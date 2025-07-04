@@ -1,251 +1,168 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010055.outbound.protection.outlook.com [52.101.84.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327FB20C00B;
-	Fri,  4 Jul 2025 10:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE34184;
+	Fri,  4 Jul 2025 10:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751625691; cv=fail; b=fcbzfKqvIFgIHnanBe5/jic+wLH63ZCcEcX0eyZXdc330DXHGdt5EbHKcLFXkIhmv0yGkAIZhtwMKThpjBSy4TYkLJR36L9NBBltqSry/ee1QRESayVmOGo+cFNcGlcavnNNo6WzOeXBFGgfXEcozZB+XXtokgJwY+455D64xYQ=
+	t=1751625833; cv=fail; b=qJCQUO1FrQDn9bZfhK02ct/yzByr66f4TJpMfEy3cgCGl9RARRsqcKrgGVzZwVyme0gqIbCkNEw89yd2VQNqPljxHBedMLoy+qelkLJgTNhV7YSBUnbBjpP1Iy6Xbc+NmjO7BOgNahY4ZL+m8NPVuxiZI/q+i+i/lZFlEfrFhY8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751625691; c=relaxed/simple;
-	bh=akbp5+UdU2FW3Bo479NqH76/3egoKE0KrP+5QYI+WvE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JU+PnmUNGRcdIpCIcHDSZraxU0aQOYuOVLnOzwvYxHP78N4LwEWwM/2QHYvd71BlV6wpq4ulp5QqszGi2Uhuz7ylDiZBrBk/JK72H2UGVVP79CquNro0QuP0VLdY7tJ/+XgzjNz928HDZf3Z/xgt4QvwR3i+MGw7rmevLKIl1Qs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=x2SgVYZ1; arc=fail smtp.client-ip=40.107.220.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1751625833; c=relaxed/simple;
+	bh=jDoQhaogdhJjFi4Ft+/aybjePq8JD08t4IqjZ0bU51o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kBmfrmqiMLWdtGzQ66RsvOGK1aTKsiJN3UhUk3V6Ub9eEN2vYXr5sUU0+NZxXPhNvYsJCcW0PxVkPgzRrx6/UwDu1oWQaa1cve/vBfh7Ncis9EEEte9WxlHMH8Cwj0vsyoQXBPqYiwL+PfYPh5gTjez9YG4A7M1D2H9H6KeToCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com.cn; spf=fail smtp.mailfrom=leica-geosystems.com.cn; dkim=pass (1024-bit key) header.d=leica-geosystems.com.cn header.i=@leica-geosystems.com.cn header.b=Ll8Dw8+W; arc=fail smtp.client-ip=52.101.84.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="x2SgVYZ1"
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com.cn header.i=@leica-geosystems.com.cn header.b="Ll8Dw8+W"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U2vbEOb36JlqhMHp1KyveR7H96Y4TPyK07gu8zsX9Ru/UUV1idp8YTxTKqipikuuymSH8Z13CZCQWGZfp6XPrHKm72g377cWKrglz2Spjqik1U7Z69jmqqfg40jNQQHQi8eh3o64ek4SlkHGS+CiuYrmqC2mpM4gohHUBglwMtGqWXBqgFoARUrwpEAzAN5CXgrfRfGD51XbN6r+jyNjzXiw213po/gG5hfXZhDkUwysGxWIMUN0otVyTfHmmXHmgON18LWWnNoCeUH5+utm9CtV6NiWoamgUgnvnTVTw/4Qt5QkZBWyYVrb70fqFHTIOqsKJG5Jnoe6fORPM1Vu/g==
+ b=OBIxXdTFiByV0t7WZTs40JdcYla984S9I35Vbc0MDNyfMDC3R9RwXU8BTHAw0aeEt3VWiSViWbpK+D4xuF85TO+OkDVAo8qd+uZFhKovKyfDTknNM8E/PLH4mwtRyDueiMCq9rLana42sBD6j106JK8PjpDRZVxkzSIKlXzxBpSB6oSOpzzAu6pvHcD8MQST1EFOccNPsCdqUnH4W6Aw6XWmGLMco/K8Z7YfrIvTFMT67oUrlZ4Eyl0UDzUf4DX9LTODv6ZtFxGxfhWxAR8lZCWRxIkMXn4KFKoO4LRf1oroW1/LG6kgaW0+Ozvg/q1cwUXxyDhoaq7Cc/rzhcSO7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NJwuPJmWTTV5cLBJxplctMGHYYyVy9wpGMoKBhgyYB0=;
- b=TUG8u6T1QP68csvhfrohU0d9FAqagM8qx4swtdq2WDI4UpZLqJ36XdCogBAw7bs11IQTT++kwCU4ZQY/QVECGCPX/qsZH+WJdryx3yv3JJUcPWhCAvxUUfolLEiDwEB4/oPE3qzVQExS/Sp52cRsEj2vDGkUJ0RS+sTwkTOzPK8gbsdspjOmwX1NEKhpf8kni6FGPKUgIGF1gaMBO09jdSmBtVOOcgMTYw/tVudro8K4w/bAKxXkK+quV+EZG9YxT+/GCOCFrF03j2NqMkG/M4aBK5ywYI6m1OCjLGN2zF/QdMT0U511SRuLtxUXIT7QT/EfL8LTCVCPHGe25mPKxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=WR6EaVC5ysQADqtF1f0504PjaTHo9m0RQfRLOUvQYb8=;
+ b=KLR8UuNh0d9aPEc0yPnodMjYyv3zYcq7xjmZ058VvsOF0EozU6Y2qQ3OJCAxm7f/hdYidzDgp5vmhJXRp4zJjvby62CaAiXarS2f+Wphh9UmRoa7vgjzckkfy912er/3GSvc3nzp4j+yXTlRb22ZDV31toRQ3T/4zaT2ldQnYz5e6Mr6oYPh4cKeExLACDpykv8Xsfs81bs7gcmVXkL2ijQJ8vm5czIDG11UG6HlizD3x1kUkP79ycUVRBg+smdwkJGXJ5E4vFwmngaq4/apuQkXi6NTKgtCeetY9CBePa3/TZwLyNAJitb6o0rUoREStY3MQtDgtmnWWZL6/++ADQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=leica-geosystems.com.cn; dmarc=pass (p=reject sp=reject
+ pct=100) action=none header.from=leica-geosystems.com.cn; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=leica-geosystems.com.cn; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NJwuPJmWTTV5cLBJxplctMGHYYyVy9wpGMoKBhgyYB0=;
- b=x2SgVYZ1lwULja6k7i3iocGs49yFGHK2ZL2Gebb79FOQGWWs8Tk1p11G8XKDZplhNBURuNBQW0G5ost0GxgqZ/QsOl5Tv1/9iw+ok31HqDWCfgvTt6PVW5BMFD9bEBIY0yF9WYrbx2J0Ss3bqYoKABm+9/y4jY7Jl7BLNFu/5tc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa) by DM4PR12MB5866.namprd12.prod.outlook.com
- (2603:10b6:8:65::6) with Microsoft SMTP Server (version=TLS1_2,
+ bh=WR6EaVC5ysQADqtF1f0504PjaTHo9m0RQfRLOUvQYb8=;
+ b=Ll8Dw8+WqKgl7cNalV1VMMJ0heVlG2GMf5NyQPbgdTAtKvb1CGrZqe/tQZ16oM/hCWn3OcEuvb4cryXNaA/LJIPtm5Qd5MB0Y99bpcDTlZxCXKPUViraxB1xQvD+3loiIiFKAmFkz4TB6tQMvlhLlOs8EsVAmWO8DcngCh5QvyA=
+Received: from PA7P264CA0415.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:39b::18)
+ by PA4PR06MB8475.eurprd06.prod.outlook.com (2603:10a6:102:2a6::20) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Fri, 4 Jul
- 2025 10:41:28 +0000
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf]) by SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf%8]) with mapi id 15.20.8722.031; Fri, 4 Jul 2025
- 10:41:27 +0000
-Message-ID: <67c40ef1-8d90-44c5-b071-b130a960ecc4@amd.com>
-Date: Fri, 4 Jul 2025 16:11:16 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] fs: generalize anon_inode_make_secure_inode() and fix
- secretmem LSM bypass
-To: Paul Moore <paul@paul-moore.com>, david@redhat.com,
- akpm@linux-foundation.org, brauner@kernel.org, rppt@kernel.org,
- viro@zeniv.linux.org.uk
-Cc: seanjc@google.com, vbabka@suse.cz, willy@infradead.org,
- pbonzini@redhat.com, tabba@google.com, afranji@google.com,
- ackerleytng@google.com, jack@suse.cz, hch@infradead.org,
- cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-References: <20250626191425.9645-5-shivankg@amd.com>
- <a888364d0562815ca7e848b4d4f5b629@paul-moore.com>
-Content-Language: en-US
-From: Shivank Garg <shivankg@amd.com>
-In-Reply-To: <a888364d0562815ca7e848b4d4f5b629@paul-moore.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN4PR01CA0084.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26d::14) To SA5PPFF1E6547B5.namprd12.prod.outlook.com
- (2603:10b6:80f:fc04::8ea)
+ 2025 10:43:47 +0000
+Received: from AM4PEPF00025F9C.EURPRD83.prod.outlook.com
+ (2603:10a6:102:39b:cafe::d5) by PA7P264CA0415.outlook.office365.com
+ (2603:10a6:102:39b::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.23 via Frontend Transport; Fri,
+ 4 Jul 2025 10:43:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
+ smtp.mailfrom=leica-geosystems.com.cn; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=leica-geosystems.com.cn;
+Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com.cn
+ designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.8.40.94; helo=hexagon.com; pr=C
+Received: from hexagon.com (193.8.40.94) by
+ AM4PEPF00025F9C.mail.protection.outlook.com (10.167.16.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8922.1 via Frontend Transport; Fri, 4 Jul 2025 10:43:47 +0000
+Received: from GEO-W5CG2253GWB.lgs-net.com ([10.132.33.66]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
+	 Fri, 4 Jul 2025 12:43:46 +0200
+From: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>
+To: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Qing-wu.Li@leica-geosystems.com.cn
+Cc: bsp-development.geo@leica-geosystems.com
+Subject: [PATCH V5 1/2] dt-bindings: leds: pwm: add enable-gpios property
+Date: Fri,  4 Jul 2025 18:43:37 +0800
+Message-ID: <20250704104338.46546-2-Qing-wu.Li@leica-geosystems.com.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250704104338.46546-1-Qing-wu.Li@leica-geosystems.com.cn>
+References: <20250704104338.46546-1-Qing-wu.Li@leica-geosystems.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 04 Jul 2025 10:43:46.0845 (UTC) FILETIME=[85210CD0:01DBECD0]
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPFF6E64BC2C:EE_|DM4PR12MB5866:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84aaf0b9-30c9-499a-5327-08ddbae753e5
+X-MS-TrafficTypeDiagnostic: AM4PEPF00025F9C:EE_|PA4PR06MB8475:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 4eea86b4-af2c-4d17-3f53-08ddbae7a7de
+X-SET-LOWER-SCL-SCANNER: YES
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NFhidjYzQ2xva1ZCekF4Y1F4OFZibTFRMVIzOTY0cHlzMVpUUUg0c05Xcm9Y?=
- =?utf-8?B?RlZheTh6cmhPV05WdzlXakliY1pzelY5d1hHaFJDWWpFVlhQQ2ppanBiMzhD?=
- =?utf-8?B?V0t5MG5zRXdPQUQwN0xzNHhFc2ZxNHUyZGFZbm1TdmI1WHpYa3RLZlJnMGh4?=
- =?utf-8?B?d3dmd09BMEZTUHFrKzRpSXRGeXh0UnM2NEFCM1JacTBFUWgxUnhBNitUZ0Ry?=
- =?utf-8?B?Slk1SUJJZXlXTjJrS1pwbHQxT0pmUXU2TXpkWkVNUFdxZ3pGcURKYnhseVdS?=
- =?utf-8?B?U0g2Q2NzckE4WDNrOVM2Z3NiVE1JOHlRR3l0RjFhSEw0ZldhbnhXM1ozM0dn?=
- =?utf-8?B?OWFRVmg0UkpXZlhOV0JkZ05ZTnpXU0V5cE5leFBkaHJNTE5VLzRhbFl2Ymg2?=
- =?utf-8?B?WngwOWw5dC9FZ0R1T3BnaWk0UDZuZXhZSWQyb284VFcvVTJKZlRhckxSNmNt?=
- =?utf-8?B?NHB4aVB5QjA1VmZUeUJneXVvZzdYVDlUUjJGL3JRYVp2VjJ2bTRGN3lGWW9h?=
- =?utf-8?B?Y2c1clpqK0xnL0JKK3ZjNFN6NDM1SDJzREpuakp2bkJBMHloYUNIZGowOVdT?=
- =?utf-8?B?d3E3YktpNmJMcXpqcmhmd0E3bTZBVzBkL1J1ZERZWFF3V0lIVzdIUWltZHQr?=
- =?utf-8?B?Q1gyUGpHc3YvS2ZrVlVlelFWZ1BHbW5uU29jTmhKTzgxN0NXOVZ1ZExaSHV2?=
- =?utf-8?B?S0E1Z0ExZGFDcnUyWEdTVTBBdy9tQmhnOU5wOVFrUUxoMkN1SWtZbStXZjZO?=
- =?utf-8?B?Q1d6VzdmMEhCUlIzZHdXNVR1WUZyRmJyYnpwcWkyeFhxZUVsaFlaaCtXU1Vl?=
- =?utf-8?B?d051R0FLTTI1SGg0ZFNiN2xHMWlpbXAvNGJISkxoYmNlYlJzNkFsdUY0Z0U0?=
- =?utf-8?B?cTF6K0hBamlXUHJQd2NHeVdXSFphRFd6amRIWWtTbFJIS25xOVJCZndaNFov?=
- =?utf-8?B?WGt5THFzcnJxNW4yRnc0Z0FkdTFndUQ4aFNuVlZmNnA1Y0JXUUdobVBCKzlh?=
- =?utf-8?B?ekhJdUFaU2szQkJZZ3BGSUUrWjRoUFRSbmxMR1BYVWdJcFZYbERIdCtZWERB?=
- =?utf-8?B?M0IvSmI0VzFwYnVtR3IybGZQM2EzV2xrRDhBMFpMRWh5S3NLN0ZHVFF0cEJU?=
- =?utf-8?B?QmYwS05LSHJzQmtqcnIzdzRMVkdZOERiSXRtS21jYjdaV2djT2ozWmdJNzZs?=
- =?utf-8?B?dEJ4TTJkMFhOSk1wakhoeDVZeVpNdnN4Qi9IMjQ0S25CcGJzNzNzcGhER0dr?=
- =?utf-8?B?NTVTUFNZejE0UTlKZlMyc3dVUHkrWFVESEo3U0UwWmV0N3Fja1doVFlvU1Uy?=
- =?utf-8?B?Q0crYVV3TnBvQzFhRWN0TFphVXhoemVQaDhHNnlvbGEwL1h3bzMyY1R1bFFs?=
- =?utf-8?B?ZWhoc1VMREFSN1BzcW1OcXBuOHI4amIxZ2F5ZlRZeG51OUQ5NWR1NnYyWGk1?=
- =?utf-8?B?bXNtOVN5Y2o2Y3Y0d2ZqeWtJZ0dNeWNhNnZ6OGxjZXJKaUI0bllXWFZnMHVV?=
- =?utf-8?B?RzAvdWU1dkhrYmlNVGcyTkJ1SXE4Zmo0QVRwMVU1WUxkeDcxcGJNVDIrMmNn?=
- =?utf-8?B?SWs4QWxDNExJRTVVckhTQTNsbVJGa1ZnaXRnUGRCK1p5ZEZhYjdZelloaE1P?=
- =?utf-8?B?ZWlMSGJmZzZHZG1uWEFVdmhiaFBBcDBUeWx4ZnF0dkVyckIxQzJ4N2tGdGEr?=
- =?utf-8?B?MkZUMCtiVlNoUmphRXM1b25vQThLZDIvQ3RROERMTW1OV1hjMC9KcFZGQWFk?=
- =?utf-8?B?c1R5S29PUHpMQU9yU3NKWnN2Q1NGL1pIT3R0bmFoNEROdUtrWUlRTXJaR1Zo?=
- =?utf-8?B?MVpXYnptYm1FWVI3RTJROGpTaFkxaEJiejVUUm44OERteGpSbkF1Z3FhdUZE?=
- =?utf-8?B?Z0dUY2w2RkFuYldtRWlJUUFMMWRHMlFYU1hvcjFObTBOSjdpb3JSSkUyMmRS?=
- =?utf-8?Q?b/vhC4egp9k=3D?=
+	=?us-ascii?Q?vABrjRbijw48e1k6Sh4wkatk9XQ1IjoPqujAP6D4Mqt81s/yEZd6/VJqqSmh?=
+ =?us-ascii?Q?64KxYg4uiUObO7xt6I9ks2sP1l/pwC892uM2bNsGKxDpjzSw3zNMg0SNgCSR?=
+ =?us-ascii?Q?/EpO6u5AftX4tY+ftIFGb1Nk2E57iIYXYbnH4OJ9svPXMhhzBbdzV1DUWvaH?=
+ =?us-ascii?Q?ccBirF+HL1ytTiwHGv6BuqgH5AUWWr2SzYqmcqtB8P4kX286hxR6Je9u/54q?=
+ =?us-ascii?Q?DSPuSWEXJr3IVvmrLWl69bmoMpHM54fRYUWWZeMKAJjk/N3O24T5LhuCg/I5?=
+ =?us-ascii?Q?kvH6FCR4Ce4+45IU7DRIR/7WbQvDoNlKkfOidVyRI41RZDRWCaVQHbp6kcLE?=
+ =?us-ascii?Q?bBKvmhsTNz6tfZs40gtn2BqY+HxhMdZdfeayaNyzAo9UWLamE/Vlhy8WUt4z?=
+ =?us-ascii?Q?fIzvpMr9YKJb7M/yJTEZOkblzipv9YE9nEDVp6BqKWbrYngu9TXL6/7XPrOd?=
+ =?us-ascii?Q?MpZSJ20sNkDWqk3iLkDj2ucQ/E0fQiuy8ow1509wPdcY92GsVxUP7XLjE3+h?=
+ =?us-ascii?Q?D+BkAfO9dC1ALAsflS3Qr0O7fD/NxLbcrOs4wOZQ4bpCtRke5q1/rWyvjlAE?=
+ =?us-ascii?Q?2WE7IbMS0yuJO0AJXeMYDBnWx60vae9oMcPjCLA9IuYb+uDG57o0jPZ59liz?=
+ =?us-ascii?Q?8U/gSwo8D2juhAfs/qXc30BoTlY6PO6S2F+Is/NPW9R1Y4uFTzt5JOtRmSvI?=
+ =?us-ascii?Q?Sbw/wrhWufQwx78msQkzIMa0WNY4o9Bw+4qhYXbtseuqoNSFgI5zK36+w0UI?=
+ =?us-ascii?Q?bF10/ESpBqX/7MlxtDwhYb6W+9sj6PZAVrboFF36AXV4jwdJ43PiRbjvYn1d?=
+ =?us-ascii?Q?RGBocpoD0zzWC4AxM9+sbQtIKZ2xcrbILZ6148mXuJgVapIjrL42/J9mp3wi?=
+ =?us-ascii?Q?oTsNkZqo7hPNSNnx5YuxW9jn0NTyr6D1f9RF9W8HC7VwtSt5UqLGCWHuK2X1?=
+ =?us-ascii?Q?shwoNZ47SM+O0K/xYawOJR76nMbXOcTeTi9Gw48/M7U65UU5hCmS3hMykP3B?=
+ =?us-ascii?Q?/KFzxkOyVfxpbMBG98P8AKL9tJUGusz3PD63txOYIcFBhQ8ku4hu+GHcuZZ5?=
+ =?us-ascii?Q?WWNoDOqVWs7Ft1eiUIQvZQDc+4SBOspCKAIclW/ZJiyvjrjN+o2qyD39f1lM?=
+ =?us-ascii?Q?bso0VoRCuBXeWR0G6e2uHJOM7W5ZDytBI0SDe+QgHkFmWbV5JeGaUNWt6yn/?=
+ =?us-ascii?Q?A3nc/mlVvszonFkzEKmEyAjMOw2B4PJCPBqsh8WQUMUgCLoqk7BmTzLPLYMp?=
+ =?us-ascii?Q?6+2x8aKqFWU0ua+a+jSw4LTUGYnkxSCVMNdbsHqBApHmhLhmG82uJYQjZbUr?=
+ =?us-ascii?Q?Urcz4ePl0eq5WoDARkKrpaa5Izt6fiGL7dYXrQA7lp5Ke2/VcyHdmq7AMWlK?=
+ =?us-ascii?Q?sYMP8EZ65vKDqjdx+ZBKOwBwr6ZjrKWtbFV77IEMsXMJZ6k7xHm15FES844u?=
+ =?us-ascii?Q?XvJQS4BB7bwUZid+lx1B9jLx1yBd1kKwzSojPRprjF7381pMgV6w84YEshmW?=
+ =?us-ascii?Q?4TDFijSKxhijAV/tyN2ysEKoNGpCriEK95oaP0C9UhKhrQbiZX0voDQrrw?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPFF6E64BC2C.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dHEycWVBVUhTSlFmZDVvOFlmbCsrTjdBL1lib09Dc2gwZDlML2t5MjRWNDR0?=
- =?utf-8?B?TTZIdzR0QXNpb0U4M2I0TXUrS1k2cmx3MC9ybmp6L1ZrVzJWOU5vNWFESVND?=
- =?utf-8?B?bVdQSEFYTlRhQVlUbnRZV3YrNnR1QnpwRWdSWXgzVlE1SXpVaVJlU1BQSGxN?=
- =?utf-8?B?L21sa29UTnFIdFlBRXBkeXJIZG5ZbkhQRGNwVlhYaDVtSGszZmlRemZONU5j?=
- =?utf-8?B?RTVQWitxbTVCekUvRVdrV0txSkR4WUZJWjlxQzNzVzA1Y29TcWJid1IvcU5S?=
- =?utf-8?B?Z1lJRFR4VTkybDNNZTdzR2JVR3RiNW4rVE1ocG1OWnZFN2lqeTZnZ0s2eHpJ?=
- =?utf-8?B?dGltT2NpVHpyS1lQVTQ2RWlJb1NlTkppaTJ4engydmRDL01NUlAremxJWUpB?=
- =?utf-8?B?cXNzNXR1UmRyVmw1Q055ekduWFlCRDlFYXNMWFJ2VHdlQUpMdk50NUFueWt2?=
- =?utf-8?B?QW1iWXpTUVh4TXJtNUNVSHZaNU5UOFd6T3RUWjc1akJRNkUyNUxsL01wL05t?=
- =?utf-8?B?N290Q203MTUrTHFrV1BZSmJWaExoNkxYNkF1VjZua2lQNjVjSXVaaUdQMXdU?=
- =?utf-8?B?Ujd2VjhGVmZpZTJUcmcwWnlsb3dKYkFYVGkrcVMySUdTODdCK2JFdHRWNVl5?=
- =?utf-8?B?cHNWM0tFejVYdVdDcXdWMzdyanJ5d2F4aUhFVE9UOXJFam9WV2xHWDZFbG9k?=
- =?utf-8?B?NDBzUnhkVDFYRVZOckk0amxEYzZNeWkrNVdETXJFeFozMEhTSy9PQ3RJbUs4?=
- =?utf-8?B?M2l0SFBUODNvYUliT1hyZ3hnV1h4VXV3dFQweHZMZnlUa1c4M1Q1c2pXUGF3?=
- =?utf-8?B?MERzMFpqemdVVG8zdndkRk9haFZCK2N6cmdHNVVzZGp4emhsS1JHeWdhSlJl?=
- =?utf-8?B?NTEvcytNeFg0RmVSRkdYd2VYVE9sWGJGb0xsNjZmT21UOW9VLzV3QTZ3ZUhz?=
- =?utf-8?B?dENzRFZoR2cyYjlWc1pYd2lVeHJVUiswd2dSblBqa3lGcGNmYSsvTnVXZkxy?=
- =?utf-8?B?RzU3ZXZhRUVqaU9mb1lZakM5WGVoTkRVTnVybXpjcnpVTjh1RUV0Znd2azgv?=
- =?utf-8?B?V1FHSWNHanNBQUZPOEkraHp0T2dUSjR5czJXTFFzT0dXYzhlS1B0TnNiMDZG?=
- =?utf-8?B?Q1F2MWZ5L2xBenRsNEJlYS9keFdEUUJzTjlKVjJGMGNOdkdwenlxS1hTWEJi?=
- =?utf-8?B?U0JtcFVSWnpMdXVzajZxVlB2MVdkNUNrNmUveFFFbElVeWN3Rkhtdi84UlZh?=
- =?utf-8?B?Vlk5T0xaVDZhajc1aHBUbTNpY3JLdzdSUjRJMHNuQjkwQ3AxYmpoeTBVNjJ0?=
- =?utf-8?B?OE9mQ1d3OTEvVGpYeVFJaFgvV2U2RFZPRUFMQVRKaXJaYnZiUExYS2tYUFBB?=
- =?utf-8?B?VDRUK0xZMm85T0dhMFh5cFVDZ1Vzc0s0blpKVERVMTRQcGM1RmxWMUZHcEcr?=
- =?utf-8?B?RE9EZDVwSEpZOWZsdWJuL3hSMnF3QUo5QkdIeUhNK2ZCREdGdlJNNi9HUXdM?=
- =?utf-8?B?V1dVZjBQTUZMSWpYT0hKRVVzK2ppdnlONno4Zkpaako0WWVDRHVHVzlrVzNv?=
- =?utf-8?B?UDVnOTZwbi9NTHZud2V0VmxvbkJSeUhCWktvejFlbzFoa0NCVGNuU2ExU3lo?=
- =?utf-8?B?c0l4VmQ3MldrN0d3ckxXMUJHWVBTMTdaZXdBT2pBdHVEN2N6MWhJYjQ3bHBH?=
- =?utf-8?B?eHF0L3NuTmNQTVdCT0h2MHQ3Y0IvSHhMK1ZRcEw2OEhIeWgwc1N5dlRRUTdq?=
- =?utf-8?B?MzczZjl5eVZGS3RBVW13bG1RT2plVVNaVFo4MHFHY3JXdVZOVVJWdG1SUnpM?=
- =?utf-8?B?UDNSTVJwSXdGTXZYUUhnbi9yUWNSSE5IUXNsT0hYWHBEcmJqNDAvWkJvTkk0?=
- =?utf-8?B?Y1dMdThHalEyYVRjL2RoaS8xQ1ZTdlFjdUduR0U2ZFpua0p4SUxrSTg0ZTh6?=
- =?utf-8?B?ZTM5S01EcEtXNmhRZGU3RnkrMEM4MGkzZndRcy82QzdzNTFVTUtrTVZwVnFp?=
- =?utf-8?B?M2c3K05BQjhoT1JRVDVwUzZkK0wwZmxBMkVzOGdYL0tIWXlDZDlSYkd4VDFr?=
- =?utf-8?B?Y0FTbW9QaW9xTTgxSVZjd2FIMk1UdnJLWHBsUEJwdCsrUUxva1lIczlORE9B?=
- =?utf-8?Q?oc+so9vtQNhOFy0h0G5oDQR7r?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84aaf0b9-30c9-499a-5327-08ddbae753e5
-X-MS-Exchange-CrossTenant-AuthSource: SA5PPFF1E6547B5.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 10:41:27.6989
+	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: leica-geosystems.com.cn
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 10:43:47.2104
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uqf4nUg5UHBbBXNySsH40k2lE4AQlyWsDviNL9QBoFXYtyxDRkhZQF3QMQL7mAwmt/RLnUukd5BQMbAYEBZPjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5866
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4eea86b4-af2c-4d17-3f53-08ddbae7a7de
+X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00025F9C.EURPRD83.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR06MB8475
 
+Some PWM LED driver chips like TPS92380 and LT3743 require a separate
+enable signal in addition to PWM control. Add this property to allow
+device trees to specify such GPIO, which will be controlled automatically
+by the driver based on the LED brightness state.
 
+Link: https://www.ti.com/lit/gpn/tps92380
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/3743fe.pdf
 
-On 7/3/2025 7:43 AM, Paul Moore wrote:
-> On Jun 26, 2025 Shivank Garg <shivankg@amd.com> wrote:
->
-...
-> Thanks again for your continued work on this!  I think the patch looks
-> pretty reasonable, but it would be good to hear a bit about how you've
-> tested this before ACK'ing the patch.  For example, have you tested this
-> against any of the LSMs which provide anonymous inode support?
-> 
-> At the very least, the selinux-testsuite has a basic secretmem test, it
-> would be good to know if the test passes with this patch or if any
-> additional work is needed to ensure compatibility.
-> 
-> https://github.com/SELinuxProject/selinux-testsuite
+Signed-off-by: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>
+---
+ Documentation/devicetree/bindings/leds/leds-pwm.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Hi Paul,
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.yaml b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
+index 61b97e8bc36d0..6c4fcefbe25f9 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
+@@ -40,6 +40,13 @@ patternProperties:
+           initialization. If the option is not set then max brightness is used.
+         $ref: /schemas/types.yaml#/definitions/uint32
+ 
++      enable-gpios:
++        description:
++          GPIO for LED hardware enable control. Set active when brightness is
++          non-zero and inactive when brightness is zero.
++          The GPIO default state follows the "default-state" property.
++        maxItems: 1
++
+     required:
+       - pwms
+       - max-brightness
+-- 
+2.43.0
 
-Thank you for pointing me to the selinux-testsuite. I wasn't sure how to properly
-test this patch, so your guidance was very helpful.
-
-With the current test policy (test_secretmem.te), I initially encountered the following failures:
-
-~/selinux-testsuite/tests/secretmem# ./test
-memfd_secret() failed:  Permission denied
-1..6
-memfd_secret() failed:  Permission denied
-ok 1
-ftruncate failed:  Permission denied
-unable to mmap secret memory:  Permission denied
-not ok 2
-#   Failed test at ./test line 23.
-ftruncate failed:  Permission denied
-unable to mmap secret memory:  Permission denied
-ok 3
-ftruncate failed:  Permission denied
-unable to mmap secret memory:  Permission denied
-ok 4
-memfd_secret() failed:  Permission denied
-ok 5
-ftruncate failed:  Permission denied
-unable to mmap secret memory:  Permission denied
-not ok 6
-#   Failed test at ./test line 37.
-# Looks like you failed 2 tests of 6.
-
-Using ausearch -m avc, I found denials for create, write, map. For instance:
- avc:  denied  { create } for  pid=11956 comm="secretmem" anonclass=[secretmem] 
-...
-
-To resolve this, I updated test_secretmem.te to add additional required
-permissions {create, read, write, map}
-With this change, all tests now pass successfully:
-
-diff --git a/policy/test_secretmem.te b/policy/test_secretmem.te
-index 357f41d..4cce076 100644
---- a/policy/test_secretmem.te
-+++ b/policy/test_secretmem.te
-@@ -13,12 +13,12 @@ testsuite_domain_type_minimal(test_nocreate_secretmem_t)
- # Domain allowed to create secret memory with the own domain type
- type test_create_secretmem_t;
- testsuite_domain_type_minimal(test_create_secretmem_t)
--allow test_create_secretmem_t self:anon_inode create;
-+allow test_create_secretmem_t self:anon_inode { create read write map };
-
- # Domain allowed to create secret memory with the own domain type and allowed to map WX
- type test_create_wx_secretmem_t;
- testsuite_domain_type_minimal(test_create_wx_secretmem_t)
--allow test_create_wx_secretmem_t self:anon_inode create;
-+allow test_create_wx_secretmem_t self:anon_inode { create read write map };
- allow test_create_wx_secretmem_t self:process execmem;
-
- # Domain not allowed to create secret memory via a type transition to a private type
-@@ -30,4 +30,4 @@ type_transition test_nocreate_transition_secretmem_t test_nocreate_transition_se
- type test_create_transition_secretmem_t;
- testsuite_domain_type_minimal(test_create_transition_secretmem_t)
- type_transition test_create_transition_secretmem_t test_create_transition_secretmem_t:anon_inode test_secretmem_inode_t "[secretmem]";
--allow test_create_transition_secretmem_t test_secretmem_inode_t:anon_inode create;
-+allow test_create_transition_secretmem_t test_secretmem_inode_t:anon_inode { create read write map };
-
-Does this approach look correct to you? Please let me know if my understanding
-makes sense and what should be my next step for patch.
-
-Thanks,
-Shivank
