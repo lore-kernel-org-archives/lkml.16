@@ -1,78 +1,133 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D5218DF80;
-	Fri,  4 Jul 2025 01:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D9018DF80;
+	Fri,  4 Jul 2025 01:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751593221; cv=none; b=WrSozTh5BNCT/GQeS33nPT3fC3l255thQZTYehtln2ZyF2G4WvI73CnIDYRVa4klvNS0OrCPb6aFpbSHP19Qr6/xJB9pYw5nSqbwHHW/iOLRmJCgM4J6TngpRnNm9Dt/Usqm+P7d53kY5Olr7gg3nTdBVSpG17QyByCuejZsXfo=
+	t=1751593231; cv=none; b=TwNkGFnnMNo5Cwiv9hi0nWmv/73Q9CNOZ3ih+KLHow5b4RBnuoO2rAhkuE6JUfCe125nTe50tBoCVGKGc8lkPfbMdApXIvwYmdWDKQvJTtJnSDnHOGfSdwkvWHAKUcaHqntmh2LP+cqZFDTeOojXUuvooMDmsgzSZ+sbMn1ZEdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751593221; c=relaxed/simple;
-	bh=OGTvTBOp6xDBWmqgcMuRz4SoHTb8KMn3mwjf01V44hc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ZxJ0n9XkkxL47v8aFjkv1JI80w7zW6uK03GkPFhLcPepxnsxJosf6rp8Fctxw3mujwRZizSDNaRzDdcChCN5z3wCkzAU10DZbvbXqCHOAbp2EBRMTy8399Qrq7Sp4ZUdqGPioRDCLPBDkQH8i62sqiWfI1kMP7z63dO2TPS0rEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uXVOb-001KdI-3V;
-	Fri, 04 Jul 2025 01:39:22 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1751593231; c=relaxed/simple;
+	bh=WONhXjTimx6DN03HG/RMmbijk/yprIyCTUxCwykAM54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jRv+9zvrbRHbI9GBtmYDyoA+du5qPb3QHvTyAmCoFQh7MyJkglDILplVXElUX5Jywymi03lALLQA3Tq/QqRdz8Ywf5TD01j5HV+EvIfSt+BpNIg/8yuWzO8N3RAKiYh6SioPHOeKoN4hUUGd2CZHtji6SvR7DvhM5vYevAj7Op8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bYGY65T9RzYQv77;
+	Fri,  4 Jul 2025 09:40:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 992591A0847;
+	Fri,  4 Jul 2025 09:40:25 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgBnxyQHMWdo_wdUAg--.20169S3;
+	Fri, 04 Jul 2025 09:40:25 +0800 (CST)
+Message-ID: <f73b6973-3f7c-4e0e-9908-3a3f151715b5@huaweicloud.com>
+Date: Fri, 4 Jul 2025 09:40:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Kees Cook" <kees@kernel.org>, "Joel Granados" <joel.granados@kernel.org>,
- linux-fsdevel@vger.kernel.org, "LKML" <linux-kernel@vger.kernel.org>
-Subject:
- Re: [PATCH v3?] proc_sysctl: remove rcu_dereference() for accessing ->sysctl
-In-reply-to: <20250703234313.GM1880847@ZenIV>
-References: <>, <20250703234313.GM1880847@ZenIV>
-Date: Fri, 04 Jul 2025 11:39:16 +1000
-Message-id: <175159315670.565058.128329102948224076@noble.neil.brown.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/10] ext4: restart handle if credits are insufficient
+ during allocating blocks
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+ ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com,
+ libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
+ <20250701130635.4079595-6-yi.zhang@huaweicloud.com>
+ <i7lzmvk5prgnw2zri46adshfjhfq63r7le5w5sv67wmkiimbhc@a24oub5o6xtg>
+ <ceb8c9c1-f426-4cd0-b7d8-841190631a90@huaweicloud.com>
+ <zqrcmug26tnhhjombztjjqwcorbnk4elqg2dqayhtfo2gkx3e3@wvzykthigny6>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <zqrcmug26tnhhjombztjjqwcorbnk4elqg2dqayhtfo2gkx3e3@wvzykthigny6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgBnxyQHMWdo_wdUAg--.20169S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar1DtF1kAF4UWw1rXFW5KFg_yoW5JFy8pF
+	WfCF1jkr4UWa47ZF4Iqw4kXFW3t3ykCrW7XrZ8W3sFq3Z09r1SkF4xJa4jkF9YyrWxWa1U
+	Zr4Ut343W3W5ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Fri, 04 Jul 2025, Al Viro wrote:
-> On Mon, Jun 16, 2025 at 12:49:51PM +1000, NeilBrown wrote:
+On 2025/7/4 0:27, Jan Kara wrote:
+> On Thu 03-07-25 10:13:07, Zhang Yi wrote:
+>> On 2025/7/2 22:18, Jan Kara wrote:
+>>> On Tue 01-07-25 21:06:30, Zhang Yi wrote:
+>>>> From: Zhang Yi <yi.zhang@huawei.com>
+>>>>
+>>>> After large folios are supported on ext4, writing back a sufficiently
+>>>> large and discontinuous folio may consume a significant number of
+>>>> journal credits, placing considerable strain on the journal. For
+>>>> example, in a 20GB filesystem with 1K block size and 1MB journal size,
+>>>> writing back a 2MB folio could require thousands of credits in the
+>>>> worst-case scenario (when each block is discontinuous and distributed
+>>>> across different block groups), potentially exceeding the journal size.
+>>>> This issue can also occur in ext4_write_begin() and ext4_page_mkwrite()
+>>>> when delalloc is not enabled.
+>>>>
+>>>> Fix this by ensuring that there are sufficient journal credits before
+>>>> allocating an extent in mpage_map_one_extent() and
+>>>> ext4_block_write_begin(). If there are not enough credits, return
+>>>> -EAGAIN, exit the current mapping loop, restart a new handle and a new
+>>>> transaction, and allocating blocks on this folio again in the next
+>>>> iteration.
+>>>>
+>>>> Suggested-by: Jan Kara <jack@suse.cz>
+>>>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+>>>
+>>> Very nice. Feel free to add:
+>>>
+>>> Reviewed-by: Jan Kara <jack@suse.cz>
+>>>
+>>> One small comment below:
+>>>
+>>>> +/*
+>>>> + * Make sure that the current journal transaction has enough credits to map
+>>>> + * one extent. Return -EAGAIN if it cannot extend the current running
+>>>> + * transaction.
+>>>> + */
+>>>> +static inline int ext4_journal_ensure_extent_credits(handle_t *handle,
+>>>> +						     struct inode *inode)
+>>>> +{
+>>>> +	int credits;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!handle)
+>>>
+>>> Shouldn't this rather be ext4_handle_valid(handle) to catch nojournal mode
+>>> properly?
+>>>
+>> __ext4_journal_ensure_credits() already calls ext4_handle_valid() to handle
+>> nojournal mode, and the '!handle' check here is to handle the case where
+>> ext4_block_write_begin() passes in a NULL 'handle'.
 > 
-> > The reality is that ->sysctl does not need rcu protection.  There is no
-> > concurrent update except that it can be set to NULL which is pointless.
+> Ah, right. But then you don't need the test at all, do you? Anyway,
+> whatever you decide to do with this (or nothing) is fine by me.
 > 
-> I would rather *not* leave a dangling pointer there, and yes, it can
-> end up being dangling.  kfree_rcu() from inside the ->evict_inode()
-> may very well happen earlier than (also RCU-delayed) freeing of struct
-> inode itself.
 
-In that case could we move the proc_sys_evict_inode() call from
-proc_evict_inode() to proc_free_inode(), and replace kfree_rcu() with
-kfree()?
-Or does the inode need to be deleted from ->sibling_inodes earlier than
-free_inode?
+Yeah, remove this test is fine with me. I added this one is because the
+comments in ext4_handle_valid() said "Do not use this for NULL handles."
+I think it is best to follow this rule. :)
 
-> 
-> What we can do is WRITE_ONCE() to set it to NULL on the evict_inode
-> side and READ_ONCE() in the proc_sys_compare().
-
-That is likely the simplest change.
-
-Thanks,
-NeilBrown
-
-> 
-> The reason why the latter is memory-safe is that ->d_compare() for
-> non-in-lookup dentries is called either under rcu_read_lock() (in which
-> case observing non-NULL means that kfree_rcu() couldn't have gotten to
-> freeing the sucker) *or* under ->d_lock, in which case the inode can't
-> reach ->evict_inode() until we are done.
-> 
-> So this predicate is very much relevant.  Have that fucker called with
-> neither rcu_read_lock() nor ->d_lock, and you might very well end up
-> with dereferencing an already freed ctl_table_header.
-> 
+Best regards,
+Yi.
 
