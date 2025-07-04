@@ -1,96 +1,218 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F03828B40A
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 08:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6642EE60E;
+	Fri,  4 Jul 2025 08:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751618597; cv=none; b=I4/uSs9tU9m03CXOr78OxP+3dI6KGzfToK2ndOuYRHokyEc7J4iYuiXIPv3yj3No/Q4cZHxhsuR98jxXMZirsPmfpaApkcbfGMLHEdYT3lqHMMHbtJHjOF1USPVBLae/kBJBiZ+rgIpl8S5sKyvJuBBxBAdnAUXLMEOOuDgcR1k=
+	t=1751618602; cv=none; b=U5a1w/TFdPlsS43SfeFucOUB1odEFhXUD6F+NDhDm5RK8RVH0Vsw7Lt+E/xnaGH+XRPaTRoyR+Tj7NIYHSpyIb2rhGaolGlnXP7IvrDgN15oEvSyYcJqItBN4F/ZoIFPkY75AJEM5lK0esC8fiaddJCOGoTAVDgXAvQvOg6/9f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751618597; c=relaxed/simple;
-	bh=XWPuLH+r945MMXMKIDI54FYqxlY/reitRUTj8Ejgnuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D4D0nvlUTeGU6QgXt35I/zd9fSI9eWKDgVRqDF3LvG0EL4bYmhNIL5j+SCptS9VCWJ1rAqqEx2SPDnUN0WKykHyBjhn47kYrYV8F4KpJ2YTEkMfYjCt48i9VOeIM8qaqCyrj8N2/D1o2lMym4y3MbuhAjJwVlV0nxfIvsst4QY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XnG8IIrk; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751618602; c=relaxed/simple;
+	bh=WC663r1Nrv3IDM4pbbroaXIZVFiya4oXX5gjFpAjE0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tpRYftpzrmu3GGHgz4rg5v2P8uTl7br+PzL6wCsSVdamW75qYJ2vbstVg+kOVADKrytkPqegVSCVd6hfbn3Yov08/FgywBTHhE650dosSG9Fg4POIyFhZE9JJlaw38RMX2SC6CtEUZ+BkYJ+Hfq2qryoKB5yj57Iok5gyvI66WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=A8LMSWFk; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XnG8IIrk"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553bcf41440so846975e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 01:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751618593; x=1752223393; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XWPuLH+r945MMXMKIDI54FYqxlY/reitRUTj8Ejgnuo=;
-        b=XnG8IIrkaR4PiO2w5NhZizCrv5VJ8gOFBTeeRewG/O8LNKor/464lUJadrQ1rZlljH
-         iJ4ZQTIkfaa/mUxRIXa/2Ev0HsFLlf804FyJ/TMAW5MK+pwG+p3POASsRFVOIM5G2/0v
-         ZRQQJ+ER5g0gMZzV/3aO0/kDeqL7KEmaIzaBd25o7QeC5FOGXJOjNCrUkHDB0cYTf9gh
-         hXFF+jny+BkHwqFA9VwPAmU52AAdf+50HvxTFaMp+yfqzGeAgx/GikIG/hKyMcylqEAe
-         uDareKppgpvC/0Xge1rko+itxMOrmNnNkp7ltZNon9v7CpbfO0yVAywQh4EaDKMZEszq
-         +BNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751618593; x=1752223393;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XWPuLH+r945MMXMKIDI54FYqxlY/reitRUTj8Ejgnuo=;
-        b=aXUmE5yN+NLsP/h+h2156we9wGFTsLm9yk1RBMnwhYh8X1lKvoe0W2PDn98CKonsuw
-         iJcUF026Am20rw+s1bawfuCB7usQd+gBU7SWiBV4AVOsG5VedZkq2cXU1ON4J0rswIhi
-         QJSvONYaztLP/GfTUX+YFzUULEg71ywwrJm2+Uo7Xh6Lc5zDSIzpzUuttbsl3rS5zxXf
-         a3aaCr0LlvvlP4CKC15cs59pPVcb4PU7OwT+qchfylJsl4smMltkTI/iX2Xtoj98nZgD
-         hLUfpmNuj67m1rCyp383XiCV4pSH1DRfVWhHHrL7Q14UCAc867gCtJ+jEMg23uZfirBf
-         Z5YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAK7j3di+YAxIIoRCbSGZzCoFcVsTo3RP9pp/tA22Jit9WvUzL/if9bBUJ6D7AKLO1ND6BtHkO79rKZXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIt2fEhVVdh+YZbfEsP8KxCYRrD4jK/oqPYcV51577fvsHT5i3
-	3GE1R2mieWX1plCWcubVEoWOggkaH/PtQvDUN9R/m5eJx/EpVmUAhE075yzGJF5gw02DdOwwt+0
-	dg8kTI0GmU2iafkqXXB2XpCC/pLwKrMtEupKiNbfdQw==
-X-Gm-Gg: ASbGncsX3oYk96zZY8XvAkh7dGbdV6puP3pnssc6J88IOPbhRy3rhSN2xBTQu6d72Gf
-	mnCJYw+xu6G9wJ8CD1vnnuTUTOVsmWc/u+EWMjQBMbftk+Us4vRGDyEd/CUs4/1byL2kfCpgJLO
-	Tk8rBkihkX5HHe9ujC3p70hTZOkHv4nOALhHvEtFU49TE=
-X-Google-Smtp-Source: AGHT+IGygUbBqXVfLxaLDk54V2AN8vVvj+sifspuQseTLX5ENvM8EjcwjnY64cUuxldDodJn88Si0MNwx96DmR8ZR2k=
-X-Received: by 2002:a05:6512:15a7:b0:553:23f9:bb3b with SMTP id
- 2adb3069b0e04-556f2f25595mr495692e87.49.1751618593487; Fri, 04 Jul 2025
- 01:43:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A8LMSWFk"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5646qXdq008983;
+	Fri, 4 Jul 2025 08:43:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=OhOmXY
+	Aj/2Vy0m+ws5zyVcX4kOdXzVFqtuhyr/O1J18=; b=A8LMSWFkXTZXb45HoNVSXh
+	iuLvbVCzskreMNkozbUe0mgx20SeQxmiLcF6ljeqqi1Th0n/G82dmjeeZ0H03aJ7
+	wEQNH5De+crB3G6kVeargOCyVJbSdUeyTa78+f4mEqnojNZ0kKG2HA9QKlo8UtOM
+	2MfVHyHwkPLZ6ddTk/iNp8ox8wdIYvQQoN/JD879pPrz1M51B0u/kaKAS3X7kVez
+	yKXq6sNUtxQxtWEG/m7HhEqAqCk+3HtbfS86KMPoFgH6z0YLsSBLukfo5XFE9XZG
+	0UWexjNLZCdy5euwBRORgQkDhsJxVrfN7Te1us6ePKwJAxN50ZhpqbY/7NHCUFCg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82g84bc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 08:43:03 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5648acbL022614;
+	Fri, 4 Jul 2025 08:43:03 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82g84b7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 08:43:02 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5648GALh021371;
+	Fri, 4 Jul 2025 08:43:02 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jwe3rrv4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 08:43:02 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5648gwEd51184018
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Jul 2025 08:42:58 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 50E5520043;
+	Fri,  4 Jul 2025 08:42:58 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C60A22004B;
+	Fri,  4 Jul 2025 08:42:52 +0000 (GMT)
+Received: from [9.61.253.3] (unknown [9.61.253.3])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  4 Jul 2025 08:42:52 +0000 (GMT)
+Message-ID: <b6e8f65a-234f-4543-961b-076a088ae819@linux.ibm.com>
+Date: Fri, 4 Jul 2025 14:12:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com> <20250704075425.3219648-1-sakari.ailus@linux.intel.com>
-In-Reply-To: <20250704075425.3219648-1-sakari.ailus@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 4 Jul 2025 10:43:01 +0200
-X-Gm-Features: Ac12FXwoTDxBT2X9zSk4EsbKoD54_AAQBokPURktdmvdCe76XBldGoZG3G1FI9g
-Message-ID: <CACRpkdZewS7FUFZZTbR3QXZ6y_MPD0g1vwMPmx2ALA3H7+H=xQ@mail.gmail.com>
-Subject: Re: [PATCH 35/80] iio: magnetometer: Remove redundant
- pm_runtime_mark_last_busy() calls
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Gerald Loacker <gerald.loacker@wolfvision.net>, 
-	=?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Waqar Hameed <waqar.hameed@axis.com>, Hans de Goede <hansg@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Jakob Hauser <jahau@rocketmail.com>, 
-	David Laight <david.laight@aculab.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] powerpc/secvar: Expose secvars relevant to the key
+ management mode
+To: Srish Srinivasan <ssrish@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
+        zohar@linux.ibm.com, nayna@linux.ibm.com, msuchanek@suse.de,
+        linux-kernel@vger.kernel.org
+References: <20250610211907.101384-1-ssrish@linux.ibm.com>
+ <20250610211907.101384-3-ssrish@linux.ibm.com>
+Content-Language: en-US
+From: R Nageswara Sastry <rnsastry@linux.ibm.com>
+In-Reply-To: <20250610211907.101384-3-ssrish@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _ZCsWS_I4BWE0w9I80nvT2k7t-FmBJnC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA2NCBTYWx0ZWRfX98GxvNa98QK1 B56FU+8wjb1Ho3ofFdGEKVuvJdKr/K7QbDcCNmKAtbAk/IQXOZtkIbir5tyd/ZRcm4MJauKGuwV 8HAJHvfUA+TUxAV8xhRAL9hFlNq16O/PiG446xNGlDsK3wMgf3zOy1W3EG/NvbNR/zqinkLleeY
+ Mi9EnlsA9xFLxlQ3EN3TYESO4HzHBd7J5Ny6glPEirBNcFSCZUsBSHuaFuSGfrZzzxrgQb4hLOf bcDYgMdMRwjRRYjW9/w52Q+BBpuctxeUh2DBhexUyWF8yjVgFPORuE7z7DXRa0eNrke9oLes0y7 NTLBSUXt+MBlKcOWmASxOHjGsGZN4KMpEkvb7y6d5SNooRqGedIUT55TgiMIVI6f5KZ4Mgeppu+
+ zv7JJPtEnj+6F5Ak+fidrdhQ27R5m46Z5kSUER5gevPi86rZ8Jg+NcIeZ15XXcCluWdxSios
+X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=68679417 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=1BM8l147YzEeg-DoTtwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: hEM-4Tx3Tu_gdYPd0gXpOtHVYGv4GjD6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_03,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011
+ impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507040064
 
-On Fri, Jul 4, 2025 at 9:54=E2=80=AFAM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
 
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
+On 11/06/25 2:49 AM, Srish Srinivasan wrote:
+> The PLPKS enabled PowerVM LPAR sysfs exposes all of the secure boot
+> secvars irrespective of the key management mode.
 >
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> The PowerVM LPAR supports static and dynamic key management for secure
+> boot. The key management option can be updated in the management
+> console. The secvars PK, trustedcadb, and moduledb can be consumed both
+> in the static and dynamic key management modes for the loading of signed
+> third-party kernel modules. However, other secvars i.e. KEK, grubdb,
+> grubdbx, sbat, db and dbx, which are used to verify the grub and kernel
+> images, are consumed only in the dynamic key management mode.
+>
+> Expose only PK, trustedcadb, and moduledb in the static key management
+> mode.
+>
+> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
+> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
+> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+With the following scenarios:
+1. With and with out secure boot by enabling keystore_signed_updates and 
+keystore_kbytes
+2. With Dynamic Key Guest Secure Boot
+3. With Static Key Guest Secure Boot
+> ---
+>   Documentation/ABI/testing/sysfs-secvar        |  7 +++++
+>   arch/powerpc/platforms/pseries/plpks-secvar.c | 28 ++++++++++++++++---
+>   2 files changed, 31 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-secvar b/Documentation/ABI/testing/sysfs-secvar
+> index f001a4f4bd2e..1016967a730f 100644
+> --- a/Documentation/ABI/testing/sysfs-secvar
+> +++ b/Documentation/ABI/testing/sysfs-secvar
+> @@ -38,6 +38,13 @@ Description:	Each secure variable is represented as a directory named as
+>   		representation. The data and size can be determined by reading
+>   		their respective attribute files.
+>   
+> +		Only secvars relevant to the key management mode are exposed.
+> +		Only in the dynamic key management mode should the user have
+> +		access (read and write) to the secure boot secvars db, dbx,
+> +		grubdb, grubdbx, and sbat. These secvars are not consumed in the
+> +		static key management mode. PK, trustedcadb and moduledb are the
+> +		secvars common to both static and dynamic key management modes.
+> +
+>   What:		/sys/firmware/secvar/vars/<variable_name>/size
+>   Date:		August 2019
+>   Contact:	Nayna Jain <nayna@linux.ibm.com>
+> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c b/arch/powerpc/platforms/pseries/plpks-secvar.c
+> index 767e5e8c6990..f9e9cc40c9d0 100644
+> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
+> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
+> @@ -59,7 +59,14 @@ static u32 get_policy(const char *name)
+>   		return PLPKS_SIGNEDUPDATE;
+>   }
+>   
+> -static const char * const plpks_var_names[] = {
+> +static const char * const plpks_var_names_static[] = {
+> +	"PK",
+> +	"moduledb",
+> +	"trustedcadb",
+> +	NULL,
+> +};
+> +
+> +static const char * const plpks_var_names_dynamic[] = {
+>   	"PK",
+>   	"KEK",
+>   	"db",
+> @@ -213,21 +220,34 @@ static int plpks_max_size(u64 *max_size)
+>   	return 0;
+>   }
+>   
+> +static const struct secvar_operations plpks_secvar_ops_static = {
+> +	.get = plpks_get_variable,
+> +	.set = plpks_set_variable,
+> +	.format = plpks_secvar_format,
+> +	.max_size = plpks_max_size,
+> +	.config_attrs = config_attrs,
+> +	.var_names = plpks_var_names_static,
+> +};
+>   
+> -static const struct secvar_operations plpks_secvar_ops = {
+> +static const struct secvar_operations plpks_secvar_ops_dynamic = {
+>   	.get = plpks_get_variable,
+>   	.set = plpks_set_variable,
+>   	.format = plpks_secvar_format,
+>   	.max_size = plpks_max_size,
+>   	.config_attrs = config_attrs,
+> -	.var_names = plpks_var_names,
+> +	.var_names = plpks_var_names_dynamic,
+>   };
+>   
+>   static int plpks_secvar_init(void)
+>   {
+> +	u8 mode;
+> +
+>   	if (!plpks_is_available())
+>   		return -ENODEV;
+>   
+> -	return set_secvar_ops(&plpks_secvar_ops);
+> +	mode = plpks_get_sb_keymgmt_mode();
+> +	if (mode)
+> +		return set_secvar_ops(&plpks_secvar_ops_dynamic);
+> +	return set_secvar_ops(&plpks_secvar_ops_static);
+>   }
+>   machine_device_initcall(pseries, plpks_secvar_init);
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+-- 
+Thanks and Regards
+R.Nageswara Sastry
 
-Yours,
-Linus Walleij
