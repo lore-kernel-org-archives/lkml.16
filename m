@@ -1,59 +1,66 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E572BD038
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC3B2868B3
 	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 07:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615660; cv=none; b=i7O+/DqOHWKSWndfSg4rI0dspLQErIgRxNz4xWlXOGAZVgL7fIFlanXYjjVlBsHb1O2yteoZc11Np3zgcd1TZXgjMs9eoziVqiiJ+jGmkLLNd+Vb4E94Am1eQuj1dOobxNybEjhQaMYyRiQJ5rRPchMWv9kPJRi0ddj97tFTQEA=
+	t=1751615661; cv=none; b=t/O/BSXByWTDsNhPln0PlT6g4anRMNzWAaA0E6PZ0wUkNgfW1bmEyp9Av/yvADGX/zqrxVZi4Oz1Q5vGLzZunM1odUDniQ8a0jHtNOS4K44h9oWDy3e2KZC1tmeohQ+l3WGztQ6cFCI+XLW+E7CVeJrDqqhavXrNCcxF546ErCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615660; c=relaxed/simple;
-	bh=jkS9/YATNHGwePG4Z6nuBAAtHBE+gydJOzbwcD0bugw=;
+	s=arc-20240116; t=1751615661; c=relaxed/simple;
+	bh=3RwMRyp8fXMT0ekrMhYvr10mmIyqSJ+HSm2qdURO4ps=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fbJ2fvnM6VEk+LVki3ipgso7Goud/KaT310GlgHSfHLK/9uw6s2ALuvDcVmxfsrU+JpNe7ejGNdaRh+Sw21qcqgi9TIb2oKRzu+G3Xf6zXG6yyyFIo2ZOBEY3KQBAyY0m7O0SNJsAbsm9yesUKBoGMGdJ1+9WDhWQ1xLNLWmDcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PTKCaS07; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=F1O8ZQ9KAT2Gmnt6xbGywsibcHUwwbjKwLuGx+I4bV/2Q4fN4R1zkDF+Tu5g94snqGHFgxrUS2FBENd5Iz4pTBO5qMcnfznxcsQfEfu6D8QqhPpM7E+4adz0U+Hq/Sd4/Em7s1Ry5FJeWcjBXWl2UVnMvBqvyKCBDeqTMxkmUAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ey7uKWX4; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PTKCaS07"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ey7uKWX4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751615658; x=1783151658;
+  t=1751615659; x=1783151659;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jkS9/YATNHGwePG4Z6nuBAAtHBE+gydJOzbwcD0bugw=;
-  b=PTKCaS07+uVUD22F+XJehbYJGDMnwtu03rT+WyVMiAaxL7uXf5kYCAMV
-   FEB+ytjseDduNrfvrenBgxGJrhiBFuELRM2ueEys5ldp5XWq+6bXT5ebx
-   LWpvPdJTWIXNP8AzFo6QMEt1cC+a6jKQQ01uzNiF2FMiR5MYq4agTSA9I
-   glMEoOLP1TTolFaWPRsIwHxFAAZGD1wGNltXBFdYlYxzhIWIk21WEo1/J
-   Uwz7ae3NlerhCGq+Fr2rSzk38jqMb1rFUzwt+cSwfPWO1WDbenCa4qaAs
-   9ziithr+WCX6osOykJ1JNHBa1eyvf66pTTvwa715FqJqvVu3uLrkuG3iM
+  bh=3RwMRyp8fXMT0ekrMhYvr10mmIyqSJ+HSm2qdURO4ps=;
+  b=Ey7uKWX4IA5WlkgQBK+hFjZGE/IkXj4tBR+CaDVNW9v2nLaf6yhwySc5
+   loR6DnTiihAzvf10ReGZYxiXjS3AWeNNERGH+klfGHEOGVtJo96U68c2/
+   ITalm4nkz4Nn4J+8SUYhW0AytVlUzuxxoJVU+Lcu56Km8hehe4y2KXjR3
+   hkzbCtJ6gpTMKLNHLFRqvRA9uX0aQr9dj/R838Dp3ZahQj15v8LcjQzUZ
+   caUqLVHUYTyzfo7PFBzBgLoiwgvW5gEo8ji/KRrFMVN+5EbI1Xm1+oP9/
+   8FqLmeHcGz0aUb3Gj3XswskuNscV99xlQdUbxY3/83YCnh5hZdivX4FM8
    A==;
-X-CSE-ConnectionGUID: MVdk2ttBS92J7ipwPMPAkw==
-X-CSE-MsgGUID: Sd0qg+uRTZuV1EVhceXXUw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494566"
+X-CSE-ConnectionGUID: oI0M2TTqSlOolcfJyo6YSQ==
+X-CSE-MsgGUID: EW6mMNeOTKqtfBoCddAHGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="76494558"
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="76494566"
+   d="scan'208";a="76494558"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:17 -0700
-X-CSE-ConnectionGUID: RxateKRvQpesT7CzRi+HIw==
-X-CSE-MsgGUID: rJnaQAiQS7Sm1KrgVEE8Hg==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:16 -0700
+X-CSE-ConnectionGUID: r9sUPqNERrOEdYYEoEP/WQ==
+X-CSE-MsgGUID: EDcc4uMETdWK9rdj/PE7rw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,286,1744095600"; 
-   d="scan'208";a="158924238"
+   d="scan'208";a="158924217"
 Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.244])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:16 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 00:54:14 -0700
 Received: from svinhufvud.lan (localhost [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 1C36044424;
-	Fri,  4 Jul 2025 10:54:14 +0300 (EEST)
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 1857244433;
+	Fri,  4 Jul 2025 10:54:12 +0300 (EEST)
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Sebastian Reichel <sre@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 21/80] HSI: omap_ssi_port: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Fri,  4 Jul 2025 10:54:13 +0300
-Message-Id: <20250704075413.3218357-1-sakari.ailus@linux.intel.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 19/80] drm/panfrost: Remove redundant pm_runtime_mark_last_busy() calls
+Date: Fri,  4 Jul 2025 10:54:11 +0300
+Message-Id: <20250704075411.3218059-1-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
 References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
@@ -82,101 +89,29 @@ rc2:
         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
                 pm-runtime-6.17-rc1
 
- drivers/hsi/controllers/omap_ssi_port.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/hsi/controllers/omap_ssi_port.c b/drivers/hsi/controllers/omap_ssi_port.c
-index aeb92b803a17..50dde968febe 100644
---- a/drivers/hsi/controllers/omap_ssi_port.c
-+++ b/drivers/hsi/controllers/omap_ssi_port.c
-@@ -362,7 +362,6 @@ static int ssi_async_break(struct hsi_msg *msg)
- 		spin_unlock_bh(&omap_port->lock);
- 	}
- out:
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev);
- 
- 	return err;
-@@ -401,7 +400,6 @@ static int ssi_async(struct hsi_msg *msg)
- 		msg->status = HSI_STATUS_ERROR;
- 	}
- 	spin_unlock_bh(&omap_port->lock);
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev);
- 	dev_dbg(&port->device, "msg status %d ttype %d ch %d\n",
- 				msg->status, msg->ttype, msg->channel);
-@@ -504,7 +502,6 @@ static int ssi_setup(struct hsi_client *cl)
- 	omap_port->ssr.mode = cl->rx_cfg.mode;
- out:
- 	spin_unlock_bh(&omap_port->lock);
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev);
- 
- 	return err;
-@@ -570,7 +567,6 @@ static int ssi_flush(struct hsi_client *cl)
- 	pinctrl_pm_select_default_state(omap_port->pdev);
- 
- 	spin_unlock_bh(&omap_port->lock);
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev);
+diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+index 563f16bae543..0dd62e8b2fa7 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
++++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+@@ -203,7 +203,6 @@ static int panfrost_perfcnt_disable_locked(struct panfrost_device *pfdev,
+ 	panfrost_mmu_as_put(pfdev, perfcnt->mapping->mmu);
+ 	panfrost_gem_mapping_put(perfcnt->mapping);
+ 	perfcnt->mapping = NULL;
+-	pm_runtime_mark_last_busy(pfdev->dev);
+ 	pm_runtime_put_autosuspend(pfdev->dev);
  
  	return 0;
-@@ -625,7 +621,6 @@ static int ssi_stop_tx(struct hsi_client *cl)
- 	writel(SSI_WAKE(0), omap_ssi->sys + SSI_CLEAR_WAKE_REG(port->num));
- 	spin_unlock_bh(&omap_port->wk_lock);
- 
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev); /* Release clocks */
- 
- 
-@@ -653,7 +648,6 @@ static void ssi_transfer(struct omap_ssi_port *omap_port,
- 		}
- 	}
- 	spin_unlock_bh(&omap_port->lock);
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev);
+@@ -279,7 +278,6 @@ void panfrost_perfcnt_close(struct drm_file *file_priv)
+ 	if (perfcnt->user == pfile)
+ 		panfrost_perfcnt_disable_locked(pfdev, file_priv);
+ 	mutex_unlock(&perfcnt->lock);
+-	pm_runtime_mark_last_busy(pfdev->dev);
+ 	pm_runtime_put_autosuspend(pfdev->dev);
  }
  
-@@ -683,7 +677,6 @@ static void ssi_cleanup_queues(struct hsi_client *cl)
- 			txbufstate |= (1 << i);
- 			status |= SSI_DATAACCEPT(i);
- 			/* Release the clocks writes, also GDD ones */
--			pm_runtime_mark_last_busy(omap_port->pdev);
- 			pm_runtime_put_autosuspend(omap_port->pdev);
- 		}
- 		ssi_flush_queue(&omap_port->txqueue[i], cl);
-@@ -739,7 +732,6 @@ static void ssi_cleanup_gdd(struct hsi_controller *ssi, struct hsi_client *cl)
- 		 * ssi_cleanup_queues
- 		 */
- 		if (msg->ttype == HSI_MSG_READ) {
--			pm_runtime_mark_last_busy(omap_port->pdev);
- 			pm_runtime_put_autosuspend(omap_port->pdev);
- 		}
- 		omap_ssi->gdd_trn[i].msg = NULL;
-@@ -936,7 +928,6 @@ static void ssi_pio_complete(struct hsi_port *port, struct list_head *queue)
- 	reg = readl(omap_ssi->sys + SSI_MPU_ENABLE_REG(port->num, 0));
- 	if (msg->ttype == HSI_MSG_WRITE) {
- 		/* Release clocks for write transfer */
--		pm_runtime_mark_last_busy(omap_port->pdev);
- 		pm_runtime_put_autosuspend(omap_port->pdev);
- 	}
- 	reg &= ~val;
-@@ -981,7 +972,6 @@ static irqreturn_t ssi_pio_thread(int irq, void *ssi_port)
- 		/* TODO: sleep if we retry? */
- 	} while (status_reg);
- 
--	pm_runtime_mark_last_busy(omap_port->pdev);
- 	pm_runtime_put_autosuspend(omap_port->pdev);
- 
- 	return IRQ_HANDLED;
-@@ -1018,7 +1008,6 @@ static irqreturn_t ssi_wake_thread(int irq __maybe_unused, void *ssi_port)
- 		}
- 		hsi_event(port, HSI_EVENT_STOP_RX);
- 		if (test_and_clear_bit(SSI_WAKE_EN, &omap_port->flags)) {
--			pm_runtime_mark_last_busy(omap_port->pdev);
- 			pm_runtime_put_autosuspend(omap_port->pdev);
- 		}
- 	}
 -- 
 2.39.5
 
