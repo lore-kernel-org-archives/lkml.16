@@ -1,198 +1,151 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7DA34CF5;
-	Fri,  4 Jul 2025 11:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751629095; cv=none; b=m08f0o31tPWz4i6Zetlnd3KDKM1fXT+ZXj1ELZU4QWfqOauouhuFbMTO89jEn+UssLRJ2KkefNsz3O4bVCS4RBmWUZs1lTkeOhhnugAtZ8ww5SJzHT/A6WwfIIJAUUF+jUUbyNPk53e2fVwupFD5mwPYwLWGbdVXSH4ko5Cj1yw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751629095; c=relaxed/simple;
-	bh=YJP28q7Ucuh5+7BaGONOkzuEJ3W9tO+RZPWtLfGChOQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyoYvv4sbwv9ho/gXOyZ2IvLHIkt0oQUQ7l7uzfZFk5KS37lqRqxeW9ALB1NABOsqyEgJkhW6ASXCRW0oW53aSk7gDlnJ2MT/z9gFNZNyOhqrVhDJzqWbJWAYIOl/CbmhpVwBRabBF8Ee3HnsPZEh+kbTOm5O/8JCM68a7CZA24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=E/JO7/9f; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A72B34CF5;
+	Fri,  4 Jul 2025 11:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751629249; cv=fail; b=ERIZRpKCrUa/3tiItzg0DNvB/5qVAR7gTm2EDGgbs5O286uNmKYdBg9Oo3acUJ2cgHjNYBiQMUVKs99xMK5cOm2QWdIGJmPOd2XqHyCyp/335F6R8QUpJlzWmcOH4dafyPt93JiKWY7xljnqcs5fWOn0Sv/WgI1iFJtvaSEH+JI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751629249; c=relaxed/simple;
+	bh=LaEeP2ZRJaNnI/6JQPH8bDy4293yRTuyC2f/Yf23cx4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NZoqtEuoSb15+MXksaqFSSRPaG7jQWZbVvlVCAALDDpFY+Aj76G2gB22H22p00tmVlaYxVXkQC5K9wfq+eKlZpr4aElpJ2XtJ1P1hOxc9MvCFlOPcVbnZlio0g+5rSXbfrWFjrUfUe/x7E5l4TKjGhInR4s2/DVf+w/yZJfkpN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o8J3GLTM; arc=fail smtp.client-ip=40.107.237.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="E/JO7/9f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=ynC92e4rjsZv78cTw8oxuNAOqH35c/SFBFFQS7G9ITc=; b=E/JO7/9fAmFdO1eN4H2Q43FGZn
-	4ShIr/TC33BfEuNNGiQnlyf4jEJTaJ9+pf9h3MnkoB7eSetIN8ZhjFYmWq6Iv8A65Woc7u6bIay7k
-	NqKDUe0niYCFjXpSt87C2aYckfzzQ/jq2iSGipNs56IVU4bA8XmzH9JvE7clqVIV+ONIG6Z6Y/cQs
-	S8qPcygYw0TOAJZZdWMFNl02/zNb0pwqYs23nUGAZv+v0DMGNrvDvacS6a3lGjNUJ8e6driZHEPBj
-	eQmW+TY9fG8evl5IneDSEI/7+YQKtKJTvostwB41z1Siysa3NgW1T5WNbzSp5w+IXMDJl8F3k8P04
-	C2QDdK9w==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uXek2-0004GS-1e;
-	Fri, 04 Jul 2025 13:38:06 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uXek1-0006BS-2J;
-	Fri, 04 Jul 2025 13:38:05 +0200
-Message-ID: <f5d724ab-0eb6-41a1-b694-8aea566e99ab@iogearbox.net>
-Date: Fri, 4 Jul 2025 13:38:04 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o8J3GLTM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DbhjRYVxElTQIZyeI400Ck18h1df6uT0FUcyPHVxPGw9LlxhXlND8Oe13Kv0OPR9sBgPczEeqKo/VNLRfgz2HoksvWspNKhY2T5WebWa5SMcWLVpknpWTe9XEQLGhq5qBlkjD+AyN2y2EUgFQKPgrnukcBaJxVT1zD5nZbIABvXGtZmT0ZEFMHI+hx2YvyHHtADFZz2fNgIx0UrnEtcY3oBOXbsZPTb8VO96GVRsKWmVhfL9dLg/K8u7EHsJey33kuBLaI+msjVIa/HHSlkfLN7oyqoBzUFH5DNnZ3tpFB1eeJCI+mn0QcUJDN13kpSJQqdxhJdJM+lR7YuZ+ZuNhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5HoSlKL/zwvmvT+7oPAPvSnAmnHlVwSHWhBdejUOYVU=;
+ b=edpW7zxFDfoKhsgkJd6MFHK7Jyd7eqIK9tl6DIavB86GenJ2SU2vqOasz2IbX9rRLOZyDTsBhZayONob/p6z2/ifhawAISKv8mdO9H783u5vYFXGIK24BDXgOiAiSbUV+eUOdTf/6vYLffEMwmIrhf4FSuR0/zjDA5BWVcCWDuxw5TaUnM3a103xpHxrSmW0yXpANX47l52AYB9DrLlKfHlvrUTBKdc19wBG7kqRKrXkuXDkGL6bZ+4fungfuXc1AtKTh7AgLeDSesgkgSmGqo6V83YfX6+4n2oenx5bU6O4FwbR4UeQdXQkut7DsITgbaM7Iwu6WpUgL6tMcIosmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5HoSlKL/zwvmvT+7oPAPvSnAmnHlVwSHWhBdejUOYVU=;
+ b=o8J3GLTMknHVRgTutTlooJRGNj4fW4eNQdX3oW1VqLw0Ui28d788JNssHbWDeED8zhn5VejZb4C81ccA8EnbGrpUoRoN6py2NOK1Fzzlzmmy80qi6mOUJBuJ1g7YVdbLcnO4P7PlGl4pbTYsCuAa3G3Y/yqVHkV+dO2f/dN2m0k=
+Received: from SJ0PR03CA0181.namprd03.prod.outlook.com (2603:10b6:a03:2ef::6)
+ by CY1PR12MB9699.namprd12.prod.outlook.com (2603:10b6:930:108::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Fri, 4 Jul
+ 2025 11:40:45 +0000
+Received: from MWH0EPF000989E8.namprd02.prod.outlook.com
+ (2603:10b6:a03:2ef:cafe::fb) by SJ0PR03CA0181.outlook.office365.com
+ (2603:10b6:a03:2ef::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Fri,
+ 4 Jul 2025 11:40:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989E8.mail.protection.outlook.com (10.167.241.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8901.15 via Frontend Transport; Fri, 4 Jul 2025 11:40:44 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Jul
+ 2025 06:40:43 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Jul
+ 2025 06:40:43 -0500
+Received: from xhdctallapa40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 4 Jul 2025 06:40:41 -0500
+From: Srikanth Chary Chennoju <srikanth.chary-chennoju@amd.com>
+To: <gregkh@linuxfoundation.org>, <Thinh.Nguyen@synopsys.com>,
+	<m.grzeschik@pengutronix.de>, <Chris.Wulff@biamp.com>, <tiwai@suse.de>
+CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<punnaiah.choudary.kalluri@amd.com>, Srikanth Chary Chennoju
+	<srikanth.chary-chennoju@amd.com>
+Subject: [PATCH 0/3] Add support for Superspeed plus EndPoint for Bulk and Isochronous transfers
+Date: Fri, 4 Jul 2025 17:10:10 +0530
+Message-ID: <20250704114013.3396795-1-srikanth.chary-chennoju@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next,v3 2/2] selftests/bpf: Enhance XDP Rx metadata
- handling
-To: Jesper Dangaard Brouer <hawk@kernel.org>,
- "Song, Yoong Siang" <yoong.siang.song@intel.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Alexei Starovoitov <ast@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Magnus Karlsson <magnus.karlsson@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-References: <20250702165757.3278625-1-yoong.siang.song@intel.com>
- <20250702165757.3278625-3-yoong.siang.song@intel.com>
- <77463344-1b1a-443a-97be-a7ef8a88b8af@kernel.org>
- <IA3PR11MB92546301B67FB3A9FDCD716DD842A@IA3PR11MB9254.namprd11.prod.outlook.com>
- <88a64a65-bd8c-4b73-af19-6764054d4572@kernel.org>
-Content-Language: en-US
-From: Daniel Borkmann <daniel@iogearbox.net>
-Autocrypt: addr=daniel@iogearbox.net; keydata=
- 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
-In-Reply-To: <88a64a65-bd8c-4b73-af19-6764054d4572@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27689/Fri Jul  4 10:42:55 2025)
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: srikanth.chary-chennoju@amd.com does
+ not designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E8:EE_|CY1PR12MB9699:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9bff077f-5b40-49fe-091c-08ddbaef9ccd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?l+eQQ5QcRJlF9VslUBalvB9sTj49P9PXDrd6bgRAjnAMxwooXZNtirBGlEGi?=
+ =?us-ascii?Q?F9L6OfbcF9nqtDAKsQqu2lNNsd5/RLnqzRnwHdFx0qPaBceEBfQqY8HjDgi/?=
+ =?us-ascii?Q?OLU1sO709lLLQa/S1bXf3qo95+e2TwUJnrHbWxFyJu3eI/3L5XMgTsjdQmoB?=
+ =?us-ascii?Q?VhK8fpZl7c2nb1B2210mLxCXC522adDgVehaMMCr7EVLxNEd4+sqtupv5oFE?=
+ =?us-ascii?Q?OlC3l6Jg5YoznVH2eom8WZ3xOChkEs1WBdEzEq8VBBcl7m1Cn38ni2E2wk3g?=
+ =?us-ascii?Q?ZDccvlvWNejHpk36DYAQO3pn2bg62vjoRHq6V/iBQZp5a9XL4eWPybBv4RAS?=
+ =?us-ascii?Q?kt5DCZaD9r4kA85z0wIEXqpJJz6g7YpDDtQbKf5ute4CM55aVTOOfDvrbxk9?=
+ =?us-ascii?Q?laY7mbQYUyzVF30cRMNTyj0q0HFzd4BbAHR7pobr3Qlq4ldfS+vHCjFv4vZB?=
+ =?us-ascii?Q?f26Z5mTH/hjf9psna/i5OF4Y0O1DSuEJXAwwqMrK0mqKnrz7rYEIWblzFLwa?=
+ =?us-ascii?Q?/wW7sfuYnxv165nZyfcAmYSw6j389ZelVAqpIy4GHHu8kKqmtJJP8CxWTSBG?=
+ =?us-ascii?Q?VP42zldhMtnZq+ZG021GhJL6B3YL0IGgo5UDz+sA9jGylOK3fAzhEBVi6C2t?=
+ =?us-ascii?Q?s2QdwFz0igH7wv0U7sSd6FMhUxIl/5fuyxbo1j70pxwTe4ODMuYHiUWAAliM?=
+ =?us-ascii?Q?NIzlQZRhRxgORG2nplozCO45hG4K+zgFyMTfv1Z0/otwAQXm5LlgOxC20ime?=
+ =?us-ascii?Q?A/wuOXP2mWY0xNqVvrdk6cKDWaHoTx46RE1aV/kcnc72XTRr6TBqHzz+0BMr?=
+ =?us-ascii?Q?WOeX2lOUtTNzotZR1UAuPLsvuu/EzSUZb82GIADIoFsQRNMA62Trs5QE0nNn?=
+ =?us-ascii?Q?QeoiyrXdqj3v5qx/A+D4y3kbxnetdmPV29ZinoEnHR237UWpfKzoqknFcB7N?=
+ =?us-ascii?Q?kJDV7hEYbsVEVuugb0KQKt+Jv2V5PQEwChYnmZeZbGURoWJMAxZFW45BxOOc?=
+ =?us-ascii?Q?2NmEcHLhI+dLSFK9DI0N7rwsaXbObdLWuLmHHrINtat+B0N6iXu2A1pY60dm?=
+ =?us-ascii?Q?McKArPXNCy6bZfMpL49+8vZvjjf5vf4uIuDnVdUO/D2KDVfaMHp0vjjDYQlD?=
+ =?us-ascii?Q?57rfxshQYu3OAIBUZDzJlu0wg+aeoYPoOENTKzWd1axfdSqLirFTZbOoks45?=
+ =?us-ascii?Q?pHsjzclbtzUn9OOu4fNLLfD9HFMLmG7l8aeA59sqrQi4IzS+WtF9OK2+nI9/?=
+ =?us-ascii?Q?tneGbQ2jpO6RbcVNRo0Wn/WDiDJAabPDp+pJw1i7L93Kr08u2TG738OQv9gg?=
+ =?us-ascii?Q?PnWh1l3RCQIGrSmDuzn4S7jW8T5KYcnLuTF1eawqVQ61keZj/o6+KBkfXwHX?=
+ =?us-ascii?Q?8ABaArf6JU3eMYtDUxCakaSn4j0EU1xoypWiyAKHirVkZpL5vH/UMiT79ep0?=
+ =?us-ascii?Q?a+hpi/y1eG03KRUhuZVHACdGIOE/BbEFt1MQuCpUmVBVPI7N+kMESZy12pRd?=
+ =?us-ascii?Q?TeVXfCV30PJjmbZR8qNAWb3CJszVngDH4+/i?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 11:40:44.5767
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bff077f-5b40-49fe-091c-08ddbaef9ccd
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E8.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9699
 
-On 7/4/25 11:58 AM, Jesper Dangaard Brouer wrote:
-> On 04/07/2025 03.17, Song, Yoong Siang wrote:
->> On Friday, July 4, 2025 1:05 AM, Jesper Dangaard Brouer <hawk@kernel.org> wrote:
->>> On 02/07/2025 18.57, Song Yoong Siang wrote:
->>>> Introduce the XDP_METADATA_SIZE macro as a conservative measure to
->>>> accommodate any metadata areas reserved by Ethernet devices.
->>>
->>> This seems like a sloppy workaround :-(
->>>
->>> To me, the problem arise because AF_XDP is lacking the ability to
->>> communicate the size of the data_meta area.  If we had this capability,
->>> then we could allow the IGC driver to take some of the space, have the
->>> BPF-prog expand it futher (bpf_xdp_adjust_meta) and then userspace
->>> AF_XDP would simply be able to see the size of the data_meta area, and
->>> apply the struct xdp_meta at right offset.
->>>
->> Thanks for your input.
->>
->> I agree with you that the implementation will be simple if user application
->> able to get the size of data_meta area. The intention of this patch set is to let
->> developer aware of such limitations before we have a perfect solution.
->>
->> Btw, do you got any suggestion on how to expose the metadata length?
->> I not sure whether xdp_desc.options is a simple and good idea or not?
-> 
-> That is a question to the AF_XDP maintainers... added them to this email.
-> 
-> /* Rx/Tx descriptor */
-> struct xdp_desc {
->      __u64 addr;
->      __u32 len;
->      __u32 options;
-> };
-> 
-> As far as I know, the xdp_desc.options field isn't used, right?
+These patches include changes for 
+1. Supporting SSP devices
+2. Provide support for maxburst 
+3. Support for SSP endpoint companion for Isochronous transfers
 
-The options holds flags, see also XDP_PKT_CONTD and XDP_TX_METADATA.
+Srikanth Chary Chennoju (3):
+  usb:gadget:zero: support for super speed plus
+  usb: gadget: f_sourcesink support for maxburst for bulk transfers
+  usb: gadget: f_sourcesink: Addition of SSP endpoint companion for
+    Isochronous transfers
 
-> (Please AF_XDP experts, please verify below statements:)
-> Something else we likely want to document: The available headroom in the
-> AF_XDP frame.  When accessing the metadata in userspace AF_XDP we do a
-> negative offset from the UMEM packet pointer.  IIRC on RX the available
-> headroom will be either 255 or 192 bytes (depending on NIC drivers).
-> 
-> Slightly confusing when AF_XDP transmitting from userspace the UMEM
-> headroom is default zero (XSK_UMEM__DEFAULT_FRAME_HEADROOM is zero).
-> This is configurable via xsk_umem_config.frame_headroom, like I did in
-> this example[1].
-> 
-> Maybe I did something wrong in[1], because I see that the new method is
-> setting xsk_umem_config.tx_metadata_len + flag XDP_UMEM_TX_METADATA_LEN.
-> This is nicely documented in [2]. How does this interact with setting
-> xsk_umem_config.frame_headroom ?
+ drivers/usb/gadget/function/f_sourcesink.c | 37 ++++++++++++++++++++--
+ drivers/usb/gadget/function/g_zero.h       |  2 ++
+ drivers/usb/gadget/legacy/zero.c           |  2 +-
+ 3 files changed, 38 insertions(+), 3 deletions(-)
 
-If you request XDP_UMEM_TX_METADATA_LEN then on TX side you can fill
-struct xsk_tx_metadata before the start of packet data, that is,
-meta = data - sizeof(struct xsk_tx_metadata). The validity of the
-latter is indicated via desc->options |= XDP_TX_METADATA and then
-you fill meta->flags with things like XDP_TXMD_FLAGS_CHECKSUM to
-tell that the related fields are valid (ex. request.csum_start,
-request.csum_offset) and that you expect the driver to do the
-offload with this info. This is also what I mentioned in the other
-thread some time ago that imho it would make sense to have this also
-on RX side somewhat similar to virtio_net_hdr..
-
-> [1] https://github.com/xdp-project/bpf-examples/blob/3f365af4be1fe6a0ef77e751ff9b12c912810453/AF_XDP-interaction/af_xdp_user.c#L423-L424
-> [2] https://www.kernel.org/doc/html/v6.12/networking/xsk-tx-metadata.html
-> 
-> --Jesper
+-- 
+2.25.1
 
