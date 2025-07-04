@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0F52E5B23
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D412F2EE981
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 16:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751647593; cv=none; b=VCirQLnjZ8ZaEuCXHeOruiBUCX4CjbD9mMjszqZAdJGL7B7+dsy6G9iRCwO3stxd+9Vjyllj2ToHxtN5zvVLJh22NQXXz7iAmAEZzjqMDrkr12Szrbpg/QEI4YLcQLHRWGcmWkr6zlTylMVdY2Gn20DPjT9siSZJOtZFP1+HSdo=
+	t=1751647595; cv=none; b=Un511F052yrjtrAPuzz6HyQgxwJ3OPYAnfZUwAuKCl9AUAV8scemhTy6qN+8tEHsRhIT2Km2VaQWnP5XykMBRU2RA8xGV5xQwNfCw9z7bJPAxT57hvA4v/edUo0+G4uKZCgUF6SQCpXhGpZA5BHh6q9P58Amgz9wExANJMTnwNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751647593; c=relaxed/simple;
-	bh=uvg1ZkUCHAyT1ZJign96r0uHR2f9F7hjaot1gafCOk0=;
+	s=arc-20240116; t=1751647595; c=relaxed/simple;
+	bh=+AIr79H684tpFcfHu4CEdKxm2WsQCW5SxNyLqwnGP6g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P4R8DJHiwzCRCOiaOlu4NodN81OnuIxfUEyewSC5+Yj3xO/H+SO8pBAB/ek9EUtrlDTMXYkNwYhjUn5aUNrMusuDrU31OQmC7g1fiypl1hGbOcM7Lg7k2qybothJWfdjc+tx5g1wpQ9zkz/uXS0AWrer1IKMn43dTN4A3599L4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M4CZhBZ7; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=FgOUicyRIkkNwrpqKIb6tQ+JHoTW2ePtULPvvLClbwDf9/yM+ppRTcM5dtiLMoyjvUQmqYi3lyDEtduGklkwQETZ88T+Ona3MU05xE9e6B9157luREP6VI/ck4HkhrXloPKR0v0Wqr9VXChSPW83HIc5EA+H7y+O6Lj5IsCfrg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LmTV5UDa; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M4CZhBZ7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmTV5UDa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751647591; x=1783183591;
+  t=1751647594; x=1783183594;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uvg1ZkUCHAyT1ZJign96r0uHR2f9F7hjaot1gafCOk0=;
-  b=M4CZhBZ7mn06v0u5DBHRcEk3B+efnCWomLXlJGNy1ZDFxZPn/haoW10w
-   GJUY2U5p5JONnjv51PJXMyzeA70H+aZtzOgJRcZblK8fsX5wnBFcxyiyG
-   EQnaQTZIHCXO9zJ7E2FXY8tuH12g26V5L1fkOpNWWlTQfPsQiKdJW+Dwk
-   +MiiomrXkIQappkhsc6fkgpcpzT4FhRxKSrksoYiCFMLDQZ6cS1cnCdpv
-   X82YA8a9S1kHabpoLi/0bRhxqWCau8YESubjEJJNiAu3c9IRg3GU8uj/2
-   2I6jJhKL8QoQfHYpisJls68I2HKPcyV7Jtq1AXEnzl31aE+qZ18EHkqM3
-   w==;
-X-CSE-ConnectionGUID: g1LLyioSSN28n5opOtgssg==
-X-CSE-MsgGUID: +mljtYsGThKUJ4brAINUsA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57755787"
+  bh=+AIr79H684tpFcfHu4CEdKxm2WsQCW5SxNyLqwnGP6g=;
+  b=LmTV5UDal8gtgfqiqmDet97SdLY1w70LYHKdPaSPW0NdnadXRYhXiDg9
+   FZopsC/l9dUb/fBstBUB2OkTy7lmp2wwrPb24N00CTPKYohzGs5SoDQdh
+   v6VsFHwrrYk7obYy3AjtZEtc3pGHwBbvL4UB+6EI9W2zb810zsytG9Dxw
+   0EFAQcDSlDKddsms23JW2+hq3ZqAYjctxNa9iuwS2TpUlt89Au+idu62i
+   vwR/vczx2aAzsb76wP6v4DiFTVqIt5D4dnSbiNEXQ37bYEVSK4yjUl1FT
+   hFUwQlWXaXlPS8mCR26gNQDKjp5PzlG3r06TffTnlJTedQBVP2LVpVwCX
+   g==;
+X-CSE-ConnectionGUID: qX0pSbugSQGO/9/3iTlqgw==
+X-CSE-MsgGUID: mM3J+DetRyy5r68umVTSsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57755791"
 X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="57755787"
+   d="scan'208";a="57755791"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:31 -0700
-X-CSE-ConnectionGUID: 3Nrzr9SuTLGjpibqqKnp+A==
-X-CSE-MsgGUID: 8D7syhqyR8KhlqGnCqMJXA==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:34 -0700
+X-CSE-ConnectionGUID: jmOkvmL1R9aNCJIY9PQqqw==
+X-CSE-MsgGUID: Ka2sBBkrTfirwiNjPTb8YA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
-   d="scan'208";a="154424717"
+   d="scan'208";a="154424720"
 Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:28 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 09:46:31 -0700
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
@@ -52,9 +52,9 @@ Cc: anshuman.gupta@intel.com,
 	alexander.usyskin@intel.com,
 	gregkh@linuxfoundation.org,
 	daniele.ceraolospurio@intel.com
-Subject: [PATCH v7 05/10] drm/xe/xe_late_bind_fw: Load late binding firmware
-Date: Fri,  4 Jul 2025 22:20:33 +0530
-Message-Id: <20250704165038.1464460-6-badal.nilawar@intel.com>
+Subject: [PATCH v7 06/10] drm/xe/xe_late_bind_fw: Reload late binding fw in rpm resume
+Date: Fri,  4 Jul 2025 22:20:34 +0530
+Message-Id: <20250704165038.1464460-7-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250704165038.1464460-1-badal.nilawar@intel.com>
 References: <20250704165038.1464460-1-badal.nilawar@intel.com>
@@ -66,299 +66,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Load late binding firmware
-
-v2:
- - s/EAGAIN/EBUSY/
- - Flush worker in suspend and driver unload (Daniele)
-v3:
- - Use retry interval of 6s, in steps of 200ms, to allow
-   other OS components release MEI CL handle (Sasha)
-v4:
- - return -ENODEV if component not added (Daniele)
- - parse and print status returned by csc
-v5:
- - Use payload to check firmware valid (Daniele)
- - Obtain the RPM reference before scheduling the worker to
-   ensure the device remains awake until the worker completes
-   firmware loading (Rodrigo)
-v6:
- - In case of error donot re-attempt fw download (Daniele)
+Reload late binding fw during runtime resume.
 
 Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-Reviewed-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 ---
- drivers/gpu/drm/xe/xe_late_bind_fw.c       | 155 ++++++++++++++++++++-
- drivers/gpu/drm/xe/xe_late_bind_fw.h       |   1 +
- drivers/gpu/drm/xe/xe_late_bind_fw_types.h |   7 +
- 3 files changed, 162 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/xe/xe_late_bind_fw.c | 2 +-
+ drivers/gpu/drm/xe/xe_late_bind_fw.h | 1 +
+ drivers/gpu/drm/xe/xe_pm.c           | 4 ++++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-index 54b815145a69..9804508ee90d 100644
+index 9804508ee90d..54ba0b57185b 100644
 --- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
 +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-@@ -16,6 +16,20 @@
- #include "xe_late_bind_fw.h"
- #include "xe_pcode.h"
- #include "xe_pcode_api.h"
-+#include "xe_pm.h"
-+
-+/*
-+ * The component should load quite quickly in most cases, but it could take
-+ * a bit. Using a very big timeout just to cover the worst case scenario
-+ */
-+#define LB_INIT_TIMEOUT_MS 20000
-+
-+/*
-+ * Retry interval set to 6 seconds, in steps of 200 ms, to allow time for
-+ * other OS components to release the MEI CL handle
-+ */
-+#define LB_FW_LOAD_RETRY_MAXCOUNT 30
-+#define LB_FW_LOAD_RETRY_PAUSE_MS 200
- 
- static const u32 fw_id_to_type[] = {
- 		[XE_LB_FW_FAN_CONTROL] = CSC_LATE_BINDING_TYPE_FAN_CONTROL,
-@@ -31,6 +45,30 @@ late_bind_to_xe(struct xe_late_bind *late_bind)
- 	return container_of(late_bind, struct xe_device, late_bind);
- }
- 
-+static const char *xe_late_bind_parse_status(uint32_t status)
-+{
-+	switch (status) {
-+	case CSC_LATE_BINDING_STATUS_SUCCESS:
-+		return "success";
-+	case CSC_LATE_BINDING_STATUS_4ID_MISMATCH:
-+		return "4Id Mismatch";
-+	case CSC_LATE_BINDING_STATUS_ARB_FAILURE:
-+		return "ARB Failure";
-+	case CSC_LATE_BINDING_STATUS_GENERAL_ERROR:
-+		return "General Error";
-+	case CSC_LATE_BINDING_STATUS_INVALID_PARAMS:
-+		return "Invalid Params";
-+	case CSC_LATE_BINDING_STATUS_INVALID_SIGNATURE:
-+		return "Invalid Signature";
-+	case CSC_LATE_BINDING_STATUS_INVALID_PAYLOAD:
-+		return "Invalid Payload";
-+	case CSC_LATE_BINDING_STATUS_TIMEOUT:
-+		return "Timeout";
-+	default:
-+		return "Unknown error";
-+	}
-+}
-+
- static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
- {
- 	struct xe_device *xe = late_bind_to_xe(late_bind);
-@@ -44,6 +82,99 @@ static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
+@@ -82,7 +82,7 @@ static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
  		return 0;
  }
  
-+static void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
-+{
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+	struct xe_late_bind_fw *lbfw;
-+	int fw_id;
-+
-+	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
-+		lbfw = &late_bind->late_bind_fw[fw_id];
-+		if (lbfw->payload && late_bind->wq) {
-+			drm_dbg(&xe->drm, "Flush work: load %s firmware\n",
-+				fw_id_to_name[lbfw->id]);
-+			flush_work(&lbfw->work);
-+		}
-+	}
-+}
-+
-+static void xe_late_bind_work(struct work_struct *work)
-+{
-+	struct xe_late_bind_fw *lbfw = container_of(work, struct xe_late_bind_fw, work);
-+	struct xe_late_bind *late_bind = container_of(lbfw, struct xe_late_bind,
-+						      late_bind_fw[lbfw->id]);
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+	int retry = LB_FW_LOAD_RETRY_MAXCOUNT;
-+	int ret;
-+	int slept;
-+
-+	xe_device_assert_mem_access(xe);
-+
-+	/* we can queue this before the component is bound */
-+	for (slept = 0; slept < LB_INIT_TIMEOUT_MS; slept += 100) {
-+		if (late_bind->component.ops)
-+			break;
-+		msleep(100);
-+	}
-+
-+	if (!late_bind->component.ops) {
-+		drm_err(&xe->drm, "Late bind component not bound\n");
-+		/* Do not re-attempt fw load */
-+		drmm_kfree(&xe->drm, (void *)lbfw->payload);
-+		lbfw->payload = NULL;
-+		goto out;
-+	}
-+
-+	drm_dbg(&xe->drm, "Load %s firmware\n", fw_id_to_name[lbfw->id]);
-+
-+	do {
-+		ret = late_bind->component.ops->push_config(late_bind->component.mei_dev,
-+							    lbfw->type, lbfw->flags,
-+							    lbfw->payload, lbfw->payload_size);
-+		if (!ret)
-+			break;
-+		msleep(LB_FW_LOAD_RETRY_PAUSE_MS);
-+	} while (--retry && ret == -EBUSY);
-+
-+	if (!ret) {
-+		drm_dbg(&xe->drm, "Load %s firmware successful\n",
-+			fw_id_to_name[lbfw->id]);
-+		goto out;
-+	}
-+
-+	if (ret > 0)
-+		drm_err(&xe->drm, "Load %s firmware failed with err %d, %s\n",
-+			fw_id_to_name[lbfw->id], ret, xe_late_bind_parse_status(ret));
-+	else
-+		drm_err(&xe->drm, "Load %s firmware failed with err %d",
-+			fw_id_to_name[lbfw->id], ret);
-+	/* Do not re-attempt fw load */
-+	drmm_kfree(&xe->drm, (void *)lbfw->payload);
-+	lbfw->payload = NULL;
-+
-+out:
-+	xe_pm_runtime_put(xe);
-+}
-+
-+int xe_late_bind_fw_load(struct xe_late_bind *late_bind)
-+{
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+	struct xe_late_bind_fw *lbfw;
-+	int fw_id;
-+
-+	if (!late_bind->component_added)
-+		return -ENODEV;
-+
-+	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
-+		lbfw = &late_bind->late_bind_fw[fw_id];
-+		if (lbfw->payload) {
-+			xe_pm_runtime_get_noresume(xe);
-+			queue_work(late_bind->wq, &lbfw->work);
-+		}
-+	}
-+	return 0;
-+}
-+
- static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
+-static void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
++void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
  {
  	struct xe_device *xe = late_bind_to_xe(late_bind);
-@@ -97,6 +228,7 @@ static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
- 
- 	memcpy((void *)lb_fw->payload, fw->data, lb_fw->payload_size);
- 	release_firmware(fw);
-+	INIT_WORK(&lb_fw->work, xe_late_bind_work);
- 
- 	return 0;
- }
-@@ -106,11 +238,16 @@ static int xe_late_bind_fw_init(struct xe_late_bind *late_bind)
- 	int ret;
- 	int fw_id;
- 
-+	late_bind->wq = alloc_ordered_workqueue("late-bind-ordered-wq", 0);
-+	if (!late_bind->wq)
-+		return -ENOMEM;
-+
- 	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
- 		ret = __xe_late_bind_fw_init(late_bind, fw_id);
- 		if (ret)
- 			return ret;
- 	}
-+
- 	return 0;
- }
- 
-@@ -132,6 +269,8 @@ static void xe_late_bind_component_unbind(struct device *xe_kdev,
- 	struct xe_device *xe = kdev_to_xe_device(xe_kdev);
- 	struct xe_late_bind *late_bind = &xe->late_bind;
- 
-+	xe_late_bind_wait_for_worker_completion(late_bind);
-+
- 	late_bind->component.ops = NULL;
- }
- 
-@@ -145,7 +284,15 @@ static void xe_late_bind_remove(void *arg)
- 	struct xe_late_bind *late_bind = arg;
- 	struct xe_device *xe = late_bind_to_xe(late_bind);
- 
-+	xe_late_bind_wait_for_worker_completion(late_bind);
-+
-+	late_bind->component_added = false;
-+
- 	component_del(xe->drm.dev, &xe_late_bind_component_ops);
-+	if (late_bind->wq) {
-+		destroy_workqueue(late_bind->wq);
-+		late_bind->wq = NULL;
-+	}
- }
- 
- /**
-@@ -174,9 +321,15 @@ int xe_late_bind_init(struct xe_late_bind *late_bind)
- 		return err;
- 	}
- 
-+	late_bind->component_added = true;
-+
- 	err = devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
- 	if (err)
- 		return err;
- 
--	return xe_late_bind_fw_init(late_bind);
-+	err = xe_late_bind_fw_init(late_bind);
-+	if (err)
-+		return err;
-+
-+	return xe_late_bind_fw_load(late_bind);
- }
+ 	struct xe_late_bind_fw *lbfw;
 diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-index 4c73571c3e62..28d56ed2bfdc 100644
+index 28d56ed2bfdc..07e437390539 100644
 --- a/drivers/gpu/drm/xe/xe_late_bind_fw.h
 +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-@@ -11,5 +11,6 @@
- struct xe_late_bind;
+@@ -12,5 +12,6 @@ struct xe_late_bind;
  
  int xe_late_bind_init(struct xe_late_bind *late_bind);
-+int xe_late_bind_fw_load(struct xe_late_bind *late_bind);
+ int xe_late_bind_fw_load(struct xe_late_bind *late_bind);
++void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind);
  
  #endif
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-index c4a8042f2600..3cc5fc0593b3 100644
---- a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-@@ -9,6 +9,7 @@
- #include <linux/iosys-map.h>
- #include <linux/mutex.h>
- #include <linux/types.h>
-+#include <linux/workqueue.h>
+diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+index ff749edc005b..734fe259600e 100644
+--- a/drivers/gpu/drm/xe/xe_pm.c
++++ b/drivers/gpu/drm/xe/xe_pm.c
+@@ -20,6 +20,7 @@
+ #include "xe_gt.h"
+ #include "xe_guc.h"
+ #include "xe_irq.h"
++#include "xe_late_bind_fw.h"
+ #include "xe_pcode.h"
+ #include "xe_pxp.h"
+ #include "xe_trace.h"
+@@ -550,6 +551,9 @@ int xe_pm_runtime_resume(struct xe_device *xe)
  
- #define XE_LB_MAX_PAYLOAD_SIZE SZ_4K
+ 	xe_pxp_pm_resume(xe->pxp);
  
-@@ -36,6 +37,8 @@ struct xe_late_bind_fw {
- 	const u8  *payload;
- 	/** @payload_size: late binding blob payload_size */
- 	size_t payload_size;
-+	/** @work: worker to upload latebind blob */
-+	struct work_struct work;
- };
- 
- /**
-@@ -58,6 +61,10 @@ struct xe_late_bind {
- 	struct xe_late_bind_component component;
- 	/** @late_bind_fw: late binding firmware array */
- 	struct xe_late_bind_fw late_bind_fw[XE_LB_FW_MAX_ID];
-+	/** @wq: workqueue to submit request to download late bind blob */
-+	struct workqueue_struct *wq;
-+	/** @component_added: whether the component has been added */
-+	bool component_added;
- };
- 
- #endif
++	if (xe->d3cold.allowed)
++		xe_late_bind_fw_load(&xe->late_bind);
++
+ out:
+ 	xe_rpm_lockmap_release(xe);
+ 	xe_pm_write_callback_task(xe, NULL);
 -- 
 2.34.1
 
