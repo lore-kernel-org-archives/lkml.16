@@ -1,167 +1,142 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2048.outbound.protection.outlook.com [40.107.212.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCD528C2DE
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 12:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633517; cv=fail; b=XZG0TkacPB6Z6AuVgdTfXG1Nu5TTnNK1fIXvcWgifLzCP/+WBAx0rZ7orjzQpm9XWfWYyNcYlTNmlS7Br395mHGFWfn1+o3Ec3iqhLMfoEZW5FnqdTOcONnhP5gbFVb1K69aOpIysdXzuLy1NxkpPltVRg6suQiIo4q3MeqgPlM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633517; c=relaxed/simple;
-	bh=kTA6pFvDITX7B0ol5AOnTP6fRiDF+42RI+3l5WCdreI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=khbtAgfi2H9QLyuE3qEioDstRocEQ4Ul7JIbYlCwbt1lcGiOGyoNetMwMKdZnODAxtXWd2rJkdKHyLcBHo8OVgGCXLy10ksxDKDYiTce1sSAQztUJJp5JkZn0bglxIJ2yEA2JK+GIopjegpUxyzjP/g+0CcbbJJ7i06GgZuJPbU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DRwuMiHc; arc=fail smtp.client-ip=40.107.212.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86A72D94B9;
+	Fri,  4 Jul 2025 12:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751633562; cv=none; b=TGP7otCtn/Jvv3mILeHJQmWhoN6zlOWLeK4cwmZc2PLvjnocY559KmMRAUREgROJJ81YqWuFIsXNAHUpWn/6O3rpL8kNjVLPU/JQ7OeWiTSCu0Ff4SgRTf/hWBX/9TMI9aCA2NrhZwquj6J2ALUx/UeYISAQVf00ldtgRJmtRGw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751633562; c=relaxed/simple;
+	bh=c0ayyYPG+6L6jSFBRrSSs/MMnb/OVuujyQj4eLgzJqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SxuiI41L5N8fN+pC6BLWc4NPdIBjhISv7d2sPdMK0T11PR9BlLlQDnzPcxuoFlYc2CaPTr9BGiTyPJIl2eDanu8mTlgx25i508iIvChuH5K5Qu0U84jncc9HQhmeIxjPypPzbLEqlLMOsyh27eUfTNCaqAdc3U8avgVxIOG822o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NljcD97H; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DRwuMiHc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PucQuk9DAoO9lza28Uj8e9mtPDcZ3AL7mdH+LhRgTad0LWsYTwP5gR5YZQIU2WiaQToQ9lYUkVu7Fe3lH218rZFl/6R7961tfNSVCqjaLWC4PuQ1Kebk6bw8ptDO9VpKcC+QRo4E/jFK42fGEW35t+HXISIexSCEt1tU5fLBPdyVyLAKNIEtbZkx/lF0gT6zzSYw+UteLCoBQETe/2+cIlLqFOeHxmBpK8GWfOAlQR3/dwhtkibHIuDSj4pzEWHUBa7LKLyIMHu9gt6bLXNBimkPv1uWOzkp6Cn6WI4q6ZfLR4V+1phD6lTU5KdOjtIIjo0wrp1aKOsGXynN7hGoXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OtO5MwsQeBWiwOvyAR1v7SEZ62OWgjcMS/uUKMko0RM=;
- b=Tad+kddJVP6F18vDGTNgL6tz8oan2TSjo6S+pEGHRc+t3ejLu0rm5YKx0vBK8iHMK8TGh7MFQ9V93/ZQpRMEleZ4duJiizq4NKzvi0JVDfJ+0uR+gnUkobY52+wMyagCr9IJ7QQL/vT2/FiI3yL3j5EbH4eagpIJkx3fBfGZg2SJTESKBMB8WnDbU8HP7oE4M4Gk/kyYLZ7gyBeZB0Z+IcXSefcYumFeZoypNtIa6ZMpVyBLlHj2KPyrfDY6Tp8wCRIECSqN17+5xFUS81xo5VF74DgHNSX8EipqqrfkDk6z85BbTgixilxZx3WFC2VtbvETa1gQ4FbOvzzppnb1cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OtO5MwsQeBWiwOvyAR1v7SEZ62OWgjcMS/uUKMko0RM=;
- b=DRwuMiHc1jY2aPU95+Y5cNoDeTq413l7A6ZnPLJE/QVdFPi5r1vpXMq3pR8D35qUV50oXHhixZYleYPTdKJxTpbcw80VEDOuj7g64T7/Pfe4saD+6JEzlGooZNyRonFeV4B2Wvv3ECy3P1W35WSAFvwFaxHgGisDfMimnTTYIv+F1FEexcHKISWCBpqK1gdfBmZ9KzDQza2LwlatartXcCOtAPDVX+2VX/+FAT6/wnRSj+a5MWNGvi8vAEDWR8HBWi+zD01NmmDTBFOvTJh/Cshzk03UUv1xnACB7OE40Z9ZFgB6OznqZmY7Ng8iw9NTBtekBfFUGue8wCIUZKsldA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SJ2PR12MB9238.namprd12.prod.outlook.com (2603:10b6:a03:55d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.37; Fri, 4 Jul
- 2025 12:51:53 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Fri, 4 Jul 2025
- 12:51:53 +0000
-Date: Fri, 4 Jul 2025 09:51:51 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	"open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iommu/amd: Enable PASID and ATS capabilities in the
- correct order
-Message-ID: <20250704125151.GL1209783@nvidia.com>
-References: <20250703155433.6221-1-eahariha@linux.microsoft.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703155433.6221-1-eahariha@linux.microsoft.com>
-X-ClientProxiedBy: MN2PR14CA0030.namprd14.prod.outlook.com
- (2603:10b6:208:23e::35) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NljcD97H"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0dd7ac1f5so170559966b.2;
+        Fri, 04 Jul 2025 05:52:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751633559; x=1752238359; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Fnp24A+F18p2VXKqfxoHkduyIpuB09MSbIN1sn/af0=;
+        b=NljcD97HfTSvJ9Vpit4R2M/dFIdoi6V15h5hdxNZtwb+NJIiEO3rVZ2mqApODpXmvf
+         OWbePds1hmLEV8Yvb8HU0thiHqf+9jWwX52eTHc1h+/ovHtXQuKVpX3m7fKmtuLYdsEF
+         tbmNyr7YofJzH50BI5txczXSl9a4fIlyznOJhNb57jyOF8EWEqff5a6bBBCpoNpnxA7J
+         dp+nDJOJo0aaKjJoVopVNA3mvCLqyJ8PPO6hQYAEr8I9UmSV7BZi0xcgRe7pF4JtGFPF
+         VIhscRQlyUw2v9dxslQMVjhcu6b8NyItLeZvNsQ0uplBB9wpXGeB2iHg2Pj4AWVG/OBI
+         L6+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751633559; x=1752238359;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Fnp24A+F18p2VXKqfxoHkduyIpuB09MSbIN1sn/af0=;
+        b=pIifS7Qu+e9iUUfqq/+kV/nTHzRytHr0BQbrwcTiWjI+42HgZ5aG2tbttpbRVkEkqq
+         7opzf8wcm99i4EqEjHsbTfe2ecXPI6SqC+45as4YpC2nA5wdgad071HY9OJKQk/e3J+p
+         JjbXTd80y2Ww1K+6jo/3BnOPKsC2I0JaMdpAaNhV/0byYCTJ3PV2iOO9b/Q+NY0uhzCm
+         4M8it/PRB78D/hsDZXrgwQOptL4xCprZfxmR3hBT/0LE/UMEKzgWmhe5R2AfkV+nNrsr
+         f0Y+8+Xz4ACu/4ZI5WyIrnVI+nZnZhL+mwkx/h6k2VbkuNH19fowyeiW342izwDNv2va
+         4Jjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU02lY3o5TSdtJeZ3Szf/59mUeCz4sv1/SrphnmtwfOztpPRKhd5mfvzHrqgjiird04qDRgZ6qVNL7gqWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH3U/U1KR54f5gNKDjxfAvOi/OSMTBXeIDxE1F9VXM4Rxdslb4
+	xsOFabdRoYPjBWbd4tPuE4lGO4Z8JIGSeb2GRvLjQCV/kbvZ5GtF95ffos0zCunb2dmUFg==
+X-Gm-Gg: ASbGncvJi3vPnFBSy3nNJI8O+hd46bQ0XyyLkgpqGfxINjd44i0qCCcTWDqsK2aGKAa
+	312XwMfGOhlYtY+6g3z0IY6LqoaMyj/j9zAQc7dwCad7n5IeKKAch4te2MFMLDbtgaiYGWvmrHa
+	OKl9xusVBTI1TeDS7BLlemjQhT2nKhSMbCXsuowOxXPXm96Ct1oOdlbrd9wTPjgKKHLdK9qSBim
+	56plTkHet2JQANWyyFy+sYM2qfY0XQ32jHhhT243hgW5GtspJN/8wAEFnldCieMKpwyxsisFQCl
+	+QSXP+XlX1PtKsycfBjSDuMVpYDD8fKTs5VHIPNBjiXIHjrNFIR4aTpcFmwUuD+vv5XUHN/cJMz
+	rTo584iOmRC34m26y3gPdA/CHiA/e2PaCpgpOs6lZOSPuivLmJmS/ciJh11zy4g==
+X-Google-Smtp-Source: AGHT+IFVmbHZUSILaEE/lAxcLbnmzBB8SiuydGw2FFP3jin7eyGZLSoBl6WUDvTGJQwVu3yzJWY5cg==
+X-Received: by 2002:a17:907:7249:b0:ae3:6708:941c with SMTP id a640c23a62f3a-ae3fbc2c1e0mr236415266b.6.1751633558609;
+        Fri, 04 Jul 2025 05:52:38 -0700 (PDT)
+Received: from legolas.fritz.box (p200300d0af416e00eb84418c678abf7e.dip0.t-ipconnect.de. [2003:d0:af41:6e00:eb84:418c:678a:bf7e])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b64f5asm166346066b.162.2025.07.04.05.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 05:52:38 -0700 (PDT)
+From: Markus Theil <theil.markus@gmail.com>
+To: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net,
+	akpm@linux-foundation.org,
+	Jason@zx2c4.com,
+	Markus Theil <theil.markus@gmail.com>
+Subject: [PATCH v2 1/4] prandom: add usage comments for cryptography
+Date: Fri,  4 Jul 2025 14:52:30 +0200
+Message-ID: <20250704125233.2653779-2-theil.markus@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250704125233.2653779-1-theil.markus@gmail.com>
+References: <20250704125233.2653779-1-theil.markus@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ2PR12MB9238:EE_
-X-MS-Office365-Filtering-Correlation-Id: c8c69bed-3d8d-4e92-29ce-08ddbaf98cca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zrTgHVbKDxpHlAoPgfdjbwlxve3oZ1Cp5hOsV8LgcotDvwXMdQ7J11zcLven?=
- =?us-ascii?Q?ijerPS9s3kS8Ill8wZ0V2O7mAOgjQnqVRYAx6GirlRfoMJIPtH3URbaIXvin?=
- =?us-ascii?Q?JAvOlKNaBjVXYkQc5JRtXDYC85JcbNaxK/nCZPqwjIkoTAnWX3tcS0hgywAi?=
- =?us-ascii?Q?dd4lAYHgs9h7zMDwi5ZrTp6fyc/z4ualRuhqEvWTWuTdJ5OGvy+9R1qOZu8e?=
- =?us-ascii?Q?jCgD09572kTKlxES9fpweaUTbN4SXmd46Vp9q0LLt1u+r7KJlgd8xpnPuRFb?=
- =?us-ascii?Q?D/6suaLNaPob9hEEXNOiIBSoORCOFXUmwusTJ3dYID7s3LWIuBsRt1BMecw+?=
- =?us-ascii?Q?E41g83Ner/9lUa7+lq2MqSPcFP+ELWuXFyQquKYcijVqIS1eKeI6OYi5i3Yn?=
- =?us-ascii?Q?dJxicjAbeesQhYexvnIlqbUoKyTbUgEj1AvIA/57sWRQ0U6hDt5XcqIzTG+g?=
- =?us-ascii?Q?LV5mi1ln4qRrhChYGP/ki+kBst27oWUaGtj6wgP92lYigXfgGIxTebbtwjAj?=
- =?us-ascii?Q?dlWYRLIKqrohDA8P2U/PLHJqYRefhl4wBSg8L3gYt+SIz9qR0aMetj+ebvku?=
- =?us-ascii?Q?X66xtun8q0NgCVmYUeN8Fjn51yIZmX5+7Z119i2pBm75UKd/vydeeXoFtCeK?=
- =?us-ascii?Q?cIhV/GCpPzNeH/RVMqP1NO5uXCawQfJptZ1NVGWSX/WfQSQZHvODBVNwAmgm?=
- =?us-ascii?Q?nONKVEGHoq7wD2mzhxuJPdPulcTrzTg88IbWYVD61HKzOSMkSJ4dirbqysV/?=
- =?us-ascii?Q?7Osk3MSrGnJf446tAyRfXFHoVlU7JNej6G9pc91A3VGGoaU0J2Ftwf8/xt7i?=
- =?us-ascii?Q?0pNg7ULttpdsylcdzvqAUbKRjN5UH8ZR0cg0V9sL/zbEP4yRIlbBrRRosQdz?=
- =?us-ascii?Q?fyDQQpvA88+7O4otKzLtkT/X3BKB9LgkafuXPaZZanwPSTszutjNJJJG7ve3?=
- =?us-ascii?Q?IijmV/vvgsqOozxsZraczePQdwr/cYHsSc2YVhsjyVumchTQ27BsI6u24WCD?=
- =?us-ascii?Q?W1A6GCwagTUlPYDqEn1hSKeKMtkfZItwjSx4ahEjhGdGej/ucQZi1VErmMDC?=
- =?us-ascii?Q?geRQa9wRB+SoYdM92cHZkG7g01hkDStxQf/JQUMgYCP/pNkMXCE8rByKW903?=
- =?us-ascii?Q?biWaLD1rcc16zWTST8FSREqL9pL9cbernfuogJVPGjrVxiBx+DiYUt66nWag?=
- =?us-ascii?Q?JwGanVf1ewBOKq84Zel0w2bZc6HG75l00aQ4fRGOYVGvXQpCTS9ZafEaa92m?=
- =?us-ascii?Q?qw42DsoGeF0FyHAKtfTw15NE6xZrCem9lDYXmfCxU0CNjx07QXfIVIeQwGYQ?=
- =?us-ascii?Q?NDfCnjz20jgPMmuZEdEHc/ANF+VembHTfmR8nYRfdsWTf+Q7YoUR/FqQddxr?=
- =?us-ascii?Q?wagRITaALk8MYdIecuKUPSbhrW82J+zt7NxmOmvsk36601p0GS5mNSEBZ4HJ?=
- =?us-ascii?Q?x6pXLKeohy0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KvMGwlmeYgYv/7WAL0J9Zt5Pouvdf5FsNjHMqSbDH21BcjArlR9wmpSIU5o1?=
- =?us-ascii?Q?tpaK5z2NKfj94jtd2/3k1iPodELQqjs4yKU9NWJ700maK2oyIFuY2LDbc/Kd?=
- =?us-ascii?Q?WS/3+8mUOtaSNYVkXqEJc0q+1+ypb5o0iJKV6RciyW2VXRb/DizXAsg6CzTH?=
- =?us-ascii?Q?c4bgEBPyzDAliZurPZ12RGYqnAMeNuz91ndqccGWQQzg9z1sXF1dMHKesKvy?=
- =?us-ascii?Q?oiCMkjmwCyMVYZhyR97V715Vh8iiLJ0feP6B73Slahj4lXd2c1QQDta2vxq5?=
- =?us-ascii?Q?BO6Cn4y4dWwzoycj/OX91hC/KCgqqrSK5BqRIg9HHnVLsUsnQPZYAAsvWWS0?=
- =?us-ascii?Q?vcvvSYp+z6vz1VIZqBAl20Q+luJ/qCKmSMagFqWsPNulwoVMhemt9JiG1Svq?=
- =?us-ascii?Q?MhT6CjtL/U+qkyFkZ7lUD2XkkCwMwOVER8ZG/BAYxvErdNLmebdGXuB9IKF8?=
- =?us-ascii?Q?GiLozLKAgSWfMBfTflOYXIW6Yo90RrdjvoY0PIa/O1Hn7gcTmiDVXzDDHFrI?=
- =?us-ascii?Q?uPQ/amI6PTWLs1LYIBQcOSrevJLk4/8+FbFCK6zhQK+BWGZfIzix15hEuaii?=
- =?us-ascii?Q?cAJMNPrCLxqp8Odhiin0LMOakXtcTKgwCN8ZM1l+N/f7JmsdAxO7Qasd+YfF?=
- =?us-ascii?Q?WRw3jPDvXr7qefCvEKhgRLsSjIhey+epbof0g3guSdY7IV2h3XPXCZiAQY0K?=
- =?us-ascii?Q?wl7xzk6TyNXpKhSHMD92TkQLM/rGYs85RS4/6tvCYrEiosSFH/SzNwoZqTrE?=
- =?us-ascii?Q?3rra8aTJSjf99Pnx+HyPtLwKuW373zheEkw/6gz3+Q0vli64bCSihwr8m6YM?=
- =?us-ascii?Q?tOHYPUmwmjdAKWMnCNCrwOHL59/tOdl2jCDSct+rGjYtg0kEGy/9Q4R/7G5k?=
- =?us-ascii?Q?n0r1haEKz3rpb78PbrJq/dwo177kOhTyLDPZFS05tM7fZ8de6GAl8upksGJK?=
- =?us-ascii?Q?3/ya8NJ6Eu4ueNOpTJ/ZBHaHwaYlruVmY4oWemMLRrJVVFHbTN2HlQLGC571?=
- =?us-ascii?Q?SePRmjJbojE0xFTKYeQUo4aFSdTYFMxl5SzloyisoyEIhoo8IvWy/nuxZBEb?=
- =?us-ascii?Q?vSv0GWoEVtrHgUGY/5c/R6+TZGCiZH42hWABTPsYMqI8pzy+fY0sav3gtImm?=
- =?us-ascii?Q?B/A0oOcTZNLIrmKxoVTXulJqx23VjYwJHkULyF052lOHIQk+eVuwF6JIL+cX?=
- =?us-ascii?Q?Usyxtk38aG6arzfowtKYoCV5ghMTbsEpbE1AkJGHQ0Od4C5A5D/MqvbPlIJ9?=
- =?us-ascii?Q?HqXKiNtPFbAyHH/6GSKpLAsSyszWQ0TRrt91P50E3DeKZ6tH0YsSiNIYgFwo?=
- =?us-ascii?Q?XHh07LY2iWn7fVPYWVbuliyO1yYZ6mttcJPuOBx1FUJygwBT6p7JbvvyAf/X?=
- =?us-ascii?Q?3/ng06M1wGfZSndZB9/XPmUMIkJRn7mgkRUR4qElXosMvDni4VdQFFHPXJ2w?=
- =?us-ascii?Q?Vy/GlbQngIx8pfnoTDNf7kBsXmxk/uOUh3X7QL2ROP5EyX+KY12UujiZ0mLI?=
- =?us-ascii?Q?CW7WACfBgCYoMrRM8bMyHa7/CJ3XcMWa+YgYu+476je6jkTLuiwoHAT4fsgG?=
- =?us-ascii?Q?337CPOr4csu/OX6LAmYvRo3RUt/vMLEHP6bdrQz2?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8c69bed-3d8d-4e92-29ce-08ddbaf98cca
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 12:51:53.1426
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uqCJVC8l5WMO+9RwDh3OqiJ0tECvxga0fIDZTjG8xomtPOdPw9qYb7jqxrYGWXFf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9238
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 08:54:33AM -0700, Easwar Hariharan wrote:
-> Per the PCIe spec, behavior of the PASID capability is undefined if the
-> value of the PASID Enable bit changes while the Enable bit of the
-> function's ATS control register is Set. Unfortunately,
-> pdev_enable_caps() does exactly that by ordering enabling ATS for the
-> device before enabling PASID.
-> 
-> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> Cc: Vasant Hegde <vasant.hegde@amd.com>
-> Cc: Jason Gunthorpe <jgg@nvidia.com>
-> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-> Fixes: eda8c2860ab679 ("iommu/amd: Enable device ATS/PASID/PRI capabilities independently")
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->  drivers/iommu/amd/iommu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Make it more explicit, that the PRNG must not
+be used for cryptographic purposes.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Future code may also check such things in checkpatch.pl,
+but it is probably hard to differentiate valid testing
+code only by looking at paths. Therefore this is left
+out here by intention.
 
-The other two drivers look like they do it Ok.
+Signed-off-by: Markus Theil <theil.markus@gmail.com>
+---
+ include/linux/prandom.h | 2 ++
+ lib/random32.c          | 6 ++++++
+ 2 files changed, 8 insertions(+)
 
-Jason
+diff --git a/include/linux/prandom.h b/include/linux/prandom.h
+index ff7dcc3fa105..63d1fe4b30c8 100644
+--- a/include/linux/prandom.h
++++ b/include/linux/prandom.h
+@@ -17,7 +17,9 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
+ 
++/* WARNING: this API MUST NOT be used for cryptographic purposes! */
+ u32 prandom_u32_state(struct rnd_state *state);
++/* WARNING: this API MUST NOT be used for cryptographic purposes! */
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+ 
+diff --git a/lib/random32.c b/lib/random32.c
+index 24e7acd9343f..c808745a4b53 100644
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
++ * WARNING: this API MUST NOT be used for cryptographic purposes!
++ *
+  * This is a maximally equidistributed combined Tausworthe generator
+  * based on code from GNU Scientific Library 1.5 (30 Jun 2004)
+  *
+@@ -48,6 +50,8 @@
+  *
+  *	This is used for pseudo-randomness with no outside seeding.
+  *	For more random results, use get_random_u32().
++ *
++ *	WARNING: this API MUST NOT be used for cryptographic purposes!
+  */
+ u32 prandom_u32_state(struct rnd_state *state)
+ {
+@@ -70,6 +74,8 @@ EXPORT_SYMBOL(prandom_u32_state);
+  *
+  *	This is used for pseudo-randomness with no outside seeding.
+  *	For more random results, use get_random_bytes().
++ *
++ *	WARNING: this API MUST NOT be used for cryptographic purposes!
+  */
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t bytes)
+ {
+-- 
+2.49.0
+
