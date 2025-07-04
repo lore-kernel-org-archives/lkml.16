@@ -1,41 +1,41 @@
 Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C590C2D876F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58A42D780F;
 	Fri,  4 Jul 2025 12:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751632491; cv=none; b=Hpiy42XXVAhasnYtZTibeah5BtcIEKxP2dCPgBNUkRIpc1q4SK3zmPpj4wkWgwpN1VXYqVuHDLoYiYseeU+JDAb4575S6ZgfrvmLWNzjndQ9Sk6yDk/DuZe0vFYccmZ96Ur86DzGzn0gFxWKPwbQ7IC1LtQ4mTTJmVLegchMVOI=
+	t=1751632492; cv=none; b=JXaO9PR1CaZDfHVpKYjfE+6vpZqYFYU0LsTuiJRnlIeSak42tVEV2uQCrJR2rgQxwPm122pcpSb3gp1v0AYCVRWtQdtqmbi3VZ3bctugEQ8wM5JhOZzWDLLl12Nm5U8lxO3QG9g9KwF5YAgrE9qEsfzm8OPqRRxZO+4/ghzeCrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751632491; c=relaxed/simple;
-	bh=5Tas9+eQ6WOuKWE768dbMyplk9/e25+akoD7xZlU0bQ=;
+	s=arc-20240116; t=1751632492; c=relaxed/simple;
+	bh=OvquuHVICDQ9XundXMM5947JvWF+4DgoayME0Jx/qJ0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O0u/7begjFMrxoITb66biXx38WtnMROKrdVTj8nea3UC+hQav//0PZtueO/LCrir4l9UxJtQxq6oG3KAR5x0Me02ylf6gTB0+Oc1OfwiEZJslwvdqhdIhAlych025rEjasyWgzPqMwoKcHHx5JmzXpYoAuXbChFny4L/DT1oWB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LHUToJCj; arc=none smtp.client-ip=217.70.178.249
+	 In-Reply-To:To:Cc; b=sUnzI7tgGWDB95ZIStKStthxoQSms2Ek5Ag/vt57VcIb3J675mzOyWDFpx218C9pVfV/ndgJj5XuL1n7r1SMbHaN8GCzqdwlllGV/yYGSkzPAd1KuuuI3ijYBC8cm9m4SKreMwMv5jTqqpqtnk4DeyrNA/fE+yq4zMa1Ya54+Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I2NU57WR; arc=none smtp.client-ip=217.70.178.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LHUToJCj"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I2NU57WR"
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id 9DA9A582F8E;
-	Fri,  4 Jul 2025 11:47:18 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BF04D205B2;
-	Fri,  4 Jul 2025 11:47:10 +0000 (UTC)
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 8CEF8582FC8;
+	Fri,  4 Jul 2025 11:47:19 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 029AC1F433;
+	Fri,  4 Jul 2025 11:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751629631;
+	t=1751629632;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GoiwShPkk8gSyNHjpMAydVKBu25Rjqwdofoj4nra1qU=;
-	b=LHUToJCj3HiybVWWr6VHQN81Y0aa/sAGOpVu/uD743l/Rx4qb/Ld4y8PjmIfVnvjWeiFp+
-	sKUlldRImTwbF32//KXY+W0o0+pOXimYMdgeWy5y26dbdFTiNXd4cwgdG2yLGIUidIPYh1
-	3AYdwkXV216o6/psh32H5bKszRULvIBz6r6CBaIYIWX5YAjkthmTR4H3egykySyqeoSuwR
-	+nVVIssmMqlZfLMRdkmDksXU5bYRz+QuRpOzcDPJLjHAzZMkFKfPYnKEe04AtPCJU9RQlz
-	IdWFtZWk0XF1SCAl4snDZlGACGhB3Zi0H+tRQBahPOpDYpEhhxJzZEhEvqX0cQ==
+	bh=TBz2O02Tt4mWeplOHbeNiFeXMoyO2YXfDzvyEphZrEY=;
+	b=I2NU57WRV/5ZwcQyU1TiL6jD76BY4z3K6ljjuhSLWFwBHcHrs+sdxaTwmqx6939wyCpU7P
+	TQFrlHPX0zAVP+ziuRUgfrq+usBwivCE5j+yl+KY5UyCdwloE7kWpdOyXWoNzfCLJkqOcY
+	z9xyzANk0C3Uz2FGqiA1JfbruGqUWurTLrnvQHOnNfuofEg1q/MAY9e9hh1gU1b+d2rkM9
+	mQhb84OEtESzeB7Wj4pPubrThXJPcN7iHgTMTSP7tl0zVoa2K1QwmXckP2WjqQ3IG4SMtU
+	ELyEVLo3EmtXojTyET/FQR/0Q4TiVFPGBaEBVk2l1NzMtThr5AkH/tS63cWevw==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 04 Jul 2025 13:47:07 +0200
-Subject: [PATCH 2/6] MIPS: mobileye: eyeq5: add 5 I2C controller nodes
+Date: Fri, 04 Jul 2025 13:47:09 +0200
+Subject: [PATCH 4/6] MIPS: mobileye: eyeq5: add two GPIO bank nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250704-of-commits-v1-2-dc2006bf2846@bootlin.com>
+Message-Id: <20250704-of-commits-v1-4-dc2006bf2846@bootlin.com>
 References: <20250704-of-commits-v1-0-dc2006bf2846@bootlin.com>
 In-Reply-To: <20250704-of-commits-v1-0-dc2006bf2846@bootlin.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -55,115 +55,64 @@ To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Andi Shyti <andi.shyti@kernel.org>
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfedtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpefvhhorohcunfgvsghruhhnuceothhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleevhfekueefvdekgfehhffgudekjeelgfdthedtiedvtdetteegvdeileeiuefhnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemieeigegsmehftdhffhemfhgvuddtmeelvghfugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemieeigegsmehftdhffhemfhgvuddtmeelvghfugdphhgvlhhopegludelvddrudeikedruddtrddvudeingdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughirdhshhihthhisehkvghrnhgvlhdrohhrg
- hdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtrgiffhhikhdrsggrhihouhhksehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvfedtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpefvhhorohcunfgvsghruhhnuceothhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleevhfekueefvdekgfehhffgudekjeelgfdthedtiedvtdetteegvdeileeiuefhnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemieeigegsmehftdhffhemfhgvuddtmeelvghfugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemieeigegsmehftdhffhemfhgvuddtmeelvghfugdphhgvlhhopegludelvddrudeikedruddtrddvudeingdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtt
+ hhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add the SoC I2C controller nodes to the platform devicetree. Use a
-default bus frequency of 400kHz. They are AMBA devices that are matched
-on PeriphID.
+This platform uses the same GPIO controller as Nomadik. It however has
+its own pinconf & pinmux controller. EyeQ5 is the first platform to use
+gpio-nomadik independently from pinctrl-nomadik.
 
-Set transfer timeout to 10ms instead of Linux's default of 200ms.
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- arch/mips/boot/dts/mobileye/eyeq5.dtsi | 75 ++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index a84e6e720619ef99e1405ae6296d8bad1aa3fa23..b9b6f2684e675020d0377147a04d7ad5bfc272c1 100644
+index b9b6f2684e675020d0377147a04d7ad5bfc272c1..b8df7906231d065032b12d0ffdc93a75c8f3e822 100644
 --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
 +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -110,6 +110,81 @@ soc: soc {
- 		ranges;
- 		compatible = "simple-bus";
+@@ -253,6 +253,36 @@ timer {
+ 				clocks = <&olb EQ5C_CPU_CORE0>;
+ 			};
+ 		};
++
++		gpio0: gpio@1400000 {
++			compatible = "mobileye,eyeq5-gpio";
++			reg = <0x0 0x1400000 0x0 0x1000>;
++			gpio-bank = <0>;
++			ngpios = <29>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SHARED 14 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&olb 0 0 29>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			resets = <&olb 0 26>;
++		};
++
++		gpio1: gpio@1500000 {
++			compatible = "mobileye,eyeq5-gpio";
++			reg = <0x0 0x1500000 0x0 0x1000>;
++			gpio-bank = <1>;
++			ngpios = <23>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SHARED 14 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&olb 0 29 23>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			resets = <&olb 0 26>;
++		};
+ 	};
+ };
  
-+		i2c0: i2c@300000 {
-+			compatible = "mobileye,eyeq5-i2c", "arm,primecell";
-+			reg = <0 0x300000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 1 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>; /* Fast mode */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&olb 35>, <&olb EQ5C_PER_I2C>;
-+			clock-names = "i2cclk", "apb_pclk";
-+			resets = <&olb 0 13>;
-+			i2c-transfer-timeout-us = <10000>;
-+			mobileye,olb = <&olb 0>;
-+		};
-+
-+		i2c1: i2c@400000 {
-+			compatible = "mobileye,eyeq5-i2c", "arm,primecell";
-+			reg = <0 0x400000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 2 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>; /* Fast mode */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&olb 35>, <&olb EQ5C_PER_I2C>;
-+			clock-names = "i2cclk", "apb_pclk";
-+			resets = <&olb 0 14>;
-+			i2c-transfer-timeout-us = <10000>;
-+			mobileye,olb = <&olb 1>;
-+		};
-+
-+		i2c2: i2c@500000 {
-+			compatible = "mobileye,eyeq5-i2c", "arm,primecell";
-+			reg = <0 0x500000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>; /* Fast mode */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&olb 35>, <&olb EQ5C_PER_I2C>;
-+			clock-names = "i2cclk", "apb_pclk";
-+			resets = <&olb 0 15>;
-+			i2c-transfer-timeout-us = <10000>;
-+			mobileye,olb = <&olb 2>;
-+		};
-+
-+		i2c3: i2c@600000 {
-+			compatible = "mobileye,eyeq5-i2c", "arm,primecell";
-+			reg = <0 0x600000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>; /* Fast mode */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&olb 35>, <&olb EQ5C_PER_I2C>;
-+			clock-names = "i2cclk", "apb_pclk";
-+			resets = <&olb 0 16>;
-+			i2c-transfer-timeout-us = <10000>;
-+			mobileye,olb = <&olb 3>;
-+		};
-+
-+		i2c4: i2c@700000 {
-+			compatible = "mobileye,eyeq5-i2c", "arm,primecell";
-+			reg = <0 0x700000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>; /* Fast mode */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&olb 35>, <&olb EQ5C_PER_I2C>;
-+			clock-names = "i2cclk", "apb_pclk";
-+			resets = <&olb 0 17>;
-+			i2c-transfer-timeout-us = <10000>;
-+			mobileye,olb = <&olb 4>;
-+		};
-+
- 		uart0: serial@800000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0 0x800000 0x0 0x1000>;
 
 -- 
 2.50.0
