@@ -1,109 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C1A22DF9E;
-	Fri,  4 Jul 2025 08:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C4E286893;
+	Fri,  4 Jul 2025 08:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751619173; cv=none; b=m50hDBnw89I+iz1WodgbTssBITEujTenAc9pNQUj4ilpNM+3XHewduVjuwoZ1aBTjcz683PwwXp9m1W+BzjK3/CmpwErwdPQC51Q7XTuKch7unOx3QZC8Ff4y0ENctQ+A/Z84+LD51l+vpCwiw/Xt7HQhWOXFyKmbEnl2MEnqvg=
+	t=1751619268; cv=none; b=Rvn970V9ZpVGHKQaHIZozz0xIN/4VGqpVLe/7ooSK/ViYnljl4lHRpBrs1LLQ4UkLjvO4CalF+/MD/AwwSTXKPzKNjJNiCCNH96zvvXHiU0rIgH2PaCnjRzMJYVbNDnq9HT0qoFc6GVFC+B7seJ4sSw7yxe0dkRI0LlajBlHVrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751619173; c=relaxed/simple;
-	bh=DW6ZZg7OqmfmNQY4yfB0bhS9zFryDvFWDls1s/E6PpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mc8xLOuB7FGjscaBLzJScZlY9pCi3DqYjN1PvsedG+8OI/Dca1ht4SAf/AyOVk9qKtUyo3th5UrlQ0bkbekF0629aQ6uHgQRFjVWLCMtwelaDsFbJfZtFz9gBp+/TxPG/G79t560sS9an+1eNayXqrn4IBMoA4/PzFFcL4y6+fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/d0hYb/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751619268; c=relaxed/simple;
+	bh=uz/zicClKa77WCJ3YsL+10TMEVpskxKUqb8kUyLUeUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=chVLzR8REk13iQkfe7KVxc6LmFZf4LRpGOiuya6P8siXmix1ghh2+OFYcjB+DUxHEpQDrZlHrCFHM6CxSjdcajX1X+QcH6lTiCLTsDk1vVJmdjy5SMNhUMsNJyL+ve61ZwSR63p8Tx85EvdGuMBFD5AmAUVpG6vupanq5nG0ijk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=htj2+znE; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/d0hYb/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A4DC4CEE3;
-	Fri,  4 Jul 2025 08:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751619173;
-	bh=DW6ZZg7OqmfmNQY4yfB0bhS9zFryDvFWDls1s/E6PpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P/d0hYb/Fs3sF9qfGqEbKMwGxOobdAyP8B5XQ9OPbNP58vYJuonHTl72lXpspxIRJ
-	 cQb8GaO7vUvDY8dYI0Dql+UBXrDzIGbHGf5m/PVKTAc7zSu6OW9cfoBbqyJ+qQfvNi
-	 +N11mLRlJBQrGWCwDgvTb4yNPUU0rS6W9hKBAwq3GZAlYaCPKymf9HtqxJ+gpANOPH
-	 HAeXNpoV7R2P9ouFzG6KXkBI0OWdLlui3PcG7eB5+3uk18rWG7mwC8Q5RhUuQ40p0A
-	 KSJUCi/BqdmG6wKZq6t7uei6N01xLx4+arywBe+AtcZhiHCceRl+Ww0sv6cXOvXRje
-	 xw1CD4wwYCGiw==
-Date: Fri, 4 Jul 2025 10:52:48 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	djwong@kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
-	kernel test robot <oliver.sang@intel.com>
-Subject: Re: [PATCH] fs/xfs: replace strncpy with memtostr_pad()
-Message-ID: <y5d46toqsrrbqfxfioo5yqo532tzqh3f2arsidbe4gq4w3jdqp@rktbxszwtsbh>
-References: <nrq9MPwFBIHZRQzC6iAdiUz7uvBdbqKNxdfM8Jus8lTDZCwtPkFMjtJ1V5mkcpX0YX34TYNOddSEOgsXngLtHQ==@protonmail.internalid>
- <20250704072604.13605-1-pranav.tyagi03@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="htj2+znE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751619231;
+	bh=ZCHo5NqU7SbFbU/bIDHFUIZHzFSRaHBIyId8HLH6J94=;
+	h=Date:From:To:Cc:Subject:From;
+	b=htj2+znE2moaKwfLr3/jSMjySprOWUM5D5+4etRUaCDntPL3sDpIdSPukXC3HUfZt
+	 mb8lQnb9d5R1k7/VJdtd5UVkVPhzyoD45pk7g3xpeCfuW0goEJcNL+ruOnGRrTCttE
+	 L+lZGNeazzJADta2Pxd5xM6+Hu0kB8SHbfRSHOKTv2VQXjOJdOMRgdKtlWp+Z/lEOJ
+	 tYZeX+NduwLW4t/RahpRJimceXxVL9sj5C44sGH+T5r5tW5CMa1JfWdaQ0s//Tx9Nm
+	 wCWEBbx3P5Q8PDVhgRE1iWOPpbqpvOHJ2FfFcP5rYd5TxlT/mAAqMUyCxyhK9i7YDU
+	 ZGR7ZkrP8edaQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bYS996v79z4wxh;
+	Fri,  4 Jul 2025 18:53:49 +1000 (AEST)
+Date: Fri, 4 Jul 2025 18:54:18 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: linux-next: manual merge of the gpio-brgl tree with the devicetree
+ tree
+Message-ID: <20250704185418.3e7599c2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704072604.13605-1-pranav.tyagi03@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/LB=LD9kpseukT9DZ2hcfXt5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Jul 04, 2025 at 12:56:04PM +0530, Pranav Tyagi wrote:
-> Replace the deprecated strncpy() with memtostr_pad(). This also avoids
-> the need for separate zeroing using memset(). Mark sb_fname buffer with
-> __nonstring as its size is XFSLABEL_MAX and so no terminating NULL for
-> sb_fname.
-> 
-> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202506300953.8b18c4e0-lkp@intel.com
+--Sig_/LB=LD9kpseukT9DZ2hcfXt5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Pranav.
+Hi all,
 
-Please Read the kernel-test-robot email:
+Today's linux-next merge of the gpio-brgl tree got a conflict in:
 
-"
-If you fix the issue in a separate patch/commit (i.e. not just a new
-version of the same patch/commit), kindly add following tags...
-"
+  Documentation/devicetree/bindings/trivial-devices.yaml
 
-Those tags shouldn't be added here as you are not fixing anything, your
-previous patch have not been committed.
+between commit:
 
+  4fb2210866f7 ("dt-bindings: trivial-devices: Add Analog Devices ADT7411")
+
+from the devicetree tree and commit:
+
+  e65e2b0d0f7e ("dt-bindings: mfd: adp5585: document adp5589 I/O expander")
+
+from the gpio-brgl tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
 Cheers,
-Carlos
+Stephen Rothwell
 
-> ---
->  fs/xfs/libxfs/xfs_format.h | 2 +-
->  fs/xfs/xfs_ioctl.c         | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-> index 9566a7623365..779dac59b1f3 100644
-> --- a/fs/xfs/libxfs/xfs_format.h
-> +++ b/fs/xfs/libxfs/xfs_format.h
-> @@ -112,7 +112,7 @@ typedef struct xfs_sb {
->  	uint16_t	sb_sectsize;	/* volume sector size, bytes */
->  	uint16_t	sb_inodesize;	/* inode size, bytes */
->  	uint16_t	sb_inopblock;	/* inodes per block */
-> -	char		sb_fname[XFSLABEL_MAX]; /* file system name */
-> +	char		sb_fname[XFSLABEL_MAX] __nonstring; /* file system name */
->  	uint8_t		sb_blocklog;	/* log2 of sb_blocksize */
->  	uint8_t		sb_sectlog;	/* log2 of sb_sectsize */
->  	uint8_t		sb_inodelog;	/* log2 of sb_inodesize */
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index d250f7f74e3b..c3e8c5c1084f 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -990,9 +990,8 @@ xfs_ioc_getlabel(
->  	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
-> 
->  	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
-> -	memset(label, 0, sizeof(label));
->  	spin_lock(&mp->m_sb_lock);
-> -	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-> +	memtostr_pad(label, sbp->sb_fname);
->  	spin_unlock(&mp->m_sb_lock);
-> 
->  	if (copy_to_user(user_label, label, sizeof(label)))
-> --
-> 2.49.0
-> 
+diff --cc Documentation/devicetree/bindings/trivial-devices.yaml
+index db0295bf9fde,43b21fed7ec0..000000000000
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@@ -39,10 -39,6 +39,8 @@@ properties
+            - ad,adm9240
+              # AD5110 - Nonvolatile Digital Potentiometer
+            - adi,ad5110
+-             # Analog Devices ADP5589 Keypad Decoder and I/O Expansion
+-           - adi,adp5589
+ +            # Analog Devices ADT7411 Temperature Sensor and 8-channel ADC
+ +          - adi,adt7411
+              # Analog Devices LT7182S Dual Channel 6A, 20V PolyPhase Step-=
+Down Silent Switcher
+            - adi,lt7182s
+              # AMS iAQ-Core VOC Sensor
+
+--Sig_/LB=LD9kpseukT9DZ2hcfXt5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhnlroACgkQAVBC80lX
+0Gz56Af/W6fbp+iVlLmX/wcIe9hzQzgqeU1YTuOMpZdTYgzN7Ej+mVc7s4fPEZum
+u38S0m6g/K62HEZoHprlMNJ01bvysrE9hNZ7vC2J09QhrVW5APsfw3NsSHekrlke
+i70B0BUhUFJe4q7EO4SG6kh4KpF/0+/oOoOXtkuaT7p/r63TejeHD/M+/hNEK2KM
+57IgxrF8QedPEuI3Q8K7smnMbAmOELpQe1rGy/K2USfVo8Q5St535ayx4Prt4/a9
+gZUCNF7MxqzpGSBChBgZPXncf2xjJ5m64PnUs8JXDyEfLzNrcQwPJzIlRPkqwT1D
+jgGWTxk+mMwZD4bFuubUPoKAv1twqA==
+=n/Cj
+-----END PGP SIGNATURE-----
+
+--Sig_/LB=LD9kpseukT9DZ2hcfXt5--
