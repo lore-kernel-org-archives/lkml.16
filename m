@@ -1,64 +1,48 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55737236A9F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 11:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E560E236A9F;
+	Fri,  4 Jul 2025 11:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751627459; cv=none; b=ankOAFujQqMs/n5HMSlQM5QuQaMXGW2RNItv0ry9WYsxevJEOZE76yn+uBCQrPJSB4MDUsKBc5IN+GqkiBOt/4N23NZFeRHTUNgx9KWqLpUeoepG9eW3WL5O7ZkvUiC3IS+kSykEnPiVbzqiOE+jRpAsfXT3jCFQmHC/4HAOx8A=
+	t=1751627521; cv=none; b=A7y99MaKfbHfyaUvOEsXhPTQSDQvPgCYNEGjYeUNsKBKo7TncmCMG8ChdbDhe9w0BPfks7kDCxMj+SzienhxYyeaBOmxA2GarKvJM15JI5UN5BUfo3wO0tD7gwu2vtlA0fSTCdLqa8O+DTtgRjgeqiLtA7hnF5eyjlakVv856L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751627459; c=relaxed/simple;
-	bh=SF8CYPTrOdy+j7O2eI2p8/yS2Z2CtPaSi47s5TwJido=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G1RyGhc6oibMorZK6jMTdUIr09O+RpG/lLi8umpyJbIrliKJq7fShC2I7J4ldgQkwajJzgLjz/WvaOiKI0afvpC0PyzEJZDhR8bNyMXyeYuAYFXx3/JYbAbwwdcfPmW9Zl1YmbUk8+9xIuOvHhMgIoBHwIYOyl/9iZ6RJnOzl3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YxwURsWn; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751627521; c=relaxed/simple;
+	bh=s6REyjnHSoFjza36o3YvH2nfVLx6i3GaLyx0PsMyNU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=REHmOU+YntlUSaGL23er93G+homxTW4Cqt1qBFGTDyMjtI+UitQleZbr+GRP3Gdn7idCX07YoLYCn5ko1WyWmM6UYgaF5/3q3oUgG6/SU29iGQDMXpN0kZ/a4Mq4PlUbtcZM5oZ1beun5g2DisAlHvddf9dOG3p7eaofEqcJxgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NGHUrMZt; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxwURsWn"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a522224582so307980f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 04:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751627456; x=1752232256; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dCPtwnOfQ6keZPy4LpTxW8EywDH7gbIh/lGbQNpkD4Y=;
-        b=YxwURsWnXvzS80Tvw6J8p4Uq6DszfCS6+xdZA89QQ1/TyYml1nIsJREUoC+6SUOfGg
-         xqZ6DRB3xWd2NlLfqE8QkVgySf2IAA5Z2h8RTaD2FKmM2TYmgjimTv8H8R9lvGt3uInP
-         CbQIZNY3PMZsepzJtTU4HAIKnLcNSyqu8WwgYqE3yfNmc053ZUOT7+EbG/Pcf9wuMr4R
-         75hqNGEHlv2VK6QvPSt+KfCacSWYSHYiyTqKF+UO319gdZL6ZRhuwZFoiigCa7VE1y78
-         TnCJCL5Ys6DWICz3cPMaVWQ0TcgpvBYSv04rkGGXV5bYmE9CcWVkplEIPea8JNJyzUNm
-         kjEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751627456; x=1752232256;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dCPtwnOfQ6keZPy4LpTxW8EywDH7gbIh/lGbQNpkD4Y=;
-        b=jjggjqZ+Is/cQph94S+i2e+47+yWHDRT4mnRApsrcPya7891arrRT80oQctZfR1sY2
-         GeqPZqtFx+xA5OfqYgwJindsurYvXoOYkRq+H1dpodLWoH/6PdxGTqw8cMBJxPDJsYyS
-         pSUAUfYYK1W7ZXpSHSdtvgD6oAjkHd7P20ZJI1hCWU0LuzwpUnF0vgOU3ZoX+SQkYTxE
-         DvbdpKZzrzz4v3gJYqNLhIqALSRPXtAsAwCRCRmFscISdezF13RgSe2q9u5fgNKjEiV0
-         ScSQ+ZPMmRBmNKwXfLbRtQ38OkA9KBheFNB6cQTu7VXq0iTI7rEM7H5RTbiPYCytYekH
-         LNtg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1cQPRs3m0ltVjrotuOn0Mhf7vENI1bQeEGWzsuqaTYUuxAaCE8kbPi+ZEIJ+dH3MAeB/h5+WVSIfjmk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzseskplzWeStUryf7P1ClwxdVDIs48LZI7IKtAIOdXFeDrsxjh
-	THBvZi+OEgj1zsOuMpNBNbpUxr/JOKKb5ai+C0lRtjHbQRPGAESwCx4kMVlcbN9ZW0g=
-X-Gm-Gg: ASbGncu6qhkNZB/zzMjUWmTjF5/PLA52wZQzsEKtGs1XGFqPiXC3wE08rn5+/hQdXPb
-	kl7D6eeAM7HrH46i26d3zcIgkyussn9u+ptRwXH6nrm+/wYfIr6+4ugKm7pj40YZZ/XiiEa83A4
-	eO0uMlbMxhRUopQUc0xRRbwBtQgGvwsU1IgT29tZ1eqTrpthyLOyY6TLupc5dJzePQR+5F0jkQS
-	sGt8VptALDGXcuc8usPV6rZMVkqCc1oIee/v3jcU5oNvBGUOYkBejP+9p+NOYWsXpVqQYoWI4ov
-	upgIhPM1yLk5fALS0k7sSAoqNPj348dBMfTl5liWFFV+FmchYw5IbU7EbfWW+fVQ7Uo=
-X-Google-Smtp-Source: AGHT+IFUrRT4OwH5hTE+/EwaS0JQstvht/Nvd/yC+ncXVq5jOgWUtrHO2HEpZmkTrSJj963GBPh1Hw==
-X-Received: by 2002:a05:6000:26ca:b0:3a5:1410:71c0 with SMTP id ffacd0b85a97d-3b4965fa43dmr1629767f8f.38.1751627455547;
-        Fri, 04 Jul 2025 04:10:55 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b97732sm2265248f8f.59.2025.07.04.04.10.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 04:10:55 -0700 (PDT)
-Message-ID: <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
-Date: Fri, 4 Jul 2025 12:10:53 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NGHUrMZt"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564AQQcn009985;
+	Fri, 4 Jul 2025 11:11:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	tWfyMTnZH9175Nz+Ogd9ZMpUueR8EjLhKs8V1H9wxGM=; b=NGHUrMZtzcxGF0Qf
+	NwPztYGWx/kJPGMfpit/0F562ZoNSSM/Nkvd4lhQ08x9/G1zxgJ4fYO1BvCW2IMY
+	yknfMP1nYYvoz5/sZXZd/msHGlVeKcs2zeoaUKY8oufyif7renqWPTGWA+0iR7KB
+	xveuyCMRUaZWtRXc1/uDiH13gt27SoQw7DKy05kYkHeLfbbFmosXC34wj2l2h0qC
+	SLY1HDWU9kXgAMDz8RN/79DEyYwc7mmLBkzTlgUQ0NPLtDi3aBhiGb+incRiHbCc
+	lsEaUFDM+xn7LwdHh8aD0ub8hQP6N2Neg9cDcQ8WR+OvlmFEK5SE5poUkeEzeoeW
+	tki/tw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pd6w04ak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Jul 2025 11:11:55 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 564BBtAl018724
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Jul 2025 11:11:55 GMT
+Received: from [10.218.23.250] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 4 Jul
+ 2025 04:11:49 -0700
+Message-ID: <9c463005-3582-4bee-bd9f-cd0b415f5e65@quicinc.com>
+Date: Fri, 4 Jul 2025 16:41:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,75 +50,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor
- string
-To: David Laight <david.laight.linux@gmail.com>,
- Usman Akinyemi <usmanakinyemi202@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
- <20250704102007.6354ce9f@pumpkin>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: qcom,videocc: Add sc8180x
+ compatible
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Ajit Pandey
+	<quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        "Taniya
+ Das" <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
+References: <20250702-sc8180x-videocc-dt-v3-0-916d443d8a38@quicinc.com>
+ <20250702-sc8180x-videocc-dt-v3-1-916d443d8a38@quicinc.com>
+ <mzmer4g7df7xqhnstpfhyzcm2irpmsk4iwtx6esjksp34lpkk5@76lrsoyb5cp6>
+ <20250703-robust-analytic-hummingbird-88eb3b@krzk-bin>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250704102007.6354ce9f@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+In-Reply-To: <20250703-robust-analytic-hummingbird-88eb3b@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA0MDA4NSBTYWx0ZWRfX0lIOWkEGI5YA
+ OBDUQJOaExzKkwBcDItVopSQhCbC5QK1Vu83TzaSgWcHl7cXdNoZKl88ZYeRGkwH5IuLYfE5cPo
+ lPYlfvr0BwbaoVdTng7s88jNs1XJc5VIcfzVyTVkzEkUaxz78e7zw39jP9b9PDctB/elKw9Uz6j
+ BST6Et7bWR4dn8yPrEUQZ+PfzVtGPKhblxHrEKdjtqiTNi5mHyd/QKjfm2YoqTTHqrAF1sBGoww
+ KmRdmZukVS93XAZFYKPSTRjvfGt+fj/+PCbc/MpEgrIi+ifWG528IyBPhMRL3iriEHUuXpT/EM/
+ UuQYtAoK7nJ1mXvNgPdlMhYArmO9GndwafcLs4CN/RR3tsPP/SAUjfyFd0kYx99EXvOzuF2WK3w
+ lWTjwS7PNV7zomj//PjFlrYYWEYmrNpcMunk7u6JMdwOJPqzBZNGykXe/j65cvIWLEG+qxHD
+X-Proofpoint-GUID: qshePr32P3oQP_m0s8A6OWgZTDJ0lW8a
+X-Authority-Analysis: v=2.4 cv=UPrdHDfy c=1 sm=1 tr=0 ts=6867b6fc cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
+ a=SMCFeqylH9x0VImpco4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: qshePr32P3oQP_m0s8A6OWgZTDJ0lW8a
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_04,2025-07-02_04,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 suspectscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507040085
 
 
+On 7/3/2025 12:55 PM, Krzysztof Kozlowski wrote:
+> On Thu, Jul 03, 2025 at 01:29:06AM +0300, Dmitry Baryshkov wrote:
+>>> -      - qcom,sc7180-videocc
+>>> -      - qcom,sc7280-videocc
+>>> -      - qcom,sdm845-videocc
+>>> -      - qcom,sm6350-videocc
+>>> -      - qcom,sm8150-videocc
+>>> -      - qcom,sm8250-videocc
+>>> +    oneOf:
+>>> +      - enum:
+>>> +          - qcom,sc7180-videocc
+>>> +          - qcom,sc7280-videocc
+>>> +          - qcom,sdm845-videocc
+>>> +          - qcom,sm6350-videocc
+>>> +          - qcom,sm8150-videocc
+>>> +          - qcom,sm8250-videocc
+>>> +      - items:
+>>> +          - const: qcom,sc8180x-videocc
+>>> +          - const: qcom,sm8150-videocc
+>>>   
+>>>     clocks:
+>>>       minItems: 1
+>>> @@ -111,6 +115,7 @@ allOf:
+>>>         properties:
+>>>           compatible:
+>>>             enum:
+>>> +            - qcom,sc8180x-videocc
+>> Is there a need for this? Isn't it already covered by the SM8150 entry?
+> Yes and no. Yes - some change here is needed as I explained. No - this
+> exact change does not work, so it is obviously redundant.
 
-On 04/07/2025 10:20 am, David Laight wrote:
-> On Thu, 19 Jun 2025 03:28:43 +0530
-> Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
-> 
->> strncpy() is unsafe for fixed-size binary data as
->> it may not NUL-terminate and is deprecated for such
 
-But memcpy doesn't null terminate after the 4 chars either so I don't 
-think that's a good justification. Surely you don't want null 
-termination, because char *vendor is supposed to be a single string 
-without extra nulls in the middle. It specifically adds a null at the 
-end of the function.
+Yes, I agree. I'll add 'contains:' throughout the schema and remove this 
+compatible since anyway it matches with sm8150 compatible.
 
->> usage. Since we're copying raw CPUID register values,
->> memcpy() is the correct and safe choice.
->>
 
-There should be a fixes: tag here if it actually fixes something. But in 
-this use case strncpy seems to behave identically to memcpy so I don't 
-think we should change it. Except maybe if b,c,d have NULLs in them then 
-strncpy will give you uninitialized parts where memcpy won't. But that's 
-not mentioned in the commit message and presumably it doesn't happen?
+Thanks,
 
->> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
->> ---
->>   tools/perf/arch/x86/util/header.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
->> index 412977f8aa83..43ba55627817 100644
->> --- a/tools/perf/arch/x86/util/header.c
->> +++ b/tools/perf/arch/x86/util/header.c
->> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
->>   	unsigned int b, c, d;
->>   
->>   	cpuid(0, 0, lvl, &b, &c, &d);
->> -	strncpy(&vendor[0], (char *)(&b), 4);
->> -	strncpy(&vendor[4], (char *)(&d), 4);
->> -	strncpy(&vendor[8], (char *)(&c), 4);
->> +	memcpy(&vendor[0], (char *)(&b), 4);
->> +	memcpy(&vendor[4], (char *)(&d), 4);
->> +	memcpy(&vendor[8], (char *)(&c), 4);
-> 
-> Why not:
-> 	cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)(vendor + 4));
-> 
-> 
->>   	vendor[12] = '\0';
->>   }
->>   
-> 
+Satya Priya
 
