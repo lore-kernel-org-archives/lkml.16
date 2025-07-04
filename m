@@ -1,119 +1,141 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8F62857FA;
-	Fri,  4 Jul 2025 07:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DB727A10A;
+	Fri,  4 Jul 2025 07:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751615236; cv=none; b=urDJincCOqg36IldaJIJHfOI7099astX/6wi49t+5ES69vtnuqrjg9r2vcK0u/w5/g0D9Hlr+rknQAZTYEnXhT2HexlypjduVUT27RO+usfYOCgk8H2cn6Lm2+8wLAeYWjF6l0HKF6tC2Wc0ohvwP7rLgvMRWnuHdrYXHhEY240=
+	t=1751615448; cv=none; b=Tv3M7p0XvKqWs02AmfFSOllkkhVJEMteV/khsuo+2WsQetX3t20zOaH90pN3XiLYnNjomoBj8Ax0rqo9SY8I0tKpCGZCEyh2yQP/8Fd4H04BeXZ3MhNSCu9CTN/EkL/lAfdv/Wg44WmZf78JP8J81OyoAlAKOLFZD2Qu1tcayII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751615236; c=relaxed/simple;
-	bh=8gB+AO68oAYcL/RcwfcXX8F3VEcyUkNlDhqHsTYg8h4=;
+	s=arc-20240116; t=1751615448; c=relaxed/simple;
+	bh=SAV3OOw7TJ9qXgDYsbQ0R6rToSQAXqWdWPlOqVTVQFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcNPGJhB8nWy0p/8vuHuFAx9f/OaNeC5w16RBEBXto/KVM4cjFDsA/MM2Lt+ET+4sNXToLytGJ8BrrmKVCQLVtZLIcrSDn4A/xKzS5FO7AlYsLuQlYzfgF1tvxXm73q3WAvfbu3KSjNNqWkN4pw90DKuBS6b+Llwh2kXit9gHH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=s7b8gHjl; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oz4k1bQWyCPXkpvn+eXIS3ahSpRh4fXe3NWhfAar/HeIKJb1Knc0w5bL+rvYpT09JqlmvCFgYvWvCB93pjEyvEbS/NfeXl0ibVEnFXA0/7sEG01YNvPrzamP23zYW35c7kRZn9Y6/2rL4qmXteU2wdgCYVrlzJl0Ksy7PFXjJxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZBeoqWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s7b8gHjl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=lLeBr9v7iWnmJB5WR8E+Qdx4chL/QEo8kPrObOm2XBg=; b=s7b8gHjlLshr/s6aHjDwESkoZv
-	9xldLQc20XR4fF5OqxXWznCzk91go6X0+1hokaiCtTzgcvzRs3qRiKtfsqTUJE7KKzeAgCKHREsra
-	kvnr9afUyBdWT23H0Pp+eDaPiqOZEqx4FXHdDlmRumtj22gq0Q3GoFqjbkWKDBxQn6m8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uXb7w-000B5q-N9; Fri, 04 Jul 2025 09:46:32 +0200
-Date: Fri, 4 Jul 2025 09:46:32 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Michal Rostecki <vadorovsky@protonmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	llvm@lists.linux.dev, linux-pci@vger.kernel.org,
-	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v13 2/5] rust: support formatting of foreign types
-Message-ID: <307d7547-b8da-4a82-9ae6-c95f66a283d2@lunn.ch>
-References: <20250701-cstr-core-v13-0-29f7d3eb97a6@gmail.com>
- <20250701-cstr-core-v13-2-29f7d3eb97a6@gmail.com>
- <DB2BDSN1JH51.14ZZPETJORBC6@kernel.org>
- <CAJ-ks9nC=AyBPXRY3nJ0NuZvjFskzMcOkVNrBEfXD2hZ5uRntQ@mail.gmail.com>
- <DB2IJ9HBIM0W.3N0JVGKX558QI@kernel.org>
- <CAJ-ks9nF5+m+_bn0Pzi9yU0pw0TyN7Fs4x--mQ4ygyHz4A6hzg@mail.gmail.com>
- <34c00dfa-8302-45ee-8d80-58b97a08e52e@lunn.ch>
- <CANiq72ksOG10vc36UDdBytsM-LT7PdgjcZ9B0dkqSETH6a0ezA@mail.gmail.com>
- <CAJ-ks9mkC3ncTeTiJo54p2nAgoBgTKdRsAwEEwZE2CtwbAS7BA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZBeoqWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A80C4CEE3;
+	Fri,  4 Jul 2025 07:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751615448;
+	bh=SAV3OOw7TJ9qXgDYsbQ0R6rToSQAXqWdWPlOqVTVQFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sZBeoqWrs0zzhCsY1tDneN2o3SAwe7xSg0ID1BLE9cePwRqORDfsZ4W+0YrlzDIN2
+	 9rzeauKqM1I7Jqw/EnVEUgh8Pa0Mxbtv9R0cFlihRsQAPwOqpjKq0x8JSWBYcEXi39
+	 Cy6PZG6CLK3Iz9bQgWR8E9MKLmCi4OFeJnrtYwA++LYEcgKszj3Zepv50x3Z2TBxx8
+	 7BqKLWKvNikA0tXCchXT5ZlrjARLePNhLD9pczgdNfy0g0harPkCK+4zxy6/8sBOxs
+	 YJYMpVIrIszMerQ5DR5J7neAiFLSHlAsuo/FmeWGSsGZjWuKifKqzsMeeB6qLu6jO9
+	 d1fRK99PCko5g==
+Date: Fri, 4 Jul 2025 09:50:45 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>
+Cc: "lee@kernel.org" <lee@kernel.org>, 
+	"pavel@kernel.org" <pavel@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>
+Subject: Re: [PATCH V4 1/2] dt-bindings: leds: pwm: add enable-gpios property
+Message-ID: <20250704-devious-badger-of-contentment-e0a00a@krzk-bin>
+References: <20250703093430.229959-1-Qing-wu.Li@leica-geosystems.com.cn>
+ <20250703093430.229959-2-Qing-wu.Li@leica-geosystems.com.cn>
+ <85e411bf-58cf-46fe-9afa-7b76999f1a42@kernel.org>
+ <AM9PR06MB795507373B99DFF6820D979ED743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
+ <1c95927e-a028-43fe-bdf5-449767b49ec1@kernel.org>
+ <AM9PR06MB795513A172A70CB09462FCA8D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJ-ks9mkC3ncTeTiJo54p2nAgoBgTKdRsAwEEwZE2CtwbAS7BA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <AM9PR06MB795513A172A70CB09462FCA8D743A@AM9PR06MB7955.eurprd06.prod.outlook.com>
 
-> There's also a tactical question about splitting by subsystem: are
-> there any tools that would assist in doing this, or is it a matter of
-> manually consulting MAINTAINERS to figure out file groupings?
+On Thu, Jul 03, 2025 at 11:36:10AM +0000, LI Qingwu wrote:
+>=20
+>=20
+> > -----Original Message-----
+> > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > Sent: Thursday, July 3, 2025 6:55 PM
+> > To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>; lee@kernel.org;
+> > pavel@kernel.org; robh@kernel.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; linux-leds@vger.kernel.org; devicetree@vger.kernel=
+=2Eorg;
+> > linux-kernel@vger.kernel.org
+> > Cc: GEO-CHHER-bsp-development
+> > <bsp-development.geo@leica-geosystems.com>
+> > Subject: Re: [PATCH V4 1/2] dt-bindings: leds: pwm: add enable-gpios pr=
+operty
+> >=20
+> > This email is not from Hexagon=E2=80=99s Office 365 instance. Please be=
+ careful while
+> > clicking links, opening attachments, or replying to this email.
+> >=20
+> >=20
+> > On 03/07/2025 12:27, LI Qingwu wrote:
+> > >
+> > >
+> > >> -----Original Message-----
+> > >> From: Krzysztof Kozlowski <krzk@kernel.org>
+> > >> Sent: Thursday, July 3, 2025 5:59 PM
+> > >> To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>; lee@kernel.org;
+> > >> pavel@kernel.org; robh@kernel.org; krzk+dt@kernel.org;
+> > >> conor+dt@kernel.org; linux-leds@vger.kernel.org;
+> > >> conor+devicetree@vger.kernel.org;
+> > >> linux-kernel@vger.kernel.org
+> > >> Cc: GEO-CHHER-bsp-development
+> > >> <bsp-development.geo@leica-geosystems.com>
+> > >> Subject: Re: [PATCH V4 1/2] dt-bindings: leds: pwm: add enable-gpios
+> > >> property
+> > >>
+> > >> This email is not from Hexagon=E2=80=99s Office 365 instance. Please=
+ be
+> > >> careful while clicking links, opening attachments, or replying to th=
+is email.
+> >=20
+> > Please drop this, it is not relevant in upstream discussions. Use norma=
+l email
+> > client which will not produce useless header above.
+> >=20
+> >=20
+> > >>
+> > >>
+> > >> On 03/07/2025 11:34, LI Qingwu wrote:
+> > >>> some pwm led driver chips like tps92380 require a separate enable
+> > >>> signal
+> > >>
+> > >> Sentence starts with capital letter.
+> > >>
+> > >> tps92380 does not have dedicated enable pin. It has VDDIO, which
+> > >> serves also enable purpose, but it is a supply.
+> > >
+> > > So this patch is unacceptable anyway?
+> >=20
+> > If you make this patch for tps92380, I think it is not correct. You hav=
+e entire
+> > commit msg to explain the hardware and all unusual things. Having VDDIO=
+ and
+> > EN pin is unusual, because you do not supply power directly from GPIOs =
+of a SoC.
+> > All this should be explained.
+>=20
+> Thank you for the feedback, what about rename to power-supply with regula=
+tor support ?=20
+> Convert this patch to add regulator support instead of GPIO, using "power=
+-supply" property to control=20
+> LED power, or drop this patch and give up upstream, or what's the better =
+=66rom your point of view?
+> appreciate your guidance!
 
-You can run ./scripts/get_maintainer -f path/to/file.c
+Does it solve your problem? It is surprising that once you say it is
+GPIO and once as regulator. How is it in your board?
 
-and it will give you the Maintainers for that file. From that you can
-imply the subsystem.
+Regulator is looking as correct hardware description, so that patch
+would be fine.
 
-It might be possible to do one tree wide patchset, since Rust is still
-small at the moment. But you will need to get Reviewed-by: or
-Acked-by: from each subsystem Maintainer for the patches. That is not
-always easy, since some subsystems have CI systems, and will want the
-patch to pass their CI tests before giving an Reviewed-by.
+Best regards,
+Krzysztof
 
-	Andrew
