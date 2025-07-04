@@ -1,190 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716541B7F4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Jul 2025 14:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E404170826;
+	Fri,  4 Jul 2025 14:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751638537; cv=none; b=Me4sw2zN0vjeZMXRztuT88sozrtwWFj1uDu2kk2WbbG4ZpzuEEWpD7HyphiEPrESttllwd9QluAbI4cgOrLlRrCqJUG6Rk/7vNWohqIornTITqjpbi+Qj75nR+vTREpQ2buLgeRn1Z9iX09O9i4IlBFn05myEzH2aqr/NPMSmJg=
+	t=1751638585; cv=none; b=gpK0N2M6eio2+Vj/+WX20LZZDAiCnRJ8yTYmbmmwUJeV8Gh6JGdZhBwXmcBIxfLrUy92S0KxA/1RlQ5heka3qxLHJR1dfMmhcjXCaSPI75wMQK8yqruQvDwCIqP3vSi3mA6S5KD0LKjgf/BINJ0iAjB/JB5AiACPqBp37h4TnJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751638537; c=relaxed/simple;
-	bh=irNBVMFL+eu4veuwB4jkQ2MKSYn0y5M8ZdcwNJK4p78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T4QhJcDU8DXFpcma3/CGKumNnmFt/sCixNMVKNzlQdunASfVM3BlgZWxNx1N66g+w8jjX/YDTI4H+tGf4CW5e6dTVV7FgzXUDQ8hcizqiOu+mIOyiUk1s1xqQVq6hT9rYy0PyI5uNK6+mig/+gGY3HsiSGdo5JDvkjFoeO0AV0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KPGp4YUx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751638585; c=relaxed/simple;
+	bh=oo+uEgK1Jfph1XkO08KqkKaj+w/7lywoKLOEgNgfAZQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JKJDqzQ4zu5U6xxJCpz6srVkwBvxznXGB1VCXxUghnossEjM28aCJBtKpXu1KJ7UAVS+bMKmA5EHHPF7g8/2KZKBx+G5zwzKxi/1+sCMju6WSEFZ0SIwS75u0g5SkkrJQNsLqHB8TIgVPGKfgSl5hlE1Y32MeVZgjWOEe5vdS7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EVZPB5oA; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KPGp4YUx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751638534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LBn7YewcGLqcJwIQMeePqXaU86WOWyp8TwMnIsNgXlU=;
-	b=KPGp4YUxZmelhHhypD15KA0oQZBizbl5cQeKFnjf7wlt5xR224Yd+DVAmVSui82WrEVgOo
-	RfzIon9F3s5Mu7yVH6c1wkxSdLJ7JRbjpxiXbHViwlBUmZWCCsbZTJttE+hAOd9tTdlDw9
-	vdA26+vqjT+/EJfgW+GNVO+laWB8oiA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-3-V9ZTXphYM_SqkQzBgY0yVQ-1; Fri, 04 Jul 2025 10:15:33 -0400
-X-MC-Unique: V9ZTXphYM_SqkQzBgY0yVQ-1
-X-Mimecast-MFC-AGG-ID: V9ZTXphYM_SqkQzBgY0yVQ_1751638532
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a503f28b09so560026f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 07:15:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVZPB5oA"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6095f07cd53so137281a12.3;
+        Fri, 04 Jul 2025 07:16:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751638580; x=1752243380; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sb8iimynI9CzYNi0AnSl9OGFpIWMTxy9TSj8evqbmoU=;
+        b=EVZPB5oAT+hyu8PJbNlth9xsz3KdDLACNRGPwCTDwcP0EZeEojv3xkTeTbHafzyc0j
+         LgcFH+U5bvK3HJQ6tgP1emqNrVRCmGy2B1ohWHRUfpOypTlp4P1Celh6jqlShefFc5sd
+         xHcKHtNX8XZ9VSmpZN8OhpPQrZ22GwamoEAoMbT0JGGbBPociwwnUuoKxbuhy3afKXYv
+         s0WTjvqGmcVMiqjNcYgII38dKamMxf39PMAVf7Vi92S7GtKB0WTPp1eQq45R1zDg0iOe
+         IZ006EG9BjKlGQsy3yKcMaNbVp4f/KGtmpStKn8flnPgXHEkMpp4aDFdU/HcmA2ImzJ5
+         N5og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751638532; x=1752243332;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LBn7YewcGLqcJwIQMeePqXaU86WOWyp8TwMnIsNgXlU=;
-        b=Aj64i1zt0d13dPPfYjS9g/AffFZTd7Un6R7rescfLH0ssUm4vw6RayfcEXcClkEJS1
-         GldAn1DCZPAPt/ieJjNPi6ZtYQQPvLHk2s66hkFFCRra6SsRBpZlOOlXVTkKarNrtqEe
-         /0fq7Sxi3kJg2RJGeVhGapJz66Tz8PL7P/ycfndFUl3txHHU/qW42KX3NvMn7C95HaXs
-         83h7dit18ImmZgAg5kQhKntYW0OpPS5U0XGXCNDBG+ZozTUItB+ljkgRCZuOdFx0knY9
-         bMD44f5pMtfIaUfY40BOb8awsWEEc4tszpeV5d+2hkIktYku+nDJheipFJMCgO34Ze5F
-         1L4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXwa9GJFHoyEdn+FRNwUlfKZS6LAyud8nT7D78/J4bPicFkx7sYgoW9NxTWQAnMMRjoLZLmbNa0d3F9uhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzIhbVpWchbXj4xcvdFDudJEfchtELwEjXw722vGrWkEwC/zIZ
-	O4lqmhIaXL554hYibpjcHmb0kyCByG1KraDUnn1JknnIfIZG5czBOcfUMNrEpTBWHVautnZUUtM
-	5wXa1hkmXVAmoBT8BWitRq1CbnAWJOoS/utln/GMTVBy2iX3GyjkzOqomxCUmnqM8rw==
-X-Gm-Gg: ASbGncsmP0LZXoL7wz7IfAbnrIZggXHfxhixswp6Bc01H178WqqS/C+WfILzhkIN6pV
-	hE0ITc9KEcS0huKagJLCouYDQyfgWwEVP4wAism0w1qsGHv1NzVHrcb0SXRGNohh+ahJw/DoEts
-	CR1AAPfTXplCHLmDijx0VsDEkmYCi84MtK+h4masAL09bVJrQ+nuxKDbspjulVTVvYzmWdfk4TD
-	y2MPm2XvCALSr2tmBvr9fh7AZ3E9ErofaMocH8fYfK50OdHnUULmdfBMibpPNxmTuC7f2FPOEt/
-	+IU8AmQy2qLTE86qHKrh6k8ZN42np/9nFjEzjmjFNZLtuRoP0FxYQzdSyaynFEx++QIutI7QADK
-	Pml86DP7wqGjn+9MialP9NlECKPALIXrpuYbtchGx4+MKJLs=
-X-Received: by 2002:a05:6000:2386:b0:3a5:8977:e0fd with SMTP id ffacd0b85a97d-3b48f763f20mr3038216f8f.0.1751638531741;
-        Fri, 04 Jul 2025 07:15:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFFZfrZGXx1jIEHCw4iULGVHb/HshXOPXs2ODzOAd6Gc9BaMJ2C1ZIpAirKVHX6TqTgT60YQ==
-X-Received: by 2002:a05:6000:2386:b0:3a5:8977:e0fd with SMTP id ffacd0b85a97d-3b48f763f20mr3038165f8f.0.1751638531220;
-        Fri, 04 Jul 2025 07:15:31 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:5500:988:23f9:faa0:7232? (p200300d82f2c5500098823f9faa07232.dip0.t-ipconnect.de. [2003:d8:2f2c:5500:988:23f9:faa0:7232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bcef22sm57156535e9.19.2025.07.04.07.15.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 07:15:30 -0700 (PDT)
-Message-ID: <29cc7d2a-b174-4ed3-ae1a-22db478c62ec@redhat.com>
-Date: Fri, 4 Jul 2025 16:15:28 +0200
+        d=1e100.net; s=20230601; t=1751638580; x=1752243380;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sb8iimynI9CzYNi0AnSl9OGFpIWMTxy9TSj8evqbmoU=;
+        b=gnpPGTHekMyRgeOi2+QoKuHW6pPQpTKE6fSJY0DEuwBMxKvohJ3NZZsTmsVbY0yF7T
+         sks8Ug8v7zlt8GPLn7Yw1ZgA7Qhf609GkoKcUfCF0uPimt9TMHjbhQfIdRibb9MnRIVp
+         25KWOkFzSwEHJDvyBTETebsnnRbHMgqXYnAn678yajoCguW05xIflEGZcHXGWbjMKONH
+         JYDRD8C2g4L8sll5uGgcS66umTHF18TA9ffpr5s1YEHmfZEzubkL93RWH7Obd4gxfAfu
+         Xoyt1C/WE4UtnO387QbkXHrxTyHt9UJV3Vr6QGHvYs0CYKKW3cqYXoP2yRM1APEGBHUY
+         vmWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUARHOnlWk/P3ohjm24KvFYvRPmBOByMCn90b5R7Q9uBQ/EbR62Z0/fy199R+njxE/j4tlm3bLqzMVs1qQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwpdEgAaV/DkXaRggh8fQrUIRMABNDwGD9HwVIv3q1gZdhv66a
+	hSk09XUs+WJRN8352ZwQ0hD6R/KHxug49P736gHwb2GjTDs+GVuXVTB1QfyNKA==
+X-Gm-Gg: ASbGncsHZEfWqu7nWwgiGccNNj9AD16GzXLryAoLwgomD2aMKtha/9nl6DR1m1WF6a8
+	cAyNqgOoFMpZyjcHla5CXjqfIdzlWZhGLi6S+Pv5YjST7PBCy7pCJoy1Cv1EfqZaOC7QKAtBNlk
+	3hfm8bs644eYubEVrc5F79gNxYc8r7EscwCm0NTTamipDOhwXk5wCY85Hf21shYZf8y4XmHotiG
+	jME/OC8hUit8BQLfG3YE0RBGOC/Hdf5b0K95BUmrIrlcrgIcCMwjuqXYeAQv60TxFbeCQZ1H7fW
+	nZlBju+0ktsDOvdmsiDCcsY4qjJ3NG2VMGnE9svuwYHYCDetORJOqXukbw9wC0Xr1gab+1a2WpX
+	fQ4tN8II/3D7Rds53DWboNg==
+X-Google-Smtp-Source: AGHT+IFc7IohEsknf/s8s4QFDEXv5Yh63dnCdh0iNkJ2FiQksbeWPWAzsgLI+sTiW+yLce4CuDrXlw==
+X-Received: by 2002:a05:6402:40c9:b0:602:f026:82cc with SMTP id 4fb4d7f45d1cf-60fd65641e7mr705154a12.5.1751638579144;
+        Fri, 04 Jul 2025 07:16:19 -0700 (PDT)
+Received: from localhost.localdomain ([41.37.222.172])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fcb8c7f7bsm1390972a12.81.2025.07.04.07.16.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 07:16:18 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	andy@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	dan.carpenter@linaro.org,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH v2] staging: media: atomisp: Remove custom sysfs attributes from atomisp_drvfs.c
+Date: Fri,  4 Jul 2025 17:15:27 +0300
+Message-Id: <20250704141527.10146-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/6] KVM: arm64: Expose new KVM cap for cacheable
- PFNMAP
-To: Jason Gunthorpe <jgg@nvidia.com>, ankita@nvidia.com
-Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
- suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com,
- will@kernel.org, ryan.roberts@arm.com, shahuang@redhat.com,
- lpieralisi@kernel.org, ddutile@redhat.com, seanjc@google.com,
- aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com, kjaju@nvidia.com,
- targupta@nvidia.com, vsethi@nvidia.com, acurrid@nvidia.com,
- apopple@nvidia.com, jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com,
- mochs@nvidia.com, udhoke@nvidia.com, dnigam@nvidia.com,
- alex.williamson@redhat.com, sebastianene@google.com, coltonlewis@google.com,
- kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org,
- akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org,
- tabba@google.com, qperret@google.com, kvmarm@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- maobibo@loongson.cn
-References: <20250621042111.3992-1-ankita@nvidia.com>
- <20250621042111.3992-7-ankita@nvidia.com>
- <20250704134413.GE1410929@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250704134413.GE1410929@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04.07.25 15:44, Jason Gunthorpe wrote:
-> On Sat, Jun 21, 2025 at 04:21:11AM +0000, ankita@nvidia.com wrote:
->> From: Ankit Agrawal <ankita@nvidia.com>
->>
->> Introduce a new KVM capability to expose to the userspace whether
->> cacheable mapping of PFNMAP is supported.
->>
->> The ability to safely do the cacheable mapping of PFNMAP is contingent
->> on S2FWB and ARM64_HAS_CACHE_DIC. S2FWB allows KVM to avoid flushing
->> the D cache, ARM64_HAS_CACHE_DIC allows KVM to avoid flushing the icache
->> and turns icache_inval_pou() into a NOP. The cap would be false if
->> those requirements are missing and is checked by making use of
->> kvm_arch_supports_cacheable_pfnmap.
->>
->> This capability would allow userspace to discover the support.
->> It could for instance be used by userspace to prevent live-migration
->> across FWB and non-FWB hosts.
->>
->> CC: Catalin Marinas <catalin.marinas@arm.com>
->> CC: Jason Gunthorpe <jgg@nvidia.com>
->> CC: Oliver Upton <oliver.upton@linux.dev>
->> CC: David Hildenbrand <david@redhat.com>
->> Suggested-by: Marc Zyngier <maz@kernel.org>
->> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
->> ---
->>   Documentation/virt/kvm/api.rst | 13 ++++++++++++-
->>   arch/arm64/kvm/arm.c           |  7 +++++++
->>   include/uapi/linux/kvm.h       |  1 +
->>   3 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> I don't know if any VMM will ever use this, but it looks OK
+Continue the cleanup of the AtomISP driver as discussed with Hans and Andy
+in [1].
 
-So, should we defer it to the point where we actually have a use case?
+Tackle the TODO item: "Remove custom sysfs files created by atomisp_drvfs.c":
+- Remove the sysfs attributes `dbglvl`, `dbgfun`, and `dbgopt`.
+- Delete their associated show/store handler functions.
+- Remove the corresponding attribute group definitions.
+- Keep `dbg_attr_groups[]` as an empty array to preserve compatibility.
 
-I mean, patch #4 could be simplified by modifying arm64 code in patch #5 
-only. No need for a common kvm_arch function etc.
+Link: https://lore.kernel.org/all/836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org/ [1]
+Suggested-by: Hans de Goede <hansg@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+v2:
+- modify the reference link line.
 
--- 
-Cheers,
+ .../staging/media/atomisp/pci/atomisp_drvfs.c | 138 ------------------
+ 1 file changed, 138 deletions(-)
 
-David / dhildenb
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+index 31c82c3c0d33..c25fd3ff003d 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+@@ -1,9 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * Support for atomisp driver sysfs interface
+- *
+- * Copyright (c) 2014 Intel Corporation. All Rights Reserved.
+- */
+
+ #include <linux/device.h>
+ #include <linux/err.h>
+@@ -16,140 +11,7 @@
+ #include "hmm/hmm.h"
+ #include "ia_css_debug.h"
+
+-#define OPTION_BIN_LIST			BIT(0)
+-#define OPTION_BIN_RUN			BIT(1)
+-#define OPTION_VALID			(OPTION_BIN_LIST | OPTION_BIN_RUN)
+-
+-/*
+- * dbgopt: iunit debug option:
+- *        bit 0: binary list
+- *        bit 1: running binary
+- *        bit 2: memory statistic
+- */
+-static unsigned int dbgopt = OPTION_BIN_LIST;
+-
+-static inline int iunit_dump_dbgopt(struct atomisp_device *isp,
+-				    unsigned int opt)
+-{
+-	int ret = 0;
+-
+-	if (opt & OPTION_VALID) {
+-		if (opt & OPTION_BIN_LIST) {
+-			ret = atomisp_css_dump_blob_infor(isp);
+-			if (ret) {
+-				dev_err(isp->dev, "%s dump blob infor err[ret:%d]\n",
+-					__func__, ret);
+-				goto opt_err;
+-			}
+-		}
+-
+-		if (opt & OPTION_BIN_RUN) {
+-			if (isp->asd.streaming) {
+-				atomisp_css_dump_sp_raw_copy_linecount(true);
+-				atomisp_css_debug_dump_isp_binary();
+-			} else {
+-				ret = -EPERM;
+-				dev_err(isp->dev, "%s dump running bin err[ret:%d]\n",
+-					__func__, ret);
+-				goto opt_err;
+-			}
+-		}
+-	} else {
+-		ret = -EINVAL;
+-		dev_err(isp->dev, "%s dump nothing[ret=%d]\n", __func__, ret);
+-	}
+-
+-opt_err:
+-	return ret;
+-}
+-
+-static ssize_t dbglvl_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	unsigned int dbglvl = ia_css_debug_get_dtrace_level();
+-
+-	return sysfs_emit(buf, "dtrace level:%u\n", dbglvl);
+-}
+-
+-static ssize_t dbglvl_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t size)
+-{
+-	unsigned int dbglvl;
+-	int ret;
+-
+-	ret = kstrtouint(buf, 10, &dbglvl);
+-	if (ret)
+-		return ret;
+-
+-	if (dbglvl < 1 || dbglvl > 9)
+-		return -ERANGE;
+-
+-	ia_css_debug_set_dtrace_level(dbglvl);
+-	return size;
+-}
+-static DEVICE_ATTR_RW(dbglvl);
+-
+-static ssize_t dbgfun_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	unsigned int dbgfun = atomisp_get_css_dbgfunc();
+-
+-	return sysfs_emit(buf, "dbgfun opt:%u\n", dbgfun);
+-}
+-
+-static ssize_t dbgfun_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t size)
+-{
+-	struct atomisp_device *isp = dev_get_drvdata(dev);
+-	unsigned int opt;
+-	int ret;
+-
+-	ret = kstrtouint(buf, 10, &opt);
+-	if (ret)
+-		return ret;
+-
+-	return atomisp_set_css_dbgfunc(isp, opt);
+-}
+-static DEVICE_ATTR_RW(dbgfun);
+-
+-static ssize_t dbgopt_show(struct device *dev, struct device_attribute *attr,
+-			   char *buf)
+-{
+-	return sysfs_emit(buf, "option:0x%x\n", dbgopt);
+-}
+-
+-static ssize_t dbgopt_store(struct device *dev, struct device_attribute *attr,
+-			    const char *buf, size_t size)
+-{
+-	struct atomisp_device *isp = dev_get_drvdata(dev);
+-	unsigned int opt;
+-	int ret;
+-
+-	ret = kstrtouint(buf, 10, &opt);
+-	if (ret)
+-		return ret;
+-
+-	dbgopt = opt;
+-	ret = iunit_dump_dbgopt(isp, dbgopt);
+-	if (ret)
+-		return ret;
+-
+-	return size;
+-}
+-static DEVICE_ATTR_RW(dbgopt);
+-
+-static struct attribute *dbg_attrs[] = {
+-	&dev_attr_dbglvl.attr,
+-	&dev_attr_dbgfun.attr,
+-	&dev_attr_dbgopt.attr,
+-	NULL
+-};
+-
+-static const struct attribute_group dbg_attr_group = {
+-	.attrs = dbg_attrs,
+-};
+
+ const struct attribute_group *dbg_attr_groups[] = {
+-	&dbg_attr_group,
+ 	NULL
+ };
+--
+2.25.1
 
