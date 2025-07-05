@@ -1,74 +1,89 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B8E10942;
-	Sat,  5 Jul 2025 19:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E87110942
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 19:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751742190; cv=none; b=ssRQqjWt9lQTxj70cyicaML3XtDm8m0BpS9tIW2yQlNOnqNItKRUq4ud6s+MzBmKylFwYN9Jz8FqrYcXxtKF13s1chv+5TdyOypcqQ5k3xlk05regnTR2C6uLGveenCoL+dHMy7pa/EIgJM0Bop+qss+xE1yxRhn0a9y3e4tIv8=
+	t=1751742198; cv=none; b=XvHJUm8XA/VXu/u96M96UFLlrIA5sGmvfES+DjbtyEG2qHSLeW4Qitrw6CHkiXE2gLmBAIKENJyjq8H0TTWUY6lo8azdqU4mHL0X7aZTLfIPYhmfqxmjf7VTlcjudh8z8rpMvVPGYRv669d96LcXGLiSbsY1qBofDPX7yaP6U3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751742190; c=relaxed/simple;
-	bh=9HO47YLjgkBIB1JTCg5ZgIjx1CpmGk2qgXFefZv/6P8=;
+	s=arc-20240116; t=1751742198; c=relaxed/simple;
+	bh=CIfEAdGw2O1R8b3FT158TGO0fY2CDehsQ/I7lst0ODQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SDbUHELquRzPiFrxSgcqDRPAZvJYHvPnOf+gkfruBm+dkvmCJVd0isuawvFA6BUD36QCFNZHyyxyNtlBP9wxjzpNSZCGpn+f0iEEjQn/d8ul+iaggouMPQscKqvqblZ1lR94r0DPKqeAcOxYaxKh4Qn5eFa4vqlrps4pD+UxyrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cFItwM7i; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bawKukmlRk5M5gECFPHs63g66WXbMbEswnIWL/NkhWmEEO7gW0y6w1mJv+3TNFNvLpa1odr/BT5vILpbPMwm9NxhWtwuT7n7OHYyEbDUa2fZJXCY+MpEzVaOT19SdcEEIx0KnS/4yB6PK8oN6g+NKpI3EHwFwS6vVnpqykv48mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=X4262PbB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFItwM7i"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-747fba9f962so1439667b3a.0;
-        Sat, 05 Jul 2025 12:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751742188; x=1752346988; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=11lnZUHK4peQhtJtZlA1DMT7EWqZuUbx7mq3W6Wt0YM=;
-        b=cFItwM7iU1GgDoRd6eRZdCt3Qgsp2sfALNFtq4+ctPaKbM3DiQLSg2etmPHZR4w+iC
-         AhbKNiY3nv83seDwPzKi4He1wc9yrr4AVWZQEVP6oMlvOQr7Mlr3S4Sf9BQdbo1uOJPS
-         UOYkjGCUBoff006EWF+y75HnWMsbPruoLVUX8hvoEU0cmWyrPhbl5YqbW4FYKqoVMwyb
-         /TsLuSeE/UVI1284wPW6+VkEhqz6m3ByjhvT6AMyEIkxQ54scZfagET9y51/BkYwnpOH
-         xlFKc4N8IX323AQsDavspdCLzn6zpQ+IEXwS7osfWQwKd33mOH6jShJ3O233StAbQiRt
-         n/cA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="X4262PbB"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 565HnjCA023791
+	for <linux-kernel@vger.kernel.org>; Sat, 5 Jul 2025 19:03:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=GbeLfqtbM84GigusBY9E85yZ
+	ET2t+I54GGzPiTHuUK8=; b=X4262PbBT0ocS+G1VzLtUvvO6QeTriYKsQ7KM6Gl
+	a3/Fp1XauDYfMEYw+cIIH+0GRaRFDS7OQ7oFR0+pbUpB4ju2BqdzCog51Et74914
+	4HcGXKQnqP/5XDoOeXWxJddBafY4mxgBKnFAZFszy6B2BlO1kfR9VIE/nJoDATpt
+	HEyYlIu3uwcFn71ZYfG54yWQKMAwIVvdl9JUD5f6Fp8ave1iVz7xoO1jb1sVUGuo
+	5bHfs/pr8+/xOfb/n5D+I3DByTwemsYT64Qrte3vcMiS/57yYNcSKizeTNYAFSCR
+	JVFVhX8tpqnFmY2AMeCqiznGGxtSSfrKs/glJ4vdZDfXjg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47psdqa10t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 19:03:15 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d413a10b4cso281125885a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 12:03:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751742188; x=1752346988;
+        d=1e100.net; s=20230601; t=1751742195; x=1752346995;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=11lnZUHK4peQhtJtZlA1DMT7EWqZuUbx7mq3W6Wt0YM=;
-        b=nISYfmLS9x/1YRzx2s8MFjeoSwCLFXDBNQfrHU1/+O5gyr+cu3Ld3ilCfzNIOAkM38
-         oWRE3GyN7txH5RXJUEyRkAaphBJ7eX8JPdAdIwbttLpa6trFuukCo1j4DcArv9s+1CwE
-         dNVgvKxF08uaV6J6WBoEf1hADYjUPtjTnLFOHzBuzKtPnCXijGsjjjbNnEFn1pqLSQtj
-         p6fz4g9EmQJBGGnH+ZqKSkRvKk+18JZiAWmTeDCyYKFd2TBUVb0XEcvidbA8EI42mR9f
-         mJIJwPip9yG9DfVcrmYAneo8/E+AZ4v7MYRNwdtBSIfy5W/g3kDPn5LVpTfJHrKgTfIu
-         wZpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+D2ooj0EZyf/xtoBH/l/15WHUJMJs9hzAqBUSG0y8so0CwY31aoaD2y5ae5TWfK5rUvjxswjmcrKrbv5q@vger.kernel.org, AJvYcCX7tmLz7PIpGM/+RWBhkTlg+LMrcSNbKqiIYtZ11eoB1arF/G/xM1HINkraU5ZS9SU91ttpKQ+NXaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysjVp17gW6Sr1czexgtqY2E7KzL8cdK9J06FBORrSmngV1cLSZ
-	xFkQEEGIs/XcUAbeF4o3nHiybCj0ZdhMxsojie07Y+Mj9p2ZvhWWYB/g
-X-Gm-Gg: ASbGncsO89+R2oZKd1OsPeYXGjZ1zQjwGrTJRqmN1R26PHweII3kd5AdMAB8xqw+mKE
-	Ydq2wYXhxXRVGmQHx4GCIjHahfWXCB8qqnEH66MkqusQUCtqQ0icY/WtxJ5PTb7wH01Yk6Cv2zS
-	XQLXQvnSF2NZUtBo+VPHxfaxu5HRXaXVieP64ulbJ/Ljugb7SbI1EDpVvsSRy0QARuaAa5WTt3+
-	0DEM+FlhSCuoDy4s7nMZVUfg/TrUDxznopve6ztJ4iP3o2yIx2lhdgWfjPR60dfxF4GGjBJH+Yr
-	/dWGdtpwtbtXBf9cJHkEzW/8NHN0Mf1AzPG8FU2xe6OWBhu8Rz35MJUAAxHPh5qwo0gTCV7SfKF
-	D30KMnf5Pxg==
-X-Google-Smtp-Source: AGHT+IGXOLv5E0kKd2A6cCF8jo4VUPIGL16792gkYrlOQmmoOlQk+s3YJkvOuYIi8k5qz1PWxng+/g==
-X-Received: by 2002:a05:6a00:26f8:b0:742:ccf9:317a with SMTP id d2e1a72fcca58-74ce5159818mr7629424b3a.12.1751742188234;
-        Sat, 05 Jul 2025 12:03:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cf9e1sm4936081b3a.65.2025.07.05.12.03.07
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GbeLfqtbM84GigusBY9E85yZET2t+I54GGzPiTHuUK8=;
+        b=C0qXto1EepMuGU9X5///HzMLPFMXJuy7AQhbVm1y48/GU+PY5i3aVslDObuaLU8e16
+         +aRs2H+DNgjy8mvRxogFG8IgDf66QgtaabtMJOP8tuuZWcfEDziMal/N7atNQEaEH9L+
+         EFNDC8LK50ODAhHEQci79DHDVCaf5oT1MxWizjSE657gxy6FQF/EVXFB4nROKb3DK6sg
+         sqOhvAJnit/za1fp5LCw0USDcD3nq1lzAkLyosaBw+9CsVZ2vzrC4CTcwAuyGlifeiFq
+         ixyMP/YIOrfu2kTaFFYmKb4GwBLLcic7vNY6eXVKX3zNamBcggbECDDJxgZZIj4YV2nm
+         oRTg==
+X-Forwarded-Encrypted: i=1; AJvYcCX62D7mxfZsyJb98uEGHuXjlwdtGG2KHQuZ6aDy5W5nq9B7mGg4Osa6QKQY65Jsth1ooZ5579kmmOAHsE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytOR8WXV1655ndRw0vi5ACYoF6KrtekzetYXT2qecM1xqjTx3h
+	kXxlZZXXNjwN79hpTrED5d5TvguUCkq7BSBd11uFLTzojdLLN+YYN2lOpLlD62FDa0JrNtWP1hQ
+	UoMm76OP3VUjTZZGKC+x0Y3fAlVRTgR00kKQTVJ8DswCDqX1yojQdi7TvKMOucUrDysc=
+X-Gm-Gg: ASbGncsdU33dWtDwBa25ukBzN3z/uOQJAvtveFVnp0eH0yDnXdY+z3sv/otVP8A2f4x
+	Z5dAtkID5Jj5tCH4FgPcmhZUYjkAKkqzezZ0SsFJTbbqEcmOVhOGv8ZLwIsUfMJ5qwa9FzQRzjo
+	2jHHztKOeBXW/ziqRvK3FLpiLdGVgfw6IZ045FcfCUgG1PHRWHbjXPyfS5GSHA2oKUIDsu5FAIg
+	KYiBFKEXOt8s0dc9CNy/9RhATk7aUaqlFyElKzdvgzE+VX5aO2JRKrCuoddmEiMf3RIRoBgQHnV
+	PdH+FQJx/MIzG8IMxGIefPmmuNfRwHZ4gz1CoJ+lxcfoBRDtD0zX4GHxYRbDOBkZObNoiM2KmVp
+	4UIRBMsNTbbbPpFQiCcNQo5bhu4uVE85w0eo=
+X-Received: by 2002:a05:620a:1b96:b0:7d4:4abb:908f with SMTP id af79cd13be357-7d5f2f3f5fbmr408995385a.42.1751742194441;
+        Sat, 05 Jul 2025 12:03:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEcvtS4mI2BDeyqNJVRJsTnuleGJAXLklqYBVVRwEGb4WyHXNKOFHugdKts46+FzAjULo25pw==
+X-Received: by 2002:a05:620a:1b96:b0:7d4:4abb:908f with SMTP id af79cd13be357-7d5f2f3f5fbmr408991985a.42.1751742193996;
+        Sat, 05 Jul 2025 12:03:13 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384c18d3sm658991e87.212.2025.07.05.12.03.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 12:03:07 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sat, 5 Jul 2025 12:03:06 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: vinicius.gomes@intel.com, dave.jiang@intel.com, fenghuay@nvidia.com,
-	vkoul@kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] dmaengine: idxd: fix memory leak in error
- handling path
-Message-ID: <13cc0bf5-ecfc-4cda-ac8b-dacd714d5c41@roeck-us.net>
-References: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
+        Sat, 05 Jul 2025 12:03:13 -0700 (PDT)
+Date: Sat, 5 Jul 2025 22:03:11 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        kernel@collabora.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: adv7511: Fix
+ DRM_BRIDGE_OP_HDMI_{AUDIO|CEC_ADAPTER} setup
+Message-ID: <d2a4ixu6xjcltjylv5c43gkzksbr2n4cqhw4x6tljaph77is7q@mdlp7fhoms26>
+References: <20250704-adv7511-bridge-ops-fix-v1-1-c1385922066e@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,71 +92,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <20250704-adv7511-bridge-ops-fix-v1-1-c1385922066e@collabora.com>
+X-Authority-Analysis: v=2.4 cv=ffSty1QF c=1 sm=1 tr=0 ts=686976f3 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Wb1JkmetP80A:10 a=QX4gbG5DAAAA:8 a=EUspDBNiAAAA:8 a=1kJDpHXNGl3mU_r8nRYA:9
+ a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=AbAUZ8qAyYyZVLSsDulk:22
+X-Proofpoint-ORIG-GUID: EvnBKaMXhuW-uootCZjZlouCD--aJhL-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA1MDEyNSBTYWx0ZWRfX2AluVN7gsb4i
+ X+fj0bI5nXHAs2Rf6dKgTCMuOulLc9EL09BrQl1bPo92IBywvC/8aZMTAFLfgHsZPDVuJMYjnl/
+ VUd0SlA3R1Xn3czrmuNnsoa/N1PHquL4OKpebCMfVZKD43ZFzSIg5/8dGtHenFuvzKESos8q7Nj
+ HFPtu2QZrnVWw3ivQBPI34pnnL08+0RjsTjvzHe6BZ/stlXCyHnw9YOS2C+kAIw0QyJgX+SWPlO
+ +BzJBV5X755i2RBMANcEKBlTWTbUJWIx//WOAlqCBBwaEFMGZtCuGx7tRB79lpC/nkm3EbJyzqF
+ unnVXwiyM0lyRc0sMIXUK/O5D+Z1W6+osTTB9prEVPpfeRJ2Y8miffbGe2ZFRoEguowHQBjos7C
+ qgW8CmXNrH3warFcfUTFgrAGXG0uHTjifEZ9ZqkzemG/8QFfrBO1at0MLUcC5biWcoakctBj
+X-Proofpoint-GUID: EvnBKaMXhuW-uootCZjZlouCD--aJhL-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_07,2025-07-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507050125
 
-Hi,
-
-On Fri, Apr 04, 2025 at 08:02:08PM +0800, Shuai Xue wrote:
-> changes since v3:
-> - remove a blank line to fix checkpatch warning per Fenghua
-> - collect Reviewed-by tags from Fenghua
+On Fri, Jul 04, 2025 at 02:52:54PM +0300, Cristian Ciocaltea wrote:
+> When driver is built with either CONFIG_DRM_I2C_ADV7511_AUDIO or
+> CONFIG_DRM_I2C_ADV7511_CEC disabled, drm_bridge_connector_init() is
+> expected to fail with -EINVAL.  That is because all required audio (or
+> CEC) related callbacks in adv7511_bridge_funcs ended up being NULL.
 > 
+> Set DRM_BRIDGE_OP_HDMI_AUDIO and DRM_BRIDGE_OP_HDMI_CEC_ADAPTER bridge
+> ops only when the aforementioned kernel config options have been
+> enabled.
 > 
-> changes since v2:
-> - add to cc stable per Markus
-> - add patch 4 to fix memory leak in idxd_setup_internals per Fenghua
-> - collect Reviewed-by tag for patch 2 from Fenghua
-> - fix reference cnt in remove() per Fenghua
-> 
-> changes since v1:
-> - add Reviewed-by tag for patch 1-5 from Dave Jiang
-> - add fixes tag
-> - add patch 6 and 7 to fix memory leak in remove call per Vinicius
-> 
-> Shuai Xue (9):
->   dmaengine: idxd: fix memory leak in error handling path of
->     idxd_setup_wqs
->   dmaengine: idxd: fix memory leak in error handling path of
->     idxd_setup_engines
->   dmaengine: idxd: fix memory leak in error handling path of
->     idxd_setup_groups
->   dmaengine: idxd: Add missing cleanup for early error out in
->     idxd_setup_internals
->   dmaengine: idxd: Add missing cleanups in cleanup internals
->   dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
->   dmaengine: idxd: fix memory leak in error handling path of
->     idxd_pci_probe
->   dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove
->     call
->   dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
-> 
->  drivers/dma/idxd/init.c | 159 ++++++++++++++++++++++++++++------------
->  1 file changed, 113 insertions(+), 46 deletions(-)
+> Fixes: ae01d3183d27 ("drm/bridge: adv7511: switch to the HDMI connector helpers")
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 
-This patch series, as applied to 6.6 and 6.12 kernels, results in a variety
-of warning backtraces and crashes when unloading idxd the driver, such as
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-da_free called for id=0 which is not allocated.
-refcount_t: underflow; use-after-free.
-list_add corruption. next->prev should be prev (ff11d2ed9908ecd0), but was ff11d2ed8a5d0ba0. (next=ff11d2ed8a5d0ba0).
 
-Looking into it, I see that many resources are now released from functions
-such as idxd_cleanup() and idxd_free(). At the same time, the calls to
-put_device(idxd_confdev(idxd)) trigger calls to idxd_conf_device_release()
-which releases the same resources. On top of that,
-put_device(idxd_confdev(idxd)) is now called from idxd_remove() _and_ from
-idxd_free() [which is called from idxd_remove()], on top of the put_device()
-called from device_unregister() itself.
-
-Does this actually work in the upstream kernel ? What prevents duplicate
-release of resources from idxd_free(), idxd_cleanup(), and
-idxd_conf_device_release() ? And why would idxd_remove() need the extra
-put_device() call ?
-
-Sorry if I am missing something, I just try to understand the logic behind
-this patch series and why it triggers crashes and warning backtraces in 6.6
-and 6.12 kernels.
-
-Thanks,
-Guenter
+-- 
+With best wishes
+Dmitry
