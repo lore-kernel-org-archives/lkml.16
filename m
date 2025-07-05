@@ -1,286 +1,91 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD1716A956
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 06:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7514328F4;
+	Sat,  5 Jul 2025 06:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751695650; cv=none; b=ZXcu1aKCMgIKclnfwyH4y10OsA2/8u8KO3K10fH71CV83/WumqXf7R5Ep/eAHPWZGa3SLHOM7x54/KQ/uuLNYz3DO+XFAu+fEuIxjwg20bdixJVtQDtgyH6A3WjpSwMWtI7E+2jiY4JaULIToQMHMGp5EqbaKTi6H/7k9iYwbRk=
+	t=1751696176; cv=none; b=NB90A+vQ3n/A9B2QiFyeI123ka5Hrvb50KSM28pFidiZ8sJeJ5VdS8MKULg1VK/eBmtspE70/kfg6VS71N235dCOp2D1pTrlndLlKhSE9Hr6SEaKRzmmWwKNDV1MoZQ37pURpCsaPGL0iHQuO94xPZhNqi+M0tx1xJgS/P4i+U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751695650; c=relaxed/simple;
-	bh=NrT12kA5qjy5ZJ8dedsQeHk4B3Q8JNkXD5kOgaP4JoY=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=A/ZYKPMrXAWyl7JYVwOPpORm6bdjdKYK+fN8wxrlZGY+4AuEYIlZQ+XeAzoJORSU5OK+yn1Oz6SR1q14fLiuoMvAu+uVSfAunUj4joG3ae0G/ZgNnp67vTqYc9Uj6NVBATXFjWcXh/3ceobWunhU0iXIKZmu/Sg6AM8Wh4ENSx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FKZDQhtR; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751696176; c=relaxed/simple;
+	bh=LF1jiRasVpDsHCFv5RnCFTT28flPBjHzekp2MX6K3+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wn5PqwlPt85gQQDpRd1ouMecdTJWPEhC41xPIc8w5CM1EQVLdqUEc8EbRVmAl3C2ouprKjp3CfDBhdcj07CnPWZ1W4ppv/ZUktMqhWcapXLnJ+tm1i1rE96L+yC4NPCqCO1ia73PtP8Ph/2vj4dtHUw8AzvqMDrwGo/xzKjW7a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVmJhYtp; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FKZDQhtR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVmJhYtp"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so17445081fa.1;
+        Fri, 04 Jul 2025 23:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751696172; x=1752300972; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LF1jiRasVpDsHCFv5RnCFTT28flPBjHzekp2MX6K3+w=;
+        b=UVmJhYtpeADP4m3gTTC4wIFUY5t/ElqDFMDm9QBZjgUk9sU6cvc2AbUb9Jd5NwITMX
+         3bc/hkAChBorcekexgQDU7OY9eFRr8dhmKmUcqgDkWaOjebDeLU4G2NmqFs95YqCzN73
+         kQ3AuOl3s6RSAmFxccLqMV4dORuPYtPklmXqqzHWjg8RUbJhEF0KH4pBJBnE4oV7ro+e
+         0ESBY9Vq3K7Xh/YBpwt+7xuKs+95tPBusu0VupD/Rwni/GRQ15Vfyabjx+kHpkYm7y6Y
+         i960iNawkfjdWvZvWrqlxXX89++eb89ERFoeZN5KZRdOGueVmpGNp6wwOiTx21wCAdej
+         S9GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751696172; x=1752300972;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LF1jiRasVpDsHCFv5RnCFTT28flPBjHzekp2MX6K3+w=;
+        b=Nz4kKTzbYXhphUuPi6ZNgh40qNm4VOCmhFynSQlW1JNuukCS5DmtRdEuVH/Oiz0BT6
+         AO2rgs1ubv8D/zGveySO9NwLL3DYZDb4W1kHqaYBAtyE60oT+Q0MWOlqxEiWfJGsqK26
+         NdGN7DxxjRP8gKAC9lWGvrkq8Ix20QnbzW5Wxtdua3uXc7PZ8rVxCojsYRFIrqZzCyDU
+         /VmjKAGqDwJorKnM6mzJyhu4/qBBqZgG0Ae8lO9FsR5/t9MCMW1kYJiDLl+pT2QtLFju
+         l0G9xFKAH6HIi4SOKsHGe2Dql4NZctG/WU30nz98bhhp55MYh1sPniy/vh3ZnbqrXqDn
+         9Ctw==
+X-Forwarded-Encrypted: i=1; AJvYcCXj8ded9iI0k5YkuLT+0S/ZUl//Er9mo4Whu514iAgV/sdLcNKWwaQVlqC88uS7AKJVEO4nvVy0teSOdGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/bwS1tPlo76VMMdsdGk2dx1hZcqxKqJ+VKjUK5LW+MT93R03w
+	xpExVDqLzq83qH/kdLlKVLbl3TQ/Rvr009MKv/XtDB76tU/vp9GLSvxD
+X-Gm-Gg: ASbGncunue5dqG8gPAlAoupXZMKp37QF/DyycFDMQHX1iWu4YxEueYQat3LP/sLIqXr
+	ucC3eyHPVjoobwCsSVudzSfyZ9WrOzpSmUpasRJ4vbcYFWjeb68JRV/Q8oJxJdVmx1uefmP5rCL
+	5TiiPaIov+ksFtpuaxafNV+9MT3Fhs4gnapLiya9D0PlnvISGwVkLnZrZssGxUHcFO2+BO4kGC1
+	BWwUZm0i79Cc7rXQMNj84BkbYMPPvbodADG9GcuWLYilX3073tCJCw+zMN34ckxWqf1iZQIxPJb
+	bUrMwPNhhtp8dPSZLEtXdHNzbDN5U/Ov6CReAwyeb7XrW+DSx/0SgorJRGBTY1orM4br/ypKTns
+	JGMk0roE4EGg=
+X-Google-Smtp-Source: AGHT+IGTOe06lLadUO5wP/zEqqBonfrCzWyQsWr8bdiOWnM8sH9bGGRfkG+o/Fg6av04gGMVK1aiVA==
+X-Received: by 2002:a05:651c:1183:b0:32a:e7b9:1dc9 with SMTP id 38308e7fff4ca-32e1bff32e0mr15160521fa.3.1751696172217;
+        Fri, 04 Jul 2025 23:16:12 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.70.88])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32e1b11eaedsm4434731fa.66.2025.07.04.23.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 23:16:11 -0700 (PDT)
+Date: Sat, 5 Jul 2025 09:16:10 +0300
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>, 
+	Christoph Hellwig <hch@infradead.org>, Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Konstantin Evtushenko <koevtushenko@yandex.com>, Sergey Bashirov <sergeybashirov@gmail.com>
+Subject: Re: [PATCH 2/2] NFSD: Fix last write offset handling in layoutcommit
+Message-ID: <2swioqrkdxgo3clt77vfc3iyta5diffsoecbqes7pisalsdm4v@d35b4pfsik76>
+References: <20250704114917.18551-1-sergeybashirov@gmail.com>
+ <20250704114917.18551-3-sergeybashirov@gmail.com>
+ <f1fdddde-2450-4a2c-a1e8-ee6a3ff81090@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751695640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OoyKvKGvOIY+YOUK48oOpXE0v1eQrruCiKGQYblUeLQ=;
-	b=FKZDQhtREfyH1f1X4BX8cCxxOnFSsRs1+D9N7Sb6JyptsT4zg410KhBXcOKR4fuaZHZ5Yz
-	PE3egEXoI9aayXiVC4cyXbKOYcUKKqvSXnVh5QGaprVycAHTQIUs4UbmG7FcpkOFl/FGiT
-	qpFoZWQW3p0mpwXyCbVFrsyHYgEMqGo=
-Date: Sat, 05 Jul 2025 06:07:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: qiang.zhang@linux.dev
-Message-ID: <74395e33b2175fdb2745211c4ca41e5b2358d80d@linux.dev>
-TLS-Required: No
-Subject: Re: [bug report] [PATCH v6] net: usb: Convert tasklet API to new
- bottom half workqueue mechanism
-To: "Oleksij Rempel" <o.rempel@pengutronix.de>, "Jun Miao"
- <jun.miao@intel.com>
-Cc: sbhatta@marvell.com, kuba@kernel.org, oneukum@suse.com,
- netdev@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <aGgD_Lp0i-ZU2xkt@pengutronix.de>
-References: <20250618173923.950510-1-jun.miao@intel.com>
- <aGgD_Lp0i-ZU2xkt@pengutronix.de>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f1fdddde-2450-4a2c-a1e8-ee6a3ff81090@oracle.com>
+User-Agent: NeoMutt/20231103
 
->=20
->=20Hi Jun,
->=20
->=20On Wed, Jun 18, 2025 at 01:39:23PM -0400, Jun Miao wrote:
->=20
->=20>=20
->=20> Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-> >=20
->=20>  replaces all occurrences of tasklet usage with the appropriate wor=
-kqueue
-> >=20
->=20>  APIs throughout the usbnet driver. This transition ensures compati=
-bility
-> >=20
->=20>  with the latest design and enhances performance.
-> >=20
->=20
-> After applying this patch, the smsc95xx driver fails after one down/up
->=20
->=20cycle.
+Hi Chuck,
 
-Hello, Oleksij
+Thanks for your kind guidance, it really helps to understand the
+process of code contribution better! I'm on vacation next week,
+will rework and resubmit updated patches when I get back.
 
-Please try follow patch base on Jun Miao's patchs:
-
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 9564478a79cc..554f1a1cf247 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -953,6 +953,7 @@ int usbnet_open (struct net_device *net)
-        dev->pkt_cnt =3D 0;
-        dev->pkt_err =3D 0;
-        clear_bit(EVENT_RX_KILL, &dev->flags);
-+       enable_work(&dev->bh_work);
-=20
-=20       // delay posting reads until we're fully open
-        queue_work(system_bh_wq, &dev->bh_work);
-
-
-Thanks
-Zqiang
-
-
->=20
->=20Here is how I can reproduce the issue:
->=20
->=20nmcli device set enu1u1 managed no
->=20
->=20ip a a 10.10.10.1/24 dev enu1u1
->=20
->=20ping -c 4 10.10.10.3
->=20
->=20ip l s dev enu1u1 down
->=20
->=20ip l s dev enu1u1 up
->=20
->=20ping -c 4 10.10.10.3
->=20
->=20The second ping does not reach the host. Networking also fails on oth=
-er
->=20
->=20interfaces.
->=20
->=20After some delay, the following trace appears:
->=20
->=20[ 846.838527] INFO: task kworker/u16:1:308 blocked for more than 120 =
-seconds.
->=20
->=20[ 846.838596] Not tainted 6.16.0-rc3-00963-g4fcedea9cdf2-dirty #32
->=20
->=20[ 846.838666] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disa=
-bles this message.
->=20
->=20[ 846.838697] task:kworker/u16:1 state:D stack:0 pid:308 tgid:308 ppi=
-d:2
->=20
->=20 task_flags:0x4208060 flags:0x00000010
->=20
->=20[ 846.838776] Workqueue: events_unbound linkwatch_event
->=20
->=20[ 846.838851] Call trace:
->=20
->=20[ 846.838880] __switch_to+0x1d0/0x330 (T)
->=20
->=20[ 846.838933] __schedule+0xa88/0x2a90
->=20
->=20[ 846.838980] schedule+0x114/0x428
->=20
->=20[ 846.839010] schedule_preempt_disabled+0x80/0x118
->=20
->=20[ 846.839036] __mutex_lock+0x764/0xba8
->=20
->=20[ 846.839060] mutex_lock_nested+0x28/0x38
->=20
->=20[ 846.839084] rtnl_lock+0x20/0x30
->=20
->=20[ 846.839115] linkwatch_event+0x18/0x70
->=20
->=20[ 846.839141] process_one_work+0x760/0x17b0
->=20
->=20[ 846.839175] worker_thread+0x768/0xce8
->=20
->=20[ 846.839208] kthread+0x3bc/0x690
->=20
->=20[ 846.839237] ret_from_fork+0x10/0x20
->=20
->=20[ 846.839359] INFO: task kworker/u16:1:308 is blocked on a mutex like=
-ly
->=20
->=20owned by task ip:899.
->=20
->=20[ 846.839381] task:ip state:D stack:0 pid:899
->=20
->=20tgid:899 ppid:1 task_flags:0x400100 flags:0x00000019
->=20
->=20[ 846.839419] Call trace:
->=20
->=20[ 846.839432] __switch_to+0x1d0/0x330 (T)
->=20
->=20[ 846.839466] __schedule+0xa88/0x2a90
->=20
->=20[ 846.839495] schedule+0x114/0x428
->=20
->=20[ 846.839524] schedule_timeout+0xec/0x220
->=20
->=20[ 846.839551] wait_skb_queue_empty+0xa0/0x168
->=20
->=20[ 846.839581] usbnet_terminate_urbs+0x150/0x2c8
->=20
->=20[ 846.839609] usbnet_stop+0x41c/0x608
->=20
->=20[ 846.839636] __dev_close_many+0x1fc/0x4b8
->=20
->=20[ 846.839668] __dev_change_flags+0x33c/0x500
->=20
->=20[ 846.839694] netif_change_flags+0x7c/0x158
->=20
->=20[ 846.839718] do_setlink.isra.0+0x2040/0x2eb8
->=20
->=20[ 846.839745] rtnl_newlink+0xd88/0x16c8
->=20
->=20[ 846.839770] rtnetlink_rcv_msg+0x654/0x8c8
->=20
->=20[ 846.839795] netlink_rcv_skb+0x19c/0x350
->=20
->=20[ 846.839823] rtnetlink_rcv+0x1c/0x30
->=20
->=20[ 846.839848] netlink_unicast+0x3c4/0x668
->=20
->=20[ 846.839873] netlink_sendmsg+0x620/0xa10
->=20
->=20[ 846.839899] ____sys_sendmsg+0x2f8/0x788
->=20
->=20[ 846.839924] ___sys_sendmsg+0xf0/0x178
->=20
->=20[ 846.839950] __sys_sendmsg+0x104/0x198
->=20
->=20[ 846.839975] __arm64_sys_sendmsg+0x74/0xa8
->=20
->=20[ 846.840000] el0_svc_common.constprop.0+0xe4/0x338
->=20
->=20[ 846.840033] do_el0_svc+0x44/0x60
->=20
->=20[ 846.840061] el0_svc+0x3c/0xb0
->=20
->=20[ 846.840089] el0t_64_sync_handler+0x104/0x130
->=20
->=20[ 846.840117] el0t_64_sync+0x154/0x158
->=20
->=20[ 846.840164]
->=20
->=20[ 846.840164] Showing all locks held in the system:
->=20
->=20[ 846.840199] 1 lock held by khungtaskd/41:
->=20
->=20[ 846.840216] #0: ffffffc08424ede0 (rcu_read_lock){....}-{1:3}, at: d=
-ebug_show_all_locks+0x14/0x1b0
->=20
->=20[ 846.840309] 3 locks held by kworker/u16:2/47:
->=20
->=20[ 846.840325] #0: ffffff800926a148 ((wq_completion)ipv6_addrconf){+.+=
-.}-{0:0}, at: process_one_work+0x698/0x17b0
->=20
->=20[ 846.840406] #1: ffffffc0860f7c00 ((work_completion)(&(&net->ipv6.ad=
-dr_chk_work)->work)){+.+.}-{0:0}, at: process_one_work+0x6bc/0x17b0
->=20
->=20[ 846.840484] #2: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl=
-_lock+0x20/0x30
->=20
->=20[ 846.840568] 2 locks held by pr/ttymxc1/60:
->=20
->=20[ 846.840595] 5 locks held by sugov:0/84:
->=20
->=20[ 846.840618] 2 locks held by systemd-journal/124:
->=20
->=20[ 846.840639] 3 locks held by kworker/u16:1/308:
->=20
->=20[ 846.840655] #0: ffffff8005d00148 ((wq_completion)events_unbound){+.=
-+.}-{0:0}, at: process_one_work+0x698/0x17b0
->=20
->=20[ 846.840733] #1: ffffffc087307c00 ((linkwatch_work).work){+.+.}-{0:0=
-}, at: process_one_work+0x6bc/0x17b0
->=20
->=20[ 846.840810] #2: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl=
-_lock+0x20/0x30
->=20
->=20[ 846.840894] 1 lock held by ip/899:
->=20
->=20[ 846.840910] #0: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl=
-_newlink+0x5e8/0x16c8
->=20
->=20[ 846.840982] 2 locks held by sshd/901:
->=20
->=20[ 846.840998] #0: ffffff800aee06b0 (nlk_cb_mutex-ROUTE){+.+.}-{4:4}, =
-at: __netlink_dump_start+0x100/0x800
->=20
->=20[ 846.841073] #1: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl=
-_dumpit+0x128/0x1a8
->=20
->=20[ 846.841149] 2 locks held by sshd/903:
->=20
->=20[ 846.841165] #0: ffffff800b1c76b0 (nlk_cb_mutex-ROUTE){+.+.}-{4:4}, =
-at: __netlink_dump_start+0x100/0x800
->=20
->=20[ 846.841237] #1: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: rtnl=
-_dumpit+0x128/0x1a8
->=20
->=20Reverting this patch recovers smsc95xx functionality.
->=20
->=20Best Regards,
->=20
->=20Oleksij
->
+--
+Sergey Bashirov
