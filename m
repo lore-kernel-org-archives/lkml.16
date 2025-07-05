@@ -1,106 +1,146 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5BB2E36E0
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433101FECA1;
+	Sat,  5 Jul 2025 07:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751700078; cv=none; b=MWWz3ywmULwDLAqoq7+m31tTLUBDGtxgpu63I/0onJZdjnwO2Cag/nbiycas33r5Pucs5jYtQVGOydhGCpId9+en7/V10wuKkvmf4MXFcXN1VOLKx16dQKBdFbN8LmRugulwXEyCE34T5KKNSVxEwmq33zmqQWs8E2jqAjFU3BA=
+	t=1751700104; cv=none; b=kg7xnD2+E3el7wE/c4Ra2rXidOPciJotFMX6ceILHHPH7R3TasSswa/Yqdn1oE5yz7niyRTf7MirLfzjUG4IpzXOdNyLSp8a36IIxNG5+I5jjQ3jng+GARJrNw/xFZttsdy0Tq3K60734Ms3ZbjdmqMwzs5oaYM2MIedpTpVIaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751700078; c=relaxed/simple;
-	bh=+xBPB/8dTHOxwVpAzuXPV8Ax9paQP4P6o5ZXrcl4zbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aXFIgVuGFE3/B6gVl5CQgwx/97f9CzKN6hRLcxdVXR+cPZ+X7AZyeRXIKfSw336qlBzKtrIgEzFnS8LQfR0+QTOUJfitPkK4Kz9kmIf9mFfPx7NKuCgIL+9wDY9RMb1Is6e0qIEIo3Ogdozfv2+oyw30sn74CsGu1n7Preso8Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hoRSOZXN; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hoRSOZXN"
-Message-ID: <c3e83d38-1192-4c55-a4ea-263639f47ad6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751700072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=euhcLfujtIvPVA/VcYVwZJTUlTuFRe4/HxRQq/ltqzY=;
-	b=hoRSOZXNSXk4tqkpkGPZ6moJ0oX9X2ATr72QOgTxioSC/wY+0yJmMaHHge1BSXpzYK7gDZ
-	h/oGRFZuflNp4k7fSkjYhCG8Io9w359QPR7e4SAQ8z89c0sHjr4gqlOnX6wonNL8gfh5b6
-	2DsvSYunqfnkolmq25dJ3cJXyH3P/iM=
-Date: Sat, 5 Jul 2025 00:21:06 -0700
+	s=arc-20240116; t=1751700104; c=relaxed/simple;
+	bh=LF8J+P/koEFy0Ko4H5/UKpmWQHaOlbyQL4Cbdi8KDRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L7IdtBtsYFiofO3eDFo8CbXsxKWzi5ISrBoXa3MXcDZln2lEWqZfN+zn4APPXZvnVsZDbE6nku3p/wD2aKKY4ghBk2tK9AytJJH7/IFdStF634bFNGxYBWm0KblRkmhccZpDqCeLThEWoodg6iSEN3/4/Lnkr/A+DLDt58McR/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.123])
+	by gateway (Coremail) with SMTP id _____8AxlnCB0mhoErsiAQ--.9285S3;
+	Sat, 05 Jul 2025 15:21:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.123])
+	by front1 (Coremail) with SMTP id qMiowJBxZOSA0mhoElgKAA--.60805S2;
+	Sat, 05 Jul 2025 15:21:37 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v12 0/4] Add Loongson Security Engine chip driver
+Date: Sat,  5 Jul 2025 15:20:41 +0800
+Message-ID: <20250705072045.1067-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] RISC-V: KVM: Disable vstimecmp before exiting to
- user-space
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-References: <20250704153838.6575-1-apatel@ventanamicro.com>
- <20250704153838.6575-2-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250704153838.6575-2-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxZOSA0mhoElgKAA--.60805S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr43XFy5WrW7Cw4xCr4rWFX_yoW5ZrWDpF
+	45C3yakr4UJrsrCr93Jry8CFyfZ3s3Jr9xKa9rXw15ur9rAa48XrW2yFyUAF47AF1rJry2
+	vFWkCF4UCF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
+
+The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+accelerator engines. Each engine have its own DMA buffer provided
+by the controller. The kernel cannot directly send commands to the
+engine and must first send them to the controller, which will
+forward them to the corresponding engine. Based on these engines,
+TPM2 have been implemented in the chip, then let's treat TPM2 itself
+as an engine.
+
+v12: "loongson-tpm" -> "tmp_loongson"
+
+v11: Put all updates to the MAINTAINERS in one patch
+     crypto: statically initialize rng_devices.lock, use this lock in
+             loongson_rng_probe().
+
+v10: mfd: Cleanned up coding style.
+     crypto: Unlimited tfm
+     tpm: Added error check
+
+v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
+
+v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+    are all encryption related drivers and SM2, SM3, and SM4 drivers
+    will be added to the crypto subsystem in the future, the base driver
+    need to be changed when adding these drivers. Therefore, it may be
+    more appropriate to place the base driver within the crypto
+    subsystem.
+
+    Removed complete callback in all driver. Removed the concepts of
+    "channel", "msg" and "request" as they may be confusing. Used the
+    concepts of "egnine" and "command" may be better.
+
+v7: Addressed Huacai's comments.
+
+v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+
+    crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+    ls6000se-rng.c ->loongson-rng.c
+
+    tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+
+v5: mfd: Registered "ls6000se-rng" device in mfd driver
+    tpm: Prefix all with tpm_loongson instead of tpm_lsse.
+         Replace all "ls6000se" with "loongson"
+
+v4: tpm: Removed MODULE_AUTHOR fields.
+         Prefix all with tpm_lsse instead of tpm.
+
+v3: Put the updates to the MAINTAINERS in a separate patch.
+    tpm: Added reminder about Loongson security engine to git log.
+
+v2: Removed misc driver. Added tpm driver.
+
+Qunqin Zhao (4):
+  mfd: Add support for Loongson Security Engine chip controller
+  crypto: loongson - add Loongson RNG driver support
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add entry for Loongson Security Engine drivers
+
+ MAINTAINERS                            |   9 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_loongson.c        |  84 ++++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   5 +
+ drivers/crypto/loongson/Makefile       |   1 +
+ drivers/crypto/loongson/loongson-rng.c | 209 ++++++++++++++++++++
+ drivers/mfd/Kconfig                    |  11 ++
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/loongson-se.c              | 253 +++++++++++++++++++++++++
+ include/linux/mfd/loongson-se.h        |  53 ++++++
+ 13 files changed, 639 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/loongson-rng.c
+ create mode 100644 drivers/mfd/loongson-se.c
+ create mode 100644 include/linux/mfd/loongson-se.h
 
 
-On 7/4/25 8:38 AM, Anup Patel wrote:
-> If VS-timer expires when no VCPU running on a host CPU then WFI
-> executed by such host CPU will be effective NOP resulting in no
-> power savings. This is as-per RISC-V Privileged specificaiton
-> which says: "WFI is also required to resume execution for locally
-> enabled interrupts pending at any privilege level, regardless of
-> the global interrupt enable at each privilege level."
->
-> To address the above issue, vstimecmp CSR must be set to -1UL over
-> here when VCPU is scheduled-out or exits to user space.
->
-> Fixes: 8f5cb44b1bae ("RISC-V: KVM: Support sstc extension")
-> Fixes: cea8896bd936 ("RISC-V: KVM: Fix kvm_riscv_vcpu_timer_pending() for Sstc")
-> Reported-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-> Closes: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2112578
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/kvm/vcpu_timer.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
->
-> diff --git a/arch/riscv/kvm/vcpu_timer.c b/arch/riscv/kvm/vcpu_timer.c
-> index ff672fa71fcc..85a7262115e1 100644
-> --- a/arch/riscv/kvm/vcpu_timer.c
-> +++ b/arch/riscv/kvm/vcpu_timer.c
-> @@ -345,8 +345,24 @@ void kvm_riscv_vcpu_timer_save(struct kvm_vcpu *vcpu)
->   	/*
->   	 * The vstimecmp CSRs are saved by kvm_riscv_vcpu_timer_sync()
->   	 * upon every VM exit so no need to save here.
-> +	 *
-> +	 * If VS-timer expires when no VCPU running on a host CPU then
-> +	 * WFI executed by such host CPU will be effective NOP resulting
-> +	 * in no power savings. This is because as-per RISC-V Privileged
-> +	 * specificaiton: "WFI is also required to resume execution for
-> +	 * locally enabled interrupts pending at any privilege level,
-> +	 * regardless of the global interrupt enable at each privilege
-> +	 * level."
-> +	 *
-> +	 * To address the above issue, vstimecmp CSR must be set to -1UL
-> +	 * over here when VCPU is scheduled-out or exits to user space.
->   	 */
->   
-> +	csr_write(CSR_VSTIMECMP, -1UL);
-> +#if defined(CONFIG_32BIT)
-> +	csr_write(CSR_VSTIMECMPH, -1UL);
-> +#endif
-> +
->   	/* timer should be enabled for the remaining operations */
->   	if (unlikely(!t->init_done))
->   		return;
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+base-commit: a79a588fc1761dc12a3064fc2f648ae66cea3c5a
+-- 
+2.45.2
+
