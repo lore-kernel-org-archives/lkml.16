@@ -1,313 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3654818C008;
-	Sat,  5 Jul 2025 02:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AB42E3719
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 02:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751683334; cv=none; b=EXm83eaXBIcg7oE+1F3OBAcdrhVcEF6JxvCp77tA6l1wSVV2qEDkvPgmcuQ9+mQQy3U7zdUerFTXY8tM05zFAPn0+F24Rj3WuQjZOU0M0DyPKISCWim7uDKLY5z70zqAjNo996uqOBkjGxTYM8cQqi2LcM+gfE3MUA+TBDI+E04=
+	t=1751683652; cv=none; b=G+LzdV/roK1N7l9bbVcJ0tHqwrgggBoDcJHjafuEx6lEpuR+Hi6HK99BYSgsLJ9Y8Ug1L0qT7hD1rZVtKeTmfhmyLz6N3K2A0+Ex3mMtWqzCkuGf6BC4VoaI5+moONXn10oVQjU2JAteLF9XTGj2CqJwxPsrRgbEoTnNFzOIbYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751683334; c=relaxed/simple;
-	bh=uD3I/y75dZxFUb887u8OjaaPjYvIjNI42BjLkWVYi8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATAsoOTJWbx4aXm3P++fl1kxvXemnEmoWQ7kGdPbvDjNZclOqDfPB9xSvjhWOGSQtNOiBjkjx/rzbunWS2Nk4z3MkGZk91PkfqAuyiegks+Tb1AHxwJJhDQ4zJ9PE8WBjOvhbLL/0RmJxpAPYETuJ15Oqcmbfq7fNYREERXOnsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eq9lOmbm; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751683652; c=relaxed/simple;
+	bh=a02lPmZKv/naTYZA9OmQPxvGdxGzUfJ3jTjVREOZLAI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nXfhRdgFRma6AVqb3qJt2+KBnnOHh99ps2QRn15uccUKg7BCj+z0Wqjpw3Uv0zKR+PHsraAe+qCV4BKKtZ9xqrDu1+rzhRwJ14HwRcfkklZnPuK+wbRj/giwKpwql2bja3hzmS+vpz0sWEjnsAtdRG+sxRGTsSWZZXC264xMcgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KEvRdK7v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eq9lOmbm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751683330; x=1783219330;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uD3I/y75dZxFUb887u8OjaaPjYvIjNI42BjLkWVYi8E=;
-  b=Eq9lOmbmADUbNj1zWvGShtURdbPMCPtg6BcHhdJOnn5kLE3Zuy5THklI
-   PkXX6SCngG8acrECuEAQL0xHJxznGYvj2Z2nCB9htvIZKVuon6KK+BPXI
-   wcN4rnH5OowK/JjGA0Q2196A8T4kB2PfzEg9qmrUweWByBkpc22XrWqQl
-   zq7w0dSD9p4I6dAQGGNHE2w6+85cK4BIoyijZQBjdLGi68ad8t3HSXByG
-   viTfSSLZw5dFUF67fMIe7u6axcGOHu6o5rcQLyHgx5/aTBco4cpaCg8Nz
-   A/cuVMOPQU27Yhe+AeR4RdyIHNU2uq/JxUA0fKgHMoB2KNp7TJZaHM13a
-   g==;
-X-CSE-ConnectionGUID: XNiLfYCERz2uzaOUMOh+jA==
-X-CSE-MsgGUID: m/zYjoknSFqk4qR6pTd1KQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57670414"
-X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
-   d="scan'208";a="57670414"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 19:42:10 -0700
-X-CSE-ConnectionGUID: Z5BLif5PSri+C6lKn5woZA==
-X-CSE-MsgGUID: mau3jFtSTfKrjGWBCE6iAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
-   d="scan'208";a="191934934"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 04 Jul 2025 19:42:08 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXsqs-0004DL-0s;
-	Sat, 05 Jul 2025 02:42:06 +0000
-Date: Sat, 5 Jul 2025 10:41:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, alexei.starovoitov@gmail.com,
-	rostedt@goodmis.org, jolsa@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 03/18] ftrace: factor out
- ftrace_direct_update from register_ftrace_direct
-Message-ID: <202507051048.PEDxVblg-lkp@intel.com>
-References: <20250703121521.1874196-4-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KEvRdK7v"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5652ZSsZ009155
+	for <linux-kernel@vger.kernel.org>; Sat, 5 Jul 2025 02:47:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=gjy4TsFninVe5bPVihlWoJ
+	GRkiWlNHpU3ZfSz9r0mGI=; b=KEvRdK7vKZsc64O1isantDYYOvYOQKNHrxauG6
+	ConzIya7qW1oBjk7wAHtrNccPxFztnk4H9CaGfHaMZHSK3becWugA/dpW40gGkWl
+	JKWmmqnOi2OnDE8vm/UiV8JH2S6Z9EcvK95gSuWGsQdWqXMYaXUh8iUBpbLCJ6+X
+	QDd3rx9ItRWDcsZJfMaHE7wCaMGPDBKZ/vGQpZcBRL3ASLNqFcJnvEf5CxM0GIt9
+	Vfvlm6iEUdlqxV1hMV1dgne54Ydnw/T3CpLGokTs76qg0AM3Po8/Cen/bPMCDY1f
+	8CPjQ88IxILEqRttzb+WUD07LmTTxxpq91LDksLPVtCSh40A==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pucm80dr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 02:47:29 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d4576e83cdso390477285a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 19:47:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751683648; x=1752288448;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gjy4TsFninVe5bPVihlWoJGRkiWlNHpU3ZfSz9r0mGI=;
+        b=hHneQbpYfZa3z7uthMdTRXCzhRmavcnb4QHwKLkHiXRdVl7oBM0xHeY2XLDHTaW+OK
+         vZfb1aqhEN2SsaSuWV3tDy/m8DhPUnxbFo7Wow/ZhXbA0IPVXjGU9gjotw+mnpRzwG2j
+         jbu6HfentDvh455Shl03ztCC7G89XDr/7N7wZ/G7KHjbYYmzgfACIL9bIeyUtVJOkMAv
+         huTlhCbsTTlhLtybDb88uisDquYYNA+aJkQqaPyJ99MHJ6Uz+HWAGKXNnEdQsqHRMwzp
+         07WQgv95gqMkp/JnI8lNXmI9oQoFVZqWwddUcYxqTDHPpWTkBjnuayJn0XSggkT9dkZx
+         rFLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVii0o4MAsfNOfe8is6yohAnzliU+6uZ2pa2w38SQo0up0mbDNxFArmztNmpRmvcy8vmVuMi2agXvRMgjU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygc6r6x9iMCKiPEPSV1be4SNdCiKdJknzXGZ+jW6fN3cwuO1Ta
+	1v4e68jhMWUMjt6RWFPAU6rtxcAa88UZs4CcDHI0iUMYEmEH2tU7IcKI4R27ePsDwF1BmDJTumR
+	5ChTZ3H/5aoRr9UF/h3EKp1rnem4xjBb0gttrfw+RT4jz5cXQe9Z/gL5l1UOnLiOpc5A=
+X-Gm-Gg: ASbGnctvbSDlQCxjW+0tK07lnlOshCiDtH3RxPteagHRJ7m5pTWyf5pjUlU+DcFQU03
+	Mp2kl/aB9T7GaXTIb/BQFkPhXsdS8FtuYPH0o+UVsCA5Hk4b/l6gsk7q2PAgEvNvZnNGQtttwcf
+	bQOysebwvha8Rr4ztXt0ZKjpmndE8Nbiiqpv1k6b6Mu6ou3+QCrYMkaOOcMCQP/PvY2cfHD7W74
+	zC1tpgQy5BZde3JSZN7WPjQv1j9XFTpoQTbaMX5GMgcDbhET+yvLB8r9d7BNmhKjFyOm0+Q0DW3
+	eab1ccsP3q4kOCxE4KQpbXsXFc5osVzkwdnjkqPfWeCrXQ/YTUVZ3nSxxnVe7jM4wnG72xhmrWP
+	QzX4pCoMUKV1CFAGc/6MNurTyuLw0Qs1OU0s=
+X-Received: by 2002:a05:620a:2485:b0:7d3:9218:6d1b with SMTP id af79cd13be357-7d5effa5066mr170819385a.25.1751683648231;
+        Fri, 04 Jul 2025 19:47:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMjGKSOCRv6Aeyw2vw6oMPWzpEEhkYFVFUNj5HTXRFl2we4vDYiTxbSAstbuCsTQWU2PJ0sA==
+X-Received: by 2002:a05:620a:2485:b0:7d3:9218:6d1b with SMTP id af79cd13be357-7d5effa5066mr170817285a.25.1751683647785;
+        Fri, 04 Jul 2025 19:47:27 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32e1b1418b3sm4092411fa.76.2025.07.04.19.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 19:47:26 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: [PATCH 00/12] drm/msm/dpu: rework format handling code
+Date: Sat, 05 Jul 2025 05:47:21 +0300
+Message-Id: <20250705-dpu-formats-v1-0-40f0bb31b8c8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703121521.1874196-4-dongml2@chinatelecom.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADmSaGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwNT3ZSCUt20/KLcxJJiXYMU08RUkxTDRMMkSyWgjoKi1LTMCrBp0bG
+ 1tQC+/D1DXQAAAA==
+X-Change-ID: 20250705-dpu-formats-0d5ae4d1a1b9
+To: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jordan Crouse <jordan@cosmicpenguin.net>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1498;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=a02lPmZKv/naTYZA9OmQPxvGdxGzUfJ3jTjVREOZLAI=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoaJI82lipzpyCC4LKN7ThdLaL0Fuf/bVrrEFXL
+ N5kmFgLvi6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaGiSPAAKCRCLPIo+Aiko
+ 1avgB/9tgZuAoAH5++lDQAjlCepbdpElh8X9Ms6JNzVhuMPPabCS0iVhoseTNfDSNRIsDHuNqlr
+ r0LPD/AvQDvHxoW1x364Z/uayPIkC0wFq0jw0BCdzhMadMGEukEVv2hmgG5GWBZAFN40egpPmGV
+ MUP3TOrXlRv4CFBcCBnob3qm+c/EWMGb7pDlFOyGyNi6vVqZx9CfgSVCu6sZSkC7VdUe4a3lr9Y
+ mnI/ugKxuBeamrAb/WW/Jsdvl5d7AcXSqObpe7RmcDUap+F/5NukqJNcagojo32b0RyBPcBiTa/
+ FlnUHvKFxm+YbJvh66rI/3t2d6WXnpP5NTq0SJ8d6oWAio+m
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Authority-Analysis: v=2.4 cv=GdQXnRXL c=1 sm=1 tr=0 ts=68689241 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=ilABv6Z8GYNuw7svrMYA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: xGUBbarriTnEDv7flXJ4m5OluntXDrK_
+X-Proofpoint-ORIG-GUID: xGUBbarriTnEDv7flXJ4m5OluntXDrK_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA1MDAxNyBTYWx0ZWRfXxdxAX5txlyiG
+ EsRopIkU6UxQM5hE78fBedFqTAX5W+b/ZrSAmm1F+l5ma2M9xzwbAIthIaKMXh+B/v8Mfq9PLb+
+ 6zwdGiRFb2KSCR7v9bZCb4Jkc/Aj6qa2AGuarmDV7wfakqutjwqea2kmB3pqJ9YTtjz9bph8AAq
+ toWifkkzZNem/c7On/maqoEi2qxjur3AKNOTG+VLjoUXnycJHZC018w79oUrzlqYK5lleHSvUly
+ 2lA4fimdI7SO/HXaTkkiNST41h8eLVFaInkFlg5K0dlxmkhPj0Pbh+NxpqqG2n6UaegWLOzK/JG
+ +fjrdEhzNHTI/RAqD+cuUfusKo2YmUhegaDvTaMRgz480RP/t90+11KQe51k83H4hP1p2rkmb74
+ vvlToaRtroSXnc0Ee1THmF+sdkOjlvxx8EkbhuZXmnFR48xgBdCoUiHrXa2QOcHKK2cb3E3e
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_07,2025-07-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 mlxlogscore=926 priorityscore=1501 impostorscore=0
+ malwarescore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507050017
 
-Hi Menglong,
+- Rework mdp_format.c in order to make format table manageable
+- Rework layout population for UBWC formats in DPU driver
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+Dmitry Baryshkov (12):
+      drm/msm/disp: set num_planes to 1 for interleaved YUV formats
+      drm/msm/disp: set num_planes and fetch_mode in INTERLEAVED_RGB_FMT
+      drm/msm/disp: set num_planes, fetch_mode and tile_height in INTERLEAVED_RGB_FMT_TILED
+      drm/msm/disp: simplify RGB{,A,X} formats definitions
+      drm/msm/disp: simplify tiled RGB{,A,X} formats definitions
+      drm/msm/disp: pull in common YUV format parameters
+      drm/msm/disp: pull in common tiled YUV format parameters
+      drm/msm/disp: drop PSEUDO_YUV_FMT_LOOSE_TILED
+      drm/msm/dpu: simplify _dpu_format_populate_plane_sizes_*
+      drm/msm/dpu: drop redundant num_planes assignment in _dpu_format_populate_plane_sizes*()
+      drm/msm/dpu: rewrite _dpu_format_populate_plane_sizes_ubwc()
+      drm/msm/dpu: use standard functions in _dpu_format_populate_plane_sizes_ubwc()
 
-[auto build test WARNING on bpf-next/master]
+ drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c    |  178 ++--
+ drivers/gpu/drm/msm/disp/dpu1/msm_media_info.h | 1155 ------------------------
+ drivers/gpu/drm/msm/disp/mdp_format.c          |  614 +++++++------
+ 3 files changed, 394 insertions(+), 1553 deletions(-)
+---
+base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
+change-id: 20250705-dpu-formats-0d5ae4d1a1b9
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/bpf-add-function-hash-table-for-tracing-multi/20250703-203035
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250703121521.1874196-4-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next v2 03/18] ftrace: factor out ftrace_direct_update from register_ftrace_direct
-config: x86_64-randconfig-123-20250704 (https://download.01.org/0day-ci/archive/20250705/202507051048.PEDxVblg-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507051048.PEDxVblg-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507051048.PEDxVblg-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   kernel/trace/ftrace.c:233:49: sparse:     got struct ftrace_ops [noderef] __rcu *[addressable] [toplevel] ftrace_ops_list
-   kernel/trace/ftrace.c:318:16: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops **p @@     got struct ftrace_ops [noderef] __rcu **list @@
-   kernel/trace/ftrace.c:318:16: sparse:     expected struct ftrace_ops **p
-   kernel/trace/ftrace.c:318:16: sparse:     got struct ftrace_ops [noderef] __rcu **list
-   kernel/trace/ftrace.c:318:50: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops **p @@     got struct ftrace_ops [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:318:50: sparse:     expected struct ftrace_ops **p
-   kernel/trace/ftrace.c:318:50: sparse:     got struct ftrace_ops [noderef] __rcu **
-   kernel/trace/ftrace.c:325:12: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops * @@     got struct ftrace_ops [noderef] __rcu *next @@
-   kernel/trace/ftrace.c:325:12: sparse:     expected struct ftrace_ops *
-   kernel/trace/ftrace.c:325:12: sparse:     got struct ftrace_ops [noderef] __rcu *next
-   kernel/trace/ftrace.c:1072:43: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:1072:43: sparse:     expected struct ftrace_hash [noderef] __rcu *notrace_hash
-   kernel/trace/ftrace.c:1072:43: sparse:     got struct ftrace_hash *
-   kernel/trace/ftrace.c:1073:43: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:1073:43: sparse:     expected struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:1073:43: sparse:     got struct ftrace_hash *
-   kernel/trace/ftrace.c:1298:40: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:1298:40: sparse:     expected struct ftrace_hash *hash
-   kernel/trace/ftrace.c:1298:40: sparse:     got struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:1299:40: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:1299:40: sparse:     expected struct ftrace_hash *hash
-   kernel/trace/ftrace.c:1299:40: sparse:     got struct ftrace_hash [noderef] __rcu *notrace_hash
-   kernel/trace/ftrace.c:1300:37: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:1300:37: sparse:     expected struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:1300:37: sparse:     got struct ftrace_hash *
-   kernel/trace/ftrace.c:1301:38: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:1301:38: sparse:     expected struct ftrace_hash [noderef] __rcu *notrace_hash
-   kernel/trace/ftrace.c:1301:38: sparse:     got struct ftrace_hash *
-   kernel/trace/ftrace.c:2100:54: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash *old_hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:2100:54: sparse:     expected struct ftrace_hash *old_hash
-   kernel/trace/ftrace.c:2100:54: sparse:     got struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:1505:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/ftrace.c:1505:9: sparse:    struct ftrace_hash [noderef] __rcu *
-   kernel/trace/ftrace.c:1505:9: sparse:    struct ftrace_hash *
-   kernel/trace/ftrace.c:1521:39: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:1522:40: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:1523:40: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:1524:42: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:1695:18: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops *ops @@     got struct ftrace_ops [noderef] __rcu *[addressable] [toplevel] ftrace_ops_list @@
-   kernel/trace/ftrace.c:1696:43: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops *ops @@     got struct ftrace_ops [noderef] __rcu *next @@
-   kernel/trace/ftrace.c:1757:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:1758:22: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *notrace_hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:2078:50: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:2089:50: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:2572:53: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *static [toplevel] direct_functions @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:2583:36: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *static [toplevel] direct_functions @@
-   kernel/trace/ftrace.c:3379:51: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *B @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3380:66: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:3386:52: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *B @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3387:66: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:3400:41: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3401:51: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *src @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3404:52: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *notrace_hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3408:52: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *src @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3423:39: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3424:42: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3432:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3438:81: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3442:54: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *notrace_hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3444:56: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *new_hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3474:60: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *new_hash1 @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3475:49: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected struct ftrace_hash *new_hash2 @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3514:45: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3516:46: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3518:48: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3520:49: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3526:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3527:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3533:34: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *save_filter_hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3534:35: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *save_notrace_hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3536:45: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash *[addressable] filter_hash @@
-   kernel/trace/ftrace.c:3537:46: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash *[addressable] notrace_hash @@
-   kernel/trace/ftrace.c:3542:53: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash *save_filter_hash @@
-   kernel/trace/ftrace.c:3543:54: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash *save_notrace_hash @@
-   kernel/trace/ftrace.c:3590:31: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3591:32: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3606:59: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *[addressable] filter_hash @@
-   kernel/trace/ftrace.c:3607:59: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *[addressable] notrace_hash @@
-   kernel/trace/ftrace.c:3612:43: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *[addressable] filter_hash @@
-   kernel/trace/ftrace.c:3613:43: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *[addressable] notrace_hash @@
-   kernel/trace/ftrace.c:3615:39: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *[addressable] filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3616:40: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *[addressable] notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3658:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3659:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3660:45: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3661:46: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:3947:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3964:22: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:4650:22: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:4653:22: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:5060:27: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:5062:27: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:5442:19: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:5586:19: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:5592:34: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *filter_hash @@     got struct ftrace_hash *[assigned] old_hash @@
-   kernel/trace/ftrace.c:5857:27: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:5859:27: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:5940:50: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *static [toplevel] direct_functions @@
-   kernel/trace/ftrace.c:5942:51: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *static [toplevel] direct_functions @@
-   kernel/trace/ftrace.c:6050:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
->> kernel/trace/ftrace.c:6056:19: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *free_hash @@     got struct ftrace_hash [noderef] __rcu *static [addressable] [assigned] [toplevel] direct_functions @@
-   kernel/trace/ftrace.c:6095:50: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:6147:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:6151:52: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *static [addressable] [assigned] [toplevel] direct_functions @@
-   kernel/trace/ftrace.c:6477:35: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *extern [addressable] [toplevel] ftrace_graph_hash @@     got struct ftrace_hash *[assigned] hash @@
-   kernel/trace/ftrace.c:6479:43: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *extern [addressable] [toplevel] ftrace_graph_notrace_hash @@     got struct ftrace_hash *[assigned] hash @@
-   kernel/trace/ftrace.c:6548:35: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:6556:35: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash **orig_hash @@     got struct ftrace_hash [noderef] __rcu ** @@
-   kernel/trace/ftrace.c:6624:47: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *[addressable] [toplevel] ftrace_graph_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:6625:55: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct ftrace_hash [noderef] __rcu *[addressable] [toplevel] ftrace_graph_notrace_hash @@     got struct ftrace_hash * @@
-   kernel/trace/ftrace.c:7344:46: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:7345:47: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:7349:44: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:7367:18: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops *ops @@     got struct ftrace_ops [noderef] __rcu *[addressable] [toplevel] ftrace_ops_list @@
-   kernel/trace/ftrace.c:7367:66: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_ops *ops @@     got struct ftrace_ops [noderef] __rcu *next @@
-   kernel/trace/ftrace.c:7419:59: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:7420:59: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:7807:62: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:7808:62: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:7852:36: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/ftrace.c:7852:36: sparse:    struct ftrace_ops [noderef] __rcu *
-   kernel/trace/ftrace.c:7852:36: sparse:    struct ftrace_ops *
-   kernel/trace/ftrace.c:8628:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:8628:14: sparse:     expected struct ftrace_hash *hash
-   kernel/trace/ftrace.c:8628:14: sparse:     got struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:8677:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:8677:14: sparse:     expected struct ftrace_hash *hash
-   kernel/trace/ftrace.c:8677:14: sparse:     got struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:231:20: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:231:20: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:231:20: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3434:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3434:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3434:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3434:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3434:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3434:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3468:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3468:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3468:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3468:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3468:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3468:29: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:5974:30: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:5983:21: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:5985:17: sparse: sparse: dereference of noderef expression
-   kernel/trace/ftrace.c:3739:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *filter_hash @@
-   kernel/trace/ftrace.c:3739:48: sparse:     expected struct ftrace_hash *hash
-   kernel/trace/ftrace.c:3739:48: sparse:     got struct ftrace_hash [noderef] __rcu *filter_hash
-   kernel/trace/ftrace.c:3740:49: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct ftrace_hash *hash @@     got struct ftrace_hash [noderef] __rcu *notrace_hash @@
-   kernel/trace/ftrace.c:3740:49: sparse:     expected struct ftrace_hash *hash
-   kernel/trace/ftrace.c:3740:49: sparse:     got struct ftrace_hash [noderef] __rcu *notrace_hash
-
-vim +6056 kernel/trace/ftrace.c
-
-  6015	
-  6016	/**
-  6017	 * register_ftrace_direct - Call a custom trampoline directly
-  6018	 * for multiple functions registered in @ops
-  6019	 * @ops: The address of the struct ftrace_ops object
-  6020	 * @addr: The address of the trampoline to call at @ops functions
-  6021	 *
-  6022	 * This is used to connect a direct calls to @addr from the nop locations
-  6023	 * of the functions registered in @ops (with by ftrace_set_filter_ip
-  6024	 * function).
-  6025	 *
-  6026	 * The location that it calls (@addr) must be able to handle a direct call,
-  6027	 * and save the parameters of the function being traced, and restore them
-  6028	 * (or inject new ones if needed), before returning.
-  6029	 *
-  6030	 * Returns:
-  6031	 *  0 on success
-  6032	 *  -EINVAL  - The @ops object was already registered with this call or
-  6033	 *             when there are no functions in @ops object.
-  6034	 *  -EBUSY   - Another direct function is already attached (there can be only one)
-  6035	 *  -ENODEV  - @ip does not point to a ftrace nop location (or not supported)
-  6036	 *  -ENOMEM  - There was an allocation failure.
-  6037	 */
-  6038	int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-  6039	{
-  6040		struct ftrace_hash *hash, *free_hash = NULL;
-  6041		int err = -EBUSY;
-  6042	
-  6043		if (ops->func || ops->trampoline)
-  6044			return -EINVAL;
-  6045		if (!(ops->flags & FTRACE_OPS_FL_INITIALIZED))
-  6046			return -EINVAL;
-  6047		if (ops->flags & FTRACE_OPS_FL_ENABLED)
-  6048			return -EINVAL;
-  6049	
-  6050		hash = ops->func_hash->filter_hash;
-  6051		if (ftrace_hash_empty(hash))
-  6052			return -EINVAL;
-  6053	
-  6054		mutex_lock(&direct_mutex);
-  6055	
-> 6056		free_hash = direct_functions;
-  6057		err = ftrace_direct_update(hash, addr);
-  6058		if (err)
-  6059			goto out_unlock;
-  6060	
-  6061		ops->func = call_direct_funcs;
-  6062		ops->flags = MULTI_FLAGS;
-  6063		ops->trampoline = FTRACE_REGS_ADDR;
-  6064		ops->direct_call = addr;
-  6065	
-  6066		err = register_ftrace_function_nolock(ops);
-  6067		if (free_hash && free_hash != EMPTY_HASH)
-  6068			call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-  6069	
-  6070	 out_unlock:
-  6071		mutex_unlock(&direct_mutex);
-  6072	
-  6073		return err;
-  6074	}
-  6075	EXPORT_SYMBOL_GPL(register_ftrace_direct);
-  6076	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With best wishes
+Dmitry
+
