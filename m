@@ -1,101 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EF42CA9;
-	Sat,  5 Jul 2025 15:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAC72AD00
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 15:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751727975; cv=none; b=BY20yDectHuDWc1HzMumTUPvZeY7LhajUVNq3iNG2B+/uMLL19auM6t0WGGiqpgBTABlWZx2qSnndsXVjxDFNTj9oaQ3AJP0stsLXYLRGIoAPbWpCL+zipGB2xJ/GzsgbDPIG5vmf/nt4x38eU3uCsIq+4imZp3lVkzuF6fRsWU=
+	t=1751728368; cv=none; b=PqyNP/f2+DBKm2HxEIHEIRDuukTlL+vyF80r8fC1pPg0YvZGwQLZ41jBht9U33339hiC2dsiV+bASymAC13JynxCAab3bemiN3KJ7hvp6lgJHRLfq8mC4UKG3aiIfT6SKhYe6M9IP/6CubcVZEOHIFW2aPSY5LXyodrTypKQNsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751727975; c=relaxed/simple;
-	bh=0RAT1QzWcZIXw2i/MINS/triAT6nnVcva9zpNrI0LLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iwLcXnlIb1wzn+3k9wx04DfLabDY1veFOagEcbLW0lww26EmDcBCWNQuvhsBR6bn0NKyklw1CA2mH2NppQGQe3ErfbiB/ZCgVduTZ81hqP6Bf0PoTRI9Pqf9y2Mcgoc2cPxZvRo+0DK7v2FOGQ3uqRZpshAK6EokPoI2GcyOuvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLcAqjQk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLcAqjQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14241C4CEE7;
-	Sat,  5 Jul 2025 15:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751727975;
-	bh=0RAT1QzWcZIXw2i/MINS/triAT6nnVcva9zpNrI0LLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cLcAqjQkbE5VH+oStc615DdfriNe9c6q+qG+6fXcpOAwGEl5rjzUbsy4FwGmikAVM
-	 MLHY/egV/Sqoijv6+RWZ8HiE2IJFqskiZpcJ4TNbbYoR+doxy4M5sGIEb/LJKYfw8X
-	 PDPi+9J7IGf+Zp34umbVD6EyZKKsh37qeDGNMlZa79Pr/nV/64rybeLxf861FVWvfx
-	 NXNEpqjj5U3sNrD5Q2kIGVp1/2mqHMDBuJxlf6G86wFmZrydGNVu9j0mlPusVxYXx2
-	 s7bT3YObs1o0j5QIgAXtJv3c4qAB5AWcSk6yDNp4frVHcVWj9lcvKMNEyUpIAF3ipP
-	 S5iTxB0C10AMA==
-Date: Sat, 5 Jul 2025 17:06:08 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
-	kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/8] rust: device: add drvdata accessors
-Message-ID: <aGk_YBCGqrO-A6bG@cassiopeiae>
-References: <20250621195118.124245-1-dakr@kernel.org>
- <20250621195118.124245-3-dakr@kernel.org>
- <DB42TQY2E57U.1PKC16LW38MH9@kernel.org>
+	s=arc-20240116; t=1751728368; c=relaxed/simple;
+	bh=NyHmvzYnFYyU4cUR6nR5su9u+rl8YbxFNBwcAzIqszs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Nouj3vBzYE0pEXAzF/BWin1B+r6IQMUmw87DNAWG7TE/fvihHIgQhAtM8TwfESJUWjuWBjuiiwrsnnMLmx0rb5h6KLxKZSv7Ke7nkdhtyN0YFPQmHtnIJLa8dGQbCmMtIxIno8o1Juq3A7LGgAfHnbjBQW1I/o6dGnmLrkfMCdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3df2cc5104bso37817715ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 08:12:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751728365; x=1752333165;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VNMfKba/qZsNd0ZiLu02MxcXWLcUrJCx3h47TOcv0p4=;
+        b=efQGbbgFIb3asQoYjjCBfZMXU8B8C6ucXEbrFFoaKgC/y9frCuw9uVNlXx1OTDEg32
+         eJOtVitnfJJ3HD2DZVSbrqiyhorfOT9D0eRGbhwN5Jr1np+OptUxHxl3dvuJ4Epwvm9Z
+         RpfrAMApybGVP4Kxmzho41773jP4K1Zi0odfALOLWywHhEBaG9nAm9psIrnq+Xq/TZxR
+         NAaQwEC0PpHTl97ds1M3USymPepXdB+eGeSRVYsnJfTRdC73bCTdnBh5wMZtus7y66dj
+         uZqCZHgf8JkovRcoVzN0mgqsSyaHRCvgnJr5Mx2a8PBBnhzafiC+KBxPAvPO3ydwnmgw
+         KVXA==
+X-Gm-Message-State: AOJu0YzziORjFWPgqAPj5r4+V3c0QY/xQ08bBNlbh2/wHc7B0uWRWCl0
+	2+ys0805KpfmNXSm3lIao/iqh2vhVG6w/Odft4iu+rQr+ZjWOdAscXYdH/kRQ3SU8pSJYmGPP5I
+	mgB3+jvnjmgAiYkD7XA0P2/1ZG1YqlmKcVC5/SVLAVwjdHaeSiZwqqfkm0eI=
+X-Google-Smtp-Source: AGHT+IGTLQR8+UCBXrGsyvj7dJ3hSmvZWgf+8PsZ6oWBlga43svujd8FEylHQZgmSt8CQqfMK8ilo4nOwxnYV7dqQInmY+YgO18+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB42TQY2E57U.1PKC16LW38MH9@kernel.org>
+X-Received: by 2002:a05:6e02:12c3:b0:3d6:cbad:235c with SMTP id
+ e9e14a558f8ab-3e13548bc4dmr53425845ab.6.1751728365661; Sat, 05 Jul 2025
+ 08:12:45 -0700 (PDT)
+Date: Sat, 05 Jul 2025 08:12:45 -0700
+In-Reply-To: <68692d2c.a00a0220.c7b3.0039.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686940ed.a00a0220.c7b3.003f.GAE@google.com>
+Subject: Re: [syzbot] [block?] WARNING in bioset_exit (2)
+From: syzbot <syzbot+1bfac8c74f4f587bf9c7@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jul 05, 2025 at 01:15:06PM +0200, Benno Lossin wrote:
-> On Sat Jun 21, 2025 at 9:43 PM CEST, Danilo Krummrich wrote:
-> > +impl Device<Internal> {
-> > +    /// Store a pointer to the bound driver's private data.
-> > +    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
-> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-> > +        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) }
-> > +    }
-> > +
-> > +    /// Take ownership of the private data stored in this [`Device`].
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// - Must only be called once after a preceding call to [`Device::set_drvdata`].
-> > +    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
-> > +    ///   [`Device::set_drvdata`].
-> > +    pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
-> > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-> > +        let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
-> > +
-> > +        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
-> > +        // `into_foreign()`.
-> 
-> Well, you're also relying on `dev_get_drvdata` to return the same
-> pointer that was given to `dev_set_drvdata`.
-> 
-> Otherwise the safety docs look fine.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Great! What do you think about:
+***
 
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 146eba147d2f..b01cb8e8dab3 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -80,8 +80,11 @@ pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
-         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-         let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+Subject: Re: [syzbot] [block?] WARNING in bioset_exit (2)
+Author: axboe@kernel.dk
 
--        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
--        // `into_foreign()`.
-+        // SAFETY:
-+        // - By the safety requirements of this function, `ptr` comes from a previous call to
-+        //   `into_foreign()`.
-+        // - `dev_get_drvdata()` guarantees to return the same pointer given to `dev_set_drvdata()`
-+        //   in `into_foreign()`.
-         unsafe { T::from_foreign(ptr.cast()) }
-     }
+#syz set subsystems: bcachefs
+
+-- 
+Jens Axboe
