@@ -1,63 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272C923A578;
-	Sat,  5 Jul 2025 20:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB409136349;
+	Sat,  5 Jul 2025 20:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751746127; cv=none; b=sqHiidvf1Fq+b7EiE3Dc8n53jlmzfhEI5vWCQXbRCYnnRGGPBQp/BTKB1hutJrpb1IcJ7D30keC6dLbY64OGE0L+CXYTiggc6X/xK/kABz2Jloa6l1ep0b2f2DWHoUXs2lLw6ns/kJKc+GjZfsOO01oeUl6pFLzynYbiwd5EzRQ=
+	t=1751746618; cv=none; b=aBIiWmsgnvjUlbWyto1qZdsl/mtYXW4+Lx9+D1vIz80kG7wdCpvId7rqKbGVdQ/8e2/HXAEex3fhMGmmGed9J3vTQqr+Do5MNIox8C2xQ0flwybHZBS2bXliu+BFrxpOkJk5CiUM/tnUmbob+6GJPPkz/SA60CYn/WJ+pcXUqlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751746127; c=relaxed/simple;
-	bh=UhgcxGXXvhl6dEtU7dO4PMzectR9iPceo4fNrfcxALs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QCFS+k9PtceWU0mVGT9ctOvyQJfjCQrHxIzp0B2t08LJUQ9tEXvDXwaJqXoOOhLYTbO7YVzkvmNZBSp+KPQwhmTGtk8aBVXQJPxhCLOHmPWQiQOvakFEaq59sPu01IqVY/sgC3c1g1x3OhpA6BQocts2nqUpS9EXp9+CixH7HNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqBK1bAf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqBK1bAf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 012F6C4CEED;
-	Sat,  5 Jul 2025 20:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751746127;
-	bh=UhgcxGXXvhl6dEtU7dO4PMzectR9iPceo4fNrfcxALs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=KqBK1bAfaa5olTyXTRIj0RZwQvh3SWpoclX34C2kJZrVjoCRSKYKcWIlpqXyhwHyc
-	 drvF9Maqu+xPoPdxl/4tjoGkPup1nJPmLLlVLO1ILQxpv9oTcxll6AgBZkXhy5dlFt
-	 tZj5YhhaJdPNBRQDxjkh+QXhwiX1Fv3gz/jGIGHQTHTfEMfLe5GAjV2lL06St5YqQe
-	 o0DRa5lCla2AbKnRjSjwk503KmNloVoCHJEQUuKWbBpTDcFu2QVl7vYWJkjdaM7sR4
-	 A5OQVs9C3OEPnPcVBewnjJro6lvryTki+XmklNGN1uQkFQvvQrOC61wO3eEhTlqRfo
-	 w725xO7nlg1Nw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB003383BA08;
-	Sat,  5 Jul 2025 20:09:11 +0000 (UTC)
-Subject: Re: [PULL REQUEST] i2c-for-6.16-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aGki-9QTCbO-H4zU@shikoro>
-References: <aGki-9QTCbO-H4zU@shikoro>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aGki-9QTCbO-H4zU@shikoro>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc5
-X-PR-Tracked-Commit-Id: 534eb6de621954cde61c910dbeb8fb1700a0a0d6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fd860cd78146605eeeeee3ac264ca166cc9fa943
-Message-Id: <175174615062.2526409.10992096909880049588.pr-tracker-bot@kernel.org>
-Date: Sat, 05 Jul 2025 20:09:10 +0000
-To: Wolfram Sang <wsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
+	s=arc-20240116; t=1751746618; c=relaxed/simple;
+	bh=tqSvcb5gMRXWjTnt1NnR8SPN1P9keJhpBkhDxxg/lHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfsZ4gwXMAC++hVXtS7TbX0peMlOto4hc2n9vjI0VnYnGrujlglWeHZ9mstLjNlT/QbC0hoRA03fvEUP2VY4tf95DU+LtcFRE01Hq4c2yo/gKpnpmYjmFQHgfNdtCkqlebX53aPDBO193hPQqa9YzrrYlmeyYLmpHMbp9C/rFfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost [127.0.0.1])
+	by gate.crashing.org (8.18.1/8.18.1/Debian-2) with ESMTP id 565KG2rq174660;
+	Sat, 5 Jul 2025 15:16:02 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.18.1/8.18.1/Submit) id 565KFv2e174653;
+	Sat, 5 Jul 2025 15:15:57 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Sat, 5 Jul 2025 15:15:57 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andre Almeida <andrealmeid@igalia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
+Message-ID: <aGmH_Y4248gRRpoq@gate>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
+ <20250622172043.3fb0e54c@pumpkin>
+ <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
+ <20250624131714.GG17294@gate.crashing.org>
+ <20250624175001.148a768f@pumpkin>
+ <20250624182505.GH17294@gate.crashing.org>
+ <20250624220816.078f960d@pumpkin>
+ <83fb5685-a206-477c-bff3-03e0ebf4c40c@csgroup.eu>
+ <20250626220148.GR17294@gate.crashing.org>
+ <20250705193332.251e0b1f@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705193332.251e0b1f@pumpkin>
 
-The pull request you sent on Sat, 5 Jul 2025 15:04:59 +0200:
+Hi!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc5
+On Sat, Jul 05, 2025 at 07:33:32PM +0100, David Laight wrote:
+> On Thu, 26 Jun 2025 17:01:48 -0500
+> Segher Boessenkool <segher@kernel.crashing.org> wrote:
+> > On Thu, Jun 26, 2025 at 07:56:10AM +0200, Christophe Leroy wrote:
+> ...
+> > I have no idea why you think power9 has it while older CPUS do not.  In
+> > the GCC source code we have this comment:
+> >   /* For ISA 2.06, don't add ISEL, since in general it isn't a win, but
+> >      altivec is a win so enable it.  */
+> > and in fact we do not enable it for ISA 2.06 (p8) either, probably for
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fd860cd78146605eeeeee3ac264ca166cc9fa943
+2.07 I meant of course.  Sigh.
 
-Thank you!
+> > a similar reason.
+> 
+> Odd, I'd have thought that replacing a conditional branch with a
+> conditional move would pretty much always be a win.
+> Unless, of course, you only consider benchmark loops where the
+> branch predictor in 100% accurate.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+The isel machine instruction is super expensive on p8: it is marked as
+first in an instruction group, and has latency 5 for the GPR sources,
+and 8 for the CR field source.
+
+On p7 it wasn't great either, it was actually converted to a branch
+sequence internally!
+
+On p8 there are bc+8 optimisations done by the core as well, conditional
+branches that skip one insn are faster than equivalent isel insns!
+
+Since p9 it is a lot better :-)
+
+> OTOH isn't altivec 'simd' instructions?
+
+AltiVec is the old motorola marketing name for what is called the
+"Vector Facility" in the architecture, and which at IBM is still called
+VMX, the name it was developed under ("Vector Multimedia Extension").
+
+Since p7 (ISA 2.06, 2010) there also is the Vector-Scalar Extension
+Facility, VSX, which adds another 32 vector registers, and the
+traditional floating point registers are physically the same (but those
+use only the first half of each vector reg).  Many new VSX instructions
+can do simple floating point stuff on all 64 VSX registers, either just
+on the first lane ("scalar") or on all lanes ("vector").
+
+This does largely mean that all floating point is stored in IEEE DP
+format internally (on older cores usually some close to 70-bit format
+was used internally), which in olden times actually allowed to make the
+cores faster.  Only when storing a value to memory it was actually
+converted to IEEE format (but of course it was always rounded correctly,
+etc.)
+
+> They pretty much only help for loops with lots of iterations.
+> I don't know about ppc, but I've seen gcc make a real 'pigs breakfast'
+> of loop vectorisation on x86.
+
+For PowerPC (or Power, the more modern name) of course we also have our
+fair share of problems with vectorisation.  It does help that we were
+the first architecture used by GCC that had a serious Vector thing,
+the C syntax extension for Vector literals is taken from the old
+extensions in the AltiVec PIM but using curly brackets {} instead of
+round brackets (), for example.
+
+> For the linux kernel (which as Linus keeps reminding people) tends
+> to run 'cold cache', you probably want conditional moves in order
+> to avoid mis-predicted branches and non-linear execution, but
+> don't want loop vectorisation because the setup and end cases
+> cost too much compared to the gain for each iteration.
+
+You are best off using what GCC gives you, usually.  It is very well
+tuned, both the generic and the machine-specific code :-)
+
+The kernel of course disables all Vector and FP stuff, essentially it
+disables use of any of the associated registers, and that's pretty much
+the end of it ;-)
+
+(The reason for that is that it would make task switches more expensive,
+long ago all task switches, but nowadays still user<->kernel switches).
+
+
+Segher
