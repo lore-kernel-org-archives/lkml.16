@@ -1,152 +1,111 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E5320330;
-	Sat,  5 Jul 2025 06:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468E13595C;
+	Sat,  5 Jul 2025 07:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751698744; cv=none; b=jQwaQip1Pct8lkjJzLQM0XAPk1fT0ILzJO+fZQTkan9IWvMhmp5WOnKatEwXcsu0ZHNyyw2FDM/8u3HzydFHlpF+DhUApMDt1eObDjVJStJtbT97yu2wXuWpckkxBu48R7dKuuFjc4vvEi5JbMD9mbcNyYsTqgIaZgxC+WSSs7E=
+	t=1751698837; cv=none; b=uCXcZt8JQINa7FJF0dSpIXt4loALiSLQemT24GUAkSRGuMxa5/Qd8GW2RI4Rkf4EZBIWAY8XXRTIMX8iPEqW/Hr8aBd+rZAvn3ZFtJFzPSlBwrhArpVel0R0jzF6BecnHEYWeonxD3UOScUTzRQRZc14BL7O4JeQUWC8k7aBBB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751698744; c=relaxed/simple;
-	bh=/vI/pctqiLTX0hFAMIl1Ve6WG/lz+qFH6FCsLv3psFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZER8OvMeABaTVezBYCOoXzIJNKUUtIHcaqV6M6KUPjcf7ziz2z1oEPBzzvtQ+6OyEvp/odtSgoIEeJ2z3p7O3WV0f1ZxeLQHVdwQgbQ1zfWXVPfHC3pD4BEoY+4apgmZNrVnWuiLYiHu6O2+qxE42uez6vg+V2vrqdVWR5D/cBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=NNImsWkx; arc=none smtp.client-ip=117.135.210.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1751698837; c=relaxed/simple;
+	bh=UbB+teRlheEX2h1GboUmQdLUHrxkTF24Qmo6xyVBcAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uIM3qLRDKYbaAGlNqpwNM8NSYjgX6MUMIbNpc2opEQxpZPasf008ZpEvXgD9m9xj0jHayd77sAj7QJE3ueAwYonZ8DfwaIlKxH1w2OVAfTY7ZpZl3t2hZ2uShjohM1n+XH6STB/Bx9Iqnw8ihKV+a2RqTZKgSX612cmCDLGzfNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cpLoFbeH; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="NNImsWkx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=i9PdUsrSzxDvnGGck2LHjgNlbpovBPa7pmcE0HgHa3k=;
-	b=NNImsWkxBNXWemhn6DxDPD3UDQQR/oNQM0tqzF6bDmBktscq7LsM9R2vQBmHfn
-	060pGgukkqp355Na9dIKeYAx1/t2/XP9u3RPxDtgHsCg4AUvyeG6YZRr3SdD82cR
-	iSCJj3dt1Kg942GSFfOTb3vWzGXEb6FlwNYFqsuYqK/TA=
-Received: from [172.19.20.199] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3D7sQzWhoEk+KAw--.56536S2;
-	Sat, 05 Jul 2025 14:58:25 +0800 (CST)
-Message-ID: <102fa362-35c9-46d2-853c-472a5c4cd5d9@126.com>
-Date: Sat, 5 Jul 2025 14:58:24 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpLoFbeH"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-74b50c71b0aso831657b3a.0;
+        Sat, 05 Jul 2025 00:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751698835; x=1752303635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nssAUAlhMduaAjfLKEY31UHSStHFXQFJc1UCeUJTUOU=;
+        b=cpLoFbeHB8ZGLqe4oFfYeeE/wuJHjdnucxAUsgEmfEe4DW35eXnTz3pIQ1YwMQOlJv
+         15b5h3Akgj0lve9jO8HYfDKrhGJgBq1PfQcE3LqxXRvYhhPngNQTT6URbT0CnI8wlO8e
+         EQdga74zR8TEsPxKPC3lCJBwvI36OoS7EbJn0zkwHeQQVYx/EGxAAT0ujQ2cLpUpUuU2
+         J21SKrUBoJbeb3S9Aki5F9bZ7lXoHblqEr7zlkt4cLfWOCRaCQMXs/ym2mdeGNF2poDe
+         Mk/lwv7VNX5T5H66YjrHUVcfRh5bPJZvFpK/UJHIhH5omA/FQ+DJZ+UNbMh187Y6yMs9
+         xnTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751698835; x=1752303635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nssAUAlhMduaAjfLKEY31UHSStHFXQFJc1UCeUJTUOU=;
+        b=QWFyytqjJpJQ+2n2+4qvJCqyUnK9JbMrPzexonoRDPoYV0YohJJyznR3YZtEU5eAW1
+         spDpGhXe1yoRCD/O1sueeRgHGoCC8Zwv00xztRX2UbXV+xrdfoB2GhyYI/0fjMAOekOt
+         rtUp4hBlQKa5nfyjF9iBdJo+OHCJY3K3YaUb+B4TL/p2jaBiDvs9Po+bh06cLpjYRqrl
+         sNGHqQIM4x3+c3IZ1bKNwR8ZL7CQaoQ9IkXPb7IPa0WlQthiTqFiqhpFfS+YLn+nOV72
+         MKDsQ8mVqxMpQrXxe7D1u5aQEZbss2Q5GUTT3Q21HTLtdjzPNkwWCv54WCbUz05rKNZ2
+         d4NA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNGEoR5RMVTFQgzr7l1o6bA7vZ6827rEx61EDnPFh6kr8NtEyVgSpE6qSBDJ/IlpEcAbqneI9e9LrdlLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuaL7nGbSaHLVRyGU+QZ89wlQfcButTxQsEEtksjExZKt5dB5o
+	q/E4+MGFlIDqZUywYpb64fVgct4usBQiXo10DYc1qPZcvyCyTzQdgpjJzNH/RuiBNnHoHQ==
+X-Gm-Gg: ASbGncsPlNO5eCxIT+bQeswS1N+6slcKg910EwQLSgYmSjpZUdgvYudIVdQr/a6iFsP
+	PZpQLpz7LPFMC1ID7zkUaiHT0c3LSzosBpGCZDMt1Z/7ap2Pmmj0JdRzlpIqT/Hm/+0sO+szOQZ
+	4EtTh1dIcWt+DMbz7ci2TWEeZcIsAseqxwQBqGzvwr12Bi+b7Vut+/hHEGJW3eCnFPl6RW8iaVr
+	2qYEIMC+3r2HTUV8VXv3MjB91EVbmHw3mdaf3hTmJEp9p7pNJ77dG/ulO1dvBIzvjfbVjHBlCCJ
+	oYLvuIrj/ImMY5WC6Ej7+SBijGIUbxWSl5TH17nbZmmF58TvoZ0qu674NHw5k0eerGxQGu+z
+X-Google-Smtp-Source: AGHT+IGvNv873ht3zYXKYDK4jQOR12YQwVSFK97C52NvA93Agip6zuoIuhrdkBpAwe1Y1Kc/3dsQpA==
+X-Received: by 2002:a05:6a00:928c:b0:742:a77b:8c4 with SMTP id d2e1a72fcca58-74ce8824f1bmr7863083b3a.3.1751698834683;
+        Sat, 05 Jul 2025 00:00:34 -0700 (PDT)
+Received: from localhost.localdomain ([119.8.44.69])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce43d5186sm3638341b3a.169.2025.07.05.00.00.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 00:00:34 -0700 (PDT)
+From: Han Gao <rabenda.cn@gmail.com>
+To: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Han Gao <rabenda.cn@gmail.com>,
+	linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] riscv: dts: sophgo: add more sg2042 isa extension support
+Date: Sat,  5 Jul 2025 15:00:11 +0800
+Message-ID: <cover.1751698574.git.rabenda.cn@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] efi/tpm: Fix the issue where the CC platforms event log
- header can't be correctly identified
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: ardb@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com,
- ilias.apalodimas@linaro.org, jgg@ziepe.ca, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, liuzixing@hygon.cn
-References: <1751510317-12152-1-git-send-email-yangge1116@126.com>
- <aGczaEkhPuOqhRUv@kernel.org> <2ab4ebba-1f97-4686-9186-5bcaa3549f54@126.com>
- <aGfvr2pBau6z9GLC@kernel.org>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <aGfvr2pBau6z9GLC@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3D7sQzWhoEk+KAw--.56536S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxArWDKrWrCr18uw48Wr1rZwb_yoWrJw47pF
-	1Ika1ftrs8Jw1S9wn2vw48Ca1jyws3AFZrXFykG340yrs0gr1xtF42k3Wjkas3Xr47W3ZY
-	qa4jqry3Aa4DuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbHUDUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOhSBG2hoxidxiQAAst
 
+Add xtheadvector & ziccrse & zfh for sg2042
 
+Thanks,
+Han
 
-在 2025/7/4 23:13, Jarkko Sakkinen 写道:
-> On Fri, Jul 04, 2025 at 10:53:54AM +0800, Ge Yang wrote:
->>
->>
->> 在 2025/7/4 9:50, Jarkko Sakkinen 写道:
->>> On Thu, Jul 03, 2025 at 10:38:37AM +0800, yangge1116@126.com wrote:
->>>> From: Ge Yang <yangge1116@126.com>
->>>>
->>>> Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
->>>> for CC platforms") reuses TPM2 support code for the CC platforms, when
->>>> launching a TDX virtual machine with coco measurement enabled, the
->>>> following error log is generated:
->>>>
->>>> [Firmware Bug]: Failed to parse event in TPM Final Events Log
->>>>
->>>> Call Trace:
->>>> efi_config_parse_tables()
->>>>     efi_tpm_eventlog_init()
->>>>       tpm2_calc_event_log_size()
->>>>         __calc_tpm2_event_size()
->>>>
->>>> The pcr_idx value in the Intel TDX log header is 1, causing the
->>>> function __calc_tpm2_event_size() to fail to recognize the log header,
->>>> ultimately leading to the "Failed to parse event in TPM Final Events
->>>> Log" error.
->>>>
->>>> According to UEFI Spec 2.10 Section 38.4.1: For Tdx, TPM PCR 0 maps to
->>>> MRTD, so the log header uses TPM PCR 1. To successfully parse the TDX
->>>> event log header, the check for a pcr_idx value of 0 has been removed
->>>> here, and it appears that this will not affect other functionalities.
->>>
->>> I'm not familiar with the original change but with a quick check it did
->>> not change __calc_tpm2_event_size(). Your change is changing semantics
->>> to two types of callers:
->>>
->>> 1. Those that caused the bug.
->>> 2. Those that nothing to do with this bug.
->>>
->>> I'm not seeing anything explaining that your change is guaranteed not to
->>> have any consequences to "innocent" callers, which have no relation to
->>> the bug.
->>>
->>
->> Thank you for your response.
->>
->> According to Section 10.2.1, Table 6 (TCG_PCClientPCREvent Structure) in the
->> TCG PC Client Platform Firmware Profile Specification, determining whether
->> an event is an event log header does not require checking the pcrIndex
->> field. The identification can be made based on other fields alone.
->> Therefore, removing the pcrIndex check here is considered safe
->> for "innocent" callers.
-> 
-> Thanks for digging that out. Can you add something to the commit
-> message? That spec is common knowledge if you are "into the topic"
-> in the first palace so something along the lines of this would be
-> perfectly fine:
-> 
-> "The check can be safely removed, as ccording to table 6 at section
-> 10.2.1 of TCG PC client specification the index field does not require
-> fixing the PCR index to zero."
-> 
-Ok, thanks.
+---
 
-> But then: we still have that constraint there and we cannot predict the
-> side-effects of removing a constraint, even if it is incorrectly defined
-> constraint. For comparison, it's much less risky situation when adding
-> additional constraints, as possible side-effects in the worst case
-> scenarios can be even theoretically much lighter than in the opposite
-> situation.
-> 
-> For this reasons it would be perhaps better to limit the fix for the
-> CC only, and not change the semantics across the board.
-> 
-Ok, thanks.
+Changes in v3:
+  remove zfh in riscv,isa
 
-I originally intended to add a 
-cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT) check inside the 
-__calc_tpm2_event_size() function to limit the fix to Confidential 
-Computing (CC) platforms only. However, this function is also used 
-during the EFI stub phase, where the cc_platform_has() function is not 
-defined.
+Changes in v2:
+  add zfh for sg2042
 
-Call Trace:
-efi_pe_entry()
-   efi_stub_entry()
-     efi_retrieve_eventlog()
-       efi_retrieve_tcg2_eventlog()
-         __calc_tpm2_event_size()
+v2: https://lore.kernel.org/linux-riscv/cover.1747235487.git.rabenda.cn@gmail.com/
+v1: https://lore.kernel.org/linux-riscv/cover.1746828006.git.rabenda.cn@gmail.com/
 
-Therefore, I plan to modify __calc_tpm2_event_size() to accept an 
-additional parameter indicating whether the event originates from a CC 
-platform.
+Han Gao (3):
+  riscv: dts: sophgo: Add xtheadvector to the sg2042 devicetree
+  riscv: dts: sophgo: add ziccrse for sg2042
+  riscv: dts: sophgo: add zfh for sg2042
 
+ arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 384 +++++++++++++-------
+ 1 file changed, 256 insertions(+), 128 deletions(-)
 
-> BR, Jarkko
+-- 
+2.47.2
 
