@@ -1,73 +1,234 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B0118C31
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 03:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD9E26CE21;
+	Sat,  5 Jul 2025 03:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751684764; cv=none; b=WluOiYsijsdc+ktXzU2vhzZ5IL2KRqAM+jBMy3uhL+6tfuov7f1zvOLgOtmsrcAuPTbNGGaror3eQU5faRs3e+9RhkMZw+AV1HNyqsfEYrMxjj2HmlJaVPCpGWDhdjYvVztM1bKugN3le6GeJaTk3t4unDQJySvibHj07wJ20fU=
+	t=1751684790; cv=none; b=usK1/jjmWWJgVRACPLGrn3g+JjkhbGEB43swPUSmEGM3YYHjfJsQGDlNdxEFFigU+SleJ6gtodlsPT9Gos1C8HoYi0H22f0AcLUFwu5ye7aTzYJrKwmDhjTPkaz6lU4RqcpY+QoDgTzK0Y0AInmFfw3EczKWr6xeg2vCuPMNkdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751684764; c=relaxed/simple;
-	bh=MnhKa4k0/CcQg5nk17F9gHv6DtI5zwy3vpLR/50PV5o=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BUhwko3E1iI1HPgntOsn8stKpSgAWQjvV5vzzyrPI/Umy/zfs8l1r0aF65XCFq/Gbmcbk3l+VRmIdSYaBZRZvwNnQfjyYp2M7SzuUys7Zf+w4om+lSzM6V+q7VQJMiCSyf/azZCjQMyS+MYmb1ORPMv6tv6UqNU4YPDThldc9+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-875b6256041so127263139f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 20:06:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751684762; x=1752289562;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u0M7eAxQWQMFn6kKg8bv6Zf4RsGe5B9nQ0q4iqJyMcc=;
-        b=dOqBdZzcpSS5nNFrIn8l+a92hQQulnEr6gaR0IgxPBQwFjyUwXnBuerbO9bZ38bAp+
-         9o/zRxyHV7azXWqN3IvyYaaU5mqVjibl5tA99Yeswjf5PMLd8svQJHbef02KhESCLuHM
-         jxf26ZU75LDWv2vnOUGpjbj4gSPsyH0x1BaTFLX+2JiC0Hc1gtHQXhl7HPTMB2cj+AgQ
-         5FTyXYcEpSajWDh843UVIF2667O2z/qB4xBOB22Mr5gF6XRWykiM1f+e8048J/urLLdr
-         7arcGBVg8Vu+oDxi+X8Wq7zmit957xW5zzNrZktZQwfFIxjHnu5TnGzqlBfcwzGDvnNj
-         WAoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWz/YFGpbU6WnS5TqrjZu38WRu9iUPSHH0FsYlwuzAJ2Mf2x9oC9Ts58FBCxk/2x9ttc4NsKdDPpaIjtuc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvEEgPBzQjz+udtJ9jmySdf/zfpttBYnQXGv6U9VEV/XclgY7g
-	UC4fGFesT3xjck+ze7T/qTu683AtX4W001XmBRXjTqMlb+mmNrLvBL87d2tCzhW+WGu/gMcyATg
-	HzKU+WTzdDgUbjkuis2vkuMAN+xLG5vOTVVwWsgK3U5UGrXjjNcBOK0k4HK0=
-X-Google-Smtp-Source: AGHT+IGdQ4uSwLjgxk3LbTRakfTl3iVIxArs8rto6VwvTLDLTM1p2Hs5fS5Dr5oJgYWoTz2k7uPEVweoGeRlme+xp8nbpYo5NQuo
+	s=arc-20240116; t=1751684790; c=relaxed/simple;
+	bh=xSmD1BN6P5V7C/X5RvCFdlgaheiZckKB+DDOQhLV30E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SRrCYOdWugQx6M1XNkjDQx/0aZxxX0GpuECrFFHsMYsxoPNj/ryAOOtBu49r71x0WG5nymzZYVxbMj69qc+ztegfUB1UAwrQ+JIOOhXjH7JVo4UHjYaCHSN7+DIwT8hfVfdZzIraqVUOlVUih3PrIU/HhpupDMWTPlqey6/SZ/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bYwQ522zrz2qFCJ;
+	Sat,  5 Jul 2025 11:06:37 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5D06D1A016C;
+	Sat,  5 Jul 2025 11:05:40 +0800 (CST)
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 5 Jul 2025 11:05:40 +0800
+Received: from [10.174.177.223] (10.174.177.223) by
+ kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 5 Jul 2025 11:05:39 +0800
+Message-ID: <86aad556-51a7-47b8-872f-8ba1e06727a9@huawei.com>
+Date: Sat, 5 Jul 2025 11:05:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2513:b0:3dd:f338:6361 with SMTP id
- e9e14a558f8ab-3e13ee967fbmr7690545ab.6.1751684762621; Fri, 04 Jul 2025
- 20:06:02 -0700 (PDT)
-Date: Fri, 04 Jul 2025 20:06:02 -0700
-In-Reply-To: <kl7jac3bqyd3dz4uj5rp3dwam6rdbegvf5qahgn7njdaeodndj@aq7yil27yawv>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6868969a.a70a0220.29cf51.002d.GAE@google.com>
-Subject: Re: [syzbot] [ocfs2?] possible deadlock in __ocfs2_flush_truncate_log
-From: syzbot <syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com>
-To: ipravdin.official@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-failed to apply patch:
-checking file fs/ocfs2/move_extents.c
-patch: **** unexpected end of file in patch
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2 1/2] net: vlan: fix VLAN 0 refcount imbalance of
+ toggling filtering during runtime
+To: Ido Schimmel <idosch@idosch.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <jiri@resnulli.us>,
+	<oscmaes92@gmail.com>, <linux@treblig.org>, <pedro.netdev@dondevamos.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhangchangzhong@huawei.com>
+References: <20250703075702.1063149-1-dongchenchen2@huawei.com>
+ <20250703075702.1063149-2-dongchenchen2@huawei.com>
+ <aGf11IS6Blvz_XOm@shredder>
+From: "dongchenchen (A)" <dongchenchen2@huawei.com>
+In-Reply-To: <aGf11IS6Blvz_XOm@shredder>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
 
+> On Thu, Jul 03, 2025 at 03:57:01PM +0800, Dong Chenchen wrote:
+>> 8021q(vlan_device_event) will add VLAN 0 when enabling the device, and
+>> remove it on disabling it if NETIF_F_HW_VLAN_CTAG_FILTER set.
+>> However, if changing filter feature during netdev runtime,
+>> null-ptr-unref[1] or bug_on[2] will be triggered by unregister_vlan_dev()
+>> for refcount imbalance.
+> [...]
+>
+>> Root cause is as below:
+>> step1: add vlan0 for real_dev, such as bond, team.
+>> register_vlan_dev
+>>      vlan_vid_add(real_dev,htons(ETH_P_8021Q),0) //refcnt=1
+>> step2: disable vlan filter feature and enable real_dev
+>> step3: change filter from 0 to 1
+>> vlan_device_event
+>>      vlan_filter_push_vids
+>>      	ndo_vlan_rx_add_vid //No refcnt added to real_dev vlan0
+>> step4: real_dev down
+>> vlan_device_event
+>>      vlan_vid_del(dev, htons(ETH_P_8021Q), 0); //refcnt=0
+>>          vlan_info_rcu_free //free vlan0
+>> step5: real_dev up
+>> vlan_device_event
+>>      vlan_vid_add(dev, htons(ETH_P_8021Q), 0);
+>>          vlan_info_alloc //alloc new empty vid0. refcnt=1
+>> step6: delete vlan0
+>> unregister_vlan_dev
+>>      BUG_ON(!vlan_info); //will trigger it if step5 was not executed
+>>      vlan_group_set_device
+>>          array = vg->vlan_devices_arrays
+>> 	//null-ptr-ref will be triggered after step5
+>>
+>> E.g. the following sequence can reproduce null-ptr-ref
+>>
+>> $ ip link add bond0 type bond mode 0
+>> $ ip link add link bond0 name vlan0 type vlan id 0 protocol 802.1q
+>> $ ethtool -K bond0 rx-vlan-filter off
+>> $ ifconfig bond0 up
+>> $ ethtool -K bond0 rx-vlan-filter on
+>> $ ifconfig bond0 down
+>> $ ifconfig bond0 up
+>> $ ip link del vlan0
+>>
+>> Add the auto_vid0 flag to track the refcount of vlan0, and use this
+>> flag to determine whether to dec refcount while disabling real_dev.
+>>
+>> Fixes: ad1afb003939 ("vlan_dev: VLAN 0 should be treated as "no vlan tag" (802.1p packet)")
+>> Reported-by: syzbot+a8b046e462915c65b10b@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=a8b046e462915c65b10b
+>> Co-developed-by: Ido Schimmel <idosch@idosch.org>
+>> Signed-off-by: Ido Schimmel <idosch@idosch.org>
+>> Signed-off-by: Dong Chenchen <dongchenchen2@huawei.com>
+> Given my name is also on the patch, do you mind making the commit
 
-Tested on:
+Hi, Ido
 
-commit:         a79a588f Merge tag 'pm-6.16-rc5' of git://git.kernel.o..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fd0cea6d0f67318f
-dashboard link: https://syzkaller.appspot.com/bug?extid=6bf948e47f9bac7aacfa
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17f8d48c580000
+Thanks for your review
+I apologize for adding your signature to the patch without your
+permission. Perhaps I should use "suggested-by"?
+
+> message a bit clearer? Specifically, in addition to the BUG_ON(), it
+> would be good to also describe the memory leak. Something like this:
+>
+> "
+> Assuming the "rx-vlan-filter" feature is enabled on a net device, the
+> 8021q module will automatically add or remove VLAN 0 when the net device
+> is put administratively up or down, respectively.
+>
+> There are a couple of problems with the above scheme. The first problem
+> is a memory leak that can happen if the "rx-vlan-filter" feature is
+> disabled while the device is running:
+>
+>   # ip link add bond1 up type bond mode 0
+>   # ethtool -K bond1 rx-vlan-filter off
+>   # ip link del dev bond1
+>
+> When the device is put administratively down the "rx-vlan-filter"
+> feature is disabled, so the 8021q module will not remove VLAN 0 and the
+> memory will be leaked [1].
+>
+> Another problem that can happen is that the kernel can automatically
+> delete VLAN 0 when the device is put administratively down despite not
+> adding it when the device was put administratively up since during that
+> time the "rx-vlan-filter" feature was disabled.
+>
+> This is not a problem if VLAN 0 does not exist, but if it belongs to an
+> upper VLAN device with VLAN ID 0, then a crash [2] can be triggered when the
+> VLAN device is deleted since the lower device does not have a VLAN info
+> structure associated with it:
+>
+>   # ip link add bond1 type bond mode 0
+>   # ip link add link bond1 name vlan0 type vlan id 0 protocol 802.1q
+>   # ethtool -K bond1 rx-vlan-filter off
+>   # ip link set dev bond1 up
+>   # ethtool -K bond1 rx-vlan-filter on
+>   # ip link set dev bond1 down
+>   # ip link del vlan0
+>
+> Fix both problems by noting in the VLAN info whether VLAN 0 was
+> automatically added upon NETDEV_UP and based on that decide whether it
+> should be deleted upon NETDEV_DOWN, regardless of the state of the
+> "rx-vlan-filter" feature.
+>
+> [1]
+> unreferenced object 0xffff8880068e3100 (size 256):
+>    comm "ip", pid 384, jiffies 4296130254
+>    hex dump (first 32 bytes):
+>      00 20 30 0d 80 88 ff ff 00 00 00 00 00 00 00 00  . 0.............
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>    backtrace (crc 81ce31fa):
+>      __kmalloc_cache_noprof+0x2b5/0x340
+>      vlan_vid_add+0x434/0x940
+>      vlan_device_event.cold+0x75/0xa8
+>      notifier_call_chain+0xca/0x150
+>      __dev_notify_flags+0xe3/0x250
+>      rtnl_configure_link+0x193/0x260
+>      rtnl_newlink_create+0x383/0x8e0
+>      __rtnl_newlink+0x22c/0xa40
+>      rtnl_newlink+0x627/0xb00
+>      rtnetlink_rcv_msg+0x6fb/0xb70
+>      netlink_rcv_skb+0x11f/0x350
+>      netlink_unicast+0x426/0x710
+>      netlink_sendmsg+0x75a/0xc20
+>      __sock_sendmsg+0xc1/0x150
+>      ____sys_sendmsg+0x5aa/0x7b0
+>      ___sys_sendmsg+0xfc/0x180
+> unreferenced object 0xffff888008c06f20 (size 32):
+>    comm "ip", pid 384, jiffies 4296130254
+>    hex dump (first 32 bytes):
+>      a0 31 8e 06 80 88 ff ff a0 31 8e 06 80 88 ff ff  .1.......1......
+>      81 00 00 00 01 00 00 00 cc cc cc cc cc cc cc cc  ................
+>    backtrace (crc fe715fa5):
+>      __kmalloc_cache_noprof+0x2b5/0x340
+>      vlan_vid_add+0x25a/0x940
+>      vlan_device_event.cold+0x75/0xa8
+>      notifier_call_chain+0xca/0x150
+>      __dev_notify_flags+0xe3/0x250
+>      rtnl_configure_link+0x193/0x260
+>      rtnl_newlink_create+0x383/0x8e0
+>      __rtnl_newlink+0x22c/0xa40
+>      rtnl_newlink+0x627/0xb00
+>      rtnetlink_rcv_msg+0x6fb/0xb70
+>      netlink_rcv_skb+0x11f/0x350
+>      netlink_unicast+0x426/0x710
+>      netlink_sendmsg+0x75a/0xc20
+>      __sock_sendmsg+0xc1/0x150
+>      ____sys_sendmsg+0x5aa/0x7b0
+>      ___sys_sendmsg+0xfc/0x180
+>
+> [2]
+> kernel BUG at net/8021q/vlan.c:99!
+> Oops: invalid opcode: 0000 [#1] SMP KASAN
+> CPU: 4 UID: 0 PID: 405 Comm: ip Not tainted 6.16.0-rc4-virtme-gb9fd9888a565 #1 PREEMPT(full)
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.17.0-4.fc41 04/01/2014
+> RIP: 0010:unregister_vlan_dev+0x290/0x3b0
+> [...]
+> Call Trace:
+>   <TASK>
+>   rtnl_dellink+0x33d/0xa50
+>   rtnetlink_rcv_msg+0x6fb/0xb70
+>   netlink_rcv_skb+0x11f/0x350
+>   netlink_unicast+0x426/0x710
+>   netlink_sendmsg+0x75a/0xc20
+>   __sock_sendmsg+0xc1/0x150
+>   ____sys_sendmsg+0x5aa/0x7b0
+>   ___sys_sendmsg+0xfc/0x180
+>   __sys_sendmsg+0x124/0x1c0
+>   do_syscall_64+0xbb/0x360
+>   entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> "
+
+v3 wil be send. Thank you for your guidance.
+
+Best regards
+Dong Chenchen
 
