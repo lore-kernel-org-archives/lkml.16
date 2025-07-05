@@ -1,115 +1,150 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE96186E2E;
-	Sat,  5 Jul 2025 15:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B780198E91;
+	Sat,  5 Jul 2025 15:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751731019; cv=none; b=mcXRSThPzem0k0R+3Xj7PntV0sxUUHjmrVxGhGGFanxxdlyC6j2Bqh6cBK0nosxJUsqwXWrtjlLH5hE8t2EcbHRiwlAcpCfujg3rKLNC7Ll+fCxeR8L0x2JB/3B+HyRMj5P1kkolO753XJRXV29j2auWFTLB3ImXfoTTsWA1fQc=
+	t=1751731047; cv=none; b=XCGA9qqb6jJ+2AgMj49q/Aqn28sMbHI/AKKCVjF5iiw3PHFsg1uvboQoa/Up8XOENP2CtwiTJEJFAsccRN+AtEb3Z4JaUq6k5fUVZ+0wPn0VHsaYQcU81j4SEyz7S0p/dxNprKou6wmy68OD/1ueVLkNL1pEgVFvTpU7WdsOn/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751731019; c=relaxed/simple;
-	bh=hhpxyw9Gt3PCRNLN3iZIqyRhINENxCk+HO4ESr9vG4s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueNoPOO5TVjGEoC3pP/Nv80t/8QCypL0qoz7sUUDF6YVnfHyLjezdfcQdrQ/yO8emI8YZIJ+DW5DRZU/SoXwbs0GeBZ7RugSPE+1+tR7YpobWLDEVuSvltae+HdwyT2HwEco0cSI0OncERwY6Ju0uGthQLhGHPZpyyGAF2IWBKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3bSxZBQ; arc=none smtp.client-ip=209.85.208.179
+	s=arc-20240116; t=1751731047; c=relaxed/simple;
+	bh=Gt1eKTa6tIxKurKrdxjpWEUs1JtVLd/hrzYlnIwvltI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DERF4z1rZR3CgiSH/HNyIpWTw2Pv/HfXdO+8YQ+YwaiXEBQcXk/O57wSffSnCrcDXwIfPIWt/JQRY16tDxei0tKBu0kWDlpEqyd4GUsGj7pDfqoibELtr2jHvrM2Ac89Dw2gQUl5eRk2b3wTUs8xxi1C4dTRuQon7QewyeF4SaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOVARa+C; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3bSxZBQ"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b3b250621so16455951fa.2;
-        Sat, 05 Jul 2025 08:56:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOVARa+C"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-749248d06faso1458969b3a.2;
+        Sat, 05 Jul 2025 08:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751731015; x=1752335815; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kIuW9mYDfe1OO55T0B/j5JkohO1wkPFoK07cmUTgjB8=;
-        b=a3bSxZBQD28YvPtII5IM7eEZxyYXqS7/9IWa373T4b0mpT9euabTobz6J3BP9HZZ0P
-         gHKTxQqSDYNtXGWdaPP2f4rL3SkB3Hi5XHAM1TIDW8+tiRHjf/PS9lu6CQY/iOFUxdBc
-         1ADf97jvOAqB4ivbDnZjSKb7SGM8YsmqUq50TwcQy/cat182/uAwGRRyveVSrmIbWgM0
-         P8kBD3bS2RRlJwDwKT/ebMYmhjy95AckVt1zXE4EXUS1VJ5HWrWidmf7dUcd4+TboGt7
-         pqodiANCIj+1Z8ynQ51RQs0b8SgnZimYc1ID64VElJiqfS9eEerLjgfZOTS93Xjuyg+F
-         m6Fg==
+        d=gmail.com; s=20230601; t=1751731045; x=1752335845; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=afPSfC4kVbMqCL3ZhWKf3H6Etjj2i6ZPDF9rDxYtYWg=;
+        b=WOVARa+CG65xzgtVCSzZbFb7kmEi2REFJBK0I7FfihFGu8CXaeW5Eek2fTVV0zCr13
+         5Vs2nOiHatKi5o5/YIeRpoDTowjHI/uZa0JAq5h4sp4dltkRH2N4P8aK4YfiWhQEN2Lk
+         du1QcysTNbmZM3me2KXQ/5tzGqOMVQUx+eS2SaLYyT73kUhRhEZNy4WtO4XmVBXFVMkJ
+         d3Q9pJ5Gmj2inSAWuBH8dHkX71ejyPu1DZ9+gkY6DlTp1AkGAQGCHINpILJ1mEXcQ6FH
+         jWD757oKqbl+E1SiNBVReNPX8jlY55mu4QQHqErjkqRDpHwhyerM2eEBPiNPnSqKETeP
+         Wqog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751731015; x=1752335815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kIuW9mYDfe1OO55T0B/j5JkohO1wkPFoK07cmUTgjB8=;
-        b=M8gSJGnJrdetQcn7NR2QR3hnoOYvAsOrOkqBUWtcCy2sm0HIx1ZuPKz8FJawycaLrI
-         rrXlGM3kW6L/ipdS2XkSRiKf6yWEw0SKYILHAOkD5b2ILsM1pS0KBC9vbD+kbnwapIWM
-         3vIwg6d6LTNBvGvPoDZYf3wzqoDcrEkANQrGWwio1OlKSVfiqrN6bd0TyXNpn2hHeaEQ
-         mKUkf4yXvzXb/COOAK2JsCzZTbmck4a9vRqdyFh0W9dbAVzjZQ4Tjuz+H9LkZ6KPjPnE
-         b5bh+es+h869QAWvIG6c860XMnatac8IZAlrPSiwxOmEEMR/Jt6fwwo9REVegO3CmHkd
-         UNOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVNXWKGkJALRjuGzyUYWfnfcoxaRgwHhHPBTU1ZXSocWH9Rr6k1s9+btdSrZCbBj3X/wbxpLD3lq8SYQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP7qotmb7N4mghOOnXLGcXQ8elB70npbXaU0/Ka6QbFHNJJ0Gq
-	EvnMiNN4jnJliWOa/E+a28M0K74gmtEast8FIUaS+yj/4sIjLyPEcffkeoWpDV0YsyurOkmwBJD
-	uifw6Dj4bleAiFgZrqbdCmYFJ6bFcpefRX9hWEwKPyg==
-X-Gm-Gg: ASbGncsnBw8N8h/lBNjMO6JP145hl2V+VkEo+52ABUdjUt4A6DR/92b+zd76iPA+QHV
-	wcC4Qfx2jQmN5VZqQLOyp03ASXTX/T7t1hWvN4yVAM+pLRx0JrlfnJu+XyvJsMy8xsOth2LNALn
-	shjfiZj9K4daBPTol0znN5+yQaH6ZwyTzC7/4ZTDNQyeywYl69nXZnUsEgcfcaYddvzSYnNDJLJ
-	7axUg==
-X-Google-Smtp-Source: AGHT+IFJjapQ+hpAJpLx1J8MEUHl7JDBD3MLiEKFP+eMnV56PMUbi2JwbohnEb49nWfoC1O5cxox2QvaewvI/5VRfZ8=
-X-Received: by 2002:a2e:be05:0:b0:32b:4f0c:d259 with SMTP id
- 38308e7fff4ca-32f199c54dcmr8286901fa.16.1751731015092; Sat, 05 Jul 2025
- 08:56:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751731045; x=1752335845;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=afPSfC4kVbMqCL3ZhWKf3H6Etjj2i6ZPDF9rDxYtYWg=;
+        b=vj/6pZHVqM+nW+ST1RkKC4aVtPHCVY6UzO1Uvscv1/S1K2C6GI1nQO6wYrBgb794H7
+         wwb7hs2U7aT8JT9qkIzzUBnYygcgljcZwhlIdq+8Aev058p7cXkwKu+z+czNJ4pQjJZZ
+         i7sV0bUTC2/AN4KGc0clNx3+KcHnWHwYh9drKnEDsnN2KJU9OusfUbZl9rIfMN951g/y
+         CwN7rg8UwnOnomfxNTdcW4yVECCwnipwmLhZ2ijLlOze49fX7DB7y+hu99dADhnV9kER
+         mfeHugx9EfNbUiEJJQDrPq7HAmChlpNZ9oEX8jD/0C7enQDs/hAfXXDVkj7uCwp63t8+
+         /RRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2qcq1JcmD31pzteyNj3tHTbKdsT01qdR+9j0k7guHOYabcGyGSTpey9TyXZHy30y0N0lTsD3bqKXxtFtO@vger.kernel.org, AJvYcCVKSb45FMXqmr8KVJ/bxbnMaKz2nb1ZE4jTPtD4uuv1uzPi9TAlzprvheJeDVyFZccSg7lY2rZ6MPST@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx32mYc95KEGx7nWPD9vr2u8XxfP0NX66bcuxJWs8jER5sEKGQd
+	yLXkX8Pl+4EcyAqZWW6Dac0F/+KmylXl1EpTVe91OUWBhVVxhmeZTd++
+X-Gm-Gg: ASbGncuvnFyfSVwlPLhzWUQiRUzfeTA4wVJ0I/HtNVvBOBuYO81Wyi2Kj2LJDFZHa+r
+	aIULun2Kui6xt9Q9qky6pU+EbegBLGirUwKIY6nrAG4L0UCVhmbNw2EEl3Zsj6mgWDKTvKpPZAj
+	ClZ3ksBKKCz3BuUZ4xPcapFJYxJY2SbTRcw/g25riVSg4xuPfPHoRcAFoRKDnTt0PYa2ofiX2cd
+	0dP+AqzXgjsLLYN6GD0jSu3KvdPHqmkfFGaOyFJ1n0QIOpbJKhQSy/TO+KxhheAK22N7suLXdiC
+	hyMUudfddBNlLOyQEeonSe4yPljrhmEj5HwohANb2vbJiZ/Dw6z5VeXSEnGty/uMyZvcE/Io46S
+	+dbP+rhNDCZDxlGI=
+X-Google-Smtp-Source: AGHT+IGQceXr4LoeHtkNDedzNiN7bq81/QO67YRemkiM9QgZx4aV68p++p7C6lvxIBFPx5clI3QR1Q==
+X-Received: by 2002:a05:6a21:699:b0:222:d63a:249d with SMTP id adf61e73a8af0-22720cbab8dmr4386269637.20.1751731045364;
+        Sat, 05 Jul 2025 08:57:25 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:882f:293:70ba:30fe:2559:8217])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee450ce1sm4603799a12.11.2025.07.05.08.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 08:57:24 -0700 (PDT)
+From: Abinash Singh <abinashlalotra@gmail.com>
+X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
+To: sfrench@samba.org
+Cc: pc@manguebit.org,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	tom@talpey.com,
+	bharathsm@microsoft.com,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org,
+	Abinash Singh <abinashsinghlalotra@gmail.com>
+Subject: [PATCH RFC] fs/smb : fix build warning in cifs_open()
+Date: Sat,  5 Jul 2025 21:27:14 +0530
+Message-ID: <20250705155714.805067-1-abinashsinghlalotra@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704-cstr-include-miscdevice-v1-1-bb9e9b17c892@gmail.com>
-In-Reply-To: <20250704-cstr-include-miscdevice-v1-1-bb9e9b17c892@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 5 Jul 2025 11:56:19 -0400
-X-Gm-Features: Ac12FXznq6vxJh3hKdm5lxKLvoJwiCZlPoVnC9pRg7NUOBaCaiw_ZeptxofP9EM
-Message-ID: <CAJ-ks9nJhBDQtVUGNJVPmtrK6M8S9_Q+vpVGeSLtspJNaaX+nw@mail.gmail.com>
-Subject: Re: [PATCH] rust: miscdevice: remove unnecessary import
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 4, 2025 at 3:50=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> `kernel::str::CStr` is included in the prelude.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  rust/kernel/miscdevice.rs | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-> index 288f40e79906..8309d656088a 100644
-> --- a/rust/kernel/miscdevice.rs
-> +++ b/rust/kernel/miscdevice.rs
-> @@ -17,7 +17,6 @@
->      mm::virt::VmaNew,
->      prelude::*,
->      seq_file::SeqFile,
-> -    str::CStr,
->      types::{ForeignOwnable, Opaque},
->  };
->  use core::{marker::PhantomData, mem::MaybeUninit, pin::Pin};
->
-> ---
-> base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
-> change-id: 20250704-cstr-include-miscdevice-4c5cb26a0ece
->
-> Best regards,
-> --
-> Tamir Duberstein <tamird@gmail.com>
->
+The function `cifs_open()` triggers
+a large stack frame warning:
+ld.lld: warning:
+	fs/smb/client/file.c:949:0: stack frame size (1032) exceeds limit (1024) in function 'cifs_open'
 
-Oops, should have sent this to Greg. Sent
-https://lore.kernel.org/all/20250705-miscdevice-maintainers-v1-1-9a6b67f760=
-2f@gmail.com/
-to make this easier in the future.
+Fix excess stack usgae by dynamically allocating `cifs_pending_open` struct.
+
+Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+---
+It only reduces only 40 bytes.But we can reduce it more
+by allocating other structs on heap.
+This is fine if this function is not performance critical,
+Is it ?
+
+Thank You
+---
+ fs/smb/client/file.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index e9212da32f01..818a3c1e6c72 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -959,9 +959,13 @@ int cifs_open(struct inode *inode, struct file *file)
+ 	const char *full_path;
+ 	bool posix_open_ok = false;
+ 	struct cifs_fid fid = {};
+-	struct cifs_pending_open open;
++	struct cifs_pending_open *open __free(kfree) = NULL;
+ 	struct cifs_open_info_data data = {};
+ 
++	open = kmalloc(sizeof(*open),GFP_KERNEL);
++	if (!open)
++		return -ENOMEM;
++
+ 	xid = get_xid();
+ 
+ 	cifs_sb = CIFS_SB(inode->i_sb);
+@@ -1057,7 +1061,7 @@ int cifs_open(struct inode *inode, struct file *file)
+ 	if (server->ops->get_lease_key)
+ 		server->ops->get_lease_key(inode, &fid);
+ 
+-	cifs_add_pending_open(&fid, tlink, &open);
++	cifs_add_pending_open(&fid, tlink, open);
+ 
+ 	if (!posix_open_ok) {
+ 		if (server->ops->get_lease_key)
+@@ -1066,7 +1070,7 @@ int cifs_open(struct inode *inode, struct file *file)
+ 		rc = cifs_nt_open(full_path, inode, cifs_sb, tcon, file->f_flags, &oplock, &fid,
+ 				  xid, &data);
+ 		if (rc) {
+-			cifs_del_pending_open(&open);
++			cifs_del_pending_open(open);
+ 			goto out;
+ 		}
+ 	}
+@@ -1075,7 +1079,7 @@ int cifs_open(struct inode *inode, struct file *file)
+ 	if (cfile == NULL) {
+ 		if (server->ops->close)
+ 			server->ops->close(xid, tcon, &fid);
+-		cifs_del_pending_open(&open);
++		cifs_del_pending_open(open);
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
+-- 
+2.43.0
+
