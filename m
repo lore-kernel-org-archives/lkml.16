@@ -1,72 +1,72 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1F209F5A
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 16:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C8620FABC
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 16:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751731305; cv=none; b=fi+5Q9ma26Z9/lgegvKm1NITF4oVl2GAFGPTwFq9nN8dYfTB2jXBX2EQ46uCcpTskOmWzngCpweZSqb+4P6oM4TVLsolT73ZmEJAwM2fm+8xUt4TgsKpxJuBkA7XlU8B0uMvhjutTJoIrJY13g54khxnT/qommUqMNM/A1R758I=
+	t=1751731307; cv=none; b=hJ92/ZKaMUky4OkxbfbRhoPto9536UlHfYOsoN9xkb2F5KbsGiUiDii2oGjspzJuoK9+835GQZUDHJoY8+tZEB1KzcG4A9JFaZ7WTSYQnA1QQ/c916xaUKqcyg8MSH8rgzQpuaKnb6Mly4xcwoMiAFGWcVaeoTHMDlNIYgfBeCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751731305; c=relaxed/simple;
-	bh=rB0RSw9Z+0WSX7+8sve+aEuU7EIPgo2ibCmehHgLJRc=;
+	s=arc-20240116; t=1751731307; c=relaxed/simple;
+	bh=jpSsgVmo545R6Fs7k3JvSGXq45XPdnMEYua0cmzMR10=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PY7reS4iMFQWzpav05w/rs+pAYH3SGy2nHDv1qwESJv+0GrlHq0rOVJQSkd3/V/e1BUPoi939piV/lz0zYsEGP6wDz09QexFwRoSbbq4NuTInRedCMo+BE1b+Pht8aewovyIsBTm5IZ5UUoAuh77kSlDRfUJSVLYc3LTIIW/e+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E8vtL8ZC; arc=none smtp.client-ip=209.85.221.51
+	 MIME-Version; b=UXr5GRTv8bs8iBkyU1rsNVQUxeAN/enDYxuiJJL7dgnJ6bfIlFb9fBOZscRYisL4Zh/a11/1FTrFjxG2xjRVN9zTOWt3NH7p7G0HT/+d7LO+nwxuBJDN3x7xPm0FiG8v0WlzcCNAv1fZv4aQkL7Pc4QX2GMlV7xqMCJuUBc7z0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C2TMqWwG; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E8vtL8ZC"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so933249f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 09:01:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2TMqWwG"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-453749aef9eso5764325e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 09:01:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751731302; x=1752336102; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751731304; x=1752336104; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LQHfJyFRiIICm4X1h0CxbHPbRqVpH05B906HjCThtsI=;
-        b=E8vtL8ZCnxz88I3eW4YfsOe/jM6xuML0VNUguglJ3zi4KhrFRDSuYkpbRE+gWvqcWk
-         VMF+Ab9/06IriPS+NI7JNkQoZoV+lFRndqRGsuSxYWS5i93+tf7bNvwShC1tJ3zKGXOe
-         N48kHk0YAZQMifLHfL9W7PbMgx4YtwH7IHZUXDQJ5cFx8iFbgjLAI+P2WUjcVO8Lc/Z0
-         /LIvXKjzczWoS7PyzTd3aoWh/KNHVqgmA9uvKGmTButeFmEYgVP6pm7ZUNQgP38tpZl7
-         qCqyXwgQHNxpfReyHVxvugpFuEY6Ob/tAypB0LTT9dggjLye2U8BO6YW960Pkcsp4qII
-         ASFA==
+        bh=zUsxmHI16pe+iZ8+pv+ck2V4zWW0Na+WzCoL+5yxEKQ=;
+        b=C2TMqWwGgVqAwiOOdA1KNBJs2CW+7GOc+SwYs6w9mAQlT0LWc5S1oezQThw1biqWJN
+         xn+qVhkPlrbLwLgAqEK7vu59vSaNXR4Nq9UpRQAHbmvMrhYbKliZFbq+O0MogmIcpH4V
+         cIyHRHiI2mMMwj6ArcMfP8ZB4/HInjKBCxhRtmIfAVWwF6vEHv56n44DrwQ+dMjyDF0z
+         nbE30lJAnJQUd4DqGOm80JD3kIr5PoQ8+wYA85VeOVdKUPVmtVHRlwCkZ2RtdhmW986x
+         gH3kCs0HZQWKjeOIftMEwoZo1YVxhCX+sHiEYbatZFFwb34XfkSU/QCQR4qUnPoFRTJu
+         jV5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751731302; x=1752336102;
+        d=1e100.net; s=20230601; t=1751731304; x=1752336104;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LQHfJyFRiIICm4X1h0CxbHPbRqVpH05B906HjCThtsI=;
-        b=Io811ILifB9Hkh5pOCTJVNKcG4n2B93pZuY6vSG4vlpUktvHMvMNdsoUFNJHS4THlJ
-         zVnhSlvJCYLqe0NJtLP2OOay0gSy3UxnoR3nhTUIs/29QQwF1/FTQcxkoxBNnlB0vtT0
-         86ayZ4nfublv53P8lAgwEGjNG9nQbmWVB5J7pmC9KoP7yz9kokv3lpQVKnLpm3lIOqDE
-         YxkPaSsR07yWu1Fl0BlCILTMEJiNFcp5A9BaxgokYyj63FwrBX8e3E93lGJi/tI0zZEr
-         joDhai0EKE6b6oM0VNU6G8Z+lBOhP+SlSna8YpB+r6XQDX0PnkTEc8MPUTJ2wYHCuN9a
-         sRRg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+2fMrilfGe+/xlNAfsNQlRufdqDvwFo/1ZwMMGrW+mnpg6FrhP/sLv1WMN26qyZv80csFtr61oFCIWsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm2wopr67fDRXdrTI6R4yDzlhWApEPHg6NlJgZ0aiLWdgKZWAZ
-	Iy5FwosDSEmTXzuagjxbuQLN7fkVYIHjRgi544GqS530eutsBrbUoPX9YfgcdefObqo=
-X-Gm-Gg: ASbGnctKdok/U2t1xPI6v0Wd/pcVp0QvkaSQHCnbKGThlUlfSP1aPXQPjcmW/3dD5UG
-	+13ZmNum/da47EsfQ9suBGdCsWYdew2sfNlOTwTpJ6RqWErG8AySG8+xHM7K7ma8U5Ye+vdQjEo
-	CdXyn9y5jBckgWKofY5BPSC4/CSBvuv6J48v8umwe5hqW5NbiP5NN8mDrxKWWG+sSIDI3sOZJ/6
-	RLVvJJZB3JwWWce5AKMgBeus6Zto0bGC25cg7TMemNoztk3wliVUyxv3hUar+vkbYf/cyaeSRQC
-	zZmzSmVt2nqMbB9fS+zBRG8tp0sKAYBHgiUw9ds/YGRJ3ciNoN5jd3f1AHVAfWfcnRwEN74+MmU
-	jDunkxewalCh4
-X-Google-Smtp-Source: AGHT+IFeaVRSzTNz/VdNMNQsTZ3QWmzX0EE92wM7GCY4yaaZNOw45r4CCh8oDEF2jvcKIKTkrvktKw==
-X-Received: by 2002:a05:6000:220f:b0:3a5:7991:ff6 with SMTP id ffacd0b85a97d-3b49a9fea7cmr1909373f8f.1.1751731302034;
-        Sat, 05 Jul 2025 09:01:42 -0700 (PDT)
+        bh=zUsxmHI16pe+iZ8+pv+ck2V4zWW0Na+WzCoL+5yxEKQ=;
+        b=BacCBf641ArqnlTzWbeExDl8jXBgj9Dq1l4r0Jc0bOc5glfxsVSz/jFlCeMnPPVgIC
+         +wUH0WnFEXih8xUxZtqQvDSabch2JvZind8O3gW6pwYpcRaWBRX+qCY9vgP7ucucUKmz
+         DJIr7MKnIno1/NgXa+3zG1uRYh0bQQkZkcgi2lxBiuPbTZrkM3f0XP/W0rQlhgpodyt/
+         uvc77NbLFf2H43r9mskQEIMcTFolGXJnzzrO1QepRSyWKb2KFT90/3y5+ZUGxFD658F/
+         9NqKBfRFWJNdLQM8NYm2RgMlcbetooR6Kem9kCYeGqbC746BcpWT7PDev7v8M5AmUy+R
+         EAzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFPT2OtRoyFZUlUbPgaxVPby3YxsGHN4FspS7VX/HGb2Pm1nd4Ub3qpkdI7uyBh/zFvja72V1IilX7U5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/X3vf2Ni1aNx2ZEi/uvT74cRDVHDHOaMiS+FH2v8O83ycQ1b5
+	dzISZT0u9Zx7nDXx3634GWEKTentMEticzsJuTSwTkoLy3YguFOqcpq/Lr3R8LS5vEU=
+X-Gm-Gg: ASbGncuF72jtFRzDBniK6hVqrkz4RX4V1wAjMgn+5PCza8Er79pMIsn4TXp6+lMxRf2
+	b+di/SBOx7eonlAsvOZjlbVPxpl1E2tYDI6jUuw0aDWuItyY5bS0/qC63PPqrgKdFCZjgi1514y
+	+cImulN2SCHEXrwZYPoScpJVeTdLbfsuDj7Uk0K0EOvGzDsQ/+wDXSecmlPA3jwsvtvNwyYr3Rh
+	jM86N+pitbP8VURp7+7q6k/ipvgJL6wdYjK6R09kjgpwWQQnqDDNudh9CPxAaqHTOBmaTWUlYuj
+	DSBRLLeGgwX3qFqqo4FNptU+m653OT4MW9BGzxW+TYgcgByubQBOqGloqAZSK+lyDVP5ZuAW00L
+	vTqJXJv5aR2Hz
+X-Google-Smtp-Source: AGHT+IGzerrCTXQuEdTY6Z3UMBommonlkj7ahpYePAZGtvXJ/CHr5sdZDaeVN00disSSpbO2UXOJ3Q==
+X-Received: by 2002:a05:600c:1c1f:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-454bb85e7c5mr26723275e9.16.1751731303752;
+        Sat, 05 Jul 2025 09:01:43 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b16990aasm57709375e9.32.2025.07.05.09.01.41
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b16990aasm57709375e9.32.2025.07.05.09.01.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 09:01:41 -0700 (PDT)
+        Sat, 05 Jul 2025 09:01:42 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
 Cc: ghennadi.procopciuc@oss.nxp.com,
 	S32@nxp.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 06/20] clocksource/drivers/vf_pit: Encapsulate the initialization of the cycles_per_jiffy
-Date: Sat,  5 Jul 2025 18:01:12 +0200
-Message-ID: <20250705160129.3688026-6-daniel.lezcano@linaro.org>
+Subject: [PATCH 07/20] clocksource/drivers/vf-pit: Allocate the struct timer at init time
+Date: Sat,  5 Jul 2025 18:01:13 +0200
+Message-ID: <20250705160129.3688026-7-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250705160129.3688026-1-daniel.lezcano@linaro.org>
 References: <20250705160129.3688026-1-daniel.lezcano@linaro.org>
@@ -78,36 +78,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the cycles_per_jiffy initialization to the same place where the
-other pit timer fields are initialized.
-
-No functional changes intended.
+Instead of having a static global structure for a timer, let's
+allocate it dynamically so we can create multiple instances in the
+future to support multiple timers. At the same time, add the
+rollbacking code in case of error.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/timer-vf-pit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/timer-vf-pit.c | 48 +++++++++++++++++++++++-------
+ 1 file changed, 37 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-vf-pit.c
-index 20f637c8e856..3c1ac05626de 100644
+index 3c1ac05626de..e1f1e66a2664 100644
 --- a/drivers/clocksource/timer-vf-pit.c
 +++ b/drivers/clocksource/timer-vf-pit.c
-@@ -155,6 +155,7 @@ static int __init pit_clockevent_init(struct pit_timer *pit, void __iomem *base,
- 	 * for anyone else who needs them.
- 	 */
- 	pit->clkevt_base = base + PIT_CH(3);
-+	pit->cycle_per_jiffy = rate / (HZ);
+@@ -37,8 +37,6 @@ struct pit_timer {
+ 	struct clocksource cs;
+ };
  
- 	writel(0, pit->clkevt_base + PITTCTRL);
+-static struct pit_timer pit_timer;
+-
+ static void __iomem *clksrc_base;
  
-@@ -212,7 +213,6 @@ static int __init pit_timer_init(struct device_node *np)
- 		return ret;
+ static inline struct pit_timer *ced_to_pit(struct clock_event_device *ced)
+@@ -189,38 +187,66 @@ static int __init pit_clockevent_init(struct pit_timer *pit, void __iomem *base,
+ 
+ static int __init pit_timer_init(struct device_node *np)
+ {
++	struct pit_timer *pit;
+ 	struct clk *pit_clk;
+ 	void __iomem *timer_base;
+ 	unsigned long clk_rate;
+ 	int irq, ret;
+ 
++	pit = kzalloc(sizeof(*pit), GFP_KERNEL);
++	if (!pit)
++		return -ENOMEM;
++
++	ret = -ENXIO;
+ 	timer_base = of_iomap(np, 0);
+ 	if (!timer_base) {
+ 		pr_err("Failed to iomap\n");
+-		return -ENXIO;
++		goto out_kfree;
+ 	}
+ 
++	ret = -EINVAL;
+ 	irq = irq_of_parse_and_map(np, 0);
+-	if (irq <= 0)
+-		return -EINVAL;
++	if (irq <= 0) {
++		pr_err("Failed to irq_of_parse_and_map\n");
++		goto out_iounmap;
++	}
+ 
+ 	pit_clk = of_clk_get(np, 0);
+-	if (IS_ERR(pit_clk))
+-		return PTR_ERR(pit_clk);
++	if (IS_ERR(pit_clk)) {
++		ret = PTR_ERR(pit_clk);
++		goto out_iounmap;
++	}
+ 
+ 	ret = clk_prepare_enable(pit_clk);
+ 	if (ret)
+-		return ret;
++		goto out_clk_put;
  
  	clk_rate = clk_get_rate(pit_clk);
--	pit_timer.cycle_per_jiffy = clk_rate / (HZ);
  
  	/* enable the pit module */
  	writel(~PITMCR_MDIS, timer_base + PITMCR);
+ 
+-	ret = pit_clocksource_init(&pit_timer, timer_base, clk_rate);
++	ret = pit_clocksource_init(pit, timer_base, clk_rate);
+ 	if (ret)
+-		return ret;
++		goto out_disable_unprepare;
++
++	ret = pit_clockevent_init(pit, timer_base, clk_rate, irq, 0);
++	if (ret)
++		goto out_pit_clocksource_unregister;
++
++	return 0;
+ 
+-	return pit_clockevent_init(&pit_timer, timer_base, clk_rate, irq, 0);
++out_pit_clocksource_unregister:
++	clocksource_unregister(&pit->cs);
++out_disable_unprepare:
++	clk_disable_unprepare(pit_clk);
++out_clk_put:
++	clk_put(pit_clk);
++out_iounmap:
++	iounmap(timer_base);
++out_kfree:
++	kfree(pit);
++
++	return ret;
+ }
+ TIMER_OF_DECLARE(vf610, "fsl,vf610-pit", pit_timer_init);
 -- 
 2.43.0
 
