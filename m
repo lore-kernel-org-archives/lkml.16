@@ -1,194 +1,235 @@
-Received: from mailrelay-egress16.pub.mailoutpod3-cph3.one.com (mailrelay-egress16.pub.mailoutpod3-cph3.one.com [46.30.212.3])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96011F5437
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751699852; cv=none; b=ukEbv3WtqZCvWWo260BSIjXknv7FYKH8NPINDMNHksPizwFWpDf0uzlD2pPKG9eODKZiCUUAzZapJmN/XeX93TUkdivSuFGSbQR3bbnICbaEllR8R14RS0HC5LMY8n41I29mKf4bvxJDjo5Bw+37ySnXJoi+LWsBJEcZyJiO7sc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751699852; c=relaxed/simple;
-	bh=Q/gP1ee5h4zuoHWtTz9IDaf9f/qI6rqm7Uef+xT279w=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Kw4sUvG9HDs594jR8kqzhgvhxnahVuYywZgCAvDSsVwAuK+cvOitdUqeMGIVyFHcZk3O0auK7fVigZ8svIBdvGZ7QSySm/Oej16/jbAGVqlHtffx4m6jxFTy97lVt7FyU9jF4/e9ablccx4FVaFoQkUke1BGIvD2iv6dwet/qZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=IINvfj+C; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=A0EWOTTC; arc=none smtp.client-ip=46.30.212.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215CE1F5437
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751699858; cv=fail; b=XgLlB4DOhbr5E1wjdUjmbX7dzFGf2A3hOJkxg3bqphxok0mK4nGeaIlsotLGaZdZRbgXnxNdK3UwU3RK+q1yUo+Mo16WFMUp9Lf3et7LkemE6DwIWTp5RHkwVAO2AcWKAXHj6cZQ0TTtNRhSl5p8yp0hUjsUUlsbnpztr98Sc3g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751699858; c=relaxed/simple;
+	bh=vqdRqK2v8g9Wqwe80KHYkdnepr2zUBwTsdVKu1Iyb8o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gj505CLi1qi43oAcvj/CRsN6Ad8KFTLrWX29xfruHKuUuYvZTQ0bZ4lI5b0N0R5Z5fMTZ6PUIBeJ+dP58SHGQG5KPyGpuBifXU5X1h93uhEoIIbmf9KFp6kQhWUu+F6NwB+2zoueHGsfVsFJySp9WgSgbR8LWceEfohHpK1+kPQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gXx6CGCK; arc=fail smtp.client-ip=40.107.237.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="IINvfj+C";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="A0EWOTTC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751699841; x=1752304641;
-	d=konsulko.se; s=rsa1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=0dF08nZ5AD94cqmTG2oD0kbPc0AyPxw2HHR1baJXYOw=;
-	b=IINvfj+C2bWDaUPKaeQ1dp124mX5RlbM2RmbMnDyDotbJvcQNyb/bDNcgdB8yTEETYpj1kKAV/3QM
-	 I29dOHvkouxSZI5kfF254SmD0bTUS3kN+91/2C1HyehRGePIBjZm6qJMR0xlrZVmvbbWiLN8c3QUXy
-	 Ib66Zyg/eLvppeS70jCNdgtsH0UnNpaXhDX8Pdg/rAkhWJJVticB5XJUHhk9k5LsUwaAZWFkD5r2E0
-	 x6d9XvEi9EN4E5W0cITxN80BplO6UkfVuC2BFdClu1ldQARZl9dMYkXrvQt/oU/g3fAqv3f4WvUzy0
-	 4tVI7Kjs9kMYbqBwqLySjJgc6VX+yYA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751699841; x=1752304641;
-	d=konsulko.se; s=ed1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=0dF08nZ5AD94cqmTG2oD0kbPc0AyPxw2HHR1baJXYOw=;
-	b=A0EWOTTCHcbh2Whz4NRwaAMrW8SmMbqKP0RmpN38wNQC1MDBxxPf59eA8ZD4nsnqLfeJvMVUcbTjQ
-	 nm3e4qWCw==
-X-HalOne-ID: 16b71226-5970-11f0-b992-f78b1f841584
-Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
-	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 16b71226-5970-11f0-b992-f78b1f841584;
-	Sat, 05 Jul 2025 07:17:20 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gXx6CGCK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ccO82VbCKpMqbiPEK05jr4pMoadJFXMmFH+sKcP6ocCE+SCGaFGTQXqIuVNnQuDEfZEPV6udyev6TvHEmYJsLgTToEkmCbluqxiFe1T6Xbkt90XlmwbWWC7w0tec04oZxTjchTNjMKGMwDzgQuXnKvVIvG+tmF6tJrPV7uh9qhr066LSv2EJeyk1DLyMIN7nJEnh+XXQYZD9pVk90SCjEp9G1nFFPjBagr4docZIAgxEk/4d+BA2J3Hp4GkC9vLrnyFEPde7KEdTP7CgD5Jx+e73xIbDBS0CP4DZyj3pe5G6yKlaj8Is8x+Ux+N3cumNIIoQ8EpH5fUhdsgrUyrBJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bpm0bXsRM9yInaQMDqYb4M1DHhKTk0ZdmS+96+3Jjcc=;
+ b=KsqFhtyPPm8e13PgbiY23mamNdakxjkChrSdmD5uRn4oujXsIAnNNK94/nKHH3EkVQC+O0QAZgquKFXMDDcg6nvhmBfQ0fZSi5R77c2964WhTyzMG1Wt6xkqmEHRpEQCsvLkiQR82QLgml0krhvVz4El1quqvmrG5zRUA31Pf2fOeRiSGDUGI7pv9zWhC31MxiElQX5C91eJ8R4O3/apodUK/C/LYnTd5feraua4Xja3i6gxhBDKaV84KZhMyEcyfdY1SWknlVD0gRz0nh78AD2zglZIPsZ1zIjbYRrT6b3f9Jg8PETtYocZm77olVcwWz43Wq0MAU72a6WNKP8T7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bpm0bXsRM9yInaQMDqYb4M1DHhKTk0ZdmS+96+3Jjcc=;
+ b=gXx6CGCKhZPOrpnDyDtr9NWcKnZrq80mpsCH4hD+ciIv7QM6a5TFgJ31LiDLow5FM3opPTozdnPZcOIQQQv3+pwXCTaMilK9hQc98EBxOjNhcW7h+/f7spDBM4woee2lqs6DJsfG/Ybn6U2Zh90cnxkcMrhdhjPiZyBcEAcqZVHFCejlG9eJQneWiI7oqiFiUV1zQ78BWAUkT9cHssL4GAdZcL2IjUx5fcU7WvsYP5KBQnlVppk6PTgTVOKD8EkPSIPR1bwOu1hWFAjzB6BMiJUKsQTAg6edcZdt5v2ndje6iFMCBbz+c678ipLZyC1NK5XvvCnrYPeGTIiC74ZWAg==
+Received: from SN1PR12CA0056.namprd12.prod.outlook.com (2603:10b6:802:20::27)
+ by DS5PPFD22966BE3.namprd12.prod.outlook.com (2603:10b6:f:fc00::662) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Sat, 5 Jul
+ 2025 07:17:29 +0000
+Received: from SA2PEPF00001505.namprd04.prod.outlook.com
+ (2603:10b6:802:20:cafe::39) by SN1PR12CA0056.outlook.office365.com
+ (2603:10b6:802:20::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.23 via Frontend Transport; Sat,
+ 5 Jul 2025 07:17:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SA2PEPF00001505.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Sat, 5 Jul 2025 07:17:29 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sat, 5 Jul 2025
+ 00:17:21 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sat, 5 Jul
+ 2025 00:17:20 -0700
+Received: from localhost.nvidia.com (10.127.8.12) by mail.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Sat, 5 Jul 2025 00:17:19 -0700
+From: <ankita@nvidia.com>
+To: <ankita@nvidia.com>, <jgg@nvidia.com>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <joey.gouly@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<ryan.roberts@arm.com>, <shahuang@redhat.com>, <lpieralisi@kernel.org>,
+	<david@redhat.com>, <ddutile@redhat.com>, <seanjc@google.com>
+CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
+	<kjaju@nvidia.com>, <targupta@nvidia.com>, <vsethi@nvidia.com>,
+	<acurrid@nvidia.com>, <apopple@nvidia.com>, <jhubbard@nvidia.com>,
+	<danw@nvidia.com>, <zhiw@nvidia.com>, <mochs@nvidia.com>,
+	<udhoke@nvidia.com>, <dnigam@nvidia.com>, <alex.williamson@redhat.com>,
+	<sebastianene@google.com>, <coltonlewis@google.com>, <kevin.tian@intel.com>,
+	<yi.l.liu@intel.com>, <ardb@kernel.org>, <akpm@linux-foundation.org>,
+	<gshan@redhat.com>, <linux-mm@kvack.org>, <tabba@google.com>,
+	<qperret@google.com>, <kvmarm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<maobibo@loongson.cn>
+Subject: [PATCH v10 1/6] KVM: arm64: Rename the device variable to s2_force_noncacheable
+Date: Sat, 5 Jul 2025 07:17:12 +0000
+Message-ID: <20250705071717.5062-2-ankita@nvidia.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250705071717.5062-1-ankita@nvidia.com>
+References: <20250705071717.5062-1-ankita@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Re: [PATCH v10 3/4] rust: add support for NUMA ids in allocations
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <aGfx6c72FgHn3NNW@pollux>
-Date: Sat, 5 Jul 2025 09:17:10 +0200
-Cc: linux-mm@kvack.org,
- akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org,
- Uladzislau Rezki <urezki@gmail.com>,
- Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5BDED328-4E79-4E39-95C3-21C3FB80593C@konsulko.se>
-References: <20250702160758.3609992-1-vitaly.wool@konsulko.se>
- <20250702160910.3610134-1-vitaly.wool@konsulko.se> <aGfx6c72FgHn3NNW@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.200.121)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001505:EE_|DS5PPFD22966BE3:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97f8a7fe-d668-4354-2e2b-08ddbb940053
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?T/EBLtb42Jcz1rEBuSNKBHqPpg4u6adNAnA36kzit6Yd6sd/QWenycMswQD3?=
+ =?us-ascii?Q?riIlSkOCuXFOrivi3tKrkSXw/E0v0HaNLwbs6dk/vuOUuqBX0CtYFB0cW+QY?=
+ =?us-ascii?Q?+yAuauHj3gmo2QHQOCP7Puy+S+VTZCTZHZrMJS7sNiF+a6N+AFA9euMNN1qe?=
+ =?us-ascii?Q?Wbdwn3dYsgLpLqwgthoiUSZUgPWOm++CKofCze0sC3fWIbVs7Uv5TQ5FFvTs?=
+ =?us-ascii?Q?vjEN7bGDrNGBesRfRlnJb0I+zM6s5zPmvEcVngFoKfWFtLYo+PTvD48D2zz1?=
+ =?us-ascii?Q?AADUVbxV94VSyU9vkUDd8v+yExD8vHdxkIkrXs+5owMz+jTFHKWt+jxoeHdB?=
+ =?us-ascii?Q?uHdLdZQ7lxV9MI2VApr4tk2UoyKvYbKy+D/arvYaE1lW0N40J9IStE2c4U6F?=
+ =?us-ascii?Q?4rSzIllE+adDScMPOx4r4g0AgTbSaHjWFh6zju0bq4oSVVnEDqdm1N05ogn3?=
+ =?us-ascii?Q?VduDEz7pa3CXpWAvaexVBwvFdaePX/GVrNuzzQwwok0PA1JiCHwXLSUyT2mE?=
+ =?us-ascii?Q?mqkGMrwdkGNiRBquESjkr7YkRmTK9ft44QSEhg0JGkdHmByCucNpA0SQwSOW?=
+ =?us-ascii?Q?jLwtqJ9WxomageR7mpavGOe+dQFZOC7w/7oPnyx1ZKo6wqC1G/efNM0+mxYU?=
+ =?us-ascii?Q?cVyg10aIu/95Jm875b2Q0rZzZd1dqAcTZiM4PBTNmbohRCDWNbaOjM+5+iB/?=
+ =?us-ascii?Q?3RrMU6QD6wELmW0SqarHjKakiorcHVd3T0cQC6/lB5nrf5Vx2Brk2XGtgxlS?=
+ =?us-ascii?Q?wl7QINYoSaGCbXSSxeodu2dZtdGvqI8fN7BRAlQFmGKYAJGvektOq9y/272c?=
+ =?us-ascii?Q?jNCRbxyDs3zD1rmCxqdBe7nh7JapD53bzoVkWqvH2pbtDWi/h+FeOTmkMDDG?=
+ =?us-ascii?Q?4JA0L6fXSayXCcsYcMwfRyDE0YsNArVJEULLNrqcbiRMt2uMOJbK7L4NT+K0?=
+ =?us-ascii?Q?h9Uoh3tgzqtYtJUpCej1G7J4msj9ZcBx2iXzz+S6Rv1IMBdsw6XK2W6wd12H?=
+ =?us-ascii?Q?tu8E8EzjXMVzl+Ups0VP655S5V2KWmmnm6Z4MHnc8H4kKjxjyWqLYEMPl6mA?=
+ =?us-ascii?Q?CNSSmWj7MaftXAt9wMK43Gc5Dt2CmBlyuj46e4780qKTIm74tDVZw9GlHVg6?=
+ =?us-ascii?Q?YTQXUtbQfPtIUsl6rnWfpfSgRM3IyDmgZyevDim1UtDJeuMMkQa2t9eT9atF?=
+ =?us-ascii?Q?0Yay95nHepsMtxjyIERBpIYbrNjTo7aQIs4j6uHEymP6xCZSLmuHPzaa64Dp?=
+ =?us-ascii?Q?oJo7l5N8E+2XiB3709vpL54JKOIZetDnq+8SGYdKHPhEQ+sqSQLJJIRV46/p?=
+ =?us-ascii?Q?ji4qOR/vyXiJGrFYRVdromqdX274S3GLTmW/uOqAef9ByU9DrK4q7lHRdnqq?=
+ =?us-ascii?Q?0d2OKSmKG14YsIc1AQn3ohAwgB6qEtUl1zQliHQEQu9dTmqDbNDnl1T2yksE?=
+ =?us-ascii?Q?hpDjoiyHMyw/E3HCGXiEKv1Er+u0+djlR2x8e1pZ2xeej78x1g4EcbEWvKzM?=
+ =?us-ascii?Q?USVVSn7Z6o2aqQMp8vdUJ8jukMIlRKkfYok/D29IcB3SdmZ0zqztTZvycw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2025 07:17:29.0833
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97f8a7fe-d668-4354-2e2b-08ddbb940053
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001505.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFD22966BE3
 
+From: Ankit Agrawal <ankita@nvidia.com>
 
+For cache maintenance on a region, ARM KVM relies on that
+region to be mapped to the Kernal virtual address as CMOs
+operate on VA.
 
-> On Jul 4, 2025, at 5:23=E2=80=AFPM, Danilo Krummrich <dakr@kernel.org> =
-wrote:
->=20
-> On Wed, Jul 02, 2025 at 06:09:10PM +0200, Vitaly Wool wrote:
->> /// The kernel's [`Allocator`] trait.
->> ///
->> /// An implementation of [`Allocator`] can allocate, re-allocate and =
-free memory buffers described
->> @@ -148,7 +172,7 @@ pub unsafe trait Allocator {
->>     ///
->>     /// When the return value is `Ok(ptr)`, then `ptr` is
->>     /// - valid for reads and writes for `layout.size()` bytes, until =
-it is passed to
->> -    ///   [`Allocator::free`] or [`Allocator::realloc`],
->> +    ///   [`Allocator::free`], [`Allocator::realloc`] or =
-[`Allocator::realloc_node`],
->>     /// - aligned to `layout.align()`,
->>     ///
->>     /// Additionally, `Flags` are honored as documented in
->> @@ -159,7 +183,41 @@ fn alloc(layout: Layout, flags: Flags) -> =
-Result<NonNull<[u8]>, AllocError> {
->>         unsafe { Self::realloc(None, layout, Layout::new::<()>(), =
-flags) }
->>     }
->>=20
->> -    /// Re-allocate an existing memory allocation to satisfy the =
-requested `layout`.
->> +    /// Allocate memory based on `layout`, `flags` and `nid`.
->> +    ///
->> +    /// On success, returns a buffer represented as `NonNull<[u8]>` =
-that satisfies the layout
->> +    /// constraints (i.e. minimum size and alignment as specified by =
-`layout`).
->> +    ///
->> +    /// This function is equivalent to `realloc_node` when called =
-with `None`.
->> +    ///
->> +    /// # Guarantees
->> +    ///
->> +    /// When the return value is `Ok(ptr)`, then `ptr` is
->> +    /// - valid for reads and writes for `layout.size()` bytes, =
-until it is passed to
->> +    ///   [`Allocator::free`], [`Allocator::realloc`] or =
-[`Allocator::realloc_node`],
->> +    /// - aligned to `layout.align()`,
->> +    ///
->> +    /// Additionally, `Flags` are honored as documented in
->> +    /// =
-<https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
->> +    fn alloc_node(
->> +        layout: Layout,
->> +        flags: Flags,
->> +        nid: NumaNode,
->> +    ) -> Result<NonNull<[u8]>, AllocError> {
->> +        // SAFETY: Passing `None` to `realloc_node` is valid by its =
-safety requirements and
->> +        // asks for a new memory allocation.
->> +        unsafe { Self::realloc_node(None, layout, =
-Layout::new::<()>(), flags, nid) }
->> +    }
->> +
->> +    /// Re-allocate an existing memory allocation to satisfy the =
-requested `layout` and
->> +    /// a specific NUMA node request to allocate the memory for.
->> +    ///
->> +    /// Systems employing a Non Uniform Memory Access (NUMA) =
-architecture contain collections of
->> +    /// hardware resources including processors, memory, and I/O =
-buses, that comprise what is
->> +    /// commonly known as a NUMA node.
->> +    ///
->> +    /// `nid` stands for NUMA id, i. e. NUMA node identifier, which =
-is a non-negative
->> +    /// integer if a node needs to be specified, or NO_NODE if the =
-caller doesn't care.
->>     ///
->>     /// If the requested size is zero, `realloc` behaves equivalent =
-to `free`.
->>     ///
->> @@ -191,13 +249,27 @@ fn alloc(layout: Layout, flags: Flags) -> =
-Result<NonNull<[u8]>, AllocError> {
->>     ///   and old size, i.e. `ret_ptr[0..min(layout.size(), =
-old_layout.size())] =3D=3D
->>     ///   p[0..min(layout.size(), old_layout.size())]`.
->>     /// - when the return value is `Err(AllocError)`, then `ptr` is =
-still valid.
->> -    unsafe fn realloc(
->> +    unsafe fn realloc_node(
->>         ptr: Option<NonNull<u8>>,
->>         layout: Layout,
->>         old_layout: Layout,
->>         flags: Flags,
->> +        nid: NumaNode,
->>     ) -> Result<NonNull<[u8]>, AllocError>;
->>=20
->> +    /// Re-allocate an existing memory allocation to satisfy the =
-requested `layout`. This
->> +    /// function works exactly as realloc_node() but it doesn't give =
-the ability to specify
->> +    /// the NUMA node in the call.
->> +    unsafe fn realloc(
->> +        ptr: Option<NonNull<u8>>,
->> +        layout: Layout,
->> +        old_layout: Layout,
->> +        flags: Flags,
->> +    ) -> Result<NonNull<[u8]>, AllocError> {
->> +        // SAFETY: guaranteed by realloc_node()
->> +        unsafe { Self::realloc_node(ptr, layout, old_layout, flags, =
-NumaNode::NO_NODE) }
->> +    }
->=20
-> I think Alice suggested to just drop alloc_node() and realloc_node() =
-and make
-> alloc() and realloc() always take a NumaNode argument.
->=20
-> I don't have a strong preference, but keeping only alloc() and =
-realloc() for
-> seems indeed simpler, so let's remove the _node() variants.
+Currently the device variable is effectively trying to setup
+the S2 mapping as non cacheable for memory regions that are
+not mapped in the Kernel VA. This could be either device or
+Normal_NC depending on the VM_ALLOW_ANY_UNCACHED flag in the
+VMA.
 
-I don=E2=80=99t have a strong preference either but if I modify alloc() =
-and realloc(), I=E2=80=99ll have to change KVec and KBox in the same =
-patch, would that be okay with you?
+Thus "device" could be better renamed to s2_force_noncacheable
+which implies that it is ensuring that region be mapped as
+non-cacheable.
 
-~Vitaly
+CC: Catalin Marinas <catalin.marinas@arm.com>
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Tested-by: Donald Dutile <ddutile@redhat.com>
+Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+---
+ arch/arm64/kvm/mmu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-<snip>
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 2942ec92c5a4..1601ab9527d4 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -1478,7 +1478,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	int ret = 0;
+ 	bool write_fault, writable, force_pte = false;
+ 	bool exec_fault, mte_allowed;
+-	bool device = false, vfio_allow_any_uc = false;
++	bool s2_force_noncacheable = false, vfio_allow_any_uc = false;
+ 	unsigned long mmu_seq;
+ 	phys_addr_t ipa = fault_ipa;
+ 	struct kvm *kvm = vcpu->kvm;
+@@ -1653,7 +1653,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 		 * In both cases, we don't let transparent_hugepage_adjust()
+ 		 * change things at the last minute.
+ 		 */
+-		device = true;
++		s2_force_noncacheable = true;
+ 	} else if (logging_active && !write_fault) {
+ 		/*
+ 		 * Only actually map the page as writable if this was a write
+@@ -1662,7 +1662,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 		writable = false;
+ 	}
+ 
+-	if (exec_fault && device)
++	if (exec_fault && s2_force_noncacheable)
+ 		return -ENOEXEC;
+ 
+ 	/*
+@@ -1695,7 +1695,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	 * If we are not forced to use page mapping, check if we are
+ 	 * backed by a THP and thus use block mapping if possible.
+ 	 */
+-	if (vma_pagesize == PAGE_SIZE && !(force_pte || device)) {
++	if (vma_pagesize == PAGE_SIZE && !(force_pte || s2_force_noncacheable)) {
+ 		if (fault_is_perm && fault_granule > PAGE_SIZE)
+ 			vma_pagesize = fault_granule;
+ 		else
+@@ -1709,7 +1709,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 		}
+ 	}
+ 
+-	if (!fault_is_perm && !device && kvm_has_mte(kvm)) {
++	if (!fault_is_perm && !s2_force_noncacheable && kvm_has_mte(kvm)) {
+ 		/* Check the VMM hasn't introduced a new disallowed VMA */
+ 		if (mte_allowed) {
+ 			sanitise_mte_tags(kvm, pfn, vma_pagesize);
+@@ -1725,7 +1725,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	if (exec_fault)
+ 		prot |= KVM_PGTABLE_PROT_X;
+ 
+-	if (device) {
++	if (s2_force_noncacheable) {
+ 		if (vfio_allow_any_uc)
+ 			prot |= KVM_PGTABLE_PROT_NORMAL_NC;
+ 		else
+-- 
+2.34.1
+
