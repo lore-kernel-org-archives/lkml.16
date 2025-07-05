@@ -1,85 +1,58 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-80.smtpout.orange.fr [80.12.242.80])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC65200B99;
-	Sat,  5 Jul 2025 07:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80086276023
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751702172; cv=none; b=VCUC6PUDKuiVUZhiK6XheWHHGRM3fOzoD+MSoM2pmFboFRwy87xmYgBD8nI8JNbyy/fMyraTu0xoWlMmS0Bp7bEv0nUcYxqGVejXumlHpCePyHTzG41yuypYAZgPyzSFek13lDDwqBk0Gn+ny+/DTQng3lEpXfaRayqjnP0XI2c=
+	t=1751702348; cv=none; b=D9aqL6zROFQtzNzSlyLQEP880iz83z57exOjuFfGcGTTFjHCaUbonO8WMHSWBHW71u5YLLZjEKZ+0eStcj6N9jXAPl5jN0tDaAnxq3WkGxYcNivK4npf4821GqY0rYNKLb/rmUlY3KTRwpfIr2exiZxnAry2XCD+PM5n1+ZyEZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751702172; c=relaxed/simple;
-	bh=1P2U2dshSLhnnrRgjC9ySFPrNtAdxhRNQ9ZjqtLrhc0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tmXB8BskQeyqFrFqPi2BAoDw6TJ8tzXY69Z+oeX3g9lSINSuqGEha4VXmcnhBoHjzpPaIfaMS4XfLIbkk/ePMldg5Yx8ZhoB+OsbuksrrHrWHbjp85GZ13lw54OZeS9D/tRluftjGL4nZHjxyMsN5gPwaHdk3J+rBcKQERpqeZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWmDf4CA; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751702348; c=relaxed/simple;
+	bh=/VexuRGfxstLsMBVegl0LgB0EX+vVYZredeeu5BeKfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qrnT9HEqFLFqHOzP6Gims6wmd1aNHp1v+XMZQ0bVdEVe9KvWX8vU12jgpNzBc889MErIJGVr3KbYljxat0VqarbdGsebWzbFCjEVWShTcLHWTLH9Ho5N1Y4Pqim7tOiLo7zEZJk2bWg4iJtprXvre9GjVI1tRdd/CIYCK0nJqUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=hcnAbTcd; arc=none smtp.client-ip=80.12.242.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWmDf4CA"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b34a71d9208so971945a12.3;
-        Sat, 05 Jul 2025 00:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751702169; x=1752306969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h/IUKcxSD2e2ah4kSG9Q2b9GaMgau4YL3nl4/Ou8ZYo=;
-        b=UWmDf4CA7dn1jyHjN5Hlu603FKL0a7Y1WQR7hlBC7SdhiQc62xH01cbmQ4RkkJv2v+
-         7INsN2EcVh9ksjfKm4d3Zr6fnrWVPFCHFuHFmJReNqQ1o05R4THE+mCnjoqoHbbwLnad
-         flEVJOT/5bHM6e5+NVseVfi7bHzKKkVwHPbwIcXuamrdRN7PpSvpTcyKJo0j4lS3CUA2
-         nti1cuUpEUK6xayV1+By4McD6WzjLi+On07bN9gaHWUIuabhyA0sJA/wFC5w7TJJnCpL
-         L5kgoErlLMsneSqNEdhF/llSyIOJScjoPjHHCeXrlZN70tRsdbP9u80HXyAajYCiMk5u
-         A0zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751702169; x=1752306969;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h/IUKcxSD2e2ah4kSG9Q2b9GaMgau4YL3nl4/Ou8ZYo=;
-        b=jIgWQsic4g8vRRIdnkwJts3cVroDJmQRwsh0HMIs54AxOmULzGxXSDeaozmHki+Qzk
-         5sxvNcvk5zC31XO0wRpt2pEjwuuQf6TPcU6MyVotWMPzy+Dh/kstzEvhKQq0UIMMSsuw
-         p6Q1HM2yb1WYF5hc0XruqMc9HP5QCN6AMTJ1vv5pCue8bKPIj/2TwKWfK3vsZ0b6Ywx7
-         ZOsCoRWDlRVCPwSSbsd4PoBih/xAXoSWevs4TagoLLOGcLRcAzhwJoUz/o0fCOtsme+e
-         iGilOwylwPzL112Knt/mncFshD5VF7hk2fKuLQWwAIDs0h/wdhr4bY4eeitX7Eftk71G
-         wyxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTVVmmL+RyJAwQ39O/VYQqvFZglFSBZDteES3wog7ANyoQWhI0s+9C8Fm1rynyr2R8FTM=@vger.kernel.org, AJvYcCXDdbVZUYjBCldekkrk2wUFCe5h3gn3dFPdjjdeLTboCs7HOWxPqfh5VJRnrpcU8Ffqb+tEu85CWvldTpTE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNWhg8Hfu8x87oafSjEvAINUC221B6NEi/hVUk5QpNYMkO++wj
-	E8HYnTEZKBH9XNW5kIY6+fI/BRR9xhiEv1ja04L+BJ8/8jYcLKbHNOKcaWpg5A==
-X-Gm-Gg: ASbGncvEX5cfYVSoy5tSn7taNKEIVP7UXqckQTbkPjAOK7gv1AfC5fLHsINIVnF6Zth
-	mdMtBbNxwUfSoAkfkPS99B7qHy/mblPP7ZdsaNi+2cVKWnMomWjqTYEjydh3fbXDAvOJt8YO47Q
-	OB4hSxlYXQXuWPvDySLHb/6EVneifH0Dxkr17eTcFtaojwSwHlByZAXP2lxSPoyywbKkpxH83HC
-	uqk4nXFGQoxIB4cSnLQklSmHa+RUZosvFuEJvhA9mM8sLEeCsGQZ4CHegCFbFPZVIeMvaZWLB2c
-	0r465fwrXPK3oF0+OfOOJXW681zzPTLowbnqhWXbxL2qbXWXs5mMyML0AFjRLYqlkW9fqBJuV7X
-	84A==
-X-Google-Smtp-Source: AGHT+IELb59jy1yq/0ZLxHvUZqGi8xjJJOOy8kXY/fGS5HJJFKa5k9aihU11XHC1d9gpDvqKsoQ2NA==
-X-Received: by 2002:a05:6a21:33a5:b0:220:658:860 with SMTP id adf61e73a8af0-2260989672amr6461002637.12.1751702169435;
-        Sat, 05 Jul 2025 00:56:09 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:8079:3d14:21d6:b779])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74ce359e9c7sm4092388b3a.15.2025.07.05.00.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 00:56:09 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	virtualization@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="hcnAbTcd"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id XxmRuIndJIhD3XxmRuGMxm; Sat, 05 Jul 2025 09:57:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751702275;
+	bh=BI+j1w9mTZpLw/TaFgSG0lCPQ8EjEl0+1NsDW1CCqCY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=hcnAbTcdE9dhBmNv1p1ojidJSRx56OGpjMVnzdTmNcAuPDAfYoI+7AzM3FxalgGR2
+	 UrLZ7te0oTPEP+uP+jrv3UrhfRl6IZEPTSX0QQBGgbBd6AyD30LVwPC4LxRoKzJymr
+	 h5fgBFyz9tTrqqI49vo5uHpYvfxdP3DRypGeihhHBRNnN479gVC4Bmd55IxDQmIicg
+	 sks05tr+XLsGYUJExNK6janAnLondxBWJlNqJ37ppgxeBu54lA3u/EXzmXSb5zecjj
+	 FGEkevjawYi9OMfb5vZ24XdXBIwVJXVwDgutkUiXjiq96D+gtamaENK5c6f4y3aYl8
+	 h+zXwKaL9PmoA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 05 Jul 2025 09:57:55 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: vigneshr@ti.com,
+	aaro.koskinen@iki.fi,
+	andreas@kemnade.info,
+	khilman@baylibre.com,
+	rogerq@kernel.org,
+	tony@atomide.com,
+	jmkrzyszt@gmail.com,
+	andi.shyti@kernel.org,
+	miaoqinglang@huawei.com,
+	grygorii.strashko@ti.com,
+	wsa@kernel.org
+Cc: linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net-next] virtio-net: xsk: rx: move the xdp->data adjustment to buf_to_xdp()
-Date: Sat,  5 Jul 2025 14:55:14 +0700
-Message-ID: <20250705075515.34260-1-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 0/2] i2c: omap: 2 Fixes
+Date: Sat,  5 Jul 2025 09:57:36 +0200
+Message-ID: <cover.1751701715.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,44 +61,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit does not do any functional changes. It moves xdp->data
-adjustment for buffer other than first buffer to buf_to_xdp() helper so
-that the xdp_buff adjustment does not scatter over different functions.
+This small serie is a follow-up of [1].
 
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
- drivers/net/virtio_net.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+For an unkwown reason I don't feel really confident with these patches.
+Maybe because one is really old and the other one is related to
+pm, which ordering is sometimes tricky (from my PoV at least).
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 9f6e0153ed2d..4d995a47a116 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -1179,7 +1179,14 @@ static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
- 		return NULL;
- 	}
- 
--	xsk_buff_set_size(xdp, len);
-+	if (first_buf) {
-+		xsk_buff_set_size(xdp, len);
-+	} else {
-+		xdp_prepare_buff(xdp, xdp->data_hard_start,
-+				 XDP_PACKET_HEADROOM - vi->hdr_len, len, 1);
-+		xdp->flags = 0;
-+	}
-+
- 	xsk_buff_dma_sync_for_cpu(xdp);
- 
- 	return xdp;
-@@ -1304,7 +1311,7 @@ static int xsk_append_merge_buffer(struct virtnet_info *vi,
- 			goto err;
- 		}
- 
--		memcpy(buf, xdp->data - vi->hdr_len, len);
-+		memcpy(buf, xdp->data, len);
- 
- 		xsk_buff_free(xdp);
- 
+They are compile tested only.
+
+So review with care ;-)
+
+[1]: https://lore.kernel.org/all/vhhxtsspywvuzkfgbn52hysghd6tdxhk32wv3wcnlqwhskto3f@h2bbhek3s4s3/
+
+Christophe JAILLET (2):
+  i2c: omap: Handle omap_i2c_init() errors in omap_i2c_probe()
+  i2c: omap: Fix an error handling path in omap_i2c_probe()
+
+ drivers/i2c/busses/i2c-omap.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
 -- 
-2.43.0
+2.50.0
 
