@@ -1,36 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD922E3702;
-	Sat,  5 Jul 2025 05:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9F0A927
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 06:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751694931; cv=none; b=r8FJ/ry6Thes2vW0J6LXS9jjv6mSVDEWcHenM/9NqpVN0R1sd7ilZlr7RJQvTQRyBj0tYJyUIJGMeH+LTtzqK0mj70BW2kCdWEmVQHW5L6CJJWRvFLbHKMvKZ+7GkeEtM2sdKuEGQIebRdGS7oznysOzofrqi8l0Kl4b9YO0kWs=
+	t=1751695293; cv=none; b=X+n+PdSeUHiM+YRugaMvXiI/xdKyANgcGihvkWhZeFc2acAeIGocrkCxeLsqaqURGOOSZuErenqlJJ+Flrb8lt0G2KD/lyHnNKNxCYuOb5fkhMyljmYC36E3HVtHqRsWLmYMuZMN8IaVrwGeF67/1G25ne4uqr5sJNxWYFfw/go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751694931; c=relaxed/simple;
-	bh=d7/uhSw2VSan58YiIhT9PeVIWmFDPBAlvnKCItow7NY=;
+	s=arc-20240116; t=1751695293; c=relaxed/simple;
+	bh=Jwk7LrOiEZVMgoQ8L3FzYRWdRU10TKG82/z45Yk2RnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZL6ZU4lUOxmnSwozkjZH7UJKwNrGQ13gVQAX56GmpNfbsTBYRkMHCEkPwGHgPPrfb2CW7IY7+PJFTs3cH3BQPJGxe/NtPyDOeR1NY7POLtsRhfjnJtuu71WqL3gzH3JKX8iNYH/4wVcjA5bBWFywts36hIKUCttqOoOyk5BSdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yb07Js06; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qClkjpLs8hhg1hjv/lGK0BW0FtBUyQlJTaWv3KnmZLk1LHT1B68shxH2mU+TOvNb6nEOFP7/RGpvymChJuMtCTH+twLqHmR4uuRNS53biG/Ovlt6dXP/KiKBtKzoi9yZ5JNYo77cRNiuuGPbJJeC9equDX7lvutDYJLicyOr+L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TImUVJS+; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yb07Js06"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8451DC4CEE7;
-	Sat,  5 Jul 2025 05:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751694930;
-	bh=d7/uhSw2VSan58YiIhT9PeVIWmFDPBAlvnKCItow7NY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yb07Js06Vb7lum1Oippkb+vwjc7Yb8ZN+N4EDJFNSAa1fWRsH/MTwAo6pWkWPsM2g
-	 In+Y/v+tLgZ08YodJMJGUFSMX+hI4psul4SIQSypaxn3wyySh3Fgq2qE7AYX6w4tXQ
-	 qHjKJsL060ChX+N4h5JX8bnLVqP57WVzQjfm8W94=
-Date: Sat, 5 Jul 2025 07:55:28 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lin Ma <linma@zju.edu.cn>
-Cc: davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4] net: atm: Fix incorrect net_device lec check
-Message-ID: <2025070515-deputy-fiber-6520@gregkh>
-References: <20250705052805.59618-1-linma@zju.edu.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TImUVJS+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751695291; x=1783231291;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jwk7LrOiEZVMgoQ8L3FzYRWdRU10TKG82/z45Yk2RnA=;
+  b=TImUVJS+T70ZVNYahs5w9bXnmMhBe4gIYYpKe3CkEMZx870k+nlxapLv
+   nS9fglZZ/E8NNhOoc7WB1viL5ghbZEQqWIE4d/ZI9+4ZnYcSdtNYcFaq2
+   bGM8GsZ/zdThZFy10csAijvi+6N+ihj2qOM47aepuNIRk9sCV9Ni0U9as
+   m6wMaVVxkcY0ti2HlOOFT5fqTPX0LiVHlrb8MKdebfGobgY7nwgkBpH+y
+   8cw8oDqYqcufEi5i4mOee1PW/rIs7gFRq7gjTwlizUQmp4xNiKikJ7KfW
+   wdTM2mzClXqOJeJfUm20NBP4utt0V/RTHLlwv3l+M2I7SWjUEwRj3yu6r
+   Q==;
+X-CSE-ConnectionGUID: 2HIfZVhuSTGfg6kreDjX7g==
+X-CSE-MsgGUID: UXM5a9uVT4uvY5doAYVT0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="65061951"
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="65061951"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 23:01:30 -0700
+X-CSE-ConnectionGUID: r9LQNFAwSv2J+KZ6Sb8NPQ==
+X-CSE-MsgGUID: DL362qTISWOqwA+hdZZQ2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="160445501"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 04 Jul 2025 23:01:26 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXvxj-0004KT-0E;
+	Sat, 05 Jul 2025 06:01:23 +0000
+Date: Sat, 5 Jul 2025 14:00:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matt Fleming <matt@readmodwrite.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Matt Fleming <mfleming@cloudflare.com>
+Subject: Re: [PATCH v2] stackdepot: Make max number of pools build-time
+ configurable
+Message-ID: <202507051300.E0JSHxu1-lkp@intel.com>
+References: <20250704120604.2688934-1-matt@readmodwrite.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,165 +73,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250705052805.59618-1-linma@zju.edu.cn>
+In-Reply-To: <20250704120604.2688934-1-matt@readmodwrite.com>
 
-On Sat, Jul 05, 2025 at 01:28:05PM +0800, Lin Ma wrote:
-> There are two sites in atm mpoa code that believe the fetched object
-> net_device is of lec type. However, both of them do just name checking
-> to ensure that the device name starts with "lec" pattern string.
-> 
-> That is, malicious user can hijack this by creating another device
-> starting with that pattern, thereby causing type confusion. For example,
-> create a *team* interface with lecX name, bind that interface and send
-> messages will get a crash like below:
-> 
-> [   18.450000] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-> [   18.452366] BUG: unable to handle page fault for address: ffff888005702a70
-> [   18.454253] #PF: supervisor instruction fetch in kernel mode
-> [   18.455058] #PF: error_code(0x0011) - permissions violation
-> [   18.455366] PGD 3801067 P4D 3801067 PUD 3802067 PMD 80000000056000e3
-> [   18.455725] Oops: 0011 [#1] PREEMPT SMP PTI
-> [   18.455966] CPU: 0 PID: 130 Comm: trigger Not tainted 6.1.90 #7
-> [   18.456921] RIP: 0010:0xffff888005702a70
-> [   18.457151] Code: .....
-> [   18.458168] RSP: 0018:ffffc90000677bf8 EFLAGS: 00010286
-> [   18.458461] RAX: ffff888005702a70 RBX: ffff888005702000 RCX: 000000000000001b
-> [   18.458850] RDX: ffffc90000677c10 RSI: ffff88800565e0a8 RDI: ffff888005702000
-> [   18.459248] RBP: ffffc90000677c68 R08: 0000000000000000 R09: 0000000000000000
-> [   18.459644] R10: 0000000000000000 R11: ffff888005702a70 R12: ffff88800556c000
-> [   18.460033] R13: ffff888005964900 R14: ffff8880054b4000 R15: ffff8880054b5000
-> [   18.460425] FS:  0000785e61b5a740(0000) GS:ffff88807dc00000(0000) knlGS:0000000000000000
-> [   18.460872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   18.461183] CR2: ffff888005702a70 CR3: 00000000054c2000 CR4: 00000000000006f0
-> [   18.461580] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   18.461974] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   18.462368] Call Trace:
-> [   18.462518]  <TASK>
-> [   18.462645]  ? __die_body+0x64/0xb0
-> [   18.462856]  ? page_fault_oops+0x353/0x3e0
-> [   18.463092]  ? exc_page_fault+0xaf/0xd0
-> [   18.463322]  ? asm_exc_page_fault+0x22/0x30
-> [   18.463589]  ? msg_from_mpoad+0x431/0x9d0
-> [   18.463820]  ? vcc_sendmsg+0x165/0x3b0
-> [   18.464031]  vcc_sendmsg+0x20a/0x3b0
-> [   18.464238]  ? wake_bit_function+0x80/0x80
-> [   18.464511]  __sys_sendto+0x38c/0x3a0
-> [   18.464729]  ? percpu_counter_add_batch+0x87/0xb0
-> [   18.465002]  __x64_sys_sendto+0x22/0x30
-> [   18.465219]  do_syscall_64+0x6c/0xa0
-> [   18.465465]  ? preempt_count_add+0x54/0xb0
-> [   18.465697]  ? up_read+0x37/0x80
-> [   18.465883]  ? do_user_addr_fault+0x25e/0x5b0
-> [   18.466126]  ? exit_to_user_mode_prepare+0x12/0xb0
-> [   18.466435]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [   18.466727] RIP: 0033:0x785e61be4407
-> [   18.467948] RSP: 002b:00007ffe61ae2150 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
-> [   18.468368] RAX: ffffffffffffffda RBX: 0000785e61b5a740 RCX: 0000785e61be4407
-> [   18.468758] RDX: 000000000000019c RSI: 00007ffe61ae21c0 RDI: 0000000000000003
-> [   18.469149] RBP: 00007ffe61ae2370 R08: 0000000000000000 R09: 0000000000000000
-> [   18.469542] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-> [   18.469936] R13: 00007ffe61ae2498 R14: 0000785e61d74000 R15: 000057bddcbabd98
-> 
-> Correctly validating the net_device object has several methods. For
-> example, function xgbe_netdev_event() checks `netdev_ops` field,
-> function clip_device_event() checks `type` field. Considering the
-> related variable `lec_netdev_ops` is not defined in the same file, so
-> introduce another type value `ARPHRD_ATM_LANE` for a simple and correct
-> check.
-> 
-> By the way, this bug dates back to pre-git history (2.3.15), hence use
-> the first reference for tracking.
-> 
-> Signed-off-by: Lin Ma <linma@zju.edu.cn>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> ---
-> V3 -> V4: Fix the linking issue reported by intel kernel test robot.
->           see details in https://lore.kernel.org/oe-kbuild-all/202507050831.2GTrUnFN-lkp@intel.com/
->           As pointed out by Simon <horms@kernel.org>, not using netdev_ops
->           for check in this case
-> 
->  include/uapi/linux/if_arp.h | 1 +
->  net/atm/lec.c               | 1 +
->  net/atm/mpc.c               | 5 ++++-
->  3 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/if_arp.h b/include/uapi/linux/if_arp.h
-> index 4783af9fe520..d61ee711a495 100644
-> --- a/include/uapi/linux/if_arp.h
-> +++ b/include/uapi/linux/if_arp.h
-> @@ -38,6 +38,7 @@
->  #define	ARPHRD_APPLETLK	8		/* APPLEtalk			*/
->  #define ARPHRD_DLCI	15		/* Frame Relay DLCI		*/
->  #define ARPHRD_ATM	19		/* ATM 				*/
-> +#define ARPHRD_ATM_LANE	20		/* ATM LAN Emulation		*/
->  #define ARPHRD_METRICOM	23		/* Metricom STRIP (new IANA id)	*/
->  #define	ARPHRD_IEEE1394	24		/* IEEE 1394 IPv4 - RFC 2734	*/
->  #define ARPHRD_EUI64	27		/* EUI-64                       */
-> diff --git a/net/atm/lec.c b/net/atm/lec.c
-> index 73078306504c..dd82a9f203cc 100644
-> --- a/net/atm/lec.c
-> +++ b/net/atm/lec.c
-> @@ -745,6 +745,7 @@ static int lecd_attach(struct atm_vcc *vcc, int arg)
->  			return -ENOMEM;
->  		dev_lec[i]->netdev_ops = &lec_netdev_ops;
->  		dev_lec[i]->max_mtu = 18190;
-> +		dev_lec[i]->type = ARPHRD_ATM_LANE;
->  		snprintf(dev_lec[i]->name, IFNAMSIZ, "lec%d", i);
->  		if (register_netdev(dev_lec[i])) {
->  			free_netdev(dev_lec[i]);
-> diff --git a/net/atm/mpc.c b/net/atm/mpc.c
-> index 583c27131b7d..4170453bbfd8 100644
-> --- a/net/atm/mpc.c
-> +++ b/net/atm/mpc.c
-> @@ -275,6 +275,9 @@ static struct net_device *find_lec_by_itfnum(int itf)
->  	sprintf(name, "lec%d", itf);
->  	dev = dev_get_by_name(&init_net, name);
->  
-> +	if (!dev || dev->type != ARPHRD_ATM_LANE)
-> +		return NULL;
-> +
->  	return dev;
->  }
->  
-> @@ -1006,7 +1009,7 @@ static int mpoa_event_listener(struct notifier_block *mpoa_notifier,
->  	if (!net_eq(dev_net(dev), &init_net))
->  		return NOTIFY_DONE;
->  
-> -	if (strncmp(dev->name, "lec", 3))
-> +	if (dev->type != ARPHRD_ATM_LANE)
->  		return NOTIFY_DONE; /* we are only interested in lec:s */
->  
->  	switch (event) {
-> -- 
-> 2.17.1
-> 
+Hi Matt,
 
-Hi,
+kernel test robot noticed the following build errors:
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+[auto build test ERROR on akpm-mm/mm-nonmm-unstable]
+[also build test ERROR on linus/master v6.16-rc4 next-20250704]
+[cannot apply to akpm-mm/mm-everything]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+url:    https://github.com/intel-lab-lkp/linux/commits/Matt-Fleming/stackdepot-Make-max-number-of-pools-build-time-configurable/20250704-200804
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
+patch link:    https://lore.kernel.org/r/20250704120604.2688934-1-matt%40readmodwrite.com
+patch subject: [PATCH v2] stackdepot: Make max number of pools build-time configurable
+config: arm64-randconfig-001-20250705 (https://download.01.org/0day-ci/archive/20250705/202507051300.E0JSHxu1-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507051300.E0JSHxu1-lkp@intel.com/reproduce)
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507051300.E0JSHxu1-lkp@intel.com/
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+All errors (new ones prefixed by >>):
 
-thanks,
+   In file included from include/linux/init.h:5,
+                    from include/linux/printk.h:6,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arm64/include/asm/bug.h:26,
+                    from include/linux/bug.h:5,
+                    from include/linux/vfsdebug.h:5,
+                    from include/linux/fs.h:5,
+                    from include/linux/debugfs.h:15,
+                    from lib/stackdepot.c:17:
+>> include/linux/build_bug.h:78:41: error: static assertion failed: "DEPOT_MAX_POOLS <= (1LL << (DEPOT_POOL_INDEX_BITS)) - 1"
+      78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                         ^~~~~~~~~~~~~~
+   include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
+      77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+         |                                  ^~~~~~~~~~~~~~~
+   lib/stackdepot.c:42:1: note: in expansion of macro 'static_assert'
+      42 | static_assert(DEPOT_MAX_POOLS <= (1LL << (DEPOT_POOL_INDEX_BITS)) - 1);
+         | ^~~~~~~~~~~~~
 
-greg k-h's patch email bot
+
+vim +78 include/linux/build_bug.h
+
+bc6245e5efd70c Ian Abbott       2017-07-10  60  
+6bab69c65013be Rasmus Villemoes 2019-03-07  61  /**
+6bab69c65013be Rasmus Villemoes 2019-03-07  62   * static_assert - check integer constant expression at build time
+6bab69c65013be Rasmus Villemoes 2019-03-07  63   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  64   * static_assert() is a wrapper for the C11 _Static_assert, with a
+6bab69c65013be Rasmus Villemoes 2019-03-07  65   * little macro magic to make the message optional (defaulting to the
+6bab69c65013be Rasmus Villemoes 2019-03-07  66   * stringification of the tested expression).
+6bab69c65013be Rasmus Villemoes 2019-03-07  67   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  68   * Contrary to BUILD_BUG_ON(), static_assert() can be used at global
+6bab69c65013be Rasmus Villemoes 2019-03-07  69   * scope, but requires the expression to be an integer constant
+6bab69c65013be Rasmus Villemoes 2019-03-07  70   * expression (i.e., it is not enough that __builtin_constant_p() is
+6bab69c65013be Rasmus Villemoes 2019-03-07  71   * true for expr).
+6bab69c65013be Rasmus Villemoes 2019-03-07  72   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  73   * Also note that BUILD_BUG_ON() fails the build if the condition is
+6bab69c65013be Rasmus Villemoes 2019-03-07  74   * true, while static_assert() fails the build if the expression is
+6bab69c65013be Rasmus Villemoes 2019-03-07  75   * false.
+6bab69c65013be Rasmus Villemoes 2019-03-07  76   */
+6bab69c65013be Rasmus Villemoes 2019-03-07  77  #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+6bab69c65013be Rasmus Villemoes 2019-03-07 @78  #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+6bab69c65013be Rasmus Villemoes 2019-03-07  79  
+07a368b3f55a79 Maxim Levitsky   2022-10-25  80  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
