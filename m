@@ -1,178 +1,128 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60F71DD0D4;
-	Sat,  5 Jul 2025 07:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690DD1DD0D4;
+	Sat,  5 Jul 2025 07:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751699408; cv=none; b=adDRshVhfCQ9w+DFP2T2i+/itQZf/KAKHkSpRd78PFHKBPFa8MMxhdyf/UerBCaoefjjeB3d1nbdDVRt0wMWW23wQ3Lb4JZC3YMoE6azCpjap5C63ms6k450e6D7QCQwQy2CC5ho92oSYLukH9HdYajizDGfLUAF5/zYG+K5vf8=
+	t=1751699414; cv=none; b=gBO/SiqAEvz6d3/+XOtxqOCpByCYeKvw/vuK7ERUZeOf9jETPvTvAylIkmaNgEuAW0ahdVkM7ztLPoN7R614COUkPh2+/M2Iob+g6jwm2IJ/7GfQIqg4714LvI8hLyXeCHLkRI3Ed5YHEn5rIyNx0IYtLy2gQsl7ohz912XUiic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751699408; c=relaxed/simple;
-	bh=LvpZBH7Yveq9YRhSphaKsMkLGPc+63OIb3tHftMzm5Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/+u9+LD0z+xYFKHz1ZlxLx8IAZkR/WQEMaWJrRkmFMSgCAMqe0CHG8UgkU/7ExtOnPgLAHEszjJJ+6XdlleUd0+MVViWFVnlkHjPlROXISyEGCW5Zx6o+9EmqM1Bu/hqRWt7vvpPu/OYcsGlHuW7uQfqMQ2f/8N+q1VH+Ikuiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fL794L6o; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fL794L6o"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1040837f8f.0;
-        Sat, 05 Jul 2025 00:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751699405; x=1752304205; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WwGKDGYZu3zU20tyaWGV7f0jUHSIerDDzpIeaZ0z7yw=;
-        b=fL794L6o4JpxDz+/7XoFATfWI74B/RQfFxkkMH7ufTa4d/JolKUZAl/kcnNFNIHc1D
-         6dhLDD0pH/T7BcKcfefOLbQA2k5sEQFo2HepPSrwzKjI058JAzJocj39P06upv7/nC25
-         bMIhXJOdjlqVOH6vfvK/vfSufUIPKoGRPDOZoMBY43UfPitQUKxDclzSZ0lItXol2rSM
-         W+RuiRh1fQIA/e7JMievpv1vkIW/XFrESoIbTYswBLQyn0Pb1kpEWM4yVfzwtFxo542f
-         6a/alFECa9Krs5sQTjMZH4SVKT5wPUT0CIcZHtuVeDxBndXMzZT6iEwSv+2seZO2NtZC
-         pozw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751699405; x=1752304205;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WwGKDGYZu3zU20tyaWGV7f0jUHSIerDDzpIeaZ0z7yw=;
-        b=g9UW/evs2YE711nFtHYBn+HP+WGrsea/mFpc+4qUn2VKhDOSqDfMXR9tOwVKMrOSsG
-         2oK/6v9HErzg0/85wSUyFG5RTHrtW6AylwHYNLrbNra06NhZSpLyn2Lmdb5UnQql69kn
-         iAilfOWFg7HHoQEt+V0zJ1XF5ZLSAYPNHhGEUFU5I2sO5YyFzC9lfBZH+jxbCe/SF0WK
-         FLH/LSLgCxO2B7sfwQpu91cvt4NuzXLgtEcRQ/OiAvoVbSQNbWSEn3K/ICdHA7uReurz
-         xV+dhcfT5AsqdCp9YeE7ZoXWnEonGWUSbFQ8WoJTeacsoyyl4rHqyD1sQZPbI5TFCRix
-         O21A==
-X-Forwarded-Encrypted: i=1; AJvYcCWQZVETpKspl1Mg9QxR7hkZdG6BxPYuDxfUJ8fxtbM6uHsUmYa1z+tu5f1KTd1wGEzlgECLhALFgSHvlFAgTEI=@vger.kernel.org, AJvYcCXwz3VaFCjjwsFdZcaV4nC9q3aqkTNYiZW2+3dcpdRHpM86f/o6lhK+VTNox2LBZiLzKzw5LYUO2rnL4TtJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvoQoFx05lcxU+nJvjt5Tg+PX0on84/xNxjUmjYNxlYODqA02O
-	PwC7+JsJzZmD/vbxEtIYkJA7hT4unf/WFcnnsB3ytMTU+SkS4TzyGl4m
-X-Gm-Gg: ASbGncv9OAuwcqUOWDyMq/HmWG4GTsoMm1wBI7Z4NSj4pkanhMePzrZn1YrWVUfvI+L
-	FlcX/97QCPVr85GHNf4ZoTNKzqN4vzwUrtAixlvSnkCnQ/2sz5qscQoR7/unygzF5AfKdtP11Ww
-	ACfAsWaM1c+mSAK5Bkpeo3y77wONWzGgmQ2fEPaZ75dw2CmyrR+y7S5LLAqhSedVxoCMfObiFDK
-	bhCCYbEDCZ/ipoOIQMlDLaJxfjzc92uA5Ilb5XQ136aZUe4u3PHUcjpluezXPVD4G2uHm11J/IC
-	77/HeGTWVFM3xfezlnu6/aN8ceEk7sg7fs9HQog5sY64TE37i8AQdjOK9Cck1VTbDfqKBsmyS8h
-	TVZ4jv6m3l6WAhD8N1g==
-X-Google-Smtp-Source: AGHT+IHYg+BfFBK700LUYb6rC8sK/+2zYar9/pzekkdyH36Nnonb0XBe2l90dgnR4ocPCRfpkSvONQ==
-X-Received: by 2002:a05:6000:2913:b0:3a5:2b1e:c49b with SMTP id ffacd0b85a97d-3b4955971d5mr4451054f8f.29.1751699404886;
-        Sat, 05 Jul 2025 00:10:04 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030ba29sm4259385f8f.2.2025.07.05.00.10.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 00:10:04 -0700 (PDT)
-Date: Sat, 5 Jul 2025 08:10:03 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Prachotan Bathi <prachotan.bathi@arm.com>, Peter Huewe
- <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, Stuart Yoder
- <stuart.yoder@arm.com>, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
- memset
-Message-ID: <20250705081003.26409484@pumpkin>
-In-Reply-To: <aGffUrDSjNH6w6rB@kernel.org>
-References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
-	<20250626184521.1079507-3-prachotan.bathi@arm.com>
-	<aGWvtzhs5ksKgaYo@kernel.org>
-	<151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
-	<aGdAMg43nHPwgeKn@kernel.org>
-	<aGdC8gyO00AB_aPr@kernel.org>
-	<20250704114010.0d210c31@pumpkin>
-	<aGffUrDSjNH6w6rB@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1751699414; c=relaxed/simple;
+	bh=D7TQOOjltjXwEI9gZjZ2pDomlcz9NTXBEIbpgbwlSLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lREKmYpkqq88J2zU9hpiDo9Y4D2P788Ljqkx2ZTI3D50D3fVPNl1ts9cEJ+Jk795RGntlYxuBubHMBxeG798o70yJn4D4t7OCUCPKeJ/TsTq5EyenKmxjMWBAe9bVmR5MzjlYbmRtVZMMdORVwyUH20l8w0K7huTgnueQMtJTYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bZ1q55Hn2zYQtLs;
+	Sat,  5 Jul 2025 15:10:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 8EA471A0847;
+	Sat,  5 Jul 2025 15:10:08 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgBnxyTKz2hoUJLWAg--.53385S3;
+	Sat, 05 Jul 2025 15:10:04 +0800 (CST)
+Message-ID: <094a1420-9060-4dcf-9398-8873193f5f7b@huaweicloud.com>
+Date: Sat, 5 Jul 2025 15:10:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
+ with ARM64_64K_PAGES
+To: Joseph Qi <jiangqi903@gmail.com>
+Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ LTP List <ltp@lists.linux.it>, Theodore Ts'o <tytso@mit.edu>,
+ Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>
+References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+ <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+ <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+ <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgBnxyTKz2hoUJLWAg--.53385S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJry3Gr1kKrW8KF1rCryrtFb_yoW8AF4rpa
+	y3Ja4DCF4UGr18JrWIqF1vqw17ta18tr48Xr9xGry5C3Z0yF1xur4SgF1j9F90vr1xuwnY
+	qr4q9a4I9ayjyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Fri, 4 Jul 2025 17:04:02 +0300
-Jarkko Sakkinen <jarkko@kernel.org> wrote:
+On 2025/7/3 18:47, Joseph Qi wrote:
+> 
+> 
+> On 2025/7/3 15:26, Naresh Kamboju wrote:
+>> On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
+>>>
+>>> Hi, Naresh!
+>>>
+>>> On 2025/6/26 20:31, Naresh Kamboju wrote:
+>>>> Regressions noticed on arm64 devices while running LTP syscalls mmap16
+>>>> test case on the Linux next-20250616..next-20250626 with the extra build
+>>>> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
+>>>>
+>>>> Not reproducible with 4K page size.
+>>>>
+>>>> Test environments:
+>>>> - Dragonboard-410c
+>>>> - Juno-r2
+>>>> - rk3399-rock-pi-4b
+>>>> - qemu-arm64
+>>>>
+>>>> Regression Analysis:
+>>>> - New regression? Yes
+>>>> - Reproducibility? Yes
+>>>>
+>>>> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+>>>> transaction.c start_this_handle
+>>>>
+>>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>>
+>>> Thank you for the report. The block size for this test is 1 KB, so I
+>>> suspect this is the issue with insufficient journal credits that we
+>>> are going to resolve.
+>>
+>> I have applied your patch set [1] and tested and the reported
+>> regressions did not fix.
+>> Am I missing anything ?
+>>
+>> [1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
+>>
+> 
+> I can also reproduce the similar warning with xfstests generic/730 under
+> 64k page size + 4k block size.
+> 
 
-> On Fri, Jul 04, 2025 at 11:40:10AM +0100, David Laight wrote:
-> > On Fri, 4 Jul 2025 05:56:50 +0300
-> > Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> >   
-> > > On Fri, Jul 04, 2025 at 05:45:11AM +0300, Jarkko Sakkinen wrote:  
-> > ...  
-> > > > Well, that was some truly misguided advice from my side so all the shame
-> > > > here is on me :-) There's no global memzero() and neither explicit
-> > > > version makes much sense here. Sorry about that.
-> > > > 
-> > > > I gave it now (actual) thought, and here's what I'd propose:
-> > > > 
-> > > > diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-> > > > index 96746d5b03e3..e769f6143a7c 100644
-> > > > --- a/drivers/char/tpm/tpm_crb_ffa.c
-> > > > +++ b/drivers/char/tpm/tpm_crb_ffa.c
-> > > > @@ -203,26 +203,20 @@ static int __tpm_crb_ffa_try_send_receive(unsigned long func_id,
-> > > >  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
-> > > >  
-> > > >  	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> > > > -		memzero(&tpm_crb_ffa->direct_msg_data2,
-> > > > -		       sizeof(struct ffa_send_direct_data2));
-> > > > -
-> > > > -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> > > > -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> > > > -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> > > > -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-> > > > +		tpm_crb_ffa->direct_msg_data2 = (struct ffa_send_direct_data2){
-> > > > +			.data = { func_id, a0, a1, a2 },
-> > > > +		};  
-> > 
-> > clang has a habit of compiling that as an un-named on-stack structure that
-> > is initialised and then memcpy() used to copy it into place.
-> > Often not was intended and blows the stack when the structure is large.
-> > 
-> > So probably not a pattern that should be encouraged.  
-> 
-> This is interesting observation so I had to do some compilation tests to
-> verify the claim just to see how it plays out (and for the sake of
-> learning while doing it).
-> 
-> Note that I use GCC for the examples but I have high doubts that clang
-> would do worse. Please share the insight if that is a wrong assumption.
+Hi, Joseph!
 
-It is a clang issue and may only affect builds with some of the 'memory
-sanitiser' run-time checks.
-Search through the mail archives for issues with overlarge stack frames.
+I cannot reproduce this issue on my machine. Theoretically, the 'rsv_credits'
+should be 113 under 64k page size + 4k block size, I don't think it would
+exceed the max user trans buffers. Could you please give more details?
+What is the configuration of your xfstests? and what does the specific error
+log look like?
 
-	David
-
-> 
-> OK, so... here's the dissembly (using objdump) for the  unchanged version:
-> 
-> ffff8000801805a0:	8b020260 	add	x0, x19, x2
-> ffff8000801805a4:	94011819 	bl	ffff8000801c6608 <__memset>
-> ffff8000801805a8:	a9035a75 	stp	x21, x22, [x19, #48]
-> ffff8000801805ac:	aa1a03e1 	mov	x1, x26
-> ffff8000801805b0:	aa1903e0 	mov	x0, x25
-> ffff8000801805b4:	a9047e77 	stp	x23, xzr, [x19, #64]
-> 
-> [ Off-topic: note that how a2 gets optimized out with the zero register
->   so that it is probably a parameter that we don't need at all in the
->   first place? ]
-> 
-> However, in the changed version the matching snippet looks factors
-> better:
-> 
-> ffff800080180620:	a9017c7f 	stp	xzr, xzr, [x3, #16]
-> ffff800080180624:	f900107f 	str	xzr, [x3, #32]
-> 
-> Further, look at the stack size in the original version:
-> 
-> ffff800080180524 <__tpm_crb_ffa_send_receive.constprop.0>:
-> ffff800080180524:	a9ba7bfd 	stp	x29, x30, [sp, #-96]!
-> 
-> On the other hand, in the changed version:
-> 
-> ffff800080180524 <__tpm_crb_ffa_send_receive.constprop.0>:
-> ffff800080180524:	a9bb7bfd 	stp	x29, x30, [sp, #-80]!
-> 
-> I don't know, at least the figures I'm able to measure with my limited
-> ARM assembly knowledge look way better.
-> 
-> BR, Jarkko`
-> 
+Thanks,
+Yi.
 
