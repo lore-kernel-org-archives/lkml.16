@@ -1,143 +1,194 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay-egress16.pub.mailoutpod3-cph3.one.com (mailrelay-egress16.pub.mailoutpod3-cph3.one.com [46.30.212.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2464319DF4A;
-	Sat,  5 Jul 2025 07:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96011F5437
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751699806; cv=none; b=hww+PTisFr7wMghX4Qsh1pHmJtFaBfKqS09tWGANZ3NhSfbX8delA/7JLDcdR2mEybcx8gq7f9YgN/Y2zo4/zWUXYXl5xZjrajKLXCXYqtd17VXkJIvjLBd5HxbXvSwNrT+ie6orysg7w39P3QH1Bf8Y4aUnxhatOnxkhgmRP7g=
+	t=1751699852; cv=none; b=ukEbv3WtqZCvWWo260BSIjXknv7FYKH8NPINDMNHksPizwFWpDf0uzlD2pPKG9eODKZiCUUAzZapJmN/XeX93TUkdivSuFGSbQR3bbnICbaEllR8R14RS0HC5LMY8n41I29mKf4bvxJDjo5Bw+37ySnXJoi+LWsBJEcZyJiO7sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751699806; c=relaxed/simple;
-	bh=tUhWmgK4dOMTc0iS2htVf8JYMWc1HQMBTCCneavHgjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HWZcbkeKirdVJXO0meHNm5BbiXFTollkYRRJ85t5zePfeN7s7A0hEE0CW+p3i0XecvEgqBDGCqpyIeaNbE6tpE9J8MSLsUB5AKk9wvN1We1vHdA/VYFoLsjUOMeA/BOANm98WsJr+kt2IOKmqDYOhbZHEoMbJ8rvo+HU5smDVLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQ2g3aM0; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751699852; c=relaxed/simple;
+	bh=Q/gP1ee5h4zuoHWtTz9IDaf9f/qI6rqm7Uef+xT279w=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Kw4sUvG9HDs594jR8kqzhgvhxnahVuYywZgCAvDSsVwAuK+cvOitdUqeMGIVyFHcZk3O0auK7fVigZ8svIBdvGZ7QSySm/Oej16/jbAGVqlHtffx4m6jxFTy97lVt7FyU9jF4/e9ablccx4FVaFoQkUke1BGIvD2iv6dwet/qZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=IINvfj+C; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=A0EWOTTC; arc=none smtp.client-ip=46.30.212.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQ2g3aM0"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4537fdec33bso9008665e9.1;
-        Sat, 05 Jul 2025 00:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751699802; x=1752304602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8R5oTgaAPwIE+ySog9Pi/wJSy7DIcCAi0+86Q6mHWKY=;
-        b=iQ2g3aM0O+1MIrbxY2HjshMIKaIbeKaBxPnQRcZ69/gQjdWptmpArdTLnvjOp6jZIY
-         VHHE7+pZhUEpwB9l6iqyqxIcTWY7Mzzf86pTvPPXfgZ7DiUTzFGSWS+5+v34jmDbrwqW
-         TTRb8ZSnEr0yNX7nJxFPOaomJS2MDucRQBaI9r0ioaCbhgaFdH7zLG4VgfSlIyVIHYr1
-         yeCTQ+tR3kHuwGLXBgFbUWdrRTJ3fCEvgBHoR4o/JN9s79XQqwzKAt7Y9Wg38XGmhSvI
-         aoyWqCNcmj9Ofuge6ELxHnrZJMkijrwvB9IcHvipAaqg1WTMUMppEiF3z+DAw9gmispF
-         O+xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751699802; x=1752304602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8R5oTgaAPwIE+ySog9Pi/wJSy7DIcCAi0+86Q6mHWKY=;
-        b=m8a1NOrwWdcaFvk3aHKxUFbsF7uJmrEcZ8pxosyfI7bx8RXALNcpxB9X9Yc0Zl/tsm
-         UOJYHBtZKH6QqlHp8R2RamgHvLZkDf8kKF56c9WOhemlNTjLCGk6oaKseKFR+SE7KPuj
-         lDXfSDjMD2PHAWbPXgKDpAQqFjdBASf/Ybf4LRGzVukqpYg/YAd2V1l0lWZZ2pIkcPiJ
-         MXgyDdgQKDW3tCKpu+ZOp9A+2UNxc0Gr3gFRZMlLCjDv0s4g8jCmgxJcMEw7+hDhQL5y
-         XcJgkbl8l/+A6smc7BAS3ZIJxFVNFNZ4UR6W8xWlqwGTeJPMEnFl6ehet88sEZmgtYmw
-         oswQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6t501G9jqXUv6VRYN4+3fCfc3gtIQlE36WFnl2BXrZqiOig7/RNP4H6ZCzUIjm2mf9x35VtQa+HbynfE=@vger.kernel.org, AJvYcCXE01j4xT74EqwRbiNNELHcY5W06qNA9FB76YWXtI/NV7SOGgWVKo1eDWniljHZCxe7NSmmzEbn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB3ydBa6r0sslBLip6mLgobAEAbHRxDZRaLGqh6HNJt7WMNpaP
-	cdq1HI1/6/O4RiGkZn02dRFOgth9sIBHNTaqRkIXwqHWphj1cPGzqA3Q
-X-Gm-Gg: ASbGncuzxrRoZcj9V2hN2hpBgmtZo9PFyzshSDx/QYNc0IJdbL8ViIsqhP2T13NpFkV
-	pHCj3rUt2d7t0MBF/d2G0+PPoMNkuBUfN1SFaJ9e8Mlv8SiqOft+RBZCLTwDMxUo3//UtwMJVC2
-	NTD7KQF7adkUaOqPyiVvNEal7B4QyZ+eSLHCCZ+XNxWOeUkzELQorDcO2Tfwslwil3/BISLZnQ+
-	YJtob+jV4sEzM+NwXaTlClGjU78xoUHyM9LiW9fo+4r2l38lJkS5OTCA5cX4jpB5rX0HDvVhCGb
-	zqFQQobuIr/lvX7gRv5xY0B7FTckW54z+KKvqP84yff6/0t0ONDeZrS/ojtHzSxsY644IcS0LmR
-	qKFMwfl49tleurYE2Mg==
-X-Google-Smtp-Source: AGHT+IHXEwjcjQ9NX0f8W1fKeEpMnHB2PDebEu/auXAypGG0r6Beul+slgLTogHrnsvnqSeFZur0dw==
-X-Received: by 2002:a05:600c:1c21:b0:453:7b2b:ed2e with SMTP id 5b1f17b1804b1-454b4eb7e77mr42866925e9.24.1751699802184;
-        Sat, 05 Jul 2025 00:16:42 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bdf038sm76279665e9.27.2025.07.05.00.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 00:16:41 -0700 (PDT)
-Date: Sat, 5 Jul 2025 08:16:40 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Feng Yang <yangfeng59949@163.com>, aleksander.lobakin@intel.com,
- almasrymina@google.com, asml.silence@gmail.com, davem@davemloft.net,
- ebiggers@google.com, edumazet@google.com, horms@kernel.org,
- kerneljasonxing@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, stfomichev@gmail.com, willemb@google.com,
- yangfeng@kylinos.cn
-Subject: Re: [PATCH v3] skbuff: Add MSG_MORE flag to optimize large packet
- transmission
-Message-ID: <20250705081640.232efec3@pumpkin>
-In-Reply-To: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
-References: <20250703124453.390f5908@pumpkin>
-	<20250704092628.80593-1-yangfeng59949@163.com>
-	<1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="IINvfj+C";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="A0EWOTTC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751699841; x=1752304641;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=0dF08nZ5AD94cqmTG2oD0kbPc0AyPxw2HHR1baJXYOw=;
+	b=IINvfj+C2bWDaUPKaeQ1dp124mX5RlbM2RmbMnDyDotbJvcQNyb/bDNcgdB8yTEETYpj1kKAV/3QM
+	 I29dOHvkouxSZI5kfF254SmD0bTUS3kN+91/2C1HyehRGePIBjZm6qJMR0xlrZVmvbbWiLN8c3QUXy
+	 Ib66Zyg/eLvppeS70jCNdgtsH0UnNpaXhDX8Pdg/rAkhWJJVticB5XJUHhk9k5LsUwaAZWFkD5r2E0
+	 x6d9XvEi9EN4E5W0cITxN80BplO6UkfVuC2BFdClu1ldQARZl9dMYkXrvQt/oU/g3fAqv3f4WvUzy0
+	 4tVI7Kjs9kMYbqBwqLySjJgc6VX+yYA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751699841; x=1752304641;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=0dF08nZ5AD94cqmTG2oD0kbPc0AyPxw2HHR1baJXYOw=;
+	b=A0EWOTTCHcbh2Whz4NRwaAMrW8SmMbqKP0RmpN38wNQC1MDBxxPf59eA8ZD4nsnqLfeJvMVUcbTjQ
+	 nm3e4qWCw==
+X-HalOne-ID: 16b71226-5970-11f0-b992-f78b1f841584
+Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
+	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 16b71226-5970-11f0-b992-f78b1f841584;
+	Sat, 05 Jul 2025 07:17:20 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v10 3/4] rust: add support for NUMA ids in allocations
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <aGfx6c72FgHn3NNW@pollux>
+Date: Sat, 5 Jul 2025 09:17:10 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Alice Ryhl <aliceryhl@google.com>,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5BDED328-4E79-4E39-95C3-21C3FB80593C@konsulko.se>
+References: <20250702160758.3609992-1-vitaly.wool@konsulko.se>
+ <20250702160910.3610134-1-vitaly.wool@konsulko.se> <aGfx6c72FgHn3NNW@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-On Fri, 4 Jul 2025 17:50:42 +0200
-Paolo Abeni <pabeni@redhat.com> wrote:
 
-> On 7/4/25 11:26 AM, Feng Yang wrote:
-> > Thu, 3 Jul 2025 12:44:53 +0100 david.laight.linux@gmail.com wrote:
-> >   
-> >> On Thu, 3 Jul 2025 10:48:40 +0200
-> >> Paolo Abeni <pabeni@redhat.com> wrote:
-> >>  
-> >>> On 6/30/25 9:10 AM, Feng Yang wrote:  
-> >>>> From: Feng Yang <yangfeng@kylinos.cn>
-> >>>>
-> >>>> The "MSG_MORE" flag is added to improve the transmission performance of large packets.
-> >>>> The improvement is more significant for TCP, while there is a slight enhancement for UDP.    
-> >>>
-> >>> I'm sorry for the conflicting input, but i fear we can't do this for
-> >>> UDP: unconditionally changing the wire packet layout may break the
-> >>> application, and or at very least incur in unexpected fragmentation issues.  
-> >>
-> >> Does the code currently work for UDP?
-> >>
-> >> I'd have thought the skb being sent was an entire datagram.
-> >> But each semdmsg() is going to send a separate datagram.
-> >> IIRC for UDP MSG_MORE indicates that the next send() will be
-> >> part of the same datagram - so the actual send can't be done
-> >> until the final fragment (without MSG_MORE) is sent.  
-> > 
-> > If we add MSG_MORE, won't the entire skb be sent out all at once? Why doesn't this work for UDP?  
-> 
-> Without MSG_MORE N sendmsg() calls will emit on the wire N (small) packets.
-> 
-> With MSG_MORE on the first N-1 calls, the stack will emit a single
-> packet with larger size.
-> 
-> UDP application may relay on packet size for protocol semantic. i.e. the
-> application level message size could be expected to be equal to the
-> (wire) packet size itself.
 
-Correct, but the function is __skb_send_sock() - so you'd expect it to
-send the 'message' held in the skb to the socket.
-I don't think that the fact that the skb has fragments should make any
-difference to what is sent.
-In other words it ought to be valid for any code to 'linearize' the skb.
+> On Jul 4, 2025, at 5:23=E2=80=AFPM, Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>=20
+> On Wed, Jul 02, 2025 at 06:09:10PM +0200, Vitaly Wool wrote:
+>> /// The kernel's [`Allocator`] trait.
+>> ///
+>> /// An implementation of [`Allocator`] can allocate, re-allocate and =
+free memory buffers described
+>> @@ -148,7 +172,7 @@ pub unsafe trait Allocator {
+>>     ///
+>>     /// When the return value is `Ok(ptr)`, then `ptr` is
+>>     /// - valid for reads and writes for `layout.size()` bytes, until =
+it is passed to
+>> -    ///   [`Allocator::free`] or [`Allocator::realloc`],
+>> +    ///   [`Allocator::free`], [`Allocator::realloc`] or =
+[`Allocator::realloc_node`],
+>>     /// - aligned to `layout.align()`,
+>>     ///
+>>     /// Additionally, `Flags` are honored as documented in
+>> @@ -159,7 +183,41 @@ fn alloc(layout: Layout, flags: Flags) -> =
+Result<NonNull<[u8]>, AllocError> {
+>>         unsafe { Self::realloc(None, layout, Layout::new::<()>(), =
+flags) }
+>>     }
+>>=20
+>> -    /// Re-allocate an existing memory allocation to satisfy the =
+requested `layout`.
+>> +    /// Allocate memory based on `layout`, `flags` and `nid`.
+>> +    ///
+>> +    /// On success, returns a buffer represented as `NonNull<[u8]>` =
+that satisfies the layout
+>> +    /// constraints (i.e. minimum size and alignment as specified by =
+`layout`).
+>> +    ///
+>> +    /// This function is equivalent to `realloc_node` when called =
+with `None`.
+>> +    ///
+>> +    /// # Guarantees
+>> +    ///
+>> +    /// When the return value is `Ok(ptr)`, then `ptr` is
+>> +    /// - valid for reads and writes for `layout.size()` bytes, =
+until it is passed to
+>> +    ///   [`Allocator::free`], [`Allocator::realloc`] or =
+[`Allocator::realloc_node`],
+>> +    /// - aligned to `layout.align()`,
+>> +    ///
+>> +    /// Additionally, `Flags` are honored as documented in
+>> +    /// =
+<https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
+>> +    fn alloc_node(
+>> +        layout: Layout,
+>> +        flags: Flags,
+>> +        nid: NumaNode,
+>> +    ) -> Result<NonNull<[u8]>, AllocError> {
+>> +        // SAFETY: Passing `None` to `realloc_node` is valid by its =
+safety requirements and
+>> +        // asks for a new memory allocation.
+>> +        unsafe { Self::realloc_node(None, layout, =
+Layout::new::<()>(), flags, nid) }
+>> +    }
+>> +
+>> +    /// Re-allocate an existing memory allocation to satisfy the =
+requested `layout` and
+>> +    /// a specific NUMA node request to allocate the memory for.
+>> +    ///
+>> +    /// Systems employing a Non Uniform Memory Access (NUMA) =
+architecture contain collections of
+>> +    /// hardware resources including processors, memory, and I/O =
+buses, that comprise what is
+>> +    /// commonly known as a NUMA node.
+>> +    ///
+>> +    /// `nid` stands for NUMA id, i. e. NUMA node identifier, which =
+is a non-negative
+>> +    /// integer if a node needs to be specified, or NO_NODE if the =
+caller doesn't care.
+>>     ///
+>>     /// If the requested size is zero, `realloc` behaves equivalent =
+to `free`.
+>>     ///
+>> @@ -191,13 +249,27 @@ fn alloc(layout: Layout, flags: Flags) -> =
+Result<NonNull<[u8]>, AllocError> {
+>>     ///   and old size, i.e. `ret_ptr[0..min(layout.size(), =
+old_layout.size())] =3D=3D
+>>     ///   p[0..min(layout.size(), old_layout.size())]`.
+>>     /// - when the return value is `Err(AllocError)`, then `ptr` is =
+still valid.
+>> -    unsafe fn realloc(
+>> +    unsafe fn realloc_node(
+>>         ptr: Option<NonNull<u8>>,
+>>         layout: Layout,
+>>         old_layout: Layout,
+>>         flags: Flags,
+>> +        nid: NumaNode,
+>>     ) -> Result<NonNull<[u8]>, AllocError>;
+>>=20
+>> +    /// Re-allocate an existing memory allocation to satisfy the =
+requested `layout`. This
+>> +    /// function works exactly as realloc_node() but it doesn't give =
+the ability to specify
+>> +    /// the NUMA node in the call.
+>> +    unsafe fn realloc(
+>> +        ptr: Option<NonNull<u8>>,
+>> +        layout: Layout,
+>> +        old_layout: Layout,
+>> +        flags: Flags,
+>> +    ) -> Result<NonNull<[u8]>, AllocError> {
+>> +        // SAFETY: guaranteed by realloc_node()
+>> +        unsafe { Self::realloc_node(ptr, layout, old_layout, flags, =
+NumaNode::NO_NODE) }
+>> +    }
+>=20
+> I think Alice suggested to just drop alloc_node() and realloc_node() =
+and make
+> alloc() and realloc() always take a NumaNode argument.
+>=20
+> I don't have a strong preference, but keeping only alloc() and =
+realloc() for
+> seems indeed simpler, so let's remove the _node() variants.
 
-	David
+I don=E2=80=99t have a strong preference either but if I modify alloc() =
+and realloc(), I=E2=80=99ll have to change KVec and KBox in the same =
+patch, would that be okay with you?
 
-> 
-> Unexpectedly aggregating the packets may break the application. Also it
-> can lead to IP fragmentation, which in turn could kill performances.
-> 
-> > If that's not feasible, would the v2 version of the code work for UDP?  
-> 
-> My ask is to explicitly avoid MSG_MORE when the transport is UDP.
-> 
-> /P
-> 
+~Vitaly
 
+<snip>
