@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB56313D503;
-	Sat,  5 Jul 2025 17:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9D510E0;
+	Sat,  5 Jul 2025 17:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751736279; cv=none; b=mjqgRU+xA6lIFWLVT9q5tMWorvwUNodkUW+cbMqW+/4Oq0Co02Qz282ZMC3RPl6MpuN94TAbdxQJwtodDCDtQeguFYpseD5zKzGTkN9I8Miu7PGx8OwJmakWQ7veY3WnLqTGZjaezrQ7ahPsW4x+O5mBppRU651PrM0Y48lfQbE=
+	t=1751736495; cv=none; b=SYo6Ba/Tx884TwtIk05jSaDLStV9bwwNnTwwLHoyrFLJDgg0EOqspIWPl5YSbDdHzEmctKC0G+dfxC4AuukJ+6bPL0bWOzz4pglosF6GQhJp2i3GdPVNmFjQO5SYG7g/coRGdqWJY/X1g2+LJ1JDfG/GKTRMInNeatN4Af2bfOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751736279; c=relaxed/simple;
-	bh=5TOCL6biYGPzAyjVTAkgnGGeHxX24Ot5ravR5cHQKys=;
+	s=arc-20240116; t=1751736495; c=relaxed/simple;
+	bh=YlxLzKes0woNFoFDq4Lln1Zi2b4y+fCRU3EgGSikovI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rB4KJCO2y8afdSQZC3VAoZfjruptkO6N0tME+Esd+9UV0Dh1kSiW302rs7ExIjw5WD5X4EU0v1PM7oxXWRjJiNlINV2cYRYhHfIWwVusfqnuT1DjpT8HYahWIzbu+Bk3JlMne1spXYflMZ6TFtImVrCePvvMnH4yYmitUor/+EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCeZYhrc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=df1BUyXfbnWVEAx+eSHwG6+BPGCLvoNnhv9VbUrkCDh7qsw0elZN/ByosHPvqGE5B9ak1EJnU2lhvPN1HovPOK/NpFCV9kE1+rS/Ie/NqwERs0NUMD2+OtyLo8xt+QwABeTEE7kIM4aw1oDMr/sZ9cEN1o0IypfQccKxaOqGFuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ewj3gib3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCeZYhrc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 562C7C4CEE7;
-	Sat,  5 Jul 2025 17:24:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ewj3gib3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44F8C4CEE7;
+	Sat,  5 Jul 2025 17:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751736276;
-	bh=5TOCL6biYGPzAyjVTAkgnGGeHxX24Ot5ravR5cHQKys=;
+	s=k20201202; t=1751736494;
+	bh=YlxLzKes0woNFoFDq4Lln1Zi2b4y+fCRU3EgGSikovI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RCeZYhrcwQPkVy6Jf5zMNey3Vnv3dRWpw/Nqkwfbxh/Y1zi3+fo4F6yZOCdhUj7kn
-	 /SqRhrOXa/rWPcoRIza+OaFEupzajCGUEd8tSxCYn7sPkmYOUVV/hsOXdpRjF7Vp75
-	 vGRswn16c0+kFxTiwlrKjMKsQ6t9kDKQDoP8f011w+T/h5AL2fj3Iy3SGOJnL5pJFS
-	 HoL+GIZ2r6VON3uanmroZaaUANGiFTeaMcd7+Z+qUbmJjFmyJzYrWhLMPQWosAsUmE
-	 8jA60vsdW9VMEwGTVJLf8F+WDCITWAw11k4rroz9iIz08YcC24hNYUlT+FcBWHqgii
-	 eIbpM2v9m4rCg==
-Date: Sat, 5 Jul 2025 19:24:29 +0200
+	b=Ewj3gib3IFDYdHWkEMbERFojYaQQVMLJ4f+Fzaxpsn8E3M1Y6Laf+KZkoIVeEeioF
+	 kWLN6M6rzQULjdmttqI5OAWa30IsYF7nKiIDygc1GTHUDnb4Cx1FBrRB1OweQcDlZI
+	 tiesK357KjQFRUkzcaEnu6b2ymPjHOl/WDXWpa/KI/cHY60bLK5EXUwFtZ0+3IUzHf
+	 HpYSnDSSnF51jfKbklSSwwby0znE/gAsNx50b6O3ZpDF5+N/R2QWC3GoYgndo2U3q6
+	 Z68rlpos+p7TWwpnCxIw6E9pY1tgSDOMC0AVrCmBaj+Hf95ySTLPK/K1rTQGfMnZgb
+	 bkGVPdErKZ1gQ==
+Date: Sat, 5 Jul 2025 19:28:07 +0200
 From: Danilo Krummrich <dakr@kernel.org>
 To: Daniel Almeida <daniel.almeida@collabora.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
@@ -43,11 +43,11 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Ying Huang <huang.ying.caritas@gmail.com>,
 	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v12 2/3] rust: io: mem: add a generic iomem abstraction
-Message-ID: <aGlfzdUjvSkdFhNz@cassiopeiae>
+	rust-for-linux@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Subject: Re: [PATCH v12 1/3] rust: io: add resource abstraction
+Message-ID: <aGlgpyuz2JKErAUj@cassiopeiae>
 References: <20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com>
- <20250704-topics-tyr-platform_iomem-v12-2-1d3d4bd8207d@collabora.com>
+ <20250704-topics-tyr-platform_iomem-v12-1-1d3d4bd8207d@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,111 +56,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250704-topics-tyr-platform_iomem-v12-2-1d3d4bd8207d@collabora.com>
+In-Reply-To: <20250704-topics-tyr-platform_iomem-v12-1-1d3d4bd8207d@collabora.com>
 
-On Fri, Jul 04, 2025 at 01:25:27PM -0300, Daniel Almeida wrote:
-
-This looks good now, one comment below.
-
-> +    /// Creates a new `IoMem` instance from a previously acquired [`IoRequest`].
-> +    pub fn new<'a>(io_request: IoRequest<'a>) -> Result<impl PinInit<Devres<Self>, Error> + 'a> {
-> +        let io = Self::ioremap(io_request.resource)?;
-> +        let devres = Devres::new(io_request.device, io);
+On Fri, Jul 04, 2025 at 01:25:26PM -0300, Daniel Almeida wrote:
+> +/// Resource Size type.
+> +///
+> +/// This is a type alias to either `u32` or `u64` depending on the config option
+> +/// `CONFIG_PHYS_ADDR_T_64BIT`.
+> +#[cfg(CONFIG_PHYS_ADDR_T_64BIT)]
+> +pub type ResourceSize = u64;
 > +
-> +        Ok(devres)
-> +    }
+> +/// Resource Size type.
+> +///
+> +/// This is a type alias to either `u32` or `u64` depending on the config option
+> +/// `CONFIG_PHYS_ADDR_T_64BIT`.
+> +#[cfg(not(CONFIG_PHYS_ADDR_T_64BIT))]
+> +pub type ResourceSize = u32;
 
-This method should not return `Result<impl PinInit<Devres<Self>, Error> + 'a>`,
-but just `impl PinInit<Devres<Self>, Error> + 'a`.
+I think someone commented on this previously, but maybe I also do not remember
+correctly.
 
-Here's the full diff of the changes needed. :)
+Anyways, can't we just do:
 
-diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-index b047b9a73ae5..cb0805ef0860 100644
---- a/rust/kernel/io/mem.rs
-+++ b/rust/kernel/io/mem.rs
-@@ -60,7 +60,7 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
-     ///       //
-     ///       // No runtime checks will apply when reading and writing.
-     ///       let request = pdev.request_io_by_index(0).ok_or(ENODEV)?;
--    ///       let iomem = request.iomap_sized::<42>()?;
-+    ///       let iomem = request.iomap_sized::<42>();
-     ///       let iomem = KBox::pin_init(iomem, GFP_KERNEL)?;
-     ///
-     ///       let io = iomem.access(pdev.as_ref())?;
-@@ -74,9 +74,7 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
-     ///     }
-     /// }
-     /// ```
--    pub fn iomap_sized<const SIZE: usize>(
--        self,
--    ) -> Result<impl PinInit<Devres<IoMem<SIZE>>, Error> + 'a> {
-+    pub fn iomap_sized<const SIZE: usize>(self) -> impl PinInit<Devres<IoMem<SIZE>>, Error> + 'a {
-         IoMem::new(self)
-     }
+	pub type ResourceSize = bindings::phys_addr_t;
 
-@@ -88,7 +86,7 @@ pub fn iomap_sized<const SIZE: usize>(
-     /// C API.
-     pub fn iomap_exclusive_sized<const SIZE: usize>(
-         self,
--    ) -> Result<impl PinInit<Devres<ExclusiveIoMem<SIZE>>, Error> + 'a> {
-+    ) -> impl PinInit<Devres<ExclusiveIoMem<SIZE>>, Error> + 'a {
-         ExclusiveIoMem::new(self)
-     }
-
-@@ -122,7 +120,7 @@ pub fn iomap_exclusive_sized<const SIZE: usize>(
-     ///       // family of functions should be used, leading to runtime checks on every
-     ///       // access.
-     ///       let request = pdev.request_io_by_index(0).ok_or(ENODEV)?;
--    ///       let iomem = request.iomap()?;
-+    ///       let iomem = request.iomap();
-     ///       let iomem = KBox::pin_init(iomem, GFP_KERNEL)?;
-     ///
-     ///       let io = iomem.access(pdev.as_ref())?;
-@@ -135,13 +133,13 @@ pub fn iomap_exclusive_sized<const SIZE: usize>(
-     ///     }
-     /// }
-     /// ```
--    pub fn iomap(self) -> Result<impl PinInit<Devres<IoMem<0>>, Error> + 'a> {
-+    pub fn iomap(self) -> impl PinInit<Devres<IoMem<0>>, Error> + 'a {
-         Self::iomap_sized::<0>(self)
-     }
-
-     /// Same as [`Self::iomap`] but with exclusive access to the underlying
-     /// region.
--    pub fn iomap_exclusive(self) -> Result<impl PinInit<Devres<ExclusiveIoMem<0>>, Error> + 'a> {
-+    pub fn iomap_exclusive(self) -> impl PinInit<Devres<ExclusiveIoMem<0>>, Error> + 'a {
-         Self::iomap_exclusive_sized::<0>(self)
-     }
- }
-@@ -185,11 +183,11 @@ fn ioremap(resource: &Resource) -> Result<Self> {
-     }
-
-     /// Creates a new `ExclusiveIoMem` instance from a previously acquired [`IoRequest`].
--    pub fn new<'a>(io_request: IoRequest<'a>) -> Result<impl PinInit<Devres<Self>, Error> + 'a> {
--        let iomem = Self::ioremap(io_request.resource)?;
--        let devres = Devres::new(io_request.device, iomem);
-+    pub fn new<'a>(io_request: IoRequest<'a>) -> impl PinInit<Devres<Self>, Error> + 'a {
-+        let dev = io_request.device;
-+        let res = io_request.resource;
-
--        Ok(devres)
-+        Devres::new(dev, Self::ioremap(res))
-     }
- }
-
-@@ -249,11 +247,11 @@ fn ioremap(resource: &Resource) -> Result<Self> {
-     }
-
-     /// Creates a new `IoMem` instance from a previously acquired [`IoRequest`].
--    pub fn new<'a>(io_request: IoRequest<'a>) -> Result<impl PinInit<Devres<Self>, Error> + 'a> {
--        let io = Self::ioremap(io_request.resource)?;
--        let devres = Devres::new(io_request.device, io);
-+    pub fn new<'a>(io_request: IoRequest<'a>) -> impl PinInit<Devres<Self>, Error> + 'a {
-+        let dev = io_request.device;
-+        let res = io_request.resource;
-
--        Ok(devres)
-+        Devres::new(dev, Self::ioremap(res))
-     }
- }
+Given that phys_addr_t is already either u32 or u64.
