@@ -1,106 +1,110 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F823190676;
-	Sat,  5 Jul 2025 10:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702242E3704;
+	Sat,  5 Jul 2025 10:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751709614; cv=none; b=qovZ6XcB4q4Lk6fF5LS5Vc+G25dUhUeQ+B1hKUB8wOxpYHF4uWAqSc9cq59UkSHiSdrAAMB3BLbrd3nEO7IUd0VGNtAe23ENnSzxqjfsqETWH77Z7FSYHnMKUGzXsOexkALmy2RfqUV20aDEg3Nunai7WeyPS4hWVe3OnfBJEGs=
+	t=1751709737; cv=none; b=fsDmMaGCjqZt7Q4D4yPGLBcVt4R36dE4LxAzsQl+HzN4rugrOn+o9q2IwYKyW2zep+Nrk7bkSXZ5rQ7EV//dnl6eihfmjbN+rQMJhIuyMD64lG109M8zpJAz1B6K/uBcfgL8ShEmsU6kocW7kvB9xv+z3iSKqTuQNtayZgYoVgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751709614; c=relaxed/simple;
-	bh=hECT9/EJcb82eH/cbjmMyV050Rvo+4l/7Q8hVhSKXkk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ESxbxxpJ8duJje0BsIn7o14qUtOcH26S6QWMlXM/q4Dzdxu1EfALOYpQdRMiR1nUL11Hv8u8CjgLDEEhPn3MnmXp0+sL18JfnkPDZQHb0XwHR71KP9xVs6QvriHg5QnOU8+f8CYQ8lIUUDWno1lBPZ+YK4voxiC9x6xQP7lSSxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PvDAJMtE; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751709737; c=relaxed/simple;
+	bh=M8fK8ZQeoQG2ZZneJ2DhG8Z+hpVXThcLVNcqGhy06IU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gb2bzFa3KOmNZsQk/T8ewK3rzHg1Mwc5ZXs4m6tcG74Y30qLoHwxIlw6WZ0YrgSEFPemDazUhCsKgBW0iz22+/ZDMpe4TYJ5sVIQW5lmpw/He4PlSkg2YM88Ejt1CLGLCB8m5xyPMg3Al0g+5wscxwxPOe3kT/1xFIse/PO5FSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QryWv1ko; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rNYWzMQy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PvDAJMtE"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 0C3B2258E3;
-	Sat,  5 Jul 2025 12:00:08 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 13Z8MWAI8z9B; Sat,  5 Jul 2025 12:00:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751709607; bh=hECT9/EJcb82eH/cbjmMyV050Rvo+4l/7Q8hVhSKXkk=;
-	h=From:To:Cc:Subject:Date;
-	b=PvDAJMtE1sPk7O2fRyBcgAoTmn2BWvG6150Z5BNEqXAXYQ4oDvB5xMAq+jKRQXJv8
-	 QBrsxReQUhZ3VkR6j4BfmljwtHi3AmZrZH61VdRDmfBCQ7/hmvEdVCzuqqfog9Kxzq
-	 0AGp/1hcDN41j6lKYaycNlqyOevx3JDjHZozfnl/HOlffGi06OFPzlGkfEMiSfWzXd
-	 5Jq3kDNhxg24hDA9kZBNq35wAz2Twh1uihztFek3K3+u8XHomAyROhrrKqwCb5DGNa
-	 CP93fv1KNoR7KksfQezE7CA/YM10/l5A4dk1ecDSEFAtYX2/Ddw8JKwhUlmhpSMr03
-	 +EUEN8gWJUKvw==
-From: Yao Zi <ziyao@disroot.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>
-Cc: linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH] clk: Avoid DT fetch in possible_parent_show if clk_hw is provided
-Date: Sat,  5 Jul 2025 09:58:17 +0000
-Message-ID: <20250705095816.29480-2-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QryWv1ko";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rNYWzMQy"
+Date: Sat, 5 Jul 2025 12:02:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751709733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S7gL8dYOn6HntTdoNOII9WcyvTWhgCfl9lUbpV4BSls=;
+	b=QryWv1kobeUtwnxLuKJ37S6P8dABaWh9TKOGc6zMPDghXt2id9g6pM+FYsMis+ZKJBTVnj
+	dlnc4u4f0GfCPVtSF6CbPb8KTJ8TBAw6gTF8p7KtEjpgbZfG/Tp238Kt2oVG/JiK4Yv86d
+	TmK8kxBOghlbVe7uwkQvgmpIZn1AeKVkyRDP1L1qDIwY+BB6JWJJGMCn4E86xhKLJLfqIZ
+	2rHlzbD3g/DlC3hbV2SaFJ2hywtVHkcbGf7F7HvL6X4DZPT5+w7iWsEv258XUOom/m6Av1
+	sDJJaJgZmk27zMD1f/rKLs3Mr2NJu0tT+SUkxrBrdJJ7iMCZz1C2qtat2oJVrg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751709733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S7gL8dYOn6HntTdoNOII9WcyvTWhgCfl9lUbpV4BSls=;
+	b=rNYWzMQyLXhzp3rk6oAdNJ4riQJleM33X757xJJVV0sKCPdsOXDWifHu++6mf5hqn28UWl
+	IO/D0kVyNb7D4FAQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 14/16] PCI: hv: Switch to msi_create_parent_irq_domain()
+Message-ID: <20250705100211.8Lcszko3@linutronix.de>
+References: <cover.1750858083.git.namcao@linutronix.de>
+ <024f0122314198fe0a42fef01af53e8953a687ec.1750858083.git.namcao@linutronix.de>
+ <SN6PR02MB41571145B5ECA505CDA6BD90D44DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250705094655.sEu3KWbJ@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705094655.sEu3KWbJ@linutronix.de>
 
-When showing a parent for which clk_core_get_parent_by_index fails, we
-may try using the parent's global name or the local name. If this fails
-either, the parent clock's clock-output-names is fetched through
-DT-index.
+On Sat, Jul 05, 2025 at 11:46:59AM +0200, Nam Cao wrote:
+> On Sat, Jul 05, 2025 at 03:51:48AM +0000, Michael Kelley wrote:
+> > From: Nam Cao <namcao@linutronix.de> Sent: Thursday, June 26, 2025 7:48 AM
+> > > 
+> > > Move away from the legacy MSI domain setup, switch to use
+> > > msi_create_parent_irq_domain().
+> > 
+> > With the additional tweak to this patch that you supplied separately,
+> > everything in my testing on both x86 and arm64 seems to work OK. So
+> > that's all good.
+>
+> Thanks so much for examining the patch,
 
-struct clk_hw pointer takes precedence with DT-index when registering
-clocks, thus most drivers only zero the index member of struct
-clk_parent_data when providing the parent through struct clk_hw pointer.
-If the pointer cannot resovle to a clock, clk_core_get_parent_by_index
-will fail as well, in which case possible_parent_show will fetch the
-parent's clock-output-names property, treat the unintended, zeroed index
-as valid, and yield a misleading name if the clock controller does come
-with a clocks property.
+Btw, you probably would also be interested in
+https://lore.kernel.org/lkml/cover.1751277765.git.namcao@linutronix.de/
 
-Let's add an extra check against the struct clk_hw pointer, and only
-perform the DT-index-based fetch if it isn't provided.
+which does a similar conversion for the other hyperv driver.
 
-Fixes: 2d156b78ce8f ("clk: Fix debugfs clk_possible_parents for clks without parent string names")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
-
-This was found when fixing the wrong parent description of
-clk-th1520-ap.c[1]. Without the patch,
-
-	# cat /sys/kernel/debug/clk/c910/clk_possible_parents
-	osc_24m cpu-pll1
-
-The first parent should be c910-i0, provided by an unresolvable struct
-clk_hw pointer. osc_24m is the first (and only) parent specified in
-devicetree for the clock controller. With the patch,
-
-	# cat /sys/kernel/debug/clk/c910/clk_possible_parents
-	(missing) cpu-pll1
-
-[1]: https://lore.kernel.org/linux-riscv/20250705052028.24611-1-ziyao@disroot.org/
-
- drivers/clk/clk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 0565c87656cf..280d3a470228 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3594,7 +3594,7 @@ static void possible_parent_show(struct seq_file *s, struct clk_core *core,
- 	} else if (core->parents[i].fw_name) {
- 		seq_printf(s, "<%s>(fw)", core->parents[i].fw_name);
- 	} else {
--		if (core->parents[i].index >= 0)
-+		if (!core->parents[i].hw && core->parents[i].index >= 0)
- 			name = of_clk_get_parent_name(core->of_node, core->parents[i].index);
- 		if (!name)
- 			name = "(missing)";
--- 
-2.49.0
-
+Nam
