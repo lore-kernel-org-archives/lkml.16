@@ -1,117 +1,107 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F26F5383;
-	Sat,  5 Jul 2025 00:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9364689;
+	Sat,  5 Jul 2025 00:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751676076; cv=none; b=lvlO1+UXVefjCoyfjNS2JugKU8WHvCjYdZrZ1fAVGN2RqAtQY2k11zFD739SukmiSDXlGnwDgTBZacClGJyNkalow+FcTmqsxmlVfRGBu5JQxxnn0CsWETLBbzimhBfa3L2WefKAUqHh/XjngSgqvZ/9WAG8LXsupdoZGyrn1xw=
+	t=1751676748; cv=none; b=VFQgRLOYm2asYSp1fCyZUsIXiqD0REfX/ckbp0hwsqKI0FaCdy5Ibtw4yo66CWuLpQ2dF2dfhdfB4yeUaBblcmzLsLuUneQgnbeQYt+zlm0PHqwy3youRnmqdjCEsro0+0PSj3OGhFQtDxti+7lSWHz9oJe25nCPuNJu9ZaGalg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751676076; c=relaxed/simple;
-	bh=ONin8yVrjLkha9Ng7A3VH/2v7okB0ffiONDD/FneRp8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Mhq+XmBnTTVOX2IKz98fcLK3NV9PEXIaKY4LKcnqbesC8T5i3SxrIGV9YOYUhdMje+cHqyz+QekHPPew1IJ7zjU7wqcm4x3r3yyqkEb3MhQHyBMDhEkFXOXj2Pq3WK+rGnu/VSREhkqHkiWcPqdnuhlsce0BGSSQN122AgeJuUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFT9yV1j; arc=none smtp.client-ip=209.85.219.43
+	s=arc-20240116; t=1751676748; c=relaxed/simple;
+	bh=3u22m7V4oPUqqsklZhUxQdmmm1n0QAY2E6yerhJU/zc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gmTRU2tV97DjQ7qVJdNQoV3Uuy4E19xInCMMGXaQT+nivh2AhL0dHUp3O3jTrF56usz5+7sZEO2alNCsXANyskkXnqf40x6ALDna0TbuZ6v9+OXtB6XkSTvjP8Bwn0+NktzrxXCwb+scjwENAp1G8ZXzlyaVtcOGnRa8a4nb2+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLVEDaKO; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFT9yV1j"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6face367320so14264576d6.3;
-        Fri, 04 Jul 2025 17:41:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLVEDaKO"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b2c2c762a89so1059214a12.0;
+        Fri, 04 Jul 2025 17:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751676074; x=1752280874; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2jYqu1y4C8gZBwtmd5DW4Q1O4gV8eIhCjn6oLyYM0qE=;
-        b=GFT9yV1j7rEg/KndHhUHz1JayDTjbaCvyA5Ke37t6f5RLIGMHMsUQ792ycwEyI7s0K
-         ZATk1GpjANfY/6wjGa56Dt/lXQ1XrIVLjKk2Evsc636hGBe21NGRDY1Q+qRzQU3+VopQ
-         IuSwkV0g5efN/JNqfdrnNpKwVZe+neOl4os3waKCD0oxAP0H/mLLNcyIJ7zyn4g/kwjb
-         jbNlv6XBs0PQXlvykZirQtmyiaCvBH78MW2pFCvm+jRidj7TUYYbqy7q2Kf2o+Bt5E9A
-         OHtEh5sEtkCXIdWnOfde7wjYvQpO2iNn4SDSGq9BtUxjVKX1iD+zid9OPg/UDAsjsCvG
-         wahw==
+        d=gmail.com; s=20230601; t=1751676746; x=1752281546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EBHHcVa3W4XU2PHfzmcCgAEQ9gLAFZwUWX70qZtpbPc=;
+        b=FLVEDaKObmE2Ga/JDw5LQJsCZuQsec3CamzVHVQo1g0i7WAKOD/0YnfmBqBilKXBSt
+         NHTJIrcseVWmaANbj9zohMAMk7qXvV2mYfR3ZQgkSWbSEDOf7LSYLT31+3Pp+brFHWM+
+         lGfDpZXENwU3PXkJI3gQqkojvPs7EjCisNo9ntejp23UGh5C5hO6git1d6ZXpvBUQUuV
+         84A7QKPFihVfgX+IfRvcA4gKC4pveNnh1/U3EbcWyJUY4uAigi6Ctd9t6oN5WdjJRic0
+         ctfSlODXB3CS6yqK56U13cqBxUXcfFc0vxcH+H65HsQxgL3hrHDYv48vfNjo500SVxc4
+         ewbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751676074; x=1752280874;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2jYqu1y4C8gZBwtmd5DW4Q1O4gV8eIhCjn6oLyYM0qE=;
-        b=tl6G62JNbZ0h/GAaTzIEhsxE4V4m/lqAcBwT40BfnhXzskgeofXFWyLYra30dykdEn
-         P4tWsI3sTXOm+FuPP7tDgEdgthNDeqTij571vM7RTIFyVXm60pjAnurFPGKT4Z51iLeh
-         IDphiUjvPPkSX8IkrGJdxJ9GDrKsINSa0Lw6IARp5jJLktx6M/xCTDsFMouU9neE16bY
-         Ul7znP8xo6KyluyusQBZUVY3DAin38SCbC0ix1A+V/w5ixlI+X80mPC/1odIYzvveVEg
-         gScchmMk+KwRWBTjEJWYsynzDEfIQDDplp8/JJZfqbtnyYagCIJfzRV4LNAG5sgCfNKv
-         BMEA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5ayL3SGrx4pD915WNBX2/zFnUj25MYlBhLuczTEOXV1qkMjSWL79+ZjOC9VSVLovsck05tmRkER1/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxst1YnMldkB+7G3F+faw1ZfdAf/Xk3LnhwIlPYyNrHkmqmJhfR
-	f4o8cc48a05TzeHOkENuqXfjq9/fuTauAgpluBY6d2ZGB2py2rydyUmh6w0PhT4aDvzP5l9dCyE
-	X1XZnJD5UlYPvx8XHoR5vZy8hdt685Nk=
-X-Gm-Gg: ASbGncu706GozsPDCfCKYc2fMnwGlk4vkI+YZOW3J4ehIZtmaDQZrGag5dWm1uMHt8C
-	maNMR+Q2Fls8+yE5J1+qigRR+44/xK/NbheqWD/UZA2f9CgCURG3AwOIDQm9mZuq1VONQ69zaar
-	QY62vUu7jNi1klvwqIa24P7WSRfO2Mk6gJAH8XKYVgFufMEaD643yPY3AjClWfuuIMg8IBu2kK0
-	bIOuA==
-X-Google-Smtp-Source: AGHT+IHY9oGBxlpQmj0udq8hM2zlvfj7LkfGNTNzO4aq2lcPYBS4usESsq0qZiaWlVgYkfUaS0c+QplfM1byALByi34=
-X-Received: by 2002:a05:6214:1c85:b0:6fd:c80:98f2 with SMTP id
- 6a1803df08f44-702c6d7a645mr67563026d6.27.1751676074097; Fri, 04 Jul 2025
- 17:41:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751676746; x=1752281546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EBHHcVa3W4XU2PHfzmcCgAEQ9gLAFZwUWX70qZtpbPc=;
+        b=J1Ofiwj1sFtxKeJ5AadlDa9KiIgHtsMT+IKfIdKdUGOgk67VaCE3X7nrB2PYtDo9eD
+         kVA68nw7P7RcmhRY9nOyf/BUdSS19PlO1Og5ka07J54dsrNvfPN9K4Sh8CW17EgvTbfc
+         LTulfsi8z9qpPGX0nt++svWDhVRyN7zCEI0WgGoG1GxVRlJzFLOMCIhjoPaMqMlIStF5
+         D6s4dwy2ppE60qkuocUpB3pJKOLYB6pNPn1MV9McDliU/0Tluv7gRa7PWFsoRax63ILk
+         m7YSg1ghkFQtsIlyPIptPqCqyBB/vzpeSaB5/5mfyQtwsB+XpTWP4AKPspBP9ExG82m7
+         oh0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUppbUkCF6EuTsyJH86tgN2Vx7UPJ7vMsSCOvSvsrKwG5y9i0XjTkTHLAKNBtzQK0Xfp7g1cxMEus7qxMH@vger.kernel.org, AJvYcCVWpM0DHpw4QqyeTioVJjYqj6Zw4dJsSDHDzzWFiBn8uFhEVQay9xEjJQ2YfqtDQamEKMNCJWmCaf5Fyw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZT3eF7WCs3igFUz7IzN8AT4z4mCsHAzZQ9O1GM8a+Bb0ISR8p
+	3MAYiuDNWcUMIPe4XvvzPrLTxK7u+8ypsxr77LRZkHUXhbF1uSJXdVR4
+X-Gm-Gg: ASbGncv8tJDqk0CDdr0y8kd8vc59ZRHvu7xJsQiLRMRlJfjDhfEtW7nONJErfGPtAZH
+	pS6KtFrLPCLAIeVuIu/2ETFKh7uLD1hbDx1/hrLA/2mabOaN53A6J/WaWMaU4YSwVCktOqvQbTo
+	W2+M+w1M5tsQHktKtrhTXVYVwsEN5JlvBNrJ4yMLYmoKDR/JUS2e/SEo7mUBMxnHZV4/PJMcSU0
+	cbr5/Q4BaXCLFIXG7ibkGA2J/bo0KVOcIjLnRTcUtg7yDAA4+hbWJgIVNcI5IihLy81K3NlvrNW
+	znpl0A4vJ0m84RPurVlYmcstUBpHzTMf4Ku/NQl4qYI902H6cY0KVw8+t7s8PdX0P+EpoDdEBGi
+	rjtGdVqKYoFVk
+X-Google-Smtp-Source: AGHT+IETy9RFjqkXH8PWGuIoz96s1UUnuk4tJVLobGtymAp0ENBgGogW9RsuihyxvG3+LgkXqsfh1Q==
+X-Received: by 2002:a05:6a20:72a4:b0:218:bcd3:6d2e with SMTP id adf61e73a8af0-22724392815mr951793637.36.1751676745902;
+        Fri, 04 Jul 2025 17:52:25 -0700 (PDT)
+Received: from localhost ([121.78.21.77])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee63001fsm3018512a12.63.2025.07.04.17.52.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 17:52:25 -0700 (PDT)
+From: jianywu <wujianyue000@gmail.com>
+To: jogletre@opensource.cirrus.com,
+	fred.treven@cirrus.com,
+	ben.bright@cirrus.com,
+	dmitry.torokhov@gmail.com
+Cc: patches@opensource.cirrus.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jianyue Wu <wujianyue000@gmail.com>
+Subject: [PATCH] Add NULL check for OWT effect data alloc
+Date: Sat,  5 Jul 2025 08:52:16 +0800
+Message-Id: <20250705005216.279-1-wujianyue000@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Fri, 4 Jul 2025 19:41:02 -0500
-X-Gm-Features: Ac12FXxtlnxPHPVBiNIXhOdJcvTVigCmrZELQVNhM5Z26pxSx1XTRQqXR6HR4tQ
-Message-ID: <CAH2r5mubFOMTrOVPwzq20wEx9u1dU1emymFptOGjB6rs8FTkjA@mail.gmail.com>
-Subject: [GIT PULL] smb3 client fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Please pull the following changes since commit
-d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
+From: Jianyue Wu <wujianyue000@gmail.com>
 
-  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
+Add a NULL pointer check after kmalloc when allocating memory for OWT
+effect data in cs40l50_upload_owt(). If the allocation fails, print an
+error message and return -ENOMEM to prevent dereferencing a NULL
+pointer.
 
-are available in the Git repository at:
+Signed-off-by: Jianyue Wu <wujianyue000@gmail.com>
+---
+ drivers/input/misc/cs40l50-vibra.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.16-rc4-smb3-client-fixes
-
-for you to fetch changes up to 3363da82e02f1bddc54faa92ea430c6532e2cd2e:
-
-  smb: client: fix native SMB symlink traversal (2025-07-03 18:43:04 -0500)
-
-----------------------------------------------------------------
-Five smb3 client fixes
-- Two reconnect fixes including one for a reboot/reconnect race
-- Fix for incorrect file type that can be returned by SMB3.1.1 POSIX extensions
-- tcon initialization fix
-- Fix for resolving Windows symlinks with absolute paths
-----------------------------------------------------------------
-Paulo Alcantara (2):
-      smb: client: fix warning when reconnecting channel
-      smb: client: fix native SMB symlink traversal
-
-Philipp Kerling (1):
-      smb: client: fix readdir returning wrong type with POSIX extensions
-
-Shyam Prasad N (1):
-      cifs: all initializations for tcon should happen in tcon_info_alloc
-
-Wang Zhaolong (1):
-      smb: client: fix race condition in negotiate timeout by using
-more precise timing
-
- fs/smb/client/cifsglob.h   |  2 ++
- fs/smb/client/cifsproto.h  |  1 +
- fs/smb/client/connect.c    | 15 +++++----------
- fs/smb/client/fs_context.c | 17 +++++++----------
- fs/smb/client/misc.c       |  6 ++++++
- fs/smb/client/readdir.c    |  2 +-
- fs/smb/client/reparse.c    | 22 +++++++++++++---------
- fs/smb/client/smb2pdu.c    | 10 ++++------
- 8 files changed, 39 insertions(+), 36 deletions(-)
-
-
+diff --git a/drivers/input/misc/cs40l50-vibra.c b/drivers/input/misc/cs40l50-vibra.c
+index dce3b0ec8cf3..330f09123631 100644
+--- a/drivers/input/misc/cs40l50-vibra.c
++++ b/drivers/input/misc/cs40l50-vibra.c
+@@ -238,6 +238,8 @@ static int cs40l50_upload_owt(struct cs40l50_work *work_data)
+        header.data_words = len / sizeof(u32);
+ 
+        new_owt_effect_data = kmalloc(sizeof(header) + len, GFP_KERNEL);
++       if (!new_owt_effect_data)
++               return -ENOMEM;
+ 
+        memcpy(new_owt_effect_data, &header, sizeof(header));
+        memcpy(new_owt_effect_data + sizeof(header), work_data->custom_data, len);
 -- 
-Thanks,
+2.48.1
 
-Steve
