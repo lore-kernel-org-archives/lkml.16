@@ -1,124 +1,230 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969FA20B800
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 17:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400201891A9;
+	Sat,  5 Jul 2025 17:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751738008; cv=none; b=XtF7ECMRmBakcYIolwubrqaGBLRkHqXzfw2o1TcMOmyKpO0kLJcLgJ+c8EpOyqqNwOv/xKGq60ArfvQSH8jfOPszlOoiH3k6DFzVLZwGrrGbUMzOabFYcaQvK5sumhf3LsONTTxyfLTYE8YAfHIwd2VVIi+YMUrnz7yZxou7GF4=
+	t=1751738069; cv=none; b=uIdrVwDtP7yBNb+uHtKFj94aW++AJijlVf0dPFRzgczXcs6QAk4q3OYmw9oULVtvn2gKeC5T6Nn+OtoCH7FJ5mRSU2wgXbQVkkusnAO6Zv4V9tjrPLoEbIMWWHtlcJjkPj5kc8HJvbuiIFsAI4MLr203j0rxSruroOpfUX54OFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751738008; c=relaxed/simple;
-	bh=TEejV14HsRC5fLEWgeIeilpSyWrV9Qx84J/4EhI6W64=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EgFvydGPCfTBbp4k7WL8RepOYtRuPKi8WBxfgdWFx3G+G2VFeE98Rooz/GRMIjh9K318ha+d2G35T6hXIa8KoZudo2pWf2bmCVZA/Yq0I71CWV1la8Li7dpK/ZDfZkqPoNRH7i/oximGkwX1Ja8TB1UEJIHkzPl4CrEAynW2Ogs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TU+RM9N6; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751738069; c=relaxed/simple;
+	bh=rICWKtoMH+zyndlY0ZXbsoGpXVyzFl9DyaZBL8qQaao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tkqh0PX09v/5gcIymMaPjXq0to6P4oV9REjiop/84w1Dg9jWQqK27+HhbuWlXM0w2ipuH3QlvQEYbWsuETBGViAf3TFlvrOSV6sQEgIspMDj7Of0TcG2kw640UhMhU2IoojkoqeZzUpxBbUjSBRcSXjiPMEXh0wg2te6h+JIKQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ML1ZvgWs; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU+RM9N6"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-748e81d37a7so1092247b3a.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 10:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751738006; x=1752342806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NRnHRIkvKPiGwHQ/DdC9lszMjv0qPduuNx1iD3B8GN0=;
-        b=TU+RM9N6dL/02L7uCqfRzOhqzW5K5i0w+wd4S6V88iqRRsfD0RlbDvjX38nBqmzvXS
-         rNIpcGD/qXU69eBQm6baWXkhQJh8qvgO2cSr5MRr0Mj20dmQf4FHwfNVUMadFRYsHb3b
-         x1gB5/K8BHO3cknrc4WpnHxMOoCjzDYnjllChWOYmlRg7S1LAoj6+P1O1pEw3jiixDAE
-         mVc+/q4S5zkSLwZTsEHibfG9F7btK1oFevl+DZKny8A+KC3OzHM1tlbbemz9MNuy1fhd
-         4SqjLV//+v0VOHjDb2JSUH5ZcVAuJwly2vhZmS61/VPdMUnSYwLDvhfBbvZ57D9qU3Ue
-         hgew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751738006; x=1752342806;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NRnHRIkvKPiGwHQ/DdC9lszMjv0qPduuNx1iD3B8GN0=;
-        b=snjMTKn3Ia4BGv4s2IhCQMpAbqZenSGoH24Wd5xdc+3pD7s20OcDPYEO/aFVGyur7j
-         rv1txIod6+7Ysz1iAaKLn5C40VSa40/ogwt4rXIJ5Q1aXMdkogmDSC/xc7EE0mrZHd08
-         CoS2y7bCM8MEqRjaoQG5N+9PPzejt0ugCJ7qWmLIfYDseF1uRIE7HReFPKGcwCSqRpse
-         pNph0r43rjIgZSqRBqVAJnRtz2a6omN6L8MB+QIflL9jbV6gLNtWQvrHXhbPbFY+Fttg
-         wj2Ly3p8L5hAjncnVjhoTC004EGqeXydrOjcZApiOzXxiGWChhnBk4hhSYHiTf/ihmZ1
-         +B/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWYV3RJcGt+9kORq5hPR98CWWV+AABhOXzT7R6V/sBX/3ie+z3zqTPoe3/Y1xd3PxqZchpAED1N6LV9Itw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtMv43uaSp92GLxZF8LCh1AV24xrH+GiHAR5u/QeEFY3F/U25I
-	JmZ87d8uaC1ZGGHhxlX1jMjGOV6PnUE90Gak1JTwX96uyi1OaaVLWveg
-X-Gm-Gg: ASbGncs+RxpQn/GDPoUYzkz/SksvSGJ46i+EE+CMg54aZzrEk5azy0bAn1I3Wubq1bJ
-	h9BJKiTfWBkyCPeiUYx79uhksiTd71PzNWJiR8IUAQuCqJv/lD7+95m4Rfz+kjUlYrWXUWlZTXp
-	G6DlrfxuSnNC8N628Bq3XsuLYNtqu9HQ6+fSVE+Tr3YdpE7BrN6S+RzFG/Q8TfSSXEJjnj+f5wo
-	q6uXeP2Ca/asOQL29ISCchtL1ChTkBQC8YyfKL9yRX6Iv6xOJYG2aCpmnjBTYQ6gAAO1DH9kWDr
-	jh55axig2QYeQbD3qdb52Dd7mDyEmGnABI1guvzAI7yQKtFX21iODEalEPNAh5RgD+Indu3z1VA
-	8d7bBOW6BCr9JD/KHfUORVjuywNd349EDVVVFxrs=
-X-Google-Smtp-Source: AGHT+IHznKRnwTVFc0Lh48sxul6MzHr+FNSwk4CN2E/eToBZhWqZxMcHqv67W99+dssKncSnR7ihSA==
-X-Received: by 2002:a05:6a21:2d8c:b0:225:ed50:2278 with SMTP id adf61e73a8af0-22721e6fe99mr5061569637.32.1751738005718;
-        Sat, 05 Jul 2025 10:53:25 -0700 (PDT)
-Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:224a:13ba:b5c6:4ebf])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce359e90asm4596710b3a.6.2025.07.05.10.53.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 10:53:25 -0700 (PDT)
-From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com,
-	ocfs2-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
-	syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
-Subject: [PATCH] ocfs2: avoid potential ABBA deadlock by reordering tl_inode lock
-Date: Sat,  5 Jul 2025 13:53:15 -0400
-Message-ID: <20250705175315.225246-1-ipravdin.official@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ML1ZvgWs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751738067; x=1783274067;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rICWKtoMH+zyndlY0ZXbsoGpXVyzFl9DyaZBL8qQaao=;
+  b=ML1ZvgWsRhwVmeh2sUwnowU3t4R6HJej3rL0PaYoix3gGH6wLCejFYpZ
+   F3durz7P7GEkgEeWjoRZBXlrVfqgnl34/FCCsUSRcqOL6oGEGxhxw4hg6
+   8/fS9OP9DSDt25YlkuYrclvi8BMUf40fQ5KKZHN1Tw5wyIOqiFHObYBFy
+   oTbDzqD4+ze9dsIlANSSAcDMdxFWf5TenD1TtI8JnVXOy3vKfkeIR7KXM
+   +8i4JH0Vmkzv9OKDpmglTy51IUBIfhYvuHC3UieRwUPcSVg9It8l3A0I2
+   l2Y7sJeEHfIrlnbLVcF0FLIjnDc2biIlsFWjV+yjqv3CJnWttNCo7eWIC
+   w==;
+X-CSE-ConnectionGUID: /4ED3BWoQuq+ufeQfq2gQg==
+X-CSE-MsgGUID: SXLn6UnjS0CiOWpwnzJV9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="64711301"
+X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
+   d="scan'208";a="64711301"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 10:54:27 -0700
+X-CSE-ConnectionGUID: TZ/utm6MSFeQswsdWm9GjQ==
+X-CSE-MsgGUID: XN4Gx1F1S2GKMc4NbGXj8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
+   d="scan'208";a="159128439"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 05 Jul 2025 10:54:23 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uY75h-0004ed-0i;
+	Sat, 05 Jul 2025 17:54:21 +0000
+Date: Sun, 6 Jul 2025 01:53:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dmitry Baryshkov <lumag@kernel.org>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jordan Crouse <jordan@cosmicpenguin.net>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] drm/msm/dpu: rewrite
+ _dpu_format_populate_plane_sizes_ubwc()
+Message-ID: <202507060149.j2XwjHut-lkp@intel.com>
+References: <20250705-dpu-formats-v1-11-40f0bb31b8c8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705-dpu-formats-v1-11-40f0bb31b8c8@oss.qualcomm.com>
 
-In ocfs2_move_extent(), tl_inode is currently locked after the global
-bitmap inode. However, in ocfs2_flush_truncate_log(), the lock order
-is reversed: tl_inode is locked first, followed by the global bitmap
-inode.
+Hi Dmitry,
 
-This creates a classic ABBA deadlock scenario if two threads attempt
-these operations concurrently and acquire the locks in different orders.
+kernel test robot noticed the following build warnings:
 
-To prevent this, move the tl_inode locking earlier in
-ocfs2_move_extent(), so that it always precedes the global bitmap
-inode lock.
+[auto build test WARNING on 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a]
 
-No functional changes beyond lock ordering.
+url:    https://github.com/intel-lab-lkp/linux/commits/Dmitry-Baryshkov/drm-msm-disp-set-num_planes-to-1-for-interleaved-YUV-formats/20250705-104933
+base:   26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
+patch link:    https://lore.kernel.org/r/20250705-dpu-formats-v1-11-40f0bb31b8c8%40oss.qualcomm.com
+patch subject: [PATCH 11/12] drm/msm/dpu: rewrite _dpu_format_populate_plane_sizes_ubwc()
+config: powerpc64-randconfig-003-20250705 (https://download.01.org/0day-ci/archive/20250706/202507060149.j2XwjHut-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 61529d9e36fa86782a2458e6bdeedf7f376ef4b5)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250706/202507060149.j2XwjHut-lkp@intel.com/reproduce)
 
-Reported-by: syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67d5645c.050a0220.1dc86f.0004.GAE@google.com/
-Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
----
- fs/ocfs2/move_extents.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507060149.j2XwjHut-lkp@intel.com/
 
-diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
-index 369c7d27befd..ab460cb2c9c8 100644
---- a/fs/ocfs2/move_extents.c
-+++ b/fs/ocfs2/move_extents.c
-@@ -617,6 +617,8 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
- 	 */
- 	credits += OCFS2_INODE_UPDATE_CREDITS + 1;
- 
-+	inode_lock(tl_inode);
-+
- 	/*
- 	 * ocfs2_move_extent() didn't reserve any clusters in lock_allocators()
- 	 * logic, while we still need to lock the global_bitmap.
-@@ -637,8 +639,6 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
- 		goto out_unlock_gb_mutex;
- 	}
- 
--	inode_lock(tl_inode);
--
- 	handle = ocfs2_start_trans(osb, credits);
- 	if (IS_ERR(handle)) {
- 		ret = PTR_ERR(handle);
+All warnings (new ones prefixed by >>):
+
+>> drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:79:7: warning: variable 'sclines' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+      79 |                 if (fmt->pixel_format == DRM_FORMAT_NV12 ||
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      80 |                     fmt->pixel_format == DRM_FORMAT_P010) {
+         |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:104:4: note: uninitialized use occurs here
+     104 |                         sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+         |                         ^~~~~~~
+   drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:79:3: note: remove the 'if' if its condition is always true
+      79 |                 if (fmt->pixel_format == DRM_FORMAT_NV12 ||
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      80 |                     fmt->pixel_format == DRM_FORMAT_P010) {
+         |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:74:31: note: initialize the variable 'sclines' to silence this warning
+      74 |                 unsigned int stride, sclines;
+         |                                             ^
+         |                                              = 0
+>> drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:79:7: warning: variable 'stride' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+      79 |                 if (fmt->pixel_format == DRM_FORMAT_NV12 ||
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      80 |                     fmt->pixel_format == DRM_FORMAT_P010) {
+         |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:102:28: note: uninitialized use occurs here
+     102 |                 layout->plane_pitch[0] = stride;
+         |                                          ^~~~~~
+   drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:79:3: note: remove the 'if' if its condition is always true
+      79 |                 if (fmt->pixel_format == DRM_FORMAT_NV12 ||
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      80 |                     fmt->pixel_format == DRM_FORMAT_P010) {
+         |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:74:22: note: initialize the variable 'stride' to silence this warning
+      74 |                 unsigned int stride, sclines;
+         |                                    ^
+         |                                     = 0
+   2 warnings generated.
+
+
+vim +79 drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
+
+    65	
+    66	static int _dpu_format_populate_plane_sizes_ubwc(
+    67			const struct msm_format *fmt,
+    68			struct drm_framebuffer *fb,
+    69			struct dpu_hw_fmt_layout *layout)
+    70	{
+    71		bool meta = MSM_FORMAT_IS_UBWC(fmt);
+    72	
+    73		if (MSM_FORMAT_IS_YUV(fmt)) {
+    74			unsigned int stride, sclines;
+    75			unsigned int y_tile_width, y_tile_height;
+    76			unsigned int y_meta_stride, y_meta_scanlines;
+    77			unsigned int uv_meta_stride, uv_meta_scanlines;
+    78	
+  > 79			if (fmt->pixel_format == DRM_FORMAT_NV12 ||
+    80			    fmt->pixel_format == DRM_FORMAT_P010) {
+    81				if (MSM_FORMAT_IS_DX(fmt)) {
+    82					if (fmt->flags & MSM_FORMAT_FLAG_UNPACK_TIGHT) {
+    83						stride = MSM_MEDIA_ALIGN(fb->width, 192);
+    84						stride = MSM_MEDIA_ALIGN(stride * 4 / 3, 256);
+    85						y_tile_width = 48;
+    86					} else {
+    87						stride = MSM_MEDIA_ALIGN(fb->width * 2, 256);
+    88						y_tile_width = 32;
+    89					}
+    90	
+    91					sclines = MSM_MEDIA_ALIGN(fb->height, 16);
+    92					y_tile_height = 4;
+    93				} else {
+    94					stride = MSM_MEDIA_ALIGN(fb->width, 128);
+    95					y_tile_width = 32;
+    96	
+    97					sclines = MSM_MEDIA_ALIGN(fb->height, 32);
+    98					y_tile_height = 8;
+    99				}
+   100			}
+   101	
+   102			layout->plane_pitch[0] = stride;
+   103			layout->plane_size[0] = MSM_MEDIA_ALIGN(layout->plane_pitch[0] *
+   104				sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+   105	
+   106			layout->plane_pitch[1] = stride;
+   107			layout->plane_size[1] = MSM_MEDIA_ALIGN(layout->plane_pitch[1] *
+   108				sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+   109	
+   110			if (!meta)
+   111				return 0;
+   112	
+   113			y_meta_stride = MSM_MEDIA_ROUNDUP(fb->width, y_tile_width);
+   114			layout->plane_pitch[2] = MSM_MEDIA_ALIGN(y_meta_stride, 64);
+   115	
+   116			y_meta_scanlines = MSM_MEDIA_ROUNDUP(fb->height, y_tile_height);
+   117			y_meta_scanlines = MSM_MEDIA_ALIGN(y_meta_scanlines, 16);
+   118			layout->plane_size[2] = MSM_MEDIA_ALIGN(layout->plane_pitch[2] *
+   119				y_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+   120	
+   121			uv_meta_stride = MSM_MEDIA_ROUNDUP((fb->width+1)>>1, y_tile_width / 2);
+   122			layout->plane_pitch[3] = MSM_MEDIA_ALIGN(uv_meta_stride, 64);
+   123	
+   124			uv_meta_scanlines = MSM_MEDIA_ROUNDUP((fb->height+1)>>1, y_tile_height);
+   125			uv_meta_scanlines = MSM_MEDIA_ALIGN(uv_meta_scanlines, 16);
+   126			layout->plane_size[3] = MSM_MEDIA_ALIGN(layout->plane_pitch[3] *
+   127				uv_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+   128		} else {
+   129			unsigned int rgb_scanlines, rgb_meta_scanlines, rgb_meta_stride;
+   130	
+   131			layout->plane_pitch[0] = MSM_MEDIA_ALIGN(fb->width * fmt->bpp, 256);
+   132			rgb_scanlines = MSM_MEDIA_ALIGN(fb->height, 16);
+   133			layout->plane_size[0] = MSM_MEDIA_ALIGN(layout->plane_pitch[0] *
+   134				rgb_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+   135	
+   136			if (!meta)
+   137				return 0;
+   138	
+   139			/* uAPI leaves plane[1] empty and plane[2] as meta */
+   140			layout->num_planes += 1;
+   141	
+   142			rgb_meta_stride = MSM_MEDIA_ROUNDUP(fb->width, 16);
+   143			layout->plane_pitch[2] = MSM_MEDIA_ALIGN(rgb_meta_stride, 64);
+   144	
+   145			rgb_meta_scanlines = MSM_MEDIA_ROUNDUP(fb->height, 4);
+   146			rgb_meta_scanlines = MSM_MEDIA_ALIGN(rgb_meta_scanlines, 16);
+   147	
+   148			layout->plane_size[2] = MSM_MEDIA_ALIGN(layout->plane_pitch[2] *
+   149				rgb_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+   150		}
+   151	
+   152		return 0;
+   153	}
+   154	
+
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
