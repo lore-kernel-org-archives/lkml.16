@@ -1,147 +1,151 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51CF17A5BE
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 19:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2806074BE1;
+	Sat,  5 Jul 2025 19:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751743193; cv=none; b=Qj52QSCDRJayYgXsjLJV0nzt/8xqA6nMiLtkmFLPlFfHWs/xqWuryEFHo9a/TuwS9Dwv51EFqa0nz5wcZklSm8OTWssAZQSbdxmJew99UsRAc8zUBhOExUT04WPC5NeH+ziDDKRDBP0AANEBlgA8E/TzAy7EnOYmoWf3A7hldRw=
+	t=1751743671; cv=none; b=PfICckfrIO6E0StyUI7KyLc+sankj5f2PP7VH2fwGEd7fX2NrG3zV1xH8dtXphN7Yq08ZA5s5svDfVKaSpAhfvuoBW4VC1eZe0tGoZy6xXgfFLUzGNLADFtwhGf2enXHub1g1zCL6BOwLKOXUmFOOMi9Y6CEtmF1WK0I8qgfrCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751743193; c=relaxed/simple;
-	bh=i4WxrmKI9aWJ6AEjMvCbpjm6UX1wknH9/ZWOyCQ9puI=;
+	s=arc-20240116; t=1751743671; c=relaxed/simple;
+	bh=noCGX8JTMgk+VkhE3ajHW0gmlbUMW2TalG2eHJ7gQio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OMUTPBA52sr6HrOBqP830O9f8evv5/f9ISZWFJXbXvyt02PayxjY+4XejgYA6NXkCC1ww6tuwEGjmE4GzWcYP34BVs6DacW2R2irI+SRCLUwM8cJ+Zsoi0kVaYwEA1nWGngdL1fmXh6gj+4Y6s2n7ExBq2GBZEbKy+H84w+t6Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Hg4m6If+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkvT7t1yvIsZm/2zx2FwNGjoxABZ4NEa5NeeK1eRdcsLafG9FcGtyiJCu79LZMHaS002sVsOsiuO0qWV8G3AcBIii0MRiaG7q/KjaxtVXqqbRtesN1kPa65f12FxDjb0kmU7sSnhmg6F7mGlQCWh7+Tzn17VVv20Z9OPmCE/G9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWVVhANd; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Hg4m6If+"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 565J28xa019689
-	for <linux-kernel@vger.kernel.org>; Sat, 5 Jul 2025 19:19:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=h0r+raSjr3qG0pDwi4k/j9K+
-	amUMQGQ1pbpuuZU5sz8=; b=Hg4m6If+4HXMvUgCd89eTqWygkAs5ZjYu7MAaC2N
-	umwQ0U4X9fdcF3B24dGZ8RySl4FRkfBgM+v2QTX2+aw3BgIflky9qEL9HkDDVGK+
-	jIUTsVSTYLCTS/AB//bqqSn/U2q8+iTSGUQwCtRSNVK2im98q56fqfc9kupmjsGP
-	Z7prLTlKUzkNkqHFejuTAUCh3/p7bgTZRui1bWSm0RTOh+QQnfbZY8FlR9JVxek3
-	/MzEj5TbRJOcYsHZL9JxPsdov4dsBjFL6koEgaQXZae64oTSSR0RVb0w2FZ/gPoL
-	gFlsl91FciN7fIEYgNriwIHDUKdV57CCgsRkxGilkRvG2A==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pw7q1pj0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 19:19:50 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2872e57so292085285a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 12:19:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWVVhANd"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2da3c572a0bso1664078fac.3;
+        Sat, 05 Jul 2025 12:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751743668; x=1752348468; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8Uvi3Ssl9dhbiyb7WG5zZNIM65dwWn2BHeyM8ec+zc8=;
+        b=AWVVhANdrekj55Kn2rJMbKCt0u1KDNOQ+5du4nAYqgS+LNrn2Nml5IQv5i0hVzpOD/
+         SqvUqJrtdMa5ZeXChJBgM36q3ONv//VdHYvhxl/W4r/41cpkA60mdCZv4uEpwZCJSEMz
+         Dw3GvyVAZr9dOJEqpDMQ4Qzpkz3KjB21ErFkQxVo1IymUXAO0LHVqlKIbNhLUo5qMzJq
+         c6/XKxuz4te+o1IllsYulyeY+x8VORAKs5GkU13WQCl+TkKaSCQiG7mCFpbHoKrSNRcA
+         C9retiz8Eati9DueUYuHuv4fyW2xVldWDSboWYJ7M6PRa9H74R0wjowQGN6oNqAvas52
+         a6vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751743189; x=1752347989;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0r+raSjr3qG0pDwi4k/j9K+amUMQGQ1pbpuuZU5sz8=;
-        b=wUfDCkt9coqzuQjAgh5H9VliqvetinIDFQwH3invDzRB9d5xqRWVZGNx9ReyYHQB0A
-         UhrXpgNos6XvGMmnecZIpqgoWY3pryWoKPft+VZQ4YEA5ANkrICfc1KMmXIzKwL8iQri
-         MjmUdHDgZLggrx69zIuO+9pnSZCGMhzOSKScs6EbNiYLYRG1h9U3u+jhTJ3ZHntU/EYw
-         39xsexho/VCbgBHNoTfSiEG2HsUz1zOTNoyrH0rOR7m5hHb+YDK+RHH6x9iNFS+yl9eU
-         /++vZwWsSWB2g0Etp7mr1BQfu6QLE8qKZMGneNGC20jFc08+Wxf8ejhxng4qswqfbLlT
-         8A3A==
-X-Forwarded-Encrypted: i=1; AJvYcCX9I2BR6/1le9IOihmLIIj/J6gk8w1tcxE/kTjmEiyEEKGD6tIwEafx+RMNzTv9PyrLIATivUk32F75CDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbSenP6kxte+m3FkuK53b79327dHwH13PcFN084vX02FktduuO
-	FFm4cha995svJ8X65QZbZ3w+qRf++6o+zzvsgyhVmG7+RgaR7aWoHFk2zgb1zG1J0J9sfWxnNXP
-	1PIwLPkaARMA/Ebw3RlU6QCBPAJNoEB6PlDeLVZq9vNRobTXETzEtR1SUCXnCraPJjMA=
-X-Gm-Gg: ASbGnctSXMcs4RGWLgWFrruvEzkp2zFOoolE2+H3HVDXaLhJdFqxp6zWRr5mOswN/xq
-	1hY+o54dgyU3UUUvyUIhbqvKiDSsCWlqyf1uxV2WiH2DtLG5jMmwrwyh1OJeE0Ba513nPgt76jA
-	Ckg1h4XroR4ZAST7GTTVl2Lg2/puycan+f9KxNl5rDPUaqHPa5e3G2L5xTNmDlYFadfWXcEc6P1
-	aT8Je3xqLhdSEps51BTGuIZaAkBrPsuvlrQ7FkXSEXhyHaciadFDsn7LDCiQFDvenXKc33rT7Sd
-	T2KfAUjc4yhg/uA2lF/1/iCeRLib60mSJQ/L7Le4DwRs+2/x4mqP7jwb/AMWS1Zk7zIW19Eas1M
-	9VpTGIOLf+Jc/J0B0OLD8nPywxkZXFNABMoM=
-X-Received: by 2002:a05:620a:2913:b0:7d3:d156:37d6 with SMTP id af79cd13be357-7d5df102b4amr936998485a.6.1751743189418;
-        Sat, 05 Jul 2025 12:19:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAxmBHCJAc86I5mwaeJPv9D+3BoHZHqIdYljEW4zYDWfi2OGcqvLdGuYK+a57w2SLv7bRiaQ==
-X-Received: by 2002:a05:620a:2913:b0:7d3:d156:37d6 with SMTP id af79cd13be357-7d5df102b4amr936994885a.6.1751743188975;
-        Sat, 05 Jul 2025 12:19:48 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556383bb16dsm669107e87.24.2025.07.05.12.19.47
+        d=1e100.net; s=20230601; t=1751743668; x=1752348468;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Uvi3Ssl9dhbiyb7WG5zZNIM65dwWn2BHeyM8ec+zc8=;
+        b=ogQcQ1X8LXuiZP8hC72f3CCKkJjh/Z2Vj/0RZey3DH3I+d+PFBhy1CoMhfvPAENLBY
+         hFTYpjUn3BgBEfTjlAU5FHwDyhqaZFiNltNHym2iNydTjxwzp8JBVCFo1wUynrX62gD6
+         Nskblkac3FaLEliG4wVu0XzMaA92kOQLLA/BTEkBEJD5ljvQjL/S5hdn83F+oPVGzVq5
+         ORxVILDj2ygANph7CHqjoJVUnqu3ymiqOoENUZeOEluZWxvaeCIGEBWicpgtQnIVtRTj
+         Z7VWCDWTYrjk6Uz0rm0cZ2tkYqiEmARpjeW3qlY2ZI7Jg0CHUxHURm0EQC0ntcjbyfBf
+         6xMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaMDIGbV+6sTfYvl/93tkrvSVPUr3nxa4gOV+zOOOpQdsv88uctt1W/nouUKq9CICdrSSqmqFwB7g=@vger.kernel.org, AJvYcCVP66nDn5iAiRvMDug7ngneKkukJSevypMWlPx4ylpKf4v4akh2FF6E1Cyk6X39AdAf0mksfKNDkVzI9e5kDA==@vger.kernel.org, AJvYcCVwBns4uXLLZs/xOYpQiCxLavTZD/ZExe1z6u1NKsUmabd8DF/DOfI5TRZ6fwmK03fHRRgekvv2brNv@vger.kernel.org, AJvYcCWMYostwlkjMlgEDUfHGOvBocO6mrJBEO8X+SX8naPEVJuaL4Ap3RI2g22DcZa1l81h10qZCSTVby8oHc6m@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgi0ZYHe7O7jmiP69/1MuEevEQg85AVO3WLmds9OwcreNf16zI
+	HxtIw6dTkDx21AVoKqxPW6OJ36P4tRrpdI3ioV61H5pdp2mhPMbd0MWP
+X-Gm-Gg: ASbGncvV4p8R77o2nP5/ZfgRSXJds6mzaHTRrdYkBJBfcJglbJZ33YO9rYHfRqvdMpi
+	mdiPVqu8dDFeg+kKkE3kKA6S18usGgURKeIeZlv/9h5VMf71S0fJu8mo9B6NdznY9bfD84T6rbl
+	R+f7NzT3CPtUzSIh4n/XDzctFfJgZTrqOk2M3+BEZNkKHUr1udQHUkTdSV9W77piMaYBjPaA1XY
+	VsQ63Zb7amO8vukh/2JQ4v82J7d8e7c5NtIIynCBRUpPnwHuhbxw7whBJDk8k+z1hBCoIawgP40
+	qOIWIgKaRDVkrSlEzugzQoGLlufLRbC/tDinBJVknCecmw8u5MPm/xu7Sm1PJi6GYvoWoeEfSgH
+	J
+X-Google-Smtp-Source: AGHT+IH5/ekfod+dK4/TpB2Sd1DQKASQYJbwHuxsumDvUc8YMsc2FL7gyW2TpiM3j94mzw4K5mpHqw==
+X-Received: by 2002:a05:6870:ae08:b0:29e:3c8d:61a0 with SMTP id 586e51a60fabf-2f7afcf1e5emr2212398fac.8.1751743668059;
+        Sat, 05 Jul 2025 12:27:48 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:5c68:c378:f4d3:49a4])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f7902dbf5dsm1226132fac.48.2025.07.05.12.27.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 12:19:48 -0700 (PDT)
-Date: Sat, 5 Jul 2025 22:19:46 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: "Colin King (gmail)" <colin.i.king@gmail.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Hui Pu <Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] drm/bridge: tc358767: fix uninitialized variable
- regression
-Message-ID: <m4bitkuvouisk6ebhnz6yzkmrojuocos4tvjjmxahjg2dp2kgm@sxjmymi445vy>
-References: <20250704-drm-bridge-alloc-fix-tc358767-regression-v2-1-ec0e511bedd0@bootlin.com>
+        Sat, 05 Jul 2025 12:27:47 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Sat, 5 Jul 2025 14:27:45 -0500
+From: John Groves <John@groves.net>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [RFC V2 13/18] famfs_fuse: Create files with famfs fmaps
+Message-ID: <custjjqmvxt2u3wfjztwjdxvdxr6vbpvcoptt4vvv2itt7d2os@zqg5es4g7xmf>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-14-john@groves.net>
+ <CAOQ4uxgFoEByjaJPQv_QGMzGHLx=1hZvQcYjxM_ZZi_D063HEg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250704-drm-bridge-alloc-fix-tc358767-regression-v2-1-ec0e511bedd0@bootlin.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA1MDEyNyBTYWx0ZWRfX2rKY/MbttRi5
- eR5wFTx17xtwS16i6zRMOBAwOOVMXuAHpB0a4HL/3pbmjd9U/uxHMJf7TtPMHqkJCoLZTgHSjjn
- hdkAh7RDdsSvHn5xrGL6aRLhIsM2aaHB8iNJ3Ste4gmsFGtO6dlTJ47N28vieM+5w2TSrRKduQN
- O6zE+N+DLd0Rkcodwe7scZHcF48nQqMslZDIwfrU/22wWGyvtNpPO4iDQhlUmZKCXcKt60KabBr
- ogx7R0zoQwkRsR9JCyY3diS3OyM6w64y3hdmO1EF/CAgwrm8BwC69fOPeakPoZ+RCUDQFvL8aRI
- 5Vy2cqs1zjo6sf5pGOSRlkB2z/DvcnDJntUzYX2Wqj8RiZFMJ6+FC/crh8K8UhMkiJNrTd5/Gwv
- FQkdxEut+dtuPCOAafCBFgBRCpxuPigaDoat7iacCSSmBWpCGt+6aZJ3PLGmIIeNht1Vd3WV
-X-Proofpoint-GUID: cuv2GT_lnj4nusqDRQtry5bdOc7LyR_W
-X-Proofpoint-ORIG-GUID: cuv2GT_lnj4nusqDRQtry5bdOc7LyR_W
-X-Authority-Analysis: v=2.4 cv=SOBCVPvH c=1 sm=1 tr=0 ts=68697ad6 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=P-IC7800AAAA:8
- a=EUspDBNiAAAA:8 a=Nrv5o8RMzHmR80szmAIA:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_07,2025-07-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- impostorscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507050127
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxgFoEByjaJPQv_QGMzGHLx=1hZvQcYjxM_ZZi_D063HEg@mail.gmail.com>
 
-On Fri, Jul 04, 2025 at 01:30:18AM +0200, Luca Ceresoli wrote:
-> Commit a59a27176914 ("drm/bridge: tc358767: convert to
-> devm_drm_bridge_alloc() API") split tc_probe_bridge_endpoint() in two
-> functions, thus duplicating the loop over the endpoints in each of those
-> functions. However it missed duplicating the of_graph_parse_endpoint() call
-> which initializes the struct of_endpoint, resulting in an uninitialized
-> read.
+On 25/07/04 11:01AM, Amir Goldstein wrote:
+> On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
+> >
+> > On completion of GET_FMAP message/response, setup the full famfs
+> > metadata such that it's possible to handle read/write/mmap directly to
+> > dax. Note that the devdax_iomap plumbing is not in yet...
+> >
+> > Update MAINTAINERS for the new files.
+> >
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  MAINTAINERS               |   9 +
+> >  fs/fuse/Makefile          |   2 +-
+> >  fs/fuse/famfs.c           | 360 ++++++++++++++++++++++++++++++++++++++
+> >  fs/fuse/famfs_kfmap.h     |  63 +++++++
+> >  fs/fuse/file.c            |  15 +-
+> >  fs/fuse/fuse_i.h          |  16 +-
+> >  fs/fuse/inode.c           |   2 +-
+> >  include/uapi/linux/fuse.h |  56 ++++++
+> >  8 files changed, 518 insertions(+), 5 deletions(-)
+> >  create mode 100644 fs/fuse/famfs.c
+> >  create mode 100644 fs/fuse/famfs_kfmap.h
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c0d5232a473b..02688f27a4d0 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8808,6 +8808,15 @@ F:       Documentation/networking/failover.rst
+> >  F:     include/net/failover.h
+> >  F:     net/core/failover.c
+> >
+> > +FAMFS
+> > +M:     John Groves <jgroves@micron.com>
+> > +M:     John Groves <John@Groves.net>
+> > +L:     linux-cxl@vger.kernel.org
+> > +L:     linux-fsdevel@vger.kernel.org
+> > +S:     Supported
+> > +F:     fs/fuse/famfs.c
+> > +F:     fs/fuse/famfs_kfmap.h
+> > +
 > 
-> Fixes: a59a27176914 ("drm/bridge: tc358767: convert to devm_drm_bridge_alloc() API")
-> Cc: stable@vger.kernel.org
-> Reported-by: Colin King (gmail) <colin.i.king@gmail.com>
-> Closes: https://lore.kernel.org/all/056b34c3-c1ea-4b8c-9672-c98903ffd012@gmail.com/
-> Reviewed-by: Colin Ian King <colin.i.king@gmail.com>
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> ---
-> - Link to v1: https://lore.kernel.org/r/20250703-drm-bridge-alloc-fix-tc358767-regression-v1-1-8f224cd063c4@bootlin.com
-> ---
+> I suggest to follow the pattern of MAINTAINERS sub entries
+> FILESYSTEMS [EXPORTFS]
+> FILESYSTEMS [IOMAP]
 > 
+> and call this sub entry
+> FUSE [FAMFS]
+> 
+> to order it following FUSE entry
+> 
+> Thanks,
+> Amir.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Done, and queued to -next
 
+Thanks,
+John
 
--- 
-With best wishes
-Dmitry
