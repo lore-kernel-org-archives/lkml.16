@@ -1,68 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409E643159
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 15:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496FE43159;
+	Sat,  5 Jul 2025 15:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751728538; cv=none; b=qxStKGmQR7TvBy7wV8qjp+KuT52R7GIKDJfF2pxn5kvRWzXLiZqt9TsoUU+Kv4TyURpqWCKlDgyHSin/Y6sx1fbE0sxg9kfwCeRxq/Tbx7PSojphTPdfDEo485/8mkMt7JJLgOW5j2G6A3yZ6/jNU/UBOg5JOMuRsNem3GnwU8s=
+	t=1751728588; cv=none; b=MaRpufC3CwuIuH7pAvfxkqDbN9fy7nv6OfTNW5gQx00BYjsfBBuxtzrqyMwpe6JMqILGbUD21DsTwcWdzNESQUMa+lcIEf8Lr1TYSOe32+62l8YiCzFUuVES6z/SmVFQ7J92YlSUETrKx1fdiMtyE5wWcrmK251EFZsfrnHzuro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751728538; c=relaxed/simple;
-	bh=hjrcl62bVAtqXxfz6+YFsw9u2KuCe9nnoZCDeiHxWwA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=fYJVqWDQBaXTgeZyoosu3Aq1sOjt6rXOvv4fMZahU3d7G0e7+QBKP/zxRy6PP9/szO5NiZ1/VgYtDhB5ePBJSFSUHgXfh3rAUCNLq/xsdo+Qu4VFAfcqJ04C1jO05UuqByAik9JjkkIhyBq0KNYFlisK/o5M8HNprqQiDjotFMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruuavuJV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751728588; c=relaxed/simple;
+	bh=IVbkd/IVrWWUlEr5Nl9gyhToDCubslv31uTR8EVwGyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fdOf+MoxdjAPGLmpEna9MTzD6jO9TGzspUbOQN4xe7WKqGyHpeXSjNt3Q9HHf3k0uG0Lv1XWr7qFuXBRlEi1qStqZ0v7uMSl36Gmpz8bmHNuV9Tg0GooWEGVGi3ZmkdFRSd80tDMXlPMh4H8/W7zMuSyO338sptAuvyJauTrM1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U1AVvgxR; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruuavuJV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99489C4CEE7;
-	Sat,  5 Jul 2025 15:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751728535;
-	bh=hjrcl62bVAtqXxfz6+YFsw9u2KuCe9nnoZCDeiHxWwA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ruuavuJVWkLPtdNyF2hgeDlAuRylaWBaoqCIK2W/I14P8256mDSFxKj5qeOoExAMt
-	 oa+kp1iMOnVs2kDDaZir1vdeRQLeB1+t8mRLWbAqVOd6Vd3eGV2r3godSnl+9p0gj7
-	 cTJrgVj20cqK6TN79SJV+QM35HFsdkWZfpK5l/Xr/rh0vF19NsE9nTVcYy9bpFuIkS
-	 IRtRhZeUuFG1j0y4KSRKysBmoZz9xAJB/iGBJIKo22PwAAzzqfh/9fMMNaJ6EQeBqs
-	 dOo8UzCnhe9EvEscKSIsHOSuBNTy9q0jKDy26VFLDl8aMfURq6K1oXg/St4bFcMAEv
-	 IHe0+Ku9QNGWw==
-Date: Sat, 05 Jul 2025 08:14:33 -0700
-From: Kees Cook <kees@kernel.org>
-To: Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org
-CC: Oleg Nesterov <oleg@redhat.com>, Akihiko Odaki <akihiko.odaki@daynix.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_23/23=5D_binfmt=5Felf=3A_Warn_on_?=
- =?US-ASCII?Q?missing_or_suspicious_regset_note_names?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250701135616.29630-24-Dave.Martin@arm.com>
-References: <20250701135616.29630-1-Dave.Martin@arm.com> <20250701135616.29630-24-Dave.Martin@arm.com>
-Message-ID: <D620FCC4-4A72-45CB-AF16-456E2B49B5C8@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1AVvgxR"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234b9dfb842so15144495ad.1;
+        Sat, 05 Jul 2025 08:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751728586; x=1752333386; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ppkGylIpL3e5C3TVURbfkBpVr8RCQTzH0w7GOalefMw=;
+        b=U1AVvgxRr/Hx3pkcc1t9q21+qmypQ5kLXm8AjrmwJI/unmmV5nJyti4LTf25pBtGQi
+         co9GOLDcB3EftC3NviKJGTmutfZXCyJ9MjotKcyS7tpz+V0n6o71wRhbfUgGPxhydfNi
+         Yam9mzTgaDQfaprpQV8Np5YxswVcuduvGx46aJahVM6+MAYUW7UC+ytdfsRUEotgSuGU
+         sZFi7DebWP0jXggEMKPcBv5LWRDnjfxWpfrNIZwpDCbuw6CG8ShyNi2frkc1OsFfA5nV
+         ZUidGpfeE9r7QymzhjV9gsvz+fReHZ88RNdJURSEIoGSiGfZsXIZ9baAx8NkJmPHsSXj
+         s0Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751728586; x=1752333386;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ppkGylIpL3e5C3TVURbfkBpVr8RCQTzH0w7GOalefMw=;
+        b=QKapVNVlAfHkDL9slsyibFXzaSLlcXtuMhKh0i726UoHDUzIVsPcTtSF86A1BHvXwZ
+         LgXLxAxk7OxS9m4VwsWjs9iABJJ+psvb/xkrIKpdVsOWnq/BzwlVVgzg6Hmh7AHyjwuN
+         72l8lzO/SWWFDR2Kz+GRDiCzObQJdoFN1Bi20BhEv34ZOa9rFUURyNC1iqb5AcVZRgb2
+         2WYqepFGnX7CVCb0AKPJbSCkumHXYcBj05M3V4zITGfErAtFI/Kh/rv2lIYGt8tOvUzQ
+         U0YrKfpwXZbs2h/D4wbtpuuz92WWuuuU0clUhbg64yNWawm6n1DWCFRAEIgb8bkUN3DS
+         0HTA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+Fpm9pacN+Et7Z24cmUrwpZm/+PN9OinPoGXIS/dROl+qQxmhMpnpb15q5yBevrBPZExCtKF2zXut6ptTJu4qvaj1@vger.kernel.org, AJvYcCVBBNi0mplFmsqE/kbiMEgWS3yfFls9OoSG1i4a3ElDbqQzWA2w56TKXJm0fiwkGqiOpzLjQ83M8kgZpbU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQG1hNaVAHeDOQtbCho65na70fnmdfumnLWhqmb9xpIv+GqJiP
+	067LDYOLAozTnZEM79SAIPzQNOdHDt6V2RcIk30E7lnKk8WyzADgcVjaedyXKOGvTkU=
+X-Gm-Gg: ASbGncva/aYB9cAxCECHscaz6v3iUvnH5ztgY+wEKjJhigfQHsQLsVe0ejOeXriuxZO
+	ALasJ0odvC/csfsnic/cn83U/Mtd22n1SsPTXMn7YUeVI025pkwo67D6/jis+VfDBYfAXY63T+O
+	COcjuZqE3GMv6vp9TfWb5WtXxWxFqf7mfRAPbBUZ+v0uzGBvuoyucUsEnLb789ofV4OqbwiIVwA
+	f0T2Fa2RYBnCKw12gy6T7veNiUH5K5xdHORP9bcogXWn8VCqP18522g7kMiPAQouRnb2myELJ7A
+	QnC/jDhMdmrptJMD9iKmkndS4wJHCcTQCP3ogfQv70hB8rQLyjDmW+pBJi6sOArpzwKQPBVksrZ
+	v
+X-Google-Smtp-Source: AGHT+IENTRwP9/XEq552vcsWILcUg7zV7ZKO0TjnKhOOgaoX4RsFlYOE2TspM2LWSIIQ4x3wJKNKKQ==
+X-Received: by 2002:a17:902:f609:b0:234:98eb:8eda with SMTP id d9443c01a7336-23c8755bdeemr102662375ad.28.1751728586446;
+        Sat, 05 Jul 2025 08:16:26 -0700 (PDT)
+Received: from gmail.com ([2402:e280:3e9b:22f:a1d5:dc5b:40df:a106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845b962asm43463035ad.237.2025.07.05.08.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 08:16:26 -0700 (PDT)
+From: Sumeet Pawnikar <sumeet4linux@gmail.com>
+To: mhiramat@kernel.org,
+	corbet@lwn.net
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	sumeet4linux@gmail.com
+Subject: [PATCH] Documentation: Remove duplicate word size in bootconfig
+Date: Sat,  5 Jul 2025 20:46:17 +0530
+Message-ID: <20250705151618.4806-1-sumeet4linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+Remove duplicate word size in bootconfig.rst
 
+Signed-off-by: Sumeet Pawnikar <sumeet4linux@gmail.com>
+---
+ Documentation/admin-guide/bootconfig.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On July 1, 2025 6:56:16 AM PDT, Dave Martin <Dave=2EMartin@arm=2Ecom> wrot=
-e:
->Un-migrated arches will trigger WARNs with this patch applied, and
->arches that don't specify codedump note names will always get
->"LINUX" -- since the whole point is to stop guessing the note name in
->the core code=2E
->
->On _unpatched_ arches (only) this is a potential ABI break for the
->NT_PRFPREG note (which, for historical reasons, is a "CORE" note even
->though it is OS-specific on most or all arches)=2E
+diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+index 91339efdcb54..7a86042c9b6d 100644
+--- a/Documentation/admin-guide/bootconfig.rst
++++ b/Documentation/admin-guide/bootconfig.rst
+@@ -265,7 +265,7 @@ The final kernel cmdline will be the following::
+ Config File Limitation
+ ======================
+ 
+-Currently the maximum config size size is 32KB and the total key-words (not
++Currently the maximum config size is 32KB and the total key-words (not
+ key-value entries) must be under 1024 nodes.
+ Note: this is not the number of entries but nodes, an entry must consume
+ more than 2 nodes (a key-word and a value). So theoretically, it will be
+-- 
+2.43.0
 
-After all your arch patches, aren't all the archs using the correct values=
-? Is the WARN for new or out-of-tree archs?
-
--Kees
-
---=20
-Kees Cook
