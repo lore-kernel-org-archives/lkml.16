@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7980A2AD00;
-	Sat,  5 Jul 2025 15:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8893A1E5B88;
+	Sat,  5 Jul 2025 15:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751728371; cv=none; b=TUmI1kiAey/OBeu5yeJlqzs4MX/jjD9LPVAqOo2clrQQuVpAsLukyK9J/ZASkYp8FaH38h71CD9ZwsN1sZMdVNRrJHmXcMaftEQJSBoXFrPb5guHiudJTlb6fwBhOSpae7HUkstFUQqnJYxVM7E7qpL09kP/YXMRs2sI6HwmxnY=
+	t=1751728394; cv=none; b=QHeart0+4WV83641tsZ9iJc6oWRyD1LvSwFxKocOgUmmX5hK/tKV8aVBWDJDYSnDaNjSK1Rh28F9BjkUH05+UshPm1yNokcWnQ93oH2DO7w4gMp2M772NcbkOZz6pSDE/6wJeyVTlKRuCrP9YqXQnwi1t1cJ+RSzIXEnXN4pQTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751728371; c=relaxed/simple;
-	bh=TIM6e5qHp/6nVvPVrYN8jvey9AfXNCweNKEmC77aLFs=;
+	s=arc-20240116; t=1751728394; c=relaxed/simple;
+	bh=iZ2GtQJZx8wcOuzHRqZc6ez+U/MUhqkaNbTM8nI5K8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/xb9ieF3DZtvJzl/Pem9v8MKMt/WzxFOzm+tDYAQiZyw4tdaasYARbYrqBo6ItT1BbrY8Mjl+GTns/MXGOIVxaeYRmnyoPdOmZxh3Pn4gjtwZcEjUuCDgQcIiz0QtkaRmJ6yr3Wzu8+DX3aSf7xeqTfYPwKvHHRcEP0eFTVOv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NA/UlB7Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IBUhOpapvfg8VXxVpujScVHtK3hmityk64QWoMlabx8mIb9ix/hh69ou6K3U56dzfP/c25Nul596NyI97uEB0JSGJUBOBjIsZL6h5C07epgYH7hTkWaN4DR8hwKzub7XwH/eMVzbKWDww4RMLbufV0sG8SuUDzUN4XU3gIopcoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0BNoNdK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NA/UlB7Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD51C4CEE7;
-	Sat,  5 Jul 2025 15:12:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0BNoNdK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12597C4CEE7;
+	Sat,  5 Jul 2025 15:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751728371;
-	bh=TIM6e5qHp/6nVvPVrYN8jvey9AfXNCweNKEmC77aLFs=;
+	s=k20201202; t=1751728394;
+	bh=iZ2GtQJZx8wcOuzHRqZc6ez+U/MUhqkaNbTM8nI5K8s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NA/UlB7QiZpeWNcrZwQlf84fg6QQ799YFRTI9mAodcDoB3oYDBUyry7zpB8olc4UW
-	 fb91VGwsySk+oi7By0Iq5rThNTgpHEFGNYhHGxocD5HR95rvin6BitEKStsPLgknBf
-	 0RIAZyGOPeGdEHTF/2zekkmt1ar/73UUvMr7D1J5zBQXQ8o3sN8zQZxsOlv35Lvemx
-	 KEQmn6f5psx/wO2acJvMVMCR8JTMXyDOuu2XTVAZy7M0VwpWwyCNGr4VqsNcHhbSuz
-	 +ux/VYhoPBf0rb4xcrv2brI4mX5QdNpf/qAIyeXrhwZSHWwLvVAhdLV1rCX6mIMQRx
-	 uqJAzbUUMkpVA==
-Date: Sat, 5 Jul 2025 17:12:45 +0200
+	b=i0BNoNdKlrpzY+7eWB4cV+TlCRpYrF2S7csC9hSDpHu4AWhR9AoXhTf7uYiv7C03I
+	 X2NTbqP7rJGfCWzWE5flnWf2O/wfFpBF4l3FV+XptJCVRZr/J+mnIMf6rPGP9TGa4X
+	 vI7bVJnbbcoAsyRX9qSH/ldNqEUpuFSb0t1Q3oyKTNmLnqqd3wAiBeuiT5pPX75Avy
+	 qp/3hJNWaWVRsnlCHiochtWLD0CHy9y31rY9maBx2lYdCOpyypMtqkdEaZRARWfKuX
+	 JnojiUSJiqZeEXRWV4rLpWsofUlS8uUIqRa5QorA7sMbDJMsL5WjqPxDhnUNaM9lRC
+	 x2AHegm77hvow==
+Date: Sat, 5 Jul 2025 17:13:08 +0200
 From: Danilo Krummrich <dakr@kernel.org>
 To: Tamir Duberstein <tamird@gmail.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,9 +39,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: devres: remove unused import
-Message-ID: <aGlA7aGiMC9o-bCo@cassiopeiae>
-References: <20250704-cstr-include-devres-v1-1-4ee9e56fca09@gmail.com>
+Subject: Re: [PATCH] rust: platform: remove unnecessary import
+Message-ID: <aGlBBIbAJ7GguqJX@cassiopeiae>
+References: <20250704-cstr-include-platform-v1-1-ff7803ee7a81@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,10 +50,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250704-cstr-include-devres-v1-1-4ee9e56fca09@gmail.com>
+In-Reply-To: <20250704-cstr-include-platform-v1-1-ff7803ee7a81@gmail.com>
 
-On Fri, Jul 04, 2025 at 04:11:02PM -0400, Tamir Duberstein wrote:
-> As far as I can tell, this was never used.
+On Fri, Jul 04, 2025 at 03:49:54PM -0400, Tamir Duberstein wrote:
+> `kernel::str::CStr` is included in the prelude.
 > 
 > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
