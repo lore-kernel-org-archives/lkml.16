@@ -1,277 +1,115 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4817D1DE3DB;
-	Sat,  5 Jul 2025 15:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE96186E2E;
+	Sat,  5 Jul 2025 15:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751730888; cv=none; b=JvIxjpn/Y5GwPkVwiK8MpO1Tti9Lvxg7vC6+CMtNcTQIS2lvU94gNSxLYqIUYH62OzvF0vb8gcpAroAWEHZxihmoeNKys+e1Z1LJz2RJrBErEuAQ3NL3zx8GQ9ZYvUcND4sEVGfd/3QltEsz7CL5VGsrJsbDQWqbRiE8P8T6GPg=
+	t=1751731019; cv=none; b=mcXRSThPzem0k0R+3Xj7PntV0sxUUHjmrVxGhGGFanxxdlyC6j2Bqh6cBK0nosxJUsqwXWrtjlLH5hE8t2EcbHRiwlAcpCfujg3rKLNC7Ll+fCxeR8L0x2JB/3B+HyRMj5P1kkolO753XJRXV29j2auWFTLB3ImXfoTTsWA1fQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751730888; c=relaxed/simple;
-	bh=QoDGogeRYTYrueryHPf4IWax+j0Vn0fX9BSWLqdqtds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tUbNoE9Eldn+L6WxcmGGridudQsrVVIygZtViCaXa25phuNAZv6rJfry1kR1WQ9ZzWLVNU5TPyNusi9JrVvZjzjCnFzq3yp1BCFlBJGCS7nQhzuX55HDgYZYlxfIvk9zyhmt1HIcAjUNR7N6JRGX3prDDQthWR1qdhf/7YlNFF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSOqrcY7; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1751731019; c=relaxed/simple;
+	bh=hhpxyw9Gt3PCRNLN3iZIqyRhINENxCk+HO4ESr9vG4s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ueNoPOO5TVjGEoC3pP/Nv80t/8QCypL0qoz7sUUDF6YVnfHyLjezdfcQdrQ/yO8emI8YZIJ+DW5DRZU/SoXwbs0GeBZ7RugSPE+1+tR7YpobWLDEVuSvltae+HdwyT2HwEco0cSI0OncERwY6Ju0uGthQLhGHPZpyyGAF2IWBKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3bSxZBQ; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSOqrcY7"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235ef62066eso27508475ad.3;
-        Sat, 05 Jul 2025 08:54:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3bSxZBQ"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b3b250621so16455951fa.2;
+        Sat, 05 Jul 2025 08:56:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751730886; x=1752335686; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OKXOhgR8Rxk7mTQK33CJ7OCCW5PMDPG1TwJy9Oc8MUk=;
-        b=QSOqrcY7wW940bOw/xCMeDf2Tm7XvlvFZFuo5254zHXkMMq5UdMp4wZlP6sVw1T9oS
-         GM5sHUJonIR4FOJigjPKi6opgogGgpFWCj0qrH3iL6mShyePpeII11XsskZWd7w3lcWr
-         GdggfSOAMY0ReslhIuPD1WEVIcig0c6I6a/aOq72noSTy9adVP7jdRUqjeoqQBCV0ZoJ
-         m6sOWnJA+h//mAEEnzrYpGaRQjYnyM7Vu7vilP5c+Bjxvv0O/427MgPGNmav/dgqgeJQ
-         CyuPlWEWkyN5PCgSegpQbim6v9UikXCqgYmtS5wmamXf7tNhZezT94EcE/EvTOGk+4J4
-         mQsQ==
+        d=gmail.com; s=20230601; t=1751731015; x=1752335815; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kIuW9mYDfe1OO55T0B/j5JkohO1wkPFoK07cmUTgjB8=;
+        b=a3bSxZBQD28YvPtII5IM7eEZxyYXqS7/9IWa373T4b0mpT9euabTobz6J3BP9HZZ0P
+         gHKTxQqSDYNtXGWdaPP2f4rL3SkB3Hi5XHAM1TIDW8+tiRHjf/PS9lu6CQY/iOFUxdBc
+         1ADf97jvOAqB4ivbDnZjSKb7SGM8YsmqUq50TwcQy/cat182/uAwGRRyveVSrmIbWgM0
+         P8kBD3bS2RRlJwDwKT/ebMYmhjy95AckVt1zXE4EXUS1VJ5HWrWidmf7dUcd4+TboGt7
+         pqodiANCIj+1Z8ynQ51RQs0b8SgnZimYc1ID64VElJiqfS9eEerLjgfZOTS93Xjuyg+F
+         m6Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751730886; x=1752335686;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OKXOhgR8Rxk7mTQK33CJ7OCCW5PMDPG1TwJy9Oc8MUk=;
-        b=mZKdaGDAdWVmzJ63PVPdnqKhfo2JVv/KEfcasedv3npgA5X71WCd2ZIvfk+Cg1h/2c
-         FgiOnobTR/zzSr0UOq7wkxLpImqDk/BY91ER+Nl+8pfNHwSRkctsCOliuTLnv8Ri7Paw
-         FHk4IKlrz+TsoEFSfb8StBU4hKrJIiO9nSol+A+TxaTqAPCFKYzFA7P/bM/09Q9BHaf5
-         49nts+4fUDz4A694a9eYUtgEKxN8oCrq7Q0XP9rBYdH/1r1TAsiEiasTVpvHZARZ1g4X
-         kUssU1CTBWPtxHBL+b240wTjOaEmToP7ZnoIqjLIaO2Q/TzsINVe9VwhOyP5/ZeHeBOh
-         3Qow==
-X-Forwarded-Encrypted: i=1; AJvYcCVKo9ncZ6mM9OBTB1rTpOEv8kuKTedClf+MdI/8h9vAH0FVozUhMI6N1na1VG7pFZ2/vO3StNt8iv2M4Yo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyev1+Hd79J4CTn/7ejKRqQYGhgTTiMYoM+Eq1IMUgtCHF4jdim
-	Cps6rxZX88CU7BioypxbtPsVTiWg2bRLmtOA6E/wffdGFWPR4CLEBCQDquJckw==
-X-Gm-Gg: ASbGncuiNxlITcLqaj+3eE3B85tLQqmmU1PzlJ9/ovdkEDBMicw81eyk0vQpsO7jFon
-	W60wtdxD9QWND+KyKtNrIuTWGag9GRXgk/9JLBENpRZddbYGOPZDvP4NxpD3ptYwlOe6dU0g04m
-	3gTq4oHeAhcz3kteP4zZn6zhV5QEzdFljYLULqvHazAJfT0jmkbRCV/h3S2NCHXZXUhzvxvfWR1
-	7f4mvmhxjTmWJjbLUd9Dy4KsCE9jvl9DEnrizIq1SSgEMullbBYGEh8GTCD38jIyYLSRkpkKfZW
-	S+CYNWp9A/S0hiat8vYyrRQnlzjQH+j/AVZB3k8BPkUlzm7fTO4CdH5tOeou1jk5D4fvJagabFh
-	7H4Tadozgf61MB/8=
-X-Google-Smtp-Source: AGHT+IEUKaeAeD1PyKCw8Vb7Uuu4b8zUNH1TFe785TFSy0lODfTG+ODrDrMOrE53KrSqL3ve9AIz0w==
-X-Received: by 2002:a17:902:e54a:b0:238:f2a:8893 with SMTP id d9443c01a7336-23c90fdb5acmr38491375ad.42.1751730886371;
-        Sat, 05 Jul 2025 08:54:46 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:882f:293:70ba:30fe:2559:8217])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c84593e0asm44143855ad.193.2025.07.05.08.54.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 08:54:45 -0700 (PDT)
-From: Abinash Singh <abinashlalotra@gmail.com>
-X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
-To: xiubli@redhat.com,
-	idryomov@gmail.com
-Cc: ceph-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Abinash Singh <abinashsinghlalotra@gmail.com>
-Subject: [PATCH RFC] fs/ceph : fix build warning in ceph_writepages_start()
-Date: Sat,  5 Jul 2025 21:24:22 +0530
-Message-ID: <20250705155422.802775-1-abinashsinghlalotra@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1751731015; x=1752335815;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kIuW9mYDfe1OO55T0B/j5JkohO1wkPFoK07cmUTgjB8=;
+        b=M8gSJGnJrdetQcn7NR2QR3hnoOYvAsOrOkqBUWtcCy2sm0HIx1ZuPKz8FJawycaLrI
+         rrXlGM3kW6L/ipdS2XkSRiKf6yWEw0SKYILHAOkD5b2ILsM1pS0KBC9vbD+kbnwapIWM
+         3vIwg6d6LTNBvGvPoDZYf3wzqoDcrEkANQrGWwio1OlKSVfiqrN6bd0TyXNpn2hHeaEQ
+         mKUkf4yXvzXb/COOAK2JsCzZTbmck4a9vRqdyFh0W9dbAVzjZQ4Tjuz+H9LkZ6KPjPnE
+         b5bh+es+h869QAWvIG6c860XMnatac8IZAlrPSiwxOmEEMR/Jt6fwwo9REVegO3CmHkd
+         UNOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVNXWKGkJALRjuGzyUYWfnfcoxaRgwHhHPBTU1ZXSocWH9Rr6k1s9+btdSrZCbBj3X/wbxpLD3lq8SYQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP7qotmb7N4mghOOnXLGcXQ8elB70npbXaU0/Ka6QbFHNJJ0Gq
+	EvnMiNN4jnJliWOa/E+a28M0K74gmtEast8FIUaS+yj/4sIjLyPEcffkeoWpDV0YsyurOkmwBJD
+	uifw6Dj4bleAiFgZrqbdCmYFJ6bFcpefRX9hWEwKPyg==
+X-Gm-Gg: ASbGncsnBw8N8h/lBNjMO6JP145hl2V+VkEo+52ABUdjUt4A6DR/92b+zd76iPA+QHV
+	wcC4Qfx2jQmN5VZqQLOyp03ASXTX/T7t1hWvN4yVAM+pLRx0JrlfnJu+XyvJsMy8xsOth2LNALn
+	shjfiZj9K4daBPTol0znN5+yQaH6ZwyTzC7/4ZTDNQyeywYl69nXZnUsEgcfcaYddvzSYnNDJLJ
+	7axUg==
+X-Google-Smtp-Source: AGHT+IFJjapQ+hpAJpLx1J8MEUHl7JDBD3MLiEKFP+eMnV56PMUbi2JwbohnEb49nWfoC1O5cxox2QvaewvI/5VRfZ8=
+X-Received: by 2002:a2e:be05:0:b0:32b:4f0c:d259 with SMTP id
+ 38308e7fff4ca-32f199c54dcmr8286901fa.16.1751731015092; Sat, 05 Jul 2025
+ 08:56:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250704-cstr-include-miscdevice-v1-1-bb9e9b17c892@gmail.com>
+In-Reply-To: <20250704-cstr-include-miscdevice-v1-1-bb9e9b17c892@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sat, 5 Jul 2025 11:56:19 -0400
+X-Gm-Features: Ac12FXznq6vxJh3hKdm5lxKLvoJwiCZlPoVnC9pRg7NUOBaCaiw_ZeptxofP9EM
+Message-ID: <CAJ-ks9nJhBDQtVUGNJVPmtrK6M8S9_Q+vpVGeSLtspJNaaX+nw@mail.gmail.com>
+Subject: Re: [PATCH] rust: miscdevice: remove unnecessary import
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The function `ceph_writepages_start()` triggers
-a large stack frame warning:
-ld.lld: warning:
-	fs/ceph/addr.c:1632:0: stack frame size (1072) exceeds limit (1024) in function 'ceph_writepages_start.llvm.2555023190050417194'
+On Fri, Jul 4, 2025 at 3:50=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> `kernel::str::CStr` is included in the prelude.
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  rust/kernel/miscdevice.rs | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
+> index 288f40e79906..8309d656088a 100644
+> --- a/rust/kernel/miscdevice.rs
+> +++ b/rust/kernel/miscdevice.rs
+> @@ -17,7 +17,6 @@
+>      mm::virt::VmaNew,
+>      prelude::*,
+>      seq_file::SeqFile,
+> -    str::CStr,
+>      types::{ForeignOwnable, Opaque},
+>  };
+>  use core::{marker::PhantomData, mem::MaybeUninit, pin::Pin};
+>
+> ---
+> base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
+> change-id: 20250704-cstr-include-miscdevice-4c5cb26a0ece
+>
+> Best regards,
+> --
+> Tamir Duberstein <tamird@gmail.com>
+>
 
-fix it by dynamically allocating `ceph_writeback_ctl` struct.
-
-Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
----
-The high stack usage of ceph_writepages_start() was further 
-confirmed by using -fstack-usage flag :
-...
-fs/ceph/addr.c:1837:ceph_netfs_check_write_begin        104     static
-fs/ceph/addr.c:1630:ceph_writepages_start       648     static
-...
-After optimzations it may go upto 1072 as seen in warning.
-After allocating `ceph_writeback_ctl` struct it is reduced to:
-...
-fs/ceph/addr.c:1630:ceph_writepages_start       288     static
-fs/ceph/addr.c:81:ceph_dirty_folio      72      static
-...
-Is this fun used very frequently ?? or dynamic allocation is 
-a fine fix for reducing the stack usage ?
-
-Thank You
----
- fs/ceph/addr.c | 82 ++++++++++++++++++++++++++------------------------
- 1 file changed, 43 insertions(+), 39 deletions(-)
-
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 60a621b00c65..503a86c1dda6 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -1633,9 +1633,13 @@ static int ceph_writepages_start(struct address_space *mapping,
- 	struct inode *inode = mapping->host;
- 	struct ceph_fs_client *fsc = ceph_inode_to_fs_client(inode);
- 	struct ceph_client *cl = fsc->client;
--	struct ceph_writeback_ctl ceph_wbc;
-+	struct ceph_writeback_ctl *ceph_wbc __free(kfree) = NULL;
- 	int rc = 0;
- 
-+	ceph_wbc = kmalloc(sizeof(*ceph_wbc), GFP_NOFS);
-+	if (!ceph_wbc)
-+		return -ENOMEM;
-+
- 	if (wbc->sync_mode == WB_SYNC_NONE && fsc->write_congested)
- 		return 0;
- 
-@@ -1648,7 +1652,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 		return -EIO;
- 	}
- 
--	ceph_init_writeback_ctl(mapping, wbc, &ceph_wbc);
-+	ceph_init_writeback_ctl(mapping, wbc, ceph_wbc);
- 
- 	if (!ceph_inc_osd_stopping_blocker(fsc->mdsc)) {
- 		rc = -EIO;
-@@ -1656,7 +1660,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 	}
- 
- retry:
--	rc = ceph_define_writeback_range(mapping, wbc, &ceph_wbc);
-+	rc = ceph_define_writeback_range(mapping, wbc, ceph_wbc);
- 	if (rc == -ENODATA) {
- 		/* hmm, why does writepages get called when there
- 		   is no dirty data? */
-@@ -1665,55 +1669,55 @@ static int ceph_writepages_start(struct address_space *mapping,
- 	}
- 
- 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
--		tag_pages_for_writeback(mapping, ceph_wbc.index, ceph_wbc.end);
-+		tag_pages_for_writeback(mapping, ceph_wbc->index, ceph_wbc->end);
- 
--	while (!has_writeback_done(&ceph_wbc)) {
--		ceph_wbc.locked_pages = 0;
--		ceph_wbc.max_pages = ceph_wbc.wsize >> PAGE_SHIFT;
-+	while (!has_writeback_done(ceph_wbc)) {
-+		ceph_wbc->locked_pages = 0;
-+		ceph_wbc->max_pages = ceph_wbc->wsize >> PAGE_SHIFT;
- 
- get_more_pages:
--		ceph_folio_batch_reinit(&ceph_wbc);
-+		ceph_folio_batch_reinit(ceph_wbc);
- 
--		ceph_wbc.nr_folios = filemap_get_folios_tag(mapping,
--							    &ceph_wbc.index,
--							    ceph_wbc.end,
--							    ceph_wbc.tag,
--							    &ceph_wbc.fbatch);
-+		ceph_wbc->nr_folios = filemap_get_folios_tag(mapping,
-+							    &ceph_wbc->index,
-+							    ceph_wbc->end,
-+							    ceph_wbc->tag,
-+							    &ceph_wbc->fbatch);
- 		doutc(cl, "pagevec_lookup_range_tag for tag %#x got %d\n",
--			ceph_wbc.tag, ceph_wbc.nr_folios);
-+			ceph_wbc->tag, ceph_wbc->nr_folios);
- 
--		if (!ceph_wbc.nr_folios && !ceph_wbc.locked_pages)
-+		if (!ceph_wbc->nr_folios && !ceph_wbc->locked_pages)
- 			break;
- 
- process_folio_batch:
--		rc = ceph_process_folio_batch(mapping, wbc, &ceph_wbc);
-+		rc = ceph_process_folio_batch(mapping, wbc, ceph_wbc);
- 		if (rc)
- 			goto release_folios;
- 
- 		/* did we get anything? */
--		if (!ceph_wbc.locked_pages)
-+		if (!ceph_wbc->locked_pages)
- 			goto release_folios;
- 
--		if (ceph_wbc.processed_in_fbatch) {
--			ceph_shift_unused_folios_left(&ceph_wbc.fbatch);
-+		if (ceph_wbc->processed_in_fbatch) {
-+			ceph_shift_unused_folios_left(&ceph_wbc->fbatch);
- 
--			if (folio_batch_count(&ceph_wbc.fbatch) == 0 &&
--			    ceph_wbc.locked_pages < ceph_wbc.max_pages) {
-+			if (folio_batch_count(&ceph_wbc->fbatch) == 0 &&
-+			    ceph_wbc->locked_pages < ceph_wbc->max_pages) {
- 				doutc(cl, "reached end fbatch, trying for more\n");
- 				goto get_more_pages;
- 			}
- 		}
- 
--		rc = ceph_submit_write(mapping, wbc, &ceph_wbc);
-+		rc = ceph_submit_write(mapping, wbc, ceph_wbc);
- 		if (rc)
- 			goto release_folios;
- 
--		ceph_wbc.locked_pages = 0;
--		ceph_wbc.strip_unit_end = 0;
-+		ceph_wbc->locked_pages = 0;
-+		ceph_wbc->strip_unit_end = 0;
- 
--		if (folio_batch_count(&ceph_wbc.fbatch) > 0) {
--			ceph_wbc.nr_folios =
--				folio_batch_count(&ceph_wbc.fbatch);
-+		if (folio_batch_count(&ceph_wbc->fbatch) > 0) {
-+			ceph_wbc->nr_folios =
-+				folio_batch_count(&ceph_wbc->fbatch);
- 			goto process_folio_batch;
- 		}
- 
-@@ -1724,38 +1728,38 @@ static int ceph_writepages_start(struct address_space *mapping,
- 		 * we tagged for writeback prior to entering this loop.
- 		 */
- 		if (wbc->nr_to_write <= 0 && wbc->sync_mode == WB_SYNC_NONE)
--			ceph_wbc.done = true;
-+			ceph_wbc->done = true;
- 
- release_folios:
- 		doutc(cl, "folio_batch release on %d folios (%p)\n",
--		      (int)ceph_wbc.fbatch.nr,
--		      ceph_wbc.fbatch.nr ? ceph_wbc.fbatch.folios[0] : NULL);
--		folio_batch_release(&ceph_wbc.fbatch);
-+		      (int)ceph_wbc->fbatch.nr,
-+		      ceph_wbc->fbatch.nr ? ceph_wbc->fbatch.folios[0] : NULL);
-+		folio_batch_release(&ceph_wbc->fbatch);
- 	}
- 
--	if (ceph_wbc.should_loop && !ceph_wbc.done) {
-+	if (ceph_wbc->should_loop && !ceph_wbc->done) {
- 		/* more to do; loop back to beginning of file */
- 		doutc(cl, "looping back to beginning of file\n");
- 		/* OK even when start_index == 0 */
--		ceph_wbc.end = ceph_wbc.start_index - 1;
-+		ceph_wbc->end = ceph_wbc->start_index - 1;
- 
- 		/* to write dirty pages associated with next snapc,
- 		 * we need to wait until current writes complete */
--		ceph_wait_until_current_writes_complete(mapping, wbc, &ceph_wbc);
-+		ceph_wait_until_current_writes_complete(mapping, wbc, ceph_wbc);
- 
--		ceph_wbc.start_index = 0;
--		ceph_wbc.index = 0;
-+		ceph_wbc->start_index = 0;
-+		ceph_wbc->index = 0;
- 		goto retry;
- 	}
- 
--	if (wbc->range_cyclic || (ceph_wbc.range_whole && wbc->nr_to_write > 0))
--		mapping->writeback_index = ceph_wbc.index;
-+	if (wbc->range_cyclic || (ceph_wbc->range_whole && wbc->nr_to_write > 0))
-+		mapping->writeback_index = ceph_wbc->index;
- 
- dec_osd_stopping_blocker:
- 	ceph_dec_osd_stopping_blocker(fsc->mdsc);
- 
- out:
--	ceph_put_snap_context(ceph_wbc.last_snapc);
-+	ceph_put_snap_context(ceph_wbc->last_snapc);
- 	doutc(cl, "%llx.%llx dend - startone, rc = %d\n", ceph_vinop(inode),
- 	      rc);
- 
--- 
-2.43.0
-
+Oops, should have sent this to Greg. Sent
+https://lore.kernel.org/all/20250705-miscdevice-maintainers-v1-1-9a6b67f760=
+2f@gmail.com/
+to make this easier in the future.
