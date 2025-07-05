@@ -1,98 +1,85 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888F31BF58;
-	Sat,  5 Jul 2025 02:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96B926E6FF;
+	Sat,  5 Jul 2025 02:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751681675; cv=none; b=IlUwHVlKcwBRyTN2fCEXCGZmAZDSwlUTmlIzBSq5pOHAu+z20waOR947uRgfVvAMaZCkygaum/XBPUKOoZYzYgid+7UMnTJPd7gU6aTMXc9SnYRIfohqNaoTVaVtqNy3JSvzpTuGgjU5SAskzmV4wcKF2YTW1uROM/sjcQaUbzg=
+	t=1751681705; cv=none; b=Gv8CTRk7nI41bRoKZIsp78L/f+Ib9exzi3BuWWF3z+GrjpOmz1ZQ3sgQDXIgtpYpJPQDgoC8YPEzjaXJx3G6esVJ587mCb2pPWPkhbkQ2Fd0nenANQrOpQXaXGFdQP8UsPpA1UUCT9DEbh26oDIYp2PzkTv+KEjtDiz1WQxu5xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751681675; c=relaxed/simple;
-	bh=DnwXkV3mh2xNWLLry95sYPXozKXFK8Czxdfs07K9YpI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=s3Jbg7fofPWuXEZwFM1lOCouIsIxHnk5MVHkHNsxD1csmhCDJPARMpwB1AKV3q9csOmkTbk2vLBKrrAtm+sBe2rmC8039s4Wrp2vFae1d75xMRGTzL54WFtO63vvInOMVIwLyh+Pu0u6lDuSo/tiQ4BQEBAaYSpiWkZlicPCtzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from zju.edu.cn (unknown [112.10.226.58])
-	by mtasvr (Coremail) with SMTP id _____wDHRSxbimhoyH7qAw--.5558S3;
-	Sat, 05 Jul 2025 10:13:48 +0800 (CST)
-Received: from linma$zju.edu.cn ( [112.10.226.58] ) by
- ajax-webmail-mail-app3 (Coremail) ; Sat, 5 Jul 2025 10:13:46 +0800
- (GMT+08:00)
-Date: Sat, 5 Jul 2025 10:13:46 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Lin Ma" <linma@zju.edu.cn>
-To: "kernel test robot" <lkp@intel.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, mingo@kernel.org,
-	tglx@linutronix.de, pwn9uin@gmail.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH net v3] net: atm: Fix incorrect net_device lec check
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
- 20250620(94335109) Copyright (c) 2002-2025 www.mailtech.cn zju.edu.cn
-In-Reply-To: <202507050831.2GTrUnFN-lkp@intel.com>
-References: <20250703052427.12626-1-linma@zju.edu.cn>
- <202507050831.2GTrUnFN-lkp@intel.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1751681705; c=relaxed/simple;
+	bh=MoeOv5EYR7ND7dvTc6nQZXoheLui3KxYD5UFmlAelPs=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=Yxr02knSaqwlh8xAgi9gT4dusFWycMI6YtOOo+H2OthP8XAG/X1ay/3eEWK//VQIV4p7/52gh+6/LNwGw86LZjGOBcMMQIEBaFfvymc9p4QaaAijRblenLGSwwpVOQSxCPnCC2wWIax7Kw5rZlbUPu4iuJra+4KVKSxjpmGtAwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bYvGS6g6rz4x5ql;
+	Sat,  5 Jul 2025 10:14:56 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl2.zte.com.cn with SMTP id 5652Esw6038063;
+	Sat, 5 Jul 2025 10:14:54 +0800 (+08)
+	(envelope-from jiang.peng9@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid31;
+	Sat, 5 Jul 2025 10:14:55 +0800 (CST)
+Date: Sat, 5 Jul 2025 10:14:55 +0800 (CST)
+X-Zmail-TransId: 2afc68688a9f1d0-59690
+X-Mailer: Zmail v1.0
+Message-ID: <20250705101455762ft5u2uZEb7wz0TROzD52R@zte.com.cn>
+In-Reply-To: <879d1fa7-04a5-403c-8d23-76631a67f560@kernel.org>
+References: 20250704152047205U11FdEih1MxrmcmAz0Xpp@zte.com.cn,879d1fa7-04a5-403c-8d23-76631a67f560@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <208fe08d.af32.197d85c6fb6.Coremail.linma@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:zS_KCgD3_Ilbimho74xkAA--.19191W
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwcQEmhlCw4N8wAKs6
-X-CM-DELIVERINFO: =?B?jiZXnQXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
-	APHs9E3REyVLMz4DLkghFkBLqH5QYsdiIeS7um6fpDNefWi4wE3F/NAR45aDN/ORt2VyFM
-	7zRxcFgotyfKCrND2Di8M1FrbpUWplBdpdkwTnOMjT390PyTZ68sFSMcKOis0w==
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr17ZrWxuw1DJr1xGFWkKrX_yoW8Wr13pa
-	18JayqgrZ8Wry0ga97Ka4j9ws8t395W3sxWF15Ar15ua1DAFyDWrWIgrnxXryUKr4qg348
-	KF9FgFnayw1UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUQYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
-	AKI48G6xCjnVAKz4kxM4xvF2IEb7IF0Fy264kE64k0F24lFcxC0VAYjxAxZF0Ex2IqxwAC
-	I402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMVCEFcxC0VAYjx
-	AxZFUvcSsGvfC2KfnxnUUI43ZEXa7IU8rcTJUUUUU==
+Mime-Version: 1.0
+From: <jiang.peng9@zte.com.cn>
+To: <krzk@kernel.org>
+Cc: <jasowang@redhat.com>, <xuanzhuo@linux.alibaba.com>, <mst@redhat.com>,
+        <eperezma@redhat.com>, <sumit.semwal@linaro.org>,
+        <christian.koenig@amd.com>, <virtualization@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gdmlydGlvOiBBZGQgbWlzc2luZyBrZXJuZWxkb2MgZm9yIHZpcnRpb19kbWFfYnVmX2F0dGFjaA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 5652Esw6038063
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 68688AA0.001/4bYvGS6g6rz4x5ql
 
-SGkgcm9ib3QsCgo+IAo+IEhpIExpbiwKPiAKPiBrZXJuZWwgdGVzdCByb2JvdCBub3RpY2VkIHRo
-ZSBmb2xsb3dpbmcgYnVpbGQgZXJyb3JzOgo+IAo+IFthdXRvIGJ1aWxkIHRlc3QgRVJST1Igb24g
-bmV0L21haW5dCj4gCj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vaW50ZWwtbGFiLWxrcC9s
-aW51eC9jb21taXRzL0xpbi1NYS9uZXQtYXRtLUZpeC1pbmNvcnJlY3QtbmV0X2RldmljZS1sZWMt
-Y2hlY2svMjAyNTA3MDMtMTMyNzI3Cj4gYmFzZTogICBuZXQvbWFpbgo+IHBhdGNoIGxpbms6ICAg
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNTA3MDMwNTI0MjcuMTI2MjYtMS1saW5tYSU0
-MHpqdS5lZHUuY24KPiBwYXRjaCBzdWJqZWN0OiBbUEFUQ0ggbmV0IHYzXSBuZXQ6IGF0bTogRml4
-IGluY29ycmVjdCBuZXRfZGV2aWNlIGxlYyBjaGVjawo+IGNvbmZpZzogeDg2XzY0LXJhbmRjb25m
-aWctMDc4LTIwMjUwNzA1IChodHRwczovL2Rvd25sb2FkLjAxLm9yZy8wZGF5LWNpL2FyY2hpdmUv
-MjAyNTA3MDUvMjAyNTA3MDUwODMxLjJHVHJVbkZOLWxrcEBpbnRlbC5jb20vY29uZmlnKQo+IGNv
-bXBpbGVyOiBjbGFuZyB2ZXJzaW9uIDIwLjEuNyAoaHR0cHM6Ly9naXRodWIuY29tL2xsdm0vbGx2
-bS1wcm9qZWN0IDYxNDZhODhmNjA0OTJiNTIwYTM2ZjhmOGYzMjMxZTE1ZjNjYzYwODIpCj4gcmVw
-cm9kdWNlICh0aGlzIGlzIGEgVz0xIGJ1aWxkKTogKGh0dHBzOi8vZG93bmxvYWQuMDEub3JnLzBk
-YXktY2kvYXJjaGl2ZS8yMDI1MDcwNS8yMDI1MDcwNTA4MzEuMkdUclVuRk4tbGtwQGludGVsLmNv
-bS9yZXByb2R1Y2UpCj4gCj4gSWYgeW91IGZpeCB0aGUgaXNzdWUgaW4gYSBzZXBhcmF0ZSBwYXRj
-aC9jb21taXQgKGkuZS4gbm90IGp1c3QgYSBuZXcgdmVyc2lvbiBvZgo+IHRoZSBzYW1lIHBhdGNo
-L2NvbW1pdCksIGtpbmRseSBhZGQgZm9sbG93aW5nIHRhZ3MKPiB8IFJlcG9ydGVkLWJ5OiBrZXJu
-ZWwgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4KPiB8IENsb3NlczogaHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcvb2Uta2J1aWxkLWFsbC8yMDI1MDcwNTA4MzEuMkdUclVuRk4tbGtwQGludGVsLmNv
-bS8KPiAKPiBBbGwgZXJyb3JzIChuZXcgb25lcyBwcmVmaXhlZCBieSA+Piwgb2xkIG9uZXMgcHJl
-Zml4ZWQgYnkgPDwpOgo+IAo+ID4+IEVSUk9SOiBtb2Rwb3N0OiAiaXNfbmV0ZGV2X2xlYyIgW25l
-dC9hdG0vbXBvYS5rb10gdW5kZWZpbmVkIQo+IAo+IC0tIAo+IDAtREFZIENJIEtlcm5lbCBUZXN0
-IFNlcnZpY2UKPiBodHRwczovL2dpdGh1Yi5jb20vaW50ZWwvbGtwLXRlc3RzL3dpa2kKCllvdSBh
-cmUgcmlnaHQsIHRoaXMgcGF0Y2gganVzdCBjb21waWxlIHdoZW4gQ09ORklHX0FUTT15IGJ1dCBy
-YWlzZQplcnJvciBpZiBDT05GSUdfQVRNPW0uIEknbSBzbyBzdHVwaWQgdGhhdCBJIG1hZGUgdGhp
-cyBzeW1ib2wgbWlzdGFrZSA6KAoKVW5kZXIgZml4aW5nIGl0IGN1cnJlbnRseS4KClRoYW5rcwpM
-aW4KCgo=
+> > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/> virtio_dma_buf.c
+> > index 3fe1d03b0645..18d261ba5197 100644
+> > --- a/drivers/virtio/virtio_dma_buf.c
+> > +++ b/drivers/virtio/virtio_dma_buf.c
+> > @@ -35,7 +35,16 @@ struct dma_buf *virtio_dma_buf_export
+> >  EXPORT_SYMBOL(virtio_dma_buf_export);
+> >
+> >  /**
+> > - * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
+> > + * virtio_dma_buf_attach - Mandatory attach callback for virtio dma-bufs
+>
+> Read kernel-doc.rst. Missing ()
+>
+> > + * @dma_buf: Pointer to the shared dma-buf structure
+> > + * @attach: Pointer to the newly created attachment metadata
+> > + *
+> > + * Description: Implements the standard dma-buf attach operation for > virtio devices.
+>
+> That's not kerneldoc. Which part of kernel-doc document documents such
+> syntax?
 
+Thanks so much for your time and feedback! I’ve made two specific fixes based on your notes:  
+
+Added () to the function name in the kerneldoc comment (e.g., virtio_dma_buf_attach() instead of virtio_dma_buf_attach).
+Removed the redundant "Description:" label and simplified the explanation. 
+
+Let me know if you need anything else in the meantime!  
+
+Best regards,
+Peng
