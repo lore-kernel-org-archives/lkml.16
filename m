@@ -1,140 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2140123AD;
-	Sat,  5 Jul 2025 08:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E6123AD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 08:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751704513; cv=none; b=ucvrdI27mIKlQko/7fmtkE1O2IqoVCx41sXCRksw42APkuDR7dsiEkG9tJa9i2vmPvwgYG9b8YcG/8r4obydNC2AHfQp5xsiyb94ocZoc+pvYrS0+Z+LiLdfnIfNVxsn14iGvrsqKkxbF0YxFsh7m/CXjMGlLABbibEb+aRnizY=
+	t=1751704544; cv=none; b=AcVuJpgiVBiOL/2SR3Zg38VGB42mAyjrW8K7Ej5Iq+/WC9IklUtx9ylrjzDrXi2PfxXHNx9PXgOUaCL9NUcSf+CPXWqHp4Cty0LNdlbQhCWfNHCfChSZkGfPJfDpWNNirhOwyWaX+zKtOYtpGFAkMB64NgVJMcucUX1m4sbwjCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751704513; c=relaxed/simple;
-	bh=OoZzuOzHiyo+cy87MtB1w+pqJRHbH3QJTYkmSakBpTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mQMKIW5LqlqzDsRYJSAp/9BRxDoUmDuZnKasQhrGkvEUP/hlrj9RMWs35foUpog5AKylbEpqH2iVlP3004IZz0Pi+E0RTe5G1676aMCmhf/4LpGHKo4H/VmmN4RxFZEUZ6mYznIghkJ2NF8wuYNeIwu+PHUPLXFaAzPwX4lqdpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfYGpn1i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751704544; c=relaxed/simple;
+	bh=ah4SIvptMdwSFRwkpjHC9dZIrJE8W7eJFE6nNgvIwz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IZmmVYrSaWVhFG8IjZmzAYZFr0sOUuW2fWTe4rL45jpF2Bzyu2bD2th6XPqXxUHwIFZFOgo9WEcDO6DcmZxqvWktymNfP+a83SjIC04KCQ8x+ecah7bfy2tUGmMi9fmypQHBrkShavnVgXyro0bBOS0VKEElOfBHR8FJMwbgdzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VxNsaGXm; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfYGpn1i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A06CC4CEE7;
-	Sat,  5 Jul 2025 08:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751704512;
-	bh=OoZzuOzHiyo+cy87MtB1w+pqJRHbH3QJTYkmSakBpTs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dfYGpn1iZAqx9EC2NttuDf/5YVjRJ9aW/yOg7faIOBFaC9CcEsgzZ3+EhKjU6LI4t
-	 3Ejq330Hjt0Otqvbx9AEORN4FbORQ4rKMYjGapz1gXIRVZOCC+L2OWv6we8pZ7Nvig
-	 SXX1ePuTYF0iztwFZCl/jDEzNgYNzZt7SEpIDpBHxlRpSFDGwjf8TsXl+g4S5qqaRZ
-	 gM9DkJUVYGEURTQrrYLqimK77PB+ssAYScm6NvXVkj6LPRJdGT3rgVdDX/yzpdASzN
-	 0LDd6GqLJQdRzEfKwB5ThRw8+Ggq8rkmyn62BxaBCPjg9TTRa7ujDafp3/Z/ZNfTXq
-	 zG8ODMGGhMrug==
-Message-ID: <ff887aaf-966a-41ff-a905-f791820136fd@kernel.org>
-Date: Sat, 5 Jul 2025 10:35:08 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VxNsaGXm"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so1698209f8f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 01:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751704539; x=1752309339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ah4SIvptMdwSFRwkpjHC9dZIrJE8W7eJFE6nNgvIwz8=;
+        b=VxNsaGXmpFBZzbGKOd6IK9X/JtW/udqf/QFYkdXLMxRPH8E9mWRWHzOT+AbD9nMkC1
+         vaV1j7SBSvjfLydUz29ox3rRRDZpZzJRbQEGkh0GwAz2fLNT0dw0/NXxuNgJZeLMROHS
+         Q349P3/x4ugtlRCxNp3zhbinpl0JTgQokNMmBk+oqFHEDeRH/44vvvHgcyhH1S3X3GX2
+         tz3pFZw9743bK2bsHftHI6JlopBSveB0xVs+haMSn7ibzFOVJFyTRP0hnMuIk6GPjdpz
+         HNHvsXdqQc6gu8JSIiWFTUtYBokNkCcIauhl6GCovDOlUxd6nSbvcDR5KxM1IgzY4s7/
+         oyMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751704539; x=1752309339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ah4SIvptMdwSFRwkpjHC9dZIrJE8W7eJFE6nNgvIwz8=;
+        b=i9kqVto7kdwdI12JfIEEPPHSEY76BPKvuRKYan1jI28qKIO2t6znCrx9JjYQDVHDVx
+         IN4SQWTKtJAhiINn46gRwMU19A9lS2/rsh46xg8PIQciaUx5+dIXMr6crk/oz8ac2Bn/
+         RRToT3pfvEIphErSY23XlVDn3iL/FDwy8REFAvnjswuVYHiOwwtfI0YdkM+22TC2/N9C
+         Tjp7gzwCPkE+wp2BNqCnGGaTV+ZAomFEtVwFLUEFjaJvX8WjGVsgWynUExU39ugc2Q6I
+         E05ojb+IuBf9BDEKXZFOHqtCwGyuTffqVT/Wxjrq2vQQgfH7IqSXm0bvEmwhXCTO7Zts
+         O0Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXH1dUwzkGApeSWfJ1aujmNGY8Pa/btH/z2rUWppMQLO0xI3NZK+cJad7kRYzKXytiA6xsbMjlTRH7ofmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyVIRzGXnIUbq5YTgf0djLdAeNWj5/+mUXznz5YieeFhZ/zeZk
+	0SOurQ4Kw7CiXuoLpGBkePVSBDhC96guGtObR92oQFaX+oc9D/TFEHQKzAePf5aKsa1vop4H6lG
+	DVPlSo+xddJ9A8AtvdF/WgLhhH/VCrXyQ7Ln8Ff1Z
+X-Gm-Gg: ASbGncstqvrWKkIVVPc5qHnWLh9CcHHGlKzRQ8bnGiBsJgpFNu/nZiKmRtH2L/VXe9A
+	mhC1wvXsnkTe+/LVbAj6vHmSiSHxFI08ldOKQFZnMiIg49+4rsyB2wGsdQ65a4YF7g+n6eJUKmn
+	MnDsI2mMaNLT5LifJRxxNHDdUdDpx+8ypn8ULBMER5mLZN0uy1LXZ6YCs=
+X-Google-Smtp-Source: AGHT+IH/pkllT3Sy9Cb1lHriZM/tG78khhI42JnRhbPr8kP9tTs+gtmjri5ZYwhkuP07q9yAkZH9HXYofTd095qzzFE=
+X-Received: by 2002:adf:e18f:0:b0:3a4:c71a:8119 with SMTP id
+ ffacd0b85a97d-3b495cc4ea6mr5351566f8f.25.1751704539369; Sat, 05 Jul 2025
+ 01:35:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] phy: exynos-mipi-video: allow skipping absent PHYs
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-exynos7870-mipi-phy-fix-v1-0-2eefab8b50df@disroot.org>
- <20250627-exynos7870-mipi-phy-fix-v1-2-2eefab8b50df@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250627-exynos7870-mipi-phy-fix-v1-2-2eefab8b50df@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com> <20250704-core-cstr-prepare-v1-4-a91524037783@gmail.com>
+In-Reply-To: <20250704-core-cstr-prepare-v1-4-a91524037783@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Sat, 5 Jul 2025 10:35:27 +0200
+X-Gm-Features: Ac12FXyGVQLpnmxvOqtVG7V_plS_x4VHl-FkqPG4Jcdo-zfXWt7_Lhls-5TlbKw
+Message-ID: <CAH5fLgg=4ZqKh1hqFD9bmGJwUf3LK3=K+Q4tTRPnT+NaMubpLQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6] rust: str: remove unnecessary qualification
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26/06/2025 22:01, Kaustabh Chakraborty wrote:
->  
->  struct mipi_phy_device_desc {
-> -	int num_phys;
->  	int num_regmaps;
->  	const char *regmap_names[EXYNOS_MIPI_REGMAPS_NUM];
->  	struct exynos_mipi_phy_desc {
-> +		bool present;
->  		enum exynos_mipi_phy_id	coupled_phy_id;
->  		u32 enable_val;
->  		unsigned int enable_reg;
-> @@ -54,10 +54,9 @@ struct mipi_phy_device_desc {
->  static const struct mipi_phy_device_desc s5pv210_mipi_phy = {
->  	.num_regmaps = 1,
->  	.regmap_names = {"syscon"},
-> -	.num_phys = 4,
->  	.phys = {
-> -		{
-> -			/* EXYNOS_MIPI_PHY_ID_CSIS0 */
-> +		[EXYNOS_MIPI_PHY_ID_CSIS0] = {
+On Fri, Jul 4, 2025 at 10:16=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> `core::ffi::*` is in the prelude, which is imported here.
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-
-This should be a separate change... but overall I don't like existing
-idea and I think your change is a reason to fix actual code style issue:
-
-It is expected that each variant will define static const array and then
-you assign in:
-
-static const struct mipi_phy_device_desc exynos5420_mipi_phy = {
-	.phys = exynos5420_mipi_phys_data
-}
-
-which means:
-1. You don't waste space for unused entries (now you always allocate 5
-entries, even if you have one phy)
-2. You can count them easily - ARRAY_SIZE
-3. Index in the array won't the the phy ID, so you need a separate ID
-member for that
-4. You do not need this odd 'present' field, because really code which
-is not initalized should mean 'not present' and it should be never
-needed to initialize additionally to indicate 'yes, I do exist' beyond
-basic initializations.
-
-Best regards,
-Krzysztof
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
