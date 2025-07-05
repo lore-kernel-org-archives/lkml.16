@@ -1,74 +1,56 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D633A2580D7;
-	Sat,  5 Jul 2025 13:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C64A2E3706;
+	Sat,  5 Jul 2025 13:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751720917; cv=none; b=cliwOMF8wYZCHRunVtPZJZCNfjbibeU+MD3v+g8YlO239LlmeP3VsNrUGng9xPJWrh9iMZ3PNcIPCWfAYFe0NH28VDULS0Lb4gmiUMcRTUZ2T2fIkrhwGsDv3cQuOr+95Zq0cT21qSXmNjH0+m83QoY1DSzicsUG9OoR/dCC6MI=
+	t=1751721015; cv=none; b=hDSERkifMCRbdk3wHHCzapmu4a6vLqSkPgMlwEZT7Ng0iEQwmTaCHKDNo+ex3Y+S4SIuUk3XT8jn69veA6m1RaC1CsLgap5vVBSoOadFtxwcARjYZpu0fwmuZv67B17My0HdjtCRp081sxj6BYBjH5yiwYXPZ7AiAIICl6hVpHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751720917; c=relaxed/simple;
-	bh=PY4C9YkzB4XNqZGeXjJ0WvzqHJuE9/agmQPhZCUcsAM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m+XnaY0KRRB0PjwPhKoX7HcpNrdiN9cQ9Z2D65tezjOmVjbx06eFto8sFAHQiNwOG80oy6ZBkXZ7rCMktIRi0fraMAV1J/umSt/CxhabCLAx+uQj6wPo70KX9YrEcp3u0Q4dZx85PJj94iIpYjDCQFZGQBbmwGRtcP1YM18VyK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WLf5xh+8; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751721015; c=relaxed/simple;
+	bh=UIXup+LNXzlJkMEvN+DweufuUSjQf331SNhY6u+dwkE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jrz9dmljytYD2vhYxyjdX1nGWfPuqxpdlhgMZfMCGuDObS68HoUlf9OJF63UarrVnvCA4qsU8/jGmHScpM3VImYa2mhpcXlSk/YKYiyB0V9a1jilU3FbU9m8bppbaZF77zPrJ9QT0MWet9Hockc8wSUbQZjlF67olz+irvemLVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=daS93Z0z; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLf5xh+8"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so1562488b3a.0;
-        Sat, 05 Jul 2025 06:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751720915; x=1752325715; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xrm1kWoPaGkxV4g2GOWN3UThzaZG17eDiDzIl7208/Q=;
-        b=WLf5xh+8EWlhBi53gnNKudmYR0IU8x9kUAw/mKgMuYJVV4fJNb4kaIKzRHF5vzvGuI
-         ej6VcVOroProgpAW4KzH2ilENEtGnc60uWOpbkdBIwUPpmozCzKBYdBjmjXaykss0g14
-         co/pVQRMTmPQ6jV5kunSXCU6V+J2ZjYUEAx0B/7f1TvqEqFOoHV4NFUAqjelPcapvj6Y
-         HWTTmHtd5olM93Y/xsJME4ZuF1gHVdPVMRRHevAEP8MWkwAmZqS1kWueSvoX7Qt3GJNj
-         +KrhetBVYEK5gC2N2U9+PYeYSs6svsIwab9j1ntS++JCYfPtKMPkdS6ZFktOvJJfij99
-         ow7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751720915; x=1752325715;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xrm1kWoPaGkxV4g2GOWN3UThzaZG17eDiDzIl7208/Q=;
-        b=KwV6rQpuqSQJdK/xZoVeh3MLFS4o8EU2dKlK53uc+MVfN00p0l6iUXEa0qIg9pPxEX
-         bx4UAJjghG7TENqYZgeqZcuX4pevT5nmTlZui5VkaT5G3s1B8aUnhdDnlLbohvalgRUk
-         NcBsPB+cKhzRtaQsZjv2/FIrPZM0KdO9+ptkWiXuKDEdaqmytQGt5jYCgBeEZBrTqIyU
-         RItY6xKZ3RV1iocezhv8rM25NTufveXNn0lc4/YULwafmoekp6EE1M0F+Zp6tHk0FECU
-         ogsAvIdjFsdMKFe9GqaX5LAIgCJFlNPp/MTeWLkm2/xzrg6ufSK4bIQgXq4GI4zu8gaU
-         4/0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtURxZy598H7m8a13JVk9JNE+2+GnNEgchEByawcieM9rXQaacncfyEYN/6TbNcOMp7Tb2yXisJK2xZyU=@vger.kernel.org, AJvYcCWC8Fv8YqOP54/YxyszYdr6JiwoAOu6QchFZbjzcqt65o4ulhhBqgasELHTpzsGZHHs1d7BFUB5OFfHT68=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkM+SAdg27Y57S7rrri8wYc2XYpSgxNyMVd90SPCH/kxTExJIa
-	0FVKJobzSRLwSbje5kICFwlhpot3u8gc87wst+EvGH0WmUEuIK86HkRj+6RyvA==
-X-Gm-Gg: ASbGncvUpUmHCi835lnZbtBbiYfYK5ogqN3JvHhKJgP1qWwNT/rXOm9h3FsUds4i5xP
-	0b2SBcKTXbl0HonG5leo5ovZSKecGU8hWiAgo7lMxti3nQE4tbnua1Qr+wLOPNIkDov/A7pssw0
-	NeoKTYCLG/5Y0dwQVJ6wXL91tad8YLa+Prm+pbUdPyVwIQJA1OWrAdLEE+zGr0lcJx89VoiZy1k
-	7slzBu7h/MuGRTDsW66Gjf+ZL4Z8epsRZVTJQgk9/hYvmrFmc5rq3iUY4lC8KcJ82FUqRgFu4li
-	zaYHsuETCEVZcJgsbw6fv4fq19ZjhHxQ6B4qAEYzSvrUO9/2jjfBjzu/XSGG1mEhwdwZEJYnh/H
-	f/2BNzmc=
-X-Google-Smtp-Source: AGHT+IE2Y6SHkgc+b9WM/ZkTHDlh4SguFcHr9tiVijW+NDcNvcqG7NZGJw14l/s37y48JMNEqf0xUQ==
-X-Received: by 2002:a05:6a00:3c90:b0:748:f6ee:d1f with SMTP id d2e1a72fcca58-74cf6fbdb12mr3253705b3a.20.1751720915034;
-        Sat, 05 Jul 2025 06:08:35 -0700 (PDT)
-Received: from localhost.localdomain ([112.149.32.52])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce42a4146sm4434618b3a.141.2025.07.05.06.08.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 06:08:34 -0700 (PDT)
-From: Jesung Yang <y.j3ms.n@gmail.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Jesung Yang <y.j3ms.n@gmail.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] media: dvb_frontend.h: fix typo in kernel-doc
-Date: Sat,  5 Jul 2025 13:06:57 +0000
-Message-Id: <5905eba60c787f75d2e20ef42690a9ba8cff0770.1751719712.git.y.j3ms.n@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <cover.1751719712.git.y.j3ms.n@gmail.com>
-References: <cover.1751719712.git.y.j3ms.n@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="daS93Z0z"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 565D9ovt462902;
+	Sat, 5 Jul 2025 08:09:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751720990;
+	bh=ttqjqkTwAbS4h3qGA1nHlnNHYoKbG6HRZs4IHbCT+c8=;
+	h=From:To:CC:Subject:Date;
+	b=daS93Z0znHcxGrRqwRwVnJNdcXTSEnN/3haIvwCNKSfAcZd42Y7uc1qtZxzQmcoAa
+	 IxrCCY+kZGsB3EmMK5q3NY3k8VlE2TTNNX6fwLUIfJhhrxv6ekANCQi1e5kutc+f5I
+	 oBjqu3Vn1LtDua5dP/Qe/BsLvqnkF2vBFW5T993I=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 565D9n5i2728577
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Sat, 5 Jul 2025 08:09:50 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Sat, 5
+ Jul 2025 08:09:49 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Sat, 5 Jul 2025 08:09:49 -0500
+Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 565D9hrL707887;
+	Sat, 5 Jul 2025 08:09:44 -0500
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>
+CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <shenghao-ding@ti.com>, <navada@ti.com>,
+        <13916275206@139.com>, <v-hampiholi@ti.com>, <v-po@ti.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>
+Subject: [PATCH v1] ALSA: hda/tas2781: Fix calibration data parser issue
+Date: Sat, 5 Jul 2025 21:09:08 +0800
+Message-ID: <20250705130908.26248-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,28 +58,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Fix grammar in kernel-doc for dvb_frontend_sleep_until() by replacing
-"Its" to "It's".
+Calibration data was overwritten during parser, it cause issue.
 
-Signed-off-by: Jesung Yang <y.j3ms.n@gmail.com>
+Fixes: 4fe238513407 ("ALSA: hda/tas2781: Move and unified the calibrated-data getting function for SPI and I2C into the tas2781_hda lib")
+
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
 ---
- include/media/dvb_frontend.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/tas2781_hda.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
-index 607f7645468e..12143f0b14a8 100644
---- a/include/media/dvb_frontend.h
-+++ b/include/media/dvb_frontend.h
-@@ -818,7 +818,7 @@ void dvb_frontend_reinitialise(struct dvb_frontend *fe);
-  * as possible, as it affects the detection of the dish tone command at the
-  * satellite subsystem.
-  *
-- * Its used internally by the DVB frontend core, in order to emulate
-+ * It's used internally by the DVB frontend core, in order to emulate
-  * FE_DISHNETWORK_SEND_LEGACY_CMD() using the &dvb_frontend_ops.set_voltage\(\)
-  * callback.
-  *
+diff --git a/sound/pci/hda/tas2781_hda.c b/sound/pci/hda/tas2781_hda.c
+index 5f1d4b3e9688..34217ce9f28e 100644
+--- a/sound/pci/hda/tas2781_hda.c
++++ b/sound/pci/hda/tas2781_hda.c
+@@ -44,7 +44,7 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 		TASDEVICE_REG(0, 0x13, 0x70),
+ 		TASDEVICE_REG(0, 0x18, 0x7c),
+ 	};
+-	unsigned int crc, oft;
++	unsigned int crc, oft, node_num;
+ 	unsigned char *buf;
+ 	int i, j, k, l;
+ 
+@@ -80,8 +80,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 			dev_err(p->dev, "%s: CRC error\n", __func__);
+ 			return;
+ 		}
++		node_num = tmp_val[1];
+ 
+-		for (j = 0, k = 0; j < tmp_val[1]; j++) {
++		for (j = 0, k = 0; j < node_num; j++) {
+ 			oft = j * 6 + 3;
+ 			if (tmp_val[oft] == TASDEV_UEFI_CALI_REG_ADDR_FLG) {
+ 				for (i = 0; i < TASDEV_CALIB_N; i++) {
+@@ -99,8 +100,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 				}
+ 
+ 				data[l] = k;
++				oft++;
+ 				for (i = 0; i < TASDEV_CALIB_N * 4; i++)
+-					data[l + i] = data[4 * oft + i];
++					data[l + i + 1] = data[4 * oft + i];
+ 				k++;
+ 			}
+ 		}
 -- 
-2.39.5
+2.43.0
 
