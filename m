@@ -1,108 +1,145 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9A27465B;
-	Sat,  5 Jul 2025 02:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524F42E371A;
+	Sat,  5 Jul 2025 02:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751683711; cv=none; b=TBaHV6gzlVlyHOQvDzbCLWc//q0LXBFsYhMlvXrBJH6GvIqvMl9cmFSrnvpln7uwsQpolRFMOi4ioXHOqPCU7I5YaPACYW9LHSV19QhqBCi/87un7cIj5VJK9Hfz5gDAZAiJeciAxVDpdsL+aztXT1dc2MhLgzx63TxqH9ZaMcM=
+	t=1751683889; cv=none; b=umINmwnyYx2C6iEUROPhCgjUUxd3OtK4GkF8wbOLRWSOEYZ5G6x9YcP2v4FJJFqbiMpRG6q84Hn5xEuUMLKzlstQDPZSSa2cCNpUxKUyrgIJqUl5NRUm/K5PmkHMPc9caNu8F8UV0Kzkqr5Uqr54updM/a5/XEWhVDGH3ThFVaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751683711; c=relaxed/simple;
-	bh=imfFZyMuzBbs0QEQxdBQnbPOZu4GObvS+2QnEyp8plE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XS//URA0r4Tae0HJbbBX1JaphNdX/RZ8LX3t+zlfvsPr3ql5W18OPCK66HToMexRlc5s92Ka6WcOwM+zXCjQt7EgYrpVShxyga0xxUHh7C/cyhO4/lpK06J3BU+RqOU0u4b1Qtk97Pxob1hRVJpJNpafOTBgPA32Wzh0mxegtv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=R+udOw0j; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="R+udOw0j"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so12747115e9.3;
-        Fri, 04 Jul 2025 19:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1751683708; x=1752288508; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+FTc1lp2knc8DjUqKz98FvcZs+AiwQeeISv5z2me7ls=;
-        b=R+udOw0jxYpHaymBAbuv+GoNpCBVAp327+7DgkIRihzY1ya4iqHugRGH8JSYBHFtMt
-         yW9/VHZkpqMwcI0hyp1JGU0zX6mwhZztlwkZAkq4SffbvR+3P9ml9k9D58ucudUxz776
-         YC4UN9uvNoh7rir4jbf/BSp70n0Y4Qf2n7UXsot6kk++lPuoYRSyroTGPFJ/qNWR3xOl
-         Zr7HV31d8qVAZvyWmtnvaZFzQ9uZy42wypV378X0/r7G4Tt5PMCHNnnT4FnVUwSMcW7+
-         f8HpYVF7rT2WrVB3lHIg8AiWjZp0WLGu2srIsY4U/k+uSJJ29IzWZRjS6ye8myeLBJPn
-         kUVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751683708; x=1752288508;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+FTc1lp2knc8DjUqKz98FvcZs+AiwQeeISv5z2me7ls=;
-        b=IRR9mzAOL1tkK+URKbTsEtq9LqfuT0nEyF39Az8rx16sTVQ2BNxhuXkixVKvKus57h
-         Xwni/pJCAXn/lHsjD4JYc+s1dfX6SsRew4pgVbzPshHBTcJ1x6Fhkt6R1/q/0TLbWD/m
-         O5lh4649wymIzo+nhcLZ8IRvXwvxhxSpUQ3GbJt9ocj6yxf60rs1tkzqONEfuhoKqZK5
-         pmgiUSY70LWb8mmwwdaZZBN069uXiu1DjgcYediWGSC3+8c8iHItPagSDTFKl6Ws2gtK
-         RImZ13ZSSUQGkwRebmfRnMh+ewPBnT8v91UxQoj+5LijOT6kvGLqap0MqGIUYAmMuE0s
-         19Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkazIl5QkbrYwm9dCwW3vyU+F4ltktrNICsr8y2LJH0nvQopvnyYU/OtNjPPl6R2wrC2HxPqix@vger.kernel.org, AJvYcCVKU+EtUrhkV1zZS3R+BcGoOwQEdMcC5QXU/rAGh5Q3mnKl4FDx2ULnMCpTC5jKy1u9VUQBO6L7j4IKejA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVf4UxG5qZUSByHSJlCV24wFOLgBaDlf7h0dkEcIprTrO5b6iY
-	O+DurSgISlHOfv6FwzjfqX9rgnMGr2y43RTPl/+sL9QMFt9kGoJjo6Y=
-X-Gm-Gg: ASbGncvu/Fg7eQET1G1CBJCxXRHsRasNMIha5C/IbnoR68dAByaFDQXlAVbL22pajL5
-	tRfSufste5LXmHMiQoI6vBK5xQZNXaG6rTk/KFPXW21vHuGu39fluCkAtHPGCce/ZThT/AnWEVB
-	2hs3LaJnriQGyy1Wucka9QgG8gyBOHv7BMxbHF3Fv7sOgTMoNskw91Ws6k99rEHj80BZXDPXkVN
-	IIP+cETeI8h5WcZMc6c/LDT+Nu8Qom9MYdSkkdG1aDU5M3H9xw25jvES+duzvReKViPuCv6jQmG
-	fIImj+1x3bPOBbEy0dGFrubaV1NkGJnG2lpUc3qKASW17/C8MIOGQxUmBbRP6vyrw6iRnXnlhpH
-	/Xi5FppExZnyUjmgebikHWtIr2IKvPFYAiG8i0hs=
-X-Google-Smtp-Source: AGHT+IHcOyBgdFMIsBgcKMgtcgz+vJMHffGBz9giYBlh30rL1aBDoJtL5y4XRqZbTLHnuYIV18H7jw==
-X-Received: by 2002:a05:600c:4ed0:b0:453:9bf:6f7c with SMTP id 5b1f17b1804b1-454b4e76919mr44490545e9.9.1751683707630;
-        Fri, 04 Jul 2025 19:48:27 -0700 (PDT)
-Received: from [192.168.1.3] (p5b0570c7.dip0.t-ipconnect.de. [91.5.112.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b966cbsm3836740f8f.49.2025.07.04.19.48.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jul 2025 19:48:25 -0700 (PDT)
-Message-ID: <0259106b-cafa-42cb-8af3-85bac6b628c3@googlemail.com>
-Date: Sat, 5 Jul 2025 04:48:23 +0200
+	s=arc-20240116; t=1751683889; c=relaxed/simple;
+	bh=6NyZv8lozIrsP7Itz3qOaPMzVZsGuwwnQvzBvSweyyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uhgJfowbOSQ+zeuw3mfSqDwhs0yXr/O/QGI6Dt+AQllWLrRUav2Y3L0JQJvZnsfhIKq4DJlu6FCfUBI43bqksTg81gphk/brxCkppINR315IWVs7WZcADjqveoLTst7gv5wJP8XH4Vqaatpy4YokHAyhqQwwZzxZt9K5lJ2NEWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bYw4W68X6zYQtM8;
+	Sat,  5 Jul 2025 10:51:23 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id B071D1A0C6A;
+	Sat,  5 Jul 2025 10:51:22 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.170])
+	by APP3 (Coremail) with SMTP id _Ch0CgBHpyQmk2hoam_DAg--.41567S4;
+	Sat, 05 Jul 2025 10:51:20 +0800 (CST)
+From: Wang Zhaolong <wangzhaolong@huaweicloud.com>
+To: sfrench@samba.org,
+	ematsumiya@suse.de
+Cc: linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org,
+	wangzhaolong1@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	chengzhihao1@huawei.com
+Subject: [PATCH] smb: client: fix use-after-free in crypt_message when using async crypto
+Date: Sat,  5 Jul 2025 10:51:18 +0800
+Message-Id: <20250705025118.48080-1-wangzhaolong@huaweicloud.com>
+X-Mailer: git-send-email 2.34.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250703143941.182414597@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250703143941.182414597@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgBHpyQmk2hoam_DAg--.41567S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw1fCFW7Xry3Xr13AFW7XFb_yoW5uryfpF
+	WFyFWFyrWrJrn2g395JrWrAa4FvrZ3uw13GFZ7Gw17CFyrZr1vvry2k3WjqFy5AFWkJ34U
+	Wr4vvwn0qF12yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU17KsUUUUUU==
+X-CM-SenderInfo: pzdqw6xkdrz0tqj6x35dzhxuhorxvhhfrp/
 
-Am 03.07.2025 um 16:41 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.96 release.
-> There are 139 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+The CVE-2024-50047 fix removed asynchronous crypto handling from
+crypt_message(), assuming all crypto operations are synchronous.
+However, when hardware crypto accelerators are used, this can cause
+use-after-free crashes:
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+  crypt_message()
+    // Allocate the creq buffer containing the req
+    creq = smb2_get_aead_req(..., &req);
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+    // Async encryption returns -EINPROGRESS immediately
+    rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
 
+    // Free creq while async operation is still in progress
+    kvfree_sensitive(creq, ...);
 
-Beste Grüße,
-Peter Schneider
+Hardware crypto modules often implement async AEAD operations for
+performance. When crypto_aead_encrypt/decrypt() returns -EINPROGRESS,
+the operation completes asynchronously. Without crypto_wait_req(),
+the function immediately frees the request buffer, leading to crashes
+when the driver later accesses the freed memory.
 
+This results in a use-after-free condition when the hardware crypto
+driver later accesses the freed request structure, leading to kernel
+crashes with NULL pointer dereferences.
+
+The issue occurs because crypto_alloc_aead() with mask=0 doesn't
+guarantee synchronous operation. Even without CRYPTO_ALG_ASYNC in
+the mask, async implementations can be selected.
+
+Fix by restoring the async crypto handling:
+- DECLARE_CRYPTO_WAIT(wait) for completion tracking
+- aead_request_set_callback() for async completion notification
+- crypto_wait_req() to wait for operation completion
+
+This ensures the request buffer isn't freed until the crypto operation
+completes, whether synchronous or asynchronous, while preserving the
+CVE-2024-50047 fix.
+
+Fixes: b0abcd65ec54 ("smb: client: fix UAF in async decryption")
+Link: https://lore.kernel.org/all/8b784a13-87b0-4131-9ff9-7a8993538749@huaweicloud.com/
+Cc: stable@vger.kernel.org
+Signed-off-by: Wang Zhaolong <wangzhaolong@huaweicloud.com>
+---
+ fs/smb/client/smb2ops.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
+index 1468c16ea9b8..cb659256d219 100644
+--- a/fs/smb/client/smb2ops.c
++++ b/fs/smb/client/smb2ops.c
+@@ -4314,10 +4314,11 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
+ 	struct scatterlist *sg;
+ 	u8 sign[SMB2_SIGNATURE_SIZE] = {};
+ 	u8 key[SMB3_ENC_DEC_KEY_SIZE];
+ 	struct aead_request *req;
+ 	u8 *iv;
++	DECLARE_CRYPTO_WAIT(wait);
+ 	unsigned int crypt_len = le32_to_cpu(tr_hdr->OriginalMessageSize);
+ 	void *creq;
+ 	size_t sensitive_size;
+ 
+ 	rc = smb2_get_enc_key(server, le64_to_cpu(tr_hdr->SessionId), enc, key);
+@@ -4364,11 +4365,15 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
+ 
+ 	aead_request_set_tfm(req, tfm);
+ 	aead_request_set_crypt(req, sg, sg, crypt_len, iv);
+ 	aead_request_set_ad(req, assoc_data_len);
+ 
+-	rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
++	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				  crypto_req_done, &wait);
++
++	rc = crypto_wait_req(enc ? crypto_aead_encrypt(req)
++				: crypto_aead_decrypt(req), &wait);
+ 
+ 	if (!rc && enc)
+ 		memcpy(&tr_hdr->Signature, sign, SMB2_SIGNATURE_SIZE);
+ 
+ 	kvfree_sensitive(creq, sensitive_size);
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.34.3
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
