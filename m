@@ -1,134 +1,180 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3842E3701;
-	Sat,  5 Jul 2025 13:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BBC1CFBA;
+	Sat,  5 Jul 2025 13:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751722088; cv=none; b=gsenDxsv32B0+iITvOosvbxRAupFFmesA+6IBKRB/jYaANFBy1pvlSb2iJ3I2qtAvGetDif0vwfuVrUeZ4fe4IXvHvKL8ZmCpNztk/Bza7Hh+QZXdURGYKGgQGmtyGAM92FtUlhU+wBeWqHZc88XzFi7QMSwKh+X3QhZOiS25rU=
+	t=1751722567; cv=none; b=H/Y/dwV5lp2R57n/Q6ICjfQCekRlxLfEfd0DEkzEUP3AKVEXnOZ3IRh4eQxGl0U37NDU2TRQ9m9qb73bnZEJMmaRD2Eb6CSohlYrz4xe1dqEZQQWh2XwZzgHT5+85aYBkTz+agpVmjDULJjMzQvMMDPhmoTkZUBjFmb3hGgRaLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751722088; c=relaxed/simple;
-	bh=KVqjjUVHSHMyWDBQXOVf0qJJ2zD9PqTtcLBzvAKiqaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l17dD8f6rZ4gXOPU41ydwI2ivvLaWIOpNwg8+B/qecL0MxxGfTpN6xRdocvYo8mIl1A1qzeSNNXMf2UFWHvywye9ghyGOKw5hgPKZuF4zcPcY1wCVAIRsozR4cTWG57BWwlQ9KdmT9a7Sx4623WvCc2OmuVbdNrrISxJpVG0jzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: esmtpsz20t1751722000t36e13c50
-X-QQ-Originating-IP: a8lAHqUIIqqRPRk15q8cBF5M1P2suxRgobABGel99Lo=
-Received: from [127.0.0.1] ( [119.98.96.24])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 05 Jul 2025 21:26:38 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 2169472833565071941
-Message-ID: <9588D2722C1F010D+51f41c36-856d-4dda-9f30-226c2f772f2c@radxa.com>
-Date: Sat, 5 Jul 2025 21:26:39 +0800
+	s=arc-20240116; t=1751722567; c=relaxed/simple;
+	bh=byEloyPvqf1nq7MO7oyaeg7ZRyoHN7+ex2bhsiYAgeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=lCHCf/1CWDD6HCKheBnlgvj4AUhC2MVTYzY8E73WRAIQ9mYfUQphsBz8lGs4EbIy29AoxK/b3FQqiAO4C6r5ULCCSOkEvC874yaWO9NVnUvVWqvNTT8ajB4qIqvsBNS1SacSClCxupdWlwIRsygjiRV86cwo5de9iCQIqPNt9aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyY3lM4W; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyY3lM4W"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a528e301b0so72105f8f.1;
+        Sat, 05 Jul 2025 06:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751722564; x=1752327364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ynw8s9LyLhGgrm657sVw2shdcPbKUaf0m+3Cw45kKGY=;
+        b=jyY3lM4W3yjYFaHycKwKDFuspltB9xGe6jkf75SyAv4raSRXUlRUUMs7xh6qJfwzXu
+         xSXpIhOeFojQceTTEUmTJHgMQToJDq0YfyzidopP3pNg7YxsNpF61GJWzd1JCInfoq7q
+         58HnZp74H4vp6BBSWf0G/FGEpTVDNvJhqSDH8ikuqo6jpQNXB6sApU50Ui2AuWjuo/xW
+         SHAGlHRJK4jTkgNofThl/k9h6D0zjpPDvdNrTf3VmIxD6IQCy7LKR/9NyPaXTsKoWMfR
+         9sXz9MH0TUgvmKFsv1i+ypMDJBKeHSIyM6Rp0U6dtKfma3hK39G7+rhYtgoXQMj3YLaA
+         HFmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751722564; x=1752327364;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ynw8s9LyLhGgrm657sVw2shdcPbKUaf0m+3Cw45kKGY=;
+        b=db/ykkd9MSL2XpjkHXmKhvWVppuZV07M5c+HRzOr6KY3O+5GCD9Ksnh+KogQlXj3en
+         YCXI644gjNQgid3khGRKQKlDsLRMTYlbrgzGvpQykM+rgP5vtFsfWp3q5DV4XljSD72/
+         VrRK/WWbGWbptCDkHkyD0m1bKn9QUkiE6JV39qrY38q65IkfqYicE7IgQhjWF5RD9mVV
+         9a9S7gIwnYPzHdzjpcnCsffGP3IjGxECeCfyvF6BfqeJlWIANaBF9z3scz0T4x1bZgUw
+         85iBgSp1mu4o/N6eEdNdNAAf/2JyC8Tlm7sM3czqTck4KpaH1ssyvv2eJ16lItYUg3wg
+         VNFA==
+X-Gm-Message-State: AOJu0YwQZX7T/fiHnthfteuipIKyxRbhb8TqYyHQl10A+A+jVtktjZOg
+	CfQyf0s0S0IJejgFFXclDwXmicFxQuFkXW65oOb8PjF83Gnif0zrT/oY7wleLDXy+98=
+X-Gm-Gg: ASbGnctr/6Nmj3WihJlLkR34Dt8/aJh7IhVa98V4PM3f5vgXFRQssc+rccAGGQ/fINZ
+	gieJ4yR7s2QFO2RkQ/oNlh/1TizvwStN07xRTiGLg8VVlFuwMYgssGWfVi09TyYRNUGE5Ii6YH/
+	W2cvyfueB7WFgllhNKOin9T6vr3EC3HkwhgG+uKJPd6LrP7bOP2y8LXW7GKj1ePZUzOstedKOsc
+	5P1uQg/KU6PyBHxyOkxtleMXjSMH0m7VKa0OIWqqNVoffYipAXKFwTcleQVm1LnAeUvls7d7lE0
+	jfZ/OgA7xkYVN2p5EbZy81FzACK+ne7cQrw+fKIKwfoFBkDwMGZ55KBAc4UdgfJRlSzUtsNYjT5
+	twuXwgHHglqvw0oZ6gQxyJ9HgKeJGx/SKB9Qqew==
+X-Google-Smtp-Source: AGHT+IHkCjlJ1Ork2YzV2vUina+G6VUcdyH2F7b53k1VNHr+4oxJBQtqCCHmKO52hvCGKGXtvd0wnQ==
+X-Received: by 2002:a05:6000:26c9:b0:3a5:7991:fee with SMTP id ffacd0b85a97d-3b496607b78mr1851886f8f.14.1751722563450;
+        Sat, 05 Jul 2025 06:36:03 -0700 (PDT)
+Received: from pop-os.localdomain (175.77.11.37.dynamic.jazztel.es. [37.11.77.175])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030bc5asm5001457f8f.20.2025.07.05.06.36.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 06:36:02 -0700 (PDT)
+From: =?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	briannorris@chromium.org,
+	francesco@dolcini.it,
+	thomas.weissschuh@linutronix.de,
+	tglx@linutronix.de,
+	johannes.berg@intel.com,
+	mingo@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	skhan@linuxfoundation.org,
+	=?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
+Subject: [PATCH] mwifiex: replace deprecated strcpy() with strscpy()
+Date: Sat,  5 Jul 2025 15:36:00 +0200
+Message-Id: <20250705133600.186441-1-miguelgarciaroman8@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qcom-qmp-ufs: Fix HS-G4 PHY init table for sc7280
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Nitin Rawat <quic_nitirawa@quicinc.com>,
- Manish Pandey <quic_mapa@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250613-sc7280-ufsphy-g4-fix-v1-1-1bf60744f5ac@radxa.com>
- <o2chuy22dls3y3bsjke34z7pnyzap6m4m34tjxswueshulii4d@d5lbcragrbjb>
-From: Xilin Wu <sophon@radxa.com>
-Content-Language: en-US
-In-Reply-To: <o2chuy22dls3y3bsjke34z7pnyzap6m4m34tjxswueshulii4d@d5lbcragrbjb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MfQnJH+7WKv6Z2IQjAHqShMWQK7KOahyd3oZugBFH5OBkN9TKvh6ID6X
-	1QXt/Nm2M4+ZkbJtzq8HYQzqq0b3Pr1TpI77qyU7thwiSnlucGPmoaCj2BvslImkK0rdvQ3
-	GcreWtKD7iEYcSDJtTFIPhyVnliop/+9LjXOcyolhYJ6CXjXV5AlsedaRsOO2J4W119dI+h
-	swXAcubXgn1C4Cq+oZiR8HluhTijqLkVLhXQkUk+vXkez3oGF7b8RI2M6BXvsy7bXSHgwtN
-	EumnTER9HqdPPY+Wvq6RAEiA1CpV6eL12s4M1oM7oZBIDwf1R2BZQZr4qRfBrZljaBgvmDD
-	tGiZSzAy+xuFD3lY6jBVndJrEkhKwmxIPuTd54TkeaUiJ4vQiAywBJptx5pxgvSslb5yD6D
-	qmgm/gmr0/n8MJiiDFa74V+1nnLvrSAu2DOVcC+jwaaj/H1rWraYsSgU3BIZIi95J90o6qz
-	OJ4l6CjkcvmMP/duFnmduP9IeSADiWAy+HDuIjn4r1uC0k30/BUxjibaAmR7IIKp1abeBYB
-	m2MaTSh9P9KJtl1t3vnOerlpH9DF5AULqscejz/CP40h8ufwORSJ6EYbbkV95aek1/gJXrm
-	jOJIYpN406twBRNu/gsYrZsD0QfN1wYIahNKoMXF1Y7qEHLAGCjUL3dNJkb/FDytEZEdAJy
-	sYbwL3E5xuyoDJSPWNtk4woOcGCCCrsKiSnYvKCw+7kerGTGgM/LrBXJ9K5TgXy1OQswN/A
-	A9FvvvZ/KnuE15NHJYzIDgVIQNanlCcYSwBp9BPoExtPv/Ab7Y4COJ/wX1q9Ew3AIYXr70+
-	k+akOB44lv2U9TJbmF63fhwEPYecVc/em/c2BGiUWhMiBm9hObqynoJ1reykNslJtXTLeIU
-	0ewB8OzY1IpFPjYK5fkfTw68giL53XEGI+kJAbicEAoXaYa7wzCbAfqRKyW9kcL0IfwWJkR
-	7JW98p54kCE3xWFsTOM7x0V8Z1yYPgy+f/Lh8QdNvM2dI+1RTntT1mOB9xRVFqQBfACgXpd
-	44cYs5/A==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2025/7/5 21:06:56, Dmitry Baryshkov wrote:
-> On Fri, Jun 13, 2025 at 10:41:48PM +0800, Xilin Wu wrote:
->> The PHY is limited to operating in HS-G3 mode during the initial PCS
->> registers initialization. Extra PHY init sequence is required to allow
->> HS-G4 mode to work when needed.
-> 
-> I can't find corresponding settings in either of HPGs.
-> 
+strcpy() is deprecated for NUL-terminated strings because it may overflow
+the destination buffer and does not guarantee termination.  strscpy()
+avoids these issues.
 
-I believe there was a mistake when initially adding support for sc7280 
-UFS PHY based on downstream code. In downstream [1] the 
-HSGEAR_CAPABILITY registers are programmed to 0x3 **only** when Gear 4 
-is not needed, while the current upstream driver always writes to this 
-register regardless of the UFS Gear. [2]
+adapter->fw_name is a fixed-size char array (64 bytes).  All source
+strings copied here are bounded literals or validated inputs, so no
+return-value handling is required.
 
-I don't have access to the HPGs. The Gear4 specific init sequence is 
-found in the Qualcomm proprietary UEFI driver code.
+Signed-off-by: Miguel García <miguelgarciaroman8@gmail.com>
+---
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 40 ++++++++++++++-------
+ 1 file changed, 28 insertions(+), 12 deletions(-)
 
-[1]:https://github.com/NothingOSS/android_kernel_msm-5.4_nothing_sm7325/blob/sm7325/s/drivers/phy/qualcomm/phy-qcom-ufs-qmp-v4-yupik.h#L355
-
-[2]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c#n215
-
->>
->> Fixes: 8abe9792d1ff ("phy: qcom-qmp-ufs: Add Phy Configuration support for SC7280")
->> Signed-off-by: Xilin Wu <sophon@radxa.com>
->> ---
->> This might need testing on sm8150, sm8250 and sc8180x as well.
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> index b33e2e2b5014d3ca8f19b623ba080887f53e616d..7797be329d75f95c80863e05351d0cf55fdf38c2 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> @@ -570,6 +570,13 @@ static const struct qmp_phy_init_tbl sm8150_ufsphy_pcs[] = {
->>   
->>   static const struct qmp_phy_init_tbl sm8150_ufsphy_hs_g4_pcs[] = {
->>   	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL, 0x10),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_PLL_CNTL, 0x0b),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB, 0x2d),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB, 0xb0),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_PWM_GEAR_BAND, 0xff),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_HS_GEAR_BAND, 0x1b),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_HSGEAR_CAPABILITY, 0x04),
->> +	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_RX_HSGEAR_CAPABILITY, 0x04),
->>   	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_BIST_FIXED_PAT_CTRL, 0x0a),
->>   };
->>   
->>
->> ---
->> base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
->> change-id: 20250613-sc7280-ufsphy-g4-fix-024542f31fac
->>
->> Best regards,
->> -- 
->> Xilin Wu <sophon@radxa.com>
->>
-> 
-
-
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index a760de191fce..2aad9ab210e0 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -3098,9 +3098,8 @@ static int mwifiex_pcie_request_irq(struct mwifiex_adapter *adapter)
+ }
+ 
+ /*
+- * This function gets the firmware name for downloading by revision id
+- *
+- * Read revision id register to get revision id
++ * Get firmware name for download by revision id
++ * Uses strscpy() to ensure NUL-termination and avoid overflow.
+  */
+ static void mwifiex_pcie_get_fw_name(struct mwifiex_adapter *adapter)
+ {
+@@ -3110,39 +3109,56 @@ static void mwifiex_pcie_get_fw_name(struct mwifiex_adapter *adapter)
+ 
+ 	switch (card->dev->device) {
+ 	case PCIE_DEVICE_ID_MARVELL_88W8766P:
+-		strcpy(adapter->fw_name, PCIE8766_DEFAULT_FW_NAME);
++		strscpy(adapter->fw_name,
++			PCIE8766_DEFAULT_FW_NAME,
++			sizeof(adapter->fw_name));
+ 		break;
++
+ 	case PCIE_DEVICE_ID_MARVELL_88W8897:
+ 		mwifiex_write_reg(adapter, 0x0c58, 0x80c00000);
+ 		mwifiex_read_reg(adapter, 0x0c58, &revision_id);
+ 		revision_id &= 0xff00;
++
+ 		switch (revision_id) {
+ 		case PCIE8897_A0:
+-			strcpy(adapter->fw_name, PCIE8897_A0_FW_NAME);
++			strscpy(adapter->fw_name,
++				PCIE8897_A0_FW_NAME,
++				sizeof(adapter->fw_name));
+ 			break;
+ 		case PCIE8897_B0:
+-			strcpy(adapter->fw_name, PCIE8897_B0_FW_NAME);
++			strscpy(adapter->fw_name,
++				PCIE8897_B0_FW_NAME,
++				sizeof(adapter->fw_name));
+ 			break;
+ 		default:
+-			strcpy(adapter->fw_name, PCIE8897_DEFAULT_FW_NAME);
+-
++			strscpy(adapter->fw_name,
++				PCIE8897_DEFAULT_FW_NAME,
++				sizeof(adapter->fw_name));
+ 			break;
+ 		}
+ 		break;
++
+ 	case PCIE_DEVICE_ID_MARVELL_88W8997:
+ 		mwifiex_read_reg(adapter, 0x8, &revision_id);
+ 		mwifiex_read_reg(adapter, 0x0cd0, &version);
+ 		mwifiex_read_reg(adapter, 0x0cd4, &magic);
++
+ 		revision_id &= 0xff;
+-		version &= 0x7;
+-		magic &= 0xff;
++		version     &= 0x7;
++		magic       &= 0xff;
++
+ 		if (revision_id == PCIE8997_A1 &&
+ 		    magic == CHIP_MAGIC_VALUE &&
+ 		    version == CHIP_VER_PCIEUART)
+-			strcpy(adapter->fw_name, PCIEUART8997_FW_NAME_V4);
++			strscpy(adapter->fw_name,
++				PCIEUART8997_FW_NAME_V4,
++				sizeof(adapter->fw_name));
+ 		else
+-			strcpy(adapter->fw_name, PCIEUSB8997_FW_NAME_V4);
++			strscpy(adapter->fw_name,
++				PCIEUSB8997_FW_NAME_V4,
++				sizeof(adapter->fw_name));
+ 		break;
++
+ 	default:
+ 		break;
+ 	}
 -- 
-Best regards,
-Xilin Wu <sophon@radxa.com>
+2.34.1
 
