@@ -1,224 +1,221 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22418269817
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 03:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B333139D0A
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 03:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751685636; cv=none; b=L7zE582+FjCLMiSjjWay5QcQtOhuzcZX7rjH+U2cl3YY9VBxrwePkGwMj4jrdXzpyYrHX7OZxNoIY8AAzKMlunTxANQ9rM0nrLj3hHCqHf5F5n7kCdxIaEPgw7kdtaJUhzjX2UNVLLjXRNnHANWjW0xwwEie9/q3ZYJg/qcPu40=
+	t=1751686046; cv=none; b=HexN6LW0Nwhnv4LWOJJRcSk1yJ/0QabWLjIgG8q2ZcYj9hBsQjDelNfJ3PuLZU+9oUrXSe1oIyC61SPRIwrHiVgC4CC9W0XxuTJWT6VlF+WoaaDxFi32yBEdQIXvTEaToMva1rCOfwzBp3RMQQFZlWgiaiArWmxW+uDM3hja9T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751685636; c=relaxed/simple;
-	bh=zZwDXQap667ELnegP7wTGLkBneiHcdIV4IyHvMHsMh0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cJSnfC03ftp5i8vwGW7pROueZLSWPp9ED/rBZikCydTvknXW6g8q1CbrQT0XnlGwyzqW7uLtp8n6i548BPURRrVx0FHcHtuNQFcVtXwEcdokWHoFO9URRWbKA1ucBQi1cJKjL+aHilR71JSf6/60XLA5AN+qyFzFTGiUQLwYkRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df40226ab7so32669815ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 20:20:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751685634; x=1752290434;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nKt1RwcKjdMcd7EsDv9hpf69VqnWr85XcRCar4AQMZ8=;
-        b=gM8gOHCsHtP8pcn6WDcn6XZcxgp1ZTjz9zETB9rvNgBZu3Rxtvp46NQerGDcm3GCL2
-         BA19lOeoimeAd30QGOQETnClL9EqEyEt8Ehnjr63hvGk2eo9QZHzlhxIQlX6kG86MyXz
-         hNWFHxz8OnyYhnJY68s2Bpic9stQl5jKIkZASUC61FzStqZzF1wEaYk42sC2MOjvdcbI
-         VYfxfGxPcGMTT/lkBF+FRdqknQN08rsImbEbAWk3SZvNgmBxjWgEb4dKJjdeeg7H6CFa
-         dV4RRHo8eUnzUq4W8mv+KCYgAx+PjgBUXc1rRz65zjlomNFzIwbkkNLDMttNKmqMCUci
-         iv2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUgxg7i1AB8fBvHVzgY92Gez4kAa97RJBWNpvQ+LD77Vb/NDkYY8gZ22jc6ZzYmHTY790+5K9IKhAc8LRg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgiDshoouV/zsTVCvYgHX3q4Q3AnOZdItWXjsp7u/Gkvz0Xo6x
-	V9lzOn+KSlaXqHg8EqkQ+EllRNeFVwNkxvcJCQPDWem4T/4tAoJoj52n7DAfhzjJZSNU8O0Zk66
-	s2s1E+uL0pQTv6/vL0dVJEI7YW9nNTtpMf5oH2ieacxvdo5M/zwro9nPYVmQ=
-X-Google-Smtp-Source: AGHT+IEt0sFGRwFvBLeNL/8AZA4SWCKa/D207JDFHLCrI0TTfNhMrqrxt7NKFuB414/EOhzd8jQaf69hA6qaE3PqdmhEmS1zs97S
+	s=arc-20240116; t=1751686046; c=relaxed/simple;
+	bh=rz1YPfn+Xyf97OsN+1k8HXgq3rfV0JI8jj2cnO+tzg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iMXrh05E+edEJD7pVQOc6PZkCAaCqMSyITUA03uVykhPqT5v0kPN1jgXMrnR5pwhP0vg5HOuM25CtZ8T4iiCErh2rtszqzKtxU9hb0qgeLwpFdS5T6szkZR0ZZyEG0JpSbGJwtKt5H3nY4eS2nxWX54rrjyAtLkCjmZhSjcQcQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dCY2LoA8; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dCY2LoA8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751686045; x=1783222045;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=rz1YPfn+Xyf97OsN+1k8HXgq3rfV0JI8jj2cnO+tzg8=;
+  b=dCY2LoA8XfQSqx3oUwo0P97Ep1mdCWlYZQx29DF52JEppfSVwxdmdjcV
+   K6CjbUZmHYyTBcfdjuoh0mimLrCLYi+CArl7x6C+/yZrRIPGWcO8/BdsI
+   0V5IBx5AB3QMmFBQE4ucBPpUoRleZ102uptoC83me7lNVgYcp1KBl715E
+   7+7hazgecmiSBalAR8MpSSCh3/xWpjOkdkrCZ1JHY9F/cDhY/w+qZvfFb
+   n5VWephGwDMfFw0+oDeSMbhTl9O/2jre2dV0KZOMwJ2GaWZo2fVCTmWjf
+   nrwEgjItRWyJEJyJ90kVMXBHRt7j2jRCmvOGSpcYvSozxfP25A+ZbS/+Q
+   w==;
+X-CSE-ConnectionGUID: qTbIRxLlQcOg21gdy5hYkg==
+X-CSE-MsgGUID: hHTssmoPR+Gw5liNkIW1hA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53866595"
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="53866595"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 20:27:25 -0700
+X-CSE-ConnectionGUID: YzEkqh/bRsiuAtOhpEsjAg==
+X-CSE-MsgGUID: eh3wVBO0QpuriMgRp2TlYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="155237758"
+Received: from igk-lkp-server01.igk.intel.com (HELO 030a839a1121) ([10.91.175.65])
+  by orviesa008.jf.intel.com with ESMTP; 04 Jul 2025 20:27:23 -0700
+Received: from kbuild by 030a839a1121 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXtYe-0000lV-27;
+	Sat, 05 Jul 2025 03:27:20 +0000
+Date: Sat, 5 Jul 2025 05:26:31 +0200
+From: kernel test robot <lkp@intel.com>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
+Subject: drivers/gpu/drm/vc4/vc4_drv.c:303:8: warning: cast to smaller
+ integer type 'enum vc4_gen' from 'const void *'
+Message-ID: <202507050513.zh0Xm13T-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a85:b0:3dc:87c7:a5a6 with SMTP id
- e9e14a558f8ab-3e13ee8487dmr10058605ab.4.1751685634275; Fri, 04 Jul 2025
- 20:20:34 -0700 (PDT)
-Date: Fri, 04 Jul 2025 20:20:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68689a02.a00a0220.c7b3.002d.GAE@google.com>
-Subject: [syzbot] [kernel?] possible deadlock in posix_clock_unregister
-From: syzbot <syzbot+7cfb66a237c4a5fb22ad@syzkaller.appspotmail.com>
-To: anna-maria@linutronix.de, frederic@kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+Hi Dave,
 
-syzbot found the following issue on:
+FYI, the error/warning still remains.
 
-HEAD commit:    c435a4f487e8 Merge tag 'riscv-for-linus-6.16-rc5' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1563548c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9887aa986c36cc50
-dashboard link: https://syzkaller.appspot.com/bug?extid=7cfb66a237c4a5fb22ad
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a79a588fc1761dc12a3064fc2f648ae66cea3c5a
+commit: 56aa4c374dbf86d90b7c5aabdc8facbdd3321477 drm/vc4: Use of_device_get_match_data to set generation
+date:   7 months ago
+config: x86_64-buildonly-randconfig-2001-20250705 (https://download.01.org/0day-ci/archive/20250705/202507050513.zh0Xm13T-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050513.zh0Xm13T-lkp@intel.com/reproduce)
 
-Unfortunately, I don't have any reproducer for this issue yet.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507050513.zh0Xm13T-lkp@intel.com/
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0f92f50c3eac/disk-c435a4f4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d15feed2dd9a/vmlinux-c435a4f4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/74b4738b6bd9/bzImage-c435a4f4.xz
+All warnings (new ones prefixed by >>):
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7cfb66a237c4a5fb22ad@syzkaller.appspotmail.com
-
-ptp ptp0: delete virtual clock ptp16
-======================================================
-WARNING: possible circular locking dependency detected
-6.16.0-rc4-syzkaller-00286-gc435a4f487e8 #0 Not tainted
-------------------------------------------------------
-syz.0.689/7737 is trying to acquire lock:
-ffff8880356a4130 (&clk->rwsem){++++}-{4:4}, at: posix_clock_unregister+0x4d/0xd0 kernel/time/posix-clock.c:184
-
-but task is already holding lock:
-ffff88814bd10868 (&ptp->n_vclocks_mux){+.+.}-{4:4}, at: n_vclocks_store+0xf1/0x6d0 drivers/ptp/ptp_sysfs.c:215
-
-which lock already depends on the new lock.
+   In file included from drivers/gpu/drm/vc4/vc4_drv.c:27:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/gpu/drm/vc4/vc4_drv.c:303:8: warning: cast to smaller integer type 'enum vc4_gen' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+     303 |         gen = (enum vc4_gen)of_device_get_match_data(dev);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
 
 
-the existing dependency chain (in reverse order) is:
+vim +303 drivers/gpu/drm/vc4/vc4_drv.c
 
--> #1 (&ptp->n_vclocks_mux){+.+.}-{4:4}:
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
-       ptp_vclock_in_use drivers/ptp/ptp_private.h:113 [inline]
-       ptp_vclock_in_use drivers/ptp/ptp_private.h:99 [inline]
-       ptp_clock_freerun drivers/ptp/ptp_private.h:130 [inline]
-       ptp_clock_freerun drivers/ptp/ptp_private.h:125 [inline]
-       ptp_clock_adjtime+0x527/0x760 drivers/ptp/ptp_clock.c:125
-       pc_clock_adjtime+0x118/0x1e0 kernel/time/posix-clock.c:239
-       do_clock_adjtime kernel/time/posix-timers.c:1162 [inline]
-       __do_sys_clock_adjtime+0x175/0x290 kernel/time/posix-timers.c:1174
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+   288	
+   289	static int vc4_drm_bind(struct device *dev)
+   290	{
+   291		struct platform_device *pdev = to_platform_device(dev);
+   292		const struct drm_driver *driver;
+   293		struct rpi_firmware *firmware = NULL;
+   294		struct drm_device *drm;
+   295		struct vc4_dev *vc4;
+   296		struct device_node *node;
+   297		struct drm_crtc *crtc;
+   298		enum vc4_gen gen;
+   299		int ret = 0;
+   300	
+   301		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+   302	
+ > 303		gen = (enum vc4_gen)of_device_get_match_data(dev);
+   304	
+   305		if (gen > VC4_GEN_4)
+   306			driver = &vc5_drm_driver;
+   307		else
+   308			driver = &vc4_drm_driver;
+   309	
+   310		node = of_find_matching_node_and_match(NULL, vc4_dma_range_matches,
+   311						       NULL);
+   312		if (node) {
+   313			ret = of_dma_configure(dev, node, true);
+   314			of_node_put(node);
+   315	
+   316			if (ret)
+   317				return ret;
+   318		}
+   319	
+   320		vc4 = devm_drm_dev_alloc(dev, driver, struct vc4_dev, base);
+   321		if (IS_ERR(vc4))
+   322			return PTR_ERR(vc4);
+   323		vc4->gen = gen;
+   324		vc4->dev = dev;
+   325	
+   326		drm = &vc4->base;
+   327		platform_set_drvdata(pdev, drm);
+   328	
+   329		if (gen == VC4_GEN_4) {
+   330			ret = drmm_mutex_init(drm, &vc4->bin_bo_lock);
+   331			if (ret)
+   332				goto err;
+   333	
+   334			ret = vc4_bo_cache_init(drm);
+   335			if (ret)
+   336				goto err;
+   337		}
+   338	
+   339		ret = drmm_mode_config_init(drm);
+   340		if (ret)
+   341			goto err;
+   342	
+   343		if (gen == VC4_GEN_4) {
+   344			ret = vc4_gem_init(drm);
+   345			if (ret)
+   346				goto err;
+   347		}
+   348	
+   349		node = of_find_compatible_node(NULL, NULL, "raspberrypi,bcm2835-firmware");
+   350		if (node) {
+   351			firmware = rpi_firmware_get(node);
+   352			of_node_put(node);
+   353	
+   354			if (!firmware) {
+   355				ret = -EPROBE_DEFER;
+   356				goto err;
+   357			}
+   358		}
+   359	
+   360		ret = aperture_remove_all_conflicting_devices(driver->name);
+   361		if (ret)
+   362			goto err;
+   363	
+   364		if (firmware) {
+   365			ret = rpi_firmware_property(firmware,
+   366						    RPI_FIRMWARE_NOTIFY_DISPLAY_DONE,
+   367						    NULL, 0);
+   368			if (ret)
+   369				drm_warn(drm, "Couldn't stop firmware display driver: %d\n", ret);
+   370	
+   371			rpi_firmware_put(firmware);
+   372		}
+   373	
+   374		ret = component_bind_all(dev, drm);
+   375		if (ret)
+   376			goto err;
+   377	
+   378		ret = devm_add_action_or_reset(dev, vc4_component_unbind_all, vc4);
+   379		if (ret)
+   380			goto err;
+   381	
+   382		ret = vc4_plane_create_additional_planes(drm);
+   383		if (ret)
+   384			goto err;
+   385	
+   386		ret = vc4_kms_load(drm);
+   387		if (ret < 0)
+   388			goto err;
+   389	
+   390		drm_for_each_crtc(crtc, drm)
+   391			vc4_crtc_disable_at_boot(crtc);
+   392	
+   393		ret = drm_dev_register(drm, 0);
+   394		if (ret < 0)
+   395			goto err;
+   396	
+   397		drm_client_setup_with_fourcc(drm, DRM_FORMAT_RGB565);
+   398	
+   399		return 0;
+   400	
+   401	err:
+   402		platform_set_drvdata(pdev, NULL);
+   403		return ret;
+   404	}
+   405	
 
--> #0 (&clk->rwsem){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain kernel/locking/lockdep.c:3911 [inline]
-       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-       down_write+0x92/0x200 kernel/locking/rwsem.c:1577
-       posix_clock_unregister+0x4d/0xd0 kernel/time/posix-clock.c:184
-       ptp_clock_unregister+0x14f/0x250 drivers/ptp/ptp_clock.c:432
-       ptp_vclock_unregister+0x11a/0x160 drivers/ptp/ptp_vclock.c:228
-       unregister_vclock+0x108/0x1a0 drivers/ptp/ptp_sysfs.c:177
-       device_for_each_child_reverse+0x133/0x1a0 drivers/base/core.c:4051
-       n_vclocks_store+0x4b6/0x6d0 drivers/ptp/ptp_sysfs.c:241
-       dev_attr_store+0x55/0x80 drivers/base/core.c:2440
-       sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
-       kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:593 [inline]
-       vfs_write+0x6c7/0x1150 fs/read_write.c:686
-       ksys_write+0x12a/0x250 fs/read_write.c:738
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&ptp->n_vclocks_mux);
-                               lock(&clk->rwsem);
-                               lock(&ptp->n_vclocks_mux);
-  lock(&clk->rwsem);
-
- *** DEADLOCK ***
-
-5 locks held by syz.0.689/7737:
- #0: ffff88803578b7b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1217
- #1: ffff88803704c428 (sb_writers#7){.+.+}-{0:0}, at: ksys_write+0x12a/0x250 fs/read_write.c:738
- #2: ffff888033abf488 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
- #3: ffff88814bf00d28 (kn->active#60){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2b2/0x510 fs/kernfs/file.c:326
- #4: ffff88814bd10868 (&ptp->n_vclocks_mux){+.+.}-{4:4}, at: n_vclocks_store+0xf1/0x6d0 drivers/ptp/ptp_sysfs.c:215
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 7737 Comm: syz.0.689 Not tainted 6.16.0-rc4-syzkaller-00286-gc435a4f487e8 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain kernel/locking/lockdep.c:3911 [inline]
- __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
- lock_acquire kernel/locking/lockdep.c:5871 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
- down_write+0x92/0x200 kernel/locking/rwsem.c:1577
- posix_clock_unregister+0x4d/0xd0 kernel/time/posix-clock.c:184
- ptp_clock_unregister+0x14f/0x250 drivers/ptp/ptp_clock.c:432
- ptp_vclock_unregister+0x11a/0x160 drivers/ptp/ptp_vclock.c:228
- unregister_vclock+0x108/0x1a0 drivers/ptp/ptp_sysfs.c:177
- device_for_each_child_reverse+0x133/0x1a0 drivers/base/core.c:4051
- n_vclocks_store+0x4b6/0x6d0 drivers/ptp/ptp_sysfs.c:241
- dev_attr_store+0x55/0x80 drivers/base/core.c:2440
- sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
- kernfs_fop_write_iter+0x354/0x510 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x6c7/0x1150 fs/read_write.c:686
- ksys_write+0x12a/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2aab98e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f2aa97f6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f2aabbb5fa0 RCX: 00007f2aab98e929
-RDX: 000000000000fdef RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f2aaba10b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f2aabbb5fa0 R15: 00007ffc2d8b7958
- </TASK>
-ptp ptp0: delete virtual clock ptp15
-ptp ptp0: delete virtual clock ptp14
-ptp ptp0: delete virtual clock ptp13
-ptp ptp0: delete virtual clock ptp12
-ptp ptp0: delete virtual clock ptp11
-ptp ptp0: delete virtual clock ptp10
-ptp ptp0: delete virtual clock ptp9
-ptp ptp0: delete virtual clock ptp8
-ptp ptp0: delete virtual clock ptp7
-ptp ptp0: delete virtual clock ptp6
-ptp ptp0: delete virtual clock ptp5
-ptp ptp0: delete virtual clock ptp4
-ptp ptp0: guarantee physical clock free running
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
