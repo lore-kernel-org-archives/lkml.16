@@ -1,77 +1,78 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout1.mo534.mail-out.ovh.net (smtpout1.mo534.mail-out.ovh.net [51.210.94.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB8A199924
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 23:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDE517A5BE
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 23:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.210.94.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751758324; cv=none; b=t4X3TJV7dfympZkTfd2poeiqQUFWgsK8O0eBw8HraXl/FcwEsyCVH9CEgScuu9Q/3h17zrvkMJbXsTORq8qfeoIO6swYJRWoNg4n5D2eeT1bOmTIIvpFYxMKnVDci2an4MSLItaoU17sw383/u+EwVbmPQP+KHOSIEOM6cNEc+M=
+	t=1751758762; cv=none; b=RPpqW2VJYbwjBf+SJyU428KjfZfSWlsXqrqcBgUUfFMWUlYLQHEV/erPG4eSiR/vbMhYBjNu3pc4fOY5nvRfyfe0dKFX40omLrAVk1lEGPEjMivOehamooIWP0OcVAZ/uw2IdYQg/SDJDbhycjgTNRdBTaLOZolo9a273+0jhus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751758324; c=relaxed/simple;
-	bh=Em9yf18A68eCC8P9oxRjSvOyVdLPOXhh1D9CXnveERg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Jd5pG+Bc8Tdgf2vFS5Nkqm6nR5QA7FZIvsxlZCV7HKrYv/CBX9QGRg6u+KdZKDL4mW+0qJo6R8HOYKFDCsCN40yIre0gr8XjsX6MzVjt6lcGU4Oqiq8Air5Rgx5uGnoJP79ST68UW1OwfTTf6VdWrIwTQz1d2ZiJhXsGIMTDZ7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-8730ca8143eso257758639f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 16:32:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751758322; x=1752363122;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UVZ14MoJza4vU2EiVLINHt7Z8gTvw6jQpGGYiyy39sY=;
-        b=DIRlpkEWS6m9GCHXYtRPOKHnXRrODLyd2grlQTvvcz9zIsTEnBH2zxEmjn9NDh90gR
-         kdc4cIsd7NZ2myZrbC99E2gF2E53fUbCcTJyuHgTMxlLDQxdIAfUwXQecHhmYoIAu5VQ
-         2v260rNI3RAASWQmdc4oQ3xXb4uxP9ruOYo5B9QaLSSJJuR4dCX92KQfDMa0bmKJvNSL
-         i3I1vOh5ilkNiH0m9IlE4qIYOcxTW/JqowdHf11CnCwB+7nozGTIyofeZzQ5nBa29qK4
-         vxrUUgnWySGE35bVu/QeMP8dG8CDa5lXGlwjXHWGACKeDOcfU0zTheWmPN58wTIQA18Z
-         Q/iA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZMApsTwckMkHXm0JNIaiUoO3bdeQlBJ5yH6OVCjJQ1Enm+8MXzSdcm8bej2Go5RkTXVuC2L6O6IqPEH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS4w8FgcLAW2XwgJ1s0Vwq9T2j3K1MMIbyI0oKpKTBuloazJjp
-	yjZPQ8m410jHXQcAEj0rbYFQL7Xbd+k4yI8/U2TzQEKbUxIchT5Vu5t8eD/si3QpUMzUfdyFbcH
-	ikH+baOBzoN5SdH1njp7/J6ntY+olafuTmdae44xNngDo/vN5zUd6OaJZAzQ=
-X-Google-Smtp-Source: AGHT+IGlmyTk8yAgnn2pPtO/Zu9wAZCxjMrgHMjacxEYVyRgm2IRPvdh7sAOC7olTGBj6HsnZDgEshZ4dkf1B+hJxy5tNNvT4dsb
+	s=arc-20240116; t=1751758762; c=relaxed/simple;
+	bh=mOs+XewepzXvG+nOgkKT9IVP0KnAjus+b4UwbPplEhE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VfMxClZLHCt6YMoM/A179ggQzjOJznOlslZHL+RUoRQGIe9qRqG4Xb++3lRC968kBR4g07h5aGepIZ3+qS6MyzZyysI7EyWemOGhv70I90EOBYsAWhkWJOlBA5qWEduTxqnmDC4WwLMLl8AAgePgN9vA4Zit1u5vlEDWiK8BDRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; arc=none smtp.client-ip=51.210.94.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4bZRcp57x5z6CM3;
+	Sat,  5 Jul 2025 23:32:42 +0000 (UTC)
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
+        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <bhelgaas@google.com>; Sat,  5 Jul 2025 23:32:42 +0000 (UTC)
+Received: from mta10.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.188.134])
+	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4bZRcp3r0Tz5wFR;
+	Sat,  5 Jul 2025 23:32:42 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.6])
+	by mta10.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 04055DA3D52;
+	Sat,  5 Jul 2025 23:32:41 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-102R004e742e852-2cb6-4def-8a10-6135a02faf00,
+                    6309C3B5282082938C1B0D62F70632481A582291) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:147.156.42.5
+From: Marcos Del Sol Vives <marcos@orca.pet>
+To: linux-kernel@vger.kernel.org
+Cc: marcos@orca.pet,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] pci: disable MSI on RDC PCI to PCI-E bridges
+Date: Sun,  6 Jul 2025 01:32:08 +0200
+Message-Id: <20250705233209.721507-1-marcos@orca.pet>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:198d:b0:3dd:f1bb:c75a with SMTP id
- e9e14a558f8ab-3e13485a02emr61796395ab.8.1751758322137; Sat, 05 Jul 2025
- 16:32:02 -0700 (PDT)
-Date: Sat, 05 Jul 2025 16:32:02 -0700
-In-Reply-To: <686611ef.a70a0220.5d25f.0833.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6869b5f2.a00a0220.c7b3.0050.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in __btree_trans_update_by_path
-From: syzbot <syzbot+8deb6ff4415db67a9f18@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 13121800464492353126
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvjeefjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpefghffgfeevgffhteevvefghfelffejvdejkeeijeegieduvdffteeijeejjefggeenucfkphepuddvjedrtddrtddruddpudegjedrudehiedrgedvrdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehmrghrtghoshesohhrtggrrdhpvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheefgegmpdhmohguvgepshhmthhpohhuth
 
-syzbot has bisected this issue to:
+These bridges, present on Vortex86DX3 and Vortex86EX2 SoCs, do not
+support MSIs. If enabled, interrupts generated by PCI-E devices never
+reach the processor.
 
-commit 0803fa689bb9eb8d01867808b886a26e76ff1690
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Thu Jun 26 23:52:42 2025 +0000
+I have contacted the manufacturer (DM&P) and they confirmed that PCI MSIs
+need to be disabled for them.
 
-    bcachefs: -o fix_errors may now be used without -o fsck
+Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
+---
+ drivers/pci/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=161ca582580000
-start commit:   50c8770a42fa Add linux-next specific files for 20250702
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=151ca582580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=111ca582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d831c9dfe03f77ec
-dashboard link: https://syzkaller.appspot.com/bug?extid=8deb6ff4415db67a9f18
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1311d3d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1770f982580000
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d7f4ee634263..f610ea45ca9e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2715,6 +2715,7 @@ static void quirk_disable_msi(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8131_BRIDGE, quirk_disable_msi);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_VIA, 0xa238, quirk_disable_msi);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x5a3f, quirk_disable_msi);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RDC, 0x1031, quirk_disable_msi);
+ 
+ /*
+  * The APC bridge device in AMD 780 family northbridges has some random
+-- 
+2.34.1
 
-Reported-by: syzbot+8deb6ff4415db67a9f18@syzkaller.appspotmail.com
-Fixes: 0803fa689bb9 ("bcachefs: -o fix_errors may now be used without -o fsck")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
