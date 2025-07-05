@@ -1,118 +1,101 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B54DEED8
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C44EED8
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751723972; cv=none; b=Ig9netDewyZ+vgxuydDTX08LMiFAv729Oz/Vda7hKzyQ0v2iemLIt4dFB75/WglHJuE4CvORTGmcEgNddEjv0Yfa7SfgKQW3TcclUTL4ZNwcRf/LbEnxGGEKUSJRhBvGKE0QuQFqoyjMT8KC3qcNVBD0OgL/3xG3FbtC4kk8cww=
+	t=1751723981; cv=none; b=qg+qY4pRUdiWXd3a7ZSYE8BvJbPb3ilnd3VIUz8nRplhNbQkXvmQPxvi02/vxCS2K0kUE5AUMyW4nae6p9tEZMC2vAk8SClxn9RhfNK+qmEr2q8Cdsz2T1u3xh45jfCijeBkyxrPZv9rnIs/SeExW1HKNgZyP0Em4fS27h/8YKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751723972; c=relaxed/simple;
-	bh=Hfa7K9tsCT7tpi1elmIF6vRXQkM+FAXCJQH90EedI4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VeniIq3xn6k38nxcCQn5g2+wAMBS5u5m4nDQuB8sBqKlmePuyYw6Kw7jnr8amEFly6L+8Z9uX24vYxpL/vS7eFbyEnY8hRno2y1DLA6fMVuD7dmJO7tf1Vd+1tbA41M6ipCWIE25tzP9G5OJCZ0l0F6Qi0fuaK3T46l7oxPwhUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=R0JfRKgi; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
+	s=arc-20240116; t=1751723981; c=relaxed/simple;
+	bh=WTT2moJnrSiWrspMdz5rtl2hM3ZONm3G9g3fvB0VA08=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=h5NBJwFQJc5vjDwpBfkA/aSLaTAfxp7Knvp+hZV078/3hA34i8tNClfl12BpJg/KISCusReMHgJ/Oino7TIFJOnPAq6DS8Bm6/zY7PGpBHEmlVzXFl3SJRQEKebUH3UDpDlJo5I4YY0yilNkT+VTmAM90km12COeJt7xIqmflJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Edlr3LAU; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="R0JfRKgi"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-748f5a4a423so979932b3a.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 06:59:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Edlr3LAU"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453079c1e2eso1571985e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 06:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1751723971; x=1752328771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hfa7K9tsCT7tpi1elmIF6vRXQkM+FAXCJQH90EedI4o=;
-        b=R0JfRKgiXVo/3GXgoQ1A43+4/UxAsEerJkQCEA5jU68tudTRTI/U1jriYPTg8PU8A3
-         QUztqAxPgj6GFcapxPu0dU2zeYk+zOuw5ecBHoE1/3ZBM9J2O3oPfVy29qVHlGhlA+rN
-         agQODAPX4f3KCfT1utLVz2YzMSBxLNtJAh6cJlSgo9FLjNoKp4O93Aek5bzns+VJUqt4
-         t89ClTuSNcQauqLJbJIDCQnrkQVwMwPW3us+SDWcz2boIGeOc5KcGm7LP0off8/45fO3
-         jZm0v0pZAy0zj3vX7KzGc5n7MAQkdQNPozBf0K+riDI0J974w0fqQv8q7mBmhBe91v46
-         wAXQ==
+        d=gmail.com; s=20230601; t=1751723978; x=1752328778; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CL2T53N7hQB4d6KaB7RoY5e4BOK52FoaK5MJcykcpAE=;
+        b=Edlr3LAUuSQrNv1Q9bpF5jxC+bYHM0/BT68MZBbbdA+vUYaYbdfNnfkBotfHXrXb7K
+         2HZP/0GOhDRvDm1wxbxTRLYIb1+/55AK9QLyfHZtjCTpSa31Sjti1k/v3yUCxZhQFJED
+         6mql2Ci1uLfn+8fgkhHc0905quSxHceNHLAlui38XfxKXiQjNeVMEmL7TtAflR76tmzQ
+         7nBwbwg8UpNTq2PCpH81+K2YzlaHRjeo4AjIKT5vI1E7E+JucDFbF/N9WkJoqo2yT/zf
+         qlhbFO6K3EarJY+3MRK1t96tOM/Slkn2L3Qy8U3xqzfp7aorfQsmWndPmtZ5k8E2cmnr
+         MELw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751723971; x=1752328771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hfa7K9tsCT7tpi1elmIF6vRXQkM+FAXCJQH90EedI4o=;
-        b=eHNmtgb5jhI4H/MJX5XUqq+JRTbwkBfTvYqLLZiSalwigum602exgpuewz+2hljYJZ
-         jLXdwb6AtAjv2cBs/QG+TRdZDNJuEJjk1pgS59zFms3sMgvWfRChdghnEkfYH422JJD5
-         rO1/84qoRnHa1Bzx7fwPIfo5yD+RYsuj3/V4HOEEW0powLEgTq2qaT0McgUZQAkNUvMY
-         8YjN2fTyLVHjALrXZIEwqBkAOZYg2BMJKboBD6znXhsD34wIA5xokuamtBCn/c6Qv7gE
-         6aA9fAlcOtFEX/PL9E38qJYWvwg8wXTCliHhpxLGl3sMvILWYJFauHDJ9PeNX05kIFYn
-         2Zng==
-X-Forwarded-Encrypted: i=1; AJvYcCVlFZNE9LPjCG7lAd06SlP6PMiZc6+zmgN8mN+wNnqXqn/wtwKkyIPImp6oJn4IzoILe/Aa/jEmi4IFyzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmjuqwPNg9mObxu0HowLQLqrLQ8kH+lgsY5Ytd1wqVXTbmx/IL
-	Dc7Ip+l31N8W4wiTEeGUDwW6WSpI6GbBf2XfoDLiZLKOhq/TlvzGPEuRYsyOSD0n2lOWyXoE46D
-	HnOF9CDOCxdcjoOOIIxV0oq7ZkLJM7XUtQPWDacVt
-X-Gm-Gg: ASbGncsvUiDR5SKO0N9U7cDsDYM1q/wpboRhQnaHd1hsRi9YBDNhKLZnY0t6j+hwqEY
-	gSIFN8W61aogIbNPSOK7/YFXgz5QJKEjnasDi9UD+aRtNg7v7RFRaXA0BDasT7GAuCTXpja+UV9
-	Nm7iaXAeRYLD1NKYez7lpHz0YDEa2pa/grLzS+V3vObw==
-X-Google-Smtp-Source: AGHT+IGqC/1uitnb5fUKNTcl0PthQF1yxz5P5Q3mkVvNY0INFRPePnrT40jlCyplS57rhErie3F7gcdClboHB3N6yWs=
-X-Received: by 2002:a05:6a00:194a:b0:742:3cc1:9485 with SMTP id
- d2e1a72fcca58-74ce8a8ddb0mr7121083b3a.12.1751723970850; Sat, 05 Jul 2025
- 06:59:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751723978; x=1752328778;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CL2T53N7hQB4d6KaB7RoY5e4BOK52FoaK5MJcykcpAE=;
+        b=oVNVfwfYLZWg7m+21wBMOhHKXMMzfkKeiLVLbAMRHOu3f2m85FfhzZbU4iwFgbeh5+
+         8cbNHbWeEB5IYXLKEmXomvoGXW/Hug85YxfA6P2ZMd/8ZttHS1oRhNM96BbU87NCD6vK
+         JJ6xW/xejSKwE8rwrJGxjyt5i7YyWyp5TQVcx3LaLilSS+Bscn/E5fvRndLRwjaQjnCy
+         uh7Qdng7EGt8bKAnox9HoKoAqAopVWMJWDL330ofDrUJaxCqX4IGiBQqopamG5Y4QW9J
+         32ntgPMQGSUNS2RFCKkjGf1emrDws/5kkOKll4n4SGd/MNmdHl59KZ59NpzB3DBLWGz8
+         YtLQ==
+X-Gm-Message-State: AOJu0Yzh6mJEttvhk+Nrks19GogKDZrUcH01Hpbv0k3t9u2bu85tdNjT
+	gJPFUAi0IfbE+FxUXoD6GE7EwapPI7hg1yRJEO4bZtf59rPfwJV75cnnhnnOmCiCEhY=
+X-Gm-Gg: ASbGnctJtl/cq7P279HTmZ0zRcSP8ijf7AWa9HZ5hBC/8T1R6T8W3ucYPW3UP4QABRe
+	E28ANcm/eEU+HJBX0XMAAxpHWxR1I9Rnen55jqTlBoSg22kjz73XyP7H0DOfULQof8Dx/2fR7RD
+	thLXm1hBQ0gcP7XBZlAOgen6DShn3vVYnKa9ekcajJAsS7DhtIBMasdfDGXTvJNqedHxR+TILXv
+	SyZTXmCYodmubKIYuI1NVoxfOF3lZ4V02cQMPNZwFVSOTTHzCNbEkE3OpuwjMFGBVExbC1vG79q
+	zG4WalujkUiC/F7WWdkJJdVp5afpiRGCeayhg4M6oKjawK1zCvaB7FIB1qPaSxq2OpYGouZjfP9
+	ar2jrdlds6CS/d3YCQdwOCnIWEae+IE7xKjTeSQ==
+X-Google-Smtp-Source: AGHT+IHMT+E0wHTdv+YQi7h29CUEllexOuMS5Ew4K23tHy/GvGrQG5jpn21k8VifY9BnSK3SjWw7YQ==
+X-Received: by 2002:a05:600c:524c:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-454b35ff329mr20918055e9.3.1751723977719;
+        Sat, 05 Jul 2025 06:59:37 -0700 (PDT)
+Received: from pop-os.localdomain (175.77.11.37.dynamic.jazztel.es. [37.11.77.175])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1634b0fsm55384135e9.17.2025.07.05.06.59.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 06:59:37 -0700 (PDT)
+From: =?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
+To: sudipm.mukherjee@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	=?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
+Subject: [PATCH] parport: replace deprecated strcpy() with strscpy()
+Date: Sat,  5 Jul 2025 15:59:35 +0200
+Message-Id: <20250705135935.207198-1-miguelgarciaroman8@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aGhr2R3vkwBT/uiv@pop-os.localdomain> <20250705011823.1443446-1-lizhi.xu@windriver.com>
- <aGizFhZwnPo98Bj/@pop-os.localdomain>
-In-Reply-To: <aGizFhZwnPo98Bj/@pop-os.localdomain>
-From: Jamal Hadi Salim <jhs@mojatatu.com>
-Date: Sat, 5 Jul 2025 09:59:19 -0400
-X-Gm-Features: Ac12FXxtcKFKBXIaMag0cucTZ_RoWP7mX93yvxNidg1N68n0h_2He8IWpkc3HZw
-Message-ID: <CAM0EoMneGBL0OkRC_if5VEax-XXXnFAwtpij1J3kOq9NbEPmrA@mail.gmail.com>
-Subject: Re: [PATCH V2] net/sched: Prevent notify to parent who unsupport
- class ops
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Lizhi Xu <lizhi.xu@windriver.com>, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jul 5, 2025 at 1:07=E2=80=AFAM Cong Wang <xiyou.wangcong@gmail.com>=
- wrote:
->
-> Hi Lizhi,
->
-> On Sat, Jul 05, 2025 at 09:18:22AM +0800, Lizhi Xu wrote:
-> > If the parent qdisc does not support class operations then exit notify.
-> >
-> > In addition, the validity of the cl value is judged before executing th=
-e
-> > notify. Similarly, the notify is exited when the address represented by
-> > its value is invalid.
-> >
-> > Reported-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=3D1261670bbdefc5485a06
->
-> Maybe I didn't make it clear, I think Victor's patch also fixes this
-> bug.
->
-> https://lore.kernel.org/netdev/20250704163422.160424-1-victor@mojatatu.co=
-m/
->
-> Can you check if you still see the crash with his fix?
->
+strcpy() is deprecated for NUL-terminated strings due to the risk of
+buffer overflows. This replaces it with strscpy(), using the passed
+'len' argument to limit the copy size safely.
 
-syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com (in this report)
-is part of what Victor's patch fixes (as listed in that patch).
 
-cheers,
-jamal
+Signed-off-by: Miguel García <miguelgarciaroman8@gmail.com>
+---
+ drivers/parport/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> The reason why I am asking is because his fix addresses a problem
-> earlier on the code path, which possibly makes your fix unnecessary.
-> Hence, his fix is closer to the root cause.
->
-> Please test and confirm.
->
+diff --git a/drivers/parport/probe.c b/drivers/parport/probe.c
+index 5d1b9aacb130..5f92f266bcb2 100644
+--- a/drivers/parport/probe.c
++++ b/drivers/parport/probe.c
+@@ -61,7 +61,7 @@ static void parse_data(struct parport *port, int device, char *str)
+ 		pr_warn("%s probe: memory squeeze\n", port->name);
+ 		return;
+ 	}
+-	strcpy(txt, str);
++	strscpy(txt, str, strlen(str) + 1);
+ 	while (p) {
+ 		char *sep;
+ 		q = strchr(p, ';');
+-- 
+2.34.1
 
-V
-> Thanks!
