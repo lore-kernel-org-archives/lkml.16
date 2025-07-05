@@ -1,162 +1,98 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C2B1A073F
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 14:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ADA28F4
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 14:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751724372; cv=none; b=q+Gsbzp4kf2jxgDY2gs7/+AcnlZOoVjTIqToKulF6QYz/zzkCdI2ESGHGZaHNKUzchzgGmWyF/hprrl5ki9BDZnZftZOaenYN+TDKfh/VX6TSciZG05KUQFeU+qCWTjTJeCfje2mwk3JAFhyefTE1Dk4iSM7MopiL7hyU7Aqm20=
+	t=1751724432; cv=none; b=nHnCCf+3rf87IzAtR3YPl/6rDNXA18X1InlLcp39eOEmhhhnSRNnOV88EuSfeJHMHpCmQozCqIilT91joZIWDFcw2kmSg1mtIrGZiTjfkQJgc8tDd/np4UUJKyQP/KYw/KGTnMZCR1T5DEqA+fbYXHCxYBqW41zv9CqZaY66qXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751724372; c=relaxed/simple;
-	bh=/HOVbTYQCHsMdDDq7gBoIFw9FEg0lNKVNqIBp1PBLtY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=oEzkKH7/AvRl+sNBBT4d8U3WQFfYqSGO/PEyAT+L6GugX1kePZ7mBGc11BYbBObkaP0NUzMU5fC8e7BMYv1SpMAjSY5/B2GS3VA1spx+gRwOg52TGX+qkbp/VWDNZ6QqF3iFEFodFTrR1zTpvDmVlCSUSdxMAcM8TYazXkNR3l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=zY2LkYgW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EuISihaT; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1751724432; c=relaxed/simple;
+	bh=n6HXa/sf1p+SFqWAo1aM9scyMSHVU8I90Zz3Qpu/tAg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AdxrdkP+qKl3sjJl0AQCoHvrrgd6KvUIYmWxUe30ONuRhrvT3dDytvm3nC5BSIRPv3kf2rZ2n3QWb4FBgeXHWw9nMc3LfJFnggldsbAOFW251fr0S2HfyFJgIFqkXtNgwWj2D5w5D9aHP+fTdG5m5I0N/l7sL+zx7rG0Adl85ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yg4WS9E5; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="zY2LkYgW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EuISihaT"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 6984E1D00027;
-	Sat,  5 Jul 2025 10:06:09 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-06.internal (MEProxy); Sat, 05 Jul 2025 10:06:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1751724369;
-	 x=1751810769; bh=o984k9J9qiUodd3G7z/DU89+EKzgqyct3JlnGKUqBiI=; b=
-	zY2LkYgWo3jpfb6k0dqCLz4MdXLNJAdE84WX18+dtYBrw0kBjpi122YbhDFYd57h
-	JwnNcoe+9vQo5i6qwlXM/VxjwLCXTEa+Js0odv5xO+05APf44IWd6FqFzV52A76x
-	GBdUn10zMOPvLlqVbXHHdmWDnA7LVisuxji2U56vGVg1D3yyOjwvPtTBK62QRRBs
-	U9XlDAInqk+S5vf7L+g4OpS72e8t//BCXRU5x3hT5W+rhdj8vTTFYsVYm8NWLYEQ
-	xyNzdR2d0QC5j9iDHoeyQt321DDWs9TOpf/MJKtCoJKCd9RK/hrFxJh5Y887ui07
-	TU9vX5dw8wIKByWLS7JnqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751724369; x=
-	1751810769; bh=o984k9J9qiUodd3G7z/DU89+EKzgqyct3JlnGKUqBiI=; b=E
-	uISihaTJzQxzqKwmUybA0iC++QT7LUqeDGwxq72NQyyLPk4Ndwf2cvqnelWZ2CWB
-	aXyMSNj2vLjRK+vD4vZwLnzO2wY1zlz4Pgz189ECx4PB6AMO2DzYNV7l+vk4rFs6
-	K50WtGUGdZu2nIVTgxlSG4svIsRWl2gplJK74Z7VuO64zmjqz94yKOvqT9PtXhZN
-	vjaMyIRjbm/SGx0NMYB9c6dIn8OoIBIX2tAOwoBSLAIpt8pPODLuZiYclB4MIsID
-	gGUsX268e1CgTMV9pLEovDofDfpfiFwIrKjaQ3WwKPLsIUJkmlCNqC9T4iu3DYHD
-	qENkgRYiBJp5l/PV6QBRg==
-X-ME-Sender: <xms:UDFpaDdhab2qtFffBA-bwhs_34a22IrVbEvCQRa0wcXc0E7qDlaHVQ>
-    <xme:UDFpaJPq3-uGSTQ85qsLW6MJFnlHnZao05IOm8HfU6u-yprTgd-FCosWU8H9-gFd1
-    QKKJIwTwDIBI-oHGKs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddviedvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
-    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
-    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
-    thhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgvfhhfsggrihesrg
-    hoshgtrdhiohdprhgtphhtthhopehkvgighigsihhstghuihhtsegrohhstgdrihhopdhr
-    tghpthhtohepiihihigrohesughishhrohhothdrohhrghdprhgtphhtthhopehlihhnmh
-    hqtddtieesghhmrghilhdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinh
-    hugidruggvvhdprhgtphhtthhopeifrghnghhhohhnghhlihgrnhhgsehlohhonhhgshho
-    nhdrtghnpdhrtghpthhtohepiihhohhusghinhgsihhnsehlohhonhhgshhonhdrtghnpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:UDFpaMhK-0uC48R8vYz30WIhmQl4YjkZJVwk9-0ED0lYFPIaNrkpJg>
-    <xmx:UDFpaE_zccSm5KIQg7BTF35eB10DEsjXNC539zrv6r8g-oN5-qzM4A>
-    <xmx:UDFpaPtWNRCAAFs2LcNSY04EXHXcIr_JaO-N1ZQG0VjcBu9P3i9qzA>
-    <xmx:UDFpaDEnJi0Is6LBEV2yUUtv7UskjtnefpJaA2x9Ni-h-zXrQ2HAPw>
-    <xmx:UTFpaHP8-W0if7kYC_1HYWggIyq5OD0IZTYGv4c00ysGof-QmtaLp3o0>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 113B12CE0078; Sat,  5 Jul 2025 10:06:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yg4WS9E5"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a44e94f0b0so23649091cf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 07:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751724430; x=1752329230; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GxrMRQg3ClHbYVYGNow/NsJAM3b7dz8NkMi6RpKX/2A=;
+        b=Yg4WS9E5H4wuIYQb4bvQitAkBEYXOmmmJWYHvOzRmmvigSh24G8Rpti2uEN/W34U5p
+         VsYUZl1xSNW88KNa2HPUNgHvcT77BIwhI5muamaLw5Qsa2WFtayJdRj0pZ7RmD0USWbH
+         I7vNzY/GXcKck7adp3dFABdHrAD/vQrFaSe9qNu8eCbc8+hDuylHN5HyWb0fIcmZOvwY
+         l77cKjWABXkiZkPzv+uG2X8hXZQX3PrD0pRGB0XYkFubutC9QtOKjMvyNgyftDK4L0AK
+         uqBDlR8smr580U4Vb91qX8f9GzoUPE3/PlybdimI0MiMpumbZbEUvuEna+7ac6q4KnOC
+         nCeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751724430; x=1752329230;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GxrMRQg3ClHbYVYGNow/NsJAM3b7dz8NkMi6RpKX/2A=;
+        b=helIqHxmlXij2LyIluXsVXkiSlT2oq0sytERoTkrTjKQBOO0KAU544/k6mLnKf3XJj
+         lG6bZ7//HanV5schWseKVKFBywHrgQ7BWGhB6wIjW6wxmfPMrclaoazRu6Xh981M+4oS
+         rWqmBZjt3ReJ+yOpHJbBns2R9wnR3yXm1l+IrceyyfMIlyyOF/sFNnGOySID+L+vtEB3
+         tpkv6A9VdV0u2oDUXGD0fyYvtRlUyjgAiZ5elm71QCURbliFK5b1Y0BUZwlmcalzQiMA
+         +BqtBAWZYznQ8MS+hIquhhM7fe+mTiVMRxEjpeivbTn+2E/z0QuL1Bnqw6nI/BQtGk/W
+         v/lQ==
+X-Gm-Message-State: AOJu0Yz+124LBCZ3GJcw3f6eZZUFYM67n8dbUz2VtMfUL6vPrxoHpq+5
+	tLGp8wQH9CutFLaanl+cR9fAhaxnt+y+dRueC3k6BDZ7n2/xTWXao9iUpbd/ag+g3YbrWs5SzTt
+	oktW4jWEy51juSCs8FkVgLufQAP+IqyavTNJCZQY=
+X-Gm-Gg: ASbGncv3J7JRy9RcMY9uTRpyscHEyal/QB48jljfN/zy6vUBi33CEc/HvfGOjk0FSjn
+	cZMdtMGUSCaF7CnXJq9k9sqsZt+BkyvW2WwoDe/hHVtg95N7VT04Nq7T/OT73aB04H6CJUAoxpT
+	RqwldPby0Cjov4UXvWTz6q0iS6ObzYwGTH9lLrOBOyOslmJYr+oqCCctDePevlvu5W4WgEkJLIT
+	hBdbw==
+X-Google-Smtp-Source: AGHT+IGsDdoQUx+rSGSzzxXCkVQDODMY7OH1HVs+DAsqxKXPp3PdFxseodwOcARcUr09rHXKr9lxP26x5Z/74k075ZY=
+X-Received: by 2002:a05:622a:8c0b:b0:494:acc8:b4ce with SMTP id
+ d75a77b69052e-4a9afc199bemr12740321cf.11.1751724429590; Sat, 05 Jul 2025
+ 07:07:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T5b65cb83a3eb81e4
-Date: Sat, 05 Jul 2025 15:05:47 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Yao Zi" <ziyao@disroot.org>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Xuerui Wang" <kernel@xen0n.name>, "Miaoqian Lin" <linmq006@gmail.com>,
- "Hongliang Wang" <wanghongliang@loongson.cn>,
- "Binbin Zhou" <zhoubinbin@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "Mingcong Bai" <jeffbai@aosc.io>, "Kexy Biscuit" <kexybiscuit@aosc.io>
-Message-Id: <2ad0ae43-0331-4860-8f39-34ebfe02cae8@app.fastmail.com>
-In-Reply-To: <20250705125710.59994-1-ziyao@disroot.org>
-References: <20250705125710.59994-1-ziyao@disroot.org>
-Subject: Re: [PATCH] LoongArch: Avoid in-place string operation on FDT content
-Content-Type: text/plain; charset=utf-8
+From: Sui <sui999924@gmail.com>
+Date: Sat, 5 Jul 2025 22:06:59 +0800
+X-Gm-Features: Ac12FXwxhjoOA5doABq9pXsHKKNI0Lm9-AgrhCbufh34BRyNbE1ih_yh2bJvRwM
+Message-ID: <CAObhpgi5uBNYOygBi3E-8H=XrnyrAqgkS5RwjCTjOUh+aq-zww@mail.gmail.com>
+Subject: =?UTF-8?B?W1BBVENIXSBhcm06IGxhbnlhbmc6IGZpeCB0d28g4oCcbGFibGXigJ3ihpLigJxsYWJlbA==?=
+	=?UTF-8?B?4oCdIHR5cG9zIGluIERUUw==?=
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+In arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts the properties =E2=80=9Clab=
+le=E2=80=9D are
+misspelled. Correct them to =E2=80=9Clabel=E2=80=9D so tooling and bindings=
+ pick up the
+node names properly.
 
+Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D205891
+Signed-off-by: Jake <jakecontactxyz@gmail.com>
 
-=E5=9C=A82025=E5=B9=B47=E6=9C=885=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8B=E5=
-=8D=881:57=EF=BC=8CYao Zi=E5=86=99=E9=81=93=EF=BC=9A
-> In init_cpu_fullname, a constant pointer to model property is retrieve=
-d.
-> It's later modified by the strsep function, which is illegal and
-> corrupts kernel's FDT copy. This is shown by dmesg,
->
-> 	OF: fdt: not creating '/sys/firmware/fdt': CRC check failed
->
-> Create a mutable copy of the model property and do in-place operations
-> on it instead. loongson_sysconf.cpuname lives across the kernel
-> lifetime, thus manually releasing isn't necessary.
->
-> Also move of_node_put() for the root node after the usage of its
-> property, since of_node_put() decreases the reference counter thus usa=
-ge
-> after the call is unsafe.
->
-> Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from =
-DTS")
-
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  arch/loongarch/kernel/env.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 27144de5c5fe..fba141472ab9 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -40,15 +40,18 @@ void __init init_environ(void)
->  static int __init init_cpu_fullname(void)
->  {
->  	struct device_node *root;
-> +	const char *model;
->  	int cpu, ret;
-> -	char *model;
-> +	char *tmp;
->=20
->  	/* Parsing cpuname from DTS model property */
->  	root =3D of_find_node_by_path("/");
-> -	ret =3D of_property_read_string(root, "model", (const char **)&model=
-);
-> +	ret =3D of_property_read_string(root, "model", &model);
-> +	if (ret =3D=3D 0) {
-> +		tmp =3D kstrdup(model, GFP_KERNEL);
-> +		loongson_sysconf.cpuname =3D strsep(&tmp, " ");
-> +	}
->  	of_node_put(root);
-> -	if (ret =3D=3D 0)
-> -		loongson_sysconf.cpuname =3D strsep(&model, " ");
->=20
->  	if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname,=20
-> "Loongson", 8)) {
->  		for (cpu =3D 0; cpu < NR_CPUS; cpu++)
-> --=20
-> 2.49.0
-
---=20
-- Jiaxun
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+@@ -52,12 +52,14 @@ hdd_fault {
+         gpios =3D <&gpio ASPEED_GPIO(B, 3) GPIO_ACTIVE_HIGH>;
+     };
+     bmc_err {
+- lable =3D "BMC_fault";
++ /* typo fixed: lable =E2=86=92 label */
++ label =3D "BMC_fault";
+         gpios =3D <&gpio ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
+     };
+     sys_err {
+- lable =3D "Sys_fault";
++ /* typo fixed: lable =E2=86=92 label */
++ label =3D "Sys_fault";
+         gpios =3D <&gpio ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+     };
+ };
