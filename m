@@ -1,91 +1,104 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F3F347D5
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1932B2E36E0;
+	Sat,  5 Jul 2025 07:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751700610; cv=none; b=N6oHrMhoBpI5NzYLZ7OxYwjy6NCRCLhl5r3HZ4jzu5/BB3dydCGnLRVvfpp1BEIlSJTWoIehHkWzbGxMcCDqHjqOVhiQtxCdh+bpDm/3R1vTpkORaQahSXRu/aO+l7sgBK6/gl5KO+gGXNoNNwZnyinvRvt8aw1PIh4suJxkmb4=
+	t=1751700656; cv=none; b=cnR17CTnu26GJjNIYhCnMB66XCIhf0VYZgy9gCd19In3XB5GCbUla01kVfOC3jGqpDnWPYe3hA38QBYPfeckD+/E0nq3hs9jDsT1y9x8MnoFczIJIOWBn+tW/3Wtzy7FAdZzvbXnskUib9caYRMwARtrHKWbmIDXigCt4MeWf0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751700610; c=relaxed/simple;
-	bh=UIZ5YZVciwBI4xp8OBbgIQdORnOfX3xnFzLTHbiLRdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OXfS4rQh4HOkb6FwzMzuMUgH01nTj1wfFNHV7F56uEp10RFAIX7KG5U+KCNmx1nU5vP3w0AWGoBHWyh+vc9AU7FOfXsQXn/nUxIoRsrPZaRN+duWdbkBdobrdJqw+hN5cBYInZBdHfGiKHjh8hpNLVtqeKcISpoosGN2XFjMwjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qySSDxXq; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1751700656; c=relaxed/simple;
+	bh=UMKPX2cXG6IsZummxoOvXRavgYNG6TSZTLnhJKiZP3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sVI6w3m1D0xS5tVRat0Zpkp7tBEUomFQaV2CSwJLM/Bs+Yc3CgNrlpngUNeWgDHSQxgAeUh/nbMzQ0g+H7eN+T128yj5sRkG9dQEwiOyv5AwhnENhJPMq1Xr3Npxd//MYqU4UJTDyekHAgIm58aNx8xMpCNaemNwO4JUy77iE9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVbh1gZu; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qySSDxXq"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae04d3d63e6so260374566b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 00:30:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVbh1gZu"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23526264386so15016545ad.2;
+        Sat, 05 Jul 2025 00:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1751700606; x=1752305406; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1751700653; x=1752305453; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xk44P/tMwWb5jvG2T/9WPa4Knpsi/zzzC0HCj7+/6MI=;
-        b=qySSDxXqbvhKkeoMpluFd/RpiOGTKZqTHFL9UbcbHIT/RbEFm8DxohYUrudwogQWrq
-         nbitZrTy+0W4OY4GdMpKG4xW/BbHjBI7TmKAtn20/Tfmxm2Ih1Od0dwvxiyO9sFm1tQL
-         XQE/fu8YJqM/u5YOYXkyxk6uPENx2Bf1NzdrWPX794FKWrpGX1ahBMZpu3s97bra936K
-         C3s5qgDvswmQ1bzek9GGOHQgdbQFhxT7qox3BXLAvXuOqv7FQ+0DcQFm5AKil0/qYaEZ
-         Xp76j2wZEM78JO/Mwbkkq8JZsNE1X86lCig/i84EImeQcItL97Qs3rZr2L+QGLSNwyMc
-         w/LQ==
+        bh=kmdrFnCGQGlfW9T+GcX8uPwJkq6p1K8BDyBOXN/hZ9Y=;
+        b=CVbh1gZurpSdHMevf/ic+EjzKn9EjGJaOhwdB1PrV5MYBL1WPaEfw2zP/tFP0V0Ttr
+         /4FZi0lzMIj8MUTJP4BPE+oZMri2VvbZISH7EciHV5VZ/M6hzv1RcbdxdYDD8e+g6jmf
+         gdfuaGjBASA17Vy8cAZW1NYrx70y477o3B9F6OrddPGgc5Nf4+Tr4SSFPFdTtAN4SlyY
+         hctjLTCvsazYFKO5JbOIp3RMFWFK2rgp0e6bzT5VWHoxAs57EOiMQYGHFH+4Eu97wDJD
+         R/K8BHqrf5wqX+XbK/4hgzMpp3qclUewgep9y/agaP0BPkTWTYqi4xHO2K1B9oSMNEtS
+         CSxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751700606; x=1752305406;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1751700653; x=1752305453;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xk44P/tMwWb5jvG2T/9WPa4Knpsi/zzzC0HCj7+/6MI=;
-        b=XaHalPaxDLgTN4ynLmrqOAS0KUYMlCQf8ivPtmhP/034mXJ51pygIVNvGoYH9S5qA9
-         Tq1+MzAN51lASIDZ2W3seGv1qfhpgV6xu0ldAczE7mq1TZyw56j+dKn2maedV4eY/TW4
-         t56yBCXVKrwKtKroqxdg3m/Hr/CEf28iSvVuBgwBCzxIsFtHVJw193maQSvi3CrM/+aH
-         COPOvR39aC+8dlWXxt07lu6oZA4d2y0qTt/qZT9YNE6udghynzkKuHGgHNhgPBuAzz7h
-         pDc6dntXNzm/psudyWcHN3yd2Ls6zdutuqxxrGWdK9WCjTbwzgaFzh6DuRKHiHaaYn2R
-         MIcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCJ/BEUP6qqLIRT4kGWhQAbH/RaPsbZyJGujDR47Zd/EPRJ5lAlzP0QWlP0RkyE6u1j1mIdniPql8yB0w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3OD9FpAG8+d1R8BgYnBZo8WgVRvTBhN+kfP9txRwrjBySh5Lt
-	jHQNkZTlnWtBc1ASQv/Vc/VF9GFBZEbhkICg3qgnc/oBspxdhUFrUbJin4h3tdNb/bs=
-X-Gm-Gg: ASbGncvGE0c2p6lIoLdEPePZUtd2enWdUjWIvXPneXtvXwhI9gOjOoNB0/aqlbcNNh4
-	mnYrhKPjzIn94filgzo1y4d17wy2Aq9OJJFx1Nd5PFP7GqjTiYJQP9Um06Q06XgiVYRgNHEG+g4
-	UHCm0e0CoTNOTnSPf4X/kUdrOjuigjPtwYPEgAUePhp2BDoxAQHNZQklT18/5Pqd00VRU0jOSK8
-	XcK3k/KZZ+058QulywaC7W1LKEw05zu8YmbgAtSXeiGcUoVeOsg73/Zc9mELYVEcDv+ME3H5294
-	67wEBjPaWlqnjX1NDTNA6HiwgdNlmiVMkJycUmow4kQNzoEuoD90McMAWeYkZkiDc1EtYw==
-X-Google-Smtp-Source: AGHT+IFuCK5oabUlFZOlpvhu8s1YtyWEfrIHxmGvq90ix7OjS8+i1mXBbg8hRAIoydzV3g5HcH+3yg==
-X-Received: by 2002:a17:907:7fa2:b0:ae3:74be:49ab with SMTP id a640c23a62f3a-ae3fbc32cafmr564687566b.10.1751700605632;
-        Sat, 05 Jul 2025 00:30:05 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.83])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66e6f30sm304287766b.33.2025.07.05.00.30.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Jul 2025 00:30:04 -0700 (PDT)
-Message-ID: <a297088c-1242-4ce3-a449-0be0413864a5@tuxon.dev>
-Date: Sat, 5 Jul 2025 10:30:03 +0300
+        bh=kmdrFnCGQGlfW9T+GcX8uPwJkq6p1K8BDyBOXN/hZ9Y=;
+        b=c7MWIelg/wLGxx0Bg14VJZu4IktGsvOhj7aVV4gWlm9sSLjSZz7/S/hjGGNDOQqqzP
+         W/amt07HH5Q/51oJmWjI2W5++nl0WDLAD/z6Mcm1/5wfkYTFrV+My69ytELpnN+0i1Fd
+         gwg3euC+SlJgrTb0JVNRQHVhOLmoH0KfTrALRE1BTlCO223TrIX026VGQGXbAcyXFvGd
+         9+G/jXjgcV8wAIj3aBuO2EZDBI5Y8cuJxPqSW0ALyHlDGAwU9d6u6Z8d+xvAI7Yy6Jl4
+         HOSorTCvmIB3JdgQEE2ZQpcBaHznj7vramDwCmrWHivRNNF8rtuiQp/aOiEMG6BCriDN
+         dm2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWbGPobcptbffTLUcfTDWkope1SIfi88fcKtQip+NwWAnRN2LGmQkM/2SFAETqTIqhGSNYBJx5NOR8TMHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+cQIlT2j+LQXA4Bwoi4qEq4Bdr3FUdHRjZ6I3yceyW8J405sx
+	SdztMgGEpw2zmrxxXvkMSTg6KsrgQvSmzFAIXII3KRjZtEUrxZPNcGxx
+X-Gm-Gg: ASbGnctqrlylm/MRCgKKMvxwtQZmAaDjh7RqSUfarjCpoewQwCrUx2THtEdi1HqjMBR
+	9Cp4FyN1iWpLbQupvH7Vrs/4OHGBPHSP9vxl+nVVlvMoIhLOswgAhvecXYzt2C8NQVbwFkqQHTg
+	I/eXBbta/nG/BzxZH2v2UbznqRyfHtfvT4QHRQ1ZLYqNCHrWJLr6GYv4DI4/A4yWeV5xYO2wBmF
+	LPcnI/ixP81BwXfbpBT7XJ4iFXq76jnyR//4Ped485nlFsN+VD+sA7Lm2thWKRdfEbW8u2CZhzf
+	0905X8nmjZ7ujsyLfokq+QrWkmMPxQxwAUc4E1f8k8lN4u9Hq+akVAgmzVNUFWV6VeNXDZKC
+X-Google-Smtp-Source: AGHT+IE/04DPt7tUykh0udDgUo+PHx7RALY23hqiojGA+UTh4diHLWiAvsyqnxq2PSjlDNOouXdgow==
+X-Received: by 2002:a17:902:d511:b0:237:ed38:a5b3 with SMTP id d9443c01a7336-23c8746d7eamr71697155ad.8.1751700653289;
+        Sat, 05 Jul 2025 00:30:53 -0700 (PDT)
+Received: from brak3rDesk ([115.96.219.186])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c84591cdcsm36002535ad.190.2025.07.05.00.30.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 00:30:52 -0700 (PDT)
+Date: Sat, 5 Jul 2025 13:00:44 +0530
+From: Rujra Bhatt <braker.noob.kernel@gmail.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, vgupta@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, skhan@linuxfoundation.org
+Subject: [PATCH] arc:kernel:perf_event.c : replaced sprintf with sysfs_emit()
+Message-ID: <aGjUpI1yNjEhSiAq@brak3rDesk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: microchip: sam9x7: Add LVDS controller
-To: Dharma Balasubiramani <dharma.b@microchip.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250625-b4-sam9x7-dts-v1-1-92aaee14ed16@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250625-b4-sam9x7-dts-v1-1-92aaee14ed16@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Replaced sprintf() with sysfs_emit() in sysfs*_show() function in
+perf_event.c file to follow the kernel's guidlines from
+documentation/filesystems/sysfs.rst
+This will improve consistency, safety, and makes it easier to maintain
+and update in future.
 
+Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+---
+ arch/arc/kernel/perf_event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 25.06.2025 12:08, Dharma Balasubiramani wrote:
-> Add support for LVDS controller.
-> 
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
+index ed6d4f0cd621..424ec072c441 100644
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -648,7 +648,7 @@ static ssize_t arc_pmu_events_sysfs_show(struct device *dev,
+ 	struct perf_pmu_events_attr *pmu_attr;
+ 
+ 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
+-	return sprintf(page, "event=0x%04llx\n", pmu_attr->id);
++	return sysfs_emit(page, "event=0x%04llx\n", pmu_attr->id);
+ }
+ 
+ /*
+-- 
+2.43.0
 
-Applied to at91-dt, thanks!
