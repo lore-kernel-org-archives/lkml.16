@@ -1,110 +1,194 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C64A2E3706;
-	Sat,  5 Jul 2025 13:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD3A23E336
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751721015; cv=none; b=hDSERkifMCRbdk3wHHCzapmu4a6vLqSkPgMlwEZT7Ng0iEQwmTaCHKDNo+ex3Y+S4SIuUk3XT8jn69veA6m1RaC1CsLgap5vVBSoOadFtxwcARjYZpu0fwmuZv67B17My0HdjtCRp081sxj6BYBjH5yiwYXPZ7AiAIICl6hVpHc=
+	t=1751721024; cv=none; b=RMvuNijK/JM/DWkr3+0b8WOeRIOjwtZcL1ncLJaENxPdXykYA0gnO2ES8t0XQFfyETg2O8PRK4nBBLgVBEfKlY48D+1bePREG7/SnHkdfshU04CSbEqM9S7QWLMxFX1ysvK7bTuzu+pv7ecpoi5sTFC5ehm5hEN3rxaHNmHGcN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751721015; c=relaxed/simple;
-	bh=UIXup+LNXzlJkMEvN+DweufuUSjQf331SNhY6u+dwkE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jrz9dmljytYD2vhYxyjdX1nGWfPuqxpdlhgMZfMCGuDObS68HoUlf9OJF63UarrVnvCA4qsU8/jGmHScpM3VImYa2mhpcXlSk/YKYiyB0V9a1jilU3FbU9m8bppbaZF77zPrJ9QT0MWet9Hockc8wSUbQZjlF67olz+irvemLVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=daS93Z0z; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751721024; c=relaxed/simple;
+	bh=3CMNxNiW3+FIc/BUcKb5WWD/6E4scgZ1RkowNRMoOTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qadD1rj9jBOe6tX3hLMirc52eDoJr/2nF/YfXZpWfBy3ClgLXie5r7DyRwxUjtYXyVabkqYNb2qPK5xwF6cR3NoyePKAgqrpajhyLAZTTASehEdvxcIpIZguldeMTRsH5vEq9lISC09U5e3/xKPBRHDTRoWJnftfkUrplOfmgzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gE760dQL; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="daS93Z0z"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 565D9ovt462902;
-	Sat, 5 Jul 2025 08:09:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751720990;
-	bh=ttqjqkTwAbS4h3qGA1nHlnNHYoKbG6HRZs4IHbCT+c8=;
-	h=From:To:CC:Subject:Date;
-	b=daS93Z0znHcxGrRqwRwVnJNdcXTSEnN/3haIvwCNKSfAcZd42Y7uc1qtZxzQmcoAa
-	 IxrCCY+kZGsB3EmMK5q3NY3k8VlE2TTNNX6fwLUIfJhhrxv6ekANCQi1e5kutc+f5I
-	 oBjqu3Vn1LtDua5dP/Qe/BsLvqnkF2vBFW5T993I=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 565D9n5i2728577
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Sat, 5 Jul 2025 08:09:50 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Sat, 5
- Jul 2025 08:09:49 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Sat, 5 Jul 2025 08:09:49 -0500
-Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 565D9hrL707887;
-	Sat, 5 Jul 2025 08:09:44 -0500
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>
-CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <alsa-devel@alsa-project.org>, <shenghao-ding@ti.com>, <navada@ti.com>,
-        <13916275206@139.com>, <v-hampiholi@ti.com>, <v-po@ti.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <baojun.xu@ti.com>
-Subject: [PATCH v1] ALSA: hda/tas2781: Fix calibration data parser issue
-Date: Sat, 5 Jul 2025 21:09:08 +0800
-Message-ID: <20250705130908.26248-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gE760dQL"
+Date: Sat, 5 Jul 2025 21:10:13 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751721018;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4OGIJ7s7TRMTl0Xs4Ki+8/cZ1uyPe+zE5+yenLTGv2o=;
+	b=gE760dQLmmt4M1FpGuvtCjTMneBR22mOZWVOcIZ5eNf90hp4uPPBE6WmbuaR04iddZF/Ob
+	zd2bVNvkTghi3Ig+J/HMvdSiOP22aiX3dXE0voGSFTnxS/TelUvQ9PSKiPL8kzT+Mq/SFW
+	EJ8ClOjPIGy6WwA7d3x1nw9yd/fB+VM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ze Huang <huang.ze@linux.dev>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Ze Huang <huang.ze@linux.dev>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: usb: dwc3: add support for SpacemiT
+ K1
+Message-ID: <aGkkKEMyY1JG7Z80@monica.localdomain>
+References: <20250705-dwc3_generic-v5-0-9dbc53ea53d2@linux.dev>
+ <20250705-dwc3_generic-v5-1-9dbc53ea53d2@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705-dwc3_generic-v5-1-9dbc53ea53d2@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-Calibration data was overwritten during parser, it cause issue.
+On Sat, Jul 05, 2025 at 09:01:25PM +0800, Ze Huang wrote:
+> Add support for the USB 3.0 Dual-Role Device (DRD) controller embedded
+> in the SpacemiT K1 SoC. The controller is based on the Synopsys
+> DesignWare Core USB 3 (DWC3) IP, supporting USB3.0 host mode and USB 2.0
+> DRD mode.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Ze Huang <huang.ze@linux.dev>
+> ---
 
-Fixes: 4fe238513407 ("ALSA: hda/tas2781: Move and unified the calibrated-data getting function for SPI and I2C into the tas2781_hda lib")
+Hi Krzysztof,
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
----
- sound/pci/hda/tas2781_hda.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+I kept your Reviewed-by tag, as this version only includes minor updates:
+- Dropped the `interconnects` property
+- Updated the `resets` property to match the latest convention from Alex's patch
 
-diff --git a/sound/pci/hda/tas2781_hda.c b/sound/pci/hda/tas2781_hda.c
-index 5f1d4b3e9688..34217ce9f28e 100644
---- a/sound/pci/hda/tas2781_hda.c
-+++ b/sound/pci/hda/tas2781_hda.c
-@@ -44,7 +44,7 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
- 		TASDEVICE_REG(0, 0x13, 0x70),
- 		TASDEVICE_REG(0, 0x18, 0x7c),
- 	};
--	unsigned int crc, oft;
-+	unsigned int crc, oft, node_num;
- 	unsigned char *buf;
- 	int i, j, k, l;
- 
-@@ -80,8 +80,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
- 			dev_err(p->dev, "%s: CRC error\n", __func__);
- 			return;
- 		}
-+		node_num = tmp_val[1];
- 
--		for (j = 0, k = 0; j < tmp_val[1]; j++) {
-+		for (j = 0, k = 0; j < node_num; j++) {
- 			oft = j * 6 + 3;
- 			if (tmp_val[oft] == TASDEV_UEFI_CALI_REG_ADDR_FLG) {
- 				for (i = 0; i < TASDEV_CALIB_N; i++) {
-@@ -99,8 +100,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
- 				}
- 
- 				data[l] = k;
-+				oft++;
- 				for (i = 0; i < TASDEV_CALIB_N * 4; i++)
--					data[l + i] = data[4 * oft + i];
-+					data[l + i + 1] = data[4 * oft + i];
- 				k++;
- 			}
- 		}
--- 
-2.43.0
+Let me know if you have any concerns.
 
+>  .../devicetree/bindings/usb/spacemit,k1-dwc3.yaml  | 107 +++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c967ad6aae50199127a4f8a17d53fc34e8d9480b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
+> @@ -0,0 +1,107 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/spacemit,k1-dwc3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SpacemiT K1 SuperSpeed DWC3 USB SoC Controller
+> +
+> +maintainers:
+> +  - Ze Huang <huang.ze@linux.dev>
+> +
+> +description: |
+> +  The SpacemiT K1 embeds a DWC3 USB IP Core which supports Host functions
+> +  for USB 3.0 and DRD for USB 2.0.
+> +
+> +  Key features:
+> +  - USB3.0 SuperSpeed and USB2.0 High/Full/Low-Speed support
+> +  - Supports low-power modes (USB2.0 suspend, USB3.0 U1/U2/U3)
+> +  - Internal DMA controller and flexible endpoint FIFO sizing
+> +
+> +  Communication Interface:
+> +  - Use of PIPE3 (125MHz) interface for USB3.0 PHY
+> +  - Use of UTMI+ (30/60MHz) interface for USB2.0 PHY
+> +
+> +allOf:
+> +  - $ref: snps,dwc3-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: spacemit,k1-dwc3
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: usbdrd30
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    items:
+> +      - description: phandle to USB2/HS PHY
+> +      - description: phandle to USB3/SS PHY
+> +
+> +  phy-names:
+> +    items:
+> +      - const: usb2-phy
+> +      - const: usb3-phy
+> +
+> +  resets:
+> +    items:
+> +      - description: USB3.0 AHB reset line
+> +      - description: USB3.0 VCC reset line
+> +      - description: USB3.0 PHY reset line
+> +
+> +  vbus-supply:
+> +    description: A phandle to the regulator supplying the VBUS voltage.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - phys
+> +  - phy-names
+> +  - resets
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    usb@c0a00000 {
+> +        compatible = "spacemit,k1-dwc3";
+> +        reg = <0xc0a00000 0x10000>;
+> +        clocks = <&syscon_apmu 16>;
+> +        clock-names = "usbdrd30";
+> +        interrupts = <125>;
+> +        phys = <&usb2phy>, <&usb3phy>;
+> +        phy-names = "usb2-phy", "usb3-phy";
+> +        resets = <&syscon_apmu 8>,
+> +                 <&syscon_apmu 9>,
+> +                 <&syscon_apmu 10>;
+> +        vbus-supply = <&usb3_vbus>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        hub_2_0: hub@1 {
+> +            compatible = "usb2109,2817";
+> +            reg = <1>;
+> +            vdd-supply = <&usb3_vhub>;
+> +            peer-hub = <&hub_3_0>;
+> +            reset-gpios = <&gpio 3 28 1>;
+> +        };
+> +
+> +        hub_3_0: hub@2 {
+> +            compatible = "usb2109,817";
+> +            reg = <2>;
+> +            vdd-supply = <&usb3_vhub>;
+> +            peer-hub = <&hub_2_0>;
+> +            reset-gpios = <&gpio 3 28 1>;
+> +        };
+> +    };
+> 
+> -- 
+> 2.50.0
+> 
