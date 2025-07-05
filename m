@@ -1,125 +1,145 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4A140856;
-	Sat,  5 Jul 2025 03:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F0540856;
+	Sat,  5 Jul 2025 03:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751687120; cv=none; b=M2HB/4/E6s0PS4hVLtaoK6rnMmOc3F4Sw4hUDKO3AmTHaIJHZI427Ysfi1q2zGWbAxUEiscgTQL7hiATVsX1/1xFBIdicWeqNORAT2ust6I2jpBBrmPaAndxE2iORKyOX6W2LEqO3JK1Udv54p/tCXgeluDGtmG/NlGQOqDj3jI=
+	t=1751687458; cv=none; b=O6AojbU6KMzSZ5sh7x05Fp9/9CKGuEvBqDzwT0d9qIfgE8aQ5S6IiOE6K1SQO8R/cjVkI6zqMh0UY0wzeg6i/YtIDZsUBRnDP/CgiaExegiGNPsk4FbxSTH1/vB0AW8UhrOe8I+KKg8DGyu4CsPbPvUtc2N8/YUwmJi3N4XurBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751687120; c=relaxed/simple;
-	bh=1/qboNFZMRZ/EP/VTle86vBmjRoZx2apjTbAn3IEnXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R1cI6e6AvhGDp6sGB5N/k9hD9m2Y7U8bljTRez47wqkjbgFvRkv50q7I0lFmKp7Vyegy4HpzeO8WPEu1vfYsDL6y2tEndNsy321ddXnsmuPkYwQyhlwHZWngggSilGMs0IIlqOL2mEWJonK8fbtRCruWHfcEO/XXGnrqeDK/k9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhviOMw7; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751687458; c=relaxed/simple;
+	bh=u1p+7Tq0EsziaC7h2LNkIn8gXPK7kCtdvqwdiRxAecc=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a4qf34alpWIDXnn7tGETeblPLvcl48KsHWL0XIdyAQufZEN2dUzOitHzfc9kMRReBMHu5tdFQlMjGWmjL+m8QsiX1JaLResgAXkXisvvYzo6sQW6nty9lRzTIdEzh0sjSrXfR/Ef7oaqtdZQMO/I2RaoiAm6i9XWddwk2XH9S78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cWNBQtEV; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhviOMw7"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-531466622beso422300e0c.1;
-        Fri, 04 Jul 2025 20:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751687117; x=1752291917; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cxn5O9R8zM5uNNIFJkKjTcOoiYIJRVckvhs4gosK+Zg=;
-        b=OhviOMw78hHuHqwIVELlqV07MNijs8suI8RBcHXndEnvFUNEsI1Q2hBVVmf8GRiPAY
-         6S61KIA50n7YHwBRdIC7lEiNzjbXn+anUEnYg7WnWfdjct7HFn9r3Veco29dADdAZVI9
-         1djNOZIn7q7umOZD3uSD0WLd8wlEGyskRU8oFhoDOz8cpIB1V+zJG+N8IORcESI+RU9Q
-         CI7iATiFy5L23ZZLNCaK9oZiH44NXzTnMXvit1QX9/285FDYjE9o9PhzmldCg6kAf4jM
-         H+T+bGYOXQAgIrdcCF+SAoFr8smWuaxSVQCoGGMQeNYHWaXCWSauO4S2Xyhj8X9pSj00
-         ZmQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751687117; x=1752291917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cxn5O9R8zM5uNNIFJkKjTcOoiYIJRVckvhs4gosK+Zg=;
-        b=rGz425APTkdqep+ZfQKbdzmSVLIqBQsA1B3OS/egQXYJU0TjsSI6HGmewVlmJx+e+I
-         MQJankTJif3M+ZwY57pq9UcUdR3mi6sJXCmQZWoiJqkZwDAID4nNqAlyVJKt1SzHdDfE
-         Hlj7EvXVJNATsCqTMhf5vbgTP909nqfAlIbbn9boJalxkaxte9uaxC1n5DdQXStJK3uv
-         g+RuyQng5NHL5cz1gLiJqOlOhEO21a2mJA5PfBHGCi9BVPxMKAna0TBWHhlwzRaM8Qza
-         8sBQsMsCGA0vC9qsLdMTvofxn9BwuXO1MLuJuvNbOJ+NtpFpB+ql/phrAUNAq2+91+gB
-         1ivQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFZeqZDc8+fGFWfyxK1auiHl/qVGfoXBTljZWN20PJKsBfvQlmNzMzttmmGJI9iNbb0zpKikdyBxMTKV3g@vger.kernel.org, AJvYcCVsAKeEGcjs7KQ0aZ7BdTGgKvf9yun3ViykXFUNvH1ahRZehcTbtxMheXK+wnaVUf9FLQWY4CvEOHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn4jMFMtw4rUJ+uCb3BZkH4XTot0L3Gt2AYLac8ganNrpoSbcN
-	JyiSWvoashpqbfRw0XyrbTglyH7AiiL8w9rMWGQ3dpL1N8+MX3L1h2lJT8WKWQaRzNkZLlZ5g6Q
-	vE8B4jpqbSxt15pMyDGXwjN7WzsYJP5Q=
-X-Gm-Gg: ASbGncsSIb1NCrBhRl62AMlpI3IyRXB8W5WmONIRhLO55u7Rl2mQZdyeJwjwxr51MWc
-	RABXh9wRG3cWyPjkZPaVrBNgnW86JDjlTvVvwpzutq5ojPQVtFvu/WB1EBKsKxDbL2Q2IvzjUWn
-	9ac59rNIgjC5CE45yLNPtsdiu4i2sBF5cwK5ZmankAWj0=
-X-Google-Smtp-Source: AGHT+IEsd/2gkkGLE/EI1r1VxK55gqF+R/IGayYk2sj+60uzmX9UpMRv4oN74fB6peBV3OlZpS4Aak5g8kpH3Es502E=
-X-Received: by 2002:a05:6102:440e:b0:4de:81a:7d42 with SMTP id
- ada2fe7eead31-4f3059d1026mr586361137.1.1751687117297; Fri, 04 Jul 2025
- 20:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cWNBQtEV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751687457; x=1783223457;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u1p+7Tq0EsziaC7h2LNkIn8gXPK7kCtdvqwdiRxAecc=;
+  b=cWNBQtEVwmBiFRGXgR3B1ekPMKcq6oUxmYw6mwSJkZQwSh0vUL/2iqkH
+   TeSbOFR2ZqIn0t8wQPL1la6dZgLkLyxMfNf0BKzSrwFU56xc2i4VGMm2C
+   Zg2fHXLrVQJDjwl0PIQfuO3WNGSJS7KhbT2Cc72/DPOkHHq461Eon908q
+   lea5s5l+N+WxbGiKbVsM6b/Cv2gu/pokaRZ0dkK0+DdI3GOV8SKMS3UYU
+   oOUlwwJyTdncVPVBcAQ3p905HkCv6EQRqJDpiVtCTWAbfvoJlx8+ZI5nm
+   GnQCQGgwJud2zpysj3Tuj8S3g5rV+xqzTgzLZjj6e9lKg3eHchvX6/MM/
+   Q==;
+X-CSE-ConnectionGUID: YtCuwQ39R8yyJqMSUj7mRA==
+X-CSE-MsgGUID: YX5rRt1oTMaN7iyhIY2SYg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="54122274"
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="54122274"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 20:50:56 -0700
+X-CSE-ConnectionGUID: 9KAahA5mTQKfVyiQC1NkVg==
+X-CSE-MsgGUID: +3U+73bmQgqJTvx8DSWbeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="154506658"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.252]) ([10.124.243.252])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 20:50:52 -0700
+Message-ID: <79ea9027-179a-460b-8a91-86e38feba986@linux.intel.com>
+Date: Sat, 5 Jul 2025 11:50:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
- <20250618031638.26477-5-andrew.lopes@alumni.usp.br> <20250621185824.69a11319@jic23-huawei>
-In-Reply-To: <20250621185824.69a11319@jic23-huawei>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sat, 5 Jul 2025 00:45:05 -0300
-X-Gm-Features: Ac12FXzLQp1RDoG5qPnWWadTRP__sjuPHvBZ1dJbhMZEQVeKR8lz7IW__q6hiBc
-Message-ID: <CANZih_SWg03U1jOn63++A=+_9GkzFhtK7S563hdb2m=tk5SK0A@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] iio: accel: sca3000: use sysfs_emit_at() instead
- of sprintf()
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com, 
-	nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Jann Horn <jannh@google.com>,
+ Vasant Hegde <vasant.hegde@amd.com>, Dave Hansen <dave.hansen@intel.com>,
+ Alistair Popple <apopple@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Andy Lutomirski <luto@kernel.org>, iommu@lists.linux.dev,
+ security@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/sva: Invalidate KVA range on kernel TLB flush
+To: Jason Gunthorpe <jgg@nvidia.com>
+References: <20250704133056.4023816-1-baolu.lu@linux.intel.com>
+ <20250704133807.GB1410929@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250704133807.GB1410929@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 21, 2025 at 2:58=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
-> > @@ -423,16 +423,16 @@ sca3000_show_available_3db_freqs(struct device *d=
-ev,
-> >  {
-> >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> >       struct sca3000_state *st =3D iio_priv(indio_dev);
-> > -     int len;
-> > +     unsigned int len =3D 0;
->
-> No need to initialize as set on the next line
+On 7/4/2025 9:38 PM, Jason Gunthorpe wrote:
+> On Fri, Jul 04, 2025 at 09:30:56PM +0800, Lu Baolu wrote:
+>> The vmalloc() and vfree() functions manage virtually contiguous, but not
+>> necessarily physically contiguous, kernel memory regions. When vfree()
+>> unmaps such a region, it tears down the associated kernel page table
+>> entries and frees the physical pages.
+>>
+>> In the IOMMU Shared Virtual Addressing (SVA) context, the IOMMU hardware
+>> shares and walks the CPU's page tables. Architectures like x86 share
+>> static kernel address mappings across all user page tables, allowing the
+>> IOMMU to access the kernel portion of these tables.
+>>
+>> Modern IOMMUs often cache page table entries to optimize walk performance,
+>> even for intermediate page table levels. If kernel page table mappings are
+>> changed (e.g., by vfree()), but the IOMMU's internal caches retain stale
+>> entries, Use-After-Free (UAF) vulnerability condition arises. If these
+>> freed page table pages are reallocated for a different purpose, potentially
+>> by an attacker, the IOMMU could misinterpret the new data as valid page
+>> table entries. This allows the IOMMU to walk into attacker-controlled
+>> memory, leading to arbitrary physical memory DMA access or privilege
+>> escalation.
+>>
+>> To mitigate this, introduce a new iommu interface to flush IOMMU caches
+>> and fence pending page table walks when kernel page mappings are updated.
+>> This interface should be invoked from architecture-specific code that
+>> manages combined user and kernel page tables.
+>>
+>> Fixes: 26b25a2b98e4 ("iommu: Bind process address spaces to devices")
+>> Cc:stable@vger.kernel.org
+>> Co-developed-by: Jason Gunthorpe<jgg@nvidia.com>
+>> Signed-off-by: Jason Gunthorpe<jgg@nvidia.com>
+>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>> ---
+>>   arch/x86/mm/tlb.c         |  2 ++
+>>   drivers/iommu/iommu-sva.c | 32 +++++++++++++++++++++++++++++++-
+>>   include/linux/iommu.h     |  4 ++++
+>>   3 files changed, 37 insertions(+), 1 deletion(-)
+> Reported-by: Jann Horn<jannh@google.com>
+> 
+>> @@ -1540,6 +1541,7 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+>>   		kernel_tlb_flush_range(info);
+>>   
+>>   	put_flush_tlb_info();
+>> +	iommu_sva_invalidate_kva_range(start, end);
+>>   }
+> This is much less call sites than I guessed!
+> 
+>> +void iommu_sva_invalidate_kva_range(unsigned long start, unsigned long end)
+>> +{
+>> +	struct iommu_mm_data *iommu_mm;
+>> +
+>> +	might_sleep();
+>> +
+>> +	if (!static_branch_unlikely(&iommu_sva_present))
+>> +		return;
+>> +
+>> +	guard(mutex)(&iommu_sva_lock);
+>> +	list_for_each_entry(iommu_mm, &iommu_sva_mms, mm_list_elm)
+>> +		mmu_notifier_arch_invalidate_secondary_tlbs(iommu_mm->mm, start, end);
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_sva_invalidate_kva_range);
+> I don't think it needs to be exported it only arch code is calling it?
 
-That makes sense! I=C2=B4ll change that.
+Yes. Done.
 
->
-> >
-> > -     len =3D sprintf(buf, "%d", st->info->measurement_mode_3db_freq);
-> > +     len =3D sysfs_emit_at(buf, len, "%d", st->info->measurement_mode_=
-3db_freq);
->
-> sysfs_emit() when you know you are at the start.
->
-Ok! Thanks.
-
->
-> >       if (st->info->option_mode_1)
-> > -             len +=3D sprintf(buf + len, " %d",
-> > +             len +=3D sysfs_emit_at(buf, len, " %d",
-> >                              st->info->option_mode_1_3db_freq);
-> Fix alignment.
->
-> >       if (st->info->option_mode_2)
-> > -             len +=3D sprintf(buf + len, " %d",
-> > +             len +=3D sysfs_emit_at(buf, len, " %d",
-> >                              st->info->option_mode_2_3db_freq);
->
-> same here.
-
-Actually, both cases are aligned. I checked the code and they have the
-same number of tabs, and in this email they have the same number of
-spaces.
-However, since I'm not reading this diff with a monospaced font, for
-me it appears to be different but this is caused by the difference in
-size of "-" and "+".
-Maybe this is why it appears to be different for you too?
+> 
+> Looks Ok to me:
+> 
+> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
 
 Thanks,
-Andrew
+baolu
