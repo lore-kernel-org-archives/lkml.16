@@ -1,73 +1,76 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C63F229B28
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 16:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDBF204F73
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 16:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751731316; cv=none; b=lTIgSqpZVwcyMJ+LmP4+GKogDHVltAs0Zpc1dMlVKTBiM0Nt5i27OOunQjTtBvwIVDMu/Q009ZRaFHiRDb7ui/6kMnIxvC4tGKrykaKR1D8wDLuEAtV7pzEZFP6RHqeSxaf6kCEe7FVf0vausgKBXgYeZ47QrW8+2p16CqmOGU4=
+	t=1751731319; cv=none; b=u3ydIHF88vYYPOpi1pnWg5R86NPASYRxTsM+Hc1xhc+e+7hKxuX5ajTn45/DfIHsmjurWVl4UxfFZCUXe4OrtaYJf3zI2fj4vwPzk7AR0upADruAdlBr2bDvBgNEQ6o9B07AF2MpYGt/jS5OSBM97DZAudAOFQ4prVultQGRx4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751731316; c=relaxed/simple;
-	bh=hZs4sz8oMPEiGhhqApXBtCYQcDxESo4pq1mV1+Z7Z2w=;
+	s=arc-20240116; t=1751731319; c=relaxed/simple;
+	bh=9keoWX7Ov4S4jZCBKlo3e4QDO7a1HexE+yQpD8yvh+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WrvuQY758aytD2A+Mlza24t+YB5GwJb0W9lj9t1oHZD+0U8rZQidi3aPJ3VzUeQguwLo0MobYBIrnqjvJrQgB0pQThEqbsOoQapCA8StoLHKLjc8gLR5fK7smv3qJPu5ZUeC1xuMU1bclU/DTpffpA9rNF9GEHjwGhzOJVCxX44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZrdUxIbU; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version; b=PORzz3M+OeseMPn0chwPjmkog7v/PpprQ5t4byGV8blzqzHgeVkXhFgJbc9U3JPutO5gp1Dy6RBK5NLq/B2+/3JRwdQO/UMzIaviUON6KmkF7J5mBpxS20js4N0AAnctlaFvXDfEdEDOdIueywaUgRjHxhgcW0KY/KlIhL1jWxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U7cS9QJQ; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZrdUxIbU"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4539cd7990cso10021485e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 09:01:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U7cS9QJQ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451d7b50815so13395385e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 09:01:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751731314; x=1752336114; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751731315; x=1752336115; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=epJPa/pBL6IXn229DAd6lGt1WeXWNm9UUZm5IBc/kEc=;
-        b=ZrdUxIbUxBDPTh8BI7bWA5Trshh40xz5hqMSrID7dmACJxUaqX8rOJN8KBBB4xbbgk
-         AIkqlyyuHLHBGAWMHSAqYQiXtmPupwJ3aCFX1u2LlkT0ZcSF5c9Jmvewl5kRouUSY6hv
-         UJvMTWbIqUcz7Q+6INmZFYCCgT+hxx1Xmrs6vhR+i1WCqyApGz4277xyWsGBO34NEyyy
-         ytupiFz2pLCkLQfUgi05/iDfA65MEbrAsJCihknpRCdQ3C9A9Dl5vKMpKGOpuzETOazy
-         O9nhEp1+g1dUT1CF/pxvch5QBX9jiJPW10Y7a62qKg41LjXOawctpkrDoYKjQkO+j0aI
-         +vzg==
+        bh=E9//melEuj5cFEiBGjFrC0nTmBJWerTiWP5eoVRL8g8=;
+        b=U7cS9QJQGg8PJ6lf0fQLqiqyDB8ZUFERarCbBi3y/bynfS2O9jXWR63bxYsCZJbq0z
+         T6f0jd5JGVxUixhaiLszHGyl6VDTGCQlvWBCkFgQb/YFnfg+W8+j14iE1u4rpjPI+uGF
+         eDIGgczJ9oMmq7UIFJz9hxzNyMgqWqauEPSLWLFkMLO5gG2Yd4CiXXKobNAlfwcxPBwj
+         zFOgvl2OxUXZ7/NO9iJeXWUvvxptl/D/DO/uuhlOq9h5/3hpD6ulIRtyucg4XK6J0sib
+         v0Lpcu/cPPcPfRujGZE5Y59VYealE0n7qGQny6oV3hNof7ZJc93FM383DCAt8ZaHLLXD
+         185A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751731314; x=1752336114;
+        d=1e100.net; s=20230601; t=1751731315; x=1752336115;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=epJPa/pBL6IXn229DAd6lGt1WeXWNm9UUZm5IBc/kEc=;
-        b=hrtzbIqW+DtL/VJ+VsTOmLdsKl+HxbEWNKyoTgPTDdOqMNgYWHaD6VveLkVlWs0AzF
-         wnC3NbggaHk798Ln7dpn92kUl6lGxSR1Y0P6P+cDixXhKS2vGQqd14qipoNY63YOnzHe
-         SOYPINRCfumy5Oas+iUW9HwIcDgsMaS7prrHQB11/+xWbDSRNikERt26xn6GyDtN8sMK
-         jtOGulUcqXZUpRjKYJkef20Nl8pEx/T3SbWecxsq68OsjqL/bygpwc4vy76+9nrY39VS
-         hydsAsbBFVBeGJ5h9shP7ujXjU1D1ddCcn8eF2u3GpQTKoggUk6gEizp5q5f42yRqT5Y
-         RbNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWV4of4UltmU70supaikOD6iXg0kTmtMd9YZhz5E9SDg8DClFVyfYIG5ecPyTDtsTrGeD9Jqw8P1UgqN+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyMyYICMdngS/BPvK2+wSz+c2xnCj7A26T05HffIH2Ye70eFM5
-	6adpbVTMGLk/NAem1WCJ3tjmyTqbOai2hBFxefBvkfUD7uFlfSHL2gbcQZsSMuORf81SmFuEc0w
-	xbiIN
-X-Gm-Gg: ASbGncvZ4/WQ76U1JmshRmQwn14hsRYNqEkFlM79U73P77EAiUnBElqIE0L5pJ51bTX
-	kB3yoBUWTqiI9rk+yl8ivbGMLUkvzW0PePt13FSTYmtbVtl8RiGqe3V9+WMMq9nHhm9hg8nXwxa
-	6ad7SN3y0UZX5Y6poE7KReaqAgzWsi9gSyUV84UfARTS3wpC/zzPCPsdB/QaDgKtGe/sMR1SpOh
-	rgNnraSkAgXiU8bJJSDMsX3xoht5V3gmeO8cNhBASGGYrcR77EvRTq94nfrpZL8+MysBbPhtFvo
-	2KfQ+OFbRpm5HzUnYsFLZem5yXqk7o1JKA6oVtIPeCT5i1ClDmuZffU7Z++F0peIpCldj5nzM2n
-	D8uZQ7qSq+N7d
-X-Google-Smtp-Source: AGHT+IHbUECiaM5U973bLrl71KctT6rG2xVj0aWGuJ/GI+YA+y0FmSvIk0joYcGbvDd7mLvqZogN8w==
-X-Received: by 2002:a7b:c006:0:b0:453:8e3d:26ef with SMTP id 5b1f17b1804b1-454b1f4f177mr48011405e9.6.1751731313497;
-        Sat, 05 Jul 2025 09:01:53 -0700 (PDT)
+        bh=E9//melEuj5cFEiBGjFrC0nTmBJWerTiWP5eoVRL8g8=;
+        b=Qf2p3bq7GLXqB4QimUCTFri4W6GA3lnpc59N7BurUCAHfIXpJyiZtfnmI9NjKrccf2
+         bxF36VriTHvLKYUQsDj1iDFmJ0J7Vb8taBAPOzVqvMubu9nI8yF41oBNQ4VMu3Vi57Lt
+         Qg0mUGnXIoAoFFqu1U5r1OZcScIYG+EIz5VDZF91TQqX83VNYkgbec3MFnc6MP4++bmO
+         gBetmf7J3dV2k08MEhFssxhnZBeGIxC03Mbi60ubQo/ZtW4DOFj+F9suQcPc5hq4jfWE
+         bp5798O5aLRyFcgbOIbqUUcnWCtgwrjx8VUTCkEcx9CtrRKRJ0EOYbj/3WjQMOUQdXZv
+         hfgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJoqomzwZ8DejOAPzSycKJwU6dN9TClurysmZjYLxks6ZUCDoxIv1Srvm5FiTgMt/3UXU/TZnr2ZT0NQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy1W4kmt7G3YviZ5XY4H4Bt2zLmJ2NnNeBiD3KMwZ9T6UetdkJ
+	AGWT8ABlUFKLT1s7nTqqjLbTjCabTfLa/r1SAksgWpP9vablrVqlK/yily5FKMo4LZA=
+X-Gm-Gg: ASbGncvKKjFSL0stoRaGnfRzymfGdcoiNLb7jWjZ2BS7MoTXSNIvRmTiIYd2Hu8ePIQ
+	ePlFQvUvLOo398BirY1Eaim2/5qmqFAk5qrLIrYNbTEYwdmSlYQ1yDR+DSd3NM1uSVWf/Z35D1a
+	JkcqgiIjLYFh81yaaNu+1QnhpVeq/nojgs8FEKX5fl/e7zT/ylAerLCSy0JOiL9EYWIs5uUQ2fK
+	eL1EImhJiAOIMX40Uj+CSRUvCl7hUSe2VFpG17qv/B/2t+EYMeBP+XOC/hKObjGynpsoynUnzRY
+	0ZVGNP37tLHIu2mrNDp672wdqngJ7BVrm7scc+mudjmUCsCuaDf1g1QLiLG6LAcxzvScpAWWAjX
+	WY/IEl3puDK4d
+X-Google-Smtp-Source: AGHT+IEls66kg2lSaUzmGK9alwJq0YWTWxf30IEdr8JXptk2kZDaVI/JZp2NtEYHWQjyHTVPV/FUWw==
+X-Received: by 2002:a05:600c:8112:b0:450:cd50:3c64 with SMTP id 5b1f17b1804b1-454b318d3e5mr67373515e9.31.1751731315450;
+        Sat, 05 Jul 2025 09:01:55 -0700 (PDT)
 Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b16990aasm57709375e9.32.2025.07.05.09.01.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b16990aasm57709375e9.32.2025.07.05.09.01.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 09:01:53 -0700 (PDT)
+        Sat, 05 Jul 2025 09:01:55 -0700 (PDT)
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 To: daniel.lezcano@linaro.org,
 	tglx@linutronix.de
 Cc: ghennadi.procopciuc@oss.nxp.com,
 	S32@nxp.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 18/20] clocksource/drivers/pit: Rename the VF PIT to NXP PIT
-Date: Sat,  5 Jul 2025 18:01:24 +0200
-Message-ID: <20250705160129.3688026-18-daniel.lezcano@linaro.org>
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Subject: [PATCH 20/20] dt: bindings: fsl,vf610-pit: Add compatible for s32g2 and s32g3
+Date: Sat,  5 Jul 2025 18:01:26 +0200
+Message-ID: <20250705160129.3688026-20-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250705160129.3688026-1-daniel.lezcano@linaro.org>
 References: <20250705160129.3688026-1-daniel.lezcano@linaro.org>
@@ -79,58 +82,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PIT acronym stands for Periodic Interrupt Timer which is found on
-different NXP platforms not only on the Vybrid Family. Change the name
-to be more generic for the NXP platforms in general. That will be
-consistent with the NXP STM driver naming convention.
-
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/Kconfig                             | 9 ++++++---
- drivers/clocksource/Makefile                            | 2 +-
- drivers/clocksource/{timer-vf-pit.c => timer-nxp-pit.c} | 0
- 3 files changed, 7 insertions(+), 4 deletions(-)
- rename drivers/clocksource/{timer-vf-pit.c => timer-nxp-pit.c} (100%)
+ .../devicetree/bindings/timer/fsl,vf610-pit.yaml          | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 6f7d371904df..0fd662f67d29 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -474,11 +474,14 @@ config FSL_FTM_TIMER
- 	help
- 	  Support for Freescale FlexTimer Module (FTM) timer.
+diff --git a/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml b/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml
+index bee2c35bd0e2..2aac63a58bfd 100644
+--- a/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml
++++ b/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml
+@@ -15,8 +15,12 @@ description:
  
--config VF_PIT_TIMER
--	bool "Vybrid Family Programmable timer" if COMPILE_TEST
-+config NXP_PIT_TIMER
-+	bool "NXP Periodic Interrupt Timer" if COMPILE_TEST
- 	select CLKSRC_MMIO
- 	help
--	  Support for Periodic Interrupt Timer on Freescale Vybrid Family SoCs.
-+	  Support for Periodic Interrupt Timer on Freescale / NXP
-+	  SoCs. This periodic timer is found on the Vybrid Family and
-+	  the Automotive S32G2/3 platforms. It contains 4 channels
-+	  where two can be coupled to form a 64 bits channel.
+ properties:
+   compatible:
+-    enum:
+-      - fsl,vf610-pit
++    oneOf:
++      - const: fsl,vf610-pit
++      - const: nxp,s32g2-pit
++      - items:
++          - const: nxp,s32g3-pit
++          - const: nxp,s32g2-pit
  
- config SYS_SUPPORTS_SH_CMT
- 	bool
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 205bf3b0a8f3..77a0f08eb43b 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -49,7 +49,7 @@ obj-$(CONFIG_CLKSRC_LPC32XX)	+= timer-lpc32xx.o
- obj-$(CONFIG_CLKSRC_MPS2)	+= mps2-timer.o
- obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+= samsung_pwm_timer.o
- obj-$(CONFIG_FSL_FTM_TIMER)	+= timer-fsl-ftm.o
--obj-$(CONFIG_VF_PIT_TIMER)	+= timer-vf-pit.o
-+obj-$(CONFIG_NXP_PIT_TIMER)	+= timer-nxp-pit.o
- obj-$(CONFIG_CLKSRC_QCOM)	+= timer-qcom.o
- obj-$(CONFIG_MTK_TIMER)		+= timer-mediatek.o
- obj-$(CONFIG_MTK_CPUX_TIMER)	+= timer-mediatek-cpux.o
-diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-nxp-pit.c
-similarity index 100%
-rename from drivers/clocksource/timer-vf-pit.c
-rename to drivers/clocksource/timer-nxp-pit.c
+   reg:
+     maxItems: 1
 -- 
 2.43.0
 
