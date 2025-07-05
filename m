@@ -1,145 +1,203 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524F42E371A;
-	Sat,  5 Jul 2025 02:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAFA2E371A;
+	Sat,  5 Jul 2025 02:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751683889; cv=none; b=umINmwnyYx2C6iEUROPhCgjUUxd3OtK4GkF8wbOLRWSOEYZ5G6x9YcP2v4FJJFqbiMpRG6q84Hn5xEuUMLKzlstQDPZSSa2cCNpUxKUyrgIJqUl5NRUm/K5PmkHMPc9caNu8F8UV0Kzkqr5Uqr54updM/a5/XEWhVDGH3ThFVaU=
+	t=1751683995; cv=none; b=SiZemgxfeZwxRAhVTuXtiUMLQN4GSO6RxBZ2X0EXgVGk7/qpzXwMObTf2avy7hL5rK/XJneF3odLpouH/8pvtCy9ubKaSdKvBFpV0MJV3Q/DudwUuQo4JP8atdkj5VgRwpUQ+b4pNAL1t6dp9ixwKle3jlt6CJXYXmTri+Dj1aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751683889; c=relaxed/simple;
-	bh=6NyZv8lozIrsP7Itz3qOaPMzVZsGuwwnQvzBvSweyyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uhgJfowbOSQ+zeuw3mfSqDwhs0yXr/O/QGI6Dt+AQllWLrRUav2Y3L0JQJvZnsfhIKq4DJlu6FCfUBI43bqksTg81gphk/brxCkppINR315IWVs7WZcADjqveoLTst7gv5wJP8XH4Vqaatpy4YokHAyhqQwwZzxZt9K5lJ2NEWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bYw4W68X6zYQtM8;
-	Sat,  5 Jul 2025 10:51:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id B071D1A0C6A;
-	Sat,  5 Jul 2025 10:51:22 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.170])
-	by APP3 (Coremail) with SMTP id _Ch0CgBHpyQmk2hoam_DAg--.41567S4;
-	Sat, 05 Jul 2025 10:51:20 +0800 (CST)
-From: Wang Zhaolong <wangzhaolong@huaweicloud.com>
-To: sfrench@samba.org,
-	ematsumiya@suse.de
-Cc: linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	linux-kernel@vger.kernel.org,
-	wangzhaolong1@huawei.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	chengzhihao1@huawei.com
-Subject: [PATCH] smb: client: fix use-after-free in crypt_message when using async crypto
-Date: Sat,  5 Jul 2025 10:51:18 +0800
-Message-Id: <20250705025118.48080-1-wangzhaolong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.3
+	s=arc-20240116; t=1751683995; c=relaxed/simple;
+	bh=fqGiaM9o+QYdL6+wAfim0xgE3WxaK8JpTfSDneJpGKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxEN4N1/B/cxAypRtAD/cJGfoSfKCFNKxCy0Looy6StHMhsrwIArJINmjMnobcyjlmK2SglQRxavQnuxi+4hQX2LoFk6Y4kwkh6lka7+Yor3rFbsK9Y3uNgTgapdADRS4FHke2bW7IxCIDrCpBfkn3/OQDkKV2zVG9CPsxBUI48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UiB7FgMn; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UiB7FgMn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751683992; x=1783219992;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fqGiaM9o+QYdL6+wAfim0xgE3WxaK8JpTfSDneJpGKg=;
+  b=UiB7FgMnAFql/1kMdq/8k15tvPx/vjYijLpwX+yJeodiy87vWMBCiC7K
+   64vis/myxVAOYxLKdCITWiRerkARECLHq8J9QZmxO/UNEiRhFFcJcHhow
+   dkmilbf4lLOenlh0ppudhOzqUt2YmR0Np4nKj1HFGxH9ER+8xpc4oo1P/
+   yYVpR7pYTWvzJ3PZjsNywCbJdE1QPzojp9chej3Gv1tqRdRnWOLv63CFi
+   EhR7fQibHGvZmspqToPhPbC77o/VhgdCOyxnyPPaQ27B8uRNqICUTO7so
+   E9hRxckr/7Q8OGnq7cVXDRHGAoDhAfnjzWQZTVvtDHOiGjTYrIlbd9BoU
+   Q==;
+X-CSE-ConnectionGUID: RBpiZNMyRS2gmVTO5wT5sA==
+X-CSE-MsgGUID: evGzT7C7Q+m4K6Q4LzlJPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53130874"
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="53130874"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 19:53:11 -0700
+X-CSE-ConnectionGUID: wRgFeQZbTcC/tbanYNmZXQ==
+X-CSE-MsgGUID: laoi48pUTWGWrrFw5mPUBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,289,1744095600"; 
+   d="scan'208";a="154172887"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 04 Jul 2025 19:53:10 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXt1X-0004Dp-0n;
+	Sat, 05 Jul 2025 02:53:07 +0000
+Date: Sat, 5 Jul 2025 10:52:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christian Marangi <ansuelsmth@gmail.com>
+Subject: Re: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <202507051036.3dQ3k7rN-lkp@intel.com>
+References: <20250704072807.9335-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBHpyQmk2hoam_DAg--.41567S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw1fCFW7Xry3Xr13AFW7XFb_yoW5uryfpF
-	WFyFWFyrWrJrn2g395JrWrAa4FvrZ3uw13GFZ7Gw17CFyrZr1vvry2k3WjqFy5AFWkJ34U
-	Wr4vvwn0qF12yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU17KsUUUUUU==
-X-CM-SenderInfo: pzdqw6xkdrz0tqj6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704072807.9335-1-ansuelsmth@gmail.com>
 
-The CVE-2024-50047 fix removed asynchronous crypto handling from
-crypt_message(), assuming all crypto operations are synchronous.
-However, when hardware crypto accelerators are used, this can cause
-use-after-free crashes:
+Hi Christian,
 
-  crypt_message()
-    // Allocate the creq buffer containing the req
-    creq = smb2_get_aead_req(..., &req);
+kernel test robot noticed the following build errors:
 
-    // Async encryption returns -EINPROGRESS immediately
-    rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.16-rc4 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-    // Free creq while async operation is still in progress
-    kvfree_sensitive(creq, ...);
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/pwm-airoha-Add-support-for-EN7581-SoC/20250704-153259
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250704072807.9335-1-ansuelsmth%40gmail.com
+patch subject: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
+config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250705/202507051036.3dQ3k7rN-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507051036.3dQ3k7rN-lkp@intel.com/reproduce)
 
-Hardware crypto modules often implement async AEAD operations for
-performance. When crypto_aead_encrypt/decrypt() returns -EINPROGRESS,
-the operation completes asynchronously. Without crypto_wait_req(),
-the function immediately frees the request buffer, leading to crashes
-when the driver later accesses the freed memory.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507051036.3dQ3k7rN-lkp@intel.com/
 
-This results in a use-after-free condition when the hardware crypto
-driver later accesses the freed request structure, leading to kernel
-crashes with NULL pointer dereferences.
+All errors (new ones prefixed by >>):
 
-The issue occurs because crypto_alloc_aead() with mask=0 doesn't
-guarantee synchronous operation. Even without CRYPTO_ALG_ASYNC in
-the mask, async implementations can be selected.
+   In file included from ./arch/openrisc/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/kernel.h:27,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/mm.h:7,
+                    from arch/openrisc/include/asm/pgalloc.h:20,
+                    from arch/openrisc/include/asm/io.h:18,
+                    from include/linux/io.h:12,
+                    from drivers/pwm/pwm-airoha.c:20:
+   drivers/pwm/pwm-airoha.c: In function 'airoha_pwm_apply_bucket_config':
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   In file included from include/linux/array_size.h:5,
+                    from drivers/pwm/pwm-airoha.c:16:
+   include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+>> include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    u32 * {aka unsigned int *}
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+>> include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    u32 * {aka unsigned int *}
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
 
-Fix by restoring the async crypto handling:
-- DECLARE_CRYPTO_WAIT(wait) for completion tracking
-- aead_request_set_callback() for async completion notification
-- crypto_wait_req() to wait for operation completion
 
-This ensures the request buffer isn't freed until the crypto operation
-completes, whether synchronous or asynchronous, while preserving the
-CVE-2024-50047 fix.
+vim +/__div64_32 +199 include/asm-generic/div64.h
 
-Fixes: b0abcd65ec54 ("smb: client: fix UAF in async decryption")
-Link: https://lore.kernel.org/all/8b784a13-87b0-4131-9ff9-7a8993538749@huaweicloud.com/
-Cc: stable@vger.kernel.org
-Signed-off-by: Wang Zhaolong <wangzhaolong@huaweicloud.com>
----
- fs/smb/client/smb2ops.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
+^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
+^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
+^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
+461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
+461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
+461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  195  	} else if (likely(((n) >> 32) == 0)) {		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16 @199  		__rem = __div64_32(&(n), __base);	\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
+^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
 
-diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
-index 1468c16ea9b8..cb659256d219 100644
---- a/fs/smb/client/smb2ops.c
-+++ b/fs/smb/client/smb2ops.c
-@@ -4314,10 +4314,11 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 	struct scatterlist *sg;
- 	u8 sign[SMB2_SIGNATURE_SIZE] = {};
- 	u8 key[SMB3_ENC_DEC_KEY_SIZE];
- 	struct aead_request *req;
- 	u8 *iv;
-+	DECLARE_CRYPTO_WAIT(wait);
- 	unsigned int crypt_len = le32_to_cpu(tr_hdr->OriginalMessageSize);
- 	void *creq;
- 	size_t sensitive_size;
- 
- 	rc = smb2_get_enc_key(server, le64_to_cpu(tr_hdr->SessionId), enc, key);
-@@ -4364,11 +4365,15 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
- 
- 	aead_request_set_tfm(req, tfm);
- 	aead_request_set_crypt(req, sg, sg, crypt_len, iv);
- 	aead_request_set_ad(req, assoc_data_len);
- 
--	rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
-+	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				  crypto_req_done, &wait);
-+
-+	rc = crypto_wait_req(enc ? crypto_aead_encrypt(req)
-+				: crypto_aead_decrypt(req), &wait);
- 
- 	if (!rc && enc)
- 		memcpy(&tr_hdr->Signature, sign, SMB2_SIGNATURE_SIZE);
- 
- 	kvfree_sensitive(creq, sensitive_size);
 -- 
-2.34.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
