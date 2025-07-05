@@ -1,130 +1,81 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9A010E0;
-	Sat,  5 Jul 2025 00:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E86219E0;
+	Sat,  5 Jul 2025 00:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751673821; cv=none; b=Pp3tdXpnwbe+iO4zc6dBZkm7o64wJ/8qX5fIwIJc2yGjnogE7YeU3D+eQDn+fFAUufIeGaUp3GQ/Q26ix/HmTcqcIN5lDoddQG9Cp6uIR/U4eNXkK36xoRcun2O+FRJUXeGQrweHuJFctaDno8B/nzsiCJGzIxFtRE0mdvoPt7Q=
+	t=1751673827; cv=none; b=hdodFfAzSoqrguNkTsi+Ks7o/d6pEkthyHOhnztEE0ktpvE/IK/ZIlqYtMiTIb/IEoYBHOzo/jzhB+BnLbVG0RT6eOIqEYJSiMaznlsgByzJP0VTKRDyst9S6quEOQgcgGW6QS8NWB4krzwSOyeW6EZjalkisjH2+jquuH7PPGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751673821; c=relaxed/simple;
-	bh=fc2HeCj8S7/bC0C27mDYSzPdHbvGJD07pU7oIodB5m8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NW0Iequ8WDJr3aBtSoD0rs09t4BpYZFLC11sEaezcAFoA8zxH06x2OtsVP83+0cx6BKGwGQwA4rU+GFeZVABiSOPTJ6hcphruTHUo0DMaese7JjTJoxIn/4khQQrK6JU3WCcrEviTqQ8LROYB/g3uUwIOfOSujO3paPh/Jy7T8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9rajuje; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751673827; c=relaxed/simple;
+	bh=y/vfOed2M8zK3BCqotb5LJU+AwOFUZQKBaTSpJbDeQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HhKdfQr+fULlHABYjyGqJoFjkJh97ryFCSchULUoP9pdmFknD4w83BcI19iIul8gwvn6n+BAnfQW8ohVeH0gxKi3c5jgdJDWTCps9Y/ExQ32oxtWFA0rWNnPpZhRshSx3b9zCqsGrnHj4fsKWL/j55rnrLRo9vHzv66sDJFCGD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIvA3M41; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9rajuje"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1802646b3a.2;
-        Fri, 04 Jul 2025 17:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751673819; x=1752278619; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W2zJe7UIc4K7hUHwuWT+OfAK+G8q7OIxAC0g78/mEX4=;
-        b=Q9rajujeuUQ0j9vCztpzLSi3d6uAArc2phrJflpgJ81trc+0WNOWgfpxlAn+OirTMs
-         8n1IH7I8bBwa8Dq2h+ViLZ61PE54M5Pqh2nM5m1Y2h5ybv/Om9flEYKK5LJhryk3/+hw
-         uRB2je/oYf7UWrx4c33e4aLdOWwnVPi5rbLk9ZQy8ly2zQT11u8bKWGUjJA6RtuPlZox
-         0DcCIA2EVuMAO5HNcNLOLfhvlmvz3osnSG0falu7PtriKmCmgpFBDxgfG5K+q/P+EQ3b
-         Kbwt8KzLnVYW5+HQb07ehlUtMUBovqSusJnc0DFFoNp6wvjTP6/lRIT3ncG3BQUFf766
-         nXNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751673820; x=1752278620;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W2zJe7UIc4K7hUHwuWT+OfAK+G8q7OIxAC0g78/mEX4=;
-        b=BR+Bl5NK1Xblx4m6uCfzm+nDyS31m5Qsdm+Gnbr96lbbxm6kWXp8F0nXbj/hi42XyN
-         7utyA4Up/ECn21yUYt7+MrfbDTQ5UjcVlJ7S+mqAhu1LWMMlU95vKBEsX455GAu4yE5/
-         DBVdiHJUNbt54V9yDIKdbmQAObidTEtS+hFxvHwLI5zyHZt+9h60IZretYE6rzisHr++
-         aPxch9EQWPH31BFe2egbh6e3oUtdXhEU2+apESb16lQcFfOmG3D2sYTi43f7a10M21UJ
-         9eJCamqGSpQkhbFWb1oSfRTDXvP5NbZ/7+0sUM0TgDy/KSnAKA+ldC0M1YhBb5pw7P8a
-         6NNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVI4AO8exFQJTwl4eKK+/0e7I3U43gYz6IJQDy1aDrwmS9wIP5+0lUCFJxqnCGt3BuRvGcj2anu@vger.kernel.org, AJvYcCWwZdPVSIvTE5CIAKqK3Gv6lC6OtJaihiEPQ9kavTIJNrkHbUNcz3B7psXOXcXDlKHNoI3ba1n6BLvoaBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9i2X3yXFA/PI74wZEA5CL5QlXtoj6ffFOlR8gdXmuTsUgkGgn
-	P5YO1doa3soC6/9CK0urbN4SWLYkcS3iaXTeSVc5gzQ1VAI3lLIAZc9YzxAGGA==
-X-Gm-Gg: ASbGncuuGRUNuW3ajlFhBmPgUeMplEBUous2obG9qYGzvZTA7xdbpC0EH4L/rPzyIIJ
-	O/8RV3KtxPRakLV01B6ECBm30TFGU990OK3n9qFGuaYS92jQfxMgnsThejwqtlUxWZi4n17yx3y
-	BHunEoJQFX5E1vdn2r6rpTC6YxWfxLjINqGBrXJqcrYTwCgJW0Ld9kmA3qsm6X5Y+d75WovNoOH
-	UNTVCuGrw1Q4Z7RLaFYFvavn2TiCTYIYG1UBhmKnGSQCuKa/Yb0JWWn7CYOehFrBug2rXINKZ8X
-	XBM9hVgjlKtjuq+KewhyYzjJXgCiNh79ouuObuor93wpYlERtVEEvv7+bJndCOjsEFSq
-X-Google-Smtp-Source: AGHT+IEcbea5ZBSpxUSiZjb3AiPzERqxr4jb3dBYe9axwVAfIlOYvEulZyGw5jRZDcdF2I6M9WhhFQ==
-X-Received: by 2002:a05:6a00:6f11:b0:74c:efae:ff6b with SMTP id d2e1a72fcca58-74cefaeffc7mr3211137b3a.7.1751673819578;
-        Fri, 04 Jul 2025 17:03:39 -0700 (PDT)
-Received: from localhost ([2601:647:6881:9060:4a21:dfa9:264b:9578])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce42b8044sm3075291b3a.143.2025.07.04.17.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 17:03:38 -0700 (PDT)
-Date: Fri, 4 Jul 2025 17:03:37 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com,
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org,
-	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
-	Victor Nogueira <victor@mojatatu.com>
-Subject: Re: [PATCH] net/sched: Prevent notify to parent who unsupport class
- ops
-Message-ID: <aGhr2R3vkwBT/uiv@pop-os.localdomain>
-References: <686764a5.a00a0220.c7b3.0013.GAE@google.com>
- <20250704080421.4046239-1-lizhi.xu@windriver.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIvA3M41"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B1CC4CEEF;
+	Sat,  5 Jul 2025 00:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751673826;
+	bh=y/vfOed2M8zK3BCqotb5LJU+AwOFUZQKBaTSpJbDeQs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qIvA3M417CRwp+bAylReOjcS6kf3BW3sfLUO7irwB2A5sMLYnzUr9R0mEMjElvH5N
+	 SFk32hvuCkOlBRJwSCYGkdGZpu4ITke5HkKTy8wPkb1dyc4yH5ptuYW0km7OK3BBmc
+	 T0ak4Apzj3ekXX0CUXT5xAUrdHvxCFNrC9jdx/L37+CITxhr3WW64l2lNUkv+asLtf
+	 rb98hCXPSGTWW987BDKQMijMTdMVbDaUJQF3GjJyMGV12/IB4zcMP4rEEQ+Wugfj/Z
+	 sviJqpoj5Fw0JSlLBFjUYzEtB0/v+d8toZBySkC2JqDycunlye2KpqHagnrvbwGiP6
+	 wAHECNNHmMYYQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.15 000/263] 6.15.5-rc2 review
+Date: Sat,  5 Jul 2025 02:03:34 +0200
+Message-ID: <20250705000334.337124-1-ojeda@kernel.org>
+In-Reply-To: <20250704125604.759558342@linuxfoundation.org>
+References: <20250704125604.759558342@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704080421.4046239-1-lizhi.xu@windriver.com>
+Content-Transfer-Encoding: 8bit
 
-(Cc Victor)
+On Fri, 04 Jul 2025 16:44:42 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.15.5 release.
+> There are 263 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 06 Jul 2025 12:55:09 +0000.
+> Anything received after that time might be too late.
 
-On Fri, Jul 04, 2025 at 04:04:21PM +0800, Lizhi Xu wrote:
-> If the parent qdisc does not support class operations then exit notify.
-> 
-> In addition, the validity of the cl value is judged before executing the
-> notify. Similarly, the notify is exited when the address represented by
-> its value is invalid.
-> 
-> Reported-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=1261670bbdefc5485a06
-> Tested-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
-> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
+for loongarch64:
 
-Victor also posted a fix here:
-https://lore.kernel.org/netdev/20250704163422.160424-1-victor@mojatatu.com/
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-I asked Victor there if we still need to patch
-qdisc_tree_reduce_backlog().
+Thanks!
 
-> ---
->  net/sched/sch_api.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-> index d8a33486c51..53fd63af14d 100644
-> --- a/net/sched/sch_api.c
-> +++ b/net/sched/sch_api.c
-> @@ -803,12 +803,13 @@ void qdisc_tree_reduce_backlog(struct Qdisc *sch, int n, int len)
->  			break;
->  		}
->  		cops = sch->ops->cl_ops;
-> -		if (notify && cops->qlen_notify) {
-> +		if (cops && notify && cops->qlen_notify) {
-
-I think 'notify' should be tested first, as it was.
-
->  			/* Note that qlen_notify must be idempotent as it may get called
->  			 * multiple times.
->  			 */
->  			cl = cops->find(sch, parentid);
-> -			cops->qlen_notify(sch, cl);
-> +			if (virt_addr_valid(cl))
-
-This is not how we test NULL or error pointers. Just "if (cl)" should
-be sufficient for NULL case.
-
-Thanks.
+Cheers,
+Miguel
