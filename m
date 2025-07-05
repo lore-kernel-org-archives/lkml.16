@@ -1,72 +1,143 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail3-162.sinamail.sina.com.cn (mail3-162.sinamail.sina.com.cn [202.108.3.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1B523AD
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 08:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D924C1F873E
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 08:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751704687; cv=none; b=tRj26aPdg09IAvFKYlCJGk/5UDEgrBllxVeazHS6TkCaB3lX63Kc1/JDcGXHjpnQ5WpCYX/O4Mt72Q7CAQcfMWEgkZvAjaxl0AC/AlQeNZmMHJ07m/iHrSWglOiZXUEUVx61A4Ep8TDYw8d8XvklT/lolJiMtQDFRvmFiQ2fOHw=
+	t=1751705107; cv=none; b=YLaaIYXheuNJxHDWbD+SZfazfVWVFjiL+84NpQQQr9EPwynA8dqpfO92PgdnLBsVRM1yesmP3f+iKpsALVaf2Wc2hmhTQwPVT6X2zdIdPH6eVSDIIF3u0zJGuPZBfkB9KHafTwYOBbnnZI1EqYia7j0v9pcOB/5eh5ieT7xaaqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751704687; c=relaxed/simple;
-	bh=pd3/bWeNDRMiUMWZrI3C8QH/tnQr1oE7j7E3nU936Ew=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=booHVXQWFqW8Z/fm8jr4ns8F2XiTf8rQGms10+34Gc1j1Lki75VffHx98szpVLOV/FO/gstFUT7FuZUhogj9KZgkoDVmbQD0cU6on0lUv+rb2bUyrejQ3RVYJLHz9Act3EFH/Il1OBM8tFlU6QpkvxZDG3yRyS/En4HS0gTHUIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd5cd020dso40046345ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 01:38:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751704685; x=1752309485;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gh4EdRrW8LNJZpi+F7BKE+mN/n8SDxBPLoMoVetyNa4=;
-        b=tnPEFPl1OThem1sOpiSBpkL7HpmkXGS1HhB57YKksE4rp+j3T1F3jrYD64K7Zdo1pt
-         WnjmPSFMQOtJAqp/+s+WfXlQNrmWNyFwv1nn03eXd28xWK0QFV90Py9nWG6fPXJuac+9
-         pFE/B/n/gx+lrmGR7F5y0C5mB5LD50NY/HfDwEp1QtZDQ/k3StM65iF9SuVkkd9Qre8/
-         1AUEZJ5w8YvN4oNpBmGaCmhfDfb7e+gfNXqVFR2t/xw/+1mxXHyE5nw6WGEjvuNM2a7S
-         H3kGmzil6UVnxNSPsNabs8cHxVhu+bVigV3ijZlnE5slljxyiMl96+xHfT3s9Iyqnp8I
-         dxUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXb0zeZU2wg9AbPQK9IevsPzyiSR/1Q/m95hdXqPJQfoIvIDmHsD6whtRe8LsxWNQNoMEzSZ0eVHxr8Z2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT2tOwAG3Jtjx6FmPTzJ1KfV5Don55ED1Ywx6NLNnxs/2Td9en
-	X/Uy1sSS9eJPjeZ9iZT5NKYrgaViV80hICk9yoo2JJMS2ZPBtdGUQc53Ys+c2PF+EzxT9e+DP6Z
-	Mv+wxY7DVz+1iYpKopkNzmqxyIxbN5WH9RH4SHedxDKvFRrwIIM0timUvPkM=
-X-Google-Smtp-Source: AGHT+IFhVV1SaHk58QLG0Xx5l8BncslKZ0nyOqVLOcBqkalo5W21QCSHC6gouZROc0OVfDNnQhu9m3VW3FkFXZuCEAwN8hBCTlTm
+	s=arc-20240116; t=1751705107; c=relaxed/simple;
+	bh=UUXV81sgumXaDXGfaYFsE47+6DkH9yfMkv6JpIRT1jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iE322khN+krsuYVr50dmUhibLlYqZkxmKo1GlurIFSgLztR8iRkDiOjW/uVzq3xgN7DdqwjSWjeSkjo34p49/nsCJZYwwiyrn4G1IqANc5bjcJOU+VE6mmz4dpfdWlzwt4PY6qq+S2NMf5BeZMgLUbvIta2cdJsgjkS4Pl0i5Hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=D71w7EZE; arc=none smtp.client-ip=202.108.3.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="D71w7EZE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751705100;
+	bh=e8R3JQWZibH1VdLIctS7Zf47cjKrdDSV6D1m4pB2QTs=;
+	h=From:Subject:Date:Message-ID;
+	b=D71w7EZEVOoOa6gpdm7sx57f4ffWHQv6vit+O+/dWvEwuOrHOZ5WxzKuPiBKyzaZP
+	 u5cvWdY6/qcLiM2DJrdn7Bp9kjA86n3YAx3u9aBQF+KIJ69sKa/Dz5VcZKy0wx2iqS
+	 NQ8ZP055LVPmLq3wIk3ep07BD6vXmKNkCQD5fNEU=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.34) with ESMTP
+	id 6868E57100004563; Sat, 5 Jul 2025 16:42:26 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 9898616291923
+X-SMAIL-UIID: 19AD584468314064A34B977212CA94C6-20250705-164226-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>,
+	Lizhi Xu <lizhi.xu@windriver.com>,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] general protection fault in qdisc_tree_reduce_backlog
+Date: Sat,  5 Jul 2025 16:42:12 +0800
+Message-ID: <20250705084214.2579-1-hdanton@sina.com>
+In-Reply-To: <686764a5.a00a0220.c7b3.0013.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:11:b0:3df:4cf8:dd50 with SMTP id
- e9e14a558f8ab-3e1355c3aafmr57112365ab.19.1751704685268; Sat, 05 Jul 2025
- 01:38:05 -0700 (PDT)
-Date: Sat, 05 Jul 2025 01:38:05 -0700
-In-Reply-To: <20250705081850.2552-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6868e46d.a00a0220.c7b3.0030.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] WARNING in driver_unregister (2)
-From: syzbot <syzbot+6616bba359cec7a1def1@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+> > Date: Thu, 03 Jul 2025 22:20:37 -0700
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.org..
+> > git tree:       net
+> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=12f0b3d4580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=1261670bbdefc5485a06
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164d8c8c580000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14839ebc580000
+> 
+> Date: Fri, 4 Jul 2025 22:07:34 -0700 Cong Wang wrote:
+> Maybe I didn't make it clear, I think Victor's patch also fixes this
+> bug.
+> 
+> https://lore.kernel.org/netdev/20250704163422.160424-1-victor@mojatatu.com/
+> 
+> Can you check if you still see the crash with his fix?
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+#syz test
 
-Reported-by: syzbot+6616bba359cec7a1def1@syzkaller.appspotmail.com
-Tested-by: syzbot+6616bba359cec7a1def1@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         a79a588f Merge tag 'pm-6.16-rc5' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=102bc582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5ba6cef8f153bfeb
-dashboard link: https://syzkaller.appspot.com/bug?extid=6616bba359cec7a1def1
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16a6f3d4580000
-
-Note: testing is done by a robot and is best-effort only.
+--- x/net/sched/sch_api.c
++++ y/net/sched/sch_api.c
+@@ -336,17 +336,22 @@ out:
+ 	return q;
+ }
+ 
+-static struct Qdisc *qdisc_leaf(struct Qdisc *p, u32 classid)
++static struct Qdisc *qdisc_leaf(struct Qdisc *p, u32 classid,
++				struct netlink_ext_ack *extack)
+ {
+ 	unsigned long cl;
+ 	const struct Qdisc_class_ops *cops = p->ops->cl_ops;
+ 
+-	if (cops == NULL)
+-		return NULL;
++	if (cops == NULL) {
++		NL_SET_ERR_MSG(extack, "Parent qdisc is not classful");
++		return ERR_PTR(-EOPNOTSUPP);
++	}
+ 	cl = cops->find(p, classid);
+ 
+-	if (cl == 0)
+-		return NULL;
++	if (cl == 0) {
++		NL_SET_ERR_MSG(extack, "Specified class not found");
++		return ERR_PTR(-ENOENT);
++	}
+ 	return cops->leaf(p, cl);
+ }
+ 
+@@ -1490,16 +1495,20 @@ static int __tc_get_qdisc(struct sk_buff
+ 					NL_SET_ERR_MSG(extack, "Failed to find qdisc with specified classid");
+ 					return -ENOENT;
+ 				}
+-				q = qdisc_leaf(p, clid);
++				q = qdisc_leaf(p, clid, extack);
+ 			} else if (dev_ingress_queue(dev)) {
+ 				q = rtnl_dereference(dev_ingress_queue(dev)->qdisc_sleeping);
+ 			}
+ 		} else {
+ 			q = rtnl_dereference(dev->qdisc);
+ 		}
+-		if (!q) {
+-			NL_SET_ERR_MSG(extack, "Cannot find specified qdisc on specified device");
+-			return -ENOENT;
++		if (IS_ERR_OR_NULL(q)) {
++			if (!q) {
++				NL_SET_ERR_MSG(extack,
++					       "Cannot find specified qdisc on specified device");
++				return -ENOENT;
++			}
++			return PTR_ERR(q);
+ 		}
+ 
+ 		if (tcm->tcm_handle && q->handle != tcm->tcm_handle) {
+@@ -1602,7 +1611,9 @@ static int __tc_modify_qdisc(struct sk_b
+ 					NL_SET_ERR_MSG(extack, "Failed to find specified qdisc");
+ 					return -ENOENT;
+ 				}
+-				q = qdisc_leaf(p, clid);
++				q = qdisc_leaf(p, clid, extack);
++				if (IS_ERR(q))
++					return PTR_ERR(q);
+ 			} else if (dev_ingress_queue_create(dev)) {
+ 				q = rtnl_dereference(dev_ingress_queue(dev)->qdisc_sleeping);
+ 			}
+--
