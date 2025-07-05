@@ -1,89 +1,121 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3822F2E;
-	Sat,  5 Jul 2025 14:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDA11DE8BB;
+	Sat,  5 Jul 2025 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751726770; cv=none; b=XGL1AsytWSI7oK41mU6ZjgT/CkDTlWEzMmpTIscWDQZ51oaqCOFavRmrh3jCWrtzdaJNY/Ki6GTXqVCgrS/LS+ROLVQOW1gyuAf+qTHKUf+FSTLj9q4Hk4QgpBgkwFnUBdi3Rs1PgI0qA3m4W0m4P7+0XG8jLv2YuuvVLj0mqOo=
+	t=1751727011; cv=none; b=KvfdfUSEUyYu7ZaMh+d0TSdwp4SmyhkH/v0YmzVRyqvPuMPvkpWsaLwuKdKjsBskw/cZzQbV314hMNTJbARAiyi057j2bWXj3BxkbUibEwKoG5J/WL6pxvYT1Z2k6agMEM/VNxOqACu06hXCIjcZlWu6IgjOzLjxY0sTMvDcCrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751726770; c=relaxed/simple;
-	bh=goQ0hTzbefy4V8CQMAJj1Lgw47gXhBOVmH5piWXh8Mo=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=n4f++PvmgoOYvKFsBDXO7OivKZpa0BheI2WxtYc+CuOXafWeyOZKx/aNckuVZ+GHBofOzO+v8Jba0Lx0XkhmK1g5jRHe8kiPwuqll5SpT0zzj9Lud6VJqJuYslrJgbwq+OeKbrJUnyVhbQlpC+7yn+K1IjZy20RTT3suKteB2Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=hKacc+Vo; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751727011; c=relaxed/simple;
+	bh=8YlbuHheA6By8EjMGyLEssbYxaR6FFh/g8IrjzNaAzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8OzPyK/hEpn+rEIm/jqAIlzRUCwPpfvgubRYGJpONBbEjgWHPzTHzh1vBN58gZuaPmMDdXpsuaCJSvsa7nQBxwGZ/50POL7fPYpEssQXhy8vOhaHPrk5m696icCHPD7J3dDLMGK9HoAV0G6DU9B17hKbWWwXjo2ZnAZXSY8hCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PrU0kt/t; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="hKacc+Vo"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 0140A25C85;
-	Sat,  5 Jul 2025 16:46:03 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 1rSSLXsLas_B; Sat,  5 Jul 2025 16:46:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751726762; bh=goQ0hTzbefy4V8CQMAJj1Lgw47gXhBOVmH5piWXh8Mo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=hKacc+Vo6+8x/FhFxsEQVjGy9F17hhqKOdfGpdKPv4qpkxW7s9hdQEyiX6LxOUPOs
-	 AXC7pWmC+V4r+N4VuEhPdc4BFPuj6tFf6tc7faxw/QfgRfQdSifj3AsIdm81gHZTIu
-	 lEJv3LXxRUVCWcV90QXFs+pfi9ZOCU+uCVzP4GqRPjanGRhrdX2DpDQXHi2QhfDy1R
-	 uwqmCGZsuZR51cAboAbn9xNEQENgh2j3oX311JEfNn9Mwe7kzvi+H67bdcKksqjvou
-	 PdAYIOYTtKpPdEma4vhU8VTxlsIVa2IgudgVUuf3IlyxkpZmqtblZyx5YPA5wd1WXn
-	 TdeNZOEGzWQPA==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PrU0kt/t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751727010; x=1783263010;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8YlbuHheA6By8EjMGyLEssbYxaR6FFh/g8IrjzNaAzk=;
+  b=PrU0kt/tF/hl6/S39hT382+2Rsjc83z/SwWJs0bNaDdcwEmlzAaS5Fxt
+   qWcJG+YPUxfsEYl+boXGMYk/Wc3oe2rIAzozmJ2EIiggRIFin4dxpsZEi
+   sHkzDDlyQEQmvIAckdRlFEOIlL9KaX7tEhyKRfm/g3jnlGCSBoJOyHw/T
+   /nn2/q21nuUklHN6xRMJoCU9PV2UGdzi8cSh/lIZB3piOOxSNZBixPEFg
+   KPlOC011LRnvUz1PA2fBQfKxsYu7kE7J6I6FE47qnl9CkDOoMa0cdGHbq
+   D0KygpaTLE0zPDLevDMUJ82weY568fARPe3Wrby3jA5x1lgyWuwBJdR+J
+   A==;
+X-CSE-ConnectionGUID: vl1YKZHBS3e4r81w3c+ldA==
+X-CSE-MsgGUID: tIas2Ag0QM2uzxixNr9XLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="53892868"
+X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
+   d="scan'208";a="53892868"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 07:50:10 -0700
+X-CSE-ConnectionGUID: GIk3FXhdQ3GQSiZkuPc/ug==
+X-CSE-MsgGUID: mf2246VSSWKHafcH/0/rRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
+   d="scan'208";a="154477300"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 05 Jul 2025 07:50:03 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uY4DJ-0004Y7-2E;
+	Sat, 05 Jul 2025 14:50:01 +0000
+Date: Sat, 5 Jul 2025 22:49:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	hannes@cmpxchg.org, yosry.ahmed@linux.dev, nphamcs@gmail.com,
+	chengming.zhou@linux.dev, usamaarif642@gmail.com,
+	ryan.roberts@arm.com, 21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com, akpm@linux-foundation.org,
+	senozhatsky@chromium.org, linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	clabbe@baylibre.com, ardb@kernel.org, ebiggers@google.com,
+	surenb@google.com, kristen.c.accardi@intel.com,
+	vinicius.gomes@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com, kanchana.p.sridhar@intel.com
+Subject: Re: [PATCH v10 10/25] crypto: iaa - Rearchitect the iaa_crypto
+ driver to be usable by zswap and zram.
+Message-ID: <202507052222.LbMGkyWl-lkp@intel.com>
+References: <20250704042323.10318-11-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 05 Jul 2025 14:46:01 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: document Samsung
- S6E8AA5X01 panel driver
-In-Reply-To: <20250703-true-archetypal-skylark-dfb055@houat>
-References: <20250625-panel-samsung-s6e8aa5x01-v3-0-9a1494fe6c50@disroot.org>
- <20250625-panel-samsung-s6e8aa5x01-v3-1-9a1494fe6c50@disroot.org>
- <80055981-3624-4165-af0c-3b60c345e8f8@linaro.org>
- <4b9e44b14395ff4c64eba1bd71e63150@disroot.org>
- <20250703-true-archetypal-skylark-dfb055@houat>
-Message-ID: <5f2c37bf2882530453ba91f6801f8ec0@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704042323.10318-11-kanchana.p.sridhar@intel.com>
 
-On 2025-07-03 09:01, Maxime Ripard wrote:
-> On Mon, Jun 30, 2025 at 05:18:22PM +0000, Kaustabh Chakraborty wrote:
->> On 2025-06-30 15:29, Neil Armstrong wrote:
->> > On 25/06/2025 14:41, Kaustabh Chakraborty wrote:
->> > > Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Document
->> > > the
->> > > compatible and devicetree properties of this panel driver. Timings are
->> > > provided through the devicetree node as panels are available in
->> > > different sizes.
->> >
->> > Wait, why ? Why not multiple compatibles ?
->> 
->> The panel dimensions is the only thing which differs. The model name,
->> controller, registers, and functionality are supposedly all similar, 
->> so
->> I believe this is fine...
-> 
-> If only the dimensions change, then width-mm and height-mm would be 
-> enough, right?
+Hi Kanchana,
 
-Sorry, meant panel resolution.
+kernel test robot noticed the following build warnings:
 
-> 
-> Maxime
+[auto build test WARNING on herbert-cryptodev-2.6/master]
+[also build test WARNING on herbert-crypto-2.6/master akpm-mm/mm-everything linus/master v6.16-rc4 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kanchana-P-Sridhar/crypto-iaa-Reorganize-the-iaa_crypto-driver-code/20250704-122613
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+patch link:    https://lore.kernel.org/r/20250704042323.10318-11-kanchana.p.sridhar%40intel.com
+patch subject: [PATCH v10 10/25] crypto: iaa - Rearchitect the iaa_crypto driver to be usable by zswap and zram.
+config: x86_64-randconfig-123-20250704 (https://download.01.org/0day-ci/archive/20250705/202507052222.LbMGkyWl-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507052222.LbMGkyWl-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507052222.LbMGkyWl-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+   drivers/crypto/intel/iaa/iaa_crypto_main.c:98:1: sparse: sparse: symbol 'first_wq_found_lock' was not declared. Should it be static?
+>> drivers/crypto/intel/iaa/iaa_crypto_main.c:100:12: sparse: sparse: symbol 'iaa_compression_mode_names' was not declared. Should it be static?
+>> drivers/crypto/intel/iaa/iaa_crypto_main.c:104:12: sparse: sparse: symbol 'iaa_compression_alg_names' was not declared. Should it be static?
+
+vim +/iaa_compression_mode_names +100 drivers/crypto/intel/iaa/iaa_crypto_main.c
+
+    99	
+ > 100	const char *iaa_compression_mode_names[IAA_COMP_MODES_MAX] = {
+   101		"fixed",
+   102	};
+   103	
+ > 104	const char *iaa_compression_alg_names[IAA_COMP_MODES_MAX] = {
+   105		"deflate-iaa",
+   106	};
+   107	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
