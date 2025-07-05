@@ -1,87 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7EA2CA9;
-	Sat,  5 Jul 2025 15:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE54C2CA9
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 15:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751727868; cv=none; b=rSUgMlQ2gDBF/ikdVlQBiIiE7pkjBXvdlnbdG8jo3k3SZKKnGCJy8crpOb+pTkRZSFGqas1pgLGqkxmwqMlrUVY1qIpbQbHvZkQNSN5FaGRWzM0UMNebcMFKDkAAAtLWyqZ1nX/4n+PnGKgw0BuToe7E8vMrzEAMc4icxyQNNSA=
+	t=1751727907; cv=none; b=ATIvKkJSr1ajoph4YDpzweBF7J2RD5AK6tiqaaKevIX6OxjZXR8nyJibwIwRov+80fy9qoAo0jJZjdQeo8vLDW4rG0RPdeINNvKoSikhIk3SSlk8TCbsz+AmfQZ2mLX8iQNG9LEYoHsiOfghewjYr4wR/EYPnV/oTHiq9Jnjqss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751727868; c=relaxed/simple;
-	bh=/tEGc5fW6hHUijJeSsWN8K4a9GkWPWhooqc7Gsks4/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d3z6i58/poi/E4YxvTKCiDh/9y+JLaC5YOFxcyLujx00Y34STA0AhSkrhls6h6ge3nOnn2T5xTY24wZ0dl07irM9XVqR0Vb0Af2XfFIEmJGLez5mOUqNN8fubQ7w+Vy7U8ZJP05ELVrE9OE4Ru7iLT9JUklexd/3Wp7oxYfm7q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRJeW48i; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRJeW48i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49BEDC4CEE7;
-	Sat,  5 Jul 2025 15:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751727867;
-	bh=/tEGc5fW6hHUijJeSsWN8K4a9GkWPWhooqc7Gsks4/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NRJeW48i1RIJKuvkX/Hy10kbhpiry1RaHWPDBCU4JUnt92+a1l9u6TXtv3H2PuJjv
-	 JXidW903yZJO1RKH+WBgHNkXCnYWrCVRnWpQ9z7UZw96XyDWioKIRmdYxRmal+pOq3
-	 KHjUcC4tcoPE74Xmfv3CJqK/ayJzo72l/qtc076dtuegcZ1nNYUxvhcbE+7UFY4yZX
-	 o+SUjfRpWq0jDIymlgHc8kvUngF6IRu+MVcUXz9WcCVLEiHOHm2QCvKrFHpsezyapD
-	 ZGbhjhQp3s1WPa5oDNFrCJg4VS7r6wBfMXc0PO3MN/R8/KGwfYxbn6WaXrzZLRgIqC
-	 +1zTkKpUaivWA==
-Date: Sat, 5 Jul 2025 17:04:24 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v21] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <wzneefjojgfpgrp3w6llst3kazrczmyrmudubqijnupvijwwxb@22744d27arra>
-References: <20250705072825.26497-1-ansuelsmth@gmail.com>
- <k3s7wp52oljegusctucabvo2wcmx7defklk7fdtqh32a2vvcux@7tuafqra4nrw>
- <6868e83a.050a0220.2d26f8.0920@mx.google.com>
+	s=arc-20240116; t=1751727907; c=relaxed/simple;
+	bh=Z/WNbSB4Zhc6qrK9H8azETT8ypnvxYTbcNb2Bw/7Qz8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=lyJR4OX78SH6Ff4x5IL1bvg0/cGzGG+jXGlvK2AQdiYDKgf4/RwcJZO4hwHjMhKDaUVP7V/+uszDvrfq9G4UUwTR62crDtc9P4cJUx3VHU7oLuhKRnW8lL9lNFh1dg/TQgIJhhakKLsXCIOE/fJUUvp0qFdbJXcEzqOhXrHSSEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3df33827a8cso42245485ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 08:05:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751727905; x=1752332705;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hz48evUUHxXrLFQI+k2ltDvud9DuGBIERTJqmXvZ2nk=;
+        b=J6fL3tNa8/hHcW4nCVwuJeBqAup7R2Vv5Ps3PQKhLZBsO8sjZYJQWUOXOtSFKFCR6j
+         /AcPWwbps4bKkZZkP+qlnl5cpDtSp/AweUoM2K0JXSRjOsufxupG/dnTsYjS9wriagvU
+         8bHpbv8lmNLrHzLedlCLKDpzjxy7PHj/yRXiDxq/xwI6HFJibArhFQsuABtQh/xNh3+I
+         DDgcILwExiwoV1JQh8bAhBgNN8C2ExI3je4ddzliy97lTlY+stdpksQW50wv6wD/KpM0
+         d6qClmAEjpjXOzJnKtHPxxQiVQ21DohQYlQRyFpdSRN3xyglJ0mH5BqiPqii2q2TLW3f
+         hYmw==
+X-Gm-Message-State: AOJu0YwQF1+5l6AK2CMhFJDestve8XxRurtIvSDWeZPZpje1tbaoE0g6
+	VhfctPJJBlG4RZRUV0SNXF6yWUBOCN8cPkLRaeD13P+M3PbTJTon2E0sOxSijaBRh84wA4BuqYa
+	7ZM/v87khI3O2m0E8rnaqaIs4Lg2t/5lQvVc32NLxoJq90Z8aHJmf/L8fzaA=
+X-Google-Smtp-Source: AGHT+IFQnqDZn/WWQrFkk+UAForWQytNw0uOOFRemlzttbfP2vt83C7m6AEb7AF0H2D0D7PQG0YMlMWuVvAke37ILf45QsJ6gxWl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cq2jf3rldtccbvkk"
-Content-Disposition: inline
-In-Reply-To: <6868e83a.050a0220.2d26f8.0920@mx.google.com>
+X-Received: by 2002:a05:6e02:5:b0:3de:14d4:a755 with SMTP id
+ e9e14a558f8ab-3e137225181mr51249905ab.21.1751727905087; Sat, 05 Jul 2025
+ 08:05:05 -0700 (PDT)
+Date: Sat, 05 Jul 2025 08:05:05 -0700
+In-Reply-To: <f8dee957-d286-421d-976a-c0c580454fb3@I-love.SAKURA.ne.jp>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68693f21.a00a0220.c7b3.003e.GAE@google.com>
+Subject: Re: [syzbot] [perf?] WARNING in perf_pending_task
+From: syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---cq2jf3rldtccbvkk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v21] pwm: airoha: Add support for EN7581 SoC
-MIME-Version: 1.0
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On Sat, Jul 05, 2025 at 10:54:14AM +0200, Christian Marangi wrote:
-> I used do_div since it can calculate both division and remainder in one
-> go.
+Reported-by: syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com
+Tested-by: syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com
 
-On 32bit archs do_div is definitively more expensive than a 32bit / + a
-32bit %. So the latter is the way to go. And given that these operations
-are native on all archs, there is no do_div32. And I'd expect that the
-compiler can use the synergies (if any on a given arch) when a division
-and a modulo operation with the same parameters is done.
+Tested on:
 
-Best regards
-Uwe
+commit:         a79a588f Merge tag 'pm-6.16-rc5' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13691c8c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a6dba31fc9bb876c
+dashboard link: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=157a2582580000
 
---cq2jf3rldtccbvkk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhpPu8ACgkQj4D7WH0S
-/k72/wf/QFxXGrRc1VkBUQYwW/Wch27GYhYRla7LKNBUL9mQc+WhkLODHDz3mC/r
-WQz5S4UqMfOxCzwRaMJ8gIgIRsmFLKLmruIKOFu2Xox+UbI91/vDdGVo+wl6NuRs
-9OR3kriNdxe0OXtSlyrmRfet3Jgnuq2FX+Km+Pxge1Z+oM9n4wTLKBK00i7//Pu3
-dpPhKdbwKxjVO20Iz3eYADwIs9ABD3qdP5/xbAL+FxXMbrdbA+faS2LsF00a1Z33
-SlKAYTBEvA/K4QgOrde3Oah1vV5dRqJHMSvdLKOZAcbd3iRc4HFX8Mbg6XSo38DY
-U540bsh7PN+awhLnPAUzn70CwoRe1Q==
-=rRvC
------END PGP SIGNATURE-----
-
---cq2jf3rldtccbvkk--
+Note: testing is done by a robot and is best-effort only.
