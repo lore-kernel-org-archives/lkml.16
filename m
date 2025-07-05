@@ -1,65 +1,37 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FC31BF58;
-	Sat,  5 Jul 2025 21:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4616517CA1B;
+	Sat,  5 Jul 2025 21:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751749668; cv=none; b=dTa+da2YMFTxsYhL42MiyzcdtR0Md8gp8jbsQKriJCKPIM/K3BMcLVzS75bO+4qBIij2/m0KRbcEoqdNVV3ifGx048T0wdoWDPY0MbPrTG7yRniPR04XqOpdpbFVvbreeeSwFXe63xRskrEz0e7CyJD6ejjYUGUvaBFWYXXu7To=
+	t=1751751427; cv=none; b=cyiagrdgCkSKdQ+ryX+fV2i+4kXN1JbFTJnH6wFI1gbRheHkRFYwOHWxpbSzFmtSE8mNxev3C/FbFzFORM/hWQOLaXJY9oMvpUISyaxd51XrtQwrlOP8X9eTrIuTrPHrP+RLpW+phj38v2IUgstOEWdtV7x6LuFSDxcTEmNuMj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751749668; c=relaxed/simple;
-	bh=av661HLHeLpl9E43D0/bBRcMZa2comXBBsWoJmDD+b0=;
+	s=arc-20240116; t=1751751427; c=relaxed/simple;
+	bh=jgQFX9bNY3P1g12MUq2xKHIiqs4Izm5wTAN3sIYIX74=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nwYxViwTF7lHTJU8qd7PcJ27+bDnzkyGKjGMSdN+b4t8PuHOB/D+p22YFotVIB6cMQUaNA/sgRyCtcHgoaF9sgXBeML/+SRkW9iUsBzfkbq3Yok3QQs4GZiYXE+SCznehbx6P2uUJtYsP1knETf/+3wosg4UPq4t/BpnBF+lvoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JLXxPCXW; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=tIArelBXza8imi473UAJ7Lc62Xbcn5PxFig0bYbgPWxZcgfig06MLumDldrqKIfN044RSNEB2BJMZigOi64DjSGRVkv9UGrJW5A49GMXsGlKEToakpMaCfofOi+uCnoYP43mdPsV+lzw9S1leafvAxU31fTBpQKvFxb0izQ2itQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XusdeN+7; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLXxPCXW"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60cc11b34f6so4858971a12.0;
-        Sat, 05 Jul 2025 14:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751749665; x=1752354465; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s0OfBp7ErnlCrO+RdLaJwYOfHNWrwDo8W1tXRttUHFk=;
-        b=JLXxPCXWFnZ/upTZ9j5eijUPYcBb8CYTDIT3xcI1PObhiH0U7WCSjN8k0pyZzz54E0
-         VA3PF/HSi/QzYBP7coC72h66otkUizREt8X/GJVAj8YbGo6lUIcsDLdrOU7ss9mXuXLs
-         o+Hy2oyhKJqtoCPAfUCIU4r9o3qW2QDTOkeufb6H22oVnCZ5PVCUWLUVU92qHplKEE4y
-         lXdQ58ZQfa+nhfXLILaeSDxvI9+wU3DJ9MCu230IDWldHybbNZrTGk6k7DtL+XyjZqPr
-         6jtNYYLxD97xJ9GNcPcusQB1AbOptGUnlDU75KTXFos882wyK+TtiiKkjoOn+rpwuCig
-         Ix5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751749665; x=1752354465;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s0OfBp7ErnlCrO+RdLaJwYOfHNWrwDo8W1tXRttUHFk=;
-        b=geGYMcXOe39+we2loFwFF6QtQn7QC7Hucae1epkq+H/GutVLtU022GOtL4Jzo31weA
-         cNCZZN4B7W/qPhrdIgXaYv+vJ9Yglw06G0wrI7nGWHEm+w0gtFYxBvZzFHHqRKCdBtbs
-         adkfpj9TGcipPNKB47rLz/w/xsnQ0E5lBU56Dm3c7umnKcYNKBYpZMCmctmg0vKhz7cQ
-         9IYX+bGExtFQSExZvBV25fr66aGJhqJqF5JtVaKB5jDyqjUutsKYsSxUyqb9sXkD9cLY
-         LecmvmeALV4oAvutxRZTdlq5+fg1FQarbTNcpB0s0lnLjt0jHghyheUWuVADxHFnfOV8
-         3+0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVgL+fVYJq3Xi7nzMSW95BlXrk9VpGSAhgYLuxAfqXRPrTq7q3YqS8eBp3aaLwi+7hpkQJwnNJHJCLn@vger.kernel.org, AJvYcCVuF6AO4HLtHaI+seSYxlGczustYlqeCCjQtTY77TEAc8VSXx5ZrEzWgryshVgUNAyeLuWs5F96UWBv49oY@vger.kernel.org, AJvYcCXhjTrp7ZAZPDzWfjd2YnZCy+cc71azaRhJnr6sZCidyxzati+gOaD0D6JVK7zs8tkToR134Y0rWM79MJsOgw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeAOi5WalIfbrY4A771bXGj8pZQY/Ebvks1F7n1hhTkE0+z12c
-	yfead68Z8asOsnHU1SF0Sei9CQgkgH12Bv9Ef0NT1T8zStiZAy2Uk0w=
-X-Gm-Gg: ASbGncsIpSBvEndqno3SBp7bltx0Ah1QeIdltGc2uLai2TRg18U2UrJu/YBFBYc/keX
-	/DYpmnZ0o6oiZe8OuQrO578MPRpZeKuvqsIbMbYMuKZdSvVn2q3573/xewn54lYhWeOwzco4iYL
-	Cv1BI0m97upLF1nFFDknm0Jz/6Ml5VfmLwNhji1qlNhQbgHQxgKome4iZpRDs7cz8rzoPrfbh3r
-	RYyS0zWA8tmZ++BweIoiWdrCFYKILIs38r0pOd3vF0HUm8JHrYLDJvWmmnxh0zaXWAmNOca8FdD
-	FdhNd+9BqUNoqe+oQYiGpAgIrlfgVYb9A/2tnxVm8FOjZ7RVN6mIjcbrtnDzoZ6AsOlWirnhCA=
-	=
-X-Google-Smtp-Source: AGHT+IHfo8By6gTM4sQb/mWVes7SFV6BKHWMA92iQ1C2kjF7CVvXbGrhVTrqw1Y5EOO9GItPXBtyog==
-X-Received: by 2002:a17:907:1b28:b0:ae3:6038:ad6f with SMTP id a640c23a62f3a-ae3f801ffffmr804598966b.3.1751749664350;
-        Sat, 05 Jul 2025 14:07:44 -0700 (PDT)
-Received: from [192.168.20.64] ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60fca66e566sm3044739a12.11.2025.07.05.14.07.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Jul 2025 14:07:44 -0700 (PDT)
-Message-ID: <dfcb20e5-17ec-45b5-9cce-b23dfa5028e1@gmail.com>
-Date: Sat, 5 Jul 2025 23:07:43 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XusdeN+7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=RaTOSkuia4wG8vX9CzW3qtonswhngZP8hLz+StM3ACY=; b=XusdeN+7iVBZamreoD4+W3BCQ+
+	rZnShrYn/Aqo+c/E8pFz44dbS06VPHoYeSSYDe0YktlVghgog+iyKWaWCrzm0ynblYpbWm7jPqsta
+	v6HwsO2fDjr4ggfdVHtGIs3iteuf9HM/9t9RUhBJctkQhGe9PgZhxqSkjZ3kKZNiqo1teNHm2Ef7n
+	+3qUS4DzZRASkU+BTNqdqFYsHxn9rPY37qpo6LTVo2a5G8u+J140hagW1hRe8tqeyNdh5Mn22OReQ
+	weOi5SjUrrARY5L1QVWc9RMbj2zNxV1pJGPnLOhfABHovzOE4SPhYh0+0ZnMVrtk3npbhTMOryRrn
+	3QceRadg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uYAYy-00000005XIt-3voA;
+	Sat, 05 Jul 2025 21:36:49 +0000
+Message-ID: <b56b9602-d715-4de8-903e-7c97423bf5bb@infradead.org>
+Date: Sat, 5 Jul 2025 14:36:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,82 +39,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Add Dell Inspiron 7441 / Latitude 7455
- (X1E-80-100)
-To: Val Packett <val@packett.cool>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250701231643.568854-1-val@packett.cool>
+Subject: Re: [PATCH] docs: Fix kernel-doc indentation errors in multiple
+ drivers
+To: Pavel Pisa <pisa@fel.cvut.cz>,
+ Luis Felipe Hernandez <luis.hernandez093@gmail.com>
+Cc: corbet@lwn.net, alexandre.belloni@bootlin.com, ondrej.ille@gmail.com,
+ mkl@pengutronix.de, James.Bottomley@hansenpartnership.com,
+ martin.petersen@oracle.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Martin_Je=C5=99=C3=A1bek?=
+ <martin.jerabek01@gmail.com>, =?UTF-8?B?SmnFmcOtIE5vdsOhaw==?=
+ <jnovak@fel.cvut.cz>
+References: <20250703023511.82768-1-luis.hernandez093@gmail.com>
+ <202507052123.55236.pisa@fel.cvut.cz>
 Content-Language: en-US
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20250701231643.568854-1-val@packett.cool>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <202507052123.55236.pisa@fel.cvut.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-On 7/2/25 00:53, Val Packett wrote:
-> This is a series unifying the previous Inspiron[1] and Latitude[2] ones.
-> The laptops turned out to be even more identical than previously thought,
-> with a shared firmware update capsule[3] that refers to the shared codename
-> "Thena", as well as being identical visually (other than the bottom label).
->
-> Changes since v1:
->
-> - Added audio (audioreach PR: [4], ALSA UCM: [5])
-> - Removed the copy-pasted comment about WCN regulators being on a
->    "removable M.2 card" (the board has a *soldered* WiFi module, anyway)
-> - Removed the useless pin comment
-> - Fixed sort order for usb_ nodes
-> - Added missing newlines before status
-> - Changed zap shader node to use &gpu_zap_shader reference
-> - Added raw EDID dump to the eDP panel patch
-> - Changed the USB mux compatible to ps8833
-> - Removed unused i2c busses
->
-> (Should the dtsi be an 'x1-' one in anticipation of the x1p42100-based
-> Inspiron 5441 / Latitude 5455 models?)
-
-As Inspiron 5441 is already available for sale, and at first glance has 
-only a few differences (different display, x2 instead of x4 speakers), I 
-would say "x1-" makes more sense, unless maintainers disagree.
-
-Regards,
-Alex
+Hi,
 
 
->
-> [1]: https://lore.kernel.org/all/20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org/
-> [2]: https://lore.kernel.org/all/20250525095341.12462-2-val@packett.cool/
-> [3]: https://www.dell.com/support/home/en-us/drivers/driversdetails?driverid=x2pvx&oscode=w11a6&productcode=latitude-14-7455-laptop
-> [4]: https://github.com/linux-msm/audioreach-topology/pull/25
-> [5]: https://github.com/alsa-project/alsa-ucm-conf/pull/589
->
-> Thanks,
-> ~val
->
-> Bryan O'Donoghue (1):
->    dt-bindings: arm: qcom: Add Dell Inspiron 14 Plus 7441
->
-> Val Packett (4):
->    dt-bindings: arm: qcom: Add Dell Latitude 7455
->    arm64: dts: qcom: Add support for Dell Inspiron 7441 / Latitude 7455
->    firmware: qcom: scm: Allow QSEECOM on Dell Inspiron 7441 / Latitude
->      7455
->    drm/panel-edp: Add BOE NE14QDM panel for Dell Latitude 7455
->
->   .../devicetree/bindings/arm/qcom.yaml         |    2 +
->   arch/arm64/boot/dts/qcom/Makefile             |    4 +
->   .../x1e80100-dell-inspiron-14-plus-7441.dts   |   51 +
->   .../dts/qcom/x1e80100-dell-latitude-7455.dts  |   52 +
->   .../boot/dts/qcom/x1e80100-dell-thena.dtsi    | 1658 +++++++++++++++++
->   drivers/firmware/qcom/qcom_scm.c              |    2 +
->   drivers/gpu/drm/panel/panel-edp.c             |    1 +
->   7 files changed, 1770 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-inspiron-14-plus-7441.dts
->   create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-latitude-7455.dts
->   create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-thena.dtsi
->
+On 7/5/25 12:23 PM, Pavel Pisa wrote:
+> Dear Luis Felipe Hernandez,
+> 
+> I focus only on drivers/net/can/ctucanfd/ctucanfd_base.c
+> 
+> On Thursday 03 of July 2025 04:35:11 Luis Felipe Hernandez wrote:
+>> Fix kernel-doc formatting issues causing "Unexpected indentation"
+>> errors during documentation build in CAN, SCSI, and I3C drivers.
+>>
+>> Signed-off-by: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
+>> ---
+>>  drivers/i3c/device.c                     | 6 +++---
+>>  drivers/net/can/ctucanfd/ctucanfd_base.c | 8 ++++----
+>>  drivers/scsi/scsi.c                      | 4 ++--
+>>  3 files changed, 9 insertions(+), 9 deletions(-)
+>>
+> ...
+>> diff --git a/drivers/net/can/ctucanfd/ctucanfd_base.c
+>> b/drivers/net/can/ctucanfd/ctucanfd_base.c index bf6398772960..bd6938f6e105
+>> 100644
+>> --- a/drivers/net/can/ctucanfd/ctucanfd_base.c
+>> +++ b/drivers/net/can/ctucanfd/ctucanfd_base.c
+>> @@ -507,10 +507,10 @@ static bool ctucan_is_txt_buf_writable(struct
+>> ctucan_priv *priv, u8 buf) * @isfdf:	True - CAN FD Frame, False - CAN 2.0
+>> Frame
+>>   *
+>>   * Return: True - Frame inserted successfully
+>> - *	   False - Frame was not inserted due to one of:
+>> - *			1. TXT Buffer is not writable (it is in wrong state)
+>> - *			2. Invalid TXT buffer index
+>> - *			3. Invalid frame length
+>> + *         False - Frame was not inserted due to one of:
+>> + *         1. TXT Buffer is not writable (it is in wrong state)
+>> + *         2. Invalid TXT buffer index
+>> + *         3. Invalid frame length
+>>   */
+>>  static bool ctucan_insert_frame(struct ctucan_priv *priv, const struct
+>> canfd_frame *cf, u8 buf, bool isfdf)
+> 
+> I do not have strong opinion there but the numberred list {1., 2., 3.}
+> is the sublevel of the top list {True, False} under the False option.
+> 
+> You have flattened the list which hides the connection of error
+> reasons to the False return value.
+> 
+> But if the strict rules for indentation are more important
+> than my feeling for easy navigation then I do not want to stand
+> in way and go forward.
+> 
+> Aligning False under True has some reason, the original
+> text used tabs for indentnation, which is I understand
+> as generally preferred in kernel sources and the original
+> comment with correct tab = 8 spaces renders well for me
+
+I don't see any need for the tab->spaces conversion either.
+
+It renders in .c (text) or html?  It looks fine in the .c source
+file, but the current html rendering is like this:
+
+Return
+
+True - Frame inserted successfully False - Frame was not inserted due to one of:
+
+	1. TXT Buffer is not writable (it is in wrong state)
+	2. Invalid TXT buffer index
+	3. Invalid frame length
+
+It needs something to turn True and False into a bullet list
+(non-numbered), as documented in Documentation/doc-guide/kernel-doc.rst:
+
+     So, in order to produce the desired line breaks, you need to use a
+     ReST list, e. g.::
+
+      * Return:
+      * * %0		- OK to runtime suspend the device
+      * * %-EBUSY	- Device should not be runtime suspended
+
+
+
+I don't see any of these kernel-doc warnings. I would guess that
+either Pavel or I am using some older/newer version of whatever
+software is causing this.
+
+> 
+>  * Return: True - Frame inserted successfully
+>  *	   False - Frame was not inserted due to one of:
+>  *			1. TXT Buffer is not writable (it is in wrong state)
+>  *			2. Invalid TXT buffer index
+>  *			3. Invalid frame length
+
+
+-- 
+~Randy
+
