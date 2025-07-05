@@ -1,46 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A36B223DC6;
-	Sat,  5 Jul 2025 17:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969FA20B800
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 17:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751737811; cv=none; b=L1rCYtTgy/oZEA7KZovr3B/33MB8uxVDgCYfJtOj5qVRHrFRmbrRCOSrvoOZp/+NDnoKWxxvxwJoQY5pSM8cdJ2DaOD8lk6SPFwKx7KsHn2/MZBKWpAiE7eUaUhEp7dhPMgcnQt6cslbmSm1qL6mO/SRr+WlIDS+WxBO7OrFDW0=
+	t=1751738008; cv=none; b=XtF7ECMRmBakcYIolwubrqaGBLRkHqXzfw2o1TcMOmyKpO0kLJcLgJ+c8EpOyqqNwOv/xKGq60ArfvQSH8jfOPszlOoiH3k6DFzVLZwGrrGbUMzOabFYcaQvK5sumhf3LsONTTxyfLTYE8YAfHIwd2VVIi+YMUrnz7yZxou7GF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751737811; c=relaxed/simple;
-	bh=MRKp90zy+fE+PWnSNoK2r9DKEixr7CxXd4ejww/Kp3E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JKIbtPYYzNH+9F7yjTtR3IoqhS4VHPtUtY+dTpgXrzBIdVuQI3xHhKUpy8j1HgeNvlLTHcF3m97cIVy6RYNhyj0yBJewqev93OVPfWh8SSwpYUllHaM0yAdrvZpQIVWX7mj6iZX/VTj/i9i8t+pUEJ02E46teODPSAKbvYYyNWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjJFbB/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751738008; c=relaxed/simple;
+	bh=TEejV14HsRC5fLEWgeIeilpSyWrV9Qx84J/4EhI6W64=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EgFvydGPCfTBbp4k7WL8RepOYtRuPKi8WBxfgdWFx3G+G2VFeE98Rooz/GRMIjh9K318ha+d2G35T6hXIa8KoZudo2pWf2bmCVZA/Yq0I71CWV1la8Li7dpK/ZDfZkqPoNRH7i/oximGkwX1Ja8TB1UEJIHkzPl4CrEAynW2Ogs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TU+RM9N6; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjJFbB/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E4DEC4CEF3;
-	Sat,  5 Jul 2025 17:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751737809;
-	bh=MRKp90zy+fE+PWnSNoK2r9DKEixr7CxXd4ejww/Kp3E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IjJFbB/TJgHOYYvTK4YKFHCIUHLhMNugNwmXSN/PoYsxblJdV9jSKbEBoC3WEWCAQ
-	 H4WraXru11vTaJADsbmR3Dm60hIxQYGWidUqu2yowRN+RRfwjlMW3MDBgJjPdsORNu
-	 r00b6pduZ3vLynjChv0HZU512cKsoTIgslhwimQWiE+dma2seS3kb6L5x5LCnNqJp2
-	 yJyHjq8wkhy+qGWOaQ3riCtLFjRJlH7ZE8kXhKy9DvshmQxolZ7gF/OSQ9XnGe9Q4s
-	 u17RRhawo3BvKqvDXZtJE5n8F0wUONIdVRuqvGM523wnAiPIaYP1GX+PlbLemwF9wN
-	 qFoA1ti7wtdEA==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 6/6] Docs/mm/damon/maintainer-profile: update for mm-new tree
-Date: Sat,  5 Jul 2025 10:50:00 -0700
-Message-Id: <20250705175000.56259-7-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250705175000.56259-1-sj@kernel.org>
-References: <20250705175000.56259-1-sj@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU+RM9N6"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-748e81d37a7so1092247b3a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 10:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751738006; x=1752342806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NRnHRIkvKPiGwHQ/DdC9lszMjv0qPduuNx1iD3B8GN0=;
+        b=TU+RM9N6dL/02L7uCqfRzOhqzW5K5i0w+wd4S6V88iqRRsfD0RlbDvjX38nBqmzvXS
+         rNIpcGD/qXU69eBQm6baWXkhQJh8qvgO2cSr5MRr0Mj20dmQf4FHwfNVUMadFRYsHb3b
+         x1gB5/K8BHO3cknrc4WpnHxMOoCjzDYnjllChWOYmlRg7S1LAoj6+P1O1pEw3jiixDAE
+         mVc+/q4S5zkSLwZTsEHibfG9F7btK1oFevl+DZKny8A+KC3OzHM1tlbbemz9MNuy1fhd
+         4SqjLV//+v0VOHjDb2JSUH5ZcVAuJwly2vhZmS61/VPdMUnSYwLDvhfBbvZ57D9qU3Ue
+         hgew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751738006; x=1752342806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NRnHRIkvKPiGwHQ/DdC9lszMjv0qPduuNx1iD3B8GN0=;
+        b=snjMTKn3Ia4BGv4s2IhCQMpAbqZenSGoH24Wd5xdc+3pD7s20OcDPYEO/aFVGyur7j
+         rv1txIod6+7Ysz1iAaKLn5C40VSa40/ogwt4rXIJ5Q1aXMdkogmDSC/xc7EE0mrZHd08
+         CoS2y7bCM8MEqRjaoQG5N+9PPzejt0ugCJ7qWmLIfYDseF1uRIE7HReFPKGcwCSqRpse
+         pNph0r43rjIgZSqRBqVAJnRtz2a6omN6L8MB+QIflL9jbV6gLNtWQvrHXhbPbFY+Fttg
+         wj2Ly3p8L5hAjncnVjhoTC004EGqeXydrOjcZApiOzXxiGWChhnBk4hhSYHiTf/ihmZ1
+         +B/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWYV3RJcGt+9kORq5hPR98CWWV+AABhOXzT7R6V/sBX/3ie+z3zqTPoe3/Y1xd3PxqZchpAED1N6LV9Itw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtMv43uaSp92GLxZF8LCh1AV24xrH+GiHAR5u/QeEFY3F/U25I
+	JmZ87d8uaC1ZGGHhxlX1jMjGOV6PnUE90Gak1JTwX96uyi1OaaVLWveg
+X-Gm-Gg: ASbGncs+RxpQn/GDPoUYzkz/SksvSGJ46i+EE+CMg54aZzrEk5azy0bAn1I3Wubq1bJ
+	h9BJKiTfWBkyCPeiUYx79uhksiTd71PzNWJiR8IUAQuCqJv/lD7+95m4Rfz+kjUlYrWXUWlZTXp
+	G6DlrfxuSnNC8N628Bq3XsuLYNtqu9HQ6+fSVE+Tr3YdpE7BrN6S+RzFG/Q8TfSSXEJjnj+f5wo
+	q6uXeP2Ca/asOQL29ISCchtL1ChTkBQC8YyfKL9yRX6Iv6xOJYG2aCpmnjBTYQ6gAAO1DH9kWDr
+	jh55axig2QYeQbD3qdb52Dd7mDyEmGnABI1guvzAI7yQKtFX21iODEalEPNAh5RgD+Indu3z1VA
+	8d7bBOW6BCr9JD/KHfUORVjuywNd349EDVVVFxrs=
+X-Google-Smtp-Source: AGHT+IHznKRnwTVFc0Lh48sxul6MzHr+FNSwk4CN2E/eToBZhWqZxMcHqv67W99+dssKncSnR7ihSA==
+X-Received: by 2002:a05:6a21:2d8c:b0:225:ed50:2278 with SMTP id adf61e73a8af0-22721e6fe99mr5061569637.32.1751738005718;
+        Sat, 05 Jul 2025 10:53:25 -0700 (PDT)
+Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:224a:13ba:b5c6:4ebf])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce359e90asm4596710b3a.6.2025.07.05.10.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 10:53:25 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: mark@fasheh.com,
+	jlbec@evilplan.org,
+	joseph.qi@linux.alibaba.com,
+	ocfs2-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
+	syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
+Subject: [PATCH] ocfs2: avoid potential ABBA deadlock by reordering tl_inode lock
+Date: Sat,  5 Jul 2025 13:53:15 -0400
+Message-ID: <20250705175315.225246-1-ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,74 +76,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Recently a new mm tree for new patches, namely mm-new, has been added.
-Update DAMON maintainer's profile doc for DAMON patches life cycle,
-which depend on those of mm trees.
+In ocfs2_move_extent(), tl_inode is currently locked after the global
+bitmap inode. However, in ocfs2_flush_truncate_log(), the lock order
+is reversed: tl_inode is locked first, followed by the global bitmap
+inode.
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
+This creates a classic ABBA deadlock scenario if two threads attempt
+these operations concurrently and acquire the locks in different orders.
+
+To prevent this, move the tl_inode locking earlier in
+ocfs2_move_extent(), so that it always precedes the global bitmap
+inode lock.
+
+No functional changes beyond lock ordering.
+
+Reported-by: syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67d5645c.050a0220.1dc86f.0004.GAE@google.com/
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
 ---
- Documentation/mm/damon/maintainer-profile.rst | 35 ++++++++++---------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ fs/ocfs2/move_extents.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/mm/damon/maintainer-profile.rst b/Documentation/mm/damon/maintainer-profile.rst
-index ce3e98458339..5cd07905a193 100644
---- a/Documentation/mm/damon/maintainer-profile.rst
-+++ b/Documentation/mm/damon/maintainer-profile.rst
-@@ -7,9 +7,9 @@ The DAMON subsystem covers the files that are listed in 'DATA ACCESS MONITOR'
- section of 'MAINTAINERS' file.
+diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
+index 369c7d27befd..ab460cb2c9c8 100644
+--- a/fs/ocfs2/move_extents.c
++++ b/fs/ocfs2/move_extents.c
+@@ -617,6 +617,8 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+ 	 */
+ 	credits += OCFS2_INODE_UPDATE_CREDITS + 1;
  
- The mailing lists for the subsystem are damon@lists.linux.dev and
--linux-mm@kvack.org.  Patches should be made against the `mm-unstable tree
--<https://git.kernel.org/akpm/mm/h/mm-unstable>`_ whenever possible and posted
--to the mailing lists.
-+linux-mm@kvack.org.  Patches should be made against the `mm-new tree
-+<https://git.kernel.org/akpm/mm/h/mm-new>`_ whenever possible and posted to the
-+mailing lists.
- 
- SCM Trees
- ---------
-@@ -17,17 +17,19 @@ SCM Trees
- There are multiple Linux trees for DAMON development.  Patches under
- development or testing are queued in `damon/next
- <https://git.kernel.org/sj/h/damon/next>`_ by the DAMON maintainer.
--Sufficiently reviewed patches will be queued in `mm-unstable
--<https://git.kernel.org/akpm/mm/h/mm-unstable>`_ by the memory management
--subsystem maintainer.  After more sufficient tests, the patches will be queued
--in `mm-stable <https://git.kernel.org/akpm/mm/h/mm-stable>`_, and finally
--pull-requested to the mainline by the memory management subsystem maintainer.
--
--Note again the patches for `mm-unstable tree
--<https://git.kernel.org/akpm/mm/h/mm-unstable>`_ are queued by the memory
--management subsystem maintainer.  If the patches requires some patches in
--`damon/next tree <https://git.kernel.org/sj/h/damon/next>`_ which not yet merged
--in mm-unstable, please make sure the requirement is clearly specified.
-+Sufficiently reviewed patches will be queued in `mm-new
-+<https://git.kernel.org/akpm/mm/h/mm-new>`_ by the memory management subsystem
-+maintainer.  As more sufficient tests are done, the patches will move to
-+`mm-unstable <https://git.kernel.org/akpm/mm/h/mm-unstable>`_ and then to
-+`mm-stable <https://git.kernel.org/akpm/mm/h/mm-stable>`_.  And finally those
-+will be pull-requested to the mainline by the memory management subsystem
-+maintainer.
++	inode_lock(tl_inode);
 +
-+Note again the patches for `mm-new tree
-+<https://git.kernel.org/akpm/mm/h/mm-new>`_ are queued by the memory management
-+subsystem maintainer.  If the patches requires some patches in `damon/next tree
-+<https://git.kernel.org/sj/h/damon/next>`_ which not yet merged in mm-new,
-+please make sure the requirement is clearly specified.
+ 	/*
+ 	 * ocfs2_move_extent() didn't reserve any clusters in lock_allocators()
+ 	 * logic, while we still need to lock the global_bitmap.
+@@ -637,8 +639,6 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+ 		goto out_unlock_gb_mutex;
+ 	}
  
- Submit checklist addendum
- -------------------------
-@@ -53,8 +55,9 @@ Further doing below and putting the results will be helpful.
- Key cycle dates
- ---------------
- 
--Patches can be sent anytime.  Key cycle dates of the `mm-unstable
--<https://git.kernel.org/akpm/mm/h/mm-unstable>`_ and `mm-stable
-+Patches can be sent anytime.  Key cycle dates of the `mm-new
-+<https://git.kernel.org/akpm/mm/h/mm-new>`_, `mm-unstable
-+<https://git.kernel.org/akpm/mm/h/mm-unstable>`_and `mm-stable
- <https://git.kernel.org/akpm/mm/h/mm-stable>`_ trees depend on the memory
- management subsystem maintainer.
- 
+-	inode_lock(tl_inode);
+-
+ 	handle = ocfs2_start_trans(osb, credits);
+ 	if (IS_ERR(handle)) {
+ 		ret = PTR_ERR(handle);
 -- 
-2.39.5
+2.45.2
+
