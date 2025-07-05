@@ -1,89 +1,133 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2F533993;
-	Sat,  5 Jul 2025 02:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0A423816E;
+	Sat,  5 Jul 2025 02:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751684065; cv=none; b=qlBvvuEKP8gu6JwZNOOrhYMFx9nsHk4hhzzMW5nquBq55wqRXVOAh6EGncWfxFKLYJ0K8/swp+uWYBkkSjVRL0de/qFqx+tPbCf6li5wJFSWCj8DljFyiqnfjCZTYxKQh5t3vWS7JpKMSMWJo2pZ/VAb0vzOj+YWT9s+jfmzhcc=
+	t=1751684293; cv=none; b=LRQXvF2bUDKd3ieON/bLLhGJYgkcDe/AjCculiOLuF8ZW8K02S0CAB0e9q3mdqB+pQJyD8rcfNuQ0FFFMfBA3MAXvGwwR039UhepJ6LAbm6WiZXSW3Ih9io+q8V+FfCwiGRt8wndz5ke4VbNWcL1mKuqkcKBhSoCV1CMSo5Ly8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751684065; c=relaxed/simple;
-	bh=fuV+f3p68eVNJtrMd5iPj26dCWv88/YV5dLdtehWBsI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gL0yupLDy1uDdsa+aQR2TdZlm3BmrNR7BasWSPoGf8/Sqa3KiKv5QqzFx6HxaN302mvr9ZaKXlZhA5WOP3oAOGF56chjzyajY7zpRBbuA2MjzU/xKWQ14uieML9QiDy6iazjWAlPxNtGgTMDRRSqnp6PcGStvBBNuq3Az6INPss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H/N106NL; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H/N106NL"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5652s4M23947785;
-	Fri, 4 Jul 2025 21:54:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751684044;
-	bh=b8BA+LiOkFB87eg4JOa5d7p9svdb3m3qLq/OtPj0Dy4=;
-	h=From:To:CC:Subject:Date;
-	b=H/N106NL3BEderp8KVLUEH7m77o5gBT6uolPYrLPna2CF0AZ2Bikv/QXThYDjk6Mv
-	 qpYgowVOY/XfgjSdaUFnzHYqCC0XuJI4hf6BN0eWAnATV2jseVoNFuQ/I7dCIURj71
-	 p3H6r9o35iggsqY20/c8ebY/GO8Q/cIfgxRaOr5U=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5652s3mB3984965
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 4 Jul 2025 21:54:04 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 4
- Jul 2025 21:54:02 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Fri, 4 Jul 2025 21:54:03 -0500
-Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5652rvIb3841032;
-	Fri, 4 Jul 2025 21:53:58 -0500
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>
-CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <alsa-devel@alsa-project.org>, <shenghao-ding@ti.com>, <navada@ti.com>,
-        <13916275206@139.com>, <v-hampiholi@ti.com>, <v-po@ti.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <baojun.xu@ti.com>
-Subject: [PATCH v1] ALSA: hda/tas2781: Add bus name in device name check
-Date: Sat, 5 Jul 2025 10:53:33 +0800
-Message-ID: <20250705025333.24346-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	s=arc-20240116; t=1751684293; c=relaxed/simple;
+	bh=78fy2wfFeqd1krWXatNtcMeKFMx8B0CgbxmWaUNUd7g=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=PbxfRZiRGGYZc7rwLIaNoGDcukRurSwGrDx6rcVdjygADsib3Tc4T0I/XiGA80HHCFOxMleCZgYbGbC9nXSBdG36dhVt0Bw9KmRj5GUxhdXyukn7AGPog17nCJdSUFdLm4KM2zfvaLnnWziUIeiwyxKmuLQQ0rVzNjdmkc7nLdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bYwDF6VDQz4xPS0;
+	Sat,  5 Jul 2025 10:58:05 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 5652w1Rf039931;
+	Sat, 5 Jul 2025 10:58:01 +0800 (+08)
+	(envelope-from jiang.peng9@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid31;
+	Sat, 5 Jul 2025 10:58:03 +0800 (CST)
+Date: Sat, 5 Jul 2025 10:58:03 +0800 (CST)
+X-Zmail-TransId: 2afc686894bb614-86aa7
+X-Mailer: Zmail v1.0
+Message-ID: <20250705105803198ff11jYCkg1TxntcCEb00R@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+From: <jiang.peng9@zte.com.cn>
+To: <jasowang@redhat.com>, <krzk@kernel.org>
+Cc: <mst@redhat.com>, <xuanzhuo@linux.alibaba.com>, <eperezma@redhat.com>,
+        <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
+        <virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHYyXSB2aXJ0aW86IFVwZGF0ZSBrZXJuZWxkb2MgaW4gZHJpdmVycy92aXJ0aW8vdmlydGlvX2RtYV9idWYuYw==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 5652w1Rf039931
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 686894BD.000/4bYwDF6VDQz4xPS0
 
-Device name start from bus name, as we use strstarts()
-to do compare, need add it for TXNW2781 device.
+From: Peng Jiang <jiang.peng9@zte.com.cn>
 
-Fixes: b2904df0a347 ("ALSA: hda/tas2781: Add compatible for hardware id TIAS2781 and TXNW2781")
+Fix kernel-doc descriptions in virtio_dma_buf.c to fix W=1 warnings:
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+drivers/virtio/virtio_dma_buf.c:41 function parameter 'dma_buf' not described in 'virtio_dma_buf_attach'
+drivers/virtio/virtio_dma_buf.c:41 function parameter 'attach' not described in 'virtio_dma_buf_attach'
+
+Signed-off-by: Peng Jiang <jiang.peng9@zte.com.cn>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/virtio/virtio_dma_buf.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index b9cdbca951e4..530c2266ab3b 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -588,7 +588,7 @@ static int tas2781_hda_i2c_probe(struct i2c_client *clt)
- 		hda_priv->save_calibration = tas2781_save_calibration;
- 		tas_hda->priv->global_addr = TAS2781_GLOBAL_ADDR;
- 	} else if (strstarts(dev_name(&clt->dev),
--			     "TXNW2781:00-tas2781-hda.0")) {
-+			     "i2c-TXNW2781:00-tas2781-hda.0")) {
- 		device_name = "TXNW2781";
- 		hda_priv->save_calibration = tas2781_save_calibration;
- 		tas_hda->priv->global_addr = TAS2781_GLOBAL_ADDR;
+diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
+index 3fe1d03b0645..0b39b1b209ee 100644
+--- a/drivers/virtio/virtio_dma_buf.c
++++ b/drivers/virtio/virtio_dma_buf.c
+@@ -9,13 +9,20 @@
+ #include <linux/virtio_dma_buf.h>
+
+ /**
+- * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
++ * virtio_dma_buf_export() - Creates a new dma-buf for a virtio exported object
+  * @exp_info: [in] see dma_buf_export(). ops MUST refer to a dma_buf_ops
+  *     struct embedded in a virtio_dma_buf_ops.
+  *
+  * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
+  * for an virtio exported object that can be queried by other virtio drivers
+  * for the object's UUID.
++ *
++ * Returns:
++ *   - Valid struct dma_buf pointer on success
++ *   - ERR_PTR(-EINVAL) if:
++ *     - exp_info->ops is NULL
++ *     - attach callback isn't virtio_dma_buf_attach()
++ *     - virtio_ops->get_uuid() is not implemented
+  */
+ struct dma_buf *virtio_dma_buf_export
+        (const struct dma_buf_export_info *exp_info)
+@@ -35,7 +42,16 @@ struct dma_buf *virtio_dma_buf_export
+ EXPORT_SYMBOL(virtio_dma_buf_export);
+
+ /**
+- * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
++ * virtio_dma_buf_attach() - Mandatory attach callback for virtio dma-bufs
++ * @dma_buf: Pointer to the shared dma-buf structure
++ * @attach: Pointer to the newly created attachment metadata
++ *
++ * Implements the standard dma-buf attach operation for virtio devices.
++ * Retrieves virtio-specific operations through container_of macro,
++ * then invokes device-specific attach callback if present.
++ * This enables virtio devices to participate in dma-buf sharing.
++ *
++ * Return: 0 on success, error code on failure
+  */
+ int virtio_dma_buf_attach(struct dma_buf *dma_buf,
+                          struct dma_buf_attachment *attach)
+@@ -55,8 +71,12 @@ int virtio_dma_buf_attach(struct dma_buf *dma_buf,
+ EXPORT_SYMBOL(virtio_dma_buf_attach);
+
+ /**
+- * is_virtio_dma_buf - returns true if the given dma-buf is a virtio dma-buf
+- * @dma_buf: buffer to query
++ * is_virtio_dma_buf() - Check if a dma-buf was created by virtio DMA framework
++ * @dma_buf: [in] buffer to query
++ *
++ * Returns:
++ *   - true  if the dma-buf uses virtio_dma_buf_attach() as its attach callback
++ *   - false otherwise
+  */
+ bool is_virtio_dma_buf(struct dma_buf *dma_buf)
+ {
+@@ -65,7 +85,7 @@ bool is_virtio_dma_buf(struct dma_buf *dma_buf)
+ EXPORT_SYMBOL(is_virtio_dma_buf);
+
+ /**
+- * virtio_dma_buf_get_uuid - gets a virtio dma-buf's exported object's uuid
++ * virtio_dma_buf_get_uuid() - gets a virtio dma-buf's exported object's uuid
+  * @dma_buf: [in] buffer to query
+  * @uuid: [out] the uuid
+  *
 -- 
-2.43.0
-
+2.25.1
