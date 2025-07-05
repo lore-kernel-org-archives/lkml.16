@@ -1,75 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819ED1E4AE;
-	Sat,  5 Jul 2025 09:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96BC1A3142;
+	Sat,  5 Jul 2025 09:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751707438; cv=none; b=NPMOOi5QXWZSbibwa6jh2t/hvs87+fGTWx3iqHRZkYe9D6xbaM9JbDHo9dxmo9GcPBkhSqXZ/SlEvaob69NUeHZX+DCcS1pwCULXuPUgYWBjGLb9J+m+efWGI0GAMz99FrjspJl2OiUoqnzsbj+ae0mFMNIupXA0bP8smkk32PY=
+	t=1751707585; cv=none; b=l+GGNBuHCGiqSeDGr/e/VzIzCCtI70bW5DrEFfQybUa8woB1PPxxh0CMXP7MfqUMDag+PhXBrpl6zq9wvVULk5mxxih/oNDYdF51v+vc3jhrBpYY5+IUsRusr3eXe7VaFMyg3t32Qvr84+mvdSSS/8hna8DvfPDlux1evjeTbe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751707438; c=relaxed/simple;
-	bh=BgGICVAG3ufzyD8EANR6r892lXXUNui3d8R5OQencmU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=mYAesK5VqBiQqK7ej3Iv0rShQJl28XHEBhG//74/xva/OBVb7wgvcmt9hDjfcyuG7jWej6ZaNfMcCu8lv3MdxeXzFb0wPXl0BVlyhhHrgjU5iEjCCn88WXiuW7J8pvmivzTqG10OeFHymmPCNeWjeRB0tU1i+upRCfS7kMNBQas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZS9aTiEu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751707585; c=relaxed/simple;
+	bh=1jcC9TceXdzZtJGhy6YZenRnqlihRmJcKT3PDwgXNQE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eZ/WakC3gYKOYHc2nGu9O5coAnvkQjNLadf/xEEy4/M8q3A5pEq6MgzfQbpBvR1XfyvEzpjx/jU0tSINEwoXQkeUNHyQnCpspEuYryNFh8ZNT+OsAjGfaHUJeYOOYb5+tg2oci1bndseTNY9EZ0Ee1PfRnBaveAtiMrIaHXsYaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VB9qBJAL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZS9aTiEu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDD1C4CEE7;
-	Sat,  5 Jul 2025 09:23:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VB9qBJAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71487C4CEE7;
+	Sat,  5 Jul 2025 09:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751707438;
-	bh=BgGICVAG3ufzyD8EANR6r892lXXUNui3d8R5OQencmU=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ZS9aTiEucOKW5yPsPtD1gjQDbHT88+6an4F4oCrjx99JSv6bCia0h6Xjm91nZMUFj
-	 nmzNTuLPhAKEqwDKhwyuLsCjB+5/ze8q1gYN+3bF7wjL08B9aFGUuY/zFus3o+X1ku
-	 zVEklmoRntvsvmhunellnN5YuEVati9qGT+eqyx4/FU/Rat0ZXCQl+aJ5ohGJTBDVf
-	 enA5hk2Mtv5SAA8jlBySwuFL9R+hwJqxnrvzwVlUN0j3Kp6OC9Brtfr8SfBkOVx5P8
-	 c+cHJ1HyoF87IKnLFcwNotT+80S85I/03H3gdkqW4naX3QGFXLg2CGGMs1I3M9/Hhz
-	 AUzmaGvlxNdcQ==
+	s=k20201202; t=1751707585;
+	bh=1jcC9TceXdzZtJGhy6YZenRnqlihRmJcKT3PDwgXNQE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VB9qBJAL5wEas7rR1Fgu7qGWHgA33k1e1SYrK+QclWk3lsv76VjcMwC0l6Y4ef2mW
+	 Cfmljwn0iIZWkFSxCwtCl12Z6IwLWg6VGDBVMXyHfbEAmsHj+ZgiDKhV+3NsaeMOpO
+	 mLexJCm2so/PYFBtfOcnsV79Lay4OZlrkobZcBUILRE+IrwkmSmeYJD0ZlbHxQOD90
+	 mEWc4IYNTHELDdjO6LA6R+UG7k8upuNJ/gpdPfTn1Bx3xszgE9eU2KIY0ofjTsQTxP
+	 M/7ZYozN+vRnmcXNqP3tlS5xM19QNM8vWuurA4UfHtxMJIQf/jmfDHxkcNydbUvFKG
+	 8LqeGmPawkYfw==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: stmmac: add support for dwmac 5.20
+Date: Sat,  5 Jul 2025 17:09:30 +0800
+Message-ID: <20250705090931.14358-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 05 Jul 2025 11:23:52 +0200
-Message-Id: <DB40GLDJNB8Y.2HP3DHHVU0Z8Q@kernel.org>
-Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 3/6] rust: use `kernel::{fmt,prelude::fmt!}`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Danilo
- Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>, "Nishanth Menon" <nm@ti.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1
-References: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com>
- <20250704-core-cstr-prepare-v1-3-a91524037783@gmail.com>
-In-Reply-To: <20250704-core-cstr-prepare-v1-3-a91524037783@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri Jul 4, 2025 at 10:14 PM CEST, Tamir Duberstein wrote:
-> Reduce coupling to implementation details of the formatting machinery by
-> avoiding direct use for `core`'s formatting traits and macros.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+The dwmac 5.20 IP can be found on some synaptics SoCs. Add a
+compatibility flag for it.
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
-Cheers,
-Benno
+Since v1:
+ - fix the commit msg
 
-> ---
->  rust/kernel/error.rs            | 6 +++---
->  rust/kernel/print.rs            | 6 +++---
->  rust/kernel/str.rs              | 2 +-
->  samples/rust/rust_print_main.rs | 2 +-
->  4 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+index b9218c07eb6b..cecce6ed9aa6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+@@ -59,6 +59,7 @@ static const struct of_device_id dwmac_generic_match[] = {
+ 	{ .compatible = "snps,dwmac-3.72a"},
+ 	{ .compatible = "snps,dwmac-4.00"},
+ 	{ .compatible = "snps,dwmac-4.10a"},
++	{ .compatible = "snps,dwmac-5.20"},
+ 	{ .compatible = "snps,dwmac"},
+ 	{ .compatible = "snps,dwxgmac-2.10"},
+ 	{ .compatible = "snps,dwxgmac"},
+-- 
+2.49.0
+
