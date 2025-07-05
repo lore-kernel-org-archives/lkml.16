@@ -1,131 +1,122 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2916672634;
-	Sat,  5 Jul 2025 17:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C80E10E0;
+	Sat,  5 Jul 2025 17:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751735024; cv=none; b=pIyLRqNA0gQcbLnqXmr+v3l5qickLsWhWNpBiKJnA3uh4SgrPSmc5duIWxmSFZIvIMkbElKa9ODr3eZrhPGBe6iSqGJeGqpVGiR+TgwQvPpYmqzjcC2xwBmwdHaNPcjRHaJdOOBI5cCEvpA7lcWvHLpSbIYikhtr10Dfdnx2BNc=
+	t=1751735517; cv=none; b=AVa7Df+By2csYcWIbduhLIHUTsJRsXQj0SOX7mqCid0DcidKxYG9ti6YXP17mpYRRYJYBa/UP7AvbDOf1clvt1rV49Y/79vVqWCVgMrk/FwATF4A0EO4QL3qwiHnKJLGoJUFSffASxBetZsVtOAvJv5RFZRCv+Lpf2rRxRI6RBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751735024; c=relaxed/simple;
-	bh=QjfCCAHuG5KSO6VVPMvYRGWXhmONEiIJ+1z/qE4+WX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDs8B8vjN35HqwTcYHwBieo1lu76QUt4egD+2+CW+zYAXNrnaS2yP4XCjnYh6gZKkhWCUXEQb5wA95OxcYT2rS6h3SNIvul49ovGC6PU32umWNWFmOwfS7N7O78XTwvCN6y5oW5dImHvVJgwaqXuyBH1EBPe7aOUMxkzTJtFkN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: UIRvHSRsSVmKRx59j0yRyQ==
-X-CSE-MsgGUID: cnHpFD2WTtap0SSiNRFArw==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 06 Jul 2025 02:03:33 +0900
-Received: from localhost.localdomain (unknown [10.226.92.32])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1D9304010E1B;
-	Sun,  6 Jul 2025 02:03:28 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH net-next] net: stmmac: dwmac-renesas-gbeth: Add PM suspend/resume callbacks
-Date: Sat,  5 Jul 2025 18:03:24 +0100
-Message-ID: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1751735517; c=relaxed/simple;
+	bh=p0vr5I29bsh4kSl+uTpgzLmEmSu/WNqT7YtAdhvTD00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SNs3vmeA2MTwg/cA62pvx6AZKHON4EU55XgksZ+LmDBT7c5LBSwAI4Pwaa5U1Anl8kB3NZLRAa7pZ3Len4aGBoq3iQAGH2/YG/i5k5qj3JSQAC8uRCIhm/zeOIYqCFS9tNJuiMUeGLC1XVfAXnySXv79dkmTKseG6YoA/eKsTpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/ZvpIT+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/ZvpIT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2DEC4CEE7;
+	Sat,  5 Jul 2025 17:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751735516;
+	bh=p0vr5I29bsh4kSl+uTpgzLmEmSu/WNqT7YtAdhvTD00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o/ZvpIT+359LZwE9X8lTxVLDthvMLxegQgtcJtTV17dmC/pXiNpzkliZ0ecE7ePD5
+	 qHodwTcPOIAbNSmgjdGUlCWubLbZGBSAEz9Xhf6aU1+k25QvI/RK5iGL07M11UPKkw
+	 M7h819UVyvz1U8z3uNfC6nkTACe3u+blnvoTFDKnssFtKe3id107clN9rWItY7EDBd
+	 THw/+jB4xgFUT9+6yJ5pHrianCqkCS+bM5t9Emjz4oMlbgT6+xa6cNPdgZmRDQVt2j
+	 ALWLshR36FkRq11UHymfpvEnNiNKPF+ssPGKLyzwBZ5b5nr7eSEmOfqpiwQYaAg0pg
+	 3ddFXcMmOMZvg==
+Date: Sat, 5 Jul 2025 20:11:52 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Prachotan Bathi <prachotan.bathi@arm.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/3] tpm_crb_ffa:Introduce memzero macro to replace
+ memset
+Message-ID: <aGlc2I9YGgPyc3lO@kernel.org>
+References: <20250626184521.1079507-1-prachotan.bathi@arm.com>
+ <20250626184521.1079507-3-prachotan.bathi@arm.com>
+ <aGWvtzhs5ksKgaYo@kernel.org>
+ <151a612b-198a-4f7e-94e7-10426831ab94@arm.com>
+ <aGdAMg43nHPwgeKn@kernel.org>
+ <aGdC8gyO00AB_aPr@kernel.org>
+ <20250704114010.0d210c31@pumpkin>
+ <aGffUrDSjNH6w6rB@kernel.org>
+ <20250705081003.26409484@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705081003.26409484@pumpkin>
 
-Add PM suspend/resume callbacks for RZ/G3E SMARC EVK.
+On Sat, Jul 05, 2025 at 08:10:03AM +0100, David Laight wrote:
+> On Fri, 4 Jul 2025 17:04:02 +0300
+> Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> 
+> > On Fri, Jul 04, 2025 at 11:40:10AM +0100, David Laight wrote:
+> > > On Fri, 4 Jul 2025 05:56:50 +0300
+> > > Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> > >   
+> > > > On Fri, Jul 04, 2025 at 05:45:11AM +0300, Jarkko Sakkinen wrote:  
+> > > ...  
+> > > > > Well, that was some truly misguided advice from my side so all the shame
+> > > > > here is on me :-) There's no global memzero() and neither explicit
+> > > > > version makes much sense here. Sorry about that.
+> > > > > 
+> > > > > I gave it now (actual) thought, and here's what I'd propose:
+> > > > > 
+> > > > > diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> > > > > index 96746d5b03e3..e769f6143a7c 100644
+> > > > > --- a/drivers/char/tpm/tpm_crb_ffa.c
+> > > > > +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> > > > > @@ -203,26 +203,20 @@ static int __tpm_crb_ffa_try_send_receive(unsigned long func_id,
+> > > > >  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+> > > > >  
+> > > > >  	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> > > > > -		memzero(&tpm_crb_ffa->direct_msg_data2,
+> > > > > -		       sizeof(struct ffa_send_direct_data2));
+> > > > > -
+> > > > > -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> > > > > -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+> > > > > -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+> > > > > -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
+> > > > > +		tpm_crb_ffa->direct_msg_data2 = (struct ffa_send_direct_data2){
+> > > > > +			.data = { func_id, a0, a1, a2 },
+> > > > > +		};  
+> > > 
+> > > clang has a habit of compiling that as an un-named on-stack structure that
+> > > is initialised and then memcpy() used to copy it into place.
+> > > Often not was intended and blows the stack when the structure is large.
+> > > 
+> > > So probably not a pattern that should be encouraged.  
+> > 
+> > This is interesting observation so I had to do some compilation tests to
+> > verify the claim just to see how it plays out (and for the sake of
+> > learning while doing it).
+> > 
+> > Note that I use GCC for the examples but I have high doubts that clang
+> > would do worse. Please share the insight if that is a wrong assumption.
+> 
+> It is a clang issue and may only affect builds with some of the 'memory
+> sanitiser' run-time checks.
+> Search through the mail archives for issues with overlarge stack frames.
 
-The PM deep entry is executed by pressing the SLEEP button and exit from
-entry is by pressing the power button.
+If clang really did that, it would cost at worst 40 bytes of stack (aka
+the size of struct ffa_send_direct_data. And if there is an issue, it
+absolutely will get fixed.
 
-Logs:
-root@smarc-rzg3e:~# PM: suspend entry (deep)
-Filesystems sync: 0.115 seconds
-Freezing user space processes
-Freezing user space processes completed (elapsed 0.002 seconds)
-OOM killer disabled.
-Freezing remaining freezable tasks
-Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
-printk: Suspending console(s) (use no_console_suspend to debug)
-NOTICE:  BL2: v2.10.5(release):2.10.5/rz_soc_dev-162-g7148ba838
-NOTICE:  BL2: Built : 14:23:58, Jul  5 2025
-NOTICE:  BL2: SYS_LSI_MODE: 0x13e06
-NOTICE:  BL2: SYS_LSI_DEVID: 0x8679447
-NOTICE:  BL2: SYS_LSI_PRR: 0x0
-NOTICE:  BL2: Booting BL31
-renesas-gbeth 15c30000.ethernet end0: Link is Down
-Disabling non-boot CPUs ...
-psci: CPU3 killed (polled 0 ms)
-psci: CPU2 killed (polled 0 ms)
-psci: CPU1 killed (polled 0 ms)
-Enabling non-boot CPUs ...
-Detected VIPT I-cache on CPU1
-GICv3: CPU1: found redistributor 100 region 0:0x0000000014960000
-CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
-CPU1 is up
-Detected VIPT I-cache on CPU2
-GICv3: CPU2: found redistributor 200 region 0:0x0000000014980000
-CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
-CPU2 is up
-Detected VIPT I-cache on CPU3
-GICv3: CPU3: found redistributor 300 region 0:0x00000000149a0000
-CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
-CPU3 is up
-dwmac4: Master AXI performs fixed burst length
-15c30000.ethernet end0: No Safety Features support found
-15c30000.ethernet end0: IEEE 1588-2008 Advanced Timestamp supported
-15c30000.ethernet end0: configuring for phy/rgmii-id link mode
-dwmac4: Master AXI performs fixed burst length
-15c40000.ethernet end1: No Safety Features support found
-15c40000.ethernet end1: IEEE 1588-2008 Advanced Timestamp supported
-15c40000.ethernet end1: configuring for phy/rgmii-id link mode
-OOM killer enabled.
-Restarting tasks: Starting
-Restarting tasks: Done
-random: crng reseeded on system resumption
-PM: suspend exit
+That does not weight over making a code change that makes the most sense
+for Linux in the long-term. And to add, I did show both the code and
+the figures to support my claim.
+ 
 
-15c30000.ethernet end0: Link is Up - 1Gbps/Full - flow control rx/tx
-root@smarc-rzg3e:~# ifconfig end0 192.168.10.7 up
-root@smarc-rzg3e:~# ping 192.168.10.1
-PING 192.168.10.1 (192.168.10.1) 56(84) bytes of data.
-64 bytes from 192.168.10.1: icmp_seq=1 ttl=64 time=2.05 ms
-64 bytes from 192.168.10.1: icmp_seq=2 ttl=64 time=0.928 ms
+> 
+> 	David
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-This patch is tested with out-of tree patch for save/restore
-ethernet OEN registers in the pinctrl block.
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-index 9a774046455b..df4ca897a60c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-@@ -136,6 +136,7 @@ static struct platform_driver renesas_gbeth_driver = {
- 	.probe  = renesas_gbeth_probe,
- 	.driver = {
- 		.name		= "renesas-gbeth",
-+		.pm		= &stmmac_pltfr_pm_ops,
- 		.of_match_table	= renesas_gbeth_match,
- 	},
- };
--- 
-2.43.0
-
+BR, Jarkko
