@@ -1,34 +1,35 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90808256C9F
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E272571C3
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751720527; cv=none; b=F1uiqXQUXR3mlDUQ45NAPnoGP6xIP3yMFzuXtss+BzHJHStFu1jW5IP8uCXXQ/fl1kYP32CM7KzeKSAmvRMhzW4ZHcGTyH4+wooY5rTPEWObZG02Hq+BmAv+lxnr4J4QcaB+3VxU262cfg20PbP6vXS+I2tGuTwHWKXCltOUnsg=
+	t=1751720528; cv=none; b=Rzi1Ra3sYPEbuFWWuE92jaPrO79AvpOKVmuJS+dbj9HO261pnrh+M7JMMWylWZH1AZoc5vMb2c7NFGtbbz1/J3dJueWYiDPfi8fY4idIbuCzzi8cM4IWJBLiHJSZMJxvzxfryxm8WcPQWAu9DdurIjoZdUPQvHsZDt3QH5XzDLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751720527; c=relaxed/simple;
-	bh=SqXf6aPuODlu+xrSd3tAhGLkvfo/IFawoGpR3ecYlfo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZvB20URMQo1gksu16wprOzNOJ8udgAeM7dJmHUHW+wD/n8JLpRQbagysl9lspptjG/ZrjBHjoeC2AsmAJXRe+dmCcFziD+8o0cSHDkkYRTQPphOmIdW2El8pUyyiQyYmJK6eHQoNf9mR88+0Z49Hq9OIKclHwkd4/9Q8VaRnFMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L7Rntyr7; arc=none smtp.client-ip=91.218.175.172
+	s=arc-20240116; t=1751720528; c=relaxed/simple;
+	bh=gkcNQTK5w36JIMK/bRnIZ44Pu7Fx4Zdl7XLiGr8ZwpM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FZi1GKu/doyoZWvGsjr0g+3Q/oFVzXi1Pc89t4ACSIa5Nf4hrCSDzJmPWmjzZz324cZOWQw0xE2JuU2u+DLDeKuNq20nZgzwz8C9E4q7TESMlj4zQ/uoYefLHHtRw4MZ4+VA6Gi5Q1sE8GYyYiBuU/6CyqFJ5jwsSUxQmXayPPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DgnOMb1n; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L7Rntyr7"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DgnOMb1n"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751720512;
+	t=1751720523;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ArYwZ5zOI/ep0laxBTgV4QIgn2lW60AWJ8gSjeJEzuA=;
-	b=L7Rntyr7+7XkBJYk80ZxGw/el13hwuQhm7+4mYXy5OI+I/fsKQD53KiqVJDj05I1mxZg45
-	s/r+n3q1JEjoi4dV6SGJZwUg3gWt7momo3k+LMaN0LcDMAo6TJE5FZqcJ6+bjw62Z1+zfk
-	wVWAHtIYZNWJyIUU2FWfXtb4dU7u3g0=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KzvYe0gsXYPZypHJ9jx6Wx/1vITcr51CP+JcwSmVrxM=;
+	b=DgnOMb1nbBsprbqcYHjpUXYPFdzzhQBeYLu5xxWluFHc1hp3Z/EmiBWD5Fu4rpjCpEbkXx
+	3wYG7/lmE7bgd8x+2m2aqjNTpiM4PwQ4SyGMOrtGHcUaEmEH650TKewdNluZNgPQQdqQIl
+	lJW3wDfWIt1Ll0DNNYB/1bWNKgYOTbE=
 From: Ze Huang <huang.ze@linux.dev>
-Subject: [PATCH v5 0/2] Add SpacemiT K1 USB3.0 host controller support
-Date: Sat, 05 Jul 2025 21:01:24 +0800
-Message-Id: <20250705-dwc3_generic-v5-0-9dbc53ea53d2@linux.dev>
+Date: Sat, 05 Jul 2025 21:01:26 +0800
+Subject: [PATCH v5 2/2] usb: dwc3: add generic driver to support flattened
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,10 +38,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACQiaWgC/yWMQQ6CMBAAv9Ls2TVlSQH5iiEGtyvugSItognh7
- zZynElmNkgSVRK0ZoMoqyadQgZ3MsDPPgyC6jMDWXK2tg79h8vbICFnjI231LhLTcQl5OQV5aH
- f/+7aHRxlfufrcki490mQp3HUpTVrdS4qjFxAt+8/5dkFEosAAAA=
-X-Change-ID: 20250705-dwc3_generic-8d02859722c3
+Message-Id: <20250705-dwc3_generic-v5-2-9dbc53ea53d2@linux.dev>
+References: <20250705-dwc3_generic-v5-0-9dbc53ea53d2@linux.dev>
+In-Reply-To: <20250705-dwc3_generic-v5-0-9dbc53ea53d2@linux.dev>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
@@ -48,92 +48,245 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Ze Huang <huang.ze@linux.dev>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751720506; l=3183;
+ linux-kernel@vger.kernel.org, Ze Huang <huang.ze@linux.dev>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751720506; l=6803;
  i=huang.ze@linux.dev; s=20250705; h=from:subject:message-id;
- bh=SqXf6aPuODlu+xrSd3tAhGLkvfo/IFawoGpR3ecYlfo=;
- b=ov1Mzqe2SD2LFE8mEmXjqL8WIVgz5jScaTpi63H6bGdM8uqaI7LYA3CZSN+/JUOeOCZSS263I
- q4iYuHZ9WjQAya6TOcGraiGPUN9t+iuftSW+kAXgZNOR8SQzCcDMvcO
+ bh=gkcNQTK5w36JIMK/bRnIZ44Pu7Fx4Zdl7XLiGr8ZwpM=;
+ b=ueqxYfhWxFUo01BBnAGpzNCeJ82+7IbQdyk1JP+LAI/ZGfowJ3VpySjqtqW2x+oZFAYI4J+fi
+ hUc1AX2w6CAB0/sbg7fph2AYg9htgN2R8n8365AXJsgQwcHvI9Ss3Q8
 X-Developer-Key: i=huang.ze@linux.dev; a=ed25519;
  pk=Kzc4PMu5PTo8eZZQ5xmTNL9jeXcQ9Wml0cs+vlQpBkg=
 X-Migadu-Flow: FLOW_OUT
 
-The USB 3.0 controller found in the SpacemiT K1 SoC[1] supports both USB3.0
-Host and USB2.0 Dual-Role Device (DRD). 
-
-This controller is compatible with DesignWare Core USB 3 (DWC3) driver.
-However, constraints in the `snps,dwc3` bindings limit the ability to describe
-hardware-specific features in a clean and maintainable way. While
-`dwc3-of-simple` still serves as a glue layer for many platforms, it requires a
-split device tree node structure, which is less desirable in newer platforms.
-
-To promote a transition toward a flattened `dwc` node structure, this series
-introduces `dwc3-generic-plat`, building upon prior efforts that exposed the
-DWC3 core driver [2].
-
-The device tree support for SpacemiT K1 will be submitted separately when the
-associated PHY driver is ready.
-
-This series is based on 6.16-rc1 and has been tested on BananaPi development
-boards.
-
-Link: https://developer.spacemit.com/documentation?token=AjHDwrW78igAAEkiHracBI9HnTb [1]
-Link: https://lore.kernel.org/all/20250414-dwc3-refactor-v7-3-f015b358722d@oss.qualcomm.com [2]
+To support flattened dwc3 dt model and drop the glue layer, introduce the
+`dwc3-generic` driver. This enables direct binding of the DWC3 core driver
+and offers an alternative to the existing glue driver `dwc3-of-simple`.
 
 Signed-off-by: Ze Huang <huang.ze@linux.dev>
 ---
-Changes in v5:
-- drop DTS patch (will submit when PHY driver is ready)
-- drop interconnects and update resets property in dt-bindings
-- remove unnecessary __maybe_unused attribute and PM guards
-- switch to devres APIs for reset and clock management
-- Link to v4: https://lore.kernel.org/all/20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn/
+ drivers/usb/dwc3/Kconfig             |  11 +++
+ drivers/usb/dwc3/Makefile            |   1 +
+ drivers/usb/dwc3/dwc3-generic-plat.c | 182 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 194 insertions(+)
 
-Changes in v4:
-- dt-bindings spacemit,k1-dwc:
-  - reorder properties
-  - add properties of phys & phy-names
-  - add usb hub nodes in example dt
-- add support for spacemit,k1-mbus
-- dwc3 generic plat driver:
-  - rename dwc3-common.c to dwc3-generic-plat.c
-  - use SYSTEM_SLEEP_PM_OPS macros and drop PM guards
-- dts:
-  - reorder dts properties of usb dwc3 node
-  - move "dr_mode" of dwc3 from dtsi to dts
-- Link to v3: https://lore.kernel.org/r/20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 310d182e10b50b253d7e5a51674806e6ec442a2a..4925d15084f816d3ff92059b476ebcc799b56b51 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -189,4 +189,15 @@ config USB_DWC3_RTK
+ 	  or dual-role mode.
+ 	  Say 'Y' or 'M' if you have such device.
+ 
++config USB_DWC3_GENERIC_PLAT
++	tristate "DWC3 Generic Platform Driver"
++	depends on OF && COMMON_CLK
++	default USB_DWC3
++	help
++	  Support USB3 functionality in simple SoC integrations.
++	  Currently supports SpacemiT DWC USB3. Platforms using
++	  dwc3-of-simple can easily switch to dwc3-generic by flattening
++	  the dwc3 child node in the device tree.
++	  Say 'Y' or 'M' here if your platform integrates DWC3 in a similar way.
++
+ endif
+diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+index 830e6c9e5fe073c1f662ce34b6a4a2da34c407a2..96469e48ff9d189cc8d0b65e65424eae2158bcfe 100644
+--- a/drivers/usb/dwc3/Makefile
++++ b/drivers/usb/dwc3/Makefile
+@@ -57,3 +57,4 @@ obj-$(CONFIG_USB_DWC3_IMX8MP)		+= dwc3-imx8mp.o
+ obj-$(CONFIG_USB_DWC3_XILINX)		+= dwc3-xilinx.o
+ obj-$(CONFIG_USB_DWC3_OCTEON)		+= dwc3-octeon.o
+ obj-$(CONFIG_USB_DWC3_RTK)		+= dwc3-rtk.o
++obj-$(CONFIG_USB_DWC3_GENERIC_PLAT)	+= dwc3-generic-plat.o
+diff --git a/drivers/usb/dwc3/dwc3-generic-plat.c b/drivers/usb/dwc3/dwc3-generic-plat.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..f251dda60903364d6b326a0904ec9b113e61f5c0
+--- /dev/null
++++ b/drivers/usb/dwc3/dwc3-generic-plat.c
+@@ -0,0 +1,182 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * dwc3-generic-plat.c - DesignWare USB3 generic platform driver
++ *
++ * Copyright (C) 2025 Ze Huang <huang.ze@linux.dev>
++ *
++ * Inspired by dwc3-qcom.c and dwc3-of-simple.c
++ */
++
++#include <linux/clk.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
++#include "glue.h"
++
++struct dwc3_generic {
++	struct device		*dev;
++	struct dwc3		dwc;
++	struct clk_bulk_data	*clks;
++	int			num_clocks;
++	struct reset_control	*resets;
++};
++
++static void dwc3_generic_reset_control_assert(void *data)
++{
++	reset_control_assert(data);
++}
++
++static void dwc3_generic_clk_bulk_disable_unprepare(void *data)
++{
++	struct dwc3_generic *dwc3 = data;
++
++	clk_bulk_disable_unprepare(dwc3->num_clocks, dwc3->clks);
++}
++
++static int dwc3_generic_probe(struct platform_device *pdev)
++{
++	struct dwc3_probe_data probe_data = {};
++	struct device *dev = &pdev->dev;
++	struct dwc3_generic *dwc3;
++	struct resource *res;
++	int ret;
++
++	dwc3 = devm_kzalloc(dev, sizeof(*dwc3), GFP_KERNEL);
++	if (!dwc3)
++		return -ENOMEM;
++
++	dwc3->dev = dev;
++
++	platform_set_drvdata(pdev, dwc3);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "missing memory resource\n");
++		return -ENODEV;
++	}
++
++	dwc3->resets = devm_reset_control_array_get_optional_exclusive(dev);
++	if (IS_ERR(dwc3->resets))
++		return dev_err_probe(dev, PTR_ERR(dwc3->resets), "failed to get resets\n");
++
++	ret = reset_control_assert(dwc3->resets);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to assert resets\n");
++
++	ret = devm_add_action_or_reset(dev, dwc3_generic_reset_control_assert, dwc3->resets);
++	if (ret)
++		return ret;
++
++	usleep_range(10, 1000);
++
++	ret = reset_control_deassert(dwc3->resets);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to deassert resets\n");
++
++	ret = devm_clk_bulk_get_all(dwc3->dev, &dwc3->clks);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "failed to get clocks\n");
++
++	dwc3->num_clocks = ret;
++
++	ret = clk_bulk_prepare_enable(dwc3->num_clocks, dwc3->clks);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to enable clocks\n");
++
++	ret = devm_add_action_or_reset(dev, dwc3_generic_clk_bulk_disable_unprepare, dwc3);
++	if (ret)
++		return ret;
++
++	dwc3->dwc.dev = dev;
++	probe_data.dwc = &dwc3->dwc;
++	probe_data.res = res;
++	probe_data.ignore_clocks_and_resets = true;
++	ret = dwc3_core_probe(&probe_data);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to register DWC3 Core\n");
++
++	return 0;
++}
++
++static void dwc3_generic_remove(struct platform_device *pdev)
++{
++	struct dwc3_generic *dwc3 = platform_get_drvdata(pdev);
++
++	dwc3_core_remove(&dwc3->dwc);
++}
++
++static int dwc3_generic_suspend(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++	int ret;
++
++	ret = dwc3_pm_suspend(&dwc3->dwc);
++	if (ret)
++		return ret;
++
++	clk_bulk_disable_unprepare(dwc3->num_clocks, dwc3->clks);
++
++	return 0;
++}
++
++static int dwc3_generic_resume(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++	int ret;
++
++	ret = clk_bulk_prepare_enable(dwc3->num_clocks, dwc3->clks);
++	if (ret)
++		return ret;
++
++	ret = dwc3_pm_resume(&dwc3->dwc);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int dwc3_generic_runtime_suspend(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++
++	return dwc3_runtime_suspend(&dwc3->dwc);
++}
++
++static int dwc3_generic_runtime_resume(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++
++	return dwc3_runtime_resume(&dwc3->dwc);
++}
++
++static int dwc3_generic_runtime_idle(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++
++	return dwc3_runtime_idle(&dwc3->dwc);
++}
++
++static const struct dev_pm_ops dwc3_generic_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(dwc3_generic_suspend, dwc3_generic_resume)
++	SET_RUNTIME_PM_OPS(dwc3_generic_runtime_suspend, dwc3_generic_runtime_resume,
++			   dwc3_generic_runtime_idle)
++};
++
++static const struct of_device_id dwc3_generic_of_match[] = {
++	{ .compatible = "spacemit,k1-dwc3", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dwc3_generic_of_match);
++
++static struct platform_driver dwc3_generic_driver = {
++	.probe		= dwc3_generic_probe,
++	.remove		= dwc3_generic_remove,
++	.driver		= {
++		.name	= "dwc3-generic-plat",
++		.of_match_table = dwc3_generic_of_match,
++		.pm	= &dwc3_generic_dev_pm_ops,
++	},
++};
++module_platform_driver(dwc3_generic_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("DesignWare USB3 generic platform driver");
 
-Changes in v3:
-- introduce dwc3-common for generic dwc3 hardware
-- fix warnings in usb host dt-bindings
-- fix errors in dts
-- Link to v2: https://lore.kernel.org/r/20250428-b4-k1-dwc3-v2-v1-0-7cb061abd619@whut.edu.cn
-
-Changes in v2:
-- dt-bindings:
-  - add missing 'maxItems'
-  - remove 'status' property in exmaple
-  - fold dwc3 node into parent
-- drop dwc3 glue driver and use snps,dwc3 driver directly
-- rename dts nodes and reorder properties to fit coding style
-- Link to v1: https://lore.kernel.org/all/20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn
-
----
-Ze Huang (2):
-      dt-bindings: usb: dwc3: add support for SpacemiT K1
-      usb: dwc3: add generic driver to support flattened
-
- .../devicetree/bindings/usb/spacemit,k1-dwc3.yaml  | 107 ++++++++++++
- drivers/usb/dwc3/Kconfig                           |  11 ++
- drivers/usb/dwc3/Makefile                          |   1 +
- drivers/usb/dwc3/dwc3-generic-plat.c               | 182 +++++++++++++++++++++
- 4 files changed, 301 insertions(+)
----
-base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
-change-id: 20250705-dwc3_generic-8d02859722c3
-
-Best regards,
 -- 
-Ze Huang <huang.ze@linux.dev>
+2.50.0
 
