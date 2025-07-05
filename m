@@ -1,121 +1,127 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A73202962;
-	Sat,  5 Jul 2025 15:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058DB13AF2;
+	Sat,  5 Jul 2025 15:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751730362; cv=none; b=oylY0CgzaiR+6Zwo7Ull3EmLkIkQ6wrlsB+Uwbw4oBx3ZyaAyP3pYhPKQamiXkmzzTbUy5k0+bIF3oBlRnFU/OzBaBC3hLvkR55CqDc4iMMPC7aTAhY5RVl1Cugzdpf/M46Kv1vwR/vIXHJxQcyCOsJ6wVMvK8H7OXgJQLtvenI=
+	t=1751730466; cv=none; b=d30JMjfiTmoK4fvS2e08J94N2hEW7/QCZpzRPqoacBYIU8P6DNwjYK6xfOeNvHULBa5vydL23YFoGl8zK13obz5TIJQTEU82qwlJ8av1CRfI6SXkwUgXKBRogO1vE8/plIhlgBmrgmjsJqaukWLdZxpCBp2xIM1LZwHqLLbV+tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751730362; c=relaxed/simple;
-	bh=vTlSrziJ6PU/DaMy8ZDVTEf12omCrQI5d0adbgJTZDA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IqGbwci8vBO0/8vjYN401uGTUq+rF6UV7UH2wbjcdDyLVDfN8sO+xjqurrKbXE5tygyk7biXmJIkHJm4+5S7wB8DWZYDt8HbGayxqXf83gizwWLk4UGs6jtB6TkcqBA7U1WGkdrGVyUWq3IGoa3pOzwE3bCMfazjvDqnQ2vbQwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kMk2o2An; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1751730466; c=relaxed/simple;
+	bh=vyUpJ8U5I1H58q7TZ+Vtjzg4LYM0H7CTUmnVVDYADIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GWKQ7JEcp9SDIR9KVXNA2wiq3CNF+u8ZOr4GaEUvwr1e1X4wjvG/fiTFPZ2R4tN27oTNitSL+n51iB3UqHxR5ICsxY74QIi3cBaFJLakL0kM9m3F4Hi0dN5YtP19/NUsSYszCGm44kU/tfMNSEk8l52nqqn15qvhEmavngDWa68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMk2o2An"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fae04a3795so22158026d6.3;
-        Sat, 05 Jul 2025 08:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751730359; x=1752335159; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cFk6tKGCY6/1TvKl+9/bU1VolDJHDcPT6wSmNBNvTvk=;
-        b=kMk2o2An+SOYNVIsXMTxzEm8wO1VDA3jFz6NveQL2KiXFFUqlKbChsiF1HNevlKH7Y
-         9xnDr6n4dHuQzNAodEOT+Knl6MPvacEy6gaf5iNnT/CwX7LLIrNDOjLnKnQwTVtLGN0/
-         JWiCHRQxtvQZMTmr9BaiL+klKviDF4X8B/opfIADas5kBHLioHFt3YPkPXTD4gBakzsp
-         3cXHSzOmrSc7woNXUJ30TMXmABGJTtrUS4kRP7s7SDhe/75zvTcMJVLXKY6N6Std9Vyz
-         hvbjnATWt1eo2sE3XP+G/b1AoqOSOsG55Ct/7EPQe2CbRb9O39gle0sMSvwPaWBtLiQH
-         D1YA==
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso1681346f8f.3;
+        Sat, 05 Jul 2025 08:47:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751730359; x=1752335159;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cFk6tKGCY6/1TvKl+9/bU1VolDJHDcPT6wSmNBNvTvk=;
-        b=e1lCINfuQtFWO0/Zi+wGJS8wtlBshxmwrAtAW1bCtsklehyy5Fbw3PMw4NmnoDizAa
-         sRH4wgafAI0AHJxrMOs4jTglsIzX8InxCzj6ettY48QjFKGvEb4MLRoKq1k0bk/mR5dN
-         G+q+3eikrf4J/dTSt/SpleyOw9trYX/S1fkYmgnUMRZ5Urc4KQQmC0aO+q4tKWI9T+fH
-         RkgZnzzI549K7HMk6nFLcDap5zkYhQMpFa5m8HTOOp5OW5DdQDzEsOi7rlpq9xDPdtgY
-         rAQZg1Mr2UoK/5kxVEQ23Z9GQAC90wb6vUIFvuHL3zAkBhHwFutTI+HbRdqrTM16jNmJ
-         j5sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVP9IUwV8p9McHHJH/2LncV2qF0S8xQ/HEGOJ9AXu+9wKRTjEceRs0laiP6PGqMAsXGI5sEINRgd79oVixYuQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVHJPGwB+tbvZihZoS+WMj3Ldv68Ppo2xDTwUnrXSreD2O9VEm
-	vC2cc7U4UaqTfiN41BkbKZfAPbRe28DMVA/s2sQa1HGUrvDF6cDQYWHO
-X-Gm-Gg: ASbGncvJGU71ODMRDktZDjYfzuC3dIsXP9utrDxrKX2Tpkyt9GsGoQHUcO84/CNlwtW
-	of3NdraHv9qxbaJqWBITFf2zJmGPLVjIt/8giRjKbRAEIrlaEmfbM+dGmz9yHD30cZvcuExnkII
-	9Tbwao9JcG9Ge6wCBZNLGxx5/DzTAgJ2yqVhXjt5Sjgo6x8JwB11it0ExqEKTtraY+/Nz2Pbmlm
-	lEKtwKhsnDYYQ8zYy2Me5iFp7EKThAxdp9U+pdJ6tZZ3q0TFfgOOav84xGhMwXk6HYErVFdcFSJ
-	tqypRuLFQ17LZxmGMAMD2APkf5ESgPFouMLR2hTRKi7Lzvr3U1mila7v3Fl8G0H0dFznmNYUfuR
-	vkCtBX7jbCzMd3OYZaFCVQ4U=
-X-Google-Smtp-Source: AGHT+IErgWab8gGAsFzC1pqF5vVxYNChvmn31db/X07vbhoAg6LoRJylQ+SmJ4srq2FQRu53LvZ2SQ==
-X-Received: by 2002:a05:6214:cca:b0:6fa:d956:243b with SMTP id 6a1803df08f44-702d1a31956mr44040216d6.37.1751730359428;
-        Sat, 05 Jul 2025 08:45:59 -0700 (PDT)
-Received: from 156.1.168.192.in-addr.arpa ([2600:4041:5c29:e400:6980:d392:9861:a887])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4ccd333sm30466366d6.30.2025.07.05.08.45.58
+        d=1e100.net; s=20230601; t=1751730463; x=1752335263;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lvzZHRS10n6gPJcrQt50+YuXzFjvi7jvCWV0Ug/gAc4=;
+        b=AS47nEI1asdo/IEttErDV2uGHLjtaeHsUcdk3Eak9jIV+Cutdk99LAFiPXbB4Hbk71
+         fBYAEYNRXPOzX9ekvU/HunXiozdqTaFDRzDP0L382ySfbL+69GZpbAa3cuxA2csrhUd5
+         s9LXxZ1tpYbP5ZBU2JwGSsRVhLd0kRibpLYdRokxiwfdPyG3/8ioSkqa59YDMd8/9uKq
+         l8EF1Tlp82TxAlr1PwqbOGhMlrpf1//G6UUS6+ZRqZQAr6mIDqNjBxZM9g8PFc//WpVP
+         cb0kzqDSjqvPiOP42Y3jbO09nIoFQ/6M+8Dmz+xl+SZ1UANi3Lh1aWpa0Tkl0p2hRdYY
+         ZXgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVVii2ACjZ7daXk/R0xtXNFlsiyp6nKNcxfXAcmAdc+JoseWzmJduVbXVPDVcqPqhTr37DvGp5VzsAvAo=@vger.kernel.org, AJvYcCUi21YPcKjUvt8BF8NB8t5hizlGrLuFbO/KY72hxV3xf6TO9D8VhSw0GGDwLjVANKk74xsILLPV7ltiv4YAKW7nveGWylTO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhXTYzuxNmWcyEtOOW89TUnxqECy092EIkUuSleqFdfe7tUqhz
+	GOjqjQoqOVjhY7mPy5ZHWjqC5Y74iRI+iO4fzf5ZLNoMep0oayPuqpTphwgDtg==
+X-Gm-Gg: ASbGncs1iTYNr5afgiKI6j6pTmf9EFWCaTL/jY0tMgeStiqK9EpF517eK76IaSA7x0g
+	in8691HrV5Im8SIEHtBZyCisYAaSjvby6utyNkahIBj0+5kTrXmfaBh+RunWc1uu4NWvvPl820Y
+	7d/9IjktrDTi+P6TAt/V95bjjqdLYEDsjS9tkVVSkEbX+fyRLntkGHMSuy/XnpScGpus/DAj4DZ
+	yQi7KYqOcUYyclxMy1bPUEQ3RH6PmBz4zJoPXp+kKfyDG1GVfsNKjGQijCw+r+7RAoMHYqeo9Eb
+	HByPstOON9X0Gr222etcKfTVr6mPsRd4Z9Jbkkxb11kRu9jFjOVumHU=
+X-Google-Smtp-Source: AGHT+IFC6PD2S7C+IpJQApuX+Vr/n2BZjoGXcohTLrFEW10KTcFBQtU//5MYM95EjMK+peeV/Ii0xw==
+X-Received: by 2002:a05:6000:4911:b0:3a4:ffec:ee8e with SMTP id ffacd0b85a97d-3b49aa742a8mr1886942f8f.36.1751730463041;
+        Sat, 05 Jul 2025 08:47:43 -0700 (PDT)
+Received: from gmail.com ([94.3.218.239])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b46d4c8619sm5276812f8f.0.2025.07.05.08.47.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 08:45:59 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 05 Jul 2025 11:45:56 -0400
-Subject: [PATCH] MAINTAINERS: add miscdevice Rust abstractions
+        Sat, 05 Jul 2025 08:47:42 -0700 (PDT)
+Date: Sat, 5 Jul 2025 16:47:40 +0100
+From: Breno Leitao <leitao@debian.org>
+To: John Johansen <john.johansen@canonical.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, James Morris <jmorris@namei.org>,
+	LSM List <linux-security-module@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: apparmor: WARNING: suspicious RCU usage
+Message-ID: <aGlJHJpMk__IHNKp@gmail.com>
+References: <877dfa72hm.ffs@tglx>
+ <4dbd0e0d-b1a3-8a06-5f65-bdcbb76fccee@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250705-miscdevice-maintainers-v1-1-9a6b67f7602f@gmail.com>
-X-B4-Tracking: v=1; b=H4sIALNIaWgC/x2MQQqAMAwEvyI5W6gFFf2KeAhtqjm0SiMiSP9u8
- DCHgdl9QagwCczNC4VuFj6yStc24HfMGxkO6uCs6+1oe5NYfNDQk0nI+VKoiHHocYjdFNEi6Pg
- sFPn5j5e11g8wrZdsaAAAAA==
-X-Change-ID: 20250705-miscdevice-maintainers-2aca6f19fa0a
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openssh-sha256; t=1751730358; l=756;
- i=tamird@gmail.com; h=from:subject:message-id;
- bh=vTlSrziJ6PU/DaMy8ZDVTEf12omCrQI5d0adbgJTZDA=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
- MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QDhWiG0O5vGLCf7Ml5uZ2Mo060D40EoOdcr0r4gjDe9MEBnULh4JQcVAf6lQc6eE5hU1yzozDDd
- cfNfnm3A/wQQ=
-X-Developer-Key: i=tamird@gmail.com; a=openssh;
- fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4dbd0e0d-b1a3-8a06-5f65-bdcbb76fccee@canonical.com>
 
-Add rust abstractions to miscdevice MAINTAINERS entry.
+On Tue, Sep 21, 2021 at 02:23:19PM -0700, John Johansen wrote:
+> On 9/21/21 1:32 AM, Thomas Gleixner wrote:
+> > 
+> > Running with CONFIG_PROVE_RCU_LIST triggers the following splat:
+> > 
+> > [    6.805926] =============================
+> > [    6.806848] WARNING: suspicious RCU usage
+> > [    6.807738] 5.15.0-rc2+ #24 Tainted: G            E    
+> > [    6.808860] -----------------------------
+> > [    6.809734] security/apparmor/include/lib.h:191 RCU-list traversed in non-reader section!!
+> > [    6.811508] 
+> >                other info that might help us debug this:
+> > 
+> > [    6.811516] 
+> >                rcu_scheduler_active = 2, debug_locks = 1
+> > [    6.811527] 2 locks held by apparmor_parser/1897:
+> > [    6.811530]  #0: ffff88885f139450 (sb_writers#7){.+.+}-{0:0}, at: ksys_write+0x68/0xe0
+> > [    6.816110]  #1: ffff8881000578a0 (&ns->lock){+.+.}-{3:3}, at: aa_replace_profiles+0x16d/0x11e0
+> > [    6.817418] 
+> >                stack backtrace:
+> > [    6.818086] CPU: 38 PID: 1897 Comm: apparmor_parser Tainted: G            E     5.15.0-rc2+ #24
+> > [    6.819359] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-2 04/01/2014
+> > [    6.820536] Call Trace:
+> > [    6.820918]  dump_stack_lvl+0x57/0x72
+> > [    6.821499]  __lookupn_profile+0x193/0x1a0
+> > [    6.822461]  aa_replace_profiles+0x395/0x11e0
+> > [    6.823448]  policy_update+0x13f/0x240
+> > [    6.824326]  profile_replace+0xb1/0x120
+> > [    6.825213]  vfs_write+0xe4/0x3b0
+> > [    6.826027]  ksys_write+0x68/0xe0
+> > [    6.826576]  do_syscall_64+0x3b/0x90
+> > [    6.827099]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > 
+> > which is pretty obvious because aa_replace_profile() invokes:
+> > 
+> >     __lookup_replace()
+> >       __lookup_profile()
+> >         __strn_find_child()
+> >           __policy_strn_find()
+> >             list_for_each_entry_rcu()  <- Splat
+> > 
+> > The code is "correct" as this is the writer side and holding ns->lock,
+> > but it's incorrect to use list_for_each_entry_rcu() without being in a
+> > read side critical section unless it is properly annotated.
+> > 
+> > Same problem in the same function vs. __lookup_parent() and there are
+> > more issues of that sort, e.g. vs. __lookup_profile() in
+> > aa_remove_profiles().
+> > 
+> thanks Thomas, I look into it
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+I just hit this issue as well, and I got the same feeling as Thomas.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c3f7fbd0d67a..a9a094e2c914 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5568,6 +5568,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
- F:	drivers/char/
- F:	drivers/misc/
- F:	include/linux/miscdevice.h
-+F:	rust/kernel/miscdevice.rs
- F:	samples/rust/rust_misc_device.rs
- X:	drivers/char/agp/
- X:	drivers/char/hw_random/
+Quickly looking at the code, I think you need to pass an extra argument
+to list_for_each_entry_rcu() that the ns->lock is held, silenting the
+warning.
 
----
-base-commit: 2009a2d5696944d85c34d75e691a6f3884e787c0
-change-id: 20250705-miscdevice-maintainers-2aca6f19fa0a
-
-Best regards,
---  
-Tamir Duberstein <tamird@gmail.com>
-
+Maybe being able to get "struct aa_ns *ns" in __policy_strn_find() and
+pass a lockdep_is_held(ns->lock) might be the most straight-forward
+solution.
