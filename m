@@ -1,150 +1,105 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2142E3715;
-	Sat,  5 Jul 2025 14:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB00C33987;
+	Sat,  5 Jul 2025 14:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751725008; cv=none; b=HaiSmoSJMMDPuGv1xHnNziIQP1/ksJIyJy8XcqO3dYN1OcmIRATVaRUSWL6aMicYeyxVV6RZZHefMgoLZPCnSkcUDiW87ppLTmA1MGJvtkgLsSFaqtkQPbnSd08sHzkVtpZ6JNAsf7F+K9WPwKYspJI/f345o8s/yqnt4NJ88GE=
+	t=1751725067; cv=none; b=OF1Hfo8nvxlGWBpXnGie5YtylM5Jd2fT1XaiCcQkWEP3sv6j97FtGjJo23YKsBCOR0cwA5tnlh0/vvlr5tYjyGdERxz7Sgqnv5Lc8afSmAqhwSnqhVSPLm8ZwUPnbQG63tKileGQk0i0XGs35AF6bD0L5oCAMALLoq7e+lvP1zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751725008; c=relaxed/simple;
-	bh=MDdJEYq2doyNGE6EUzPQJPJZ4ZXYPI7/XfL8g6ttZ08=;
+	s=arc-20240116; t=1751725067; c=relaxed/simple;
+	bh=RFcVFRd+jB7yzjZEF15amP7MCa2Sg4A/zIVm0kIVtVM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cvJT7/9hVoshbKB3FvZzr/x5/nELz6al8YB9Wg8WgoTSv6/FIUBmagP6p44qV09owXzaDyeOQnULeMa7b6KrzjowIav+AWKI9yaQemVvjN46ni4lw2KLppdpv4KucOW7bHDML61/O+uHUQRnjdry8sD6jwhzuEzIhAOu16Fgy9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=W9tbIoiG; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	 In-Reply-To:Content-Type; b=tdaKwhZXWDx2IpfnoEA6eLFjU2HZeiaYRJOujB2Inn6mlRitzAwqDBAmtzqzvjOSySYH9grXRvH0vLbgWUmfcRwAnRaRmkgKmI82CvpQEzzlQFweijCHvMNHkZ7JsGtCO6sniJP2B3HuZhU+/+Eky0Tfe7/FiOFuywWAyQ3YsVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VOeAwa/9; arc=none smtp.client-ip=217.70.178.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="W9tbIoiG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1751725004; bh=MDdJEYq2doyNGE6EUzPQJPJZ4ZXYPI7/XfL8g6ttZ08=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=W9tbIoiG1e2S9tK40GeYgJ4butdrSXEHCYu28e9Pm/ONj0v0D61e49sOgMjwvMrJ+
-	 nzBhoHvss2XXjv0TOuUeY627q+ra2b7K8YV/Zy4gG0n6Vjfu1t/vxjCO29RgW9kCak
-	 ToN5KKCkLW43lqKYxUxUIDNQRIL++tIsfga561x4=
-Message-ID: <2e338f72-c676-425c-a96b-1cfed466f9fc@lucaweiss.eu>
-Date: Sat, 5 Jul 2025 16:16:44 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VOeAwa/9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A7C34313C;
+	Sat,  5 Jul 2025 14:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751725061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pS5IedIEzgY1pshAvlpXhjZDmSvEewXvev0cnX3lWPQ=;
+	b=VOeAwa/9AcN38Sa7bRO3kPWHIGn4rm+OQxuxnECEY+VKRQfydCb8cc+fNZ3dBwGRKINIDw
+	cT/Tu9DYMbiBm4IVMU53kqQGn/OMnBbfPq+5PcebA1Uhlx4BpgLfs1tChXvXwVsnQySKYc
+	zo3H45QdkCt8Xv2Shr9oWckGS++VfHaeD4xcVxrPyZseJgOTR0Z47f71z/CR5q1sBR2De4
+	CCgiO6S5sD/Tpobo/oTo5ZMYMrQ52soQaIY6xtoGCM4frODN5Qh+k+QjsrRS/PUYj5Jivp
+	L1r2wc+E/vpgJs8ZwtdkZUTI9JmdUSVwxZC6FKwXIR1NMMzh5WVxp2XFt/PPhA==
+Message-ID: <8f8130b2-fec1-48bc-944e-e676a1715c31@bootlin.com>
+Date: Sat, 5 Jul 2025 16:17:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/4] Start using rpmpd for power domains on MSM8974
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] staging: gpib: Fix error handling paths in
+ cb_gpib_probe()
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Dave Penkler <dpenkler@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-staging@lists.linux.dev
+References: <bf89d6f2f8b8c680720d02061fc4ebdd805deca8.1751709098.git.christophe.jaillet@wanadoo.fr>
 Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
- <amfgwjgstu4hoxz4lo7fqrqz5fqtf3r7o6wqvrrjkcfubwrjyz@5i75peprq3wn>
- <841c41cc-e44d-40c7-9431-a77feaa49b05@lucaweiss.eu>
- <225b94a0-eea5-4061-aebd-da497d349527@oss.qualcomm.com>
-From: Luca Weiss <luca@lucaweiss.eu>
-In-Reply-To: <225b94a0-eea5-4061-aebd-da497d349527@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <bf89d6f2f8b8c680720d02061fc4ebdd805deca8.1751709098.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddviedviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfhffeivedvfffhfeehveevteetveejueehtddtgfejjeejhfeufffgjedvieejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeipdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeingdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopegthhhrihhsthhophhhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhto
+ hepughpvghnkhhlvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvghlqdhjrghnihhtohhrshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhm
 
-Hi Dmitry,
+Hi Christophe,
 
-On 24-06-2025 11:03 p.m., Dmitry Baryshkov wrote:
-> On 24/06/2025 21:46, Luca Weiss wrote:
->> Hi Dmitry,
->>
->> On 24-06-2025 2:59 a.m., Dmitry Baryshkov wrote:
->>> On Sat, Jun 21, 2025 at 03:19:55PM +0200, Luca Weiss wrote:
->>>> Switch over the ADSP PIL to use power-domains instead of a regulator,
->>>> and have one commit switching over the MSM8974 SoC plus all the devices
->>>> to use power-domains.
->>>>
->>>> Note, that I'm aware that these changes are not backwards compatible 
->>>> and
->>>> not really bisectable, but since it only affects the ADSP on these
->>>
->>> Why? The cx-supply is handled unconditionally. A single-domain usecase
->>> is also handled via a special code path. I think this might be
->>> backwards-compatible, by the pure luck.
->>
->> Honestly I have not tried and not looked much. I mostly added this 
->> paragraph to avoid the response that this change might break and is 
->> not really backwards compatible. If it does (by accident) work with 
->> the updated dts without the driver and the other way around, then even 
->> better.
+On 7/5/25 11:52 AM, Christophe JAILLET wrote:
+> If cb_gpib_config() fails, 'info' needs to be freed, as already done in the
+> remove function.
 > 
-> I think it's worth checking that new kernel works with older DTS (that's 
-> the usual rule). The platform doesn't have many users upstream, but I 
-> think it has been used by some PmOS users, which might mean not-yet- 
-> upstreamed DT.
-
-I was finally able to test this, but the patches except the dts patch 
-does not work.
-
-[  170.802573] qcom_q6v5_pas fe200000.remoteproc: probe with driver 
-qcom_q6v5_pas failed with error -61
-[  170.803127] remoteproc remoteproc0: releasing adsp
-
-I didn't take much more of a look but probably adsp_pds_attach fails there.
-
-For postmarketOS users, all msm8974 mainline devices that are packaged 
-as part of postmarketOS, come from the github.com/msm8974-mainline/linux 
-fork, which included this patch already since a few releases. I'm taking 
-care that all out-of-tree dts that are in that repo are updated.
-
-Fortunately this is just breaking adsp probe, bootup still works as 
-before. So from my side again: I think it's not worth the effort to add 
-a bunch of complexity to the driver code and support this use case. I'm 
-not aware of any msm8974 upstream users that would require that.
-
-Regards
-Luca
-
+> While at it, remove a pointless comment related to gpib_attach().
 > 
->>
->> Regards
->> Luca
->>
->>>
->>>> pretty old boards, I say it's fine to have this. Get all the patches
->>>> into the same release (6.17?) and then we're good again.
->>>>
->>>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
->>>> ---
->>>> Luca Weiss (4):
->>>>        dt-bindings: remoteproc: qcom,adsp: Make msm8974 use CX as 
->>>> power domain
->>>>        remoteproc: qcom_q6v5_pas: Use resource with CX PD for MSM8974
->>>>        ARM: dts: qcom: msm8974: Sort header includes alphabetically
->>>>        ARM: dts: qcom: msm8974: Start using rpmpd for power domains
->>>>
->>>>   .../devicetree/bindings/remoteproc/qcom,adsp.yaml  | 18 ++------
->>>>   .../arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts | 13 ------
->>>>   .../qcom/qcom-msm8974-lge-nexus5-hammerhead.dts    | 12 ------
->>>>   .../boot/dts/qcom/qcom-msm8974-samsung-hlte.dts    | 12 ------
->>>>   .../dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi   | 12 ------
->>>>   arch/arm/boot/dts/qcom/qcom-msm8974.dtsi           | 50 ++++++++++ 
->>>> + +++++++++--
->>>>   .../dts/qcom/qcom-msm8974pro-fairphone-fp2.dts     |  8 ----
->>>>   arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts  | 11 -----
->>>>   .../dts/qcom/qcom-msm8974pro-oneplus-bacon.dts     |  9 ----
->>>>   .../qcom/qcom-msm8974pro-samsung-klte-common.dtsi  | 11 ++---
->>>>   ...qcom-msm8974pro-sony-xperia-shinano-common.dtsi | 12 ------
->>>>   drivers/remoteproc/qcom_q6v5_pas.c                 |  2 +-
->>>>   12 files changed, 56 insertions(+), 114 deletions(-)
->>>> ---
->>>> base-commit: 7fa2fb97cd28e1d9670da538095565b6fba83977
->>>> change-id: 20250621-msm8974-rpmpd-switch-b19b166c02be
->>>>
->>>> Best regards,
->>>> -- 
->>>> Luca Weiss <luca@lucaweiss.eu>
->>>>
->>>
->>
+> Fixes: e9dc69956d4d ("staging: gpib: Add Computer Boards GPIB driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Changes in v2:
+>   - Fix the Fixes tag   [Thomas Richard]
+>   - Synch with latest -next
+>   - no compile tested. I think, thanks to commit 79d2e1919a27
+>     ("staging: gpib: fix Makefiles")
 > 
+> v1: https://lore.kernel.org/all/459c267de8c9bf48fcb555364930ae7e3cdc798b.1729940596.git.christophe.jaillet@wanadoo.fr/
 > 
+> Compile tested only.
+> ---
+>  drivers/staging/gpib/cb7210/cb7210.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/staging/gpib/cb7210/cb7210.c b/drivers/staging/gpib/cb7210/cb7210.c
+> index 298ed306189d..3e2397898a9b 100644
+> --- a/drivers/staging/gpib/cb7210/cb7210.c
+> +++ b/drivers/staging/gpib/cb7210/cb7210.c
+> @@ -1184,8 +1184,7 @@ struct local_info {
+>  static int cb_gpib_probe(struct pcmcia_device *link)
+>  {
+>  	struct local_info *info;
+> -
+> -//	int ret, i;
+> +	int ret;
+>  
+>  	/* Allocate space for private device-specific data */
+>  	info = kzalloc(sizeof(*info), GFP_KERNEL);
 
+You should use devm_kzalloc(). The memory will be automatically freed by
+the core. So no need to call kfree() in case of error during the probe.
+And you can remove the kfree() in cb_gpib_remove().
+
+Regards,
+
+Thomas
