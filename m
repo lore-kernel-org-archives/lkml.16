@@ -1,198 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D020E155C82
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 14:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2142E3715;
+	Sat,  5 Jul 2025 14:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751724967; cv=none; b=P1FKxODPZPC1tXjq8qiYKmOwrjjp/fPQws7ApM8M5kh5MumTyzZQpFU+m+sS32c/OHU2oOZ0FTer57JRp+V1X6pyzsI1PZ9VAQ/EqVCT2YfCxYA/4i/eV06MoEWuW8/xBjxDot/nJ9lhfPRA0yWmx2BnYP9JaeCejgtKpAmHNwQ=
+	t=1751725008; cv=none; b=HaiSmoSJMMDPuGv1xHnNziIQP1/ksJIyJy8XcqO3dYN1OcmIRATVaRUSWL6aMicYeyxVV6RZZHefMgoLZPCnSkcUDiW87ppLTmA1MGJvtkgLsSFaqtkQPbnSd08sHzkVtpZ6JNAsf7F+K9WPwKYspJI/f345o8s/yqnt4NJ88GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751724967; c=relaxed/simple;
-	bh=A4cUfru2n7vPoeaTc8J+nKwy41BFBAX5DrVrWB/g3OM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGBMUZulMmFuYN2JGMtk/L2TlRy7h+xsNL8mVGPc8iQykH2lT0DSiSmJbn2jV4T0uNGjxkrq7KR0DZeo1f6vhD+KRa+yhjEg3N2UwDUfakQgm58PwOdIniULEHgZrzV+OSTTZN9m7guvoxY5iTmIWUDnGhpfG0CWpVPDAe3h1Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S83RRbS3; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751725008; c=relaxed/simple;
+	bh=MDdJEYq2doyNGE6EUzPQJPJZ4ZXYPI7/XfL8g6ttZ08=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cvJT7/9hVoshbKB3FvZzr/x5/nELz6al8YB9Wg8WgoTSv6/FIUBmagP6p44qV09owXzaDyeOQnULeMa7b6KrzjowIav+AWKI9yaQemVvjN46ni4lw2KLppdpv4KucOW7bHDML61/O+uHUQRnjdry8sD6jwhzuEzIhAOu16Fgy9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=W9tbIoiG; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S83RRbS3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751724965; x=1783260965;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=A4cUfru2n7vPoeaTc8J+nKwy41BFBAX5DrVrWB/g3OM=;
-  b=S83RRbS39leQkR0Li8Hq9M9+bAA9PBRbiflBrAqoqfjhZHHYGOHwDX0D
-   yGIV7sp2sDx3FFSOwk2uHXumM/wAw5OPNi3WbhUJhhDe3P+zVeLYMGis8
-   F20Tlead+H8BMc7CO5mqMXI8kSJAAH2ozDQLUGkwoaQa9uGPlSEFiAh1Q
-   Hq2F2sbFfPprN85VVOp14EQZBNMyDqMmBFih/KwE/6rj6d9pe+pflOYfO
-   smZwojS++ewP1e0zaKDz3Jr3baK3aYrG8SExfe0kIVpFlojtiVJ3bt4VK
-   l61YR6CDNd8BHNGvjxtDC7XEbQMtm7opILK2QOYDFyTvVYtZqMH7jRK3I
-   w==;
-X-CSE-ConnectionGUID: qMpYuY5dTUmA+J3tHT+Itw==
-X-CSE-MsgGUID: McAcqdgATgyoroOpMyOzMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="53891987"
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="53891987"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 07:16:04 -0700
-X-CSE-ConnectionGUID: Df/EWjQ2RsuXS0UAzlUrZg==
-X-CSE-MsgGUID: K7s1JiCORDSWhEDy3bbqSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="155309790"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 05 Jul 2025 07:16:02 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uY3gN-0004XJ-0l;
-	Sat, 05 Jul 2025 14:15:59 +0000
-Date: Sat, 5 Jul 2025 22:15:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, dhaval@gianis.ca,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2 3/6] sched/fair: Remove spurious shorter slice
- preemption
-Message-ID: <202507052215.5HznxNGI-lkp@intel.com>
-References: <20250704143612.998419-4-vincent.guittot@linaro.org>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="W9tbIoiG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1751725004; bh=MDdJEYq2doyNGE6EUzPQJPJZ4ZXYPI7/XfL8g6ttZ08=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=W9tbIoiG1e2S9tK40GeYgJ4butdrSXEHCYu28e9Pm/ONj0v0D61e49sOgMjwvMrJ+
+	 nzBhoHvss2XXjv0TOuUeY627q+ra2b7K8YV/Zy4gG0n6Vjfu1t/vxjCO29RgW9kCak
+	 ToN5KKCkLW43lqKYxUxUIDNQRIL++tIsfga561x4=
+Message-ID: <2e338f72-c676-425c-a96b-1cfed466f9fc@lucaweiss.eu>
+Date: Sat, 5 Jul 2025 16:16:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704143612.998419-4-vincent.guittot@linaro.org>
+Subject: Re: [PATCH 0/4] Start using rpmpd for power domains on MSM8974
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
+ <amfgwjgstu4hoxz4lo7fqrqz5fqtf3r7o6wqvrrjkcfubwrjyz@5i75peprq3wn>
+ <841c41cc-e44d-40c7-9431-a77feaa49b05@lucaweiss.eu>
+ <225b94a0-eea5-4061-aebd-da497d349527@oss.qualcomm.com>
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <225b94a0-eea5-4061-aebd-da497d349527@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Vincent,
+Hi Dmitry,
 
-kernel test robot noticed the following build warnings:
+On 24-06-2025 11:03 p.m., Dmitry Baryshkov wrote:
+> On 24/06/2025 21:46, Luca Weiss wrote:
+>> Hi Dmitry,
+>>
+>> On 24-06-2025 2:59 a.m., Dmitry Baryshkov wrote:
+>>> On Sat, Jun 21, 2025 at 03:19:55PM +0200, Luca Weiss wrote:
+>>>> Switch over the ADSP PIL to use power-domains instead of a regulator,
+>>>> and have one commit switching over the MSM8974 SoC plus all the devices
+>>>> to use power-domains.
+>>>>
+>>>> Note, that I'm aware that these changes are not backwards compatible 
+>>>> and
+>>>> not really bisectable, but since it only affects the ADSP on these
+>>>
+>>> Why? The cx-supply is handled unconditionally. A single-domain usecase
+>>> is also handled via a special code path. I think this might be
+>>> backwards-compatible, by the pure luck.
+>>
+>> Honestly I have not tried and not looked much. I mostly added this 
+>> paragraph to avoid the response that this change might break and is 
+>> not really backwards compatible. If it does (by accident) work with 
+>> the updated dts without the driver and the other way around, then even 
+>> better.
+> 
+> I think it's worth checking that new kernel works with older DTS (that's 
+> the usual rule). The platform doesn't have many users upstream, but I 
+> think it has been used by some PmOS users, which might mean not-yet- 
+> upstreamed DT.
 
-[auto build test WARNING on tip/sched/core]
-[also build test WARNING on peterz-queue/sched/core linus/master v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I was finally able to test this, but the patches except the dts patch 
+does not work.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Guittot/sched-fair-Use-protect_slice-instead-of-direct-comparison/20250704-223850
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20250704143612.998419-4-vincent.guittot%40linaro.org
-patch subject: [PATCH v2 3/6] sched/fair: Remove spurious shorter slice preemption
-config: s390-randconfig-r072-20250705 (https://download.01.org/0day-ci/archive/20250705/202507052215.5HznxNGI-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 11.5.0
+[  170.802573] qcom_q6v5_pas fe200000.remoteproc: probe with driver 
+qcom_q6v5_pas failed with error -61
+[  170.803127] remoteproc remoteproc0: releasing adsp
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507052215.5HznxNGI-lkp@intel.com/
+I didn't take much more of a look but probably adsp_pds_attach fails there.
 
-smatch warnings:
-kernel/sched/fair.c:8721 check_preempt_wakeup_fair() warn: inconsistent indenting
+For postmarketOS users, all msm8974 mainline devices that are packaged 
+as part of postmarketOS, come from the github.com/msm8974-mainline/linux 
+fork, which included this patch already since a few releases. I'm taking 
+care that all out-of-tree dts that are in that repo are updated.
 
-vim +8721 kernel/sched/fair.c
+Fortunately this is just breaking adsp probe, bootup still works as 
+before. So from my side again: I think it's not worth the effort to add 
+a bunch of complexity to the driver code and support this use case. I'm 
+not aware of any msm8974 upstream users that would require that.
 
-  8643	
-  8644	/*
-  8645	 * Preempt the current task with a newly woken task if needed:
-  8646	 */
-  8647	static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int wake_flags)
-  8648	{
-  8649		struct task_struct *donor = rq->donor;
-  8650		struct sched_entity *se = &donor->se, *pse = &p->se;
-  8651		struct cfs_rq *cfs_rq = task_cfs_rq(donor);
-  8652		int cse_is_idle, pse_is_idle;
-  8653		bool do_preempt_short = false;
-  8654	
-  8655		if (unlikely(se == pse))
-  8656			return;
-  8657	
-  8658		/*
-  8659		 * This is possible from callers such as attach_tasks(), in which we
-  8660		 * unconditionally wakeup_preempt() after an enqueue (which may have
-  8661		 * lead to a throttle).  This both saves work and prevents false
-  8662		 * next-buddy nomination below.
-  8663		 */
-  8664		if (unlikely(throttled_hierarchy(cfs_rq_of(pse))))
-  8665			return;
-  8666	
-  8667		if (sched_feat(NEXT_BUDDY) && !(wake_flags & WF_FORK) && !pse->sched_delayed) {
-  8668			set_next_buddy(pse);
-  8669		}
-  8670	
-  8671		/*
-  8672		 * We can come here with TIF_NEED_RESCHED already set from new task
-  8673		 * wake up path.
-  8674		 *
-  8675		 * Note: this also catches the edge-case of curr being in a throttled
-  8676		 * group (e.g. via set_curr_task), since update_curr() (in the
-  8677		 * enqueue of curr) will have resulted in resched being set.  This
-  8678		 * prevents us from potentially nominating it as a false LAST_BUDDY
-  8679		 * below.
-  8680		 */
-  8681		if (test_tsk_need_resched(rq->curr))
-  8682			return;
-  8683	
-  8684		if (!sched_feat(WAKEUP_PREEMPTION))
-  8685			return;
-  8686	
-  8687		find_matching_se(&se, &pse);
-  8688		WARN_ON_ONCE(!pse);
-  8689	
-  8690		cse_is_idle = se_is_idle(se);
-  8691		pse_is_idle = se_is_idle(pse);
-  8692	
-  8693		/*
-  8694		 * Preempt an idle entity in favor of a non-idle entity (and don't preempt
-  8695		 * in the inverse case).
-  8696		 */
-  8697		if (cse_is_idle && !pse_is_idle) {
-  8698			/*
-  8699			 * When non-idle entity preempt an idle entity,
-  8700			 * don't give idle entity slice protection.
-  8701			 */
-  8702			do_preempt_short = true;
-  8703			goto preempt;
-  8704		}
-  8705	
-  8706		if (cse_is_idle != pse_is_idle)
-  8707			return;
-  8708	
-  8709		/*
-  8710		 * BATCH and IDLE tasks do not preempt others.
-  8711		 */
-  8712		if (unlikely(!normal_policy(p->policy)))
-  8713			return;
-  8714	
-  8715		cfs_rq = cfs_rq_of(se);
-  8716		update_curr(cfs_rq);
-  8717		/*
-  8718		 * If @p has a shorter slice than current and @p is eligible, override
-  8719		 * current's slice protection in order to allow preemption.
-  8720		 */
-> 8721		 do_preempt_short = sched_feat(PREEMPT_SHORT) && (pse->slice < se->slice);
-  8722	
-  8723		/*
-  8724		 * If @p has become the most eligible task, force preemption.
-  8725		 */
-  8726		if (__pick_eevdf(cfs_rq, !do_preempt_short) == pse)
-  8727			goto preempt;
-  8728	
-  8729		return;
-  8730	
-  8731	preempt:
-  8732		if (do_preempt_short)
-  8733			cancel_protect_slice(se);
-  8734	
-  8735		resched_curr_lazy(rq);
-  8736	}
-  8737	
+Regards
+Luca
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+>>
+>> Regards
+>> Luca
+>>
+>>>
+>>>> pretty old boards, I say it's fine to have this. Get all the patches
+>>>> into the same release (6.17?) and then we're good again.
+>>>>
+>>>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>>>> ---
+>>>> Luca Weiss (4):
+>>>>        dt-bindings: remoteproc: qcom,adsp: Make msm8974 use CX as 
+>>>> power domain
+>>>>        remoteproc: qcom_q6v5_pas: Use resource with CX PD for MSM8974
+>>>>        ARM: dts: qcom: msm8974: Sort header includes alphabetically
+>>>>        ARM: dts: qcom: msm8974: Start using rpmpd for power domains
+>>>>
+>>>>   .../devicetree/bindings/remoteproc/qcom,adsp.yaml  | 18 ++------
+>>>>   .../arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts | 13 ------
+>>>>   .../qcom/qcom-msm8974-lge-nexus5-hammerhead.dts    | 12 ------
+>>>>   .../boot/dts/qcom/qcom-msm8974-samsung-hlte.dts    | 12 ------
+>>>>   .../dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi   | 12 ------
+>>>>   arch/arm/boot/dts/qcom/qcom-msm8974.dtsi           | 50 ++++++++++ 
+>>>> + +++++++++--
+>>>>   .../dts/qcom/qcom-msm8974pro-fairphone-fp2.dts     |  8 ----
+>>>>   arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts  | 11 -----
+>>>>   .../dts/qcom/qcom-msm8974pro-oneplus-bacon.dts     |  9 ----
+>>>>   .../qcom/qcom-msm8974pro-samsung-klte-common.dtsi  | 11 ++---
+>>>>   ...qcom-msm8974pro-sony-xperia-shinano-common.dtsi | 12 ------
+>>>>   drivers/remoteproc/qcom_q6v5_pas.c                 |  2 +-
+>>>>   12 files changed, 56 insertions(+), 114 deletions(-)
+>>>> ---
+>>>> base-commit: 7fa2fb97cd28e1d9670da538095565b6fba83977
+>>>> change-id: 20250621-msm8974-rpmpd-switch-b19b166c02be
+>>>>
+>>>> Best regards,
+>>>> -- 
+>>>> Luca Weiss <luca@lucaweiss.eu>
+>>>>
+>>>
+>>
+> 
+> 
+
