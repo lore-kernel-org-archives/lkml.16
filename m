@@ -1,121 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDA11DE8BB;
-	Sat,  5 Jul 2025 14:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A0814F9FB;
+	Sat,  5 Jul 2025 14:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751727011; cv=none; b=KvfdfUSEUyYu7ZaMh+d0TSdwp4SmyhkH/v0YmzVRyqvPuMPvkpWsaLwuKdKjsBskw/cZzQbV314hMNTJbARAiyi057j2bWXj3BxkbUibEwKoG5J/WL6pxvYT1Z2k6agMEM/VNxOqACu06hXCIjcZlWu6IgjOzLjxY0sTMvDcCrk=
+	t=1751727043; cv=none; b=SmvP6540Or668GQgGFiijdQbY9U/QTIahO9nHokGdUW7iwbkkUX9McF7sVKWfCSVJ9ni26T9Se0g0MFBhLqDGyXHPPOvEf5+CYTVnBSmR5nXe6GBoROZHvK91x8r/+/IunyTmWrp+yX7Szm8w138nGGnr3tv4vCic8WK8CcUetM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751727011; c=relaxed/simple;
-	bh=8YlbuHheA6By8EjMGyLEssbYxaR6FFh/g8IrjzNaAzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l8OzPyK/hEpn+rEIm/jqAIlzRUCwPpfvgubRYGJpONBbEjgWHPzTHzh1vBN58gZuaPmMDdXpsuaCJSvsa7nQBxwGZ/50POL7fPYpEssQXhy8vOhaHPrk5m696icCHPD7J3dDLMGK9HoAV0G6DU9B17hKbWWwXjo2ZnAZXSY8hCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PrU0kt/t; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751727043; c=relaxed/simple;
+	bh=VNrbBwqm1/43mVvgHdyCXrjAkPHvz/X7v8AvboKMajo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W++UapMgfY+WoHzwVJZxzPEV6uiQBUeccevRaTtT/oXuTB1T8/qWEZJ+5vwyoRO1RHA8z0I54iZLvqUKbSU0vHr6kV50Aith8RNShouWIhkpkLb9h9YjOFtD86TT5L73KLNkgP1Kdr+Oka2k2G0S0CKWyvytFiqxBMACoQ++VbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EV0XFksa; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PrU0kt/t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751727010; x=1783263010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8YlbuHheA6By8EjMGyLEssbYxaR6FFh/g8IrjzNaAzk=;
-  b=PrU0kt/tF/hl6/S39hT382+2Rsjc83z/SwWJs0bNaDdcwEmlzAaS5Fxt
-   qWcJG+YPUxfsEYl+boXGMYk/Wc3oe2rIAzozmJ2EIiggRIFin4dxpsZEi
-   sHkzDDlyQEQmvIAckdRlFEOIlL9KaX7tEhyKRfm/g3jnlGCSBoJOyHw/T
-   /nn2/q21nuUklHN6xRMJoCU9PV2UGdzi8cSh/lIZB3piOOxSNZBixPEFg
-   KPlOC011LRnvUz1PA2fBQfKxsYu7kE7J6I6FE47qnl9CkDOoMa0cdGHbq
-   D0KygpaTLE0zPDLevDMUJ82weY568fARPe3Wrby3jA5x1lgyWuwBJdR+J
-   A==;
-X-CSE-ConnectionGUID: vl1YKZHBS3e4r81w3c+ldA==
-X-CSE-MsgGUID: tIas2Ag0QM2uzxixNr9XLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="53892868"
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="53892868"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 07:50:10 -0700
-X-CSE-ConnectionGUID: GIk3FXhdQ3GQSiZkuPc/ug==
-X-CSE-MsgGUID: mf2246VSSWKHafcH/0/rRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="154477300"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 05 Jul 2025 07:50:03 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uY4DJ-0004Y7-2E;
-	Sat, 05 Jul 2025 14:50:01 +0000
-Date: Sat, 5 Jul 2025 22:49:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	hannes@cmpxchg.org, yosry.ahmed@linux.dev, nphamcs@gmail.com,
-	chengming.zhou@linux.dev, usamaarif642@gmail.com,
-	ryan.roberts@arm.com, 21cnbao@gmail.com,
-	ying.huang@linux.alibaba.com, akpm@linux-foundation.org,
-	senozhatsky@chromium.org, linux-crypto@vger.kernel.org,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	clabbe@baylibre.com, ardb@kernel.org, ebiggers@google.com,
-	surenb@google.com, kristen.c.accardi@intel.com,
-	vinicius.gomes@intel.com
-Cc: oe-kbuild-all@lists.linux.dev, wajdi.k.feghali@intel.com,
-	vinodh.gopal@intel.com, kanchana.p.sridhar@intel.com
-Subject: Re: [PATCH v10 10/25] crypto: iaa - Rearchitect the iaa_crypto
- driver to be usable by zswap and zram.
-Message-ID: <202507052222.LbMGkyWl-lkp@intel.com>
-References: <20250704042323.10318-11-kanchana.p.sridhar@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EV0XFksa"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-74ce477af25so959608b3a.3;
+        Sat, 05 Jul 2025 07:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751727041; x=1752331841; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e8pSX2dE7HUbGX2qtP2ExLxJQJpQ+y89OCidZcpPV4Q=;
+        b=EV0XFksacpfV9OQYvrQzhkfEjRKvs+/wBhLB/EmR/xD9DoB9xdGe0w/n9SJ8LCvZy5
+         ysXWpXCd+VRbc0+sQEonfKrkr6L7EF3tex/keKA1Sgf4Rz1eXJ6yVjBlYO5VDrEq6QR4
+         tahfWaqlxIYBRWoGHdYMdDhvD9KS0U3I95Yq+ztZB5nLZCE1dgs1OkNEDonvh3eCoVvG
+         3iBruOODEBc9In45rJhCE3k1D2oOJI7FtTjdsXfpVaHZDxqoxaZZ8ytJyTcQF/r+c+YD
+         cadDcbyNCMXNetUpwzdmsmcofBpNzUcGfMBmu1WI2zW8revwOjhPIeVGdMS6dcwA3MZC
+         5GOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751727041; x=1752331841;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e8pSX2dE7HUbGX2qtP2ExLxJQJpQ+y89OCidZcpPV4Q=;
+        b=cMrgzAtvXKqyEjQ6P/aZnnWl/BdTIxSZUjf318VJkEqODP0W5E/X9eT9LT4ow3PzAs
+         +Idl/bhs3WvI0MztMXjJA4B937w9h4oiXepfyk+aq7m4vec6bF0Wf4p4RXXc7iy/FOPp
+         K3c3QUFoWwboXdzUWylsTPlnFSe/YqmzUP8Hye8BKCyQRFVuHFYJa0awTEBMSYYSSYrJ
+         xx1yMs1KpGO1ETaoow9LvITiKjtwlnmeo1EI/XLWgDeALD3VKtp0jpWv8zo7n4MdlkCy
+         5mfH3u9kIvwXtKyPkO82nQ9jyv+sSVupLudKnk4+QnHBbx1RoDYN1m0aL/VksXaTayKX
+         6Qug==
+X-Forwarded-Encrypted: i=1; AJvYcCUuLj/U21JTb9qRkZUOLMZVRbzkwyjh+T5dDsdPfTRWnfKR5bB9yia4xk9yavkCjf5XDJyfYt/d@vger.kernel.org, AJvYcCVxfUs+mLHAWbM5Mi00DjMph6Ay7vFfvMDeZPAQnoF/4thxxBEtfy9RwS2+kwGus4ibe0QZgQPOUHawQ2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOgX3G3LjUgCgd32QA9/aV4Tx0xpBSvbO4+s12/lWHPyFv+CJy
+	PMxcEdGG0Rg0J9ZDc7Lvrm/MzZajHsOeWfhR3u6FUGU+Yd2zyBPK1vbx
+X-Gm-Gg: ASbGncvoX+rgDObmdyxwSPCNRYfAwFr7YbUhDBrmgWgkZ+xWxk2aSwa+44rrRa8uYp3
+	Uexm+xi7l7jL4BI+kUXa4Nr1Ou6Jy0wybZQWQ5Cc+wZDZVQOboI+kMRdRKsk8apGrqEOS1TzuCf
+	LqboQUFM/yisIo5EeHC6rWUfLEdCg4Rvn4z/cvXHbX4a5vE70LUJLbYhDzzYMfJQ7rgdo5QYh1t
+	OVE7J7a1kpyLaaIwv8I02IeeBFjoOKa69c/WO2LKWJDvkwObb9rbAMwA7mWa+f/ss5rZMvRz95g
+	eCNUASlMxDUfMSTyzfjNsXw6WuDG4ZPztxmtA0+O3tH49v6K9XuLONd6ROfn1j3qMJ36agNzV3C
+	u/MQJqmSPatPE5OU=
+X-Google-Smtp-Source: AGHT+IHWzck6wI2NIMUulug49eFSbkQNtWifhf7LcrXsIil/8ND/dU180sJae9vQvyflbC+N4C50dA==
+X-Received: by 2002:a05:6a00:2e9e:b0:742:a111:ee6f with SMTP id d2e1a72fcca58-74ce650ecc9mr7177111b3a.10.1751727041391;
+        Sat, 05 Jul 2025 07:50:41 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce359eeddsm4642499b3a.7.2025.07.05.07.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 07:50:40 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: richardcochran@gmail.com
+Cc: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	yangbo.lu@nxp.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+7cfb66a237c4a5fb22ad@syzkaller.appspotmail.com,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH net] ptp: prevent possible ABBA deadlock in ptp_clock_freerun()
+Date: Sat,  5 Jul 2025 23:50:31 +0900
+Message-ID: <20250705145031.140571-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704042323.10318-11-kanchana.p.sridhar@intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Kanchana,
+ABBA deadlock occurs in the following scenario:
 
-kernel test robot noticed the following build warnings:
+       CPU0                           CPU1
+       ----                           ----
+  n_vclocks_store()
+    lock(&ptp->n_vclocks_mux) [1]
+                                     pc_clock_adjtime()
+                                       lock(&clk->rwsem) [2]
+                                       ...
+                                       ptp_clock_freerun()
+                                         ptp_vclock_in_use()
+                                           lock(&ptp->n_vclocks_mux) [3]
+    ptp_clock_unregister()
+      posix_clock_unregister()
+        lock(&clk->rwsem) [4]
 
-[auto build test WARNING on herbert-cryptodev-2.6/master]
-[also build test WARNING on herbert-crypto-2.6/master akpm-mm/mm-everything linus/master v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To solve this with minimal patches, we should change ptp_clock_freerun()
+to briefly release the read lock before calling ptp_vclock_in_use() and
+then re-lock it when we're done.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kanchana-P-Sridhar/crypto-iaa-Reorganize-the-iaa_crypto-driver-code/20250704-122613
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
-patch link:    https://lore.kernel.org/r/20250704042323.10318-11-kanchana.p.sridhar%40intel.com
-patch subject: [PATCH v10 10/25] crypto: iaa - Rearchitect the iaa_crypto driver to be usable by zswap and zram.
-config: x86_64-randconfig-123-20250704 (https://download.01.org/0day-ci/archive/20250705/202507052222.LbMGkyWl-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507052222.LbMGkyWl-lkp@intel.com/reproduce)
+Reported-by: syzbot+7cfb66a237c4a5fb22ad@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=7cfb66a237c4a5fb22ad
+Fixes: 73f37068d540 ("ptp: support ptp physical/virtual clocks conversion")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ drivers/ptp/ptp_private.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507052222.LbMGkyWl-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   drivers/crypto/intel/iaa/iaa_crypto_main.c:98:1: sparse: sparse: symbol 'first_wq_found_lock' was not declared. Should it be static?
->> drivers/crypto/intel/iaa/iaa_crypto_main.c:100:12: sparse: sparse: symbol 'iaa_compression_mode_names' was not declared. Should it be static?
->> drivers/crypto/intel/iaa/iaa_crypto_main.c:104:12: sparse: sparse: symbol 'iaa_compression_alg_names' was not declared. Should it be static?
-
-vim +/iaa_compression_mode_names +100 drivers/crypto/intel/iaa/iaa_crypto_main.c
-
-    99	
- > 100	const char *iaa_compression_mode_names[IAA_COMP_MODES_MAX] = {
-   101		"fixed",
-   102	};
-   103	
- > 104	const char *iaa_compression_alg_names[IAA_COMP_MODES_MAX] = {
-   105		"deflate-iaa",
-   106	};
-   107	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index a6aad743c282..e2c37e968c88 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -124,10 +124,16 @@ static inline bool ptp_vclock_in_use(struct ptp_clock *ptp)
+ /* Check if ptp clock shall be free running */
+ static inline bool ptp_clock_freerun(struct ptp_clock *ptp)
+ {
++	bool ret = false;
++
+ 	if (ptp->has_cycles)
+-		return false;
++		return ret;
++
++	up_read(&ptp->clock.rwsem);
++	ret = ptp_vclock_in_use(ptp);
++	down_read(&ptp->clock.rwsem);
+ 
+-	return ptp_vclock_in_use(ptp);
++	return ret;
+ }
+ 
+ extern const struct class ptp_class;
+--
