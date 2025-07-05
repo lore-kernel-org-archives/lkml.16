@@ -1,166 +1,138 @@
-Received: from smtpx1.feld.cvut.cz (smtpx1.feld.cvut.cz [147.32.210.191])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1392E36E6;
-	Sat,  5 Jul 2025 19:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.32.210.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8F018786A;
+	Sat,  5 Jul 2025 19:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751744168; cv=none; b=uetkMRuTy2w55zdR4D4ABNFuZLR+VT9rsdXyfDJ3uF7HuIaT3Gj/PBJusFEKJgT5gpZb4YBl76rm3BOCi0TqnMuHrfW46PXDUvl4+5evQ7e87JAE06kNs9pXWzpl9hMcw8AsBICn+Uwi8tlqdp9WNiQ+o7WRbp7UtEyEYd0sP2g=
+	t=1751744276; cv=none; b=KUodFjBJrtMwEk18eN/OYETh+hyw/sd0jutN+eLv1OgjvHtymoCF1dp9DAuo4H7zLD8vV5vv+Dsj5xztVRgDosQu76VrO+seuCfFBp1c1uIcMqABWoWCCMeQgK55raBHQAFDotYXw+vWPqmI0szHDuhI8PZMyTQR5I6uJkMyzSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751744168; c=relaxed/simple;
-	bh=P2wVVIyNNFi99icpzNRl6oBqKXsSSS9BxN+FOusjyqc=;
-	h=From:To:Subject:Date:Cc:References:In-Reply-To:MIME-Version:
-	 Content-Type:Content-Disposition:Message-Id; b=Cqaco1rjTTZVlS5bJqeJaeE141xNvri0tOD8PRKGVKiGKnJNedUYKO275OM5hrs2S/URlq2mxoGAUdqJ0Lnl0i7q6jBoFw4uJ5DaY0UWIk4d37Uxskl2xz/Ac/CG2AuZ/4kIgpGAXW3eRtphKXy/KM8cssqvTKYq7xmJTtVzo4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fel.cvut.cz; spf=pass smtp.mailfrom=fel.cvut.cz; dkim=pass (2048-bit key) header.d=fel.cvut.cz header.i=@fel.cvut.cz header.b=hoKjqOwk; dkim=pass (2048-bit key) header.d=fel.cvut.cz header.i=@fel.cvut.cz header.b=HUquos4j; arc=none smtp.client-ip=147.32.210.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fel.cvut.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fel.cvut.cz
+	s=arc-20240116; t=1751744276; c=relaxed/simple;
+	bh=rhkYdI0qaK2SWqPGukgpUJQl2Y1xf63RjS+xGlf+ENo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zt3BfkwK5MATSObZcjjh8UdVZ6NXEPbWecA8iRM08r5EZ4zSOelQ5Nl1Renk8X1fi2PjOL95uot/in96/qzDt4vzivN+R+7anUmzATuUrilQLNQ7b/UVllrSpZrDy1tfMQQq4n1Ia/dSXo3VfMPT+vPyRPhF46ZmtoIxj8xPWjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEwSVDeQ; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fel.cvut.cz header.i=@fel.cvut.cz header.b="hoKjqOwk";
-	dkim=pass (2048-bit key) header.d=fel.cvut.cz header.i=@fel.cvut.cz header.b="HUquos4j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fel.cvut.cz;
-	s=felmail; t=1751743594;
-	bh=bQHckHvyX9ZXT3v8VL83hL8ddqeWCtoA2CagF+Z3BZQ=;
-	h=From:To:Subject:Date:Cc:References:In-Reply-To:From;
-	b=hoKjqOwkdNbjn5myk3VVQc7XaP1yKMYnyir5Nxp2Y5TTCGi/8Cn/ExHJaveQXgFBG
-	 3AqCSbMKGbEG/cFtgnlq1wh3VKPQKWqnguNSOU4gxRe3NMH1o3wOttSOoPOIUIA3AG
-	 d6jXKg+Bf7FFIN0tpWQuOG2t6XK6ys8VA9i4/OPjt+FtAMAr6xx8ZKwStcigL5GVci
-	 oEHpQCz4NLyhlG8i2XNjMdQjh4MVhkq/NsaBTzrqmd8a3Yq/UFuajCORoxv2dAMIoB
-	 wgjeLQiXYfvTo2GYR8qtCoxaNMMG/xKHsvXnp2ndIYZGhwoHHTqXDba1VJpE7Sg7MC
-	 F6VrqeDZG5KnA==
-Received: from smtpx.fel.cvut.cz (smtpx.feld.cvut.cz [147.32.210.153])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtpx1.feld.cvut.cz (Postfix) with ESMTPS id 08B21233AE;
-	Sat,  5 Jul 2025 21:26:34 +0200 (CEST)
-Received: from localhost (unknown [192.168.200.27])
-	by smtpx.fel.cvut.cz (Postfix) with ESMTP id 000A34FDFB;
-	Sat,  5 Jul 2025 21:26:33 +0200 (CEST)
-X-Virus-Scanned: IMAP STYX AMAVIS
-Received: from smtpx.fel.cvut.cz ([192.168.200.2])
- by localhost (cerokez-250.feld.cvut.cz [192.168.200.27]) (amavis, port 10060)
- with ESMTP id TUl3fu33WDO5; Sat,  5 Jul 2025 21:26:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fel.cvut.cz;
-	s=felmail; t=1751743436;
-	bh=bQHckHvyX9ZXT3v8VL83hL8ddqeWCtoA2CagF+Z3BZQ=;
-	h=From:To:Subject:Date:Cc:References:In-Reply-To:From;
-	b=HUquos4jZsHWzwERSjYMNQUHAKjBBi/TXG4KB6nQNplyPYCKc+7HU5IF09SXnJ5JZ
-	 fbrvSs/w6ZMxClwIk9v8bl7AdplwCkQW6HYzwTPYJkq7mZwHiEKExGR7H7gUzM3yHt
-	 uPPa3IbIT6ZvgJXs1qOum4Cxk+mHaNuXTSdw88mF7lGegI/2EEavtCuMA8d+uxBwql
-	 8yQC30zSffz+jp8i9iJ+KiGEECfLd07VaasuQkgOypH/XXEM2TIV5rgFiupI3kD/AH
-	 CzsARPf0BMWrFg+uA5lbq5MPqqcx2m02Fndkl9FIkfjN0xClTyJkfa4HFJnMFslGIg
-	 W3sMBBbUdqLPA==
-Received: from baree.pikron.com (static-84-242-78-234.bb.vodafone.cz [84.242.78.234])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pisa)
-	by smtpx.fel.cvut.cz (Postfix) with ESMTPSA id 6C1854FDC3;
-	Sat,  5 Jul 2025 21:23:52 +0200 (CEST)
-From: Pavel Pisa <pisa@fel.cvut.cz>
-To: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
-Subject: Re: [PATCH] docs: Fix kernel-doc indentation errors in multiple drivers
-Date: Sat, 5 Jul 2025 21:23:55 +0200
-User-Agent: KMail/1.9.10
-Cc: corbet@lwn.net,
- alexandre.belloni@bootlin.com,
- ondrej.ille@gmail.com,
- mkl@pengutronix.de,
- James.Bottomley@hansenpartnership.com,
- martin.petersen@oracle.com,
- linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Ondrej Ille <ondrej.ille@gmail.com>,
- Martin =?utf-8?q?Je=C5=99=C3=A1bek?= <martin.jerabek01@gmail.com>,
- =?utf-8?q?Ji=C5=99=C3=AD_Nov=C3=A1k?= <jnovak@fel.cvut.cz>
-References: <20250703023511.82768-1-luis.hernandez093@gmail.com>
-In-Reply-To: <20250703023511.82768-1-luis.hernandez093@gmail.com>
-X-KMail-QuotePrefix: > 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEwSVDeQ"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso1845567a12.3;
+        Sat, 05 Jul 2025 12:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751744274; x=1752349074; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UdsPWIihv5HWhO3SsoK85fdkL/eyjqb/7Z3okGZnaXE=;
+        b=HEwSVDeQJ3Y5Nia+RPp1Fl+QzQhx0EY+lsmoXB5Zix1Y8U/28Dkry03T4qX5PB5kiB
+         jAaGnPoJtXKjWjyfVMnLZ17aI4u04zpJj3coYgS9biFEM+wiuyh1ufUUpz5pFzr4hLQr
+         DO7/c+XpnTCnm+gspMJA5FJndVeIRgiS48+1jMGz2YlKp/VF72bnBUp07hmpaaI1qC+o
+         G8vm4i8MeeiwKCxqX0jC2cj1FAQMWf4ktzLfXxcm8h5d3zuocYG5IhAmzhob2OknazsS
+         /DcSfeJ7238WagwPSK/UmJK11AJIpfCU89TeF62UECs8ANTW2WqOOLVWXTvyYPam8ZgO
+         XNfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751744274; x=1752349074;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UdsPWIihv5HWhO3SsoK85fdkL/eyjqb/7Z3okGZnaXE=;
+        b=NMrgMdODEc+keu22yDBGHZEQkIekjNJ0uGvbIUcn314C5b3eHd1QMXVpMCVZNiLx6h
+         ecrxw0xTEuCOLw+8vNV/Bo89qLZAYS/gZqEQ+mamK3Rf92g45sTltlfY2N7H/8U2l7dT
+         yWvvZiEUpVd81kpGbBs5SC7P6W0o2pAyb715av9Dvpp5zu9aDDWyPb/bmU8+9D8UtnxT
+         Cw716nvZUlr91kzDBHkO+8VWxxzV46mzV/ju+mh2w/ws6RfKFdR+uDRMzFnVgqeaiJ5d
+         J5wVr83EpfGIEEQExSPT7zCewC+T/mvZO8xxkZn96XuFuTZ+q8QVlYFOIHSyyVIxY6lo
+         iSBA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5xX3ZZIvfmHBdT8LhljqtFCc3i1kzSUaVIHs9N5t9E57iIy/S4m4xrinfwlu6lz9PbPkImEvdYhuFFNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM3Sb6I/1UavimZZ7/FezG7cAI84YxISsw1jQ0+xGVAahn98I8
+	4Q0mxfdY/eHaf6FIOOZJbCTpams1wW15drB8yrPKMPXWbqUQ5yfTJOiU
+X-Gm-Gg: ASbGnct5GQrEQTHzrRF/YCvOGzQIoAxJfo2HGBNjrk5gAVwiIZiyNhIg8OrdZ5Xuj0L
+	mMgQb4hqHdIfs1ZRsO1jhT3gSVcsg5FI9lb3MyyH1ZLmIYOllAbN6ttd1EKH9T5Je9XvLtZx6AK
+	tf2Eoc/TGJATEzWvaCAapRMO2Zh5CSgxCZKfiJvhVJkw6hOD5PkH8psTEwsmrNvAdbIqt8Y8yyJ
+	LopkVmjX5DpPnxPeDIjpPxboXcL+2fKUvGJ3PIrWFRw+3VdNVMqIGJY6fKMsjP0bHFI2fAUsVuG
+	QYJL7g+87tHxOkpma7PUYf+X0Ydtf+92J60/Qk0LIzOBF7n9YnHMq92wjeeebZ3v3L6e3atfM7E
+	=
+X-Google-Smtp-Source: AGHT+IGfY3WUKLQ4Yk5uf0Fkrth6sHY9ow0rMP3Y/0jgNKH6keGdaw88vCvOFt9UHv0SUx6yzeFNuQ==
+X-Received: by 2002:a17:90a:fc4c:b0:315:b07a:ac12 with SMTP id 98e67ed59e1d1-31aba84b709mr5335559a91.14.1751744273648;
+        Sat, 05 Jul 2025 12:37:53 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31aaaf5ae08sm5305720a91.41.2025.07.05.12.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 12:37:53 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 5 Jul 2025 12:37:52 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.12 000/413] 6.12.35-rc2 review
+Message-ID: <3037c3e6-558b-4824-8c78-a36990f4e4d6@roeck-us.net>
+References: <20250624121426.466976226@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Message-Id: <202507052123.55236.pisa@fel.cvut.cz>
+In-Reply-To: <20250624121426.466976226@linuxfoundation.org>
 
-Dear Luis Felipe Hernandez,
+Hi Greg,
 
-I focus only on drivers/net/can/ctucanfd/ctucanfd_base.c
+On Tue, Jun 24, 2025 at 01:29:53PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.35 release.
+> There are 413 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
+> Anything received after that time might be too late.
+> 
 
-On Thursday 03 of July 2025 04:35:11 Luis Felipe Hernandez wrote:
-> Fix kernel-doc formatting issues causing "Unexpected indentation"
-> errors during documentation build in CAN, SCSI, and I3C drivers.
->
-> Signed-off-by: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
-> ---
->  drivers/i3c/device.c                     | 6 +++---
->  drivers/net/can/ctucanfd/ctucanfd_base.c | 8 ++++----
->  drivers/scsi/scsi.c                      | 4 ++--
->  3 files changed, 9 insertions(+), 9 deletions(-)
->
-...
-> diff --git a/drivers/net/can/ctucanfd/ctucanfd_base.c
-> b/drivers/net/can/ctucanfd/ctucanfd_base.c index bf6398772960..bd6938f6e105
-> 100644
-> --- a/drivers/net/can/ctucanfd/ctucanfd_base.c
-> +++ b/drivers/net/can/ctucanfd/ctucanfd_base.c
-> @@ -507,10 +507,10 @@ static bool ctucan_is_txt_buf_writable(struct
-> ctucan_priv *priv, u8 buf) * @isfdf:	True - CAN FD Frame, False - CAN 2.0
-> Frame
->   *
->   * Return: True - Frame inserted successfully
-> - *	   False - Frame was not inserted due to one of:
-> - *			1. TXT Buffer is not writable (it is in wrong state)
-> - *			2. Invalid TXT buffer index
-> - *			3. Invalid frame length
-> + *         False - Frame was not inserted due to one of:
-> + *         1. TXT Buffer is not writable (it is in wrong state)
-> + *         2. Invalid TXT buffer index
-> + *         3. Invalid frame length
->   */
->  static bool ctucan_insert_frame(struct ctucan_priv *priv, const struct
-> canfd_frame *cf, u8 buf, bool isfdf)
+Some subsequent fixes are missing:
 
-I do not have strong opinion there but the numberred list {1., 2., 3.}
-is the sublevel of the top list {True, False} under the False option.
+> Tzung-Bi Shih <tzungbi@kernel.org>
+>     drm/i915/pmu: Fix build error with GCOV and AutoFDO enabled
+> 
 
-You have flattened the list which hides the connection of error
-reasons to the False return value.
+Fixed by commit d02b2103a08b ("drm/i915: fix build error some more").
 
-But if the strict rules for indentation are more important
-than my feeling for easy navigation then I do not want to stand
-in way and go forward.
+> Shyam Prasad N <sprasad@microsoft.com>
+>     cifs: do not disable interface polling on failure
+> 
 
-Aligning False under True has some reason, the original
-text used tabs for indentnation, which is I understand
-as generally preferred in kernel sources and the original
-comment with correct tab = 8 spaces renders well for me
+Fixed by commit 3bbe46716092 ("smb: client: fix warning when reconnecting
+channel") in linux-next (not yet in mainline as of right now).
 
- * Return: True - Frame inserted successfully
- *	   False - Frame was not inserted due to one of:
- *			1. TXT Buffer is not writable (it is in wrong state)
- *			2. Invalid TXT buffer index
- *			3. Invalid frame length
+> Jens Axboe <axboe@kernel.dk>
+>     io_uring/kbuf: don't truncate end buffer for multiple buffer peeks
+> 
 
-Best wishes,
+Fixed by commit 9a709b7e98e6 ("io_uring/net: mark iov as dynamically
+allocated even for single segments") and commit 178b8ff66ff8 ("io_uring/kbuf:
+flag partial buffer mappings").
 
-                Pavel
+> Yong Wang <yongwang@nvidia.com>
+>     net: bridge: mcast: re-implement br_multicast_{enable, disable}_port functions
+> 
 
-                Pavel Pisa
-    phone:      +420 603531357
-    e-mail:     pisa@cmp.felk.cvut.cz
-    Department of Control Engineering FEE CVUT
-    Karlovo namesti 13, 121 35, Prague 2
-    university: http://control.fel.cvut.cz/
-    personal:   http://cmp.felk.cvut.cz/~pisa
-    social:     https://social.kernel.org/ppisa
-    projects:   https://www.openhub.net/accounts/ppisa
-    CAN related:http://canbus.pages.fel.cvut.cz/
-    RISC-V education: https://comparch.edu.cvut.cz/
-    Open Technologies Research Education and Exchange Services
-    https://gitlab.fel.cvut.cz/otrees/org/-/wikis/home
+Fixed by commit 7544f3f5b0b5 ("bridge: mcast: Fix use-after-free during
+router port configuration").
+
+> Niklas Cassel <cassel@kernel.org>
+>     ata: ahci: Disallow LPM for ASUSPRO-D840SA motherboard
+> 
+
+Fixed by commit 3e0809b1664b ("ata: ahci: Use correct DMI identifier
+for ASUSPRO-D840SA LPM quirk").
+
+I assume the missing fixes will be queued in one of the next LTS releases.
+If not, please let me know.
+
+Thanks,
+Guenter
