@@ -1,82 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA75211A11;
-	Sat,  5 Jul 2025 17:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A472E1A9B24;
+	Sat,  5 Jul 2025 17:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751736881; cv=none; b=bniGijM6VqDh79MoGG32XM3poggJq+1CpfBC3p+ffoG89HokKlqNKbl+d8y5PBwXPkU8mr56E/WiPK2G2bOoKZweQCnd8E1rthl41gj/th6WzGfgAf6CtlJJ5N7zd8A5YbBGJbCrHR2D2yYXKVp11gxvnP1DtrKJJ1k+gQ2P3Bg=
+	t=1751737803; cv=none; b=Uchw+s/PSbGE4piSLnlinPZ7UsU+TcaQxaQX6EKb3CGKoTmkZ1omFOAwbb+dJJJH0nJxnaO31v3igOXtYE59s53mxoNqtOb8MwOnj4ivnkzwdXtzNmiOJwFF34rSGOeiTBICBc/u5PxLiTb2YCtwrbqr7OGqbunKTJxjkR14xts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751736881; c=relaxed/simple;
-	bh=+0Ul1OitS5n7/6Y4J/CBql5bB9ZtL1YtuNqEWklf5WQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXT9T3TsuWvD+kYgxURgoTb7FOid1i0p7uvUcuUuQZjY8hemr5JnEd5lwOKVmWyglwqndUVIm32QqNpJq6Fzur+oNLGQDIRFCzGISNOfo37SdZwrm/O3Meqdm9LWkoP3lsOR4tGNSlrUWDUm7DM0pc/YWuCI9PwFlbp/9lGEV/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDFewc3q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751737803; c=relaxed/simple;
+	bh=FFavEtXmOct+593n3zYGlbUqFvgbe6ItOU+9OH3bi3k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OkF4gj2o6RMUheRVX8BZW7pAebHgcf/0s3NH32PkNteCKJHVhwzWt0pq1sIYsRqYrscDoOrCwLWeuDZlje5GKTR0T3ZOzkMxAqu4AhrKG2GAj3Gm7AIxIoRRsWG0oqn2kwoBS0QSQIW0yA0DykCL44riaGTKW/9fYupT7LjYit4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyvFut/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDFewc3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D0C1C4CEE7;
-	Sat,  5 Jul 2025 17:34:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyvFut/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA3AC4CEE7;
+	Sat,  5 Jul 2025 17:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751736880;
-	bh=+0Ul1OitS5n7/6Y4J/CBql5bB9ZtL1YtuNqEWklf5WQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iDFewc3qYhVOowha3y4Ay+wzLsXI5m3ZT+N0HP5TcdbXVBQQzLbFPdAoTOIkATHo+
-	 LIA5g+qv68DL8f3qOEp+4G9SU11RhfnBUSiizDh0OUUz1pMhP3sdptO9o5aXGJyqIH
-	 VQgBhS21rA+usboMM0p/k/acfJpqsz/BzyXZW46wheampRZDt30mwoDJ8uSjCMOIGu
-	 ytcg4QpIKJRqxtD2zsaeW0oKiM1kWxAEPUaEe1mXYaBCxBVWWuEOofRX1Owkmk9kn4
-	 SB5g3TEzBjiXu9MtXp8+4lxKZi9rLtP5/QXSly9pl4wvCkbTDgVCElb2BRyZ7jwEcu
-	 +859zrIWXCcpA==
-Date: Sat, 5 Jul 2025 19:34:33 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v12 3/3] rust: platform: add resource accessors
-Message-ID: <aGliKRLJWfTs6rg0@cassiopeiae>
-References: <20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com>
- <20250704-topics-tyr-platform_iomem-v12-3-1d3d4bd8207d@collabora.com>
+	s=k20201202; t=1751737803;
+	bh=FFavEtXmOct+593n3zYGlbUqFvgbe6ItOU+9OH3bi3k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AyvFut/dQHWKRRzrt8eb7Iu2xGp+HFntV6Cwzd1H0OcGZvY0t1A5HGV+5ztDjNhsR
+	 9PYRVV0hvjpye810dNL3T+ooeLQwEk5fk3ToCKvio4WT0/aWoWKij6JiwGz/EwMrCi
+	 Mn6v2tej+/gELwe4+MYotkGITfdjNujFHx5UN7K5fEnosBI7VY4q3w6S5IvmQxB5BS
+	 bbyi5HOzIa6sUC9RJKfnsDKcjFdK10E46nm7z1mx2uue62QaCXkHJTY9YQC6z5raCX
+	 K//fKkCcQ4Xm49pPVp3Ls3f6iE5wQiyVnNtXtdESnq2bf9Jf25Hb+rGUtIsdddOXH8
+	 F/vKJVQKmODlA==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 0/6] mm/damon: misc cleanups
+Date: Sat,  5 Jul 2025 10:49:54 -0700
+Message-Id: <20250705175000.56259-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704-topics-tyr-platform_iomem-v12-3-1d3d4bd8207d@collabora.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 04, 2025 at 01:25:28PM -0300, Daniel Almeida wrote:
-> +impl Device<Bound> {
-> +    /// Returns an `IoRequest` for the resource at `index`, if any.
-> +    pub fn request_io_by_index(&self, index: u32) -> Option<IoRequest<'_>> {
-> +        // SAFETY: `resource` is a valid resource for `&self` during the
-> +        // lifetime of the `IoRequest`.
-> +        self.resource_by_index(index)
-> +            .map(|resource| unsafe { IoRequest::new(self.as_ref(), resource) })
-> +    }
-> +
-> +    /// Returns an `IoRequest` for the resource with a given `name`, if any.
-> +    pub fn request_io_by_name(&self, name: &CStr) -> Option<IoRequest<'_>> {
-> +        // SAFETY: `resource` is a valid resource for `&self` during the
-> +        // lifetime of the `IoRequest`.
-> +        self.resource_by_name(name)
-> +            .map(|resource| unsafe { IoRequest::new(self.as_ref(), resource) })
-> +    }
->  }
+Yet another round of miscellaneous DAMON cleanups.
 
-I think we should name this io_request_by_index() and io_request_by_name()
-instead. We're not requesting to remap I/O memory (yet), but trying get an
-IoRequest instance, hence I think this order fits better.
+SeongJae Park (6):
+  samples/damon/wsse: rename to have damon_sample_ prefix
+  samples/damon/prcl: rename to have damon_sample_ prefix
+  samples/damon/mtier: rename to have damon_sample_ prefix
+  mm/damon/sysfs: use DAMON core API damon_is_running()
+  mm/damon/sysfs: don't hold kdamond_lock in before_terminate()
+  Docs/mm/damon/maintainer-profile: update for mm-new tree
+
+ Documentation/mm/damon/maintainer-profile.rst | 35 ++++++++++---------
+ include/linux/damon.h                         |  1 +
+ mm/damon/core.c                               |  8 ++++-
+ mm/damon/sysfs.c                              | 16 ++-------
+ samples/damon/mtier.c                         |  5 +++
+ samples/damon/prcl.c                          |  5 +++
+ samples/damon/wsse.c                          |  5 +++
+ 7 files changed, 44 insertions(+), 31 deletions(-)
+
+
+base-commit: 486593f91f44f469c920e73a4ef451d9bbbf400e
+-- 
+2.39.5
