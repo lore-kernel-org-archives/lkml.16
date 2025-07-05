@@ -1,87 +1,107 @@
-Received: from smtp153-168.sina.com.cn (smtp153-168.sina.com.cn [61.135.153.168])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444B270813
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 08:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603A670813;
+	Sat,  5 Jul 2025 08:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751703699; cv=none; b=OV8dIAR5Hd1tczY+XhvtyChvDDXuGo6ITEp+9cDAHipk6spwXfgC8HTUAZ8Xatq7iowjHR7PIhpTROS9coh4BT92RdzvQcdwy0EX3U/efJ19fasQhg2bEAGo7UWHR40U/orrplO40NLipZc5O9UwZ3OW73twLy16pjjp6cQYo/U=
+	t=1751703831; cv=none; b=ichWJrssSjCqdxXBX5ZbWpVtqUsOf94KSodFoawqVGfVbpiYYNdXtN64i8m+P+Q6AbQ1FQMyYfPPhy6VIOub8ssbVSe02pWi6xYUE4+wxvI1KnKMQmbeGaJ41wsiHZsSh7FOwnftCvXUNC5NBW4Eu7tX2oHcqOFB7tZSjJd4Pow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751703699; c=relaxed/simple;
-	bh=L+9pODuqq/ijOJU8ex+JwRkcoHZGpIJHB+hTtkEopAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZSrK0IY8maXzuAunywUuNJX4zlIoxRQtvCswDYYft5bsMoodTbebdWSSf0gLL+0GKG+IPpQYhDVdf+PbFvknzQ0VyV6M+udJ+jpL4Jh0wLnyEXMZds+c/5LZ8+v9YROC/SnVWJ/SZ7NnlCrH4SZaR5GJDJTKLOOMQJPOx8K9Df0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=hcNB9Y/n; arc=none smtp.client-ip=61.135.153.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+	s=arc-20240116; t=1751703831; c=relaxed/simple;
+	bh=ooE5fM4XyflQS909ENk/p7WI6Na5G0eS4a5NyH9gXCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LaCfP/qajSgaaBq6v24EDYlLJ9xsO9ia7IcpUbsNqoJfZPreEULKTaTvqYRh84MPPiwu2DaQ3H2fLbyZh6uIZ7PjmtAB0b/9z76JZHonE+9qhsEE04qzOlitfSBZQYbYhh0fDS+YIEiIZgYBDnADBapz1QLXdUAVbZ4DgMmNpvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Q3+NU44/; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="hcNB9Y/n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751703689;
-	bh=zthT3jt8GIM/WAdNW204UEF6acnuYAzki0y2EbWl/Js=;
-	h=From:Subject:Date:Message-ID;
-	b=hcNB9Y/npKe+jnglLc8Iv2KqL/IwxYrwLnIla3uqMd0u3YDljVz3bPd0OtM6RYXfh
-	 Zyy3VHue1oWMGdMrp6fFEXYgdMlSQvOLQehZ7NpJX30oIW2pyBSfoXIqL55jgxUk8d
-	 d4CvrtskEx3Offgmye61PUtl3tc/8RMVi6qeE8jY=
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.33) with ESMTP
-	id 6868DFF50000677C; Sat, 5 Jul 2025 16:19:02 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 7747596685143
-X-SMAIL-UIID: 0F3F1D7F0C55476C813FEECFBA0105ED-20250705-161902-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+6616bba359cec7a1def1@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [kernel?] WARNING in driver_unregister (2)
-Date: Sat,  5 Jul 2025 16:18:49 +0800
-Message-ID: <20250705081850.2552-1-hdanton@sina.com>
-In-Reply-To: <68689a02.a00a0220.c7b3.002c.GAE@google.com>
-References: 
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Q3+NU44/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=xNWnDiVe43oAC4aWbLN7TJ3894ISYCh7qPYCBILP4oM=; b=Q3+NU44/QcBZJ1YBSEOaNKsDVi
+	Iz79r9aCFH+H/yIIBueqCSmLy36lHn7A1EnLdLQx6Vga/yNYK0Q70iLa04bXMaz0zDSgS4G+dFSAm
+	UZMcHHSqTzN9192HjrgyttF+5k9Jy/UOsTY6MuGQ0wUBjj2vY+0MHyVCd4Wh7ncBHPcI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uXyB9-000NRq-M8; Sat, 05 Jul 2025 10:23:23 +0200
+Date: Sat, 5 Jul 2025 10:23:23 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Tristram.Ha@microchip.com
+Cc: Woojung Huh <woojung.huh@microchip.com>,
+	Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek Vasut <marex@denx.de>, UNGLinuxDriver@microchip.com,
+	devicetree@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 2/2] net: dsa: microchip: Add KSZ8463 switch
+ support to KSZ DSA driver
+Message-ID: <eeb48306-0564-46da-ae74-a9f779242399@lunn.ch>
+References: <20250703020155.10331-1-Tristram.Ha@microchip.com>
+ <20250703020155.10331-3-Tristram.Ha@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703020155.10331-3-Tristram.Ha@microchip.com>
 
-> Date: Fri, 04 Jul 2025 20:20:34 -0700
-> syzbot found the following issue on:
+On Wed, Jul 02, 2025 at 07:01:55PM -0700, Tristram.Ha@microchip.com wrote:
+> From: Tristram Ha <tristram.ha@microchip.com>
 > 
-> HEAD commit:    c435a4f487e8 Merge tag 'riscv-for-linus-6.16-rc5' of git:/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=138f8f70580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5ba6cef8f153bfeb
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6616bba359cec7a1def1
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b8febc580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118f6c8c580000
+> KSZ8463 switch is a 3-port switch based from KSZ8863.  Its major
+> difference from other KSZ SPI switches is its register access is not a
+> simple continual 8-bit transfer with automatic address increase but uses
+> a byte-enable mechanism specifying 8-bit, 16-bit, or 32-bit access.  Its
+> registers are also defined in 16-bit format because it shares a design
+> with a MAC controller using 16-bit access.  As a result some common
+> register accesses need to be re-arranged.  The 64-bit access used by
+> other switches needs to be broken into 2 32-bit accesses.
 
-#syz test
+This is a rather large patch, making it hard to review. Please could
+you break it up into smaller patches, with good commit messages.
 
---- x/drivers/comedi/drivers.c
-+++ y/drivers/comedi/drivers.c
-@@ -994,10 +994,13 @@ int comedi_device_attach(struct comedi_d
- 	dev->board_name = dev->board_ptr ? *(const char **)dev->board_ptr
- 					 : dev->driver->driver_name;
- 	ret = driv->attach(dev, it);
--	if (ret >= 0)
-+	if (ret >= 0) {
- 		ret = comedi_device_postconfig(dev);
--	if (ret < 0) {
--		comedi_device_detach(dev);
-+		if (ret < 0) {
-+			comedi_device_detach(dev);
-+			module_put(driv->module);
-+		}
-+	} else {
- 		module_put(driv->module);
- 	}
- 	/* On success, the driver module count has been incremented. */
---
+>  static void ksz_cfg(struct ksz_device *dev, u32 addr, u8 bits, bool set)
+>  {
+> -	regmap_update_bits(ksz_regmap_8(dev), addr, bits, set ? bits : 0);
+> +	regmap_update_bits(ksz_regmap_8(dev), reg8(dev, addr), bits,
+> +			   set ? bits : 0);
+>  }
+
+This pattern of using reg8() appears a few times. That could be one
+patch.
+
+>  
+>  static void ksz_port_cfg(struct ksz_device *dev, int port, int offset, u8 bits,
+>  			 bool set)
+>  {
+> -	regmap_update_bits(ksz_regmap_8(dev), PORT_CTRL_ADDR(port, offset),
+> +	regmap_update_bits(ksz_regmap_8(dev),
+> +			   reg8(dev, dev->dev_ops->get_port_addr(port, offset)),
+>  			   bits, set ? bits : 0);
+
+Adding this helper and using it could be a patch.
+
+
+> -	if (ksz_is_ksz88x3(dev))
+> +	if (ksz_is_ksz88x3(dev) || ksz_is_ksz8463(dev))
+>  		return -ENOTSUPP;
+
+All these ENOTSUPP could be a patch.
+
+etc.
+
+
+    Andrew
+
+---
+pw-bot: cr
