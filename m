@@ -1,140 +1,86 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3365383;
-	Sat,  5 Jul 2025 03:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A6327510E
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 03:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751684632; cv=none; b=a08Ow02Wg7gqgaUkQeTjC5b88jXbcKEvBW0E9lH3/ZG5RR2DX3KUrHwd4IgkNiFr5qP/UodtNp4s4OhpCfPZXSAoQlr6cetyCNXuwpyOEVeSOni07aGFY+SVYfIyK+zjhaJV5L/PZBbh8Pfd+Mdi1EI9GRRE+PcGdR0dH3M8GNw=
+	t=1751684636; cv=none; b=Xldq+wwcZdG0UvvS7bUxbU+Orus5ZJp6dskLwGR9XbjhvkMAeh8I8+gEX2Cjmi2kTLKh/aBELVmSuvAM2z8ik19svc0ChZTCbg/biALFE9yIUH9gWuR26cPf8dZXNWaftJFkH5V6kwnj5jbDc+1lGqJseD3RJczWkHR1l6u3MgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751684632; c=relaxed/simple;
-	bh=//RnRTXOf51cFekTGGk5Qd0NRZnGCdyz7dD2c7mx1IQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aaCb/xHgm4qzlf6NaQ5d7QSLHYngkNI9uqZn8a9ekjuOHMG+8ExLjEexazES0iv69BZ/LETsDmjnIvYwaRVAZ++D2IXdcuzP2sMaWS7iO63MD5a0oe9LdvpQUQHxmaAj9quVE9uhPhV3GnZTI70AeLvVXtN8m9Uf2llCl1+5Ah4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RO6hSo/q; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RO6hSo/q"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5316a5e4c6cso477173e0c.1;
-        Fri, 04 Jul 2025 20:03:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751684629; x=1752289429; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=//RnRTXOf51cFekTGGk5Qd0NRZnGCdyz7dD2c7mx1IQ=;
-        b=RO6hSo/qJT0kSUQMhmP4/ZRsqO0YYvLp8AP9/JnBTAtofosqnzgHb6oqPS9OlJ5sis
-         laxZuDDo4LGXqfzlSPnmZ8Www201v3L70W+/h0EOcTZKYFoxRgWiL6ubbTSHKuiH4SD9
-         GbhfpmTbJXM/ImMvPek6tkI0Pq7dTE9vA45L4K/QAA8lf2kTeh56Zscf0X6X5c3vxKiL
-         tzna8qlDm/+2eRggcidSXq171jDFcuc0k6oUtthhxihICxgLZRteMawwKyzS4CSH84gO
-         lX3I6yQ6WXegESZu/x2OOLANOUEJojCHsbcN7Jawjr6XmeM2mlzdX5IUnCsmhm5f/k71
-         gbNw==
+	s=arc-20240116; t=1751684636; c=relaxed/simple;
+	bh=1Z36gPhcHiUKZr0aWUP3R5ZQhicwtFJbH1yrNqAwb7o=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=U3wMI8qr6iCTEfUe9eCeeeCSsKkVKMnBwIK0mOa/XSmdBAPB6VypD/WrdKC34ctT7E+gOdJ63998N8o4MWrajLs3DQstbVeXl34hHUJp6yXpWH1yWgJvYgH8wNmd26PLoOLlOJGAC1vpGx4TXa7X8CWx5IvUtC+TVEdkWReY84g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso14469815ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 20:03:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751684629; x=1752289429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=//RnRTXOf51cFekTGGk5Qd0NRZnGCdyz7dD2c7mx1IQ=;
-        b=OfIq+ARIZ9GGAgs0hx4SNz2odzaG9IIsa6bTfLQHV3xD25OAeRFJBMyMTpsb75SpHr
-         E6KynwWABrMynVPeF2ou1OqYj1uwvgewOJYd+Ag5SZAI/qdjr4FieOj28Ad1YI9a4gAq
-         yJmGxkfMmJyOkMuoDOiypkBcxhCZutuOmAgezir1n06Fi4VD00v2OY6vwYevEfeYBzlK
-         sVqGWl4q0i+/ph0+cnDPGaIQfNj/bDU9+BoHpJ/iu/RbF8krSvvFzdMFsHaNo7cmIjyw
-         kU5TwEVsXgnStmmoRVF/9X7s/ia87IA4eea7hMjoajYRtAPO0W+xULG8Xv8aumgp0Qdu
-         g0SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOL9RqoR4pSqwW39dUU7mHwDM/j1ITZhQace1rghMJxuFTXGJxqRQyvm3QSa3F2b70yq7wTjRUGG4aBjj/@vger.kernel.org, AJvYcCXywEBc7Y1Bz0xnaQAkJ6mIT/cPe6zFwYLVQJjaFcXUbR+Fwg4lxVu0pg0MIDpPivnLITToXUQ3CJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxpDrZgGPCywQUHu0Ozpj6wkcSyKU+C6imbWalp+0qnm+CJYTv
-	ZDshmUqZF+dFYL5pjO4wVp+MswPhyYJlmmjwPGP+C3ffKXGzBiLiCSPUo6auCUolMRDhhu7FPHZ
-	89pRuT623cDCxSy9Ns9eIYQpn2+Pmps4=
-X-Gm-Gg: ASbGncu6eH8KtXNjcSsc+CrLxvYH/uVBwZS3lnqIWPptZk8Zh5sLMJVhqTjXDB0n1t+
-	a21jQNUjkvxBvaufkez9EW9MLTIidLG5poS4BEfG45VjhoY/dwnl8bZqjnlZUme1PIZ2z+JJbbm
-	A7i5n8dvwBvkqLZz+sBThpiUqyCzvGhmR0v2ps3HTJ7u4=
-X-Google-Smtp-Source: AGHT+IEgs4SB0SvvoGlUCQQGq7ufy5sylQnYc5CbBVAto8sfsCcaB2uDt3bO3c8R7XbK7PhopUA/cmjKsWYjLzEj3dg=
-X-Received: by 2002:a05:6122:134a:b0:531:2afc:463e with SMTP id
- 71dfb90a1353d-534f016f351mr597717e0c.5.1751684628707; Fri, 04 Jul 2025
- 20:03:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751684634; x=1752289434;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AizbY2jpwrR1fDC2uPxzJnY/PeVExfRtVkCsyTMymAw=;
+        b=QStGsU8HIpjNT40S1JJmqpPxabqN4T+gZE8kno95byVhlCg7bpPtIKtRijMNOHjpJC
+         IgsHi9YNETLc5Tz5HQiMJLr8PIUv3cUZwMvLl7Ui1fFUcOteXN/lJW5Z4PnhsbefRcVQ
+         wK5MgpF6HxJ58g+UjyszMvFBR5RYli9GMHU5nonh+rOvTNrkK/937WPsROlECQJqljNe
+         0T0uoqqHl4wbaP+AyY3VMjkmfF93GuTSTgIDJn1uvkxB4Wc9/tec8pk0nrRFhLnsw+Ob
+         k71Au7hEJiJmYQr6DbEmICtuW8p1JeFhMFoakBK9A7UBfWkC1LW5JK2cq/TDj9ql/yLZ
+         wXrA==
+X-Gm-Message-State: AOJu0YxL0iAK0ldNoFg2UlyjXPIN+fpFbPhJ9k30KTwA/58tEL9SjayS
+	nW/eVPOz8vbROpGp59rb1UxyOFhJnofHBmAta4u98Gnrr4z/U2nrQ48VmGhv2TnelaG73TyoUeJ
+	XXMalm9IXwZ/t2IdyYTlKXrWNsziL05tMHHfM2aiNZkqhKcXi0GtZhkppStU=
+X-Google-Smtp-Source: AGHT+IF2BdfUCSep8UsqYg2TffqVwJqUHyN2ML+D3Vlsh3MRRXGyTt9ZoQKRrrpAjkxtF9NVSem24os4JzWnX0W3pV+UBo5JuZKL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
- <CAHp75Ve4yAp6sViUWZY+0abRoNZ0W+rQLCmsbijEcrh8kguVOA@mail.gmail.com>
- <CANZih_S9_8OdY=oKyVPBCTSTqYm_z_rkE=xbPym3uHOSsHMv6A@mail.gmail.com>
- <aFL6PE-8KLLKZun_@smile.fi.intel.com> <CANZih_QeeA_G5mFOAb=TMNYiR4eo9SUD5iW1G-5LBGL27NpTRw@mail.gmail.com>
- <aFQrgEw4zw9RSAO3@smile.fi.intel.com>
-In-Reply-To: <aFQrgEw4zw9RSAO3@smile.fi.intel.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Sat, 5 Jul 2025 00:03:37 -0300
-X-Gm-Features: Ac12FXw41CdZZMjWQ7ztZepUfKxGh4nqikLajCCAsmqYaTtVeRdd9R5hqSDnDNg
-Message-ID: <CANZih_S=7-ArpBT3NF54-RH_KYER=mdS9nf1bUO3djEiDY_RWQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] iio: accel: sca3000: simplify by using newer infrastructure
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, jic23@kernel.org, andrew.lopes@alumni.usp.br, 
-	gustavobastos@usp.br, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:180f:b0:3de:287b:c445 with SMTP id
+ e9e14a558f8ab-3e136d0da18mr33950215ab.0.1751684633873; Fri, 04 Jul 2025
+ 20:03:53 -0700 (PDT)
+Date: Fri, 04 Jul 2025 20:03:53 -0700
+In-Reply-To: <67d5645c.050a0220.1dc86f.0004.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68689619.a00a0220.c7b3.002b.GAE@google.com>
+Subject: Re: [syzbot] [ocfs2?] possible deadlock in __ocfs2_flush_truncate_log
+From: syzbot <syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 19, 2025 at 12:23=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Wed, Jun 18, 2025 at 03:20:06PM -0300, Andrew Ijano wrote:
-> > On Wed, Jun 18, 2025 at 2:41=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > > On Wed, Jun 18, 2025 at 09:24:19AM -0300, Andrew Ijano wrote:
-> > > > On Wed, Jun 18, 2025 at 2:56=E2=80=AFAM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > On Wed, Jun 18, 2025 at 6:17=E2=80=AFAM Andrew Ijano <andrew.ijan=
-o@gmail.com> wrote:
-> > > > > >
-> > > > > > The sca3000 driver is old and could be simplified by using newe=
-r
-> > > > > > infrastructure.
-> > > > >
-> > > > > I haven't found any reference to a base commit here. Have you
-> > > > > forgotten to use --base when preparing the series?
-> > > > > In any case, please clarify what this series is based on.
-> > > >
-> > > > Thank you for pointing this out! I think I forgot to use --base for
-> > > > it. In this case, should I submit a new version of the whole patchs=
-et
-> > > > with this information or is there a better way to do it?
-> > >
-> > > For now just reply here what is the base. I asked this question above=
-.
-> >
-> > Ok! No problem. So the base for this patchset is the commit
-> > 3c23416f69f2870bea83697d7ab03c6a8497daa7.
->
-> No such commit in the repository. :-(
-> You are doing something interesting here [1].
->
-> So, make sure you are based on the iio/testing or so, make sure that the =
-base
-> commit is the one that may be found on git.kernel.org. Use that in the ne=
-xt
-> version. Due to above this version is ambiguous to even start reviewing i=
-t.
->
-> [1] I have connected IIO subsystem as a remote, so I have access to many =
-trees
-> from kernel.org (but not to all of them).
->
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Hi, Andy. Sorry for the late response.
+***
 
-Actually, I think I didn't fully understand this part of the
-contribution process and that's what was causing confusion.
-Basically, the base commit appeared in the previous version of this
-patchset but I removed it after it was approved, to prevent it from
-being reviewed again. However, I think I could just add the
-reviewed-by tag.
+Subject: Re: [syzbot] [ocfs2?] possible deadlock in __ocfs2_flush_truncate_log
+Author: ipravdin.official@gmail.com
 
-I'll send a next version with other corrections and the missing commit
-based on iio/testing.
+#syz test
 
-Thanks,
-Andrew
+diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
+index 369c7d27befd..ab460cb2c9c8 100644
+--- a/fs/ocfs2/move_extents.c
++++ b/fs/ocfs2/move_extents.c
+@@ -617,6 +617,8 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+         */
+        credits += OCFS2_INODE_UPDATE_CREDITS + 1;
+
++       inode_lock(tl_inode);
++
+        /*
+         * ocfs2_move_extent() didn't reserve any clusters in lock_allocators()
+         * logic, while we still need to lock the global_bitmap.
+@@ -637,8 +639,6 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+                goto out_unlock_gb_mutex;
+        }
+
+-       inode_lock(tl_inode);
+-
+        handle = ocfs2_start_trans(osb, credits);
+        if (IS_ERR(handle)) {
+                ret = PTR_ERR(handle);
+
+	Ivan Pravdin
