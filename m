@@ -1,74 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC4A290D8F
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 02:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2D5293C45
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 02:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751683678; cv=none; b=gl1yySVF/GqX1fcZgX4PUhj71Gh+/AqlSdzPXYhHBDcP+2ZCdwoqj9O8EfYkiSaMkYaaHIqaesRpOx9MO8tyn3+T55nP5KkWXIe+lPRVQX1mSd+PCu7KijkM4xrbI+J15NBn8Oj4Z+s+qjeiomiYB9ERBC1mVFQk/AobXI8xnBE=
+	t=1751683678; cv=none; b=SMO/pRbqxPYKMlN9R8gN3x97kp9J2/J6cR5Mb11gBU7ie7Sd4MlNgz/RsaDXfV9Wl259ki4dntcxibnMLv3fpPDqK8gEBsbwwXvKZTTWDV6sldcghtcIoBnJiXY507A7467BUr+ZdGIHKF/gxk/L4mWQID3KsK81MasK8kUggfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751683678; c=relaxed/simple;
-	bh=fDL72GPzQmQB76txcVyhanNjbzZhYEM9L1c+/7lm29Q=;
+	bh=coMBzmxV3g8KpJCZvcMn12gkE2xPWYbuyDvVXG/7x50=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=meH66kPNUFwli86PZOIkVAGxrrOPd65EJNdQwdJ98NFlhOYlFL9K1jzbTE+APMQyRBiAjS+b3UupfL3mix1hZBxXeYgqmcumcMwsbyFL2TOmEZ/hhPRiJGiS3GwDWNXbdXmJgGDWQNGn8aeBvaA2pxiwaDZwi1xTAzQDOG8QUXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d+N3218N; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=naPxpWb2DlW3b86+nI6yfkd496Z8U+iosqs+Nthk2GoXSnv944/agoCB9GKiUMSyBLWZNw2FZ08q2GTmi40mpHXj7luUFqp5xBIJ4/gI0PwOdBzhfoQ2KaKZpbJpe0kPOC6ZfjvfcnMJHIPIyenSXtUaQYN4dsgtvN6ke+mMSuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GOjKpc9X; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d+N3218N"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GOjKpc9X"
 Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564M1YX8026531
-	for <linux-kernel@vger.kernel.org>; Sat, 5 Jul 2025 02:47:55 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 564M5OGO011258
+	for <linux-kernel@vger.kernel.org>; Sat, 5 Jul 2025 02:47:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zTjSmwSAa6yTDqMZc38W+dUQ/0/X4lOOL/yJxyMBtv0=; b=d+N3218NNejs10ER
-	xkaXR+AMbEGoc8x3xWcwANSFngm7DXtl6DwrCqZTCSrof7+J/26cB9iAxeu7W7bZ
-	wdH405mBgioJ/bGKBkU/JBWqeh1AU+m++kZe/9/W/3f8OO5nKgv0nrSKVL4XGETd
-	8YavyJStBM1mgOs24uZzbYYwU0BamBN9ByZaXcP/1fkwqBwgduTwdHRr15VCeuKx
-	ooqXHUIv8RZ0e59YfjHELuCeJ7+v3+klsGq2g+T7rYRzUtryC8gxiLlT+P6ovfsw
-	QY5Y4KldLdlzSKh7nF6QWeUjujse5esW/viyEZyDmgULjRIK5I/Y3wfOK0F78JIw
-	+diPPg==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j802cx21-1
+	mPdweLA7FPyIkpCFNmnXxeGAqvTbA1f8vu74lAadJhc=; b=GOjKpc9XbAoA05dc
+	iGAtmtglDHZws2xHp8nnS5OgkZON7+LmXXX5Taat56JW++dIF/WP9zTbw4LHd/Y8
+	bpF2o0JYw1xUuaZai9t5fDQP2xBHgEWFWSvumb48hghTEIHbiSHaGU4o2sVvNBPZ
+	/GqpKneIcHrybSPSf1GfMSXuu5oc86pyJSS+eYzAyTG0n0fu7h6nvumzLFOshYcg
+	FwRcUjTJLcKLjwn3ABNdefiwddQepipCOffndeS/BuGsdN7J5VJdTekMtKialmAB
+	HDNXWlKCplU51wf9Qpl36VnRYqNGYta9GLlgJmkJQBrPF278UrPtGengD73I0oaI
+	jXy93A==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j802cx1v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 02:47:55 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09bc05b77so225222085a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 19:47:55 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 02:47:53 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d5077ef51bso183484485a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Jul 2025 19:47:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751683675; x=1752288475;
+        d=1e100.net; s=20230601; t=1751683673; x=1752288473;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zTjSmwSAa6yTDqMZc38W+dUQ/0/X4lOOL/yJxyMBtv0=;
-        b=stf+7+WIpaH1c3+LOjkw9zrom/z9lM94u52jHCB+LUNzvY2ddd8D11I4uDutUAo32r
-         BZqpeFZQlvKdA9Tq0PvbJbV4WJvpQG1ROOXgrVxumo4U7ank0vjCePKqo3QzlUy7PS8l
-         VZXrM+BqjsOyRJq6niQDY+xgN0Vtd0gbDi0q1Ca8jex67SQqe/1qbq8e5EATgYjySedv
-         mTDNDD8xURysGBynwX9t59RlwCPpQZYxIgra19Hw43SH+a2awXuOq3FSSTq5zsKLcwQE
-         9airlgEgTsofexNwpRmSR271WEz2mLZ7LuJ8E0SB5CfEok6x2c072jVQ0wJcdhuAo0aD
-         yKiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUe3IuirU64mCjW+IrQFy8yBCdeN1xqHuHX7KxavlFlIjZkDUYuWOLaz4qH4kSpHEleviEcgBLbYMectWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqTRHPJGmNEpDcAKjnUKqTCnvIWLZLDJhVTJi+gpej/NBPdZyQ
-	zLV4Ujlg3LqpcENW9rfN3D3lQl8TR9jaQ/BpTZs3oqm0LME1YR7YhmhAX8WNL0WDRW/bMpkSE4F
-	7nfCjRyx+2qyBmXEhy+15T9+BcHBEcAwEsi1rOSH6/Dyl0d+bPuJIj01atx0w7SkQV6c=
-X-Gm-Gg: ASbGncta1qV6p242zLXZkNwGpUuCpVrdEqm4Adg1VPj23HLEjjpuJjLGCna4D8XXAG9
-	bVFouCwAOL2/Kf70kBuxIbq5thX3X88TljLU8Msjd0XH4YvaDU5fNgnXNpjAYCbU9QHxwGexdvH
-	6zAF2MG8ITgdEUUIY38GVJUMdnNhdrLPeruIUsFYyjmaPDYDhGe827FgaKKLltTaXbxMXttrg7p
-	V/q5Pt5TXdnjcA8RszeM3lwRWEG8twr2SayQ9VeCG/VR442F+V+gXUkUGh35zr/T994n8RKhxeg
-	26nDbfbKf5+RVow4+JLw/XcaaEuN3daaN2vsCL8f3/RVZuW6/C1LBEI45vGGbVilo43h9HFL0E7
-	Ml06eF1CFytiteCPNEEE62W4aYKbli34c2Zs=
-X-Received: by 2002:a05:620a:700c:b0:7d4:4073:426 with SMTP id af79cd13be357-7d5df102dc3mr488419185a.10.1751683674750;
-        Fri, 04 Jul 2025 19:47:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZWoviTs93gGJ+j/GTAGiXhkZfv9KNLnpOmGgLc0uLOjEpatwqwW7S5NrlY4NsvIhmzhe8aA==
-X-Received: by 2002:a05:620a:700c:b0:7d4:4073:426 with SMTP id af79cd13be357-7d5df102dc3mr488416485a.10.1751683674335;
-        Fri, 04 Jul 2025 19:47:54 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32e1b1418b3sm4092411fa.76.2025.07.04.19.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=mPdweLA7FPyIkpCFNmnXxeGAqvTbA1f8vu74lAadJhc=;
+        b=FguvZut0LB6zQbWaVJpOQvul1vQ6cUz4dG3oXFOYRxEtroknygtYVOZlD3+PiV1psn
+         5Rm8z3Ej924wywY24I77x7I1PgVhSOduZwBScOQjk4/HVt16FATQ8LerAbfKdASsYq2H
+         Qh9ynAni/cJ4FzT7WvvIRZmkJWrx9Edi/BnihvJV19JeFFbiUylHxGQzyJzl5FKQ5SNO
+         M3e6bZ1NUtKFYu2PMdaG2xjfeIiWvx7ZtrMi+42sFQRifweB81FftsP1G0dlqk9CQbBl
+         qo+kC5FC9Wn45Ra20HzyZo260bz0R4rXCvW+h39ABua2nzYKDM1xH2I3ruZHjJwUTB/0
+         Fxug==
+X-Forwarded-Encrypted: i=1; AJvYcCVhmiBt5UyYRhR0cD4UOel65kl1UkqSGSAMFTAI+PmOR7Zq6r/xr4BOFbRayod3r4ZR/bKk/dK/B1A5H5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFMLiYVBX+N1C8BW9+ELFixPO3DvuqQ5mFK9MVBepZdKxkO+Wu
+	WSXhG9adHrnTfOdZGf/S5cPog69LUqah5UlAhAUl0wNEbcsok+C0zmU6Qi8JDt3X2oWv6g9CnHL
+	Us3PpHzOMc/cNw7ecSEVYb1/14jACUqiB05mqR1kuXePoeK14Nj+PbwQk7vMpesgFNA4=
+X-Gm-Gg: ASbGnct7YH/toz51+fFoHABH+op+jXP1SEEaT/P70+BExvhFittJtVTfVPgK5o3wz7p
+	XoEEMh/fqC0eYauz8sHe5TyiT/U2spdc9FDeMhQlV1kxX9yJfHTPKLx4lL4DEEHaujJEFetdRIQ
+	IAYx9HyHpcKJI4VDxNSJresJ9eDf81SoR5fAjG98fW4hp8AlIGo11OJF7//UkM6xqoXiCaofTvM
+	PBVg7aJCbec6Fe0N+x8BjzleVoSWXT0tLHFbEMqYhTXGFR7oVKTt9BFm65bSgHPZeiGwBbibIg8
+	Yojrp6cbtBKvnfIsqFbRdUzS2UVByeIREiizvBy6o6FWZRMDBGlq80PWVZBU+kU9KxJorVwhw79
+	3jSwwvrzNAf2evQ9h9goHtwPouJy7cTfU29o=
+X-Received: by 2002:a05:620a:6011:b0:7d3:8a6b:d24d with SMTP id af79cd13be357-7d5f14eddd3mr140643085a.24.1751683672208;
+        Fri, 04 Jul 2025 19:47:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAuHixLkZ/p64/O+elwmVTQv75n56fJXaXRZNt4RzYjco6O+60LkaZ11hq06oOa0xGb248RQ==
+X-Received: by 2002:a05:620a:6011:b0:7d3:8a6b:d24d with SMTP id af79cd13be357-7d5f14eddd3mr140640285a.24.1751683671425;
         Fri, 04 Jul 2025 19:47:51 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32e1b1418b3sm4092411fa.76.2025.07.04.19.47.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 19:47:50 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sat, 05 Jul 2025 05:47:33 +0300
-Subject: [PATCH 12/12] drm/msm/dpu: use standard functions in
+Date: Sat, 05 Jul 2025 05:47:32 +0300
+Subject: [PATCH 11/12] drm/msm/dpu: rewrite
  _dpu_format_populate_plane_sizes_ubwc()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250705-dpu-formats-v1-12-40f0bb31b8c8@oss.qualcomm.com>
+Message-Id: <20250705-dpu-formats-v1-11-40f0bb31b8c8@oss.qualcomm.com>
 References: <20250705-dpu-formats-v1-0-40f0bb31b8c8@oss.qualcomm.com>
 In-Reply-To: <20250705-dpu-formats-v1-0-40f0bb31b8c8@oss.qualcomm.com>
 To: Rob Clark <robin.clark@oss.qualcomm.com>,
@@ -92,59 +92,234 @@ To: Rob Clark <robin.clark@oss.qualcomm.com>,
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5448;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=52506;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=fDL72GPzQmQB76txcVyhanNjbzZhYEM9L1c+/7lm29Q=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoaJI+JuKKpLrS7xPn6yJjR0fiUzSkxZGXAE5hY
- 2m00hGjZ/6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaGiSPgAKCRCLPIo+Aiko
- 1dwhB/4sk6Yq70mL9wXivdqGs5Qn4wnldjh+wbzSZ6uuue18KtdcnB3r8u3Bv4r112p2874eJWG
- n/CYHtGwynhj1QEm0BkY36zZt/76unRomMLpNBRrhiDpK4TI2966d9If24rOK5CkpuWyh1io3rR
- pnTOTQ/tuVwk3291FcTKgqsydYA7E+c3hst5AgsB0pWOaoO5YxKxKpZDIFpA6ePVoyQDfl7fQVQ
- Cglxpo948iTaQciBbTvnM+zMdfxgJYE0N/G2xb25CwC6prGS+s35pNxJG1NNHsEpWOg6pcnMGkO
- vd0zXX923CQCPw/lrqSX3evS1Tej+R7UOBkt+Wxg0jERyFMb
+ bh=coMBzmxV3g8KpJCZvcMn12gkE2xPWYbuyDvVXG/7x50=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoaJI+NS6md8HE09RhPruq8LjWc7F0DvcFYhaz+
+ 4w+MoBjouKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaGiSPgAKCRCLPIo+Aiko
+ 1X4ZB/9QxfVW4mqKLzhg7iWNgtKM4F00lpVk8wKvP0XfeHN02+9NBU6Vvni/GExBvYVwDrmJBCE
+ vDdLqg//30kLEe+AYaoqHXvUVTlhk71NrehW/PGKnoIjqj1yHkDjaOB0Jt3oyYyDJBvBYRI3CTp
+ jGInIwBcolwZrcn+evMOWIvpAxQeVzlsonCTewow+1N8obA7bcJxZ04Luwd/L6w6V8QPkPQFnyD
+ uern5WUR0CXK/6e1MEhLo9Ni4h8gWeqUDpyfNrUDwTZVQnYbgDZ4xhayZ334re8JYDY+2C5gtkK
+ tNMojWkFmPYsrI+tQ65pFs/GFrUb9ru7Yn62M3MfrS6czh50
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: MowC6cS_g0H4z5NrFPV3CiV6sG_myrfS
-X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=6868925b cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=TEkP_0IIR_zyBM1EGkkA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: MowC6cS_g0H4z5NrFPV3CiV6sG_myrfS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA1MDAxNyBTYWx0ZWRfX93PNw2bpI2lk
- AErgtebEIni7dVgZUePqNk47m0HWwHeleWxEWonMvTlaLvqqc/IlPr9X5qLDrb6p9DzabAC5uxp
- snKCB2S5IZTGlXmFL/onSbJ1ptf2O3j8D0REYsF2yUmgVj3i12k7Iflbjx6kRM2jXY6TEz47zNe
- rSxKvSbL7X/giycStCJIiq6edOk29If48zsXfpmLWse79EDsMfRu/9wb1+1dpyEW2EgIXSedWBo
- gdq7obkBDFnBEM2ADx3PwedifaH+nUl1R7i70pLMM8UueQj0LUSr4UQqIgqmempJ7NI2pwbmseU
- gRWHcr8WDhckL5OSASxG/XLOO3oQagOgHZTnzv8jtyNBT38LbSEzz7HHJYMb+dTIggOn6p7ibYT
- FsILW5IIJL6+S06Q7F6kcUpju8gtBuimqrW0eERtlqtjoU8HkKPfgiALIAmbQSsV7mzuYkFc
+X-Proofpoint-GUID: BEA2-lVq6cJN_MohLoiS0zjzv9018wqr
+X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=68689259 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=6iusXPdm3c8emWAo3PYA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: BEA2-lVq6cJN_MohLoiS0zjzv9018wqr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA1MDAxNyBTYWx0ZWRfXyb97bR2kSY58
+ C/RdsxvLaSLcBxVrVpULjZKcTA34nljVW8B813Kn+xfB/wQu5k8yLcXzIMLa9GNt/abLyeNHCYu
+ 9LUdDne8AFVuToanyAev+1zy7KEqw/SW56wg46HRBph48L+Hwu383od/gM45fUx0KvBC5OUXGQ5
+ q1Rf7LaKVIRqJZEmYvgVf/m+2v9FNPULyX/CbxpiAEM584Sd/ptFuD34s3+OFXlqO3o4ExXs6Vo
+ a7YKXowTWfU0MacKhKrbEBVCrM8K320gfql+bzIIWecF9QLG6aXHVuoZ7E4/LAjnZLX/OHWfRLl
+ DLXlTL8EN4x9RNbPPfM0/CuQlaNKcs8Efj7ELrwH78rfxwsjrXYkls3EiyQFyqeyBTy1k2rWqQE
+ EKb4w+Qe+8f8e9MMPQQW/saU5IfBLZ1dwR4T/2SY4b7SgcnuEfA2R1m4JxUQ6p6rtoOyDZUD
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-04_07,2025-07-04_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxlogscore=840 mlxscore=0 malwarescore=0 suspectscore=0
+ spamscore=0 mlxlogscore=756 mlxscore=0 malwarescore=0 suspectscore=0
  lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
  priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
  authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2507050017
 
-The _dpu_format_populate_plane_sizes_ubwc() used MSM_MEDIA_ALIGN() and
-MSM_MEDIA_ROUNDUP(), macros inherited from the previous implementation,
-msm_media_info.h. Replace them with the standard Linux macros,
-round_up() and DIV_ROUND_UP() respectively.
+Drop extra wrapping layer (msm_media_info.h) and inline all VENUS_*()
+functions, simplifying the code.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c | 62 ++++++++++++-----------------
- 1 file changed, 26 insertions(+), 36 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c    |  124 ++-
+ drivers/gpu/drm/msm/disp/dpu1/msm_media_info.h | 1155 ------------------------
+ 2 files changed, 60 insertions(+), 1219 deletions(-)
 
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-index 67bc5a6eeb43dcf113dea9eccdb778cd52b1ad40..6a0426ed1460c5af4822844d7a7b0c51739df875 100644
+index e1fb7fd3b0b97a38880bc80aec26003d65a3a310..67bc5a6eeb43dcf113dea9eccdb778cd52b1ad40 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-@@ -10,16 +10,6 @@
+@@ -7,10 +7,19 @@
+ #include <uapi/drm/drm_fourcc.h>
+ #include <drm/drm_framebuffer.h>
+ 
+-#include "msm_media_info.h"
  #include "dpu_kms.h"
  #include "dpu_formats.h"
  
++#ifndef MSM_MEDIA_ALIGN
++#define MSM_MEDIA_ALIGN(__sz, __align) (((__align) & ((__align) - 1)) ?\
++	((((__sz) + (__align) - 1) / (__align)) * (__align)) :\
++	(((__sz) + (__align) - 1) & (~((__align) - 1))))
++#endif
++
++#ifndef MSM_MEDIA_ROUNDUP
++#define MSM_MEDIA_ROUNDUP(__sz, __r) (((__sz) + ((__r) - 1)) / (__r))
++#endif
++
+ #define DPU_UBWC_PLANE_SIZE_ALIGNMENT	4096
+ 
+ /*
+@@ -54,90 +63,73 @@ static void _dpu_get_v_h_subsample_rate(
+ 	}
+ }
+ 
+-static int _dpu_format_get_media_color_ubwc(const struct msm_format *fmt)
+-{
+-	static const struct dpu_media_color_map dpu_media_ubwc_map[] = {
+-		{DRM_FORMAT_ABGR8888, COLOR_FMT_RGBA8888_UBWC},
+-		{DRM_FORMAT_ARGB8888, COLOR_FMT_RGBA8888_UBWC},
+-		{DRM_FORMAT_XBGR8888, COLOR_FMT_RGBA8888_UBWC},
+-		{DRM_FORMAT_XRGB8888, COLOR_FMT_RGBA8888_UBWC},
+-		{DRM_FORMAT_ABGR2101010, COLOR_FMT_RGBA1010102_UBWC},
+-		{DRM_FORMAT_ARGB2101010, COLOR_FMT_RGBA1010102_UBWC},
+-		{DRM_FORMAT_XRGB2101010, COLOR_FMT_RGBA1010102_UBWC},
+-		{DRM_FORMAT_XBGR2101010, COLOR_FMT_RGBA1010102_UBWC},
+-		{DRM_FORMAT_BGR565, COLOR_FMT_RGB565_UBWC},
+-	};
+-	int color_fmt = -1;
+-	int i;
+-
+-	if (fmt->pixel_format == DRM_FORMAT_NV12 ||
+-	    fmt->pixel_format == DRM_FORMAT_P010) {
+-		if (MSM_FORMAT_IS_DX(fmt)) {
+-			if (fmt->flags & MSM_FORMAT_FLAG_UNPACK_TIGHT)
+-				color_fmt = COLOR_FMT_NV12_BPP10_UBWC;
+-			else
+-				color_fmt = COLOR_FMT_P010_UBWC;
+-		} else
+-			color_fmt = COLOR_FMT_NV12_UBWC;
+-		return color_fmt;
+-	}
+-
+-	for (i = 0; i < ARRAY_SIZE(dpu_media_ubwc_map); ++i)
+-		if (fmt->pixel_format == dpu_media_ubwc_map[i].format) {
+-			color_fmt = dpu_media_ubwc_map[i].color;
+-			break;
+-		}
+-	return color_fmt;
+-}
+-
+ static int _dpu_format_populate_plane_sizes_ubwc(
+ 		const struct msm_format *fmt,
+ 		struct drm_framebuffer *fb,
+ 		struct dpu_hw_fmt_layout *layout)
+ {
+-	int color;
+ 	bool meta = MSM_FORMAT_IS_UBWC(fmt);
+ 
+-	color = _dpu_format_get_media_color_ubwc(fmt);
+-	if (color < 0) {
+-		DRM_ERROR("UBWC format not supported for fmt: %p4cc\n",
+-			  &fmt->pixel_format);
+-		return -EINVAL;
+-	}
+-
+ 	if (MSM_FORMAT_IS_YUV(fmt)) {
+-		uint32_t y_sclines, uv_sclines;
+-		uint32_t y_meta_scanlines = 0;
+-		uint32_t uv_meta_scanlines = 0;
++		unsigned int stride, sclines;
++		unsigned int y_tile_width, y_tile_height;
++		unsigned int y_meta_stride, y_meta_scanlines;
++		unsigned int uv_meta_stride, uv_meta_scanlines;
++
++		if (fmt->pixel_format == DRM_FORMAT_NV12 ||
++		    fmt->pixel_format == DRM_FORMAT_P010) {
++			if (MSM_FORMAT_IS_DX(fmt)) {
++				if (fmt->flags & MSM_FORMAT_FLAG_UNPACK_TIGHT) {
++					stride = MSM_MEDIA_ALIGN(fb->width, 192);
++					stride = MSM_MEDIA_ALIGN(stride * 4 / 3, 256);
++					y_tile_width = 48;
++				} else {
++					stride = MSM_MEDIA_ALIGN(fb->width * 2, 256);
++					y_tile_width = 32;
++				}
++
++				sclines = MSM_MEDIA_ALIGN(fb->height, 16);
++				y_tile_height = 4;
++			} else {
++				stride = MSM_MEDIA_ALIGN(fb->width, 128);
++				y_tile_width = 32;
++
++				sclines = MSM_MEDIA_ALIGN(fb->height, 32);
++				y_tile_height = 8;
++			}
++		}
+ 
+-		layout->plane_pitch[0] = VENUS_Y_STRIDE(color, fb->width);
+-		y_sclines = VENUS_Y_SCANLINES(color, fb->height);
++		layout->plane_pitch[0] = stride;
+ 		layout->plane_size[0] = MSM_MEDIA_ALIGN(layout->plane_pitch[0] *
+-			y_sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
++			sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+ 
+-		layout->plane_pitch[1] = VENUS_UV_STRIDE(color, fb->width);
+-		uv_sclines = VENUS_UV_SCANLINES(color, fb->height);
++		layout->plane_pitch[1] = stride;
+ 		layout->plane_size[1] = MSM_MEDIA_ALIGN(layout->plane_pitch[1] *
+-			uv_sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
++			sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+ 
+ 		if (!meta)
+ 			return 0;
+ 
+-		layout->plane_pitch[2] = VENUS_Y_META_STRIDE(color, fb->width);
+-		y_meta_scanlines = VENUS_Y_META_SCANLINES(color, fb->height);
++		y_meta_stride = MSM_MEDIA_ROUNDUP(fb->width, y_tile_width);
++		layout->plane_pitch[2] = MSM_MEDIA_ALIGN(y_meta_stride, 64);
++
++		y_meta_scanlines = MSM_MEDIA_ROUNDUP(fb->height, y_tile_height);
++		y_meta_scanlines = MSM_MEDIA_ALIGN(y_meta_scanlines, 16);
+ 		layout->plane_size[2] = MSM_MEDIA_ALIGN(layout->plane_pitch[2] *
+ 			y_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+ 
+-		layout->plane_pitch[3] = VENUS_UV_META_STRIDE(color, fb->width);
+-		uv_meta_scanlines = VENUS_UV_META_SCANLINES(color, fb->height);
++		uv_meta_stride = MSM_MEDIA_ROUNDUP((fb->width+1)>>1, y_tile_width / 2);
++		layout->plane_pitch[3] = MSM_MEDIA_ALIGN(uv_meta_stride, 64);
++
++		uv_meta_scanlines = MSM_MEDIA_ROUNDUP((fb->height+1)>>1, y_tile_height);
++		uv_meta_scanlines = MSM_MEDIA_ALIGN(uv_meta_scanlines, 16);
+ 		layout->plane_size[3] = MSM_MEDIA_ALIGN(layout->plane_pitch[3] *
+ 			uv_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+-
+ 	} else {
+-		uint32_t rgb_scanlines, rgb_meta_scanlines;
++		unsigned int rgb_scanlines, rgb_meta_scanlines, rgb_meta_stride;
+ 
+-		layout->plane_pitch[0] = VENUS_RGB_STRIDE(color, fb->width);
+-		rgb_scanlines = VENUS_RGB_SCANLINES(color, fb->height);
++		layout->plane_pitch[0] = MSM_MEDIA_ALIGN(fb->width * fmt->bpp, 256);
++		rgb_scanlines = MSM_MEDIA_ALIGN(fb->height, 16);
+ 		layout->plane_size[0] = MSM_MEDIA_ALIGN(layout->plane_pitch[0] *
+ 			rgb_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+ 
+@@ -147,8 +139,12 @@ static int _dpu_format_populate_plane_sizes_ubwc(
+ 		/* uAPI leaves plane[1] empty and plane[2] as meta */
+ 		layout->num_planes += 1;
+ 
+-		layout->plane_pitch[2] = VENUS_RGB_META_STRIDE(color, fb->width);
+-		rgb_meta_scanlines = VENUS_RGB_META_SCANLINES(color, fb->height);
++		rgb_meta_stride = MSM_MEDIA_ROUNDUP(fb->width, 16);
++		layout->plane_pitch[2] = MSM_MEDIA_ALIGN(rgb_meta_stride, 64);
++
++		rgb_meta_scanlines = MSM_MEDIA_ROUNDUP(fb->height, 4);
++		rgb_meta_scanlines = MSM_MEDIA_ALIGN(rgb_meta_scanlines, 16);
++
+ 		layout->plane_size[2] = MSM_MEDIA_ALIGN(layout->plane_pitch[2] *
+ 			rgb_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
+ 	}
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/msm_media_info.h b/drivers/gpu/drm/msm/disp/dpu1/msm_media_info.h
+deleted file mode 100644
+index 9fc9dbde8a27c1d7078c3d6b260c8635f27a514f..0000000000000000000000000000000000000000
+--- a/drivers/gpu/drm/msm/disp/dpu1/msm_media_info.h
++++ /dev/null
+@@ -1,1155 +0,0 @@
+-#ifndef __MEDIA_INFO_H__
+-#define __MEDIA_INFO_H__
+-
 -#ifndef MSM_MEDIA_ALIGN
 -#define MSM_MEDIA_ALIGN(__sz, __align) (((__align) & ((__align) - 1)) ?\
 -	((((__sz) + (__align) - 1) / (__align)) * (__align)) :\
@@ -155,107 +330,1148 @@ index 67bc5a6eeb43dcf113dea9eccdb778cd52b1ad40..6a0426ed1460c5af4822844d7a7b0c51
 -#define MSM_MEDIA_ROUNDUP(__sz, __r) (((__sz) + ((__r) - 1)) / (__r))
 -#endif
 -
- #define DPU_UBWC_PLANE_SIZE_ALIGNMENT	4096
- 
- /*
-@@ -80,57 +70,57 @@ static int _dpu_format_populate_plane_sizes_ubwc(
- 		    fmt->pixel_format == DRM_FORMAT_P010) {
- 			if (MSM_FORMAT_IS_DX(fmt)) {
- 				if (fmt->flags & MSM_FORMAT_FLAG_UNPACK_TIGHT) {
--					stride = MSM_MEDIA_ALIGN(fb->width, 192);
--					stride = MSM_MEDIA_ALIGN(stride * 4 / 3, 256);
-+					stride = round_up(fb->width, 192);
-+					stride = round_up(stride * 4 / 3, 256);
- 					y_tile_width = 48;
- 				} else {
--					stride = MSM_MEDIA_ALIGN(fb->width * 2, 256);
-+					stride = round_up(fb->width * 2, 256);
- 					y_tile_width = 32;
- 				}
- 
--				sclines = MSM_MEDIA_ALIGN(fb->height, 16);
-+				sclines = round_up(fb->height, 16);
- 				y_tile_height = 4;
- 			} else {
--				stride = MSM_MEDIA_ALIGN(fb->width, 128);
-+				stride = round_up(fb->width, 128);
- 				y_tile_width = 32;
- 
--				sclines = MSM_MEDIA_ALIGN(fb->height, 32);
-+				sclines = round_up(fb->height, 32);
- 				y_tile_height = 8;
- 			}
- 		}
- 
- 		layout->plane_pitch[0] = stride;
--		layout->plane_size[0] = MSM_MEDIA_ALIGN(layout->plane_pitch[0] *
-+		layout->plane_size[0] = round_up(layout->plane_pitch[0] *
- 			sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
- 
- 		layout->plane_pitch[1] = stride;
--		layout->plane_size[1] = MSM_MEDIA_ALIGN(layout->plane_pitch[1] *
-+		layout->plane_size[1] = round_up(layout->plane_pitch[1] *
- 			sclines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
- 
- 		if (!meta)
- 			return 0;
- 
--		y_meta_stride = MSM_MEDIA_ROUNDUP(fb->width, y_tile_width);
--		layout->plane_pitch[2] = MSM_MEDIA_ALIGN(y_meta_stride, 64);
-+		y_meta_stride = DIV_ROUND_UP(fb->width, y_tile_width);
-+		layout->plane_pitch[2] = round_up(y_meta_stride, 64);
- 
--		y_meta_scanlines = MSM_MEDIA_ROUNDUP(fb->height, y_tile_height);
--		y_meta_scanlines = MSM_MEDIA_ALIGN(y_meta_scanlines, 16);
--		layout->plane_size[2] = MSM_MEDIA_ALIGN(layout->plane_pitch[2] *
-+		y_meta_scanlines = DIV_ROUND_UP(fb->height, y_tile_height);
-+		y_meta_scanlines = round_up(y_meta_scanlines, 16);
-+		layout->plane_size[2] = round_up(layout->plane_pitch[2] *
- 			y_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
- 
--		uv_meta_stride = MSM_MEDIA_ROUNDUP((fb->width+1)>>1, y_tile_width / 2);
--		layout->plane_pitch[3] = MSM_MEDIA_ALIGN(uv_meta_stride, 64);
-+		uv_meta_stride = DIV_ROUND_UP((fb->width+1)>>1, y_tile_width / 2);
-+		layout->plane_pitch[3] = round_up(uv_meta_stride, 64);
- 
--		uv_meta_scanlines = MSM_MEDIA_ROUNDUP((fb->height+1)>>1, y_tile_height);
--		uv_meta_scanlines = MSM_MEDIA_ALIGN(uv_meta_scanlines, 16);
--		layout->plane_size[3] = MSM_MEDIA_ALIGN(layout->plane_pitch[3] *
-+		uv_meta_scanlines = DIV_ROUND_UP((fb->height+1)>>1, y_tile_height);
-+		uv_meta_scanlines = round_up(uv_meta_scanlines, 16);
-+		layout->plane_size[3] = round_up(layout->plane_pitch[3] *
- 			uv_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
- 	} else {
- 		unsigned int rgb_scanlines, rgb_meta_scanlines, rgb_meta_stride;
- 
--		layout->plane_pitch[0] = MSM_MEDIA_ALIGN(fb->width * fmt->bpp, 256);
--		rgb_scanlines = MSM_MEDIA_ALIGN(fb->height, 16);
--		layout->plane_size[0] = MSM_MEDIA_ALIGN(layout->plane_pitch[0] *
-+		layout->plane_pitch[0] = round_up(fb->width * fmt->bpp, 256);
-+		rgb_scanlines = round_up(fb->height, 16);
-+		layout->plane_size[0] = round_up(layout->plane_pitch[0] *
- 			rgb_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
- 
- 		if (!meta)
-@@ -139,13 +129,13 @@ static int _dpu_format_populate_plane_sizes_ubwc(
- 		/* uAPI leaves plane[1] empty and plane[2] as meta */
- 		layout->num_planes += 1;
- 
--		rgb_meta_stride = MSM_MEDIA_ROUNDUP(fb->width, 16);
--		layout->plane_pitch[2] = MSM_MEDIA_ALIGN(rgb_meta_stride, 64);
-+		rgb_meta_stride = DIV_ROUND_UP(fb->width, 16);
-+		layout->plane_pitch[2] = round_up(rgb_meta_stride, 64);
- 
--		rgb_meta_scanlines = MSM_MEDIA_ROUNDUP(fb->height, 4);
--		rgb_meta_scanlines = MSM_MEDIA_ALIGN(rgb_meta_scanlines, 16);
-+		rgb_meta_scanlines = DIV_ROUND_UP(fb->height, 4);
-+		rgb_meta_scanlines = round_up(rgb_meta_scanlines, 16);
- 
--		layout->plane_size[2] = MSM_MEDIA_ALIGN(layout->plane_pitch[2] *
-+		layout->plane_size[2] = round_up(layout->plane_pitch[2] *
- 			rgb_meta_scanlines, DPU_UBWC_PLANE_SIZE_ALIGNMENT);
- 	}
- 
+-#ifndef MSM_MEDIA_MAX
+-#define MSM_MEDIA_MAX(__a, __b) ((__a) > (__b)?(__a):(__b))
+-#endif
+-
+-enum color_fmts {
+-	/* Venus NV12:
+-	 * YUV 4:2:0 image with a plane of 8 bit Y samples followed
+-	 * by an interleaved U/V plane containing 8 bit 2x2 subsampled
+-	 * colour difference samples.
+-	 *
+-	 * <-------- Y/UV_Stride -------->
+-	 * <------- Width ------->
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  ^           ^
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  Height      |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |          Y_Scanlines
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * U V U V U V U V U V U V . . . .  ^
+-	 * U V U V U V U V U V U V . . . .  |
+-	 * U V U V U V U V U V U V . . . .  |
+-	 * U V U V U V U V U V U V . . . .  UV_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  --> Buffer size alignment
+-	 *
+-	 * Y_Stride : Width aligned to 128
+-	 * UV_Stride : Width aligned to 128
+-	 * Y_Scanlines: Height aligned to 32
+-	 * UV_Scanlines: Height/2 aligned to 16
+-	 * Extradata: Arbitrary (software-imposed) padding
+-	 * Total size = align((Y_Stride * Y_Scanlines
+-	 *          + UV_Stride * UV_Scanlines
+-	 *          + max(Extradata, Y_Stride * 8), 4096)
+-	 */
+-	COLOR_FMT_NV12,
+-
+-	/* Venus NV21:
+-	 * YUV 4:2:0 image with a plane of 8 bit Y samples followed
+-	 * by an interleaved V/U plane containing 8 bit 2x2 subsampled
+-	 * colour difference samples.
+-	 *
+-	 * <-------- Y/UV_Stride -------->
+-	 * <------- Width ------->
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  ^           ^
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  Height      |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |          Y_Scanlines
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * V U V U V U V U V U V U . . . .  ^
+-	 * V U V U V U V U V U V U . . . .  |
+-	 * V U V U V U V U V U V U . . . .  |
+-	 * V U V U V U V U V U V U . . . .  UV_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  --> Padding & Buffer size alignment
+-	 *
+-	 * Y_Stride : Width aligned to 128
+-	 * UV_Stride : Width aligned to 128
+-	 * Y_Scanlines: Height aligned to 32
+-	 * UV_Scanlines: Height/2 aligned to 16
+-	 * Extradata: Arbitrary (software-imposed) padding
+-	 * Total size = align((Y_Stride * Y_Scanlines
+-	 *          + UV_Stride * UV_Scanlines
+-	 *          + max(Extradata, Y_Stride * 8), 4096)
+-	 */
+-	COLOR_FMT_NV21,
+-	/* Venus NV12_MVTB:
+-	 * Two YUV 4:2:0 images/views one after the other
+-	 * in a top-bottom layout, same as NV12
+-	 * with a plane of 8 bit Y samples followed
+-	 * by an interleaved U/V plane containing 8 bit 2x2 subsampled
+-	 * colour difference samples.
+-	 *
+-	 *
+-	 * <-------- Y/UV_Stride -------->
+-	 * <------- Width ------->
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  ^           ^               ^
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  Height      |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |          Y_Scanlines      |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  V           |               |
+-	 * . . . . . . . . . . . . . . . .              |             View_1
+-	 * . . . . . . . . . . . . . . . .              |               |
+-	 * . . . . . . . . . . . . . . . .              |               |
+-	 * . . . . . . . . . . . . . . . .              V               |
+-	 * U V U V U V U V U V U V . . . .  ^                           |
+-	 * U V U V U V U V U V U V . . . .  |                           |
+-	 * U V U V U V U V U V U V . . . .  |                           |
+-	 * U V U V U V U V U V U V . . . .  UV_Scanlines                |
+-	 * . . . . . . . . . . . . . . . .  |                           |
+-	 * . . . . . . . . . . . . . . . .  V                           V
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  ^           ^               ^
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  Height      |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |          Y_Scanlines      |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |               |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  V           |               |
+-	 * . . . . . . . . . . . . . . . .              |             View_2
+-	 * . . . . . . . . . . . . . . . .              |               |
+-	 * . . . . . . . . . . . . . . . .              |               |
+-	 * . . . . . . . . . . . . . . . .              V               |
+-	 * U V U V U V U V U V U V . . . .  ^                           |
+-	 * U V U V U V U V U V U V . . . .  |                           |
+-	 * U V U V U V U V U V U V . . . .  |                           |
+-	 * U V U V U V U V U V U V . . . .  UV_Scanlines                |
+-	 * . . . . . . . . . . . . . . . .  |                           |
+-	 * . . . . . . . . . . . . . . . .  V                           V
+-	 * . . . . . . . . . . . . . . . .  --> Buffer size alignment
+-	 *
+-	 * Y_Stride : Width aligned to 128
+-	 * UV_Stride : Width aligned to 128
+-	 * Y_Scanlines: Height aligned to 32
+-	 * UV_Scanlines: Height/2 aligned to 16
+-	 * View_1 begin at: 0 (zero)
+-	 * View_2 begin at: Y_Stride * Y_Scanlines + UV_Stride * UV_Scanlines
+-	 * Extradata: Arbitrary (software-imposed) padding
+-	 * Total size = align((2*(Y_Stride * Y_Scanlines)
+-	 *          + 2*(UV_Stride * UV_Scanlines) + Extradata), 4096)
+-	 */
+-	COLOR_FMT_NV12_MVTB,
+-	/*
+-	 * The buffer can be of 2 types:
+-	 * (1) Venus NV12 UBWC Progressive
+-	 * (2) Venus NV12 UBWC Interlaced
+-	 *
+-	 * (1) Venus NV12 UBWC Progressive Buffer Format:
+-	 * Compressed Macro-tile format for NV12.
+-	 * Contains 4 planes in the following order -
+-	 * (A) Y_Meta_Plane
+-	 * (B) Y_UBWC_Plane
+-	 * (C) UV_Meta_Plane
+-	 * (D) UV_UBWC_Plane
+-	 *
+-	 * Y_Meta_Plane consists of meta information to decode compressed
+-	 * tile data in Y_UBWC_Plane.
+-	 * Y_UBWC_Plane consists of Y data in compressed macro-tile format.
+-	 * UBWC decoder block will use the Y_Meta_Plane data together with
+-	 * Y_UBWC_Plane data to produce loss-less uncompressed 8 bit Y samples.
+-	 *
+-	 * UV_Meta_Plane consists of meta information to decode compressed
+-	 * tile data in UV_UBWC_Plane.
+-	 * UV_UBWC_Plane consists of UV data in compressed macro-tile format.
+-	 * UBWC decoder block will use UV_Meta_Plane data together with
+-	 * UV_UBWC_Plane data to produce loss-less uncompressed 8 bit 2x2
+-	 * subsampled color difference samples.
+-	 *
+-	 * Each tile in Y_UBWC_Plane/UV_UBWC_Plane is independently decodable
+-	 * and randomly accessible. There is no dependency between tiles.
+-	 *
+-	 * <----- Y_Meta_Stride ---->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      Height      |
+-	 * M M M M M M M M M M M M . .      |         Meta_Y_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <--Compressed tile Y Stride--->
+-	 * <------- Width ------->
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  ^           ^
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  Height      |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |        Macro_tile_Y_Scanlines
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * <----- UV_Meta_Stride ---->
+-	 * M M M M M M M M M M M M . .      ^
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      M_UV_Scanlines
+-	 * . . . . . . . . . . . . . .      |
+-	 * . . . . . . . . . . . . . .      V
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * <--Compressed tile UV Stride--->
+-	 * U* V* U* V* U* V* U* V* . . . .  ^
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  UV_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 *
+-	 * Y_Stride = align(Width, 128)
+-	 * UV_Stride = align(Width, 128)
+-	 * Y_Scanlines = align(Height, 32)
+-	 * UV_Scanlines = align(Height/2, 16)
+-	 * Y_UBWC_Plane_size = align(Y_Stride * Y_Scanlines, 4096)
+-	 * UV_UBWC_Plane_size = align(UV_Stride * UV_Scanlines, 4096)
+-	 * Y_Meta_Stride = align(roundup(Width, Y_TileWidth), 64)
+-	 * Y_Meta_Scanlines = align(roundup(Height, Y_TileHeight), 16)
+-	 * Y_Meta_Plane_size = align(Y_Meta_Stride * Y_Meta_Scanlines, 4096)
+-	 * UV_Meta_Stride = align(roundup(Width, UV_TileWidth), 64)
+-	 * UV_Meta_Scanlines = align(roundup(Height, UV_TileHeight), 16)
+-	 * UV_Meta_Plane_size = align(UV_Meta_Stride * UV_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align( Y_UBWC_Plane_size + UV_UBWC_Plane_size +
+-	 *           Y_Meta_Plane_size + UV_Meta_Plane_size
+-	 *           + max(Extradata, Y_Stride * 48), 4096)
+-	 *
+-	 *
+-	 * (2) Venus NV12 UBWC Interlaced Buffer Format:
+-	 * Compressed Macro-tile format for NV12 interlaced.
+-	 * Contains 8 planes in the following order -
+-	 * (A) Y_Meta_Top_Field_Plane
+-	 * (B) Y_UBWC_Top_Field_Plane
+-	 * (C) UV_Meta_Top_Field_Plane
+-	 * (D) UV_UBWC_Top_Field_Plane
+-	 * (E) Y_Meta_Bottom_Field_Plane
+-	 * (F) Y_UBWC_Bottom_Field_Plane
+-	 * (G) UV_Meta_Bottom_Field_Plane
+-	 * (H) UV_UBWC_Bottom_Field_Plane
+-	 * Y_Meta_Top_Field_Plane consists of meta information to decode
+-	 * compressed tile data for Y_UBWC_Top_Field_Plane.
+-	 * Y_UBWC_Top_Field_Plane consists of Y data in compressed macro-tile
+-	 * format for top field of an interlaced frame.
+-	 * UBWC decoder block will use the Y_Meta_Top_Field_Plane data together
+-	 * with Y_UBWC_Top_Field_Plane data to produce loss-less uncompressed
+-	 * 8 bit Y samples for top field of an interlaced frame.
+-	 *
+-	 * UV_Meta_Top_Field_Plane consists of meta information to decode
+-	 * compressed tile data in UV_UBWC_Top_Field_Plane.
+-	 * UV_UBWC_Top_Field_Plane consists of UV data in compressed macro-tile
+-	 * format for top field of an interlaced frame.
+-	 * UBWC decoder block will use UV_Meta_Top_Field_Plane data together
+-	 * with UV_UBWC_Top_Field_Plane data to produce loss-less uncompressed
+-	 * 8 bit subsampled color difference samples for top field of an
+-	 * interlaced frame.
+-	 *
+-	 * Each tile in Y_UBWC_Top_Field_Plane/UV_UBWC_Top_Field_Plane is
+-	 * independently decodable and randomly accessible. There is no
+-	 * dependency between tiles.
+-	 *
+-	 * Y_Meta_Bottom_Field_Plane consists of meta information to decode
+-	 * compressed tile data for Y_UBWC_Bottom_Field_Plane.
+-	 * Y_UBWC_Bottom_Field_Plane consists of Y data in compressed macro-tile
+-	 * format for bottom field of an interlaced frame.
+-	 * UBWC decoder block will use the Y_Meta_Bottom_Field_Plane data
+-	 * together with Y_UBWC_Bottom_Field_Plane data to produce loss-less
+-	 * uncompressed 8 bit Y samples for bottom field of an interlaced frame.
+-	 *
+-	 * UV_Meta_Bottom_Field_Plane consists of meta information to decode
+-	 * compressed tile data in UV_UBWC_Bottom_Field_Plane.
+-	 * UV_UBWC_Bottom_Field_Plane consists of UV data in compressed
+-	 * macro-tile format for bottom field of an interlaced frame.
+-	 * UBWC decoder block will use UV_Meta_Bottom_Field_Plane data together
+-	 * with UV_UBWC_Bottom_Field_Plane data to produce loss-less
+-	 * uncompressed 8 bit subsampled color difference samples for bottom
+-	 * field of an interlaced frame.
+-	 *
+-	 * Each tile in Y_UBWC_Bottom_Field_Plane/UV_UBWC_Bottom_Field_Plane is
+-	 * independently decodable and randomly accessible. There is no
+-	 * dependency between tiles.
+-	 *
+-	 * <-----Y_TF_Meta_Stride---->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . . Half_height      |
+-	 * M M M M M M M M M M M M . .      |         Meta_Y_TF_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <-Compressed tile Y_TF Stride->
+-	 * <------- Width ------->
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  ^           ^
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . . Half_height  |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |        Macro_tile_Y_TF_Scanlines
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * <----UV_TF_Meta_Stride---->
+-	 * M M M M M M M M M M M M . .      ^
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      M_UV_TF_Scanlines
+-	 * . . . . . . . . . . . . . .      |
+-	 * . . . . . . . . . . . . . .      V
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * <-Compressed tile UV_TF Stride->
+-	 * U* V* U* V* U* V* U* V* . . . .  ^
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  UV_TF_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 * <-----Y_BF_Meta_Stride---->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . . Half_height      |
+-	 * M M M M M M M M M M M M . .      |         Meta_Y_BF_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <-Compressed tile Y_BF Stride->
+-	 * <------- Width ------->
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  ^           ^
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . . Half_height  |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |        Macro_tile_Y_BF_Scanlines
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * <----UV_BF_Meta_Stride---->
+-	 * M M M M M M M M M M M M . .      ^
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      M_UV_BF_Scanlines
+-	 * . . . . . . . . . . . . . .      |
+-	 * . . . . . . . . . . . . . .      V
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * <-Compressed tile UV_BF Stride->
+-	 * U* V* U* V* U* V* U* V* . . . .  ^
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  UV_BF_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 *
+-	 * Half_height = (Height+1)>>1
+-	 * Y_TF_Stride = align(Width, 128)
+-	 * UV_TF_Stride = align(Width, 128)
+-	 * Y_TF_Scanlines = align(Half_height, 32)
+-	 * UV_TF_Scanlines = align((Half_height+1)/2, 32)
+-	 * Y_UBWC_TF_Plane_size = align(Y_TF_Stride * Y_TF_Scanlines, 4096)
+-	 * UV_UBWC_TF_Plane_size = align(UV_TF_Stride * UV_TF_Scanlines, 4096)
+-	 * Y_TF_Meta_Stride = align(roundup(Width, Y_TileWidth), 64)
+-	 * Y_TF_Meta_Scanlines = align(roundup(Half_height, Y_TileHeight), 16)
+-	 * Y_TF_Meta_Plane_size =
+-	 *     align(Y_TF_Meta_Stride * Y_TF_Meta_Scanlines, 4096)
+-	 * UV_TF_Meta_Stride = align(roundup(Width, UV_TileWidth), 64)
+-	 * UV_TF_Meta_Scanlines = align(roundup(Half_height, UV_TileHeight), 16)
+-	 * UV_TF_Meta_Plane_size =
+-	 *     align(UV_TF_Meta_Stride * UV_TF_Meta_Scanlines, 4096)
+-	 * Y_BF_Stride = align(Width, 128)
+-	 * UV_BF_Stride = align(Width, 128)
+-	 * Y_BF_Scanlines = align(Half_height, 32)
+-	 * UV_BF_Scanlines = align((Half_height+1)/2, 32)
+-	 * Y_UBWC_BF_Plane_size = align(Y_BF_Stride * Y_BF_Scanlines, 4096)
+-	 * UV_UBWC_BF_Plane_size = align(UV_BF_Stride * UV_BF_Scanlines, 4096)
+-	 * Y_BF_Meta_Stride = align(roundup(Width, Y_TileWidth), 64)
+-	 * Y_BF_Meta_Scanlines = align(roundup(Half_height, Y_TileHeight), 16)
+-	 * Y_BF_Meta_Plane_size =
+-	 *     align(Y_BF_Meta_Stride * Y_BF_Meta_Scanlines, 4096)
+-	 * UV_BF_Meta_Stride = align(roundup(Width, UV_TileWidth), 64)
+-	 * UV_BF_Meta_Scanlines = align(roundup(Half_height, UV_TileHeight), 16)
+-	 * UV_BF_Meta_Plane_size =
+-	 *     align(UV_BF_Meta_Stride * UV_BF_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align( Y_UBWC_TF_Plane_size + UV_UBWC_TF_Plane_size +
+-	 *           Y_TF_Meta_Plane_size + UV_TF_Meta_Plane_size +
+-	 *			 Y_UBWC_BF_Plane_size + UV_UBWC_BF_Plane_size +
+-	 *           Y_BF_Meta_Plane_size + UV_BF_Meta_Plane_size +
+-	 *           + max(Extradata, Y_TF_Stride * 48), 4096)
+-	 */
+-	COLOR_FMT_NV12_UBWC,
+-	/* Venus NV12 10-bit UBWC:
+-	 * Compressed Macro-tile format for NV12.
+-	 * Contains 4 planes in the following order -
+-	 * (A) Y_Meta_Plane
+-	 * (B) Y_UBWC_Plane
+-	 * (C) UV_Meta_Plane
+-	 * (D) UV_UBWC_Plane
+-	 *
+-	 * Y_Meta_Plane consists of meta information to decode compressed
+-	 * tile data in Y_UBWC_Plane.
+-	 * Y_UBWC_Plane consists of Y data in compressed macro-tile format.
+-	 * UBWC decoder block will use the Y_Meta_Plane data together with
+-	 * Y_UBWC_Plane data to produce loss-less uncompressed 10 bit Y samples.
+-	 *
+-	 * UV_Meta_Plane consists of meta information to decode compressed
+-	 * tile data in UV_UBWC_Plane.
+-	 * UV_UBWC_Plane consists of UV data in compressed macro-tile format.
+-	 * UBWC decoder block will use UV_Meta_Plane data together with
+-	 * UV_UBWC_Plane data to produce loss-less uncompressed 10 bit 2x2
+-	 * subsampled color difference samples.
+-	 *
+-	 * Each tile in Y_UBWC_Plane/UV_UBWC_Plane is independently decodable
+-	 * and randomly accessible. There is no dependency between tiles.
+-	 *
+-	 * <----- Y_Meta_Stride ----->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      Height      |
+-	 * M M M M M M M M M M M M . .      |         Meta_Y_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <--Compressed tile Y Stride--->
+-	 * <------- Width ------->
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  ^           ^
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  Height      |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |        Macro_tile_Y_Scanlines
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * <----- UV_Meta_Stride ---->
+-	 * M M M M M M M M M M M M . .      ^
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      M_UV_Scanlines
+-	 * . . . . . . . . . . . . . .      |
+-	 * . . . . . . . . . . . . . .      V
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * <--Compressed tile UV Stride--->
+-	 * U* V* U* V* U* V* U* V* . . . .  ^
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  UV_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 *
+-	 *
+-	 * Y_Stride = align(Width * 4/3, 128)
+-	 * UV_Stride = align(Width * 4/3, 128)
+-	 * Y_Scanlines = align(Height, 32)
+-	 * UV_Scanlines = align(Height/2, 16)
+-	 * Y_UBWC_Plane_Size = align(Y_Stride * Y_Scanlines, 4096)
+-	 * UV_UBWC_Plane_Size = align(UV_Stride * UV_Scanlines, 4096)
+-	 * Y_Meta_Stride = align(roundup(Width, Y_TileWidth), 64)
+-	 * Y_Meta_Scanlines = align(roundup(Height, Y_TileHeight), 16)
+-	 * Y_Meta_Plane_size = align(Y_Meta_Stride * Y_Meta_Scanlines, 4096)
+-	 * UV_Meta_Stride = align(roundup(Width, UV_TileWidth), 64)
+-	 * UV_Meta_Scanlines = align(roundup(Height, UV_TileHeight), 16)
+-	 * UV_Meta_Plane_size = align(UV_Meta_Stride * UV_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align(Y_UBWC_Plane_size + UV_UBWC_Plane_size +
+-	 *           Y_Meta_Plane_size + UV_Meta_Plane_size
+-	 *           + max(Extradata, Y_Stride * 48), 4096)
+-	 */
+-	COLOR_FMT_NV12_BPP10_UBWC,
+-	/* Venus RGBA8888 format:
+-	 * Contains 1 plane in the following order -
+-	 * (A) RGBA plane
+-	 *
+-	 * <-------- RGB_Stride -------->
+-	 * <------- Width ------->
+-	 * R R R R R R R R R R R R . . . .  ^           ^
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  Height      |
+-	 * R R R R R R R R R R R R . . . .  |       RGB_Scanlines
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              V
+-	 *
+-	 * RGB_Stride = align(Width * 4, 128)
+-	 * RGB_Scanlines = align(Height, 32)
+-	 * RGB_Plane_size = align(RGB_Stride * RGB_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align(RGB_Plane_size + Extradata, 4096)
+-	 */
+-	COLOR_FMT_RGBA8888,
+-	/* Venus RGBA8888 UBWC format:
+-	 * Contains 2 planes in the following order -
+-	 * (A) Meta plane
+-	 * (B) RGBA plane
+-	 *
+-	 * <--- RGB_Meta_Stride ---->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      Height      |
+-	 * M M M M M M M M M M M M . .      |       Meta_RGB_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <-------- RGB_Stride -------->
+-	 * <------- Width ------->
+-	 * R R R R R R R R R R R R . . . .  ^           ^
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  Height      |
+-	 * R R R R R R R R R R R R . . . .  |       RGB_Scanlines
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .    -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 *
+-	 * RGB_Stride = align(Width * 4, 128)
+-	 * RGB_Scanlines = align(Height, 32)
+-	 * RGB_Plane_size = align(RGB_Stride * RGB_Scanlines, 4096)
+-	 * RGB_Meta_Stride = align(roundup(Width, RGB_TileWidth), 64)
+-	 * RGB_Meta_Scanline = align(roundup(Height, RGB_TileHeight), 16)
+-	 * RGB_Meta_Plane_size = align(RGB_Meta_Stride *
+-	 *		RGB_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align(RGB_Meta_Plane_size + RGB_Plane_size +
+-	 *		Extradata, 4096)
+-	 */
+-	COLOR_FMT_RGBA8888_UBWC,
+-	/* Venus RGBA1010102 UBWC format:
+-	 * Contains 2 planes in the following order -
+-	 * (A) Meta plane
+-	 * (B) RGBA plane
+-	 *
+-	 * <--- RGB_Meta_Stride ---->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      Height      |
+-	 * M M M M M M M M M M M M . .      |       Meta_RGB_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <-------- RGB_Stride -------->
+-	 * <------- Width ------->
+-	 * R R R R R R R R R R R R . . . .  ^           ^
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  Height      |
+-	 * R R R R R R R R R R R R . . . .  |       RGB_Scanlines
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .    -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 *
+-	 * RGB_Stride = align(Width * 4, 256)
+-	 * RGB_Scanlines = align(Height, 16)
+-	 * RGB_Plane_size = align(RGB_Stride * RGB_Scanlines, 4096)
+-	 * RGB_Meta_Stride = align(roundup(Width, RGB_TileWidth), 64)
+-	 * RGB_Meta_Scanline = align(roundup(Height, RGB_TileHeight), 16)
+-	 * RGB_Meta_Plane_size = align(RGB_Meta_Stride *
+-	 *		RGB_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align(RGB_Meta_Plane_size + RGB_Plane_size +
+-	 *		Extradata, 4096)
+-	 */
+-	COLOR_FMT_RGBA1010102_UBWC,
+-	/* Venus RGB565 UBWC format:
+-	 * Contains 2 planes in the following order -
+-	 * (A) Meta plane
+-	 * (B) RGB plane
+-	 *
+-	 * <--- RGB_Meta_Stride ---->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      Height      |
+-	 * M M M M M M M M M M M M . .      |       Meta_RGB_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <-------- RGB_Stride -------->
+-	 * <------- Width ------->
+-	 * R R R R R R R R R R R R . . . .  ^           ^
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  Height      |
+-	 * R R R R R R R R R R R R . . . .  |       RGB_Scanlines
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  |           |
+-	 * R R R R R R R R R R R R . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .    -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 *
+-	 * RGB_Stride = align(Width * 2, 128)
+-	 * RGB_Scanlines = align(Height, 16)
+-	 * RGB_Plane_size = align(RGB_Stride * RGB_Scanlines, 4096)
+-	 * RGB_Meta_Stride = align(roundup(Width, RGB_TileWidth), 64)
+-	 * RGB_Meta_Scanline = align(roundup(Height, RGB_TileHeight), 16)
+-	 * RGB_Meta_Plane_size = align(RGB_Meta_Stride *
+-	 *		RGB_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align(RGB_Meta_Plane_size + RGB_Plane_size +
+-	 *		Extradata, 4096)
+-	 */
+-	COLOR_FMT_RGB565_UBWC,
+-	/* P010 UBWC:
+-	 * Compressed Macro-tile format for NV12.
+-	 * Contains 4 planes in the following order -
+-	 * (A) Y_Meta_Plane
+-	 * (B) Y_UBWC_Plane
+-	 * (C) UV_Meta_Plane
+-	 * (D) UV_UBWC_Plane
+-	 *
+-	 * Y_Meta_Plane consists of meta information to decode compressed
+-	 * tile data in Y_UBWC_Plane.
+-	 * Y_UBWC_Plane consists of Y data in compressed macro-tile format.
+-	 * UBWC decoder block will use the Y_Meta_Plane data together with
+-	 * Y_UBWC_Plane data to produce loss-less uncompressed 10 bit Y samples.
+-	 *
+-	 * UV_Meta_Plane consists of meta information to decode compressed
+-	 * tile data in UV_UBWC_Plane.
+-	 * UV_UBWC_Plane consists of UV data in compressed macro-tile format.
+-	 * UBWC decoder block will use UV_Meta_Plane data together with
+-	 * UV_UBWC_Plane data to produce loss-less uncompressed 10 bit 2x2
+-	 * subsampled color difference samples.
+-	 *
+-	 * Each tile in Y_UBWC_Plane/UV_UBWC_Plane is independently decodable
+-	 * and randomly accessible. There is no dependency between tiles.
+-	 *
+-	 * <----- Y_Meta_Stride ----->
+-	 * <-------- Width ------>
+-	 * M M M M M M M M M M M M . .      ^           ^
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      Height      |
+-	 * M M M M M M M M M M M M . .      |         Meta_Y_Scanlines
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      |           |
+-	 * M M M M M M M M M M M M . .      V           |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .                  |
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . .                  V
+-	 * <--Compressed tile Y Stride--->
+-	 * <------- Width ------->
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  ^           ^
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  Height      |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |        Macro_tile_Y_Scanlines
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  |           |
+-	 * Y* Y* Y* Y* Y* Y* Y* Y* . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * <----- UV_Meta_Stride ---->
+-	 * M M M M M M M M M M M M . .      ^
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      |
+-	 * M M M M M M M M M M M M . .      M_UV_Scanlines
+-	 * . . . . . . . . . . . . . .      |
+-	 * . . . . . . . . . . . . . .      V
+-	 * . . . . . . . . . . . . . .      -------> Buffer size aligned to 4k
+-	 * <--Compressed tile UV Stride--->
+-	 * U* V* U* V* U* V* U* V* . . . .  ^
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  |
+-	 * U* V* U* V* U* V* U* V* . . . .  UV_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  -------> Buffer size aligned to 4k
+-	 *
+-	 *
+-	 * Y_Stride = align(Width * 2, 256)
+-	 * UV_Stride = align(Width * 2, 256)
+-	 * Y_Scanlines = align(Height, 16)
+-	 * UV_Scanlines = align(Height/2, 16)
+-	 * Y_UBWC_Plane_Size = align(Y_Stride * Y_Scanlines, 4096)
+-	 * UV_UBWC_Plane_Size = align(UV_Stride * UV_Scanlines, 4096)
+-	 * Y_Meta_Stride = align(roundup(Width, Y_TileWidth), 64)
+-	 * Y_Meta_Scanlines = align(roundup(Height, Y_TileHeight), 16)
+-	 * Y_Meta_Plane_size = align(Y_Meta_Stride * Y_Meta_Scanlines, 4096)
+-	 * UV_Meta_Stride = align(roundup(Width, UV_TileWidth), 64)
+-	 * UV_Meta_Scanlines = align(roundup(Height, UV_TileHeight), 16)
+-	 * UV_Meta_Plane_size = align(UV_Meta_Stride * UV_Meta_Scanlines, 4096)
+-	 * Extradata = 8k
+-	 *
+-	 * Total size = align(Y_UBWC_Plane_size + UV_UBWC_Plane_size +
+-	 *           Y_Meta_Plane_size + UV_Meta_Plane_size
+-	 *           + max(Extradata, Y_Stride * 48), 4096)
+-	 */
+-	COLOR_FMT_P010_UBWC,
+-	/* Venus P010:
+-	 * YUV 4:2:0 image with a plane of 10 bit Y samples followed
+-	 * by an interleaved U/V plane containing 10 bit 2x2 subsampled
+-	 * colour difference samples.
+-	 *
+-	 * <-------- Y/UV_Stride -------->
+-	 * <------- Width ------->
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  ^           ^
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  Height      |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |          Y_Scanlines
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  |           |
+-	 * Y Y Y Y Y Y Y Y Y Y Y Y . . . .  V           |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              |
+-	 * . . . . . . . . . . . . . . . .              V
+-	 * U V U V U V U V U V U V . . . .  ^
+-	 * U V U V U V U V U V U V . . . .  |
+-	 * U V U V U V U V U V U V . . . .  |
+-	 * U V U V U V U V U V U V . . . .  UV_Scanlines
+-	 * . . . . . . . . . . . . . . . .  |
+-	 * . . . . . . . . . . . . . . . .  V
+-	 * . . . . . . . . . . . . . . . .  --> Buffer size alignment
+-	 *
+-	 * Y_Stride : Width * 2 aligned to 128
+-	 * UV_Stride : Width * 2 aligned to 128
+-	 * Y_Scanlines: Height aligned to 32
+-	 * UV_Scanlines: Height/2 aligned to 16
+-	 * Extradata: Arbitrary (software-imposed) padding
+-	 * Total size = align((Y_Stride * Y_Scanlines
+-	 *          + UV_Stride * UV_Scanlines
+-	 *          + max(Extradata, Y_Stride * 8), 4096)
+-	 */
+-	COLOR_FMT_P010,
+-};
+-
+-#define COLOR_FMT_RGBA1010102_UBWC	COLOR_FMT_RGBA1010102_UBWC
+-#define COLOR_FMT_RGB565_UBWC		COLOR_FMT_RGB565_UBWC
+-#define COLOR_FMT_P010_UBWC		COLOR_FMT_P010_UBWC
+-#define COLOR_FMT_P010		COLOR_FMT_P010
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @width
+- * Progressive: width
+- * Interlaced: width
+- */
+-static unsigned int VENUS_Y_STRIDE(int color_fmt, int width)
+-{
+-	unsigned int stride = 0;
+-
+-	if (!width)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV21:
+-	case COLOR_FMT_NV12:
+-	case COLOR_FMT_NV12_MVTB:
+-	case COLOR_FMT_NV12_UBWC:
+-		stride = MSM_MEDIA_ALIGN(width, 128);
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-		stride = MSM_MEDIA_ALIGN(width, 192);
+-		stride = MSM_MEDIA_ALIGN(stride * 4 / 3, 256);
+-		break;
+-	case COLOR_FMT_P010_UBWC:
+-		stride = MSM_MEDIA_ALIGN(width * 2, 256);
+-		break;
+-	case COLOR_FMT_P010:
+-		stride = MSM_MEDIA_ALIGN(width * 2, 128);
+-		break;
+-	}
+-
+-	return stride;
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @width
+- * Progressive: width
+- * Interlaced: width
+- */
+-static unsigned int VENUS_UV_STRIDE(int color_fmt, int width)
+-{
+-	unsigned int stride = 0;
+-
+-	if (!width)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV21:
+-	case COLOR_FMT_NV12:
+-	case COLOR_FMT_NV12_MVTB:
+-	case COLOR_FMT_NV12_UBWC:
+-		stride = MSM_MEDIA_ALIGN(width, 128);
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-		stride = MSM_MEDIA_ALIGN(width, 192);
+-		stride = MSM_MEDIA_ALIGN(stride * 4 / 3, 256);
+-		break;
+-	case COLOR_FMT_P010_UBWC:
+-		stride = MSM_MEDIA_ALIGN(width * 2, 256);
+-		break;
+-	case COLOR_FMT_P010:
+-		stride = MSM_MEDIA_ALIGN(width * 2, 128);
+-		break;
+-	}
+-
+-	return stride;
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @height
+- * Progressive: height
+- * Interlaced: (height+1)>>1
+- */
+-static unsigned int VENUS_Y_SCANLINES(int color_fmt, int height)
+-{
+-	unsigned int sclines = 0;
+-
+-	if (!height)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV21:
+-	case COLOR_FMT_NV12:
+-	case COLOR_FMT_NV12_MVTB:
+-	case COLOR_FMT_NV12_UBWC:
+-	case COLOR_FMT_P010:
+-		sclines = MSM_MEDIA_ALIGN(height, 32);
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-	case COLOR_FMT_P010_UBWC:
+-		sclines = MSM_MEDIA_ALIGN(height, 16);
+-		break;
+-	}
+-
+-	return sclines;
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @height
+- * Progressive: height
+- * Interlaced: (height+1)>>1
+- */
+-static unsigned int VENUS_UV_SCANLINES(int color_fmt, int height)
+-{
+-	unsigned int sclines = 0;
+-
+-	if (!height)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV21:
+-	case COLOR_FMT_NV12:
+-	case COLOR_FMT_NV12_MVTB:
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-	case COLOR_FMT_P010_UBWC:
+-	case COLOR_FMT_P010:
+-		sclines = MSM_MEDIA_ALIGN((height + 1) >> 1, 16);
+-		break;
+-	case COLOR_FMT_NV12_UBWC:
+-		sclines = MSM_MEDIA_ALIGN((height + 1) >> 1, 32);
+-		break;
+-	}
+-
+-	return sclines;
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @width
+- * Progressive: width
+- * Interlaced: width
+- */
+-static unsigned int VENUS_Y_META_STRIDE(int color_fmt, int width)
+-{
+-	int y_tile_width = 0, y_meta_stride;
+-
+-	if (!width)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV12_UBWC:
+-	case COLOR_FMT_P010_UBWC:
+-		y_tile_width = 32;
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-		y_tile_width = 48;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	y_meta_stride = MSM_MEDIA_ROUNDUP(width, y_tile_width);
+-	return MSM_MEDIA_ALIGN(y_meta_stride, 64);
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @height
+- * Progressive: height
+- * Interlaced: (height+1)>>1
+- */
+-static unsigned int VENUS_Y_META_SCANLINES(int color_fmt, int height)
+-{
+-	int y_tile_height = 0, y_meta_scanlines;
+-
+-	if (!height)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV12_UBWC:
+-		y_tile_height = 8;
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-	case COLOR_FMT_P010_UBWC:
+-		y_tile_height = 4;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	y_meta_scanlines = MSM_MEDIA_ROUNDUP(height, y_tile_height);
+-	return MSM_MEDIA_ALIGN(y_meta_scanlines, 16);
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @width
+- * Progressive: width
+- * Interlaced: width
+- */
+-static unsigned int VENUS_UV_META_STRIDE(int color_fmt, int width)
+-{
+-	int uv_tile_width = 0, uv_meta_stride;
+-
+-	if (!width)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV12_UBWC:
+-	case COLOR_FMT_P010_UBWC:
+-		uv_tile_width = 16;
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-		uv_tile_width = 24;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	uv_meta_stride = MSM_MEDIA_ROUNDUP((width+1)>>1, uv_tile_width);
+-	return MSM_MEDIA_ALIGN(uv_meta_stride, 64);
+-}
+-
+-/*
+- * Function arguments:
+- * @color_fmt
+- * @height
+- * Progressive: height
+- * Interlaced: (height+1)>>1
+- */
+-static unsigned int VENUS_UV_META_SCANLINES(int color_fmt, int height)
+-{
+-	int uv_tile_height = 0, uv_meta_scanlines;
+-
+-	if (!height)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_NV12_UBWC:
+-		uv_tile_height = 8;
+-		break;
+-	case COLOR_FMT_NV12_BPP10_UBWC:
+-	case COLOR_FMT_P010_UBWC:
+-		uv_tile_height = 4;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	uv_meta_scanlines = MSM_MEDIA_ROUNDUP((height+1)>>1, uv_tile_height);
+-	return MSM_MEDIA_ALIGN(uv_meta_scanlines, 16);
+-}
+-
+-static unsigned int VENUS_RGB_STRIDE(int color_fmt, int width)
+-{
+-	unsigned int alignment = 0, bpp = 4;
+-
+-	if (!width)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_RGBA8888:
+-		alignment = 128;
+-		break;
+-	case COLOR_FMT_RGB565_UBWC:
+-		alignment = 256;
+-		bpp = 2;
+-		break;
+-	case COLOR_FMT_RGBA8888_UBWC:
+-	case COLOR_FMT_RGBA1010102_UBWC:
+-		alignment = 256;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	return MSM_MEDIA_ALIGN(width * bpp, alignment);
+-}
+-
+-static unsigned int VENUS_RGB_SCANLINES(int color_fmt, int height)
+-{
+-	unsigned int alignment = 0;
+-
+-	if (!height)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_RGBA8888:
+-		alignment = 32;
+-		break;
+-	case COLOR_FMT_RGBA8888_UBWC:
+-	case COLOR_FMT_RGBA1010102_UBWC:
+-	case COLOR_FMT_RGB565_UBWC:
+-		alignment = 16;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	return MSM_MEDIA_ALIGN(height, alignment);
+-}
+-
+-static unsigned int VENUS_RGB_META_STRIDE(int color_fmt, int width)
+-{
+-	int rgb_meta_stride;
+-
+-	if (!width)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_RGBA8888_UBWC:
+-	case COLOR_FMT_RGBA1010102_UBWC:
+-	case COLOR_FMT_RGB565_UBWC:
+-		rgb_meta_stride = MSM_MEDIA_ROUNDUP(width, 16);
+-		return MSM_MEDIA_ALIGN(rgb_meta_stride, 64);
+-	}
+-
+-	return 0;
+-}
+-
+-static unsigned int VENUS_RGB_META_SCANLINES(int color_fmt, int height)
+-{
+-	int rgb_meta_scanlines;
+-
+-	if (!height)
+-		return 0;
+-
+-	switch (color_fmt) {
+-	case COLOR_FMT_RGBA8888_UBWC:
+-	case COLOR_FMT_RGBA1010102_UBWC:
+-	case COLOR_FMT_RGB565_UBWC:
+-		rgb_meta_scanlines = MSM_MEDIA_ROUNDUP(height, 4);
+-		return MSM_MEDIA_ALIGN(rgb_meta_scanlines, 16);
+-	}
+-
+-	return 0;
+-}
+-
+-#endif
 
 -- 
 2.39.5
