@@ -1,62 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF251E4AE;
-	Sat,  5 Jul 2025 11:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0011F1A3142;
+	Sat,  5 Jul 2025 11:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751713588; cv=none; b=um6/7ZRwXg6kVpaCsN8sd/mAE7xHsjzvA4hZdr+TZJfOzhcyaKY1x9rdH204CrjcwNGbgEHju+QkjqsLNkJNckR6AGpDbv+eCS7+XBRUTSPpk4IVk8KB/HE4ta4vYxhMAhup+oi30N4AKACl8PZ9UHEj9LhK8cTwuagi3y8tUSk=
+	t=1751714113; cv=none; b=kr17Vkln1ZK+RjQGJf4IqKFdxDVmduu1BQH0VkeTTEtBcZUlSkWntvbtHLq/um1VoQ6wp7/etpouJcLxKCy4+34ro1Uckn5voCDaA5GOYA+kEAswjdFbRyk+RyFbIQv4p9X4sDBjOSs5qIocwcmc+2ER+8s3UK2ckkjImtqBGnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751713588; c=relaxed/simple;
-	bh=9mv0UxhGjH2mL6KMOypiQnTrOj6P8HKSW5WCnLKIHyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=btBl7pN5UIcb0Tv/kqw4cqKSYShGWL+xteThnkNn7hLWruC5intkwG9XazwJ85R843h+z3XE93Sn4cZ1RkNs0ZOmTFFoO/MgB2iAtGjisF5BZm3g2ZA3AAWRAQmJnY1mFUsduRA3UWuvAogMLQ5YqkBOub9+57kEaGvPJKCoXHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aafTTmDm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751714113; c=relaxed/simple;
+	bh=dEZZnQARHSTgn80TB0LK1tcWHC0xm23y+GHQTFosXLU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=tPdQDH7sqPHbkVCXaS9r1DX09ae67EjVzdWBeVrnzZsIrlzl5dYz+745gSvPWrcETsH5IqAjgZ5r2xnCmb0kjPjvt51q/ynH6sqaQZTRkwqv+6kIFitmnfln5UYGpaUFeWDpFDdmFsyHOzHCiyvcpkXlPD+eCHfuHriCAX8UtfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q21gvXSa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aafTTmDm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0E3C4CEE7;
-	Sat,  5 Jul 2025 11:06:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q21gvXSa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23BD7C4CEE7;
+	Sat,  5 Jul 2025 11:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751713588;
-	bh=9mv0UxhGjH2mL6KMOypiQnTrOj6P8HKSW5WCnLKIHyo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aafTTmDmBLWRKGomxX2C4LHrmnv/oV98ZkaEj/FkfFxKgK4ZeAx3vbutrx+H1jDfV
-	 oDBvmttYEiCi/VTvZ0DTba295JD/uAOcDTkzCkD9HIYvXG/aTMWDXOL7+JISi/B/+C
-	 IYjv4VznW8PA3o6bBBYNiS2sX13T5FqW03KM/YQp4iDMN6CgPuybf09N9pO5kwDblQ
-	 /Lad6++1ZQ9PzfmpuUX8AT8Z8Rc8GMX1lqnnpfAyxWRBmYGiI+wRd0PwZ6x8Sfhkpj
-	 RmWqx4TlyUj0ffFYalN0H2yybq79thzskSWo9Hv00Zji5g6oY0NkUwccJIapo18hqM
-	 r4xu14tfn231g==
-Message-ID: <07058db5-e56f-4771-9d6d-93c5e853af6d@kernel.org>
-Date: Sat, 5 Jul 2025 13:06:22 +0200
+	s=k20201202; t=1751714112;
+	bh=dEZZnQARHSTgn80TB0LK1tcWHC0xm23y+GHQTFosXLU=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=q21gvXSaakGcj/PSIM4jVpsq+FiyliL4ishKyGInpLXi7JOBjvTDiUDWydqk3Pnzb
+	 B8dTOtiLzqNuM0EXBj9lb8jAonFpPKAY4IxSB+Iaq1NoO1ySTDjO7EMqYm5Augkoou
+	 PDDFgdN1w64FRC5Unid3mAIfG+fwPRU2n211hVRM8i02/2490g5gqShqjaGOHxERer
+	 fXwuLOqnXe66YyTtKhUSsbHKXQPbYP4m3mvV2Vg5/EqM7CwcjHu1yet71qQ9uGK8wh
+	 YcBHTT1vL88QLqY2/1DAX//ved5/UbVfBLIaaWfHWkKj6aZ0pqxW1rVo6uRppukVQs
+	 8PSJXfo+pwJ/A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: drm: remove unnecessary imports
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-References: <20250704-cstr-include-drm-v1-1-a279dfc4d753@gmail.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250704-cstr-include-drm-v1-1-a279dfc4d753@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 05 Jul 2025 13:15:06 +0200
+Message-Id: <DB42TQY2E57U.1PKC16LW38MH9@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <david.m.ertman@intel.com>, <ira.weiny@intel.com>,
+ <leon@kernel.org>, <kwilczynski@kernel.org>, <bhelgaas@google.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/8] rust: device: add drvdata accessors
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250621195118.124245-1-dakr@kernel.org>
+ <20250621195118.124245-3-dakr@kernel.org>
+In-Reply-To: <20250621195118.124245-3-dakr@kernel.org>
 
-On 7/4/25 9:50 PM, Tamir Duberstein wrote:
-> `kernel::str::CStr` is included in the prelude.
-> 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Sat Jun 21, 2025 at 9:43 PM CEST, Danilo Krummrich wrote:
+> +impl Device<Internal> {
+> +    /// Store a pointer to the bound driver's private data.
+> +    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
+> +        // SAFETY: By the type invariants, `self.as_raw()` is a valid po=
+inter to a `struct device`.
+> +        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_fore=
+ign().cast()) }
+> +    }
+> +
+> +    /// Take ownership of the private data stored in this [`Device`].
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// - Must only be called once after a preceding call to [`Device::s=
+et_drvdata`].
+> +    /// - The type `T` must match the type of the `ForeignOwnable` previ=
+ously stored by
+> +    ///   [`Device::set_drvdata`].
+> +    pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
+> +        // SAFETY: By the type invariants, `self.as_raw()` is a valid po=
+inter to a `struct device`.
+> +        let ptr =3D unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+> +
+> +        // SAFETY: By the safety requirements of this function, `ptr` co=
+mes from a previous call to
+> +        // `into_foreign()`.
 
-Applied to drm-misc-next, thanks!
+Well, you're also relying on `dev_get_drvdata` to return the same
+pointer that was given to `dev_set_drvdata`.
+
+Otherwise the safety docs look fine.
+
+---
+Cheers,
+Benno
+
+> +        unsafe { T::from_foreign(ptr.cast()) }
+> +    }
+> +
+> +    /// Borrow the driver's private data bound to this [`Device`].
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// - Must only be called after a preceding call to [`Device::set_dr=
+vdata`] and before
+> +    ///   [`Device::drvdata_obtain`].
+> +    /// - The type `T` must match the type of the `ForeignOwnable` previ=
+ously stored by
+> +    ///   [`Device::set_drvdata`].
+> +    pub unsafe fn drvdata_borrow<T: ForeignOwnable>(&self) -> T::Borrowe=
+d<'_> {
+> +        // SAFETY: By the type invariants, `self.as_raw()` is a valid po=
+inter to a `struct device`.
+> +        let ptr =3D unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+> +
+> +        // SAFETY: By the safety requirements of this function, `ptr` co=
+mes from a previous call to
+> +        // `into_foreign()`.
+> +        unsafe { T::borrow(ptr.cast()) }
+> +    }
+> +}
+> +
+>  impl<Ctx: DeviceContext> Device<Ctx> {
+>      /// Obtain the raw `struct device *`.
+>      pub(crate) fn as_raw(&self) -> *mut bindings::device {
+
