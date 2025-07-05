@@ -1,76 +1,109 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-65.smtpout.orange.fr [80.12.242.65])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BB41F418F;
-	Sat,  5 Jul 2025 08:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942BA2E3708;
+	Sat,  5 Jul 2025 08:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751703057; cv=none; b=N+kS0T7nR3OdudUWtGv8glwYewCcYBsa0F1X7+OGzoMfdxgwEyS8ITdcRk8dlV1RVwJIzwQQbkUOaOoBZt154XzPMut4jZM2lZtXDKimFVDKWOgHhEt0s1B7wDakJwfwBrfFWwztOMWMhUasQYzQNU3IKvSQfmBRRIrzizpy3RM=
+	t=1751703222; cv=none; b=I31Tol6fTKowdoj1stAGCdYz2pN+XWnHcNynO8DaQqOTAaa4HvWysW60RRmm4bCIBEZEqKtNnwRAvrUPlXjZDHOyj8DPkcjMmt/GwYR/XL0RHnWzPzRI+i8Bm8Odt1jN2da15KXq7FSeaovzbxsyDXXoP5QbV7D1lVh5yMmHhhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751703057; c=relaxed/simple;
-	bh=NLwY+RObuoSFbPTe2+ZYsRiQiNlgFC+2GTkUWFIu9VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cvETy2LRYp5n0GdEXqwgaidLmNcf03ZW8m2uUw3MyLzdGA1N8ep/exKdpUkgNfxilimZa439wUqazgQN21CePeCP0eanqXwi/tRGzJL68nhShjvSPm2Po75MYsCil3DgNH0bEFalwBwvWYF+H00+nJrOdW7ZvNr00+3V5DMu3GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=SKoAtiMv; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751703222; c=relaxed/simple;
+	bh=Diwz3sxzI9NChf/k2ekgjgSqB6LvFdPzKu2q9jD75Jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rfvUANrUNFQvRk5ce7/gki196eCq+TYHcbcf407nXkZh9ZCvhncxyN25FiH4RAYs40Z4157Uhuy12fV4xR6pLV6Le8R6Mf5ukoHInNn9wgKvqMaZXdQqtAm/W86lFbXPy64Afl8EmGWfFtzfja1PWmWqSM71GLToLvayz5JqOiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=nJU+SYzM; arc=none smtp.client-ip=80.12.242.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SKoAtiMv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=8tu7+Zp0YatuDllTNOUx72knnGe1yKc8lR7+17d3cGs=; b=SKoAtiMvmDvoXagIUq978ZXq7n
-	V+87ytVvr2CX5jIb744RJJc6RjaB+ZmJVMb3sJLjWqo/7cZuwubUNG7INUKIN6KZNFoEc0M6mYnFm
-	y/ARtbS+aPk3uFkviTs/zQtasG8wwNv7iGmM9khUGv8GA5SIOzqW6PBPFn2SGQWMrJFw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uXxyq-000NMe-Pq; Sat, 05 Jul 2025 10:10:40 +0200
-Date: Sat, 5 Jul 2025 10:10:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net] net: phy: realtek: Reset after clock enable
-Message-ID: <e1df8097-dd48-4570-8f8e-c6c25a3683a4@lunn.ch>
-References: <20250704-phy-realtek-clock-fix-v1-1-63b33d204537@kernel.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="nJU+SYzM"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id Xy0au5r9q2WitXy0buPMeJ; Sat, 05 Jul 2025 10:12:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751703150;
+	bh=IDZp6l5xw/oHRf5S1uAFtP428wpChGCpPW/ucIcbiWs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=nJU+SYzM4HD/XrQLZ3iaT+Do+WWVzHyaksrtjIcFamUweVgAbklZsIJX29MUp+ZXG
+	 vSMj+/j1dL8JH4u2DbwValvwhKc2foovJqlgGhoMa2BxSY52K525AvoKuLO5L5jERR
+	 Wdvu39PWdIQ8eYL1FkrScaT7BRCcird9eAhogiYw7FkfYa3en7vekPN0ag448k54Pt
+	 mRP6x3xoh06OR7I2bGIhnjScyIR25AQfjsBEEA53ITsZa1cFA29RlaNm+VYe+dJVgl
+	 ndQboLgQ2CS3xzYjcr46ILayBI8fv1Y/KPkAOqmS8mxF/mowuddgUzoAOCzjxxeAIK
+	 1jjoEQfn/JbEw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 05 Jul 2025 10:12:30 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2] ASoC: qcom: qdsp6: Add an error handling path in q6usb_component_probe()
+Date: Sat,  5 Jul 2025 10:12:25 +0200
+Message-ID: <1a3bf0ee02f880919190944e581bef2b428ca864.1751703113.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704-phy-realtek-clock-fix-v1-1-63b33d204537@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 04, 2025 at 07:48:44PM +0200, Sebastian Reichel wrote:
-> On Radxa ROCK 4D boards we are seeing some issues with PHY detection and
-> stability (e.g. link loss, or not capable of transceiving packages)
-> after new board revisions switched from a dedicated crystal to providing
-> the 25 MHz PHY input clock from the SoC instead.
-> 
-> This board is using a RTL8211F PHY, which is connected to an always-on
-> regulator. Unfortunately the datasheet does not explicitly mention the
-> power-up sequence regarding the clock, but it seems to assume that the
-> clock is always-on (i.e. dedicated crystal).
-> 
-> By doing an explicit reset after enabling the clock, the issue on the
-> boards could no longer be observed.
+If an error occurs after a successful q6usb_dai_add_aux_device() call,
+some resources should be released as already done in the remove function.
 
-I don't know if it helps in this situation, but look at
-PHY_RST_AFTER_CLK_EN.
+Add an error handling path in the probe and the missing clean-up.
 
-If it does not actually help, it might be worth mentioning it in the
-commit message to stop reviewers saying you should see if it is
-useful.
+Fixes: 72b0b8b29980 ("ASoC: qcom: qdsp6: Add USB backend ASoC driver for Q6")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Changes in v2:
+  - Propagate the error code returned by snd_soc_usb_allocate_port()
+    instead of an explicit -ENOMEM.   [Dan Carpenter]
 
-	Andrew
+v1: https://lore.kernel.org/all/7338875b20cb41693f803c6b9673cf7f3e5f089a.1746781775.git.christophe.jaillet@wanadoo.fr/
+---
+ sound/soc/qcom/qdsp6/q6usb.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
+index ebe0c2425927..0d998e872e82 100644
+--- a/sound/soc/qcom/qdsp6/q6usb.c
++++ b/sound/soc/qcom/qdsp6/q6usb.c
+@@ -327,8 +327,10 @@ static int q6usb_component_probe(struct snd_soc_component *component)
+ 		return ret;
+ 
+ 	usb = snd_soc_usb_allocate_port(component, &data->priv);
+-	if (IS_ERR(usb))
+-		return -ENOMEM;
++	if (IS_ERR(usb)) {
++		ret = PTR_ERR(usb);
++		goto free_aux_devices;
++	}
+ 
+ 	usb->connection_status_cb = q6usb_alsa_connection_cb;
+ 	usb->update_offload_route_info = q6usb_update_offload_route;
+@@ -337,6 +339,12 @@ static int q6usb_component_probe(struct snd_soc_component *component)
+ 	data->usb = usb;
+ 
+ 	return 0;
++
++free_aux_devices:
++	auxiliary_device_delete(&data->uauxdev);
++	auxiliary_device_uninit(&data->uauxdev);
++
++	return ret;
+ }
+ 
+ static void q6usb_component_remove(struct snd_soc_component *component)
+-- 
+2.50.0
+
