@@ -1,115 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2980A13DB9F;
-	Sat,  5 Jul 2025 13:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E074148830
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751720703; cv=none; b=TrGocNjvOPwD9dQsfjdi0an709HLSOebgx3Uhlvvt//bBCP5THVCjNXUld84sTLwrX9DRg/GT7lLBknUz1CfaSSj/LJ0+eqn+5yYGy8AfohALcyjMn+4l8D4Tog5UmK8UztyTo5bGtR7hRw8C/5qKEj7Wub4ntKfe1x9FzkdzmY=
+	t=1751720763; cv=none; b=uYG7o0aT9MPtkZ14ZXGnl9FxtuDHSqA2r3zQaJ2703oKA6H6uaXAGHOOfkXAfFFYTssIYz/gp85YSaz5X130gk/QqrRIHBaD8bfnKsYgcGNVaUzFr7h5/zPHFVhKKS7gXHq4zSrtCc2BY/1EEhqFy7yeKJA9k0HEWiEyNZD/Vxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751720703; c=relaxed/simple;
-	bh=S/+SPECrJ9hwBt015R6VVTYLl2CaM/EtJtugv5y0JMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nVNdP5+86HZwz8GMyTXWRAtuDLEJRP6OlrmM7F+vu3COlY8bkdVj7wWpXckm2WPzdRNols+K81Id0eMGWFQ0w+Do59si1c+geiioTm8IGBeecZ2HEIGAJf0uaM7NAlQ7LE6jLQ4AdT0RYrxi29Ot6orx5b1K8Qtj2QpiRoF88fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4RhUIsE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4RhUIsE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B79C4CEE7;
-	Sat,  5 Jul 2025 13:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751720702;
-	bh=S/+SPECrJ9hwBt015R6VVTYLl2CaM/EtJtugv5y0JMs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=k4RhUIsEjqOm0jhpDowOoynm7Qaf2ijC30wor27l6OeG6/dHtGxjPlBDh6UoaZIf+
-	 x1lfDWnDc5FPMK0o7rQE+p/5Ocy8yYZl1bFTzEr1dvpk8oTZJYBLSJiYhGj/5QpKx5
-	 QwryHFYY7+/OaqVjcVZMY3CAmSCG4BPlm7RbI/TRhMvP0MoSBVWNjt5Aso1p8uC3p7
-	 EtO6h0WWsrVwc8l/dPhQeM50hjM0BaOcC8nG3v2g8SIzuj8+dmQ202Lq8yQdmIqDWU
-	 P9rpXMCMoonY2JtuR1zt8/l/VC9rKDET5XQsoiMP00g6FBbqzfp4kvAwrlSqAOmE0j
-	 G1jtGSkC8SCnw==
-Date: Sat, 5 Jul 2025 15:04:59 +0200
-From: Wolfram Sang <wsa@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andi Shyti <andi.shyti@kernel.org>
-Subject: [PULL REQUEST] i2c-for-6.16-rc5
-Message-ID: <aGki-9QTCbO-H4zU@shikoro>
+	s=arc-20240116; t=1751720763; c=relaxed/simple;
+	bh=F/zi+qoNp1igtiWRl9dzbK79TTCBnOEjTF+WECB9y60=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=mQG5Kfb1LsM1mZH5YQ49aQ1s6KYYZRB/kzfiwXn2Uolv0BP57jv7FKQZfH6ioldOM20tP+or0oponx+yRdxNX234NJlS/QRsbGCUZ8ZeVsszv3+sntCzNzSrzDzbO77CR3TVlprYVCLAbzXZecCooyQ8LANvZJ2JqmH8tfqQQpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3e055be2288so14767205ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 06:06:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751720761; x=1752325561;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8kjxOvYKT8DN5sLSem5sYs9qnqzz3mqUfdY4PF7XdyU=;
+        b=Ne95WSLXSfWoFpDGQq9tGQCbn+uLovspk4/BC/8iJwbZBFu/Ssss0koQrmmoT50g/9
+         XZjEozAR1Z8/iSMDIMMD+r8jn77px0xuDVJK3kk1edoCBFxFm5h/XUCvnJ7lgVuyTyWI
+         4GgSBx0b3NT+/tK2QZh+zHIMnjxKB7xCx1bcjmMMU2baT0GydG8REqxK19+2bKWf4kX9
+         Tuj0ag/aIX6tJOodlmvHzaGW3TW6eYqX/MqL/bhXpYGvGpECf3JnFNdhchM8MmQpEeRa
+         vR0/PmdktNeHwtMz1DHuZUUu7gPgM/LB2Et6dqkDjVDCoYDjIlzv7FQNYPiEB/6sIGId
+         Fygw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkSjo8QlG/ne3iRg3FCifqnZC5P0szXn23cXlfxgFoT7TwaBqudISIORc1QIdq0XqD67EdTHymsHo7h0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuUypmNvMGhOZSqL3fvh+jOyQgVISTXSTwH+Us6CnA4nLFglnd
+	vK+cG2ckNIXMo6rBmjuA9RluNhz9AUqs2nWybashm3dsZbNfFlYrhcBfFpJ7/Ruc5n1MxfRVbO8
+	T6lzppT+166cuTFOkTstfImCV77Q44K9NSbBcgLMlfPKPHaffrKjV5UjwJs8=
+X-Google-Smtp-Source: AGHT+IH/X5+qJ8O9dbUdWKi4epIO6O5E9jxkZwRqcUxBTE8GTUrIeQ32xDDNx5m9TPkPhrSfJ4W5C1PVpmeWD8/2idG8t4yOpH2b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SVsUToTKcWfmnEfn"
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:17cb:b0:3dc:7f3b:acb1 with SMTP id
+ e9e14a558f8ab-3e136fbc32amr44158195ab.13.1751720761578; Sat, 05 Jul 2025
+ 06:06:01 -0700 (PDT)
+Date: Sat, 05 Jul 2025 06:06:01 -0700
+In-Reply-To: <20250705124712.2637-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68692339.a00a0220.c7b3.0038.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] UBSAN: shift-out-of-bounds in pcl726_attach
+From: syzbot <syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---SVsUToTKcWfmnEfn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
+Reported-by: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
+Tested-by: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
 
-  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
+Tested on:
 
-are available in the Git repository at:
+commit:         a79a588f Merge tag 'pm-6.16-rc5' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ba1c8c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5ba6cef8f153bfeb
+dashboard link: https://syzkaller.appspot.com/bug?extid=5cd373521edd68bebcb3
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=136c2582580000
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc5
-
-for you to fetch changes up to 534eb6de621954cde61c910dbeb8fb1700a0a0d6:
-
-  Merge tag 'i2c-host-fixes-6.16-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current (2025-07-04 18:31:22 +0200)
-
-----------------------------------------------------------------
-i2c-for-6.16-rc5
-
-designware: initialise msg_write_idx during transfer
-microchip: check return value from core xfer call
-realtek: add 'reg' property constraint to the device tree
-
-----------------------------------------------------------------
-Conor Dooley (1):
-      i2c: microchip-core: re-fix fake detections w/ i2cdetect
-
-Krzysztof Kozlowski (1):
-      dt-bindings: i2c: realtek,rtl9301: Fix missing 'reg' constraint
-
-Michael J. Ruhl (1):
-      i2c/designware: Fix an initialization issue
-
-Wolfram Sang (1):
-      Merge tag 'i2c-host-fixes-6.16-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      (Rev.) i2c/designware: Fix an initialization issue
-
- Documentation/devicetree/bindings/i2c/realtek,rtl9301-i2c.yaml | 3 ++-
- drivers/i2c/busses/i2c-designware-master.c                     | 1 +
- drivers/i2c/busses/i2c-microchip-corei2c.c                     | 6 +++++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
-
---SVsUToTKcWfmnEfn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhpIvsACgkQFA3kzBSg
-KbYjVhAAhSKwTpo49dx/uMl33+C2670EwkdvoSe4hQ2bvisIhqJ61WKdwncmBehi
-90b4BHIu3DcDQHnbVVFjY2emTPmQkFQx1g0DPRMG8qs7vVBgV78K9h4jU18m5Om5
-h0DelSFwIKVAv70s7LayAfo4W+D4m+eLavJWATpmqR05FtIrYJIfIGxY++q6ksxY
-p8gkYHh+HTD1X6VY2Ioyf1tACdbH1bCu3XY2a2BLYlteR4msU3aFIhAjOvNPaXuH
-Mg4NpNvMVkjh6p+XlCp7Mx6SdS5Bl/ez8mTR6h8yDjIuOb5p1Qb0GYhn4u7TsABS
-a9GYcOrCPQtC0DNTBaYzmIr/7sVE/bT1pgaI9Mibiy3FPXZDeet9ZA2FZcNWV5P4
-lAA/JRhqg3Dzw7e9n0fl3CwYwiC0bu10YlF1qu9urPqX9He8DB5ag3v+WrAOZFDr
-IKBkSuMLReF4RFWRqBRJ5JHqWwyX76sgKmS3ZC2VKD6GpMVvF4ruVWoZT09SdMdW
-ssJTuQBsRGaCzI+Ky0bqRSEg56V+UVOhei/r6hLn9NaXVyqSeJKFj6qtVFjXN7/C
-yWr9yABC0YQkG6QtKtd4FM1DSnLxvZKRXgV/q89q2tl8RKRqiyC06W8gvjZY8fgY
-aZUKL69cIz+p29P3xN80zkVaEBSc+XhIryOlZD5KozxaQ+YUqUg=
-=TG+8
------END PGP SIGNATURE-----
-
---SVsUToTKcWfmnEfn--
+Note: testing is done by a robot and is best-effort only.
