@@ -1,89 +1,109 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E6123AD
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 08:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7846123AD;
+	Sat,  5 Jul 2025 08:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751704544; cv=none; b=AcVuJpgiVBiOL/2SR3Zg38VGB42mAyjrW8K7Ej5Iq+/WC9IklUtx9ylrjzDrXi2PfxXHNx9PXgOUaCL9NUcSf+CPXWqHp4Cty0LNdlbQhCWfNHCfChSZkGfPJfDpWNNirhOwyWaX+zKtOYtpGFAkMB64NgVJMcucUX1m4sbwjCY=
+	t=1751704565; cv=none; b=uD1w3XjAgqv5L4+P1SSsc/sysCcZN0T6bO2V2zTyS+bquUe7V50nQKQbQYQYR2BlJWbdQgyCmF6SEdTm1k317pR76do+uZ/YGbFYq8l/EMNFDFdgRtq8ThycQ43gYgrMTLXAy9HDs+Z02k6R1FzeGIpX6jmpZV9U9nx4l/f8Cko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751704544; c=relaxed/simple;
-	bh=ah4SIvptMdwSFRwkpjHC9dZIrJE8W7eJFE6nNgvIwz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IZmmVYrSaWVhFG8IjZmzAYZFr0sOUuW2fWTe4rL45jpF2Bzyu2bD2th6XPqXxUHwIFZFOgo9WEcDO6DcmZxqvWktymNfP+a83SjIC04KCQ8x+ecah7bfy2tUGmMi9fmypQHBrkShavnVgXyro0bBOS0VKEElOfBHR8FJMwbgdzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VxNsaGXm; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751704565; c=relaxed/simple;
+	bh=Cn0VWrYKwf8V6uYejsIP+/3mvamaPCvfi5zjmIbd94g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=esEzW6NyU3Um94cHsetKnqx450NvlKIXaM6SV0MSE19+Nv9537vup9JJZ+AYNNJbon/hZY9CJ/+DRoJWeHKhume+vUSmqy6qNqSRHL/7BeyNgInUwRCl8qVE2e7GWCVJzBuTUaQ793bWF+E0wBb7N7hdA8ZuM79fPNkvkofg0So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=cF0ow0Mk; arc=none smtp.client-ip=80.12.242.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VxNsaGXm"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so1698209f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 01:35:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751704539; x=1752309339; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ah4SIvptMdwSFRwkpjHC9dZIrJE8W7eJFE6nNgvIwz8=;
-        b=VxNsaGXmpFBZzbGKOd6IK9X/JtW/udqf/QFYkdXLMxRPH8E9mWRWHzOT+AbD9nMkC1
-         vaV1j7SBSvjfLydUz29ox3rRRDZpZzJRbQEGkh0GwAz2fLNT0dw0/NXxuNgJZeLMROHS
-         Q349P3/x4ugtlRCxNp3zhbinpl0JTgQokNMmBk+oqFHEDeRH/44vvvHgcyhH1S3X3GX2
-         tz3pFZw9743bK2bsHftHI6JlopBSveB0xVs+haMSn7ibzFOVJFyTRP0hnMuIk6GPjdpz
-         HNHvsXdqQc6gu8JSIiWFTUtYBokNkCcIauhl6GCovDOlUxd6nSbvcDR5KxM1IgzY4s7/
-         oyMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751704539; x=1752309339;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ah4SIvptMdwSFRwkpjHC9dZIrJE8W7eJFE6nNgvIwz8=;
-        b=i9kqVto7kdwdI12JfIEEPPHSEY76BPKvuRKYan1jI28qKIO2t6znCrx9JjYQDVHDVx
-         IN4SQWTKtJAhiINn46gRwMU19A9lS2/rsh46xg8PIQciaUx5+dIXMr6crk/oz8ac2Bn/
-         RRToT3pfvEIphErSY23XlVDn3iL/FDwy8REFAvnjswuVYHiOwwtfI0YdkM+22TC2/N9C
-         Tjp7gzwCPkE+wp2BNqCnGGaTV+ZAomFEtVwFLUEFjaJvX8WjGVsgWynUExU39ugc2Q6I
-         E05ojb+IuBf9BDEKXZFOHqtCwGyuTffqVT/Wxjrq2vQQgfH7IqSXm0bvEmwhXCTO7Zts
-         O0Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCXH1dUwzkGApeSWfJ1aujmNGY8Pa/btH/z2rUWppMQLO0xI3NZK+cJad7kRYzKXytiA6xsbMjlTRH7ofmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyVIRzGXnIUbq5YTgf0djLdAeNWj5/+mUXznz5YieeFhZ/zeZk
-	0SOurQ4Kw7CiXuoLpGBkePVSBDhC96guGtObR92oQFaX+oc9D/TFEHQKzAePf5aKsa1vop4H6lG
-	DVPlSo+xddJ9A8AtvdF/WgLhhH/VCrXyQ7Ln8Ff1Z
-X-Gm-Gg: ASbGncstqvrWKkIVVPc5qHnWLh9CcHHGlKzRQ8bnGiBsJgpFNu/nZiKmRtH2L/VXe9A
-	mhC1wvXsnkTe+/LVbAj6vHmSiSHxFI08ldOKQFZnMiIg49+4rsyB2wGsdQ65a4YF7g+n6eJUKmn
-	MnDsI2mMaNLT5LifJRxxNHDdUdDpx+8ypn8ULBMER5mLZN0uy1LXZ6YCs=
-X-Google-Smtp-Source: AGHT+IH/pkllT3Sy9Cb1lHriZM/tG78khhI42JnRhbPr8kP9tTs+gtmjri5ZYwhkuP07q9yAkZH9HXYofTd095qzzFE=
-X-Received: by 2002:adf:e18f:0:b0:3a4:c71a:8119 with SMTP id
- ffacd0b85a97d-3b495cc4ea6mr5351566f8f.25.1751704539369; Sat, 05 Jul 2025
- 01:35:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="cF0ow0Mk"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id XyMCunIdc3HAMXyMCux85J; Sat, 05 Jul 2025 10:34:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751704491;
+	bh=bZ2e0OGLx3B1xnxgJsmUQMNOM9BBR0+6G+mi7LokNx8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=cF0ow0Mk+vKo0i7MXgUtpEOsNiSg/EqNpyVO5xtB2DGhRDbSJb+yPRjQoa3h+IbIo
+	 Q5f7G2PnB/Uqq8/s1VsxYbEcVImyFXJmcSEivXu/6IvwWRfh8613zFQOtWm87ZDplo
+	 sUzYPZMf5TXsaatv+ywMe26H0XR+DSrXCdGaEFvfmmJedqFosv3F5CeQQxAKAgVa6q
+	 7HN3dvmIIjrFEHqqMWjgVYBOHGYY/e28mf3Hs31hPhZtKM6FXIegxEQNkoEf7eWm5C
+	 yLGQ3RQyLknnkAxvmNLP/s7pJosT1WsjYaHlSz8GxbpNrqbpHGFj8pt980/R6/V5PE
+	 j0d4uq3fe1J2w==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 05 Jul 2025 10:34:51 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Simon Horman <horms@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v4 net] net: airoha: Fix an error handling path in airoha_probe()
+Date: Sat,  5 Jul 2025 10:34:32 +0200
+Message-ID: <1c940851b4fa3c3ed2a142910c821493a136f121.1746715755.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704-core-cstr-prepare-v1-0-a91524037783@gmail.com> <20250704-core-cstr-prepare-v1-4-a91524037783@gmail.com>
-In-Reply-To: <20250704-core-cstr-prepare-v1-4-a91524037783@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Sat, 5 Jul 2025 10:35:27 +0200
-X-Gm-Features: Ac12FXyGVQLpnmxvOqtVG7V_plS_x4VHl-FkqPG4Jcdo-zfXWt7_Lhls-5TlbKw
-Message-ID: <CAH5fLgg=4ZqKh1hqFD9bmGJwUf3LK3=K+Q4tTRPnT+NaMubpLQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] rust: str: remove unnecessary qualification
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 4, 2025 at 10:16=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> `core::ffi::*` is in the prelude, which is imported here.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+If an error occurs after a successful airoha_hw_init() call,
+airoha_ppe_deinit() needs to be called as already done in the remove
+function.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+Changes in v4:
+  - Add A-b and R-b tags
+  - Rebase against latest -next (because v3 now gets "Hunk #1 succeeded
+    at 2979 (offset -12 lines)")
+
+Changes in v3:
+  - call airoha_ppe_deinit() and not airoha_ppe_init()   [Lorenzo Bianconi]
+v3: https://lore.kernel.org/all/1b94b91345017429ed653e2f05d25620dc2823f9.1746715755.git.christophe.jaillet@wanadoo.fr/
+
+Changes in v2:
+  - Call airoha_ppe_init() at the right place in the error handling path
+    of the probe   [Lorenzo Bianconi]
+v2: https://lore.kernel.org/all/3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr/
+
+v1: https://lore.kernel.org/all/f4a420f3a8b4a6fe72798f9774ec9aff2291522d.1744977434.git.christophe.jaillet@wanadoo.fr/
+
+Compile tested only.
+
+In the previous iteration, this patch was part of a serie (was 2/4).
+But it should be related to 'net', while the rest of the serie was for
+'net-next'. So it is resent as a stand-alone patch, as a v4.
+---
+ drivers/net/ethernet/airoha/airoha_eth.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
+index af8c4015938c..d435179875df 100644
+--- a/drivers/net/ethernet/airoha/airoha_eth.c
++++ b/drivers/net/ethernet/airoha/airoha_eth.c
+@@ -2979,6 +2979,7 @@ static int airoha_probe(struct platform_device *pdev)
+ error_napi_stop:
+ 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++)
+ 		airoha_qdma_stop_napi(&eth->qdma[i]);
++	airoha_ppe_deinit(eth);
+ error_hw_cleanup:
+ 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++)
+ 		airoha_hw_cleanup(&eth->qdma[i]);
+-- 
+2.49.0
+
