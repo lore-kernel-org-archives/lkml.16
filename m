@@ -1,151 +1,143 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2806074BE1;
-	Sat,  5 Jul 2025 19:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F7A14386D;
+	Sat,  5 Jul 2025 19:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751743671; cv=none; b=PfICckfrIO6E0StyUI7KyLc+sankj5f2PP7VH2fwGEd7fX2NrG3zV1xH8dtXphN7Yq08ZA5s5svDfVKaSpAhfvuoBW4VC1eZe0tGoZy6xXgfFLUzGNLADFtwhGf2enXHub1g1zCL6BOwLKOXUmFOOMi9Y6CEtmF1WK0I8qgfrCM=
+	t=1751743886; cv=none; b=Uefabgsd02T0v8uJwPVnl4kzNz+Yhn005hgIe811MebeDjrJiGUhBISQzeBzwiG2/AByW+h1m3g5ZyJSvhDlg5sngQvCCslfIDINJGSq7hXClneLLCrErA2n1jw6ilYxvCftzk8yIiMnrcCO3Lvsm0Hf9Zi923NJTvRtCvWdx7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751743671; c=relaxed/simple;
-	bh=noCGX8JTMgk+VkhE3ajHW0gmlbUMW2TalG2eHJ7gQio=;
+	s=arc-20240116; t=1751743886; c=relaxed/simple;
+	bh=FTO5G4X+pxGHSBpXzwIlVzU1sFOHICPeIYKUVFrky6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VkvT7t1yvIsZm/2zx2FwNGjoxABZ4NEa5NeeK1eRdcsLafG9FcGtyiJCu79LZMHaS002sVsOsiuO0qWV8G3AcBIii0MRiaG7q/KjaxtVXqqbRtesN1kPa65f12FxDjb0kmU7sSnhmg6F7mGlQCWh7+Tzn17VVv20Z9OPmCE/G9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWVVhANd; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYeOU0p/ahcf3FVNFvYRFVUhvPyeGI/W8LuCEFyZ8z/tu4H99lHd9kHkZ2kC0EJ7N+OLc88ur/MmT1CAY0RmUIyJvCb5bqz8EJtPDVATIHvTiUHXPKuzMb84CETyyexInpg4pUzVPteBa84LGMU5mGJrNXgPlxBsLJsOCyMi9II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HlF6kCHm; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWVVhANd"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2da3c572a0bso1664078fac.3;
-        Sat, 05 Jul 2025 12:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751743668; x=1752348468; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8Uvi3Ssl9dhbiyb7WG5zZNIM65dwWn2BHeyM8ec+zc8=;
-        b=AWVVhANdrekj55Kn2rJMbKCt0u1KDNOQ+5du4nAYqgS+LNrn2Nml5IQv5i0hVzpOD/
-         SqvUqJrtdMa5ZeXChJBgM36q3ONv//VdHYvhxl/W4r/41cpkA60mdCZv4uEpwZCJSEMz
-         Dw3GvyVAZr9dOJEqpDMQ4Qzpkz3KjB21ErFkQxVo1IymUXAO0LHVqlKIbNhLUo5qMzJq
-         c6/XKxuz4te+o1IllsYulyeY+x8VORAKs5GkU13WQCl+TkKaSCQiG7mCFpbHoKrSNRcA
-         C9retiz8Eati9DueUYuHuv4fyW2xVldWDSboWYJ7M6PRa9H74R0wjowQGN6oNqAvas52
-         a6vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751743668; x=1752348468;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Uvi3Ssl9dhbiyb7WG5zZNIM65dwWn2BHeyM8ec+zc8=;
-        b=ogQcQ1X8LXuiZP8hC72f3CCKkJjh/Z2Vj/0RZey3DH3I+d+PFBhy1CoMhfvPAENLBY
-         hFTYpjUn3BgBEfTjlAU5FHwDyhqaZFiNltNHym2iNydTjxwzp8JBVCFo1wUynrX62gD6
-         Nskblkac3FaLEliG4wVu0XzMaA92kOQLLA/BTEkBEJD5ljvQjL/S5hdn83F+oPVGzVq5
-         ORxVILDj2ygANph7CHqjoJVUnqu3ymiqOoENUZeOEluZWxvaeCIGEBWicpgtQnIVtRTj
-         Z7VWCDWTYrjk6Uz0rm0cZ2tkYqiEmARpjeW3qlY2ZI7Jg0CHUxHURm0EQC0ntcjbyfBf
-         6xMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaMDIGbV+6sTfYvl/93tkrvSVPUr3nxa4gOV+zOOOpQdsv88uctt1W/nouUKq9CICdrSSqmqFwB7g=@vger.kernel.org, AJvYcCVP66nDn5iAiRvMDug7ngneKkukJSevypMWlPx4ylpKf4v4akh2FF6E1Cyk6X39AdAf0mksfKNDkVzI9e5kDA==@vger.kernel.org, AJvYcCVwBns4uXLLZs/xOYpQiCxLavTZD/ZExe1z6u1NKsUmabd8DF/DOfI5TRZ6fwmK03fHRRgekvv2brNv@vger.kernel.org, AJvYcCWMYostwlkjMlgEDUfHGOvBocO6mrJBEO8X+SX8naPEVJuaL4Ap3RI2g22DcZa1l81h10qZCSTVby8oHc6m@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzgi0ZYHe7O7jmiP69/1MuEevEQg85AVO3WLmds9OwcreNf16zI
-	HxtIw6dTkDx21AVoKqxPW6OJ36P4tRrpdI3ioV61H5pdp2mhPMbd0MWP
-X-Gm-Gg: ASbGncvV4p8R77o2nP5/ZfgRSXJds6mzaHTRrdYkBJBfcJglbJZ33YO9rYHfRqvdMpi
-	mdiPVqu8dDFeg+kKkE3kKA6S18usGgURKeIeZlv/9h5VMf71S0fJu8mo9B6NdznY9bfD84T6rbl
-	R+f7NzT3CPtUzSIh4n/XDzctFfJgZTrqOk2M3+BEZNkKHUr1udQHUkTdSV9W77piMaYBjPaA1XY
-	VsQ63Zb7amO8vukh/2JQ4v82J7d8e7c5NtIIynCBRUpPnwHuhbxw7whBJDk8k+z1hBCoIawgP40
-	qOIWIgKaRDVkrSlEzugzQoGLlufLRbC/tDinBJVknCecmw8u5MPm/xu7Sm1PJi6GYvoWoeEfSgH
-	J
-X-Google-Smtp-Source: AGHT+IH5/ekfod+dK4/TpB2Sd1DQKASQYJbwHuxsumDvUc8YMsc2FL7gyW2TpiM3j94mzw4K5mpHqw==
-X-Received: by 2002:a05:6870:ae08:b0:29e:3c8d:61a0 with SMTP id 586e51a60fabf-2f7afcf1e5emr2212398fac.8.1751743668059;
-        Sat, 05 Jul 2025 12:27:48 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:5c68:c378:f4d3:49a4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f7902dbf5dsm1226132fac.48.2025.07.05.12.27.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 12:27:47 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Sat, 5 Jul 2025 14:27:45 -0500
-From: John Groves <John@groves.net>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [RFC V2 13/18] famfs_fuse: Create files with famfs fmaps
-Message-ID: <custjjqmvxt2u3wfjztwjdxvdxr6vbpvcoptt4vvv2itt7d2os@zqg5es4g7xmf>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-14-john@groves.net>
- <CAOQ4uxgFoEByjaJPQv_QGMzGHLx=1hZvQcYjxM_ZZi_D063HEg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HlF6kCHm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6ORbq48ws88BzoCg+3C3lrqxEVQITGSfVV6sDqkLObc=; b=HlF6kCHm7Z1146GdO7SLnj71+9
+	/C+tGhuejjoazPhpxK8Ve0ym29eARPV84ad6YdaQtI40RgwcZklR/avhIMFzXMlXa3ON+jwdIq1sf
+	nQBaxTHR3rUktGW/TbF+I88NmIQKyZvgSISYK4QeBFEDHtbyj+Kxri2K50SkpUKe4peSCdmgVJpLb
+	Nh+PKQrDTWdz0G81MuxYnENLP5wDTaGegMl7BDsvWff/ph9OZav9mh0oo3tWDrcl1LeYZe3a13kLj
+	uhfEnB7I0ObqceH8Vzo5gw0VexoLR8a6yuUZo7tZDiBlZXxDdKEhSFlYwVVm51Ekg3xy0Ju/82JvI
+	EbIUvTrQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50760)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uY8bP-0003UC-2L;
+	Sat, 05 Jul 2025 20:31:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uY8bL-0007Ki-1z;
+	Sat, 05 Jul 2025 20:31:07 +0100
+Date: Sat, 5 Jul 2025 20:31:07 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: Re: [PATCH net-next] net: stmmac: dwmac-renesas-gbeth: Add PM
+ suspend/resume callbacks
+Message-ID: <aGl9e9Exvq1fVI0s@shell.armlinux.org.uk>
+References: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxgFoEByjaJPQv_QGMzGHLx=1hZvQcYjxM_ZZi_D063HEg@mail.gmail.com>
+In-Reply-To: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 25/07/04 11:01AM, Amir Goldstein wrote:
-> On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
-> >
-> > On completion of GET_FMAP message/response, setup the full famfs
-> > metadata such that it's possible to handle read/write/mmap directly to
-> > dax. Note that the devdax_iomap plumbing is not in yet...
-> >
-> > Update MAINTAINERS for the new files.
-> >
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  MAINTAINERS               |   9 +
-> >  fs/fuse/Makefile          |   2 +-
-> >  fs/fuse/famfs.c           | 360 ++++++++++++++++++++++++++++++++++++++
-> >  fs/fuse/famfs_kfmap.h     |  63 +++++++
-> >  fs/fuse/file.c            |  15 +-
-> >  fs/fuse/fuse_i.h          |  16 +-
-> >  fs/fuse/inode.c           |   2 +-
-> >  include/uapi/linux/fuse.h |  56 ++++++
-> >  8 files changed, 518 insertions(+), 5 deletions(-)
-> >  create mode 100644 fs/fuse/famfs.c
-> >  create mode 100644 fs/fuse/famfs_kfmap.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index c0d5232a473b..02688f27a4d0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8808,6 +8808,15 @@ F:       Documentation/networking/failover.rst
-> >  F:     include/net/failover.h
-> >  F:     net/core/failover.c
-> >
-> > +FAMFS
-> > +M:     John Groves <jgroves@micron.com>
-> > +M:     John Groves <John@Groves.net>
-> > +L:     linux-cxl@vger.kernel.org
-> > +L:     linux-fsdevel@vger.kernel.org
-> > +S:     Supported
-> > +F:     fs/fuse/famfs.c
-> > +F:     fs/fuse/famfs_kfmap.h
-> > +
+On Sat, Jul 05, 2025 at 06:03:24PM +0100, Biju Das wrote:
+> Add PM suspend/resume callbacks for RZ/G3E SMARC EVK.
 > 
-> I suggest to follow the pattern of MAINTAINERS sub entries
-> FILESYSTEMS [EXPORTFS]
-> FILESYSTEMS [IOMAP]
+> The PM deep entry is executed by pressing the SLEEP button and exit from
+> entry is by pressing the power button.
 > 
-> and call this sub entry
-> FUSE [FAMFS]
+> Logs:
+> root@smarc-rzg3e:~# PM: suspend entry (deep)
+> Filesystems sync: 0.115 seconds
+> Freezing user space processes
+> Freezing user space processes completed (elapsed 0.002 seconds)
+> OOM killer disabled.
+> Freezing remaining freezable tasks
+> Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+> printk: Suspending console(s) (use no_console_suspend to debug)
+> NOTICE:  BL2: v2.10.5(release):2.10.5/rz_soc_dev-162-g7148ba838
+> NOTICE:  BL2: Built : 14:23:58, Jul  5 2025
+> NOTICE:  BL2: SYS_LSI_MODE: 0x13e06
+> NOTICE:  BL2: SYS_LSI_DEVID: 0x8679447
+> NOTICE:  BL2: SYS_LSI_PRR: 0x0
+> NOTICE:  BL2: Booting BL31
+> renesas-gbeth 15c30000.ethernet end0: Link is Down
+> Disabling non-boot CPUs ...
+> psci: CPU3 killed (polled 0 ms)
+> psci: CPU2 killed (polled 0 ms)
+> psci: CPU1 killed (polled 0 ms)
+> Enabling non-boot CPUs ...
+> Detected VIPT I-cache on CPU1
+> GICv3: CPU1: found redistributor 100 region 0:0x0000000014960000
+> CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
+> CPU1 is up
+> Detected VIPT I-cache on CPU2
+> GICv3: CPU2: found redistributor 200 region 0:0x0000000014980000
+> CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
+> CPU2 is up
+> Detected VIPT I-cache on CPU3
+> GICv3: CPU3: found redistributor 300 region 0:0x00000000149a0000
+> CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
+> CPU3 is up
+> dwmac4: Master AXI performs fixed burst length
+> 15c30000.ethernet end0: No Safety Features support found
+> 15c30000.ethernet end0: IEEE 1588-2008 Advanced Timestamp supported
+> 15c30000.ethernet end0: configuring for phy/rgmii-id link mode
+> dwmac4: Master AXI performs fixed burst length
+> 15c40000.ethernet end1: No Safety Features support found
+> 15c40000.ethernet end1: IEEE 1588-2008 Advanced Timestamp supported
+> 15c40000.ethernet end1: configuring for phy/rgmii-id link mode
+> OOM killer enabled.
+> Restarting tasks: Starting
+> Restarting tasks: Done
+> random: crng reseeded on system resumption
+> PM: suspend exit
 > 
-> to order it following FUSE entry
-> 
-> Thanks,
-> Amir.
+> 15c30000.ethernet end0: Link is Up - 1Gbps/Full - flow control rx/tx
+> root@smarc-rzg3e:~# ifconfig end0 192.168.10.7 up
+> root@smarc-rzg3e:~# ping 192.168.10.1
+> PING 192.168.10.1 (192.168.10.1) 56(84) bytes of data.
+> 64 bytes from 192.168.10.1: icmp_seq=1 ttl=64 time=2.05 ms
+> 64 bytes from 192.168.10.1: icmp_seq=2 ttl=64 time=0.928 ms
 
-Done, and queued to -next
+You should also test with the interface configured before suspend/resume
+and confirm that it continues working afterwards without being
+reconfigured.
 
-Thanks,
-John
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+
+Thanks!
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
