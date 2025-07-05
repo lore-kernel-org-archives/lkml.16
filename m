@@ -1,133 +1,174 @@
-Received: from mx-rz-3.rrze.uni-erlangen.de (mx-rz-3.rrze.uni-erlangen.de [131.188.11.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3CE1C84CB;
-	Sat,  5 Jul 2025 19:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465CD205502
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 19:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751742587; cv=none; b=HWk3pSQW+RZR2FKkXTO4w8Qvz6Axd/8QaetFBfn8jvwa+EsW2MAUDMFoNDBBLwbIH12VHj+kWlZhEA7Q61OOFOm2d23Isdmz8n7pRDjNsjnerBSFlPSIWKE0OXr8xUy5zWrxi8/5KIxkpel5rJiE7FKU+QG3PsPMBwFIwgtAbb8=
+	t=1751742814; cv=none; b=fxTsP8Kr3N0sWPbjuuM7NHsFHact5aO3Wpg9pJrZxscf8O+/qHaTO0AOeVvgCL5RJZnTC+P89LwlzUoBoBnvJ8hQ0IrVecDzlKEy3WBMCMQEKO1cCOa/09mNo1IXzPZ1QbO593H7riTFS8ztGk2tcFU1kJ0DA5MY8oHO3vLYK1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751742587; c=relaxed/simple;
-	bh=qp6t18ocRY52K85B+FiCV7mr3R4S0Clf6jSk6R9gHtU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=cuhMsOqEhgWc4NIQUOKRu24sr/8yNgyEaD43Yi38ySbe1xAASzku4DXSroDQL8k/v1TsB8ddAe9DrPSWUp0y69z81akUIsZHLSZ7KTC1E8SU4VdWqi64K6qKZWG9ZBFrkdz3xkbmJvGqsDAuiaUEqtcv/CdJYr1JFH+RekL56SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=dabMzoAs; arc=none smtp.client-ip=131.188.11.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="dabMzoAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1751742575; bh=U4JRcb2ISLhy6GHoPDCy2o9SAqKHaBiyifazmsE7ZfU=;
-	h=From:To:Subject:Date:From:To:CC:Subject;
-	b=dabMzoAsMcA5VXmWoWqC9uDhMbVXY2m4NC+tHhMRkF41V9PW0CEimFmuPsu2SdKSO
-	 HILTD0E0v1XKmZuw4nAr3h2/PoOqMuvjgEe9p3CzebxBMeO3AhS9s/21aAO2Fz1lcw
-	 OsPd2tvSIKUj2RrUtSxMLwFuGoXmEHLr4sASjtjZGzX1fMwSt5RomJBXOG/nW7cVeR
-	 As/N0msV9l7Hb55OrEl6yo9W53KTAUv+PC4/PvEuNEUi2b7sIOngsgHTHbmLIzBD4T
-	 NzU1s7QvFYwq/pqVsn02/h4usfRObReaLhuEBZWW4a6CInU+KWuMJ/E6FlbQoNQ3Jo
-	 NBfy/+O/YQ2fA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-3.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bZKnC61Mmz1xwW;
-	Sat,  5 Jul 2025 21:09:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:362a:3200:5d43:2d8a:dc0e:5715
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:362a:3200:5d43:2d8a:dc0e:5715])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX19p3JUrEsOfWRyomGLjfk3UMHlSJN+uMLU=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bZKn85Bmnz1xsD;
-	Sat,  5 Jul 2025 21:09:32 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Peilin Ye <yepeilin@google.com>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Viktor Malik <vmalik@redhat.com>,
-	Ihor Solodrai <isolodrai@meta.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paul Chaignon <paul.chaignon@gmail.com>
-Subject: [PATCH bpf-next v3 0/2] bpf: Fix and test aux usage after do_check_insn()
-Date: Sat,  5 Jul 2025 21:09:06 +0200
-Message-ID: <20250705190908.1756862-1-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1751742814; c=relaxed/simple;
+	bh=sDs2FuQR9SAv9gueHnsljeOfKV0PFqXvuF6Js+kKAdM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=H7it00bi7aSyLPVgS4oVZQdiC/AFErTDKd/XypR6FjDjLgSZuV7uaSZEq+EGC0wS1nNfsDooqqdKLk7eUi36DlLpqRI1H+KviSDFt+LPOxmivTg/rvSQ0jMIIoIvb70izlDUg0xgqo00Jij3EHkBI9wZeEh3pEDI9mSqkzzS+4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-876afa8b530so160343039f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 12:13:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751742812; x=1752347612;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gqRYkQJ4Gex/FmdSFSJ1VKHDBVaZ3K23NAVJRsP4Dqo=;
+        b=wWykRfP8US+rjbyn5eqqibniJfE9SxFkA40JTCmXRmsbUtuccrIRDhrzE4br4DXAlb
+         F7HhjHdDdlqRt1KscsXyg4j8BVGbyBmTomCQPUk8XxMdYPi6eEMPugKjk+WoT3OuojCf
+         yRI3iL/pcjAkGEmnBm3B31VG89Or3/EmVHJ20qPN4v5A5aJaj725tkw8S727fxLt3w7+
+         DMdzAzJO+42BgS7pkdQ6+ak/RSo919SStglShtMQud1Rsjslj2WPtHyUlhRmaLPHXMtE
+         6MmkD93Xp1o0fX/xgd4nfs4AJfNss/7fdqzkg6y8fr4Mg5Z2ZzsQwj54V3dOGG4KbdHO
+         ohjA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0XHwXXb0G9rIV8qTPKAU22iVzICEWu7viKZPeCq1yjhN2xsonLYyt0Ra15gMGE2PSskEc88yF0Ca8wZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxujLzm9kR7VUNUZoWYrmphQRzWCFqPqPDEy4VGeZoBG0ao3CVZ
+	WIe4l0faEI+to0tqpAs7/2aVDawODWUfA7FMJ/yoRaTPe35zCcEYdRjSeCVYNIPWkVAMTu7BU+a
+	lOkGaPJPsplPTDh2Mve5oZvZy9ZoW0+A7AIY6FSDck+DgdwPrxwkpum7CZqM=
+X-Google-Smtp-Source: AGHT+IE0GC55HxVfVfXZFZohjYGAnYJaxyWhKQlnKKthOT+fNFSIVWa/wK6D1/HezOQuA4M5jUQFIBUbrdXY5+SIXnCJg1WMTwY9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2307:b0:3dd:d995:30ec with SMTP id
+ e9e14a558f8ab-3e13eefe279mr26598985ab.12.1751742812434; Sat, 05 Jul 2025
+ 12:13:32 -0700 (PDT)
+Date: Sat, 05 Jul 2025 12:13:32 -0700
+In-Reply-To: <68695144.a00a0220.c7b3.0045.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6869795c.a00a0220.c7b3.0048.GAE@google.com>
+Subject: Re: [syzbot] [usb?] KMSAN: kernel-usb-infoleak-after-free in usb_start_wait_urb
+From: syzbot <syzbot+27fe438b6370f95de4a5@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Fix cur_aux()->nospec_result test after do_check_insn() referring to the
-to-be-analyzed (potentially unsafe) instruction, not the
-already-analyzed (safe) instruction. This might allow a unsafe insn to
-slip through on a speculative path. Create some tests from the
-reproducer [1].
+syzbot has found a reproducer for the following issue on:
 
-Commit d6f1c85f2253 ("bpf: Fall back to nospec for Spectre v1") should
-not be in any stable kernel yet, therefore bpf-next should suffice.
+HEAD commit:    a79a588fc176 Merge tag 'pm-6.16-rc5' of git://git.kernel.o..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=16942f70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=aa9af7332485152e
+dashboard link: https://syzkaller.appspot.com/bug?extid=27fe438b6370f95de4a5
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11132582580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10709c8c580000
 
-[1] https://lore.kernel.org/bpf/685b3c1b.050a0220.2303ee.0010.GAE@google.com/
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b7cf1187020f/disk-a79a588f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/47e08d61ef4b/vmlinux-a79a588f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/75d3bcd3c8e0/bzImage-a79a588f.xz
 
-Changes since v2:
-- Use insn_aux variable instead of introducing prev_aux() as suggested
-  by Eduard (and therefore also drop patch 1)
-- v2: https://lore.kernel.org/bpf/20250628145016.784256-1-luis.gerhorst@fau.de/
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+27fe438b6370f95de4a5@syzkaller.appspotmail.com
 
-Changes since v1:
-- Fix compiler error due to missed rename of prev_insn_idx in first
-  patch
-- v1: https://lore.kernel.org/bpf/20250628125927.763088-1-luis.gerhorst@fau.de/
+microsoft 0003:045E:07DA.0001: unknown main item tag 0x0
+microsoft 0003:045E:07DA.0001: ignoring exceeding usage max
+=====================================================
+BUG: KMSAN: kernel-usb-infoleak-after-free in usb_submit_urb+0x5a1/0x2630 drivers/usb/core/urb.c:430
+ usb_submit_urb+0x5a1/0x2630 drivers/usb/core/urb.c:430
+ usb_start_wait_urb+0xc2/0x320 drivers/usb/core/message.c:59
+ usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+ usb_control_msg+0x27c/0x5b0 drivers/usb/core/message.c:154
+ usbhid_raw_request+0x4ab/0x690 drivers/hid/usbhid/hid-core.c:-1
+ __hid_request+0x2bd/0x500 drivers/hid/hid-core.c:1989
+ hidinput_change_resolution_multipliers drivers/hid/hid-input.c:1950 [inline]
+ hidinput_connect+0x3bf5/0x5cc0 drivers/hid/hid-input.c:2327
+ hid_connect+0x6b4/0x3440 drivers/hid/hid-core.c:2239
+ hid_hw_start+0xfc/0x1e0 drivers/hid/hid-core.c:2354
+ ms_probe+0x2e5/0x890 drivers/hid/hid-microsoft.c:391
+ __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
+ hid_device_probe+0x536/0xab0 drivers/hid/hid-core.c:2761
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:657
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+ driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+ __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+ bus_for_each_drv+0x3e3/0x680 drivers/base/bus.c:462
+ __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+ device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+ bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+ device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+ hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
+ usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
+ usb_probe_interface+0xd04/0x1310 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:657
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+ driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+ __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+ bus_for_each_drv+0x3e3/0x680 drivers/base/bus.c:462
+ __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+ device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+ bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+ device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+ usb_set_configuration+0x3493/0x3b70 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0xfc/0x290 drivers/usb/core/generic.c:250
+ usb_probe_device+0x38a/0x690 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:657
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+ driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+ __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+ bus_for_each_drv+0x3e3/0x680 drivers/base/bus.c:462
+ __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+ device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+ bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+ device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+ usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2694
+ hub_port_connect drivers/usb/core/hub.c:5566 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5706 [inline]
+ port_event drivers/usb/core/hub.c:5866 [inline]
+ hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5948
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xb8e/0x1d80 kernel/workqueue.c:3321
+ worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
+ kthread+0xd5c/0xf00 kernel/kthread.c:464
+ ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-Changes since RFC:
-- Introduce prev_aux() as suggested by Alexei. For this, we must move
-  the env->prev_insn_idx assignment to happen directly after
-  do_check_insn(), for which I have created a separate commit. This
-  patch could be simplified by using a local prev_aux variable as
-  sugested by Eduard, but I figured one might find the new
-  assignment-strategy easier to understand (before, prev_insn_idx and
-  env->prev_insn_idx were out-of-sync for the latter part of the loop).
-  Also, like this we do not have an additional prev_* variable that must
-  be kept in-sync and the local variable's usage (old prev_insn_idx, new
-  tmp) is much more local. If you think it would be better to not take
-  the risk and keep the fix simple by just introducing the prev_aux
-  variable, let me know.
-- Change WARN_ON_ONCE() to verifier_bug_if() as suggested by Alexei
-- Change assertion to check instruction is BPF_JMP[32] as suggested by
-  Eduard
-- RFC: https://lore.kernel.org/bpf/8734bmoemx.fsf@fau.de/
+Uninit was created at:
+ free_pages_prepare mm/page_alloc.c:1173 [inline]
+ __free_frozen_pages+0x179/0x1560 mm/page_alloc.c:2706
+ free_frozen_pages+0x21/0x30 mm/page_alloc.c:2744
+ __folio_put+0x435/0x460 mm/swap.c:112
+ folio_put include/linux/mm.h:1356 [inline]
+ put_page include/linux/mm.h:1425 [inline]
+ anon_pipe_put_page+0x32e/0x620 fs/pipe.c:139
+ anon_pipe_buf_release+0x39/0x50 fs/pipe.c:147
+ pipe_buf_release include/linux/pipe_fs_i.h:282 [inline]
+ pipe_update_tail fs/pipe.c:242 [inline]
+ anon_pipe_read+0xaef/0x1e80 fs/pipe.c:361
+ new_sync_read fs/read_write.c:491 [inline]
+ vfs_read+0x857/0xf00 fs/read_write.c:572
+ ksys_read fs/read_write.c:715 [inline]
+ __do_sys_read fs/read_write.c:724 [inline]
+ __se_sys_read fs/read_write.c:722 [inline]
+ __x64_sys_read+0x1fb/0x4d0 fs/read_write.c:722
+ x64_sys_call+0x39db/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:1
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Luis Gerhorst (2):
-  bpf: Fix aux usage after do_check_insn()
-  selftests/bpf: Add Spectre v4 tests
+Bytes 2727-6822 of 65535 are uninitialized
+Memory access of size 65535 starts at ffff88811b772559
 
- kernel/bpf/verifier.c                         |  19 ++-
- tools/testing/selftests/bpf/progs/bpf_misc.h  |   4 +
- .../selftests/bpf/progs/verifier_unpriv.c     | 149 ++++++++++++++++++
- 3 files changed, 167 insertions(+), 5 deletions(-)
+CPU: 0 UID: 0 PID: 11 Comm: kworker/0:1 Not tainted 6.16.0-rc4-syzkaller-00308-ga79a588fc176 #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: usb_hub_wq hub_event
+=====================================================
 
 
-base-commit: 03fe01ddd1d8be7799419ea5e5f228a0186ae8c2
--- 
-2.49.0
-
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
