@@ -1,175 +1,203 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E8C4964E
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 05:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751694246; cv=fail; b=hdi63qo2jmx1+h3Dknp7lRguY9Sapy6X55G+lTG0ieaH7ICHs7GEd4ns5caRF/K8xR8FX9+wssL63H0g1j4PiGOca0oZLlqbVCf5nUuY/DGfjc0S3x5zh3PDyCczgILJgAEDb+GHcRs88W4tJPnolp7lXE2XRnsun2IIUUvjdJg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751694246; c=relaxed/simple;
-	bh=BcvRKS7k6GNFCQflER6EId7hQ7maZnIsyJYs6E9bqoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nuYf6SEH/YpY7sVfDT3Om7/OdAGs2HsWwCY53OaaDhA7sGmwTnAIt1Gu0UFbhZ0KPObAK0h6mCOM/g7AjWGTQwcYTyBdJltcVizy/aw6UdwK1E8ZLDNE2HxiyaPTTlRxe4Dj7sdcppLlqTaiX5cR8ecfpnCJzLI8bOgNGbep/Tg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XD5YUHIp; arc=fail smtp.client-ip=40.107.93.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD922E3702;
+	Sat,  5 Jul 2025 05:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751694931; cv=none; b=r8FJ/ry6Thes2vW0J6LXS9jjv6mSVDEWcHenM/9NqpVN0R1sd7ilZlr7RJQvTQRyBj0tYJyUIJGMeH+LTtzqK0mj70BW2kCdWEmVQHW5L6CJJWRvFLbHKMvKZ+7GkeEtM2sdKuEGQIebRdGS7oznysOzofrqi8l0Kl4b9YO0kWs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751694931; c=relaxed/simple;
+	bh=d7/uhSw2VSan58YiIhT9PeVIWmFDPBAlvnKCItow7NY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZL6ZU4lUOxmnSwozkjZH7UJKwNrGQ13gVQAX56GmpNfbsTBYRkMHCEkPwGHgPPrfb2CW7IY7+PJFTs3cH3BQPJGxe/NtPyDOeR1NY7POLtsRhfjnJtuu71WqL3gzH3JKX8iNYH/4wVcjA5bBWFywts36hIKUCttqOoOyk5BSdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yb07Js06; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XD5YUHIp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PJKxxUgsf44Gyg4xP7caKrpBXzxlbBN6GzsrmVXJQDUJmzpTI3OeYEYkHsb33L3NryrOqgAIuxHO1109UuODm0M+P+/GQ7EBokjR1RxVTvc0N8oPipW3wWkShlI/EK3zO6Rc9nX89IXxOTk5CoRlq3XCrZJKgl2nL0T2HPsMJ6irA8IZx64qlfszwArJ6YJyzjIBbacar0iG3zigflJCPm1EuoGhXMxwvYpfZBQlK5RsdJ1FPYk/tj6WCiWcT3aSLEEVKT+SXP5k3SJhht3M4ol1SAfBpXs9BbcPHGKtihEl9I5f8/7GGN9mz5jdIw3BYQxNBbmzSxnPhkRdYvsWTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7nutTncCcekddzRZjhgurPATvLi+Ykw/C8LylCAQAUM=;
- b=TQ9OCslylXBDRWHTxwBSaaF8nrOmwAwP6Vr/FSBkISJGEJnQ/bauo8kdyOnEU44b43f8GIfP4WNbaCyeCPUbmDJnCMsJjpHYrRMJCoWFL1437mupEnCN2kSQysSmo2v5D0TJBaZf1Yf6GdePXWTgVe2gbUcsEj+WJvhd6RpDsg9PpByv8yRj9RKOupvb53Fb8x7OeXSEd63MWJViwaG0iAG03hFYaGfe0bqYrhpg/vyd3cTx5Wi6P0/JZ0ci0e1M7Xq6Uul00E6BsPTYmejlTA5rpWwQ59duN7PJ/tpmrqXp2evAhPdMSfeQPG+hniNlEUIEo06TiBO+ge361UYw9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7nutTncCcekddzRZjhgurPATvLi+Ykw/C8LylCAQAUM=;
- b=XD5YUHIpJFr5kKF98pW1NBB+zGiRFQVQYz82J7xcoHeawsBHC0WaLEqyVoWIP6W4bO5gGund5QGKqAAI9K8Oxj6OAnK9laDBKk9IlX/1PcijgCEFW+n7hHpQ6z8SX/NQskKU9ZZtRWzY2pczj0Obgo2kVOy7k/jPVcyC3v9GoWEI7X7xezNvnw1JdFOeBUhBhYr13r0g6pTpB8orRKnEg1QswgUkykwuHXuzrSvSQRT75y068eW/cJLnwwpN7D1Ji0xyIKjpgqru2M6I0FwkOiU619ktM43wXNBwkdZt9FDdGzh1wmCpWWXp9tFHKOlLFlmFiWaT6MBTeHPiZXQV8Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by MN2PR12MB4304.namprd12.prod.outlook.com (2603:10b6:208:1d0::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Sat, 5 Jul
- 2025 05:44:02 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%6]) with mapi id 15.20.8857.038; Sat, 5 Jul 2025
- 05:44:01 +0000
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: sched-ext@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yb07Js06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8451DC4CEE7;
+	Sat,  5 Jul 2025 05:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751694930;
+	bh=d7/uhSw2VSan58YiIhT9PeVIWmFDPBAlvnKCItow7NY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yb07Js06Vb7lum1Oippkb+vwjc7Yb8ZN+N4EDJFNSAa1fWRsH/MTwAo6pWkWPsM2g
+	 In+Y/v+tLgZ08YodJMJGUFSMX+hI4psul4SIQSypaxn3wyySh3Fgq2qE7AYX6w4tXQ
+	 qHjKJsL060ChX+N4h5JX8bnLVqP57WVzQjfm8W94=
+Date: Sat, 5 Jul 2025 07:55:28 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] sched_ext: idle: Handle migration-disabled tasks in idle selection
-Date: Sat,  5 Jul 2025 07:43:51 +0200
-Message-ID: <20250705054351.332038-1-arighi@nvidia.com>
-X-Mailer: git-send-email 2.50.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI1P293CA0007.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:2::18) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+Subject: Re: [PATCH net v4] net: atm: Fix incorrect net_device lec check
+Message-ID: <2025070515-deputy-fiber-6520@gregkh>
+References: <20250705052805.59618-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|MN2PR12MB4304:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ac2036f-f616-4723-0d41-08ddbb86f1b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5jXw23nrcmzw35U2wgwfyWdXOk8bmZfKIc2M91gcL0CKNFTfLC+nopnRQzP6?=
- =?us-ascii?Q?BAeBR+FvAuXOWDxGj78Da9V+9Mz9dM9DFMSu4ELLEBKnCUrRw9yf47dtMzfg?=
- =?us-ascii?Q?B7iYP6JCHFTcfEt6NdsdM9S3YwJg4YHinz9DSpTiaDT5c55pehEO+ys856GL?=
- =?us-ascii?Q?Psr0XvqaSAH4na45gL/zpttfNZ4ZiFozx5utWiYbd1ooiH7nBi38pvtS2c9R?=
- =?us-ascii?Q?LOuUJ6ZYUdRUMxn9hx/p4DZn2CToriOT/n3hyU9BB8fP1de0UZJxZ7iHBiow?=
- =?us-ascii?Q?1udcDIyU/V+YQvcJZ/6q7biwes95GeN6JyMbbKs8mbwHXSHWs/OixwJCnTFB?=
- =?us-ascii?Q?gHT8pUGWJn7Go2djlkO5rx7X/T3sFaJrWBtHlIWloHEFvtkPTO5vXTdhE968?=
- =?us-ascii?Q?5ruf1j+nnGnH2fv7Smxp7S0H9Zi+XjNczFb0RkTqSq/439Pu2ZhhCYs69eok?=
- =?us-ascii?Q?/14OTWJ/Q9WlvaCUpYgyB9UawwxZ97xeCC3JiZ6dIxI/FrtgNDLs5d46Xn4v?=
- =?us-ascii?Q?zcJeE6C2GyC8u9uX16w61naMdlI0EsOHbDaOOHcCa/cl5rQLLIZko+0GAGqV?=
- =?us-ascii?Q?S2rGkGNt1+pWh9UgHUqvLzJR2umo4uc4uIzmcX8iGq3Yg2dJ12bT1WYNDCa7?=
- =?us-ascii?Q?buixhdGoLNY4gXAjyTPWsYSHEH+aFRQRDffuR5QXpcZ/MANQVSod7U4qeuxh?=
- =?us-ascii?Q?dW5hrXzCcF3My/KO4umMLKilWTwKgYtDb6qtYeDwPWIQrBSlKVq4jOA5n/FK?=
- =?us-ascii?Q?cL+E+XXiB7K19WhRUuEw0sGSjgDEz2Ia6wLGohBRS8/ouUlxKGp+Zz57BHS2?=
- =?us-ascii?Q?/Pc/1S3HzPsot6gkmnyTGrQQcx74XhW/1KjYqDadJvMJX1nlc0Uh5ToJoLDZ?=
- =?us-ascii?Q?6PKlvl8MF6nFwS6qlK27pAhlDzhkybDyjt+E2hrsnFYQzYDAekAR6rMOSmSt?=
- =?us-ascii?Q?sngqj2xnnlsunkPTgKGRkRSFV4Ob+LmrD0giaoLNfdvcfa/C15noJKXcv8fc?=
- =?us-ascii?Q?YaWfnYq82MSXzTXaHpw9aEqWf2mWR9lKGAMDzpVkiZumqyHScedukl0sjKlk?=
- =?us-ascii?Q?eLS2UTkCn7SCN+2NPe0HJEu4ogaSnDVbpnX9zlsntX3PKlZ4mJF6ZymeGqG0?=
- =?us-ascii?Q?B1ySzekp0+dc8c2P+e4sc0zlQU+SwH78aQU7H60LW18aE9N1xmIRimSjRc/a?=
- =?us-ascii?Q?JiQbCVel2KA1WNG6EFYKty0W8g1DUAxKgVjWKyeBKBNop1TUsAzD761BDuwQ?=
- =?us-ascii?Q?MI7bBhE8bDD6l19FTI0kH7y98zmss1+lXT9ARKpY3JL7ntfnSbZ26JMYtFTL?=
- =?us-ascii?Q?SE9LJ3NufCirNgjC+/u/uZWrLp01fceeoIX4sMaVwteeh524S3w/ToI2TBMh?=
- =?us-ascii?Q?wgqlcmkvTBrJ1vmJcih1+YUQpZlY0UL1qqaD/+UZugRL0ft1cMOdAZShwTVQ?=
- =?us-ascii?Q?+CZq0pB8tik=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vY0Zr+D/ZBdz3R5mU3d97dzgegKXckoukWFita3icl67n0j/Z1oQB3u1EnDa?=
- =?us-ascii?Q?9SNgfuFHcxS4aMHAh3zrDsychKnQ27Qu4MzHEeesloTJrbOni77gXsOjb6xd?=
- =?us-ascii?Q?mr4weTucUDRqBZoC3qUAjhroxz2VtyXeViZzql0LXWxEzqW1r+rWmFMGPYQ4?=
- =?us-ascii?Q?/J5YJPQfxOzvisXaNJcM/lvEhs2644C3uMBjCh5CnpvzSarf8Z43UTMJKBvb?=
- =?us-ascii?Q?hTUL5aJt8g+r9dVxBNRmrKbA4v49b6ulu3pigy/NDrKQX0AdygXhusucbXMn?=
- =?us-ascii?Q?NXUk0dqJfTki2/btDX6xQWKIDR4axK188GWuGyVqaNPIyUcEndwAVr3pQYdR?=
- =?us-ascii?Q?YIgDWimi+BVL7o7zxbpN5JpVEDi4lPHx1/pCOO/PT36CL7UEPZx/+CGdIgpo?=
- =?us-ascii?Q?dtT9G/B53AaPPXHUW6bPXUlU+mEE91P3OACkY3ajyvwC9oDZb1iKDuShf2EJ?=
- =?us-ascii?Q?+sFLaYmlxnBkdQZiQyCCSC9V3AWeoKtY/RU9rBS3zvKnh0FRL2ow0gS33h7T?=
- =?us-ascii?Q?vj215S1eWnS62RVpHWn79Aq4pEuvreteggnSF/zZNnUlDkYbgb20KA6BMxvf?=
- =?us-ascii?Q?lOxinjhpadX0YaGhY5vnn0cLQgVOeuDtoX+Gp4jDydhxojSOGusLtx4zemsa?=
- =?us-ascii?Q?57RaX0sDUHx7PAC59r8KAot4uma/mJBAobW0kF2zXiH9Xep7dF5bRsqWzfwZ?=
- =?us-ascii?Q?je48ahYV35pZm6ezuE3KDMX+sWr0LPskTWGW8Pub8I9tNUt3bleGY2eCw87I?=
- =?us-ascii?Q?ovn5nQxt6D9njN2RVxpv6wF8fIi30G5OgureBapgzX8+c+ztjrK7dN2IOTB+?=
- =?us-ascii?Q?/FhNq8vNHLVQoHeFp0lbvYZYtC3fcJJvyXkmVLT2BduR7PB2mKxelp5N7a69?=
- =?us-ascii?Q?mRuRxhlgQyHVc34GJX7F6TbRiaRmSvhP+b3TMRg/JM6Fyn7hOYkg17KEP95g?=
- =?us-ascii?Q?BHCefQ7OR+ggEVhmDLMdadV1w7Z1j9brqyPbJ5ZMeAEc7NFUmdLeHjn0zfYI?=
- =?us-ascii?Q?y1qGEJqovUZKkibqgxO0KvCUSJnzXcNHGK8xyHGlOrmGC58Ai2lOrGtcf2Mw?=
- =?us-ascii?Q?cutGPTvWu4xnlQMSCHK91pbjX12DcWGT06kBGS2VAfeZ5RtGClZ1QRnskUOS?=
- =?us-ascii?Q?/Ee4veqDhKbEpKAEnUxgBqT3TndD1Vqmrh6gOHNECE4UTVrLZx2W0pWmm2sc?=
- =?us-ascii?Q?zbMUcxfC+VcTjqhUbyHTS25UFj+QUM7qF86dsV6JSwcHFVc9j0DdUrI+eUAH?=
- =?us-ascii?Q?uXN/yxPZBYN1W7/tKV0CNrVZUqEomLhB37fMX8BSAhxdFczlzE8Mmzeuu/qP?=
- =?us-ascii?Q?6nxZjnjDbE349NrWjI2iThSxkXxIcwug4RFC71UE/7qjW2PXfH+rkbCmdSGr?=
- =?us-ascii?Q?DEFB/NXKBjwJIzPaJ3B+2LMGkuwDSpCPGmfBMkH7Xdn6FyLR/EgbZ0IDtn6v?=
- =?us-ascii?Q?HMoZ5knlolvZVgLlNzO/mbUV9pL84WDYCkuZLdvyIYXw4zdRZVC+EqSCIhvU?=
- =?us-ascii?Q?edftBeqN7dGUPBbG2+IdCWnUVhYoIITHghu+CM1ETiqCpeJedsvcJZ+In2yt?=
- =?us-ascii?Q?DU7zHqn/6eOyT5RBgJltvUqM1k5Z+o6H5IeYP43m?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ac2036f-f616-4723-0d41-08ddbb86f1b8
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2025 05:44:01.5226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1CVCvpBnjTEeN5ivHxm4dEburyMLDjX9oNNCdQs9W4WIWHe8djbNWEPNRF+ZBRxhUm+NZ/CmPsxG9uZVtggocw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4304
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705052805.59618-1-linma@zju.edu.cn>
 
-When SCX_OPS_ENQ_MIGRATION_DISABLED is enabled, migration-disabled tasks
-are also routed to ops.enqueue(). A scheduler may attempt to dispatch
-such tasks directly to an idle CPU using the default idle selection
-policy via scx_bpf_select_cpu_and() or scx_bpf_select_cpu_dfl().
+On Sat, Jul 05, 2025 at 01:28:05PM +0800, Lin Ma wrote:
+> There are two sites in atm mpoa code that believe the fetched object
+> net_device is of lec type. However, both of them do just name checking
+> to ensure that the device name starts with "lec" pattern string.
+> 
+> That is, malicious user can hijack this by creating another device
+> starting with that pattern, thereby causing type confusion. For example,
+> create a *team* interface with lecX name, bind that interface and send
+> messages will get a crash like below:
+> 
+> [   18.450000] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+> [   18.452366] BUG: unable to handle page fault for address: ffff888005702a70
+> [   18.454253] #PF: supervisor instruction fetch in kernel mode
+> [   18.455058] #PF: error_code(0x0011) - permissions violation
+> [   18.455366] PGD 3801067 P4D 3801067 PUD 3802067 PMD 80000000056000e3
+> [   18.455725] Oops: 0011 [#1] PREEMPT SMP PTI
+> [   18.455966] CPU: 0 PID: 130 Comm: trigger Not tainted 6.1.90 #7
+> [   18.456921] RIP: 0010:0xffff888005702a70
+> [   18.457151] Code: .....
+> [   18.458168] RSP: 0018:ffffc90000677bf8 EFLAGS: 00010286
+> [   18.458461] RAX: ffff888005702a70 RBX: ffff888005702000 RCX: 000000000000001b
+> [   18.458850] RDX: ffffc90000677c10 RSI: ffff88800565e0a8 RDI: ffff888005702000
+> [   18.459248] RBP: ffffc90000677c68 R08: 0000000000000000 R09: 0000000000000000
+> [   18.459644] R10: 0000000000000000 R11: ffff888005702a70 R12: ffff88800556c000
+> [   18.460033] R13: ffff888005964900 R14: ffff8880054b4000 R15: ffff8880054b5000
+> [   18.460425] FS:  0000785e61b5a740(0000) GS:ffff88807dc00000(0000) knlGS:0000000000000000
+> [   18.460872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   18.461183] CR2: ffff888005702a70 CR3: 00000000054c2000 CR4: 00000000000006f0
+> [   18.461580] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   18.461974] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   18.462368] Call Trace:
+> [   18.462518]  <TASK>
+> [   18.462645]  ? __die_body+0x64/0xb0
+> [   18.462856]  ? page_fault_oops+0x353/0x3e0
+> [   18.463092]  ? exc_page_fault+0xaf/0xd0
+> [   18.463322]  ? asm_exc_page_fault+0x22/0x30
+> [   18.463589]  ? msg_from_mpoad+0x431/0x9d0
+> [   18.463820]  ? vcc_sendmsg+0x165/0x3b0
+> [   18.464031]  vcc_sendmsg+0x20a/0x3b0
+> [   18.464238]  ? wake_bit_function+0x80/0x80
+> [   18.464511]  __sys_sendto+0x38c/0x3a0
+> [   18.464729]  ? percpu_counter_add_batch+0x87/0xb0
+> [   18.465002]  __x64_sys_sendto+0x22/0x30
+> [   18.465219]  do_syscall_64+0x6c/0xa0
+> [   18.465465]  ? preempt_count_add+0x54/0xb0
+> [   18.465697]  ? up_read+0x37/0x80
+> [   18.465883]  ? do_user_addr_fault+0x25e/0x5b0
+> [   18.466126]  ? exit_to_user_mode_prepare+0x12/0xb0
+> [   18.466435]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> [   18.466727] RIP: 0033:0x785e61be4407
+> [   18.467948] RSP: 002b:00007ffe61ae2150 EFLAGS: 00000202 ORIG_RAX: 000000000000002c
+> [   18.468368] RAX: ffffffffffffffda RBX: 0000785e61b5a740 RCX: 0000785e61be4407
+> [   18.468758] RDX: 000000000000019c RSI: 00007ffe61ae21c0 RDI: 0000000000000003
+> [   18.469149] RBP: 00007ffe61ae2370 R08: 0000000000000000 R09: 0000000000000000
+> [   18.469542] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+> [   18.469936] R13: 00007ffe61ae2498 R14: 0000785e61d74000 R15: 000057bddcbabd98
+> 
+> Correctly validating the net_device object has several methods. For
+> example, function xgbe_netdev_event() checks `netdev_ops` field,
+> function clip_device_event() checks `type` field. Considering the
+> related variable `lec_netdev_ops` is not defined in the same file, so
+> introduce another type value `ARPHRD_ATM_LANE` for a simple and correct
+> check.
+> 
+> By the way, this bug dates back to pre-git history (2.3.15), hence use
+> the first reference for tracking.
+> 
+> Signed-off-by: Lin Ma <linma@zju.edu.cn>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> ---
+> V3 -> V4: Fix the linking issue reported by intel kernel test robot.
+>           see details in https://lore.kernel.org/oe-kbuild-all/202507050831.2GTrUnFN-lkp@intel.com/
+>           As pointed out by Simon <horms@kernel.org>, not using netdev_ops
+>           for check in this case
+> 
+>  include/uapi/linux/if_arp.h | 1 +
+>  net/atm/lec.c               | 1 +
+>  net/atm/mpc.c               | 5 ++++-
+>  3 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/if_arp.h b/include/uapi/linux/if_arp.h
+> index 4783af9fe520..d61ee711a495 100644
+> --- a/include/uapi/linux/if_arp.h
+> +++ b/include/uapi/linux/if_arp.h
+> @@ -38,6 +38,7 @@
+>  #define	ARPHRD_APPLETLK	8		/* APPLEtalk			*/
+>  #define ARPHRD_DLCI	15		/* Frame Relay DLCI		*/
+>  #define ARPHRD_ATM	19		/* ATM 				*/
+> +#define ARPHRD_ATM_LANE	20		/* ATM LAN Emulation		*/
+>  #define ARPHRD_METRICOM	23		/* Metricom STRIP (new IANA id)	*/
+>  #define	ARPHRD_IEEE1394	24		/* IEEE 1394 IPv4 - RFC 2734	*/
+>  #define ARPHRD_EUI64	27		/* EUI-64                       */
+> diff --git a/net/atm/lec.c b/net/atm/lec.c
+> index 73078306504c..dd82a9f203cc 100644
+> --- a/net/atm/lec.c
+> +++ b/net/atm/lec.c
+> @@ -745,6 +745,7 @@ static int lecd_attach(struct atm_vcc *vcc, int arg)
+>  			return -ENOMEM;
+>  		dev_lec[i]->netdev_ops = &lec_netdev_ops;
+>  		dev_lec[i]->max_mtu = 18190;
+> +		dev_lec[i]->type = ARPHRD_ATM_LANE;
+>  		snprintf(dev_lec[i]->name, IFNAMSIZ, "lec%d", i);
+>  		if (register_netdev(dev_lec[i])) {
+>  			free_netdev(dev_lec[i]);
+> diff --git a/net/atm/mpc.c b/net/atm/mpc.c
+> index 583c27131b7d..4170453bbfd8 100644
+> --- a/net/atm/mpc.c
+> +++ b/net/atm/mpc.c
+> @@ -275,6 +275,9 @@ static struct net_device *find_lec_by_itfnum(int itf)
+>  	sprintf(name, "lec%d", itf);
+>  	dev = dev_get_by_name(&init_net, name);
+>  
+> +	if (!dev || dev->type != ARPHRD_ATM_LANE)
+> +		return NULL;
+> +
+>  	return dev;
+>  }
+>  
+> @@ -1006,7 +1009,7 @@ static int mpoa_event_listener(struct notifier_block *mpoa_notifier,
+>  	if (!net_eq(dev_net(dev), &init_net))
+>  		return NOTIFY_DONE;
+>  
+> -	if (strncmp(dev->name, "lec", 3))
+> +	if (dev->type != ARPHRD_ATM_LANE)
+>  		return NOTIFY_DONE; /* we are only interested in lec:s */
+>  
+>  	switch (event) {
+> -- 
+> 2.17.1
+> 
 
-This scenario must be properly handled by the built-in idle policy to
-avoid returning an idle CPU where the target task isn't allowed to run.
-Otherwise, it can lead to errors such as:
+Hi,
 
- EXIT: runtime error (SCX_DSQ_LOCAL[_ON] cannot move migration disabled Chrome_ChildIOT[291646] from CPU 3 to 14)
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Prevent this by explicitly handling migration-disabled tasks in the
-built-in idle selection logic, maintaining their CPU affinity.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-Fixes: a730e3f7a48bc ("sched_ext: idle: Consolidate default idle CPU selection kfuncs")
-Signed-off-by: Andrea Righi <arighi@nvidia.com>
----
- kernel/sched/ext_idle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
 
-diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-index 6d29d3cbc6707..001fb88a8481d 100644
---- a/kernel/sched/ext_idle.c
-+++ b/kernel/sched/ext_idle.c
-@@ -903,7 +903,7 @@ s32 select_cpu_from_kfunc(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
- 	 * selection optimizations and simply check whether the previously
- 	 * used CPU is idle and within the allowed cpumask.
- 	 */
--	if (p->nr_cpus_allowed == 1) {
-+	if (p->nr_cpus_allowed == 1 || is_migration_disabled(p)) {
- 		if (cpumask_test_cpu(prev_cpu, allowed ?: p->cpus_ptr) &&
- 		    scx_idle_test_and_clear_cpu(prev_cpu))
- 			cpu = prev_cpu;
--- 
-2.50.0
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
+thanks,
+
+greg k-h's patch email bot
