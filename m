@@ -1,137 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C4D140E34;
-	Sat,  5 Jul 2025 16:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2916672634;
+	Sat,  5 Jul 2025 17:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751734345; cv=none; b=QOqVwrnmFxKxs+qidMNdgXtRpeZAwYcVGCt2/YCxJzA4oqtqUOVVJAWOZC5wXwLviZ+treIMKgNfusdCwCaXUpUp4I57ghH08WnQaBin4k+2GRcvgwG2rl0P4DZM7yg1y1swvwTXOoKEaszTdOEGbkaFX7O5pyoofS7eqiNAGaM=
+	t=1751735024; cv=none; b=pIyLRqNA0gQcbLnqXmr+v3l5qickLsWhWNpBiKJnA3uh4SgrPSmc5duIWxmSFZIvIMkbElKa9ODr3eZrhPGBe6iSqGJeGqpVGiR+TgwQvPpYmqzjcC2xwBmwdHaNPcjRHaJdOOBI5cCEvpA7lcWvHLpSbIYikhtr10Dfdnx2BNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751734345; c=relaxed/simple;
-	bh=e2wiSNs48ZBe2YT9oRIVY+jqqRRhnGkNdUsYu5WN1Lw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qKTipWn2x4NOLeicQ36VSCNzIRtf5/9yEfFXIzQ1uKZ8kulnlQvxBb0/tIaK/rvLTP8kXV09M4kTun3rjpbasNRJlIiiRPoc87J5VMwVfDlpO4nVMQziVrTjiUdic1PDcBqobQI4j+0GRYsTLbTm151/8m4FwcmeVcEtu6gSkNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j77gGkpt; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j77gGkpt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751734343; x=1783270343;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=e2wiSNs48ZBe2YT9oRIVY+jqqRRhnGkNdUsYu5WN1Lw=;
-  b=j77gGkptM3y8sdnvDS0es3aKICkNVYo3NlVXVO7pqLvf8BrHrCLTlERG
-   drNTLgLcu17/XvGT2P0DbagAJlk92l9BPMl7+vxzJW6fPDKymryW/yOl/
-   jpWiHIVYg7L7b5sI2KW0qRehh41cBIxkynqxrOajCIXCaYk6NCB0MOfk3
-   8p03oCOHspouZ4JPjdzzyH766tv1A1D3Ux1uyX2zXFea0JcWQDMt5Yua7
-   GrbzrGIrLXGRoRzyjPTik05s3JjMwnHUvrig2Hj1C3qYpbTXSpmgTG9JN
-   D51jUJNcqTjk/bHhcf+7zjJvO2K/II8tSxcGwms0BDH4kksmfh/hWreNb
-   w==;
-X-CSE-ConnectionGUID: gQsISBb4RKumtKX9kVEbbQ==
-X-CSE-MsgGUID: QiVMXGRRSOqV/ToHyl+cgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="53238636"
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="53238636"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 09:52:21 -0700
-X-CSE-ConnectionGUID: z2oItUR9ROmbiFGY0UomQA==
-X-CSE-MsgGUID: cOW1/8VqTWG0kX5QC4KFoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="154263751"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 05 Jul 2025 09:52:20 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uY67c-0004ch-1x;
-	Sat, 05 Jul 2025 16:52:16 +0000
-Date: Sun, 6 Jul 2025 00:51:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: yangge1116@126.com, ardb@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jarkko@kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	ilias.apalodimas@linaro.org, jgg@ziepe.ca,
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: Re: [PATCH V2] efi/tpm: Fix the issue where the CC platforms event
- log header can't be correctly identified
-Message-ID: <202507060016.n5ikMP6Q-lkp@intel.com>
-References: <1751710616-24464-1-git-send-email-yangge1116@126.com>
+	s=arc-20240116; t=1751735024; c=relaxed/simple;
+	bh=QjfCCAHuG5KSO6VVPMvYRGWXhmONEiIJ+1z/qE4+WX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDs8B8vjN35HqwTcYHwBieo1lu76QUt4egD+2+CW+zYAXNrnaS2yP4XCjnYh6gZKkhWCUXEQb5wA95OxcYT2rS6h3SNIvul49ovGC6PU32umWNWFmOwfS7N7O78XTwvCN6y5oW5dImHvVJgwaqXuyBH1EBPe7aOUMxkzTJtFkN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: UIRvHSRsSVmKRx59j0yRyQ==
+X-CSE-MsgGUID: cnHpFD2WTtap0SSiNRFArw==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 06 Jul 2025 02:03:33 +0900
+Received: from localhost.localdomain (unknown [10.226.92.32])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1D9304010E1B;
+	Sun,  6 Jul 2025 02:03:28 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH net-next] net: stmmac: dwmac-renesas-gbeth: Add PM suspend/resume callbacks
+Date: Sat,  5 Jul 2025 18:03:24 +0100
+Message-ID: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1751710616-24464-1-git-send-email-yangge1116@126.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Add PM suspend/resume callbacks for RZ/G3E SMARC EVK.
 
-kernel test robot noticed the following build errors:
+The PM deep entry is executed by pressing the SLEEP button and exit from
+entry is by pressing the power button.
 
-[auto build test ERROR on efi/next]
-[also build test ERROR on char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.16-rc4 next-20250704]
-[cannot apply to intel-tdx/guest-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Logs:
+root@smarc-rzg3e:~# PM: suspend entry (deep)
+Filesystems sync: 0.115 seconds
+Freezing user space processes
+Freezing user space processes completed (elapsed 0.002 seconds)
+OOM killer disabled.
+Freezing remaining freezable tasks
+Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+printk: Suspending console(s) (use no_console_suspend to debug)
+NOTICE:  BL2: v2.10.5(release):2.10.5/rz_soc_dev-162-g7148ba838
+NOTICE:  BL2: Built : 14:23:58, Jul  5 2025
+NOTICE:  BL2: SYS_LSI_MODE: 0x13e06
+NOTICE:  BL2: SYS_LSI_DEVID: 0x8679447
+NOTICE:  BL2: SYS_LSI_PRR: 0x0
+NOTICE:  BL2: Booting BL31
+renesas-gbeth 15c30000.ethernet end0: Link is Down
+Disabling non-boot CPUs ...
+psci: CPU3 killed (polled 0 ms)
+psci: CPU2 killed (polled 0 ms)
+psci: CPU1 killed (polled 0 ms)
+Enabling non-boot CPUs ...
+Detected VIPT I-cache on CPU1
+GICv3: CPU1: found redistributor 100 region 0:0x0000000014960000
+CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
+CPU1 is up
+Detected VIPT I-cache on CPU2
+GICv3: CPU2: found redistributor 200 region 0:0x0000000014980000
+CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
+CPU2 is up
+Detected VIPT I-cache on CPU3
+GICv3: CPU3: found redistributor 300 region 0:0x00000000149a0000
+CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
+CPU3 is up
+dwmac4: Master AXI performs fixed burst length
+15c30000.ethernet end0: No Safety Features support found
+15c30000.ethernet end0: IEEE 1588-2008 Advanced Timestamp supported
+15c30000.ethernet end0: configuring for phy/rgmii-id link mode
+dwmac4: Master AXI performs fixed burst length
+15c40000.ethernet end1: No Safety Features support found
+15c40000.ethernet end1: IEEE 1588-2008 Advanced Timestamp supported
+15c40000.ethernet end1: configuring for phy/rgmii-id link mode
+OOM killer enabled.
+Restarting tasks: Starting
+Restarting tasks: Done
+random: crng reseeded on system resumption
+PM: suspend exit
 
-url:    https://github.com/intel-lab-lkp/linux/commits/yangge1116-126-com/efi-tpm-Fix-the-issue-where-the-CC-platforms-event-log-header-can-t-be-correctly-identified/20250705-182032
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git next
-patch link:    https://lore.kernel.org/r/1751710616-24464-1-git-send-email-yangge1116%40126.com
-patch subject: [PATCH V2] efi/tpm: Fix the issue where the CC platforms event log header can't be correctly identified
-config: arc-randconfig-002-20250705 (https://download.01.org/0day-ci/archive/20250706/202507060016.n5ikMP6Q-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250706/202507060016.n5ikMP6Q-lkp@intel.com/reproduce)
+15c30000.ethernet end0: Link is Up - 1Gbps/Full - flow control rx/tx
+root@smarc-rzg3e:~# ifconfig end0 192.168.10.7 up
+root@smarc-rzg3e:~# ping 192.168.10.1
+PING 192.168.10.1 (192.168.10.1) 56(84) bytes of data.
+64 bytes from 192.168.10.1: icmp_seq=1 ttl=64 time=2.05 ms
+64 bytes from 192.168.10.1: icmp_seq=2 ttl=64 time=0.928 ms
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507060016.n5ikMP6Q-lkp@intel.com/
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+This patch is tested with out-of tree patch for save/restore
+ethernet OEN registers in the pinctrl block.
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-All error/warnings (new ones prefixed by >>):
-
-   drivers/char/tpm/eventlog/tpm2.c: In function 'calc_tpm2_event_size':
->> drivers/char/tpm/eventlog/tpm2.c:40:25: error: implicit declaration of function 'cc_platform_has' [-Werror=implicit-function-declaration]
-      40 |                         cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT));
-         |                         ^~~~~~~~~~~~~~~
->> drivers/char/tpm/eventlog/tpm2.c:40:41: error: 'CC_ATTR_GUEST_STATE_ENCRYPT' undeclared (first use in this function)
-      40 |                         cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT));
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/char/tpm/eventlog/tpm2.c:40:41: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/char/tpm/eventlog/tpm2.c:41:1: warning: control reaches end of non-void function [-Wreturn-type]
-      41 | }
-         | ^
-   cc1: some warnings being treated as errors
-
-
-vim +/cc_platform_has +40 drivers/char/tpm/eventlog/tpm2.c
-
-    24	
-    25	/*
-    26	 * calc_tpm2_event_size() - calculate the event size, where event
-    27	 * is an entry in the TPM 2.0 event log. The event is of type Crypto
-    28	 * Agile Log Entry Format as defined in TCG EFI Protocol Specification
-    29	 * Family "2.0".
-    30	
-    31	 * @event: event whose size is to be calculated.
-    32	 * @event_header: the first event in the event log.
-    33	 *
-    34	 * Returns size of the event. If it is an invalid event, returns 0.
-    35	 */
-    36	static size_t calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
-    37					   struct tcg_pcr_event *event_header)
-    38	{
-    39		return __calc_tpm2_event_size(event, event_header, false,
-  > 40				cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT));
-  > 41	}
-    42	
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
+index 9a774046455b..df4ca897a60c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
+@@ -136,6 +136,7 @@ static struct platform_driver renesas_gbeth_driver = {
+ 	.probe  = renesas_gbeth_probe,
+ 	.driver = {
+ 		.name		= "renesas-gbeth",
++		.pm		= &stmmac_pltfr_pm_ops,
+ 		.of_match_table	= renesas_gbeth_match,
+ 	},
+ };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
