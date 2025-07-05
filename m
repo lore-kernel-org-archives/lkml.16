@@ -1,174 +1,513 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC65218C31;
-	Sat,  5 Jul 2025 06:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3219F18C31
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 06:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751697675; cv=none; b=uaRSyLxSsPFKQe7plOBI8hDw17kKss6nCV1awb5U44hrJ+/CaaOL+tUcXeTZ+jruFKxHXqUIxJQIWoY1f+tdsNikdoGEKylgXPbw/tycT+aPjlQbATiLYUnIYuLKUQMEv+ZxhIjz7rCjHfDHVHbpU5koaSbfzxaPgk1VItnJxdA=
+	t=1751697686; cv=none; b=kPBMx1oTtHGm6WYgbd9GVX48TnBdxUggX5KP0CWigaAq1uPFZTI6SUm7LLX0+xVPaodGEoH41D3ETr26U1odaVzja0vwqGH4NjPRl1vs5OiPN1khk/4Xii8CkO7SOcxdYYd314mdPbA3bAvkztcS24opvQwkKD8TsEP59Z8VYR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751697675; c=relaxed/simple;
-	bh=cJzM/yJ5AYZKDWd4yNtmu219r2Y9SniTVvJKVgZ2lSo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fNqlynNQ15pQ+8DGxByySfKJuxLkpvtRnJSlUkgY9iFnr1sG/N4Sqq7AlEPtdBmvVl4AUbShSed4eQoxBDu+AyMwwhHmFGJB2QM0JgMniIJUZ3DRAuy89zxkO1CMb2GXT51/0LvskyYThuwxZVDJ5Jwz/V1VVcdCqdkTiNpaIRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxLHIFyWho1LgiAQ--.40765S3;
-	Sat, 05 Jul 2025 14:41:09 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxT+YCyWhoJUwKAA--.60616S3;
-	Sat, 05 Jul 2025 14:41:08 +0800 (CST)
-Subject: Re: [External] Re: [RFC] x86/kvm: Use native qspinlock by default
- when realtime hinted
-To: Liangyan <liangyan.peng@bytedance.com>, pbonzini@redhat.com,
- vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, wanpengli@tencent.com
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org
-References: <20250702064218.894-1-liangyan.peng@bytedance.com>
- <806e3449-a7b1-fa57-b220-b791428fb28b@loongson.cn>
- <8145bb17-8ba4-4d9d-a995-5f8b09db99c4@google.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <6ea07284-7bc2-ad73-21ab-78eb75a38751@loongson.cn>
-Date: Sat, 5 Jul 2025 14:39:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1751697686; c=relaxed/simple;
+	bh=igXQzalukED0rJo7dDmagEt8kcnSLiMwRAMwgkp+BtU=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=I4uYwbv4oVknKwm2apflYWikMi+fWkomP5JJTDx8i+jE/6IC24wRLYi3g2tScQYG0DKyQDcWbb0ztuEhhIg6iXJXgycsYbhe7cKIYwyfTk+soCG7qVrZplN3acUs6faitofg/XZRYdGs5Xbq2P/to+PeScicoe+12BXcgPwaBPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EFISkFEX; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EFISkFEX"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8145bb17-8ba4-4d9d-a995-5f8b09db99c4@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxT+YCyWhoJUwKAA--.60616S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXFW3Aw17Ar1rtw45WFyrXwc_yoWrAF1xpr
-	ykJF95tFyUXr18Zr1DJryjqryUJw4DGw1UXr1UXFyUJr1UXr1qgr1UXr1j9w1UJr4xJF1U
-	tr15Jr47ZFyUJrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751697682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RjP7CZmYG3XniR4jO2Z9JhFJtKlfBbTqa8Xif+9DeVQ=;
+	b=EFISkFEX9T0D8IgGCBAV46kQlVXt/QoefNxv5ZAuaMbhlO+ZfQMFAxzz1N9qlNrF5qO27A
+	3zupVa6oRYGSQLjUMDDujasx6wexMrhh35noZ25lNO7SUEm9W4zCac9qJ9lExxegDoER5m
+	5rEO1VoUbtWRvo3M6yo0F0Lgg0sEuRo=
+Date: Sat, 05 Jul 2025 06:41:20 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: qiang.zhang@linux.dev
+Message-ID: <c2e597d2101b588d19a5028b8ae73a33c5240e32@linux.dev>
+TLS-Required: No
+Subject: Re: [bug report] [PATCH v6] net: usb: Convert tasklet API to new
+ bottom half workqueue mechanism
+To: "Oleksij Rempel" <o.rempel@pengutronix.de>, "Jun Miao"
+ <jun.miao@intel.com>
+Cc: sbhatta@marvell.com, kuba@kernel.org, oneukum@suse.com,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <74395e33b2175fdb2745211c4ca41e5b2358d80d@linux.dev>
+References: <20250618173923.950510-1-jun.miao@intel.com>
+ <aGgD_Lp0i-ZU2xkt@pengutronix.de>
+ <74395e33b2175fdb2745211c4ca41e5b2358d80d@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-There is big improvement with the test result. spawn test case is a 
-little tricky, if forked child process is scheduled on the same CPU with 
-the parent, the benefit is very huge. I doubt it is probably caused by 
-scheduler rather than by spinlock itself.
+>=20
+>=20>=20
+>=20> Hi Jun,
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  On Wed, Jun 18, 2025 at 01:39:23PM -0400, Jun Miao wrote:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  Migrate tasklet APIs to the new bottom half workqueue mechanism. I=
+t
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  replaces all occurrences of tasklet usage with the appropriate wor=
+kqueue
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  APIs throughout the usbnet driver. This transition ensures compati=
+bility
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  with the latest design and enhances performance.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  After applying this patch, the smsc95xx driver fails after one dow=
+n/up
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  cycle.
+> >=20
+>=20
+> Hello, Oleksij
+>=20
+>=20Please try follow patch base on Jun Miao's patchs:
+>=20
 
-1. What is cpu topology and numa information with physical machine and 
-virtual machine?
+Sorry,=20please ignore previous, try it:
 
-2. Could you show reschedule IPI interrupt stat information when running 
-  spawn test case?
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 9564478a79cc..6a3cca104af9 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
+        /* deferred work (timer, softirq, task) must also stop */
+        dev->flags =3D 0;
+        timer_delete_sync(&dev->delay);
+-       disable_work_sync(&dev->bh_work);
++       cancel_work_sync(&dev->bh_work);
+        cancel_work_sync(&dev->kevent);
+=20
+=20       /* We have cyclic dependencies. Those calls are needed
+         * to break a cycle. We cannot fall into the gaps because
+         * we have a flag
+         */
+-       disable_work_sync(&dev->bh_work);
++       cancel_work_sync(&dev->bh_work);
+        timer_delete_sync(&dev->delay);
+        cancel_work_sync(&dev->kevent);
 
-3. Could you run this case on CPU over-commit scenary, such as both two 
-VMs with 120 vCPUs?
 
-Regards
-Bibo Mao
-
-
-On 2025/7/2 下午8:23, Liangyan wrote:
-> We test that unixbench spawn has big improvement in Intel 8582c 120-CPU 
-> guest vm if switch to qspinlock.
-> 
-> Command: ./Run -c 120 spawn
-> 
-> Use virt_spin_lock:
-> System Benchmarks Partial Index   BASELINE       RESULT  INDEX
-> Process Creation                     126.0      71878.4   5704.6
->                                                          ========
-> System Benchmarks Index Score (Partial Only)              5704.6
-> 
-> 
-> Use qspinlock:
-> System Benchmarks Partial Index   BASELINE       RESULT    INDEX
-> Process Creation                     126.0     173566.6  13775.1
->                                                          ========
-> System Benchmarks Index Score (Partial Only              13775.1
-> 
-> 
-> Regards,
-> Liangyan
-> 
-> On 2025/7/2 16:19, Bibo Mao wrote:
->>
->>
->> On 2025/7/2 下午2:42, Liangyan wrote:
->>> When KVM_HINTS_REALTIME is set and KVM_FEATURE_PV_UNHALT is clear,
->>> currently guest will use virt_spin_lock.
->>> Since KVM_HINTS_REALTIME is set, use native qspinlock should be safe
->>> and have better performance than virt_spin_lock.
->> Just be curious, do you have actual data where native qspinlock has 
->> better performance than virt_spin_lock()?
->>
->> By my understanding, qspinlock is not friendly with VM. When lock is 
->> released, it is acquired with one by one order in contending queue. If 
->> the first vCPU in contending queue is preempted, the other vCPUs can 
->> not get lock. On physical machine it is almost impossible that CPU 
->> contending lock is preempted.
->>
->> Regards
->> Bibo Mao
->>>
->>> Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
->>> ---
->>>   arch/x86/kernel/kvm.c | 18 +++++++++---------
->>>   1 file changed, 9 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->>> index 921c1c783bc1..9080544a4007 100644
->>> --- a/arch/x86/kernel/kvm.c
->>> +++ b/arch/x86/kernel/kvm.c
->>> @@ -1072,6 +1072,15 @@ static void kvm_wait(u8 *ptr, u8 val)
->>>    */
->>>   void __init kvm_spinlock_init(void)
->>>   {
->>> +    /*
->>> +     * Disable PV spinlocks and use native qspinlock when dedicated 
->>> pCPUs
->>> +     * are available.
->>> +     */
->>> +    if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
->>> +        pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME 
->>> hints\n");
->>> +        goto out;
->>> +    }
->>> +
->>>       /*
->>>        * In case host doesn't support KVM_FEATURE_PV_UNHALT there is 
->>> still an
->>>        * advantage of keeping virt_spin_lock_key enabled: 
->>> virt_spin_lock() is
->>> @@ -1082,15 +1091,6 @@ void __init kvm_spinlock_init(void)
->>>           return;
->>>       }
->>> -    /*
->>> -     * Disable PV spinlocks and use native qspinlock when dedicated 
->>> pCPUs
->>> -     * are available.
->>> -     */
->>> -    if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
->>> -        pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME 
->>> hints\n");
->>> -        goto out;
->>> -    }
->>> -
->>>       if (num_possible_cpus() == 1) {
->>>           pr_info("PV spinlocks disabled, single CPU\n");
->>>           goto out;
->>>
->>
-
+> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+>=20
+>=20index 9564478a79cc..554f1a1cf247 100644
+>=20
+>=20--- a/drivers/net/usb/usbnet.c
+>=20
+>=20+++ b/drivers/net/usb/usbnet.c
+>=20
+>=20@@ -953,6 +953,7 @@ int usbnet_open (struct net_device *net)
+>=20
+>=20 dev->pkt_cnt =3D 0;
+>=20
+>=20 dev->pkt_err =3D 0;
+>=20
+>=20 clear_bit(EVENT_RX_KILL, &dev->flags);
+>=20
+>=20+ enable_work(&dev->bh_work);
+>=20
+>=20=20
+>=20
+>  // delay posting reads until we're fully open
+>=20
+>=20 queue_work(system_bh_wq, &dev->bh_work);
+>=20
+>=20Thanks
+>=20
+>=20Zqiang
+>=20
+>=20>=20
+>=20> Here is how I can reproduce the issue:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  nmcli device set enu1u1 managed no
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ip a a 10.10.10.1/24 dev enu1u1
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ping -c 4 10.10.10.3
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ip l s dev enu1u1 down
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ip l s dev enu1u1 up
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ping -c 4 10.10.10.3
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  The second ping does not reach the host. Networking also fails on =
+other
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  interfaces.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  After some delay, the following trace appears:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838527] INFO: task kworker/u16:1:308 blocked for more than 1=
+20 seconds.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838596] Not tainted 6.16.0-rc3-00963-g4fcedea9cdf2-dirty #32
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838666] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" d=
+isables this message.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838697] task:kworker/u16:1 state:D stack:0 pid:308 tgid:308 =
+ppid:2
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  task_flags:0x4208060 flags:0x00000010
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838776] Workqueue: events_unbound linkwatch_event
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838851] Call trace:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838880] __switch_to+0x1d0/0x330 (T)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838933] __schedule+0xa88/0x2a90
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.838980] schedule+0x114/0x428
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839010] schedule_preempt_disabled+0x80/0x118
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839036] __mutex_lock+0x764/0xba8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839060] mutex_lock_nested+0x28/0x38
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839084] rtnl_lock+0x20/0x30
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839115] linkwatch_event+0x18/0x70
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839141] process_one_work+0x760/0x17b0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839175] worker_thread+0x768/0xce8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839208] kthread+0x3bc/0x690
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839237] ret_from_fork+0x10/0x20
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839359] INFO: task kworker/u16:1:308 is blocked on a mutex l=
+ikely
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  owned by task ip:899.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839381] task:ip state:D stack:0 pid:899
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  tgid:899 ppid:1 task_flags:0x400100 flags:0x00000019
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839419] Call trace:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839432] __switch_to+0x1d0/0x330 (T)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839466] __schedule+0xa88/0x2a90
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839495] schedule+0x114/0x428
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839524] schedule_timeout+0xec/0x220
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839551] wait_skb_queue_empty+0xa0/0x168
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839581] usbnet_terminate_urbs+0x150/0x2c8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839609] usbnet_stop+0x41c/0x608
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839636] __dev_close_many+0x1fc/0x4b8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839668] __dev_change_flags+0x33c/0x500
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839694] netif_change_flags+0x7c/0x158
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839718] do_setlink.isra.0+0x2040/0x2eb8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839745] rtnl_newlink+0xd88/0x16c8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839770] rtnetlink_rcv_msg+0x654/0x8c8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839795] netlink_rcv_skb+0x19c/0x350
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839823] rtnetlink_rcv+0x1c/0x30
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839848] netlink_unicast+0x3c4/0x668
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839873] netlink_sendmsg+0x620/0xa10
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839899] ____sys_sendmsg+0x2f8/0x788
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839924] ___sys_sendmsg+0xf0/0x178
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839950] __sys_sendmsg+0x104/0x198
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.839975] __arm64_sys_sendmsg+0x74/0xa8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840000] el0_svc_common.constprop.0+0xe4/0x338
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840033] do_el0_svc+0x44/0x60
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840061] el0_svc+0x3c/0xb0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840089] el0t_64_sync_handler+0x104/0x130
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840117] el0t_64_sync+0x154/0x158
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840164]
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840164] Showing all locks held in the system:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840199] 1 lock held by khungtaskd/41:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840216] #0: ffffffc08424ede0 (rcu_read_lock){....}-{1:3}, at=
+: debug_show_all_locks+0x14/0x1b0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840309] 3 locks held by kworker/u16:2/47:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840325] #0: ffffff800926a148 ((wq_completion)ipv6_addrconf){=
++.+.}-{0:0}, at: process_one_work+0x698/0x17b0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840406] #1: ffffffc0860f7c00 ((work_completion)(&(&net->ipv6=
+.addr_chk_work)->work)){+.+.}-{0:0}, at: process_one_work+0x6bc/0x17b0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840484] #2: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: r=
+tnl_lock+0x20/0x30
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840568] 2 locks held by pr/ttymxc1/60:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840595] 5 locks held by sugov:0/84:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840618] 2 locks held by systemd-journal/124:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840639] 3 locks held by kworker/u16:1/308:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840655] #0: ffffff8005d00148 ((wq_completion)events_unbound)=
+{+.+.}-{0:0}, at: process_one_work+0x698/0x17b0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840733] #1: ffffffc087307c00 ((linkwatch_work).work){+.+.}-{=
+0:0}, at: process_one_work+0x6bc/0x17b0
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840810] #2: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: r=
+tnl_lock+0x20/0x30
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840894] 1 lock held by ip/899:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840910] #0: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: r=
+tnl_newlink+0x5e8/0x16c8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840982] 2 locks held by sshd/901:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.840998] #0: ffffff800aee06b0 (nlk_cb_mutex-ROUTE){+.+.}-{4:4=
+}, at: __netlink_dump_start+0x100/0x800
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.841073] #1: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: r=
+tnl_dumpit+0x128/0x1a8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.841149] 2 locks held by sshd/903:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [=20846.841165] #0: ffffff800b1c76b0 (nlk_cb_mutex-ROUTE){+.+.}-{4=
+:4}, at: __netlink_dump_start+0x100/0x800
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  [ 846.841237] #1: ffffffc084924408 (rtnl_mutex){+.+.}-{4:4}, at: r=
+tnl_dumpit+0x128/0x1a8
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Reverting this patch recovers smsc95xx functionality.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Best Regards,
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Oleksij
+> >
+>
