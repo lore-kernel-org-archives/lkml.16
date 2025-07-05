@@ -1,83 +1,89 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93FE8462;
-	Sat,  5 Jul 2025 14:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3822F2E;
+	Sat,  5 Jul 2025 14:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751726640; cv=none; b=VnTXkH+sV/MAcdJ7I5iK9ffGZOQmigw4voHl6hSCZ5OdDYBv9wAPImz5jvtJrnyMJVvBtG5QSts35LeA+Mo3AJeC+Br2q6mpwU1TJ2Ka6heOLUJ04C83lLae8P9ydSETtYWx2SYMR8ZpEmyVWVZEy5G+sdBrueOT/5QEiLUo2gg=
+	t=1751726770; cv=none; b=XGL1AsytWSI7oK41mU6ZjgT/CkDTlWEzMmpTIscWDQZ51oaqCOFavRmrh3jCWrtzdaJNY/Ki6GTXqVCgrS/LS+ROLVQOW1gyuAf+qTHKUf+FSTLj9q4Hk4QgpBgkwFnUBdi3Rs1PgI0qA3m4W0m4P7+0XG8jLv2YuuvVLj0mqOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751726640; c=relaxed/simple;
-	bh=YI//x8ls7R+pdx9z7vF4GczOnOwBb1p1eyUMgVpi8i0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=YyF74y1LtMbqb3albBvwb+TNkkIEAzmslE+s/YxCZePFgKwkToY1UPASvS7oZa+RH95DouHYTTCuqYB0iJgAHFiSPu/KHjFzHVX8zxKRZ5SO0aXm/Y/ZhBQCkJT6NEgUOSkr05vnhYn1dSZ/4EUCl/SoIcmRozIsVtcl4NiDCRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 565EhcLa057270;
-	Sat, 5 Jul 2025 23:43:38 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 565Ehcke057266
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 5 Jul 2025 23:43:38 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <f8dee957-d286-421d-976a-c0c580454fb3@I-love.SAKURA.ne.jp>
-Date: Sat, 5 Jul 2025 23:43:37 +0900
+	s=arc-20240116; t=1751726770; c=relaxed/simple;
+	bh=goQ0hTzbefy4V8CQMAJj1Lgw47gXhBOVmH5piWXh8Mo=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=n4f++PvmgoOYvKFsBDXO7OivKZpa0BheI2WxtYc+CuOXafWeyOZKx/aNckuVZ+GHBofOzO+v8Jba0Lx0XkhmK1g5jRHe8kiPwuqll5SpT0zzj9Lud6VJqJuYslrJgbwq+OeKbrJUnyVhbQlpC+7yn+K1IjZy20RTT3suKteB2Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=hKacc+Vo; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="hKacc+Vo"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 0140A25C85;
+	Sat,  5 Jul 2025 16:46:03 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 1rSSLXsLas_B; Sat,  5 Jul 2025 16:46:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751726762; bh=goQ0hTzbefy4V8CQMAJj1Lgw47gXhBOVmH5piWXh8Mo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=hKacc+Vo6+8x/FhFxsEQVjGy9F17hhqKOdfGpdKPv4qpkxW7s9hdQEyiX6LxOUPOs
+	 AXC7pWmC+V4r+N4VuEhPdc4BFPuj6tFf6tc7faxw/QfgRfQdSifj3AsIdm81gHZTIu
+	 lEJv3LXxRUVCWcV90QXFs+pfi9ZOCU+uCVzP4GqRPjanGRhrdX2DpDQXHi2QhfDy1R
+	 uwqmCGZsuZR51cAboAbn9xNEQENgh2j3oX311JEfNn9Mwe7kzvi+H67bdcKksqjvou
+	 PdAYIOYTtKpPdEma4vhU8VTxlsIVa2IgudgVUuf3IlyxkpZmqtblZyx5YPA5wd1WXn
+	 TdeNZOEGzWQPA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] perf/core: Fix WARN in perf_sigtrap()
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To: syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <685af60a.a00a0220.2e5631.0092.GAE@google.com>
- <ed888189-dad4-47e1-bfc8-4f2213eda32d@I-love.SAKURA.ne.jp>
-Content-Language: en-US
-In-Reply-To: <ed888189-dad4-47e1-bfc8-4f2213eda32d@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8
+Date: Sat, 05 Jul 2025 14:46:01 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: document Samsung
+ S6E8AA5X01 panel driver
+In-Reply-To: <20250703-true-archetypal-skylark-dfb055@houat>
+References: <20250625-panel-samsung-s6e8aa5x01-v3-0-9a1494fe6c50@disroot.org>
+ <20250625-panel-samsung-s6e8aa5x01-v3-1-9a1494fe6c50@disroot.org>
+ <80055981-3624-4165-af0c-3b60c345e8f8@linaro.org>
+ <4b9e44b14395ff4c64eba1bd71e63150@disroot.org>
+ <20250703-true-archetypal-skylark-dfb055@houat>
+Message-ID: <5f2c37bf2882530453ba91f6801f8ec0@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav104.rs.sakura.ne.jp
-X-Virus-Status: clean
 
-Since commit 4f6fc7821283 ("perf: Fix sample vs do_exit()") has moved
-perf_event_exit_task() call from after exit_task_work() to before
-exit_task_work(), task_work_add() from perf_event_exit_task() now returns
-0 than -ESRCH, despite perf_event_exit_task_context() updates ctx->task
-to TASK_TOMBSTONE. As a result, event->ctx->task == current assumption
-no longer holds.
+On 2025-07-03 09:01, Maxime Ripard wrote:
+> On Mon, Jun 30, 2025 at 05:18:22PM +0000, Kaustabh Chakraborty wrote:
+>> On 2025-06-30 15:29, Neil Armstrong wrote:
+>> > On 25/06/2025 14:41, Kaustabh Chakraborty wrote:
+>> > > Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Document
+>> > > the
+>> > > compatible and devicetree properties of this panel driver. Timings are
+>> > > provided through the devicetree node as panels are available in
+>> > > different sizes.
+>> >
+>> > Wait, why ? Why not multiple compatibles ?
+>> 
+>> The panel dimensions is the only thing which differs. The model name,
+>> controller, registers, and functionality are supposedly all similar, 
+>> so
+>> I believe this is fine...
+> 
+> If only the dimensions change, then width-mm and height-mm would be 
+> enough, right?
 
-Reported-by: syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
-Fixes: 4f6fc7821283 ("perf: Fix sample vs do_exit()")
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
-#syz test
+Sorry, meant panel resolution.
 
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7281230044d0..489f42defe3c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7208,7 +7208,8 @@ static void perf_sigtrap(struct perf_event *event)
- 	 * ctx->task or current has changed in the meantime. This can be the
- 	 * case on architectures that do not implement arch_irq_work_raise().
- 	 */
--	if (WARN_ON_ONCE(event->ctx->task != current))
-+	if (WARN_ON_ONCE(event->ctx->task != current &&
-+			 event->ctx->task != TASK_TOMBSTONE))
- 		return;
- 
- 	/*
--- 
-2.50.0
-
+> 
+> Maxime
