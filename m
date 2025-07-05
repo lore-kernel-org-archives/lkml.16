@@ -1,72 +1,52 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nbd.name (nbd.name [46.4.11.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496FE43159;
-	Sat,  5 Jul 2025 15:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B44C156237;
+	Sat,  5 Jul 2025 15:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751728588; cv=none; b=MaRpufC3CwuIuH7pAvfxkqDbN9fy7nv6OfTNW5gQx00BYjsfBBuxtzrqyMwpe6JMqILGbUD21DsTwcWdzNESQUMa+lcIEf8Lr1TYSOe32+62l8YiCzFUuVES6z/SmVFQ7J92YlSUETrKx1fdiMtyE5wWcrmK251EFZsfrnHzuro=
+	t=1751729451; cv=none; b=odZid3SMbxTMfqEl1AWC+h5WjPEzG40+ARotk4O/gL8SMtsrPhBi/piqIanLGiH/JAGmll6EQ+PW48ilQqtcDTK/ukLOUSyebFt8BqZ45pw2dNu+GJH27kTkxpafYzp0L8fN/V7qPRGjJDVrDgR+ZL6apdzdqcaDBezZEAelIfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751728588; c=relaxed/simple;
-	bh=IVbkd/IVrWWUlEr5Nl9gyhToDCubslv31uTR8EVwGyM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fdOf+MoxdjAPGLmpEna9MTzD6jO9TGzspUbOQN4xe7WKqGyHpeXSjNt3Q9HHf3k0uG0Lv1XWr7qFuXBRlEi1qStqZ0v7uMSl36Gmpz8bmHNuV9Tg0GooWEGVGi3ZmkdFRSd80tDMXlPMh4H8/W7zMuSyO338sptAuvyJauTrM1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U1AVvgxR; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751729451; c=relaxed/simple;
+	bh=unEW3sIR36aqxELmlsnVGBv/VJuyM2kDUpVdW1JPxuo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JEdg61t4aoLVNqZUUhb7bioNXxIQCb1O++8hZRYOKCUytuaRs/OYjYBMSTHCEZ/ZoKJPlSxLwRglu3XntAFqWki5XJqUSt53VAkw7eeEkEoiu48aqUCzcAro6ghsptlVC7n9EuV7yOTLtO8RmA39e8cIyVQjTQKleioCUqx9c8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=ZMaa7l88; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1AVvgxR"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234b9dfb842so15144495ad.1;
-        Sat, 05 Jul 2025 08:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751728586; x=1752333386; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppkGylIpL3e5C3TVURbfkBpVr8RCQTzH0w7GOalefMw=;
-        b=U1AVvgxRr/Hx3pkcc1t9q21+qmypQ5kLXm8AjrmwJI/unmmV5nJyti4LTf25pBtGQi
-         co9GOLDcB3EftC3NviKJGTmutfZXCyJ9MjotKcyS7tpz+V0n6o71wRhbfUgGPxhydfNi
-         Yam9mzTgaDQfaprpQV8Np5YxswVcuduvGx46aJahVM6+MAYUW7UC+ytdfsRUEotgSuGU
-         sZFi7DebWP0jXggEMKPcBv5LWRDnjfxWpfrNIZwpDCbuw6CG8ShyNi2frkc1OsFfA5nV
-         ZUidGpfeE9r7QymzhjV9gsvz+fReHZ88RNdJURSEIoGSiGfZsXIZ9baAx8NkJmPHsSXj
-         s0Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751728586; x=1752333386;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ppkGylIpL3e5C3TVURbfkBpVr8RCQTzH0w7GOalefMw=;
-        b=QKapVNVlAfHkDL9slsyibFXzaSLlcXtuMhKh0i726UoHDUzIVsPcTtSF86A1BHvXwZ
-         LgXLxAxk7OxS9m4VwsWjs9iABJJ+psvb/xkrIKpdVsOWnq/BzwlVVgzg6Hmh7AHyjwuN
-         72l8lzO/SWWFDR2Kz+GRDiCzObQJdoFN1Bi20BhEv34ZOa9rFUURyNC1iqb5AcVZRgb2
-         2WYqepFGnX7CVCb0AKPJbSCkumHXYcBj05M3V4zITGfErAtFI/Kh/rv2lIYGt8tOvUzQ
-         U0YrKfpwXZbs2h/D4wbtpuuz92WWuuuU0clUhbg64yNWawm6n1DWCFRAEIgb8bkUN3DS
-         0HTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Fpm9pacN+Et7Z24cmUrwpZm/+PN9OinPoGXIS/dROl+qQxmhMpnpb15q5yBevrBPZExCtKF2zXut6ptTJu4qvaj1@vger.kernel.org, AJvYcCVBBNi0mplFmsqE/kbiMEgWS3yfFls9OoSG1i4a3ElDbqQzWA2w56TKXJm0fiwkGqiOpzLjQ83M8kgZpbU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQG1hNaVAHeDOQtbCho65na70fnmdfumnLWhqmb9xpIv+GqJiP
-	067LDYOLAozTnZEM79SAIPzQNOdHDt6V2RcIk30E7lnKk8WyzADgcVjaedyXKOGvTkU=
-X-Gm-Gg: ASbGncva/aYB9cAxCECHscaz6v3iUvnH5ztgY+wEKjJhigfQHsQLsVe0ejOeXriuxZO
-	ALasJ0odvC/csfsnic/cn83U/Mtd22n1SsPTXMn7YUeVI025pkwo67D6/jis+VfDBYfAXY63T+O
-	COcjuZqE3GMv6vp9TfWb5WtXxWxFqf7mfRAPbBUZ+v0uzGBvuoyucUsEnLb789ofV4OqbwiIVwA
-	f0T2Fa2RYBnCKw12gy6T7veNiUH5K5xdHORP9bcogXWn8VCqP18522g7kMiPAQouRnb2myELJ7A
-	QnC/jDhMdmrptJMD9iKmkndS4wJHCcTQCP3ogfQv70hB8rQLyjDmW+pBJi6sOArpzwKQPBVksrZ
-	v
-X-Google-Smtp-Source: AGHT+IENTRwP9/XEq552vcsWILcUg7zV7ZKO0TjnKhOOgaoX4RsFlYOE2TspM2LWSIIQ4x3wJKNKKQ==
-X-Received: by 2002:a17:902:f609:b0:234:98eb:8eda with SMTP id d9443c01a7336-23c8755bdeemr102662375ad.28.1751728586446;
-        Sat, 05 Jul 2025 08:16:26 -0700 (PDT)
-Received: from gmail.com ([2402:e280:3e9b:22f:a1d5:dc5b:40df:a106])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845b962asm43463035ad.237.2025.07.05.08.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 08:16:26 -0700 (PDT)
-From: Sumeet Pawnikar <sumeet4linux@gmail.com>
-To: mhiramat@kernel.org,
-	corbet@lwn.net
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	sumeet4linux@gmail.com
-Subject: [PATCH] Documentation: Remove duplicate word size in bootconfig
-Date: Sat,  5 Jul 2025 20:46:17 +0530
-Message-ID: <20250705151618.4806-1-sumeet4linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="ZMaa7l88"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=vgrTPih2H6eHiBahUOSiZIhD8AXwhEH/xFNSJMqsRLI=; b=ZMaa7l88kjR7QQnunEOVUYNrEv
+	112ze6wWFaHDmDwuctN7/jFvnx4SZqfTcJmMmdYxNNoSH2/wEiy+kh+IpOjmxAhP4zvnF6E/h3VFm
+	tpZfkoYEu9DrxQKGf4jzqDmpHPLGE4OMUIntEbM/I26bUsmOxS9sfv93cV5HiMDzNWDQ=;
+Received: from p5b2062ed.dip0.t-ipconnect.de ([91.32.98.237] helo=MacBookPro.lan)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1uY4T9-007Yuf-0R;
+	Sat, 05 Jul 2025 17:06:23 +0200
+From: Felix Fietkau <nbd@nbd.name>
+To: netdev@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	Richard Gobert <richardbgobert@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: fix segmentation after TCP/UDP fraglist GRO
+Date: Sat,  5 Jul 2025 17:06:21 +0200
+Message-ID: <20250705150622.10699-1-nbd@nbd.name>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,26 +55,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove duplicate word size in bootconfig.rst
+Since "net: gro: use cb instead of skb->network_header", the skb network
+header is no longer set in the GRO path.
+This breaks fraglist segmentation, which relies on ip_hdr()/tcp_hdr()
+to check for address/port changes.
+Fix this regression by selectively setting the network header for merged
+segment skbs.
 
-Signed-off-by: Sumeet Pawnikar <sumeet4linux@gmail.com>
+Fixes: 186b1ea73ad8 ("net: gro: use cb instead of skb->network_header")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 ---
- Documentation/admin-guide/bootconfig.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_offload.c | 1 +
+ net/ipv4/udp_offload.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 91339efdcb54..7a86042c9b6d 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -265,7 +265,7 @@ The final kernel cmdline will be the following::
- Config File Limitation
- ======================
+diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+index d293087b426d..be5c2294610e 100644
+--- a/net/ipv4/tcp_offload.c
++++ b/net/ipv4/tcp_offload.c
+@@ -359,6 +359,7 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb,
+ 		flush |= skb->ip_summed != p->ip_summed;
+ 		flush |= skb->csum_level != p->csum_level;
+ 		flush |= NAPI_GRO_CB(p)->count >= 64;
++		skb_set_network_header(skb, skb_gro_receive_network_offset(skb));
  
--Currently the maximum config size size is 32KB and the total key-words (not
-+Currently the maximum config size is 32KB and the total key-words (not
- key-value entries) must be under 1024 nodes.
- Note: this is not the number of entries but nodes, an entry must consume
- more than 2 nodes (a key-word and a value). So theoretically, it will be
+ 		if (flush || skb_gro_receive_list(p, skb))
+ 			mss = 1;
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index 85b5aa82d7d7..e0a6bfa95118 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -767,6 +767,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 					NAPI_GRO_CB(skb)->flush = 1;
+ 					return NULL;
+ 				}
++				skb_set_network_header(skb, skb_gro_receive_network_offset(skb));
+ 				ret = skb_gro_receive_list(p, skb);
+ 			} else {
+ 				skb_gro_postpull_rcsum(skb, uh,
 -- 
-2.43.0
+2.49.0
 
