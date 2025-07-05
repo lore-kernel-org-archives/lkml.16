@@ -1,136 +1,108 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB5818DF62;
-	Sat,  5 Jul 2025 18:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57B9134A8
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 18:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751739043; cv=none; b=cIbADu3OPKmFLoxx6Tj+oTsByBjgyFzsjUCgnR8cq/xw36axko0pczuVyc4sv7rfxztkUMnYXLexKe/NJ7XHTTbf8/Pedrcdca0jtocERbVCRLaZX58ZZ0VEkIUDxiIQtOpd/OIvMrPnWUWx6OKLDSxed8UfOBsM0b1sBI/jTP4=
+	t=1751739556; cv=none; b=SLcDM7h3ztM+oCihpT3GEEj9VgaYSbHVEpjghip5tFSZXyQw68pABsB9fMJQjKbz3vNPLdivPbKhP6qdbITR8XpBEA1TDwxFl0ZE3xp1iTSzmqP/n/d5RUQ+vJRvrhlYXMIRWpXejbCZj97Cpbtk6JAgUQqtVTA3PyV6UON7msQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751739043; c=relaxed/simple;
-	bh=ePrYXgOzX785VPMnMe2O691qcwwLURufjdOTHMlasXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=biKq5mUqMvuClqWgLaPn8oPKxEbcuFeUvRfxLjCRkkLc4dL6gCr1Tv/o0UiO2k087droWMwg7ExCqvIEItNfpaQIHGsH58wbQpxA9bvjWzBPrgzbZg/mPkmXdioSLWcNfDII86WaCoj6VhGEaHA5vmDC9upbTqfPZMYnPg+lefg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A4U5QV2C; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4U5QV2C"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ae35f36da9dso350760566b.0;
-        Sat, 05 Jul 2025 11:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751739040; x=1752343840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YNILwY6JtxDju730mgZnPVFOLO4HNV+nHw1JvlLMVAA=;
-        b=A4U5QV2Cg9DRuvLzao06p49DFaNNxIQ4qcxxzD6T7uHgkIj3yjD4odPQchTSIORJTI
-         I39YVcm7bpUVtlFIe7Sop6N4cru/WeAnI/WGrVu+D+eviKRGvM3GKIvfj8ey7Ct/g7IB
-         eDPGZCYr3VCf+jiQO9DI7Eq3DQWTShWhHWsOYmUHkLekmG0QLPHZjNHikxP67V85+IG3
-         LnX43z505dv6F3h7J2Tma3YQOTUMUcw+qXZWf2BZZ1th9fMXNahPEnM87IsAAlsW4njo
-         wqPU0vztxeNFTksVa32TIKiZ50/s/sUFBWwOQGiF2vQklGdzSimcMW+hsm1DWRDojQWn
-         pYBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751739040; x=1752343840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YNILwY6JtxDju730mgZnPVFOLO4HNV+nHw1JvlLMVAA=;
-        b=PTUje7IRoZ0PAQ1suzpW9faFq2uvUp7+q2HRnmINBvdwkIvCMy3K5UTAiCL6uHx+7N
-         eWTvqdcDDLYGXK6r4WIcYRQoEHx6IYyv8eVnRIWufghx6z/wdJsIKUYKVmzHWOsJ6QU3
-         bbJ4h8Jr2pgpbimIG8KdW342KSl7tABHiAAnbL0byZ6K39LApm+ZUY8HdJZ+gF9jhtVy
-         wIvzx4+rW4o6dPsfojcVZavCv06WC7gaEaMGSkfm6GF9T9eOsqkkFwZvLqAJFDhVRyX0
-         fKLsh4KgSFWjOmGVSEpHPo6qfgozesDjOfR5HkxvLl7GxgAlcnr4ApkPpBpe8/iP3eTP
-         mn0A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7BjR5thSydka5G/H9Qz29rvArtwFInzPypiiSpX6oExuKOGzIYOa0XC9sS7NgtAM4Wb1ALtKtRVn8WME=@vger.kernel.org, AJvYcCVvAogKGB/xj8FXEHG04oZwcVJ2kVWkwLpQ3y3mfhQKJ3LTWxXs//hfdpy7wzh/TJlg5NKnVDM0hYNuI/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmGpmlvEXkKOUWuzW4FuAp+gj91psA61DG09Q0yaP6xOFhrRq+
-	ICvpEbOaOwhN45zNZlvSHDT3TXmMEWDym3lmA3oGOMrtTwIaNn1kR9LYEeVfHQPRc9Ccqgh/kMD
-	+5WFZyv/6GhU/QhAZLFKuYwlNfN0dGyQ=
-X-Gm-Gg: ASbGncvSL3znmHBEtw2Ou1D49sDb5bAHmeHFqGsy89I5c4J0EmdE79ic3TGDE6WO7P1
-	aLh822kegvl/ITNkeN+VkcbRGSEYD6Ta1kCz78tRXv1wtWXS+haQcw+bagOG7ZXmfF92sDT45Sk
-	8rg2/UGtnw7ltmjGtgplEccSgOFwOeYM0nehQbMJ0MxpI=
-X-Google-Smtp-Source: AGHT+IFeU1lMqRJti7UDXI9CMm8KR3it2mi8/2mz6fFw3tT4TDTp0OI5K7lZjffRjb77cUhX2MCcMe0QXmqS8UQtBBc=
-X-Received: by 2002:a17:907:d93:b0:ae3:61e8:c6a8 with SMTP id
- a640c23a62f3a-ae3fba363a1mr671064566b.0.1751739040048; Sat, 05 Jul 2025
- 11:10:40 -0700 (PDT)
+	s=arc-20240116; t=1751739556; c=relaxed/simple;
+	bh=7hthfrc7tTdg4jCbIpZXZsXxRkwD5UHIMJ/9LVWFQrU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OKpp37tCS3Y4tfyg7cEB/bx9jGOToLLmZswTYTGicIiVOI5RvsmIyq/XP5MBK3D/kI+UeZASFHCDxf7Smgx0Lf+BRu6r2PzE05l6pCHyrrnniuNzWxJMPUMMDtUcOS+Q+mKQ8+90yNSOQpCMoys2QSgdmLqTot4+gVhTFxV95YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 82ce853c-59cc-11f0-a04e-005056bd6ce9;
+	Sat, 05 Jul 2025 21:18:57 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 5 Jul 2025 21:18:55 +0300
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>, jic23@kernel.org,
+	andrew.lopes@alumni.usp.br, gustavobastos@usp.br,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	jstephan@baylibre.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] iio: accel: sca3000: simplify by using newer
+ infrastructure
+Message-ID: <aGlsj1m4TygpRkjt@surfacebook.localdomain>
+References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
+ <CAHp75Ve4yAp6sViUWZY+0abRoNZ0W+rQLCmsbijEcrh8kguVOA@mail.gmail.com>
+ <CANZih_S9_8OdY=oKyVPBCTSTqYm_z_rkE=xbPym3uHOSsHMv6A@mail.gmail.com>
+ <aFL6PE-8KLLKZun_@smile.fi.intel.com>
+ <CANZih_QeeA_G5mFOAb=TMNYiR4eo9SUD5iW1G-5LBGL27NpTRw@mail.gmail.com>
+ <aFQrgEw4zw9RSAO3@smile.fi.intel.com>
+ <CANZih_S=7-ArpBT3NF54-RH_KYER=mdS9nf1bUO3djEiDY_RWQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704-new_atomisp-v8-0-2a8560cbd9be@gmail.com> <20250704-new_atomisp-v8-3-2a8560cbd9be@gmail.com>
-In-Reply-To: <20250704-new_atomisp-v8-3-2a8560cbd9be@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 5 Jul 2025 21:10:03 +0300
-X-Gm-Features: Ac12FXyxsUmqOwiU8nL9e8ipr59xYfjyV_c2ZD-BbyFglJsuEQ2Ta4EOOMuy2-M
-Message-ID: <CAHp75Ve7y3pmZ5g8YXLNHyZgmZpiZNAuDdNfmhxYTOATrDBz5Q@mail.gmail.com>
-Subject: Re: [PATCH v8 3/3] staging: media: atomisp: fix indentation in bh
-To: LiangCheng Wang <zaq14760@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANZih_S=7-ArpBT3NF54-RH_KYER=mdS9nf1bUO3djEiDY_RWQ@mail.gmail.com>
 
-On Fri, Jul 4, 2025 at 6:41=E2=80=AFPM LiangCheng Wang <zaq14760@gmail.com>=
- wrote:
->
-> This patch fixes tab/space indentation issues in bh
-> following kernel coding style guidelines.
->
-> No functional logic changes were made.
+Sat, Jul 05, 2025 at 12:03:37AM -0300, Andrew Ijano kirjoitti:
+> On Thu, Jun 19, 2025 at 12:23 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Wed, Jun 18, 2025 at 03:20:06PM -0300, Andrew Ijano wrote:
+> > > On Wed, Jun 18, 2025 at 2:41 PM Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:
+> > > > On Wed, Jun 18, 2025 at 09:24:19AM -0300, Andrew Ijano wrote:
+> > > > > On Wed, Jun 18, 2025 at 2:56 AM Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > On Wed, Jun 18, 2025 at 6:17 AM Andrew Ijano <andrew.ijano@gmail.com> wrote:
 
 ...
 
->  void
-> -ia_css_bh_hmem_decode(
-> -    struct ia_css_3a_rgby_output *out_ptr,
-> -    const struct ia_css_bh_table *hmem_buf)
-> +ia_css_bh_hmem_decode(struct ia_css_3a_rgby_output *out_ptr,
-> +                     const struct ia_css_bh_table *hmem_buf)
+> > > > > > I haven't found any reference to a base commit here. Have you
+> > > > > > forgotten to use --base when preparing the series?
+> > > > > > In any case, please clarify what this series is based on.
+> > > > >
+> > > > > Thank you for pointing this out! I think I forgot to use --base for
+> > > > > it. In this case, should I submit a new version of the whole patchset
+> > > > > with this information or is there a better way to do it?
+> > > >
+> > > > For now just reply here what is the base. I asked this question above.
+> > >
+> > > Ok! No problem. So the base for this patchset is the commit
+> > > 3c23416f69f2870bea83697d7ab03c6a8497daa7.
+> >
+> > No such commit in the repository. :-(
+> > You are doing something interesting here [1].
+> >
+> > So, make sure you are based on the iio/testing or so, make sure that the base
+> > commit is the one that may be found on git.kernel.org. Use that in the next
+> > version. Due to above this version is ambiguous to even start reviewing it.
+> >
+> > [1] I have connected IIO subsystem as a remote, so I have access to many trees
+> > from kernel.org (but not to all of them).
+> 
+> Actually, I think I didn't fully understand this part of the
+> contribution process and that's what was causing confusion.
+> Basically, the base commit appeared in the previous version of this
+> patchset but I removed it after it was approved, to prevent it from
+> being reviewed again. However, I think I could just add the
+> reviewed-by tag.
+> 
+> I'll send a next version with other corrections and the missing commit
+> based on iio/testing.
 
-Same comment as per previous patch.
+What you just described is a normal process of rebasing your local tree against
+the (updated) upstream branch (in this case we are taling about iio/testing or
+iio/togreg whichever suits better). Hence, if the commit was approved, the new
+base should be provided. Under "approved" means that it made the subsystem tree
+and pending for the upstream.
 
-...
 
->         to->y_coef_r =3D
-> -           uDIGIT_FITTING(from->ae_y_coef_r, 16, SH_CSS_AE_YCOEF_SHIFT);
-> +               uDIGIT_FITTING(from->ae_y_coef_r, 16, SH_CSS_AE_YCOEF_SHI=
-FT);
->         to->y_coef_g =3D
-> -           uDIGIT_FITTING(from->ae_y_coef_g, 16, SH_CSS_AE_YCOEF_SHIFT);
-> +               uDIGIT_FITTING(from->ae_y_coef_g, 16, SH_CSS_AE_YCOEF_SHI=
-FT);
->         to->y_coef_b =3D
-> -           uDIGIT_FITTING(from->ae_y_coef_b, 16, SH_CSS_AE_YCOEF_SHIFT);
-> +               uDIGIT_FITTING(from->ae_y_coef_b, 16, SH_CSS_AE_YCOEF_SHI=
-FT);
-
-Not sure what's going on here. But I think this is just a churn.
-
-...
-
-> -#define IA_CSS_HMEM_BH_TABLE_SIZE      ISP_HIST_DEPTH
-> -#define IA_CSS_HMEM_BH_UNIT_SIZE       (ISP_HIST_DEPTH / ISP_HIST_COMPON=
-ENTS)
-> +#define IA_CSS_HMEM_BH_TABLE_SIZE ISP_HIST_DEPTH
-> +#define IA_CSS_HMEM_BH_UNIT_SIZE (ISP_HIST_DEPTH / ISP_HIST_COMPONENTS)
->
-> -#define BH_COLOR_R     (0)
-> -#define BH_COLOR_G     (1)
-> -#define BH_COLOR_B     (2)
-> -#define BH_COLOR_Y     (3)
-> -#define BH_COLOR_NUM   (4)
-> +#define BH_COLOR_R (0)
-> +#define BH_COLOR_G (1)
-> +#define BH_COLOR_B (2)
-> +#define BH_COLOR_Y (3)
-> +#define BH_COLOR_NUM (4)
-
-Doesn't look like a good change.
-
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
