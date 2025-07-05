@@ -1,101 +1,98 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C44EED8
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4262AD00
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 14:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751723981; cv=none; b=qg+qY4pRUdiWXd3a7ZSYE8BvJbPb3ilnd3VIUz8nRplhNbQkXvmQPxvi02/vxCS2K0kUE5AUMyW4nae6p9tEZMC2vAk8SClxn9RhfNK+qmEr2q8Cdsz2T1u3xh45jfCijeBkyxrPZv9rnIs/SeExW1HKNgZyP0Em4fS27h/8YKk=
+	t=1751724237; cv=none; b=UJAnuYBMBouzWt78G8NDrqaZMESHXYr+CtaTXKPQYePuzT4WVtP4KjRPY/qJvA6wFObs9cvMXGm8yxX69zA2ut62MbXuiPw/+pgdzvv75JJ/umkimm+5Wjd/sAw3OcFuqNVsucvQgDzia2xLOlPcw4iP0cnC+A+TQpvoeODpNn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751723981; c=relaxed/simple;
-	bh=WTT2moJnrSiWrspMdz5rtl2hM3ZONm3G9g3fvB0VA08=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=h5NBJwFQJc5vjDwpBfkA/aSLaTAfxp7Knvp+hZV078/3hA34i8tNClfl12BpJg/KISCusReMHgJ/Oino7TIFJOnPAq6DS8Bm6/zY7PGpBHEmlVzXFl3SJRQEKebUH3UDpDlJo5I4YY0yilNkT+VTmAM90km12COeJt7xIqmflJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Edlr3LAU; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1751724237; c=relaxed/simple;
+	bh=n6HXa/sf1p+SFqWAo1aM9scyMSHVU8I90Zz3Qpu/tAg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IVCmnWwYJD5+P1sHvZUOhj+mR+XdNfpu42df4OL+YE7PnKnT8HcVWqQ4vKL4s2OVclyp/dOB2Ribpce8RZol8dIpYdDcLZCNUVet4dSySXDDZ+c1ttDp301TgVPpHjYehDleycfJZ7xMFhS4agl0tfT5FNod9osxiBCzizAVofo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CarYPtV0; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Edlr3LAU"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453079c1e2eso1571985e9.3
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 06:59:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CarYPtV0"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a5851764e1so42273151cf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 07:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751723978; x=1752328778; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CL2T53N7hQB4d6KaB7RoY5e4BOK52FoaK5MJcykcpAE=;
-        b=Edlr3LAUuSQrNv1Q9bpF5jxC+bYHM0/BT68MZBbbdA+vUYaYbdfNnfkBotfHXrXb7K
-         2HZP/0GOhDRvDm1wxbxTRLYIb1+/55AK9QLyfHZtjCTpSa31Sjti1k/v3yUCxZhQFJED
-         6mql2Ci1uLfn+8fgkhHc0905quSxHceNHLAlui38XfxKXiQjNeVMEmL7TtAflR76tmzQ
-         7nBwbwg8UpNTq2PCpH81+K2YzlaHRjeo4AjIKT5vI1E7E+JucDFbF/N9WkJoqo2yT/zf
-         qlhbFO6K3EarJY+3MRK1t96tOM/Slkn2L3Qy8U3xqzfp7aorfQsmWndPmtZ5k8E2cmnr
-         MELw==
+        d=gmail.com; s=20230601; t=1751724234; x=1752329034; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GxrMRQg3ClHbYVYGNow/NsJAM3b7dz8NkMi6RpKX/2A=;
+        b=CarYPtV0BlqwbYNu6OFtJyIhnRXzAYQfwc34c/+H4CefoeJ+DkRjK4AzVkI02uPfVv
+         5GBfwh2dNfpZrXEKlWzA8k+JXV8sWMU7WytyopVOZO3VHRbWopb/XwdwGWDf/S50J5q1
+         GafXVFE1dcYRD3w5zl+bPjkQzTmS2UzhZI1p24Fosp+UUd/i+OKeqB9y2pk9Vz/XGj55
+         pPx90n6RfHrxmgousSoR2gFDBssg9ZpWLTkSYK+gKbE5ldxrqJOjyBzMHPbUU7TbTIxH
+         AHjoz+dIqxqHc3iTouwB0M3Zj2cTubZ27AwCwlXS59DPhYr6XwF3IugiJJAoYKYtXwOD
+         nzEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751723978; x=1752328778;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751724234; x=1752329034;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CL2T53N7hQB4d6KaB7RoY5e4BOK52FoaK5MJcykcpAE=;
-        b=oVNVfwfYLZWg7m+21wBMOhHKXMMzfkKeiLVLbAMRHOu3f2m85FfhzZbU4iwFgbeh5+
-         8cbNHbWeEB5IYXLKEmXomvoGXW/Hug85YxfA6P2ZMd/8ZttHS1oRhNM96BbU87NCD6vK
-         JJ6xW/xejSKwE8rwrJGxjyt5i7YyWyp5TQVcx3LaLilSS+Bscn/E5fvRndLRwjaQjnCy
-         uh7Qdng7EGt8bKAnox9HoKoAqAopVWMJWDL330ofDrUJaxCqX4IGiBQqopamG5Y4QW9J
-         32ntgPMQGSUNS2RFCKkjGf1emrDws/5kkOKll4n4SGd/MNmdHl59KZ59NpzB3DBLWGz8
-         YtLQ==
-X-Gm-Message-State: AOJu0Yzh6mJEttvhk+Nrks19GogKDZrUcH01Hpbv0k3t9u2bu85tdNjT
-	gJPFUAi0IfbE+FxUXoD6GE7EwapPI7hg1yRJEO4bZtf59rPfwJV75cnnhnnOmCiCEhY=
-X-Gm-Gg: ASbGnctJtl/cq7P279HTmZ0zRcSP8ijf7AWa9HZ5hBC/8T1R6T8W3ucYPW3UP4QABRe
-	E28ANcm/eEU+HJBX0XMAAxpHWxR1I9Rnen55jqTlBoSg22kjz73XyP7H0DOfULQof8Dx/2fR7RD
-	thLXm1hBQ0gcP7XBZlAOgen6DShn3vVYnKa9ekcajJAsS7DhtIBMasdfDGXTvJNqedHxR+TILXv
-	SyZTXmCYodmubKIYuI1NVoxfOF3lZ4V02cQMPNZwFVSOTTHzCNbEkE3OpuwjMFGBVExbC1vG79q
-	zG4WalujkUiC/F7WWdkJJdVp5afpiRGCeayhg4M6oKjawK1zCvaB7FIB1qPaSxq2OpYGouZjfP9
-	ar2jrdlds6CS/d3YCQdwOCnIWEae+IE7xKjTeSQ==
-X-Google-Smtp-Source: AGHT+IHMT+E0wHTdv+YQi7h29CUEllexOuMS5Ew4K23tHy/GvGrQG5jpn21k8VifY9BnSK3SjWw7YQ==
-X-Received: by 2002:a05:600c:524c:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-454b35ff329mr20918055e9.3.1751723977719;
-        Sat, 05 Jul 2025 06:59:37 -0700 (PDT)
-Received: from pop-os.localdomain (175.77.11.37.dynamic.jazztel.es. [37.11.77.175])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1634b0fsm55384135e9.17.2025.07.05.06.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 06:59:37 -0700 (PDT)
-From: =?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
-To: sudipm.mukherjee@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	=?UTF-8?q?Miguel=20Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>
-Subject: [PATCH] parport: replace deprecated strcpy() with strscpy()
-Date: Sat,  5 Jul 2025 15:59:35 +0200
-Message-Id: <20250705135935.207198-1-miguelgarciaroman8@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        bh=GxrMRQg3ClHbYVYGNow/NsJAM3b7dz8NkMi6RpKX/2A=;
+        b=p5GtEa5kz9hYfFKafsATzMpJKKzmYtdiUzvcPtLYdr8oaPl7O4gfj0WYW3FR9/bKlB
+         26ArmE5OZa2dHcqR31sVi3owCxlp41XjmULv/0tyyZS6IxHYnql9MwVJS0Yq78+S8G6z
+         VhYlGUCVVRQZ/+Zmbx0oABBStgUSmqMARirVdD4Lf6Lgz55KyKl20cll2sHZLJFHPpbD
+         28WuYKRKozC2PesVQ5/uTANnTJiEPbzv8b8Q+6pxM44QZfQtKQyupy9pDzEedWiJD65K
+         qT4pPVxUBeQ+9zBgRFoW8zD3bOvDMNRAtWsy3dAClAlSCug5WXg3vUZKNZNw9H6DkmhN
+         vdFQ==
+X-Gm-Message-State: AOJu0YxH8zGSH3CQHcBh2FNIE0gVlXu+X3gqRqysOAfEQHTdfABMM2c+
+	d0uyZGfJTp63gASeIjmEBe80757oOFI4m1M1REh65JEVbjdHodSOQWawf7sdpd8cEz9POQuPt5f
+	l+sLSk1T9bqlYDpqOK8X74156NbveUoVcLMcqL9A=
+X-Gm-Gg: ASbGncumjDJEYShyT2/15teU3jqilnwil10qBpPHG+NeQQxNPNcVipyt4xvEUbuCWYL
+	7o4LVmf5hIi5+e/E/WGSmznT6G0mlHjBreLGjmcFvpxE5bdfGLBPM40bbH+Skq84axJ/Tuq65h5
+	N5jBTE6njSO1VQTg68lWBxa8xTiRmC4BsWNN2+wKI9mJOF+F5/Obd94r92ym6kv0imAqRHNm+Ol
+	MYKkQ==
+X-Google-Smtp-Source: AGHT+IEY6b/ynhWAl1h6C3f51u4rjZJhhzYxkaAGggFXxLtoqmIKfLP5/KRoNhRDsIBpUhOBxumdCxl2s0Nh+FUhk3o=
+X-Received: by 2002:a05:622a:1929:b0:4a9:a596:1c06 with SMTP id
+ d75a77b69052e-4a9a68f9068mr40836551cf.16.1751724234173; Sat, 05 Jul 2025
+ 07:03:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Sui <sui999924@gmail.com>
+Date: Sat, 5 Jul 2025 22:03:43 +0800
+X-Gm-Features: Ac12FXxtAWIK8E6fonpOP4hlwShqaMn5caj8HtMgfPlSHxOQZyyAZflsCQ8Qr9Y
+Message-ID: <CAObhpgjOZRsmZ3joXRO6qQMCN6_9ry7ZfGNMsvzzXVZSiYbt=Q@mail.gmail.com>
+Subject: =?UTF-8?B?W1BBVENIXSBhcm06IGxhbnlhbmc6IGZpeCB0d28g4oCcbGFibGXigJ3ihpLigJxsYWJlbA==?=
+	=?UTF-8?B?4oCdIHR5cG9zIGluIERUUw==?=
+To: linux-kernel@vger.kernel.org
+Cc: arm-kernel@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strcpy() is deprecated for NUL-terminated strings due to the risk of
-buffer overflows. This replaces it with strscpy(), using the passed
-'len' argument to limit the copy size safely.
+In arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts the properties =E2=80=9Clab=
+le=E2=80=9D are
+misspelled. Correct them to =E2=80=9Clabel=E2=80=9D so tooling and bindings=
+ pick up the
+node names properly.
 
+Reported-by: Jens Schleusener <Jens.Schleusener@fossies.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D205891
+Signed-off-by: Jake <jakecontactxyz@gmail.com>
 
-Signed-off-by: Miguel García <miguelgarciaroman8@gmail.com>
----
- drivers/parport/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/parport/probe.c b/drivers/parport/probe.c
-index 5d1b9aacb130..5f92f266bcb2 100644
---- a/drivers/parport/probe.c
-+++ b/drivers/parport/probe.c
-@@ -61,7 +61,7 @@ static void parse_data(struct parport *port, int device, char *str)
- 		pr_warn("%s probe: memory squeeze\n", port->name);
- 		return;
- 	}
--	strcpy(txt, str);
-+	strscpy(txt, str, strlen(str) + 1);
- 	while (p) {
- 		char *sep;
- 		q = strchr(p, ';');
--- 
-2.34.1
-
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+@@ -52,12 +52,14 @@ hdd_fault {
+         gpios =3D <&gpio ASPEED_GPIO(B, 3) GPIO_ACTIVE_HIGH>;
+     };
+     bmc_err {
+- lable =3D "BMC_fault";
++ /* typo fixed: lable =E2=86=92 label */
++ label =3D "BMC_fault";
+         gpios =3D <&gpio ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
+     };
+     sys_err {
+- lable =3D "Sys_fault";
++ /* typo fixed: lable =E2=86=92 label */
++ label =3D "Sys_fault";
+         gpios =3D <&gpio ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+     };
+ };
