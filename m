@@ -1,87 +1,118 @@
-Received: from 0.smtp.remotehost.it (0.smtp.remotehost.it [213.190.28.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AECD1898F8;
-	Sat,  5 Jul 2025 13:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.190.28.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B54DEED8
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 13:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751723446; cv=none; b=XJ5r26klOTkK2q4qAwrtjKuvqzMiuGyroZBPk2oLG7LZtAN0ejtB5kmZqiAT33hcoVj6FKpAOmTlyGp6B67b+sTkEzEALsyM89uyeQpTtejTCFvc5YQTLMcxeWvetqctUzwjROEWhqhDR+9AYxkWBpBJJZRsnNAmKfINserdMSc=
+	t=1751723972; cv=none; b=Ig9netDewyZ+vgxuydDTX08LMiFAv729Oz/Vda7hKzyQ0v2iemLIt4dFB75/WglHJuE4CvORTGmcEgNddEjv0Yfa7SfgKQW3TcclUTL4ZNwcRf/LbEnxGGEKUSJRhBvGKE0QuQFqoyjMT8KC3qcNVBD0OgL/3xG3FbtC4kk8cww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751723446; c=relaxed/simple;
-	bh=KTD4FLxcO6O3F0Uz06MomQx86VnuH+P6EQI0R4x2o38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tB/BEUB4Zx+OrnRsIPlVV5wjcHEH1mmAng+bKWgFEN9dfJ8n7VteqwoRzeg+eXMWnHcMKLKAj8h3agJ48/IFL5w+jTPWSKcLPBwVONpbAhfparbC2kzcCT9elRC0zpP7TVSrEPDZb/NTBKizQCqzZSEJK/lqt2KdlrFFGQzQzgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net; spf=pass smtp.mailfrom=hardfalcon.net; dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b=Cq2sO6mj; arc=none smtp.client-ip=213.190.28.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hardfalcon.net
+	s=arc-20240116; t=1751723972; c=relaxed/simple;
+	bh=Hfa7K9tsCT7tpi1elmIF6vRXQkM+FAXCJQH90EedI4o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VeniIq3xn6k38nxcCQn5g2+wAMBS5u5m4nDQuB8sBqKlmePuyYw6Kw7jnr8amEFly6L+8Z9uX24vYxpL/vS7eFbyEnY8hRno2y1DLA6fMVuD7dmJO7tf1Vd+1tbA41M6ipCWIE25tzP9G5OJCZ0l0F6Qi0fuaK3T46l7oxPwhUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=R0JfRKgi; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b="Cq2sO6mj"
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hardfalcon.net;
-	s=dkim_2024-02-03; t=1751723434;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9LH4y+MMMjaudgXUUhlq8KLlA1S4bGHYgtofYcKGx1Y=;
-	b=Cq2sO6mjQJLVOIgUh58Iy9krdhDPfz92QS2Mp53xGH1B8n+pytHwpuwmz1eX7k5MKMSnN0
-	5kzxIkn3vXqDt9CA==
-Message-ID: <3ca03800-3d4e-41ca-897d-a0d05d6499ba@hardfalcon.net>
-Date: Sat, 5 Jul 2025 15:50:32 +0200
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="R0JfRKgi"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-748f5a4a423so979932b3a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 06:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1751723971; x=1752328771; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hfa7K9tsCT7tpi1elmIF6vRXQkM+FAXCJQH90EedI4o=;
+        b=R0JfRKgiXVo/3GXgoQ1A43+4/UxAsEerJkQCEA5jU68tudTRTI/U1jriYPTg8PU8A3
+         QUztqAxPgj6GFcapxPu0dU2zeYk+zOuw5ecBHoE1/3ZBM9J2O3oPfVy29qVHlGhlA+rN
+         agQODAPX4f3KCfT1utLVz2YzMSBxLNtJAh6cJlSgo9FLjNoKp4O93Aek5bzns+VJUqt4
+         t89ClTuSNcQauqLJbJIDCQnrkQVwMwPW3us+SDWcz2boIGeOc5KcGm7LP0off8/45fO3
+         jZm0v0pZAy0zj3vX7KzGc5n7MAQkdQNPozBf0K+riDI0J974w0fqQv8q7mBmhBe91v46
+         wAXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751723971; x=1752328771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hfa7K9tsCT7tpi1elmIF6vRXQkM+FAXCJQH90EedI4o=;
+        b=eHNmtgb5jhI4H/MJX5XUqq+JRTbwkBfTvYqLLZiSalwigum602exgpuewz+2hljYJZ
+         jLXdwb6AtAjv2cBs/QG+TRdZDNJuEJjk1pgS59zFms3sMgvWfRChdghnEkfYH422JJD5
+         rO1/84qoRnHa1Bzx7fwPIfo5yD+RYsuj3/V4HOEEW0powLEgTq2qaT0McgUZQAkNUvMY
+         8YjN2fTyLVHjALrXZIEwqBkAOZYg2BMJKboBD6znXhsD34wIA5xokuamtBCn/c6Qv7gE
+         6aA9fAlcOtFEX/PL9E38qJYWvwg8wXTCliHhpxLGl3sMvILWYJFauHDJ9PeNX05kIFYn
+         2Zng==
+X-Forwarded-Encrypted: i=1; AJvYcCVlFZNE9LPjCG7lAd06SlP6PMiZc6+zmgN8mN+wNnqXqn/wtwKkyIPImp6oJn4IzoILe/Aa/jEmi4IFyzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmjuqwPNg9mObxu0HowLQLqrLQ8kH+lgsY5Ytd1wqVXTbmx/IL
+	Dc7Ip+l31N8W4wiTEeGUDwW6WSpI6GbBf2XfoDLiZLKOhq/TlvzGPEuRYsyOSD0n2lOWyXoE46D
+	HnOF9CDOCxdcjoOOIIxV0oq7ZkLJM7XUtQPWDacVt
+X-Gm-Gg: ASbGncsvUiDR5SKO0N9U7cDsDYM1q/wpboRhQnaHd1hsRi9YBDNhKLZnY0t6j+hwqEY
+	gSIFN8W61aogIbNPSOK7/YFXgz5QJKEjnasDi9UD+aRtNg7v7RFRaXA0BDasT7GAuCTXpja+UV9
+	Nm7iaXAeRYLD1NKYez7lpHz0YDEa2pa/grLzS+V3vObw==
+X-Google-Smtp-Source: AGHT+IGqC/1uitnb5fUKNTcl0PthQF1yxz5P5Q3mkVvNY0INFRPePnrT40jlCyplS57rhErie3F7gcdClboHB3N6yWs=
+X-Received: by 2002:a05:6a00:194a:b0:742:3cc1:9485 with SMTP id
+ d2e1a72fcca58-74ce8a8ddb0mr7121083b3a.12.1751723970850; Sat, 05 Jul 2025
+ 06:59:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 6.12 000/218] 6.12.36-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250703143955.956569535@linuxfoundation.org>
-Content-Language: en-US, de-DE, en-US-large
-From: Pascal Ernster <git@hardfalcon.net>
-In-Reply-To: <20250703143955.956569535@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <aGhr2R3vkwBT/uiv@pop-os.localdomain> <20250705011823.1443446-1-lizhi.xu@windriver.com>
+ <aGizFhZwnPo98Bj/@pop-os.localdomain>
+In-Reply-To: <aGizFhZwnPo98Bj/@pop-os.localdomain>
+From: Jamal Hadi Salim <jhs@mojatatu.com>
+Date: Sat, 5 Jul 2025 09:59:19 -0400
+X-Gm-Features: Ac12FXxtcKFKBXIaMag0cucTZ_RoWP7mX93yvxNidg1N68n0h_2He8IWpkc3HZw
+Message-ID: <CAM0EoMneGBL0OkRC_if5VEax-XXXnFAwtpij1J3kOq9NbEPmrA@mail.gmail.com>
+Subject: Re: [PATCH V2] net/sched: Prevent notify to parent who unsupport
+ class ops
+To: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Lizhi Xu <lizhi.xu@windriver.com>, davem@davemloft.net, edumazet@google.com, 
+	horms@kernel.org, jiri@resnulli.us, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[2025-07-03 16:39] Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.12.36 release.
-> There are 218 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.36-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+On Sat, Jul 5, 2025 at 1:07=E2=80=AFAM Cong Wang <xiyou.wangcong@gmail.com>=
+ wrote:
+>
+> Hi Lizhi,
+>
+> On Sat, Jul 05, 2025 at 09:18:22AM +0800, Lizhi Xu wrote:
+> > If the parent qdisc does not support class operations then exit notify.
+> >
+> > In addition, the validity of the cl value is judged before executing th=
+e
+> > notify. Similarly, the notify is exited when the address represented by
+> > its value is invalid.
+> >
+> > Reported-by: syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=3D1261670bbdefc5485a06
+>
+> Maybe I didn't make it clear, I think Victor's patch also fixes this
+> bug.
+>
+> https://lore.kernel.org/netdev/20250704163422.160424-1-victor@mojatatu.co=
+m/
+>
+> Can you check if you still see the crash with his fix?
+>
 
+syzbot+1261670bbdefc5485a06@syzkaller.appspotmail.com (in this report)
+is part of what Victor's patch fixes (as listed in that patch).
 
-Hi Greg,
+cheers,
+jamal
 
+> The reason why I am asking is because his fix addresses a problem
+> earlier on the code path, which possibly makes your fix unnecessary.
+> Hence, his fix is closer to the root cause.
+>
+> Please test and confirm.
+>
 
-there seems to be a divergence between 6.12.36-rc1 and the current state of queue/6.12 or stable-queue/queue-6.12 (five patches dropped and two modified), but there doesn't seem to be an rc2 - is this intentional?
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/diff/?id2=08de5e8741606608ca5489679ec1604bb7f3d777&id=4c3f7f0935ba0c1ca54be4e82cc8f27595ab8e61
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/diff/queue-6.12?id=c0bc2de2a5416da11ffadb0d10da975d1bdb1ada&id2=e1bd69ff09807d5bf80f17f3279240cb223145a6
-
-
-In any case, I've applied all patches from the current version of stable-queue/queue-6.12 (commit id c0bc2de2a5416da11ffadb0d10da975d1bdb1ada) applied on top of a 6.12.35 kernel, compiled the result with GCC 15.1.0 as part of OpenWRT images for various platforms, and I've booted and tested those images on the following platforms without noticing any issues:
-
-- x86_64: Intel Haswell VM
-- MIPS 4KEc V7.0: Netgear GS108T v3 (SoC: Realtek RTL8380M)
-- MIPS 4KEc V7.0: Netgear GS310TP v1 (SoC: Realtek RTL8380M)
-- MIPS 74Kc V5.0: TP-Link Archer C7 v4 (SoC: Qualcomm QCA956X)
-
-Not sure it that qualifies for a "Tested-by" though because of the divergence to 6.12.36-rc1.
-
-
-Regards
-Pascal
+V
+> Thanks!
