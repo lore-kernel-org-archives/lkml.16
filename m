@@ -1,366 +1,255 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2069.outbound.protection.outlook.com [40.107.100.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46071211A3F;
-	Sat,  5 Jul 2025 20:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751747636; cv=none; b=pKyxGusOzc34R+DAZuaFKuTryQlRp45+j99Aw3fW4G8EPDkyIXUskYd7bK1ZSdF8COqMii+nOwaVs0AGEUSn/2eK4e3gOFcczWSZF9tXwMxweIJaFNdnfIbSv86RrVjPhp5cPhVbdDqBZ3rOqBxix/J/xNoTMTVfZEqlfln57rQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751747636; c=relaxed/simple;
-	bh=GJ/5VUMCSvyaJvDw2jTAUB+TVwoxvpKqQaf73jDQdi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=INfH2AjSyWujMX2TKRdBoEpJh8bm3PvOsSLlBLiJCx7yrrAsN9jhyEOemBol9rJUJl6lUKsJXvdXHRu4KfvBoy6P/y+TLZ27+0ZHDy7Srs6cdWgqi66hCQYk5OCv4LkGqt+nBg1+zhGvNav0YrgqIAEpeSAmQipr0OzMOn2hyxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyxkMuLH; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA77E136349;
+	Sat,  5 Jul 2025 20:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751747976; cv=fail; b=l+DA6xHo8+ShORVT/HtKw40VjJXS5EbWozPRnIHFoZFw3mCkQLcsetBNAuqk19qmWqBVbqkNtK5SH9+tQ8itBDs96+Qgl/48GhkgNou7CFSPvmIVRMKOc8HY2ZdmcjpQomFxIBMPDX/YFOlcPRq0IALVDGCcpDTCzDzRwWchjxQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751747976; c=relaxed/simple;
+	bh=mSrFWvEnuvjWZ+k838NccMMICBrqdL3HRQmoHzROKBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nHSeQ68kwxn2cRuUlkDLC5E41CsG6lSPD805zhxIt1cOD3/U8NFgVGEtwpqDT8/0v1FjyPjTNCWDfVJFTZY8TouP7Yl9X6znl9xeQ790aG1pO3Rnq0y5tL6f06NDikAMDmhPbewa9BxqyUr43pseXLUFzmOeXSmuFKjQUFFtohQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RUvwlrbA; arc=fail smtp.client-ip=40.107.100.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyxkMuLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B311BC4CEF2;
-	Sat,  5 Jul 2025 20:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751747635;
-	bh=GJ/5VUMCSvyaJvDw2jTAUB+TVwoxvpKqQaf73jDQdi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hyxkMuLH6q67TcM3jeXMoxP4XpsNnF6y+uBWtIf6fyyo+ALKJl6Gc/+2PckC+TYjI
-	 ygU0sE53zsuqL+TK+K/cP9TRPigq09xqW2uNlQyCarbEsJYXNh0GaPR5eYghS+xvuW
-	 yoQ5YSZvYwF0crxbcODpEEI1jSGAOkG+tuxMig10261JWOlJZ6FFoSSGnT8nsX0Zre
-	 YwXb7RXeF6wQANB/Rt2gej5bdzjVqizEe5KNgPXbuVuynHFJFql8kWK1TniRhdc7h2
-	 5IEvSAW5o+w6OJGrOwZpz8MlYZ5eEbdDl17s+7uL/7f9hKypTQXPfYqHTBwabfupc5
-	 5y+R+JKKAJehQ==
-Date: Sat, 5 Jul 2025 22:33:53 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Cc: Alejandro Colomar <alx@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Christopher Bazley <chris.bazley.wg14@gmail.com>, shadow <~hallyn/shadow@lists.sr.ht>, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>
-Subject: [RFC v1 3/3] mm: Use seprintf() instead of less ergonomic APIs
-Message-ID: <be193e1856aaf40f0e6dc44bb2e22ab0688203af.1751747518.git.alx@kernel.org>
-X-Mailer: git-send-email 2.50.0
-References: <cover.1751747518.git.alx@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RUvwlrbA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WBKrMnDxeJv1xEoz7o0C6M1uYxAHNzacQEk3dZvy0KJF7cKwaml3q9sZRcSbOtEE2X4UUAnWeZC+D/pHllt8DztmtDiIeJ0BddnDJZioJ5sHeyR+0meQdb5WJs+rYMO4GW8mupRf1dUB9su2MkOlxolB7T6RfbOwzMObOEbYeb/IryRsS6DJMJ1uFrqs3cqQy//SYr+zxxPOo4Q7f4NLqCWRXBcaB2zP5fOZkTJB5gXwAHgrBIY9WDtxaMy/9EZL5ivX44tKLDXaccICc9hC0SkJ3h1bGtcB1sjHHJAgc23TVYSGDZ/dizvFVsawEp5htCMQhRfYGEMLkZVIPYPPEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aesYfWeB2hXRAR5csBNenPYXjUgBLRnGv969qL0mua4=;
+ b=JCD3tTyXq9uybanJMcnN5VVDxKFjyr84rXYDFcHWsei68FCsyFw/GIjBoMvoiLzBpJ7cVINwHkG/ffGfGCzHQzglqSGG0gmCOo6bVe9bqw2YT9ason8zUV4QX82/ZLYyeMPGidmpqCRTu3l1RsSwq/xjSYvG3W/wy3X9i6BASGT1QgW6ZZZwX6Iq5948rX/OdytnxVcVCK8sDxgy1ZW6s9JodH4p7Smw5WDmdD/RSGQELCvPwKDp46Gh3sxoXd9PUp9+wnnmul8ZjtAcuXDKhOuxEV0pzPZKC9TMGuu0osMRXVVUvdcb7IeeumRPJRz7SAqSi+SpFnVZWnD0A4m0jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aesYfWeB2hXRAR5csBNenPYXjUgBLRnGv969qL0mua4=;
+ b=RUvwlrbA8vt9//dG313wvRgzFvz1nprwEkM1z1R6tNQjfxxKTraCZwGBHu1RFR77uI+Sy5OiMdDHC8BT8F7VkirP9I/dgXDXWEBtPMfjziedZb/33KsUqYmodgyl8Uc/oFI32OlZErjV89FKIJB8HgAb6s+DMvI/63RBMActKDdx5tlz8Zhxqfmodl3sfKRyR+yzh1/7vIklu2fN54Zxdn8JId/e8ab+IJ2Z6hBQp6ftNxVk2qW9/iVhFiYd12DTDo/FG6kocTWeFNeLTwoMjZTn1Qku1lGUalp6qdhdvTe1MK5X6XczaXe03iKkeBRzGOeAZONiQZzQmfppeGkevA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SJ2PR12MB7989.namprd12.prod.outlook.com (2603:10b6:a03:4c3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Sat, 5 Jul
+ 2025 20:39:31 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%7]) with mapi id 15.20.8901.018; Sat, 5 Jul 2025
+ 20:39:30 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>
+Cc: rcu@vger.kernel.org
+Subject: [PATCH RFC 1/3] rcu: Fix rcu_read_unlock() deadloop due to IRQ work
+Date: Sat,  5 Jul 2025 16:39:15 -0400
+Message-ID: <20250705203918.4149863-1-joelagnelf@nvidia.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL0PR02CA0012.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::25) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1751747518.git.alx@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SJ2PR12MB7989:EE_
+X-MS-Office365-Filtering-Correlation-Id: 858d9da4-2423-4f12-1d34-08ddbc040b01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?36M5cEFz4v0M+5pTdPoYvBRQAa0Qi//AW8pSWH7zzULqPs6ByzcH5lSta3Gn?=
+ =?us-ascii?Q?MKX5pmuMUNOXl70K1nWveD+TjMkAnF4n1WhZeSNqMAK0XPsLxmXO+WCc7I02?=
+ =?us-ascii?Q?Oe46l3+WUrxREtHqW/0ZX3i34gKYbtxlN6v1Ydf48099tl6Eod9Xemg2Pg2P?=
+ =?us-ascii?Q?TUvClnEthnJp0ZvxPUKHpu4eK6FALA1hNY+CbvYoOTtQCDFuCHz+ng/jyBrx?=
+ =?us-ascii?Q?OFLfJpdB8ZDRq1xgkRKnrbUREo3l/l1Hr6ith3YReFFCVQIPxRZxBH1D6DBl?=
+ =?us-ascii?Q?8sw/vXcd6jXPy7/5VmbJdOhbu00io4B4Ak9MHyedMkfWffN3VehX+x+3+mxJ?=
+ =?us-ascii?Q?yJXDi110JB85evIShAgIAMmvtHg32Cm/kYebGSgd1yqHeKWPuUGsp6hK3ac7?=
+ =?us-ascii?Q?TQZKKliNfJR0RZWOu2eoxMITw88+mHE4U3/yl+b5iOfOpDcEAHHmaFOhK7za?=
+ =?us-ascii?Q?BP8vGAQswek7FDQFrsATpRRY+l4NsNi6OqxE3ne5Yp6fl7Na1nXwHaWafTNy?=
+ =?us-ascii?Q?zb5V4hL2QeqR2wT89RfIrasEK2BBg1wjWzn1V2P+pGCSxsDA/mYvGKy1ym8k?=
+ =?us-ascii?Q?E1nnj5p95O5Z/rBV9YMVEJXGoTi8wRX4PZ0zCMPwagPUgMXo+8ek+4hXRHXq?=
+ =?us-ascii?Q?1fhG/qE8CPZR6dNq2m4OOln/Vg7QnJ8yDP7l8mu2EK6GZn5A1CFVpXnTXnJj?=
+ =?us-ascii?Q?OLPU06D7Cr0En9Vzc16Q0FcCYQO3fGbYrTeeMJ0JGVzMvgIoBerFwBLOWdFV?=
+ =?us-ascii?Q?m4W6HhokNamZhnegi6NboFWpngcNyA/KwJAYnk+GVEmopQ9Xm/eiXoaR+A+d?=
+ =?us-ascii?Q?O+I3UUq1uc6v3IE1zii7C1HUL0Z6Xo1y/blFZX662kbZXoMUIaHNe3ZW2SrS?=
+ =?us-ascii?Q?qYJhpYKS67DnSf2Pvhlu92A78aoYDaJ5SthiLDQqI2BKrkMyQ3l316Gii/9C?=
+ =?us-ascii?Q?Lon70bdeLN19/LM7vrcDMVfv9+1EkRppc49w8IG1Pm0PltlJa0gkvzXwLIg+?=
+ =?us-ascii?Q?IAAsMwn0WxqjA0QEbh/hH3SfKLCF6gkzhRn8t1ICA1327cJPcBYJPu664kaC?=
+ =?us-ascii?Q?ljhcaiJtYQhOfuBQsSaWKxXdX8aSjeURrs0WY3j+1EzMFCdNQvzk9z7bCL6w?=
+ =?us-ascii?Q?yowoWO53XIeYE17dmjC83UJTOdWiZOu2jo0za8iyHlYm0eLVoaoENloWjFVY?=
+ =?us-ascii?Q?uV/x+ey03Ij1OIqxP12UDWqm08COrgGxOzx7TYK+04ow3wTuLKqb1ElcuZv4?=
+ =?us-ascii?Q?hC0X9LXZjuqc5NuH0nT/xVz/pmst08HRbsAUN5Lc5ikHPimJupqr5d0kX2pm?=
+ =?us-ascii?Q?q/C4KB3R/OreAP6iA2oQFCFy6gQRXv9rPHRHFrr+R1N0FNxdRDuiD/OYe7P9?=
+ =?us-ascii?Q?F3huAg31PCKt/mjdFYW2zcx3zVG94AVIPU+IaTBV3HTt7kSWG/8YRL23eqM7?=
+ =?us-ascii?Q?u4LxM0+NRtdZ+M5JD5XMCFApkZYc9yYhfTQIy2b03w01d0PAKmZEDg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?fLnfDODlEgL1Ra3nx5y97OGaUhEeHTWTSd626iLaArBJepbp4NfuIbO36G2x?=
+ =?us-ascii?Q?yEjK1GijeWmNEqYXmc+WxCgGFGxQ92TLm66vUIyqzB9MVC7n8z4e3JbE/svL?=
+ =?us-ascii?Q?d9CAzHScfiqHt4yHgAWXpNlUloYGEbB0cvQN7CIJtoEZ3umsQ8G9wrWPxwMS?=
+ =?us-ascii?Q?nr0yT96ySTDBTRBRM1Ctz7izjwqzuk26Fbi+3K2mSHus2oCGIKGWr9dC7l6R?=
+ =?us-ascii?Q?OMZlh0aFgSik9Lr+cvkxG4GuD5yIb11NbNBUkVb/MQECDx6okH+5Actg00fn?=
+ =?us-ascii?Q?hJmn8g2dbKAzzdpYaQgv9iSXuxbZ4NK/bAkUf/wS+WK3IbGflTv/bKdSlRyw?=
+ =?us-ascii?Q?lzH4Y8fFN/vXXAEQvK8WxdI9dFEqWggW3ggSPIqON0k8zHlHjS116eD84wfn?=
+ =?us-ascii?Q?DLLOX6UG9sVBaIz9SLfmkaKrjlIP/ichmZFKMvbjDnB3aA3i2slDjDl3d1HK?=
+ =?us-ascii?Q?aNu5d5i7qQBx1qgNrFOebXkvz1as/fUsM0Mq9X6FjJCn3zoba2Qp2lzkA3Ib?=
+ =?us-ascii?Q?yFlzwYnqaW6SOhmVGv8eHUL9s7P1GQdE/iXYcAxdEn9UmhQaYkJ3AhGsp9Lj?=
+ =?us-ascii?Q?IcZAm2LN5yNJzhvBkOES20CowpcC5EaYST+VCW47RyG7iud/+it7Vb+NNpAf?=
+ =?us-ascii?Q?XQ/w79pZBmjbhtiIP2VabRM1e08iU+Mkm4lu2p0CL+HuKs352JULCc1sEU38?=
+ =?us-ascii?Q?900pJALfjtoRErv94V3xzpShqhF9b59Q7TrfKFfcPOi6vrcgloo8ck/YNstb?=
+ =?us-ascii?Q?T3RqMpvQjVvIWIiZ1Pe3h2IE89XDzoNAyryaNt5nYFwzdXaNhfcp6UfRc8W2?=
+ =?us-ascii?Q?7206xK0kn4s3adCZb/gE7I4VQr66npVHOXh6k+yOA6VQsHQ1qyiIzqEFWQvJ?=
+ =?us-ascii?Q?lgZE+ckkEul24Q516I6Erhsqy4kT/x/xI4XbC8LuzhFFt6RZSdc7Qm7JyZ6z?=
+ =?us-ascii?Q?OhWYDg1kxdlY0RCIcMD24Fhxc4InMbjkMW4lXcmm5zQqcx/xMyYWfDMuBF+q?=
+ =?us-ascii?Q?/3G7noudaNKNZIaWuwW0rTnPm9+vMHO0OzsB4+WkSQbPHGmsGSjc/QING9PF?=
+ =?us-ascii?Q?CF+aHkVMSfVF0j8S7UbYtDbRAPzcxm7iP15lvNTdid5WamM62jVODuGQIEwS?=
+ =?us-ascii?Q?24P2UQP5duTPWkWmdEnMFmJYS3ZLjv4kXgLZ0COJpCZXa9cQpEgiKVf0OSqZ?=
+ =?us-ascii?Q?sa075MXey/kH4/wx0Pk75IvxFGPXbK00vj6Gy6Jdt4D2ZydLLyStklZZHoIr?=
+ =?us-ascii?Q?f1D94O7ZAHHzU1BzVek3rJR815lG1FP1/qx7g0q4EFX5tTe4nT6Rh7pjs/YG?=
+ =?us-ascii?Q?AAF4X/u/lWSqAYLZs/Hp/uliNC1OAAUa0JCMcx4TdPU2cpyG5kbqYHkUB5F4?=
+ =?us-ascii?Q?z+t7VNuwu0xlKeUOZr5coThUAjK5ktSibNOLX78VmKJhS+ho7TKIC4LVEMjU?=
+ =?us-ascii?Q?scVQ4PPxt4aWa1B2DFbG5FdBKD4IOXJCpCLFiVz621oZWIeT0lAu68nHQbH+?=
+ =?us-ascii?Q?VchWc+gKw18AkjU5yjuQpNnBKxWGUMAkCWq+f7d+yQwZdEvyDvMAVsfGJlzo?=
+ =?us-ascii?Q?9pFEEq8hwbw7k0ikL50Vw7zWvP4gnxNyqg8aiGCG?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 858d9da4-2423-4f12-1d34-08ddbc040b01
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2025 20:39:30.8092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rumFQ1cFfa190haXbB9rDJjsjLsTEaEu8G3ibNsPSCsUTT6WOfvU87yjhzI45s5/tHHmNjOii7veHxzKpSgeJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7989
 
-While doing this, I detected some anomalies in the existing code:
-
-mm/kfence/kfence_test.c:
-
-	The last call to scnprintf() did increment 'cur', but it's
-	unused after that, so it was dead code.  I've removed the dead
-	code in this patch.
-
-mm/mempolicy.c:
-
-	This file uses the 'p += snprintf()' anti-pattern.  That will
-	overflow the pointer on truncation, which has undefined
-	behavior.  Using seprintf(), this bug is fixed.
-
-	As in the previous file, here there was also dead code in the
-	last scnprintf() call, by incrementing a pointer that is not
-	used after the call.  I've removed the dead code.
-
-mm/page_owner.c:
-
-	Within print_page_owner(), there are some calls to scnprintf(),
-	which do report truncation.  And then there are other calls to
-	snprintf(), where we handle errors (there are two 'goto err').
-
-	I've kept the existing error handling, as I trust it's there for
-	a good reason (i.e., we may want to avoid calling
-	print_page_owner_memcg() if we truncated before).  Please review
-	if this amount of error handling is the right one, or if we want
-	to add or remove some.  For seprintf(), a single test for null
-	after the last call is enough to detect truncation.
-
-mm/slub.c:
-
-	Again, the 'p += snprintf()' anti-pattern.  This is UB, and by
-	using seprintf() we've fixed the bug.
-
-Cc: Kees Cook <kees@kernel.org>
-Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
-Signed-off-by: Alejandro Colomar <alx@kernel.org>
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 ---
- mm/kfence/kfence_test.c | 24 ++++++++++++------------
- mm/kmsan/kmsan_test.c   |  4 ++--
- mm/mempolicy.c          | 18 +++++++++---------
- mm/page_owner.c         | 32 +++++++++++++++++---------------
- mm/slub.c               |  5 +++--
- 5 files changed, 43 insertions(+), 40 deletions(-)
+ kernel/rcu/tree.h        | 11 ++++++++++-
+ kernel/rcu/tree_plugin.h | 29 ++++++++++++++++++++++-------
+ 2 files changed, 32 insertions(+), 8 deletions(-)
 
-diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-index 00034e37bc9f..ff734c514c03 100644
---- a/mm/kfence/kfence_test.c
-+++ b/mm/kfence/kfence_test.c
-@@ -113,26 +113,26 @@ static bool report_matches(const struct expect_report *r)
- 	end = &expect[0][sizeof(expect[0]) - 1];
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: out-of-bounds %s",
-+		cur = seprintf(cur, end, "BUG: KFENCE: out-of-bounds %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_UAF:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: use-after-free %s",
-+		cur = seprintf(cur, end, "BUG: KFENCE: use-after-free %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_CORRUPTION:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: memory corruption");
-+		cur = seprintf(cur, end, "BUG: KFENCE: memory corruption");
- 		break;
- 	case KFENCE_ERROR_INVALID:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid %s",
-+		cur = seprintf(cur, end, "BUG: KFENCE: invalid %s",
- 				 get_access_type(r));
- 		break;
- 	case KFENCE_ERROR_INVALID_FREE:
--		cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid free");
-+		cur = seprintf(cur, end, "BUG: KFENCE: invalid free");
- 		break;
- 	}
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index 3830c19cf2f6..f8f612269e6e 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -174,6 +174,15 @@ struct rcu_snap_record {
+ 	unsigned long   jiffies;	/* Track jiffies value */
+ };
  
--	scnprintf(cur, end - cur, " in %pS", r->fn);
-+	seprintf(cur, end, " in %pS", r->fn);
- 	/* The exact offset won't match, remove it; also strip module name. */
- 	cur = strchr(expect[0], '+');
- 	if (cur)
-@@ -144,26 +144,26 @@ static bool report_matches(const struct expect_report *r)
++/*
++ * The IRQ work (deferred_qs_iw) is used by RCU to get scheduler's attention.
++ * It can be in one of the following states:
++ * - DEFER_QS_IDLE: An IRQ work was never scheduled.
++ * - DEFER_QS_PENDING: An IRQ work was scheduler but never run.
++ */
++#define DEFER_QS_IDLE		0
++#define DEFER_QS_PENDING	1
++
+ /* Per-CPU data for read-copy update. */
+ struct rcu_data {
+ 	/* 1) quiescent-state and grace-period handling : */
+@@ -192,7 +201,7 @@ struct rcu_data {
+ 					/*  during and after the last grace */
+ 					/* period it is aware of. */
+ 	struct irq_work defer_qs_iw;	/* Obtain later scheduler attention. */
+-	bool defer_qs_iw_pending;	/* Scheduler attention pending? */
++	int defer_qs_iw_pending;	/* Scheduler attention pending? */
+ 	struct work_struct strict_work;	/* Schedule readers for strict GPs. */
  
- 	switch (r->type) {
- 	case KFENCE_ERROR_OOB:
--		cur += scnprintf(cur, end - cur, "Out-of-bounds %s at", get_access_type(r));
-+		cur = seprintf(cur, end, "Out-of-bounds %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_UAF:
--		cur += scnprintf(cur, end - cur, "Use-after-free %s at", get_access_type(r));
-+		cur = seprintf(cur, end, "Use-after-free %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_CORRUPTION:
--		cur += scnprintf(cur, end - cur, "Corrupted memory at");
-+		cur = seprintf(cur, end, "Corrupted memory at");
- 		break;
- 	case KFENCE_ERROR_INVALID:
--		cur += scnprintf(cur, end - cur, "Invalid %s at", get_access_type(r));
-+		cur = seprintf(cur, end, "Invalid %s at", get_access_type(r));
- 		addr = arch_kfence_test_address(addr);
- 		break;
- 	case KFENCE_ERROR_INVALID_FREE:
--		cur += scnprintf(cur, end - cur, "Invalid free of");
-+		cur = seprintf(cur, end, "Invalid free of");
- 		break;
- 	}
+ 	/* 2) batch handling */
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index dd1c156c1759..baf57745b42f 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -486,13 +486,16 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 	struct rcu_node *rnp;
+ 	union rcu_special special;
  
--	cur += scnprintf(cur, end - cur, " 0x%p", (void *)addr);
-+	seprintf(cur, end, " 0x%p", (void *)addr);
- 
- 	spin_lock_irqsave(&observed.lock, flags);
- 	if (!report_available())
-diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-index 9733a22c46c1..a062a46b2d24 100644
---- a/mm/kmsan/kmsan_test.c
-+++ b/mm/kmsan/kmsan_test.c
-@@ -107,9 +107,9 @@ static bool report_matches(const struct expect_report *r)
- 	cur = expected_header;
- 	end = &expected_header[sizeof(expected_header) - 1];
- 
--	cur += scnprintf(cur, end - cur, "BUG: KMSAN: %s", r->error_type);
-+	cur = seprintf(cur, end, "BUG: KMSAN: %s", r->error_type);
- 
--	scnprintf(cur, end - cur, " in %s", r->symbol);
-+	seprintf(cur, end, " in %s", r->symbol);
- 	/* The exact offset won't match, remove it; also strip module name. */
- 	cur = strchr(expected_header, '+');
- 	if (cur)
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index b28a1e6ae096..c696e4a6f4c2 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3359,6 +3359,7 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
- void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- {
- 	char *p = buffer;
-+	char *e = buffer + maxlen;
- 	nodemask_t nodes = NODE_MASK_NONE;
- 	unsigned short mode = MPOL_DEFAULT;
- 	unsigned short flags = 0;
-@@ -3384,33 +3385,32 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
--		snprintf(p, maxlen, "unknown");
-+		seprintf(p, e, "unknown");
++	rdp = this_cpu_ptr(&rcu_data);
++	if (rdp->defer_qs_iw_pending == DEFER_QS_PENDING)
++		rdp->defer_qs_iw_pending = DEFER_QS_IDLE;
++
+ 	/*
+ 	 * If RCU core is waiting for this CPU to exit its critical section,
+ 	 * report the fact that it has exited.  Because irqs are disabled,
+ 	 * t->rcu_read_unlock_special cannot change.
+ 	 */
+ 	special = t->rcu_read_unlock_special;
+-	rdp = this_cpu_ptr(&rcu_data);
+ 	if (!special.s && !rdp->cpu_no_qs.b.exp) {
+ 		local_irq_restore(flags);
  		return;
- 	}
- 
--	p += snprintf(p, maxlen, "%s", policy_modes[mode]);
-+	p = seprintf(p, e, "%s", policy_modes[mode]);
- 
- 	if (flags & MPOL_MODE_FLAGS) {
--		p += snprintf(p, buffer + maxlen - p, "=");
-+		p = seprintf(p, e, "=");
- 
- 		/*
- 		 * Static and relative are mutually exclusive.
- 		 */
- 		if (flags & MPOL_F_STATIC_NODES)
--			p += snprintf(p, buffer + maxlen - p, "static");
-+			p = seprintf(p, e, "static");
- 		else if (flags & MPOL_F_RELATIVE_NODES)
--			p += snprintf(p, buffer + maxlen - p, "relative");
-+			p = seprintf(p, e, "relative");
- 
- 		if (flags & MPOL_F_NUMA_BALANCING) {
- 			if (!is_power_of_2(flags & MPOL_MODE_FLAGS))
--				p += snprintf(p, buffer + maxlen - p, "|");
--			p += snprintf(p, buffer + maxlen - p, "balancing");
-+				p = seprintf(p, e, "|");
-+			p = seprintf(p, e, "balancing");
- 		}
- 	}
- 
- 	if (!nodes_empty(nodes))
--		p += scnprintf(p, buffer + maxlen - p, ":%*pbl",
--			       nodemask_pr_args(&nodes));
-+		seprintf(p, e, ":%*pbl", nodemask_pr_args(&nodes));
- }
- 
- #ifdef CONFIG_SYSFS
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index cc4a6916eec6..5811738e3320 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -496,7 +496,7 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
- /*
-  * Looking for memcg information and print it out
+@@ -623,12 +626,24 @@ notrace void rcu_preempt_deferred_qs(struct task_struct *t)
   */
--static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
-+static inline char *print_page_owner_memcg(char *p, const char end[0],
- 					 struct page *page)
+ static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
  {
- #ifdef CONFIG_MEMCG
-@@ -511,8 +511,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 		goto out_unlock;
+-	unsigned long flags;
+-	struct rcu_data *rdp;
++	volatile unsigned long flags;
++	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
  
- 	if (memcg_data & MEMCG_DATA_OBJEXTS)
--		ret += scnprintf(kbuf + ret, count - ret,
--				"Slab cache page\n");
-+		p = seprintf(p, end, "Slab cache page\n");
- 
- 	memcg = page_memcg_check(page);
- 	if (!memcg)
-@@ -520,7 +519,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 
- 	online = (memcg->css.flags & CSS_ONLINE);
- 	cgroup_name(memcg->css.cgroup, name, sizeof(name));
--	ret += scnprintf(kbuf + ret, count - ret,
-+	p = seprintf(p, end,
- 			"Charged %sto %smemcg %s\n",
- 			PageMemcgKmem(page) ? "(via objcg) " : "",
- 			online ? "" : "offline ",
-@@ -529,7 +528,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
- 	rcu_read_unlock();
- #endif /* CONFIG_MEMCG */
- 
--	return ret;
-+	return p;
+-	rdp = container_of(iwp, struct rcu_data, defer_qs_iw);
+ 	local_irq_save(flags);
+-	rdp->defer_qs_iw_pending = false;
++
++	/*
++	 * Requeue the IRQ work on next unlock in following situation:
++	 * 1. rcu_read_unlock() queues IRQ work (state -> DEFER_QS_PENDING)
++	 * 2. CPU enters new rcu_read_lock()
++	 * 3. IRQ work runs but cannot report QS due to rcu_preempt_depth() > 0
++	 * 4. rcu_read_unlock() does not re-queue work (state still PENDING)
++	 * 5. Deferred QS reporting does not happen.
++	 */
++	if (rcu_preempt_depth() > 0) {
++		WRITE_ONCE(rdp->defer_qs_iw_pending, DEFER_QS_IDLE);
++		local_irq_restore(flags);
++		return;
++	}
+ 	local_irq_restore(flags);
  }
  
- static ssize_t
-@@ -538,14 +537,16 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 		depot_stack_handle_t handle)
- {
- 	int ret, pageblock_mt, page_mt;
--	char *kbuf;
-+	char *kbuf, *p, *e;
- 
- 	count = min_t(size_t, count, PAGE_SIZE);
- 	kbuf = kmalloc(count, GFP_KERNEL);
- 	if (!kbuf)
- 		return -ENOMEM;
- 
--	ret = scnprintf(kbuf, count,
-+	p = kbuf;
-+	e = kbuf + count;
-+	p = seprintf(p, e,
- 			"Page allocated via order %u, mask %#x(%pGg), pid %d, tgid %d (%s), ts %llu ns\n",
- 			page_owner->order, page_owner->gfp_mask,
- 			&page_owner->gfp_mask, page_owner->pid,
-@@ -555,7 +556,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 	/* Print information relevant to grouping pages by mobility */
- 	pageblock_mt = get_pageblock_migratetype(page);
- 	page_mt  = gfp_migratetype(page_owner->gfp_mask);
--	ret += scnprintf(kbuf + ret, count - ret,
-+	p = seprintf(p, e,
- 			"PFN 0x%lx type %s Block %lu type %s Flags %pGp\n",
- 			pfn,
- 			migratetype_names[page_mt],
-@@ -563,22 +564,23 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
- 			migratetype_names[pageblock_mt],
- 			&page->flags);
- 
--	ret += stack_depot_snprint(handle, kbuf + ret, count - ret, 0);
--	if (ret >= count)
--		goto err;
-+	p = stack_depot_seprint(handle, p, e, 0);
-+	if (p == NULL)
-+		goto err;  // XXX: Should we remove this error handling?
- 
- 	if (page_owner->last_migrate_reason != -1) {
--		ret += scnprintf(kbuf + ret, count - ret,
-+		p = seprintf(p, e,
- 			"Page has been migrated, last migrate reason: %s\n",
- 			migrate_reason_names[page_owner->last_migrate_reason]);
- 	}
- 
--	ret = print_page_owner_memcg(kbuf, count, ret, page);
-+	p = print_page_owner_memcg(p, e, page);
- 
--	ret += snprintf(kbuf + ret, count - ret, "\n");
--	if (ret >= count)
-+	p = seprintf(p, e, "\n");
-+	if (p == NULL)
- 		goto err;
- 
-+	ret = p - kbuf;
- 	if (copy_to_user(buf, kbuf, ret))
- 		ret = -EFAULT;
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index be8b09e09d30..b67c6ca0d0f7 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -7451,6 +7451,7 @@ static char *create_unique_id(struct kmem_cache *s)
- {
- 	char *name = kmalloc(ID_STR_LENGTH, GFP_KERNEL);
- 	char *p = name;
-+	char *e = name + ID_STR_LENGTH;
- 
- 	if (!name)
- 		return ERR_PTR(-ENOMEM);
-@@ -7475,9 +7476,9 @@ static char *create_unique_id(struct kmem_cache *s)
- 		*p++ = 'A';
- 	if (p != name + 1)
- 		*p++ = '-';
--	p += snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->size);
-+	p = seprintf(p, e, "%07u", s->size);
- 
--	if (WARN_ON(p > name + ID_STR_LENGTH - 1)) {
-+	if (WARN_ON(p == NULL)) {
- 		kfree(name);
- 		return ERR_PTR(-EINVAL);
- 	}
+@@ -675,7 +690,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 			set_tsk_need_resched(current);
+ 			set_preempt_need_resched();
+ 			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+-			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
++			    expboost && rdp->defer_qs_iw_pending != DEFER_QS_PENDING && cpu_online(rdp->cpu)) {
+ 				// Get scheduler to re-evaluate and call hooks.
+ 				// If !IRQ_WORK, FQS scan will eventually IPI.
+ 				if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
+@@ -685,7 +700,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 				else
+ 					init_irq_work(&rdp->defer_qs_iw,
+ 						      rcu_preempt_deferred_qs_handler);
+-				rdp->defer_qs_iw_pending = true;
++				rdp->defer_qs_iw_pending = DEFER_QS_PENDING;
+ 				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+ 			}
+ 		}
 -- 
-2.50.0
+2.43.0
 
