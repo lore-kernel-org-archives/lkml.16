@@ -1,356 +1,282 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF55728688D;
-	Sat,  5 Jul 2025 07:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EB02E36F6
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 07:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751701236; cv=none; b=OQlAvvtFY/OZmvAg7vyNuaZZWKYQ5YO0kBB9Jh/x8nhcwz+5DVNc1V4cGwJA27WKfuJ20udHrduZDFR0dwmFmt395EjlVY+t5vhSEU3jbm8Ur56ZMLeYN+C9LNTpu370k41jmkpDCQ1O4tliauwrS5DbAUrL0f2VgHLDs/rhBV4=
+	t=1751701379; cv=none; b=oR/qlltPfsPAXLJU2ppJ9r9nRdOiQXDr+1IaXgw+7GKVOozO0pKDvey/7/F1Ga78mhdWD8eKV+9t4O7XeaF0gfLAc7hTiP6XJsQkjeOLpJFdaTzXVlrSP+YQudjFNq0fRDxVqT/lO/cu9SDw3h/2+fx5rmSn4qx/Kds2HV3aYX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751701236; c=relaxed/simple;
-	bh=Hzq7nspsK0aD2610NfrWHBwq6B0G1B+f2OJCZ3QBNwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dHQvjRnAGhHbf6kLztqPse62Zt6MG4u2qbGCxgheWdsAEUdC2aV1EKmquC1z8zv7IMMxCblzysX47LHRY9nIeH8UXNq1+28D6qR3Ss9dO7S4CBNCHPiBwGrfUtW0C/Fy/DOMjRQEZ5TQGIVxq8Ga8Aguk6+4o1r6WG0O/VbqqtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Or7nvcyQ; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751701379; c=relaxed/simple;
+	bh=+ipkLr+6AZK0g0amDETbIlhExbBk39G+qSiOg3FrR3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ppyPNhO82nTDRJKwRKVD3edO4XFu8rJh+5cxxwI9eI1c+WBLr0FVVolbZ/6VEnrJpUveU64hzWN/SFRfjOUtdCyfq8SFFTYzqHadj+IEzQPOn8y3K8//04LtxKOvUZ8+upyyxmKWL8YipyXQYxfdR512IQvWa94iTEw0Gv2TUJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BXMSXBgm; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Or7nvcyQ"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747e41d5469so1795702b3a.3;
-        Sat, 05 Jul 2025 00:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751701234; x=1752306034; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z5pKCohS34WfPUKUpxcwZlTKqTz2/JTPjMDgBU0dsFE=;
-        b=Or7nvcyQ6sWnUHaW1LRMyi6OhkOBOlK0mmZtAVTayVOBTuhRZmyrtq4x9qPso4vVAW
-         0qw99fdgkAiE2E7f8fYyafv3h2VkljxUIaX1hHuxfi0Y/326lGmZnzWgjR7XaBpiiH/j
-         pE1E1gGRmRvvBc04XYX4frBl6rFhT+7EI2N8pF1H4/nNcezbtKJSPqNFlDbge4sb19fR
-         2SKQHy4ysx6dKyYBnVhg1LXLiVEUbWHJLOYJxtkFVlj9K4WSflI28K8Ut8HMjjbwmhCG
-         k+74z3Osfqa2GzwBE405gWSZlQhVrrOkR0PU75Xau32vC/mKPu0Fj0tHbKHE1GClw5OK
-         K7Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751701234; x=1752306034;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z5pKCohS34WfPUKUpxcwZlTKqTz2/JTPjMDgBU0dsFE=;
-        b=V8pEbA9SQ7kqhjnP0DCQC7PQ/qFLk6vnybA8EgQEc/GKYaFMQWV/zVZfhSRYXdrFsc
-         VIt2y/Pb9xEbmCvkh9npmdOvmN1H7W0xNHFXzPWqDayQ7+sINpLxX8JublgZYl/uJGOx
-         ECFHyMmoA3UOJCcnbFdmg5+MvYzWOwSn65Xx8WilA98mv4u1JazUElJBSXmowkhv+mNU
-         3YOsSKr1riIDNO5D4srkkT8R/oR2NT7dbE2RmvhkICUQP+sjUhpVZTHFL5a8q2tpOfQs
-         t4c0HhPG3PITkCFAQu3xMSc9U/swvpAxGotgmF7qLcHxaNCJNr/dZBjLT85MF9q78v6o
-         ct0w==
-X-Forwarded-Encrypted: i=1; AJvYcCX2X4QnPtT8zbDpKTxC6W179ou0zgs4F4CytIf2M1t8G4fRdo8uFjXznh3J24Ba0cPPeLgDyROVAg9hzWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpa8I5bJ6xg4ILOYDse0i3b6sU/P9ghllVtT1ZG9VmXh1cKLap
-	ZyHWv2CKhIwGG+gHw8m26lSvY5kFBIOszvh6Y58D/WQuTBHzMZqr8mccu+O4LhfflYYrlA==
-X-Gm-Gg: ASbGncspFUuec6bxzDGFunlyFys2qY10kM+9ZtqTLxIolmRt3kjXZSElkMsg0IrJGFW
-	c7nTL+uivvrTBldhnbXpwJxpa43hYDXp/9x6u5PXKv0caZec6r1xnc8MhAN4uoBz1Wme8MQH69U
-	CJmEZtWwivrb2ZhSSZPj7bvl9siulY0xp4ydXWXCLG0i0n7t/yY/Dc6Y1UWTH/p8Wg4nUWlkiU6
-	StslgMKQlq8SSlpMFwOHTQY3jYe9TJ1DlUMSNyBqcezhnCm1iiLIkthzmEIZYV5IAOwZ/Iq9Rji
-	pa50RsHo0PjyvuEzt7O1ZoKPNU1quyxGDxnlQ5Xm20WgcnuWNItrrAnYOuG7Arb1f0RuyvM5
-X-Google-Smtp-Source: AGHT+IG9dNZaCVFQzrF7QkF/dQRjzMwk0JAyu5rEKfoJplsviezLQN6u7ejFaJg52GjdxcVnYOftLA==
-X-Received: by 2002:a05:6a00:4613:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-74ce884e035mr9064827b3a.8.1751701233432;
-        Sat, 05 Jul 2025 00:40:33 -0700 (PDT)
-Received: from localhost.localdomain ([119.8.44.69])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce417e852sm3993616b3a.85.2025.07.05.00.40.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 00:40:32 -0700 (PDT)
-From: Han Gao <rabenda.cn@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Han Gao <rabenda.cn@gmail.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Guo Ren <guoren@kernel.org>,
-	Chao Wei <chao.wei@sophgo.com>,
-	linux-riscv@lists.infradead.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] riscv: dts: sophgo: add Sophgo SG2042_EVB_V2.0 board device tree
-Date: Sat,  5 Jul 2025 15:39:56 +0800
-Message-ID: <c1b6ccdc69af0c1457fc1486a6bc8a1e83671537.1751700954.git.rabenda.cn@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <cover.1751700954.git.rabenda.cn@gmail.com>
-References: <cover.1751700954.git.rabenda.cn@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BXMSXBgm"
+Message-ID: <88ef2551-edc2-416b-9399-b45ad880d52e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751701365;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3zrE+8OXJ3cS4paNpRcoSnhgvEgZb8sAPNGad26s/CA=;
+	b=BXMSXBgmotsWcSEE8zAJIr4/lj+mEKX1tv1Q64n4dn04UONxBx4QiCjKucVR1dnqyxeMwd
+	dQ0r4qejgKwc855GBoSbAVxZ/wdfcVgq50pPB7xcevQIirD5vfXX5hOOcgQio/iowhikW+
+	2g8yB3PsLGUEhUE2XGzNXX656fVvpw4=
+Date: Sat, 5 Jul 2025 00:42:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 2/2] RISC-V: KVM: Move HGEI[E|P] CSR access to IMSIC
+ virtualization
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250704153838.6575-1-apatel@ventanamicro.com>
+ <20250704153838.6575-3-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250704153838.6575-3-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Sophgo SG2042_EVB_V2.0 [1] is a prototype development board based on SG2042
 
-Currently supports serial port, sdcard/emmc, pwm, fan speed control.
+On 7/4/25 8:38 AM, Anup Patel wrote:
+> There is one HGEI line associated with each IMSIC VS-file on a host CPU.
+> The IMSIC virtualization already keeps track of the HGEI line and the
+> associated IMSIC VS-file used by each VCPU.
+>
+> Currently, the common AIA functions kvm_riscv_vcpu_aia_has_interrupts()
+> and kvm_riscv_aia_wakeon_hgei() lookup HGEI line using an array of VCPU
+> pointers before accessing HGEI[E|P] CSR which is slow. Move the HGEI[E|P]
+> CSR access to IMSIC virtualization so that costly HGEI line lookup and
+> potential race-conditions when updating HGEI[E|P] CSR can be avoided.
 
-Link: https://github.com/sophgo/sophgo-hardware/tree/master/SG2042/SG2042-x4-EVB [1]
+The patch looks good to me. It removes the redundant hgei lookup which 
+is great.
+But can you elaborate the race condition and it's effect (lost interrupt 
+because of hgei is disabled during context switch) in the commit text ?
 
-Signed-off-by: Han Gao <rabenda.cn@gmail.com>
----
- arch/riscv/boot/dts/sophgo/Makefile          |   1 +
- arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts | 233 +++++++++++++++++++
- 2 files changed, 234 insertions(+)
- create mode 100644 arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts
+> Fixes: 3385339296d1 ("RISC-V: KVM: Use IMSIC guest files when available")
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_aia.h |  4 ++-
+>   arch/riscv/kvm/aia.c             | 51 +++++---------------------------
+>   arch/riscv/kvm/aia_imsic.c       | 45 ++++++++++++++++++++++++++++
+>   arch/riscv/kvm/vcpu.c            |  2 --
+>   4 files changed, 55 insertions(+), 47 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_aia.h b/arch/riscv/include/asm/kvm_aia.h
+> index 0a0f12496f00..b04ecdd1a860 100644
+> --- a/arch/riscv/include/asm/kvm_aia.h
+> +++ b/arch/riscv/include/asm/kvm_aia.h
+> @@ -87,6 +87,9 @@ DECLARE_STATIC_KEY_FALSE(kvm_riscv_aia_available);
+>   
+>   extern struct kvm_device_ops kvm_riscv_aia_device_ops;
+>   
+> +bool kvm_riscv_vcpu_aia_imsic_has_interrupt(struct kvm_vcpu *vcpu);
+> +void kvm_riscv_vcpu_aia_imsic_load(struct kvm_vcpu *vcpu, int cpu);
+> +void kvm_riscv_vcpu_aia_imsic_put(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_vcpu_aia_imsic_release(struct kvm_vcpu *vcpu);
+>   int kvm_riscv_vcpu_aia_imsic_update(struct kvm_vcpu *vcpu);
+>   
+> @@ -161,7 +164,6 @@ void kvm_riscv_aia_destroy_vm(struct kvm *kvm);
+>   int kvm_riscv_aia_alloc_hgei(int cpu, struct kvm_vcpu *owner,
+>   			     void __iomem **hgei_va, phys_addr_t *hgei_pa);
+>   void kvm_riscv_aia_free_hgei(int cpu, int hgei);
+> -void kvm_riscv_aia_wakeon_hgei(struct kvm_vcpu *owner, bool enable);
+>   
+>   void kvm_riscv_aia_enable(void);
+>   void kvm_riscv_aia_disable(void);
+> diff --git a/arch/riscv/kvm/aia.c b/arch/riscv/kvm/aia.c
+> index 19afd1f23537..dad318185660 100644
+> --- a/arch/riscv/kvm/aia.c
+> +++ b/arch/riscv/kvm/aia.c
+> @@ -30,28 +30,6 @@ unsigned int kvm_riscv_aia_nr_hgei;
+>   unsigned int kvm_riscv_aia_max_ids;
+>   DEFINE_STATIC_KEY_FALSE(kvm_riscv_aia_available);
+>   
+> -static int aia_find_hgei(struct kvm_vcpu *owner)
+> -{
+> -	int i, hgei;
+> -	unsigned long flags;
+> -	struct aia_hgei_control *hgctrl = get_cpu_ptr(&aia_hgei);
+> -
+> -	raw_spin_lock_irqsave(&hgctrl->lock, flags);
+> -
+> -	hgei = -1;
+> -	for (i = 1; i <= kvm_riscv_aia_nr_hgei; i++) {
+> -		if (hgctrl->owners[i] == owner) {
+> -			hgei = i;
+> -			break;
+> -		}
+> -	}
+> -
+> -	raw_spin_unlock_irqrestore(&hgctrl->lock, flags);
+> -
+> -	put_cpu_ptr(&aia_hgei);
+> -	return hgei;
+> -}
+> -
+>   static inline unsigned long aia_hvictl_value(bool ext_irq_pending)
+>   {
+>   	unsigned long hvictl;
+> @@ -95,7 +73,6 @@ void kvm_riscv_vcpu_aia_sync_interrupts(struct kvm_vcpu *vcpu)
+>   
+>   bool kvm_riscv_vcpu_aia_has_interrupts(struct kvm_vcpu *vcpu, u64 mask)
+>   {
+> -	int hgei;
+>   	unsigned long seip;
+>   
+>   	if (!kvm_riscv_aia_available())
+> @@ -114,11 +91,7 @@ bool kvm_riscv_vcpu_aia_has_interrupts(struct kvm_vcpu *vcpu, u64 mask)
+>   	if (!kvm_riscv_aia_initialized(vcpu->kvm) || !seip)
+>   		return false;
+>   
+> -	hgei = aia_find_hgei(vcpu);
+> -	if (hgei > 0)
+> -		return !!(ncsr_read(CSR_HGEIP) & BIT(hgei));
+> -
+> -	return false;
+> +	return kvm_riscv_vcpu_aia_imsic_has_interrupt(vcpu);
+>   }
+>   
+>   void kvm_riscv_vcpu_aia_update_hvip(struct kvm_vcpu *vcpu)
+> @@ -164,6 +137,9 @@ void kvm_riscv_vcpu_aia_load(struct kvm_vcpu *vcpu, int cpu)
+>   		csr_write(CSR_HVIPRIO2H, csr->hviprio2h);
+>   #endif
+>   	}
+> +
+> +	if (kvm_riscv_aia_initialized(vcpu->kvm))
+> +		kvm_riscv_vcpu_aia_imsic_load(vcpu, cpu);
+>   }
+>   
+>   void kvm_riscv_vcpu_aia_put(struct kvm_vcpu *vcpu)
+> @@ -174,6 +150,9 @@ void kvm_riscv_vcpu_aia_put(struct kvm_vcpu *vcpu)
+>   	if (!kvm_riscv_aia_available())
+>   		return;
+>   
+> +	if (kvm_riscv_aia_initialized(vcpu->kvm))
+> +		kvm_riscv_vcpu_aia_imsic_put(vcpu);
+> +
+>   	if (kvm_riscv_nacl_available()) {
+>   		nsh = nacl_shmem();
+>   		csr->vsiselect = nacl_csr_read(nsh, CSR_VSISELECT);
+> @@ -472,22 +451,6 @@ void kvm_riscv_aia_free_hgei(int cpu, int hgei)
+>   	raw_spin_unlock_irqrestore(&hgctrl->lock, flags);
+>   }
+>   
+> -void kvm_riscv_aia_wakeon_hgei(struct kvm_vcpu *owner, bool enable)
+> -{
+> -	int hgei;
+> -
+> -	if (!kvm_riscv_aia_available())
+> -		return;
+> -
+> -	hgei = aia_find_hgei(owner);
+> -	if (hgei > 0) {
+> -		if (enable)
+> -			csr_set(CSR_HGEIE, BIT(hgei));
+> -		else
+> -			csr_clear(CSR_HGEIE, BIT(hgei));
+> -	}
+> -}
+> -
+>   static irqreturn_t hgei_interrupt(int irq, void *dev_id)
+>   {
+>   	int i;
+> diff --git a/arch/riscv/kvm/aia_imsic.c b/arch/riscv/kvm/aia_imsic.c
+> index ea1a36836d9c..fda0346f0ea1 100644
+> --- a/arch/riscv/kvm/aia_imsic.c
+> +++ b/arch/riscv/kvm/aia_imsic.c
+> @@ -677,6 +677,48 @@ static void imsic_swfile_update(struct kvm_vcpu *vcpu,
+>   	imsic_swfile_extirq_update(vcpu);
+>   }
+>   
+> +bool kvm_riscv_vcpu_aia_imsic_has_interrupt(struct kvm_vcpu *vcpu)
+> +{
+> +	struct imsic *imsic = vcpu->arch.aia_context.imsic_state;
+> +	unsigned long flags;
+> +	bool ret = false;
+> +
+> +	/*
+> +	 * The IMSIC SW-file directly injects interrupt via hvip so
+> +	 * only check for interrupt when IMSIC VS-file is being used.
+> +	 */
+> +
+> +	read_lock_irqsave(&imsic->vsfile_lock, flags);
+> +	if (imsic->vsfile_cpu > -1)
+> +		ret = !!(csr_read(CSR_HGEIP) & BIT(imsic->vsfile_hgei));
+> +	read_unlock_irqrestore(&imsic->vsfile_lock, flags);
+> +
+> +	return ret;
+> +}
+> +
+> +void kvm_riscv_vcpu_aia_imsic_load(struct kvm_vcpu *vcpu, int cpu)
+> +{
+> +	/*
+> +	 * No need to explicitly clear HGEIE CSR bits because the
+> +	 * hgei interrupt handler (aka hgei_interrupt()) will always
+> +	 * clear it for us.
+> +	 */
+> +}
+> +
+> +void kvm_riscv_vcpu_aia_imsic_put(struct kvm_vcpu *vcpu)
+> +{
+> +	struct imsic *imsic = vcpu->arch.aia_context.imsic_state;
+> +	unsigned long flags;
+> +
+> +	if (!kvm_vcpu_is_blocking(vcpu))
+> +		return;
+> +
+> +	read_lock_irqsave(&imsic->vsfile_lock, flags);
+> +	if (imsic->vsfile_cpu > -1)
+> +		csr_set(CSR_HGEIE, BIT(imsic->vsfile_hgei));
+> +	read_unlock_irqrestore(&imsic->vsfile_lock, flags);
+> +}
+> +
+>   void kvm_riscv_vcpu_aia_imsic_release(struct kvm_vcpu *vcpu)
+>   {
+>   	unsigned long flags;
+> @@ -781,6 +823,9 @@ int kvm_riscv_vcpu_aia_imsic_update(struct kvm_vcpu *vcpu)
+>   	 * producers to the new IMSIC VS-file.
+>   	 */
+>   
+> +	/* Ensure HGEIE CSR bit is zero before using the new IMSIC VS-file */
+> +	csr_clear(CSR_HGEIE, BIT(new_vsfile_hgei));
+> +
+>   	/* Zero-out new IMSIC VS-file */
+>   	imsic_vsfile_local_clear(new_vsfile_hgei, imsic->nr_hw_eix);
+>   
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index fe028b4274df..b26bf35a0a19 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -211,12 +211,10 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+>   
+>   void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
+>   {
+> -	kvm_riscv_aia_wakeon_hgei(vcpu, true);
+>   }
+>   
+>   void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu)
+>   {
+> -	kvm_riscv_aia_wakeon_hgei(vcpu, false);
+>   }
+>   
+>   int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
 
-diff --git a/arch/riscv/boot/dts/sophgo/Makefile b/arch/riscv/boot/dts/sophgo/Makefile
-index 6c9b29681cad..6f65526d4193 100644
---- a/arch/riscv/boot/dts/sophgo/Makefile
-+++ b/arch/riscv/boot/dts/sophgo/Makefile
-@@ -4,4 +4,5 @@ dtb-$(CONFIG_ARCH_SOPHGO) += cv1812h-huashan-pi.dtb
- dtb-$(CONFIG_ARCH_SOPHGO) += sg2002-licheerv-nano-b.dtb
- dtb-$(CONFIG_ARCH_SOPHGO) += sg2042-milkv-pioneer.dtb
- dtb-$(CONFIG_ARCH_SOPHGO) += sg2042-evb-v1.dtb
-+dtb-$(CONFIG_ARCH_SOPHGO) += sg2042-evb-v2.dtb
- dtb-$(CONFIG_ARCH_SOPHGO) += sg2044-sophgo-srd3-10.dtb
-diff --git a/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts b/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts
-new file mode 100644
-index 000000000000..46980e41b886
---- /dev/null
-+++ b/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2025 Sophgo Technology Inc. All rights reserved.
-+ */
-+
-+#include "sg2042.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Sophgo SG2042 EVB V2.0";
-+	compatible = "sophgo,sg2042-evb-v2", "sophgo,sg2042";
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+
-+	pwmfan: pwm-fan {
-+		compatible = "pwm-fan";
-+		cooling-levels = <103 128 179 230 255>;
-+		pwms = <&pwm 0 40000 0>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	thermal-zones {
-+		soc-thermal {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&mcu 0>;
-+
-+			trips {
-+				soc_active1: soc-active1 {
-+					temperature = <30000>;
-+					hysteresis = <8000>;
-+					type = "active";
-+				};
-+
-+				soc_active2: soc-active2 {
-+					temperature = <58000>;
-+					hysteresis = <12000>;
-+					type = "active";
-+				};
-+
-+				soc_active3: soc-active3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>;
-+					type = "active";
-+				};
-+
-+				soc_hot: soc-hot {
-+					temperature = <80000>;
-+					hysteresis = <5000>;
-+					type = "hot";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&soc_active1>;
-+					cooling-device = <&pwmfan 0 1>;
-+				};
-+
-+				map1 {
-+					trip = <&soc_active2>;
-+					cooling-device = <&pwmfan 1 2>;
-+				};
-+
-+				map2 {
-+					trip = <&soc_active3>;
-+					cooling-device = <&pwmfan 2 3>;
-+				};
-+
-+				map3 {
-+					trip = <&soc_hot>;
-+					cooling-device = <&pwmfan 3 4>;
-+				};
-+			};
-+		};
-+
-+		board-thermal {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&mcu 1>;
-+
-+			trips {
-+				board_active: board-active {
-+					temperature = <75000>;
-+					hysteresis = <8000>;
-+					type = "active";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map4 {
-+					trip = <&board_active>;
-+					cooling-device = <&pwmfan 3 4>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&cgi_main {
-+	clock-frequency = <25000000>;
-+};
-+
-+&cgi_dpll0 {
-+	clock-frequency = <25000000>;
-+};
-+
-+&cgi_dpll1 {
-+	clock-frequency = <25000000>;
-+};
-+
-+&emmc {
-+	pinctrl-0 = <&emmc_cfg>;
-+	pinctrl-names = "default";
-+	bus-width = <4>;
-+	no-sdio;
-+	no-sd;
-+	non-removable;
-+	wp-inverted;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-0 = <&i2c1_cfg>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	mcu: syscon@17 {
-+		compatible = "sophgo,sg2042-hwmon-mcu";
-+		reg = <0x17>;
-+		#thermal-sensor-cells = <1>;
-+	};
-+};
-+
-+&gmac0 {
-+	phy-handle = <&phy0>;
-+	phy-mode = "rgmii-id";
-+	status = "okay";
-+
-+	mdio {
-+		phy0: phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+			reset-gpios = <&port0a 27 GPIO_ACTIVE_LOW>;
-+			reset-assert-us = <100000>;
-+			reset-deassert-us = <100000>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	emmc_cfg: sdhci-emmc-cfg {
-+		sdhci-emmc-wp-pins {
-+			pinmux = <PINMUX(PIN_EMMC_WP, 0)>;
-+			bias-disable;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-disable;
-+		};
-+
-+		sdhci-emmc-cd-pins {
-+			pinmux = <PINMUX(PIN_EMMC_CD, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-enable;
-+		};
-+
-+		sdhci-emmc-rst-pwr-pins {
-+			pinmux = <PINMUX(PIN_EMMC_RST, 0)>,
-+				 <PINMUX(PIN_EMMC_PWR_EN, 0)>;
-+			bias-disable;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-disable;
-+		};
-+	};
-+
-+	i2c1_cfg: i2c1-cfg {
-+		i2c1-pins {
-+			pinmux = <PINMUX(PIN_IIC1_SDA, 0)>,
-+				 <PINMUX(PIN_IIC1_SCL, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-enable;
-+		};
-+	};
-+
-+	sd_cfg: sdhci-sd-cfg {
-+		sdhci-sd-cd-wp-pins {
-+			pinmux = <PINMUX(PIN_SDIO_CD, 0)>,
-+				 <PINMUX(PIN_SDIO_WP, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-enable;
-+		};
-+
-+		sdhci-sd-rst-pwr-pins {
-+			pinmux = <PINMUX(PIN_SDIO_RST, 0)>,
-+				 <PINMUX(PIN_SDIO_PWR_EN, 0)>;
-+			bias-disable;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-disable;
-+		};
-+	};
-+
-+	uart0_cfg: uart0-cfg {
-+		uart0-rx-pins {
-+			pinmux = <PINMUX(PIN_UART0_TX, 0)>,
-+				 <PINMUX(PIN_UART0_RX, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <26800>;
-+			input-schmitt-enable;
-+		};
-+	};
-+};
-+
-+&sd {
-+	pinctrl-0 = <&sd_cfg>;
-+	pinctrl-names = "default";
-+	bus-width = <4>;
-+	no-sdio;
-+	no-mmc;
-+	wp-inverted;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0_cfg>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
--- 
-2.47.2
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
