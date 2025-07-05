@@ -1,71 +1,71 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87486156C40;
-	Sat,  5 Jul 2025 16:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BDA1AC88A
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 16:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751731270; cv=none; b=SHP5Ztk2YWLdnMKOhPCbRdTky9F+7MtB2LLphsq9VmbCY/DQNDH8lPcDEAlRKd7RzoQPIX0kh9a4TDX/oxQr3KLCMBG8ZkU15xxZeWzgeoUqTRo8SmWIo0D29dYIDm55UIL6AQJZ0s1i1rfeb+8MYPBJ0JfXxSOsIrRBnfA3oLE=
+	t=1751731301; cv=none; b=epX0eQR9Tt7M2WRNwXJl4y8IfEecTpQ3cDbqX4gl9OpGuaG1ThlcgT7PLrkT27dfTdpYvC+n27b2SSYjpyO5COpMnhrDOX3dFFrrxKkufHMudjVdmy+lu4tkpHkF9VustOHiloiG1x74VazDaCjcCeO3Uey0JMBlD2bu2SbIrI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751731270; c=relaxed/simple;
-	bh=ZwlYSDrR6cRq1lX8xrIs6L01c2NSiRskHUJTkqM+BLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fhcv9iJueRuuUmxJgKblAOqMKQdIFAx5wi8RQyqI8ZQT+kAam7/cu8cUrEWQucK1dem234cEEOHeqICLFL/0OJGswCVs7itlRKuB752qIP1RCnLWTCNlUrvr4tYxJAHo5YgwnH3EOSwsI+dJa1lLuTn8r4BOF8vfVoIjN92jmgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZsKz44Xh; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751731301; c=relaxed/simple;
+	bh=w2xwY+psk//OZwbddelgesU6on196c+FTOi3IN1ZjdY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BbXi4elaq+MDEkmAmFV16bVsPN/gmNAceGYGwTkfEqzrCjMT2geORbZ2FXjyVo3L90mpFWGzE+gtSNr5UMXHY1lb9AHiimLfP9ztS2DGxP74hGw58iuf1sIycM6gEb+sr1/B9ktHEt+d5Y9qA4OSotvVGZvO+fyXJ8GgXO0MS1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tA+IbcHC; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsKz44Xh"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23c703c471dso24146055ad.0;
-        Sat, 05 Jul 2025 09:01:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tA+IbcHC"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4538a2fc7ffso19568535e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 09:01:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751731268; x=1752336068; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751731297; x=1752336097; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PczZ2yQWpsqzC7ti5geiTXw4UnZuMfFlqf02EPlXpYI=;
-        b=ZsKz44XhgzWmEfiLozuqwzn3ArTLkGdiJdwMwMAE0rSLiAy+hv2q21Fe6rKr/oAw1+
-         1fT8Krj+/s7BWB3Zh2BfE1IgIb3b7Bm1vVLlS+juvUxEoeEhLZWNUDexzrjeg9pUV4As
-         4j3NdkHW44fYoSiawQBRUeKNZq5VPUv9ZhlW1RYU9OSrg6Nu+Z0KMsoTF+P9fjRBaUK2
-         6MKdIRi0Xetz4nFy6JjSbU08xY3OCNiAyl5NgbM+UiTNICu2PTlPzTP7tYQ0/rRBDCO9
-         hXg0ApGs9SbN9VmLEy9mh8cBxdH0ngIMaJQFqHk/Qfv58Jp1s91qUSjdcUdaCB5zFjMq
-         +XyA==
+        bh=matpD/z9zLwTTC5HhjXOMGtKe1AMVVauG6MOZr7zlg4=;
+        b=tA+IbcHC72WL6jrFRBk2XLL3T93jed5yAnry0viSKi3AA4JhUwYQfEgiloj2ViXGDI
+         qNWXr9o0DoRrXCHKraPeBQIlkJGDIqKzeAXkKQlFXHA1VsMMsukx6vF/6Exg/xMtYwro
+         E4aiGYwKtHEhkrvEL3NwmMVxkBy/XpqEj19kuXyzGsWAxfh0uGawP4whFjzYJmczSdla
+         jSwyDxTvwQREjuoeNW+YeA+pKnyPvPyPaJ6PkNnF0016cAJUUXpIGFjQyk3Bm6WIssoo
+         i/36EalasBSqtB+PYs5GxuPyU5fQxCYG/Ug2YV+LZ+yq0IvwSPNFtG+NvG1SkDavyNSW
+         /Cmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751731268; x=1752336068;
+        d=1e100.net; s=20230601; t=1751731297; x=1752336097;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PczZ2yQWpsqzC7ti5geiTXw4UnZuMfFlqf02EPlXpYI=;
-        b=LZsFj1IEvW++BpSwxLijrak2cQG8dapngooE0NyIJV6LiusEphiF0lBjzYgSxQijM0
-         yWNlKMswYZkTu/PC/kg865o6/Bxqn+RDkT6jJ/I9kdLP2ejgqFqXUNEHmGaUS9uTTAbb
-         RIUxt9wdTmedkswmjpFguNgamaTQgyuRwSddH/tjGADP5dT9uwa/6H2PLK6QBj7kMWjQ
-         jv5wjJsjrx7uTOGJhhFzCtchK/wlhMufKj4k2v3ZRMdZsBQPxTlfQX6YpDViE0gFpq+S
-         0eT79n+j7X7U4v2lXC0lGyUsNuqA6Ye32vmO8CMiMbQYQFNoOXjcAuNMVogPfNisRKT7
-         ZX2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUO4MqlTZiINY1KDU5Z/epInyUnjcRfcT7IAvt2hh5s/ZuZb7k7kA+Umqc17C1OZcRZ3C8AuYf86Lhqd/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmSQD0Q8Lt4NI7ZL49U+N34Z1Xqt7CTz/zX8LBuOCG4s782/66
-	71XIgU2bqOoNVtLKwArAqU9aOrUNiQU3dVoahjmy2T3OsKGFzszT0JggDlRaDe0D
-X-Gm-Gg: ASbGncsYhYac0PVrD2AeYz+hXWoZtNU4xSPvpWe4K2r14wvCk7BGJfdtl7vKA2fbO3P
-	4I0DgmLYE2bXx720VedZxsU6NofFzkoUgCY7SP0B2RKtlCmYnkveNx6BFWes06lTb0VdbjqN2/x
-	VafvEixl07LAU78RHt7ak5MwBidDmqXXW626UQ6UDbD5XT4lX4VhH70LdTL6LOkIgldEvfxLald
-	Aexs/iinb5nmbeHBoWTi7crAEv88TPtkd6dOzppC6kKcpJ2okptl8v2JIevim516DIgoUoAuPJL
-	Ha5bDFVEH4QvJd+o1C3NTEACs2RJ+dKmV/NrljC/f6q+NkNbnnq7e3M0liXrQW/jr6GcjdBLVSv
-	wMtufW6Z++qdxIY4=
-X-Google-Smtp-Source: AGHT+IFxKBixgyWEyAxhwG1ktTeSupr+ZtlzFnIhOBHnU1mn2wsmpVsDPUBoZi5gGf/hGYRV2MxM5w==
-X-Received: by 2002:a17:903:3212:b0:231:fd73:f8e5 with SMTP id d9443c01a7336-23c8a505280mr50159465ad.24.1751731267590;
-        Sat, 05 Jul 2025 09:01:07 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:882f:293:70ba:30fe:2559:8217])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845c5c73sm44811275ad.259.2025.07.05.09.01.03
+        bh=matpD/z9zLwTTC5HhjXOMGtKe1AMVVauG6MOZr7zlg4=;
+        b=Qr9y6H3YK9J90Na9c+WcMluc0rS23kG8T/NpN0eeuU5jQvzNLRw2CUkJ0AkQ7HEuE1
+         ndKG3wSPKBplZ1AdG5MV3ndKOqchtkq7HQZTGz/iE4wJz8a9Vbdpj0/5UoGhFBopYJoH
+         ky09ZsxeybUexs6jbxE8pAeDQynSGVDxqTTnEKDk2ryyb//YGvKtCc9y1sOvOE0oJsUp
+         cxV5tAY6bL0WXSqca97Pf+1dQp8wAS4nfXPGZ+pdg1h/mNR+A2s1NSIPFiDb7fOV861u
+         mmXDwDK3fecqBGFditneL/TesUlk1DNaPpTckYOruvkDNxdpL43Ra3Kt1faLX8HBmef9
+         Ugdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwg14LxxYPdlzbKPDsbVWTR+ZuyjxH2l1ssDYpAJWKJ+PRYXbMyBLjcaJ+HEE+DDSmCBe/mw624j+06x4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrjhTTIuakqP4YyVwQwb91kQJvYPHhmbcsZotZMlg7XVJbzpgB
+	ihaIJvRGPgQ2zmGflxvSY1BQodXjK2O9WQVnaJzeCa+Cz1tsWkXlAlcEoEKkkbAfp3o=
+X-Gm-Gg: ASbGncuWQf25Hn7XGqOzVYBGlFAzIGz4bPjXr5ZbUCVuAWIUesD97w76PTGtFY9Vgiw
+	HTHJO19xV5qH7ZDaagYcrsIB2TU8rAfGTSL6l+2VpxeZ+yOc4p6rcVuRcswxgIok4e5+1gXuOZ7
+	TMrWl+qLpKA6amXffgmeKkm2J28pxrwdL22d7XzlFeoysyiLqeHVTcYvFLD1GKkSCNHfn0ukyoB
+	lAdGFyAMTEOdZJfS1rkgjY5idyyj0pmJ9jnmAjwXBPerF1Z2yn5bJhFgz3FLlTiqO2Te1lQEG5L
+	ZmyBqogQTjVsAn+yh6+IrB8Y8TSU/csz3/ElZO8Rf54miJauEqBEhsPBdzGi0vxrXdJOyBmTvhh
+	kFxswk4ttyJtk
+X-Google-Smtp-Source: AGHT+IEE0jhmeJOdrubLgwmLOC7nLIvfeLxYANT770HnC4dxDS77en1P2kCYBgTlcABjSGenIkiaSw==
+X-Received: by 2002:a05:6000:20c5:b0:3b1:a735:e6bb with SMTP id ffacd0b85a97d-3b4925845f9mr3896023f8f.4.1751731297296;
+        Sat, 05 Jul 2025 09:01:37 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b16990aasm57709375e9.32.2025.07.05.09.01.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 09:01:07 -0700 (PDT)
-From: Abinash Singh <abinashlalotra@gmail.com>
-X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
-To: mani@kernel.org,
-	vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
+        Sat, 05 Jul 2025 09:01:36 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: daniel.lezcano@linaro.org,
+	tglx@linutronix.de
+Cc: ghennadi.procopciuc@oss.nxp.com,
+	S32@nxp.com,
 	linux-kernel@vger.kernel.org,
-	Abinash Singh <abinashsinghlalotra@gmail.com>
-Subject: [PATCH RFC] dma: dw-edma: Fix build warning in dw_edma_pcie_probe()
-Date: Sat,  5 Jul 2025 21:30:55 +0530
-Message-ID: <20250705160055.808165-1-abinashsinghlalotra@gmail.com>
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 01/20] clocksource/drivers/vf-pit: Replace raw_readl/writel to reald/writel
+Date: Sat,  5 Jul 2025 18:01:07 +0200
+Message-ID: <20250705160129.3688026-1-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,183 +75,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function dw_edma_pcie_probe() in dw-edma-pcie.c triggered a
-frame size warning:
-ld.lld:warning:
-  drivers/dma/dw-edma/dw-edma-pcie.c:162:0: stack frame size (1040) exceeds limit (1024) in function 'dw_edma_pcie_probe'
+The driver uses the raw_readl() and raw_writel() functions. Those are
+not for MMIO devices. Replace them with readl() and writel()
 
-This patch reduces the stack usage by dynamically allocating the
-`vsec_data` structure using kmalloc(), rather than placing it on
-the stack. This eliminates the overflow warning and improves kernel
-robustness.
-
-Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 ---
-The stack usage was further confirmed by using -fstack-usage flag.
-it was usiing 928 bytes:
-..............................
-drivers/dma/dw-edma/dw-edma-pcie.c:377:cleanup_module   8       static
-drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       928     static
-......................................
-After applying the patch it becomes :
-.........
-drivers/dma/dw-edma/dw-edma-pcie.c:381:cleanup_module   8       static
-drivers/dma/dw-edma/dw-edma-pcie.c:160:dw_edma_pcie_probe       120     static
-.......
+ drivers/clocksource/timer-vf-pit.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-This function is used for probing . So dynamic allocation will not create
-any issues.
-
-Thank You
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 60 ++++++++++++++++--------------
- 1 file changed, 32 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 49f09998e5c0..1536395eacd2 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -161,12 +161,16 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
+diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-vf-pit.c
+index 911c92146eca..8041a8f62d1f 100644
+--- a/drivers/clocksource/timer-vf-pit.c
++++ b/drivers/clocksource/timer-vf-pit.c
+@@ -35,30 +35,30 @@ static unsigned long cycle_per_jiffy;
+ 
+ static inline void pit_timer_enable(void)
  {
- 	struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
--	struct dw_edma_pcie_data vsec_data;
-+	struct dw_edma_pcie_data *vsec_data __free(kfree) = NULL;
- 	struct device *dev = &pdev->dev;
- 	struct dw_edma_chip *chip;
- 	int err, nr_irqs;
- 	int i, mask;
+-	__raw_writel(PITTCTRL_TEN | PITTCTRL_TIE, clkevt_base + PITTCTRL);
++	writel(PITTCTRL_TEN | PITTCTRL_TIE, clkevt_base + PITTCTRL);
+ }
  
-+	vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
-+	if (!vsec_data)
-+		return -ENOMEM;
-+
- 	/* Enable PCI device */
- 	err = pcim_enable_device(pdev);
- 	if (err) {
-@@ -174,23 +178,23 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		return err;
- 	}
+ static inline void pit_timer_disable(void)
+ {
+-	__raw_writel(0, clkevt_base + PITTCTRL);
++	writel(0, clkevt_base + PITTCTRL);
+ }
  
--	memcpy(&vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-+	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+ static inline void pit_irq_acknowledge(void)
+ {
+-	__raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
++	writel(PITTFLG_TIF, clkevt_base + PITTFLG);
+ }
  
- 	/*
- 	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
- 	 * for the DMA, if one exists, then reconfigures it.
+ static u64 notrace pit_read_sched_clock(void)
+ {
+-	return ~__raw_readl(clksrc_base + PITCVAL);
++	return ~readl(clksrc_base + PITCVAL);
+ }
+ 
+ static int __init pit_clocksource_init(unsigned long rate)
+ {
+ 	/* set the max load value and start the clock source counter */
+-	__raw_writel(0, clksrc_base + PITTCTRL);
+-	__raw_writel(~0UL, clksrc_base + PITLDVAL);
+-	__raw_writel(PITTCTRL_TEN, clksrc_base + PITTCTRL);
++	writel(0, clksrc_base + PITTCTRL);
++	writel(~0UL, clksrc_base + PITLDVAL);
++	writel(PITTCTRL_TEN, clksrc_base + PITTCTRL);
+ 
+ 	sched_clock_register(pit_read_sched_clock, 32, rate);
+ 	return clocksource_mmio_init(clksrc_base + PITCVAL, "vf-pit", rate,
+@@ -76,7 +76,7 @@ static int pit_set_next_event(unsigned long delta,
+ 	 * hardware requirement.
  	 */
--	dw_edma_pcie_get_vsec_dma_data(pdev, &vsec_data);
-+	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+ 	pit_timer_disable();
+-	__raw_writel(delta - 1, clkevt_base + PITLDVAL);
++	writel(delta - 1, clkevt_base + PITLDVAL);
+ 	pit_timer_enable();
  
- 	/* Mapping PCI BAR regions */
--	mask = BIT(vsec_data.rg.bar);
--	for (i = 0; i < vsec_data.wr_ch_cnt; i++) {
--		mask |= BIT(vsec_data.ll_wr[i].bar);
--		mask |= BIT(vsec_data.dt_wr[i].bar);
-+	mask = BIT(vsec_data->rg.bar);
-+	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
-+		mask |= BIT(vsec_data->ll_wr[i].bar);
-+		mask |= BIT(vsec_data->dt_wr[i].bar);
- 	}
--	for (i = 0; i < vsec_data.rd_ch_cnt; i++) {
--		mask |= BIT(vsec_data.ll_rd[i].bar);
--		mask |= BIT(vsec_data.dt_rd[i].bar);
-+	for (i = 0; i < vsec_data->rd_ch_cnt; i++) {
-+		mask |= BIT(vsec_data->ll_rd[i].bar);
-+		mask |= BIT(vsec_data->dt_rd[i].bar);
- 	}
- 	err = pcim_iomap_regions(pdev, mask, pci_name(pdev));
- 	if (err) {
-@@ -213,7 +217,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		return -ENOMEM;
+ 	return 0;
+@@ -125,8 +125,8 @@ static struct clock_event_device clockevent_pit = {
  
- 	/* IRQs allocation */
--	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data.irqs,
-+	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data->irqs,
- 					PCI_IRQ_MSI | PCI_IRQ_MSIX);
- 	if (nr_irqs < 1) {
- 		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
-@@ -224,22 +228,22 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	/* Data structure initialization */
- 	chip->dev = dev;
+ static int __init pit_clockevent_init(unsigned long rate, int irq)
+ {
+-	__raw_writel(0, clkevt_base + PITTCTRL);
+-	__raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
++	writel(0, clkevt_base + PITTCTRL);
++	writel(PITTFLG_TIF, clkevt_base + PITTFLG);
  
--	chip->mf = vsec_data.mf;
-+	chip->mf = vsec_data->mf;
- 	chip->nr_irqs = nr_irqs;
- 	chip->ops = &dw_edma_pcie_plat_ops;
+ 	BUG_ON(request_irq(irq, pit_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
+ 			   "VF pit timer", &clockevent_pit));
+@@ -183,7 +183,7 @@ static int __init pit_timer_init(struct device_node *np)
+ 	cycle_per_jiffy = clk_rate / (HZ);
  
--	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
--	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-+	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
-+	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
+ 	/* enable the pit module */
+-	__raw_writel(~PITMCR_MDIS, timer_base + PITMCR);
++	writel(~PITMCR_MDIS, timer_base + PITMCR);
  
--	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-+	chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
- 	if (!chip->reg_base)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < chip->ll_wr_cnt; i++) {
- 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
- 		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
--		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
--		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
-+		struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
-+		struct dw_edma_block *dt_block = &vsec_data->dt_wr[i];
- 
- 		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
- 		if (!ll_region->vaddr.io)
-@@ -263,8 +267,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	for (i = 0; i < chip->ll_rd_cnt; i++) {
- 		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
- 		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
--		struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
--		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
-+		struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
-+		struct dw_edma_block *dt_block = &vsec_data->dt_rd[i];
- 
- 		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
- 		if (!ll_region->vaddr.io)
-@@ -298,31 +302,31 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
- 
- 	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
--		vsec_data.rg.bar, vsec_data.rg.off, vsec_data.rg.sz,
-+		vsec_data->rg.bar, vsec_data->rg.off, vsec_data->rg.sz,
- 		chip->reg_base);
- 
- 
- 	for (i = 0; i < chip->ll_wr_cnt; i++) {
- 		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data.ll_wr[i].bar,
--			vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
-+			i, vsec_data->ll_wr[i].bar,
-+			vsec_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
- 			chip->ll_region_wr[i].vaddr.io, &chip->ll_region_wr[i].paddr);
- 
- 		pci_dbg(pdev, "Data:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data.dt_wr[i].bar,
--			vsec_data.dt_wr[i].off, chip->dt_region_wr[i].sz,
-+			i, vsec_data->dt_wr[i].bar,
-+			vsec_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
- 			chip->dt_region_wr[i].vaddr.io, &chip->dt_region_wr[i].paddr);
- 	}
- 
- 	for (i = 0; i < chip->ll_rd_cnt; i++) {
- 		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data.ll_rd[i].bar,
--			vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
-+			i, vsec_data->ll_rd[i].bar,
-+			vsec_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
- 			chip->ll_region_rd[i].vaddr.io, &chip->ll_region_rd[i].paddr);
- 
- 		pci_dbg(pdev, "Data:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data.dt_rd[i].bar,
--			vsec_data.dt_rd[i].off, chip->dt_region_rd[i].sz,
-+			i, vsec_data->dt_rd[i].bar,
-+			vsec_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
- 			chip->dt_region_rd[i].vaddr.io, &chip->dt_region_rd[i].paddr);
- 	}
- 
+ 	ret = pit_clocksource_init(clk_rate);
+ 	if (ret)
 -- 
 2.43.0
 
