@@ -1,85 +1,87 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96B926E6FF;
-	Sat,  5 Jul 2025 02:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8986CF9C0;
+	Sat,  5 Jul 2025 02:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751681705; cv=none; b=Gv8CTRk7nI41bRoKZIsp78L/f+Ib9exzi3BuWWF3z+GrjpOmz1ZQ3sgQDXIgtpYpJPQDgoC8YPEzjaXJx3G6esVJ587mCb2pPWPkhbkQ2Fd0nenANQrOpQXaXGFdQP8UsPpA1UUCT9DEbh26oDIYp2PzkTv+KEjtDiz1WQxu5xw=
+	t=1751681880; cv=none; b=pGCBkEQkPZo3t4m2+obhLSMqRhnRzAqSMfmfW9mcnOXGYtfhAGmCbKQPKkIZFNlaCTTTFYQuzi8hS+HCznY1HEBFlP9nis8uj2BAu9kLr8E+6Xq8cBd7CgfqoBE0MOfbiAfSctHma5FK9P51R5mWZlhwve1OQZFw2P/VqgY3/PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751681705; c=relaxed/simple;
-	bh=MoeOv5EYR7ND7dvTc6nQZXoheLui3KxYD5UFmlAelPs=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=Yxr02knSaqwlh8xAgi9gT4dusFWycMI6YtOOo+H2OthP8XAG/X1ay/3eEWK//VQIV4p7/52gh+6/LNwGw86LZjGOBcMMQIEBaFfvymc9p4QaaAijRblenLGSwwpVOQSxCPnCC2wWIax7Kw5rZlbUPu4iuJra+4KVKSxjpmGtAwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bYvGS6g6rz4x5ql;
-	Sat,  5 Jul 2025 10:14:56 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 5652Esw6038063;
-	Sat, 5 Jul 2025 10:14:54 +0800 (+08)
-	(envelope-from jiang.peng9@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid31;
-	Sat, 5 Jul 2025 10:14:55 +0800 (CST)
-Date: Sat, 5 Jul 2025 10:14:55 +0800 (CST)
-X-Zmail-TransId: 2afc68688a9f1d0-59690
-X-Mailer: Zmail v1.0
-Message-ID: <20250705101455762ft5u2uZEb7wz0TROzD52R@zte.com.cn>
-In-Reply-To: <879d1fa7-04a5-403c-8d23-76631a67f560@kernel.org>
-References: 20250704152047205U11FdEih1MxrmcmAz0Xpp@zte.com.cn,879d1fa7-04a5-403c-8d23-76631a67f560@kernel.org
+	s=arc-20240116; t=1751681880; c=relaxed/simple;
+	bh=KLjzJvmcBlWpVpZts+62XfmqQ3g7Cx0jAYoobQykBWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ErI0svsGcqFFpsVV0l9IeJsJqVdGqlAThJiP6lB5UYIA9H3+yJ9dIGFy4OLxfV29HUghmYceA0dc73uUTzdrCcUrFSfDeH3AJyexMEoLmS/BpKEjVyH9BR1LfdR9FLSqoZde4LK6RP9eYnMGEQltPf96Ibw3T2hMEUqYMLgb900=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzETWLqj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzETWLqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9EE1C4CEE3;
+	Sat,  5 Jul 2025 02:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751681880;
+	bh=KLjzJvmcBlWpVpZts+62XfmqQ3g7Cx0jAYoobQykBWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VzETWLqjWZcKNCgqZ4QwJI8Y8jNIC8TpkG3aA0Dg9PMGymVZ3TZnIcm0Wb1SiOzGZ
+	 XllzMlAJkoQyvhtxNX2hwbZDUdKb12OcouivgEEr0Y+85oG6KvFProfFCPK1XZKDfR
+	 nu2Mf9pT59RBIU6DXd3RJIyrTJEH8Jhs/np6BWGWFQcKfgWIh6iChcJePC4Wp3UTHz
+	 /xjVhl3DvZBC8xPtPAn5D1S1xRJPOWy6yYYLbEkfi763bDdlInLn8f7ZoOjGNJses3
+	 913qVza8FoCm6n5nAf5Q4lLDFRfqIZ2dsqzkxhwh5Vn0VjIYbrFo0RBFKtQOD36RP4
+	 l/HXzUENQ9z3A==
+Date: Fri, 4 Jul 2025 19:17:58 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: syzbot <syzbot+f4f84b57a01d6b8364ad@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, hare@suse.de,
+	hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org,
+	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com,
+	syzkaller-bugs@googlegroups.com, willy@infradead.org,
+	p.raghav@samsung.com
+Subject: Re: [syzbot] [exfat?] kernel BUG in folio_set_bh
+Message-ID: <aGiLVkgBqh19rc6w@bombadil.infradead.org>
+References: <6865e87a.a70a0220.2b31f5.000a.GAE@google.com>
+ <68663a26.a70a0220.5d25f.0856.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.peng9@zte.com.cn>
-To: <krzk@kernel.org>
-Cc: <jasowang@redhat.com>, <xuanzhuo@linux.alibaba.com>, <mst@redhat.com>,
-        <eperezma@redhat.com>, <sumit.semwal@linaro.org>,
-        <christian.koenig@amd.com>, <virtualization@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gdmlydGlvOiBBZGQgbWlzc2luZyBrZXJuZWxkb2MgZm9yIHZpcnRpb19kbWFfYnVmX2F0dGFjaA==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 5652Esw6038063
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68688AA0.001/4bYvGS6g6rz4x5ql
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68663a26.a70a0220.5d25f.0856.GAE@google.com>
 
-> > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/> virtio_dma_buf.c
-> > index 3fe1d03b0645..18d261ba5197 100644
-> > --- a/drivers/virtio/virtio_dma_buf.c
-> > +++ b/drivers/virtio/virtio_dma_buf.c
-> > @@ -35,7 +35,16 @@ struct dma_buf *virtio_dma_buf_export
-> >  EXPORT_SYMBOL(virtio_dma_buf_export);
-> >
-> >  /**
-> > - * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
-> > + * virtio_dma_buf_attach - Mandatory attach callback for virtio dma-bufs
->
-> Read kernel-doc.rst. Missing ()
->
-> > + * @dma_buf: Pointer to the shared dma-buf structure
-> > + * @attach: Pointer to the newly created attachment metadata
-> > + *
-> > + * Description: Implements the standard dma-buf attach operation for > virtio devices.
->
-> That's not kerneldoc. Which part of kernel-doc document documents such
-> syntax?
+On Thu, Jul 03, 2025 at 01:07:02AM -0700, syzbot wrote:
+> syzbot has bisected this issue to:
+> 
+> commit 47dd67532303803a87f43195e088b3b4bcf0454d
+> Author: Luis Chamberlain <mcgrof@kernel.org>
+> Date:   Fri Feb 21 22:38:22 2025 +0000
+> 
+>     block/bdev: lift block size restrictions to 64k
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ec33d4580000
+> start commit:   50c8770a42fa Add linux-next specific files for 20250702
+> git tree:       linux-next
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17ec33d4580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13ec33d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d831c9dfe03f77ec
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f4f84b57a01d6b8364ad
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15c93770580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1001aebc580000
+> 
+> Reported-by: syzbot+f4f84b57a01d6b8364ad@syzkaller.appspotmail.com
+> Fixes: 47dd67532303 ("block/bdev: lift block size restrictions to 64k")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Thanks so much for your time and feedback! I’ve made two specific fixes based on your notes:  
+Odd, I can't see where the null pointer comes from.
 
-Added () to the function name in the kerneldoc comment (e.g., virtio_dma_buf_attach() instead of virtio_dma_buf_attach).
-Removed the redundant "Description:" label and simplified the explanation. 
+bdev_getblk() --> __getblk_slow() properly returns NULL and doesn't use
+the data. But neither does fat_fill_super() on failure. My only
+suspicion was on fat_msg() but that sb usage seems fine and the goto out_fail
+seems fine as iput() also doesn't process null inodes and unload_nls()
+is fine. The return value is also set to -EIO correctly so we don't return NULL
+actually. I jus tdon't see anything odd on _fat_msg() either.
 
-Let me know if you need anything else in the meantime!  
+Hrm..
 
-Best regards,
-Peng
+  Luis
