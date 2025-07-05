@@ -1,113 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D531BF58
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 02:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888F31BF58;
+	Sat,  5 Jul 2025 02:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751681358; cv=none; b=exwwZEW17bqRQXYUXXAyrSYDoFswlsv7cKsR6AF19b8qI/dayjakwI8s60b2X0ZASToyY5PG1BUBO41gncZNuY8yLgpGqYg8ar2A+eyFYy4ne8JdCiF5HSVuNXiWMGOt/DudeV7wYoJDodhNlmfFMfUqCR1szNYf6O27uPG5Iy8=
+	t=1751681675; cv=none; b=IlUwHVlKcwBRyTN2fCEXCGZmAZDSwlUTmlIzBSq5pOHAu+z20waOR947uRgfVvAMaZCkygaum/XBPUKOoZYzYgid+7UMnTJPd7gU6aTMXc9SnYRIfohqNaoTVaVtqNy3JSvzpTuGgjU5SAskzmV4wcKF2YTW1uROM/sjcQaUbzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751681358; c=relaxed/simple;
-	bh=BQwmKsA3I9+RYP2xkti8aYYVkl/QM2yFlc6xhfV2f4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hjqn0rbgZGZN0YmXqU/WrF+4B9y85wUjfw2c8MVNowzJP1DL8TDEC2Zdpp0NxwoKE+OGGOmpNYyguJbz2ZOIO4sZjJKoUpLOCoDBq0HE0stZ+HBVofY3jjHY536YyegBrTF2BxJiFr2qlcE88DWIL1zQJ9jBAm5pKwNWUdXM8sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UvbIbDEb; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UvbIbDEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751681357; x=1783217357;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=BQwmKsA3I9+RYP2xkti8aYYVkl/QM2yFlc6xhfV2f4Y=;
-  b=UvbIbDEbozKyBr43GRiB0RvPAu+hFBF50hB06IVzuvcshJaDFkCEhGP7
-   9I6HBpCXGJ7pU7BlywFyV7NLDqADcgfunQ/H/UVdiXGcZfbEAV4eYthFU
-   qszNiL5ck3X7pyR2Z25mCSSmK4JSIQqq8jHvgmWfpsQ42OJHXj3woa6qQ
-   5QBevOf3/4hSo3wqMtl0WvbQRrK74LPM/Iadt8UwI3Pt6RP59lNea4Vut
-   nC4pjjU9xZQc2OO90yDDU07ASeRQRU2eCwkjLsh8YB3bVXNqaWg8oJrBM
-   6v/5lpTJPI6FpXzvO4uwbrnfw2aFiOOnXkO8vE/qJdz/pM6Y5D2Z1IHH+
-   g==;
-X-CSE-ConnectionGUID: 6DOR3K4LThqZ++1HVb2/kQ==
-X-CSE-MsgGUID: RLe3e2TpTYuIXMzllRn1Ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53864953"
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="53864953"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 19:09:16 -0700
-X-CSE-ConnectionGUID: ud1gR3FrTiuV8Bg+0VD38g==
-X-CSE-MsgGUID: qJZ3Ry3iTayEgCrIdEZk1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
-   d="scan'208";a="154496499"
-Received: from igk-lkp-server01.igk.intel.com (HELO 030a839a1121) ([10.91.175.65])
-  by orviesa009.jf.intel.com with ESMTP; 04 Jul 2025 19:09:16 -0700
-Received: from kbuild by 030a839a1121 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uXsL2-0000kn-35;
-	Sat, 05 Jul 2025 02:09:12 +0000
-Date: Sat, 5 Jul 2025 04:08:33 +0200
-From: kernel test robot <lkp@intel.com>
-To: Jack Yu <jack.yu@realtek.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: sound/soc/codecs/rt1318.c:1149:34: warning: unused variable
- 'rt1318_of_match'
-Message-ID: <202507050416.elP8eSZp-lkp@intel.com>
+	s=arc-20240116; t=1751681675; c=relaxed/simple;
+	bh=DnwXkV3mh2xNWLLry95sYPXozKXFK8Czxdfs07K9YpI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=s3Jbg7fofPWuXEZwFM1lOCouIsIxHnk5MVHkHNsxD1csmhCDJPARMpwB1AKV3q9csOmkTbk2vLBKrrAtm+sBe2rmC8039s4Wrp2vFae1d75xMRGTzL54WFtO63vvInOMVIwLyh+Pu0u6lDuSo/tiQ4BQEBAaYSpiWkZlicPCtzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.79.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [112.10.226.58])
+	by mtasvr (Coremail) with SMTP id _____wDHRSxbimhoyH7qAw--.5558S3;
+	Sat, 05 Jul 2025 10:13:48 +0800 (CST)
+Received: from linma$zju.edu.cn ( [112.10.226.58] ) by
+ ajax-webmail-mail-app3 (Coremail) ; Sat, 5 Jul 2025 10:13:46 +0800
+ (GMT+08:00)
+Date: Sat, 5 Jul 2025 10:13:46 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Lin Ma" <linma@zju.edu.cn>
+To: "kernel test robot" <lkp@intel.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, mingo@kernel.org,
+	tglx@linutronix.de, pwn9uin@gmail.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH net v3] net: atm: Fix incorrect net_device lec check
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
+ 20250620(94335109) Copyright (c) 2002-2025 www.mailtech.cn zju.edu.cn
+In-Reply-To: <202507050831.2GTrUnFN-lkp@intel.com>
+References: <20250703052427.12626-1-linma@zju.edu.cn>
+ <202507050831.2GTrUnFN-lkp@intel.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <208fe08d.af32.197d85c6fb6.Coremail.linma@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:zS_KCgD3_Ilbimho74xkAA--.19191W
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwcQEmhlCw4N8wAKs6
+X-CM-DELIVERINFO: =?B?jiZXnQXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
+	APHs9E3REyVLMz4DLkghFkBLqH5QYsdiIeS7um6fpDNefWi4wE3F/NAR45aDN/ORt2VyFM
+	7zRxcFgotyfKCrND2Di8M1FrbpUWplBdpdkwTnOMjT390PyTZ68sFSMcKOis0w==
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr17ZrWxuw1DJr1xGFWkKrX_yoW8Wr13pa
+	18JayqgrZ8Wry0ga97Ka4j9ws8t395W3sxWF15Ar15ua1DAFyDWrWIgrnxXryUKr4qg348
+	KF9FgFnayw1UAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUQYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
+	AKI48G6xCjnVAKz4kxM4xvF2IEb7IF0Fy264kE64k0F24lFcxC0VAYjxAxZF0Ex2IqxwAC
+	I402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UMVCEFcxC0VAYjx
+	AxZFUvcSsGvfC2KfnxnUUI43ZEXa7IU8rcTJUUUUU==
 
-Hi Jack,
+SGkgcm9ib3QsCgo+IAo+IEhpIExpbiwKPiAKPiBrZXJuZWwgdGVzdCByb2JvdCBub3RpY2VkIHRo
+ZSBmb2xsb3dpbmcgYnVpbGQgZXJyb3JzOgo+IAo+IFthdXRvIGJ1aWxkIHRlc3QgRVJST1Igb24g
+bmV0L21haW5dCj4gCj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vaW50ZWwtbGFiLWxrcC9s
+aW51eC9jb21taXRzL0xpbi1NYS9uZXQtYXRtLUZpeC1pbmNvcnJlY3QtbmV0X2RldmljZS1sZWMt
+Y2hlY2svMjAyNTA3MDMtMTMyNzI3Cj4gYmFzZTogICBuZXQvbWFpbgo+IHBhdGNoIGxpbms6ICAg
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNTA3MDMwNTI0MjcuMTI2MjYtMS1saW5tYSU0
+MHpqdS5lZHUuY24KPiBwYXRjaCBzdWJqZWN0OiBbUEFUQ0ggbmV0IHYzXSBuZXQ6IGF0bTogRml4
+IGluY29ycmVjdCBuZXRfZGV2aWNlIGxlYyBjaGVjawo+IGNvbmZpZzogeDg2XzY0LXJhbmRjb25m
+aWctMDc4LTIwMjUwNzA1IChodHRwczovL2Rvd25sb2FkLjAxLm9yZy8wZGF5LWNpL2FyY2hpdmUv
+MjAyNTA3MDUvMjAyNTA3MDUwODMxLjJHVHJVbkZOLWxrcEBpbnRlbC5jb20vY29uZmlnKQo+IGNv
+bXBpbGVyOiBjbGFuZyB2ZXJzaW9uIDIwLjEuNyAoaHR0cHM6Ly9naXRodWIuY29tL2xsdm0vbGx2
+bS1wcm9qZWN0IDYxNDZhODhmNjA0OTJiNTIwYTM2ZjhmOGYzMjMxZTE1ZjNjYzYwODIpCj4gcmVw
+cm9kdWNlICh0aGlzIGlzIGEgVz0xIGJ1aWxkKTogKGh0dHBzOi8vZG93bmxvYWQuMDEub3JnLzBk
+YXktY2kvYXJjaGl2ZS8yMDI1MDcwNS8yMDI1MDcwNTA4MzEuMkdUclVuRk4tbGtwQGludGVsLmNv
+bS9yZXByb2R1Y2UpCj4gCj4gSWYgeW91IGZpeCB0aGUgaXNzdWUgaW4gYSBzZXBhcmF0ZSBwYXRj
+aC9jb21taXQgKGkuZS4gbm90IGp1c3QgYSBuZXcgdmVyc2lvbiBvZgo+IHRoZSBzYW1lIHBhdGNo
+L2NvbW1pdCksIGtpbmRseSBhZGQgZm9sbG93aW5nIHRhZ3MKPiB8IFJlcG9ydGVkLWJ5OiBrZXJu
+ZWwgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4KPiB8IENsb3NlczogaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvb2Uta2J1aWxkLWFsbC8yMDI1MDcwNTA4MzEuMkdUclVuRk4tbGtwQGludGVsLmNv
+bS8KPiAKPiBBbGwgZXJyb3JzIChuZXcgb25lcyBwcmVmaXhlZCBieSA+Piwgb2xkIG9uZXMgcHJl
+Zml4ZWQgYnkgPDwpOgo+IAo+ID4+IEVSUk9SOiBtb2Rwb3N0OiAiaXNfbmV0ZGV2X2xlYyIgW25l
+dC9hdG0vbXBvYS5rb10gdW5kZWZpbmVkIQo+IAo+IC0tIAo+IDAtREFZIENJIEtlcm5lbCBUZXN0
+IFNlcnZpY2UKPiBodHRwczovL2dpdGh1Yi5jb20vaW50ZWwvbGtwLXRlc3RzL3dpa2kKCllvdSBh
+cmUgcmlnaHQsIHRoaXMgcGF0Y2gganVzdCBjb21waWxlIHdoZW4gQ09ORklHX0FUTT15IGJ1dCBy
+YWlzZQplcnJvciBpZiBDT05GSUdfQVRNPW0uIEknbSBzbyBzdHVwaWQgdGhhdCBJIG1hZGUgdGhp
+cyBzeW1ib2wgbWlzdGFrZSA6KAoKVW5kZXIgZml4aW5nIGl0IGN1cnJlbnRseS4KClRoYW5rcwpM
+aW4KCgo=
 
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a79a588fc1761dc12a3064fc2f648ae66cea3c5a
-commit: fe1ff61487ace69cd4e680e36169c90667eb9624 ASoC: rt1318: Add RT1318 audio amplifier driver
-date:   1 year, 1 month ago
-config: x86_64-buildonly-randconfig-2001-20250705 (https://download.01.org/0day-ci/archive/20250705/202507050416.elP8eSZp-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050416.elP8eSZp-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507050416.elP8eSZp-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from sound/soc/codecs/rt1318.c:18:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> sound/soc/codecs/rt1318.c:1149:34: warning: unused variable 'rt1318_of_match' [-Wunused-const-variable]
-    1149 | static const struct of_device_id rt1318_of_match[] = {
-         |                                  ^~~~~~~~~~~~~~~
-   2 warnings generated.
-
-
-vim +/rt1318_of_match +1149 sound/soc/codecs/rt1318.c
-
-  1148	
-> 1149	static const struct of_device_id rt1318_of_match[] = {
-  1150		{ .compatible = "realtek,rt1318", },
-  1151		{},
-  1152	};
-  1153	MODULE_DEVICE_TABLE(of, rt1318_of_match);
-  1154	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
