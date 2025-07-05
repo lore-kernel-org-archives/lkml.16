@@ -1,107 +1,122 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E1224DD0B
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 08:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F431B87EB;
+	Sat,  5 Jul 2025 08:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751705540; cv=none; b=Cm7cd6iJ/DmAMt4Nrc0opoS9hsAUssZ63usrqFj5f/PDD8w9FvzInwO9l/IC4S5BXFM4Mx/cf/j3nSDneFJZOzx1uqCFReYR/q9UtetVDSVXReNdyTpTornNGSfZf3EXP/TNB2j/j/sxbrXJDCtU44fvTUcCtBgEZ4c4qAUIloA=
+	t=1751705662; cv=none; b=UQ6Fs9zvxXDKJiXXG68iiO3qI0PxpOeiP9qo/oqSMNgy0a+YJXcKgVgJWfOXoWDKnJsNZKxrLyb2em2KLXxTrxBlnxFJonOzk3qI3sQmMt0A7i8o/A+E22q4jPmxwLNy5kCFzHqNeBIR9v3rgZkMA6Ns8ViL9N23oaX3xdmszi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751705540; c=relaxed/simple;
-	bh=OH6Donon7lVbQXTIs6DE02Wj3iwK0njDFmZpSCw8VmY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E14+fIrQmj1PTmhIE1F1OQE7gyEbK1PUoxjIICsS4/cARStRK6RGGjbDJYyhb5IGgkaJscPr/SjBy79/lBE8LhRe+aTWOWVF7gmcPm6Nblsr0zPJQRvB1g2tsxw64hV9cvVb61q7T7YqufHDpMVlgh0VlC5w3obn9/Pj+CbhOmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WZiidFHq; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751705662; c=relaxed/simple;
+	bh=CUPpDZUa3QuU+NGttTzTaNHOrRBmC+2nM/nqavBLNdE=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O01z0vCmaTUNEkrv8u8ORXBCLdxr60CRhn0xN1ILmM7K6YS8C5Gg5I8VDzgFNjaD0q8M4ybZ7zP+0P4QPh30uNrhO326L3JqrIMefNqaIlR7Or3HVIFHyBiR5SdS/Wdse3G3SkCI7EEORDERnDgpftStL+CZkos9FShsgKV9PRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWvS+x14; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZiidFHq"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a528e301b0so61823f8f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Jul 2025 01:52:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWvS+x14"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so10201265e9.1;
+        Sat, 05 Jul 2025 01:54:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751705537; x=1752310337; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zqxTDa4DhWJhcXAPACl5qTQfjpblrskBrbY4onevVXk=;
-        b=WZiidFHqzD2zLHNqa+kMYXC+Z5R8jDTKfhiRWqhxbhVCJ9CnTIB9uDT7WNN32kkWVc
-         gPlxRTiJudn3GR0/XXRj50uNpWzIg/9kz4wLW9Q8EtSMPaRYkFghkIRl1RFvjCwJ0NfP
-         rWRZlTnfFVhEiO8tYm9Bth370oF2gQY6f1XeQZl4dh/53Xmr2zqWMd7xCCL6729pThVu
-         qTCONfAVQaWnGlM1bYRbM3YynSo+AuUZ9v6JQDU9VB25UqQCnxfaPn2pKc/FvIGLY/as
-         BQov+OQVwKy06D1HCuA9JUQgXUxXUfPGuj68CFgwvwVA5Ee6hvP3N5EF2RiAXf+f2pSy
-         Ap8w==
+        d=gmail.com; s=20230601; t=1751705659; x=1752310459; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vvIRbUB61GVB8bR0tMGG9gJqcSl0CknkzZsodQ81bs4=;
+        b=GWvS+x14jYPuk+RUe2US1xdMjiPT6JbQwQaD4J0K81gzuRAXuRFuCXiyM+3xSBf63D
+         uZi4u5aVwLTmmuk+ZAqs4ypgjKzMdWYkSz7N873Qk6N+NgU0yqJ4F4mFCBFr4L8GsyPK
+         oam1hF5gAimNRZYoNNsBSvmZlc0Pqrls0J52BMHSBh7VdMhx22jCo9h2+TgTZZoGqytE
+         vm35wPZK8TTQTDnNQxTXLJcjYLDUZhmqZleAMzY/8fgLn/QSZQ83H92UplJ309IRluML
+         SaNItG6T0VMGixSxMRmumn/c6vUg1V1VyfZqxrYM3yuTzJH02NiHtgBxrxqJZ5LjPJop
+         2Tag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751705537; x=1752310337;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zqxTDa4DhWJhcXAPACl5qTQfjpblrskBrbY4onevVXk=;
-        b=Z+Z1AQvkexWil3D5/p+/ThVsBFCbxjCIazGVWrJr9xu9ZCIN4FvANRAN0yOcb+fiez
-         tG1MERcSrR3euElXE3AuLIfbOSztAweYduJqs8hBD47DKpg2Zbk1WBvYx/7dv3KoN7TL
-         3a/dDs2srb/lQAoEBNgviPqQ6RAIFBzfy9paxnuU5lQjWYFQ8OnCuQDisbyBtTYPknCR
-         xoYU+ZW0OpXzwB3gBdW/HyBMgD1kAZyLy4JqUKmJ543YZJdSqJRK6dUSloHIz0EpR1QS
-         byRIaR0FBQhrwejHVH6+EixVjA29TnEv+SNc/PoDEafaW4B1UIL5YQi+/IsqhmeGOb9X
-         AJOw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1cewWZyfLlYTcLouNv63KflQAs5KB7oxLhaATatfJReNlHmdOp8GyHlpuLhJ1DM2Q2T0UAMcB88Qy05s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVxhiH9Ypf9XUpeuuaclEr+UJCDE2XKKCm+602bKeTAELFa61L
-	TmagNJ+Pt2iYAEri+mHhJQ/cM8EuyEyNjQzSs6FKepeokG+8wbs+CO1E8hd3Ayemhrk=
-X-Gm-Gg: ASbGncsOojlr8/fzEymPWCohe24hbk+LgwGVZb3PJN+kuEQpqe8eG5NRVHQbD6bdbAO
-	6vNDoBOX4JP7stGEwUv9fuZCvjjhFTbGYIdpvh/n4B+XvjFH1I283QxnQATQ2HIid00lxNnfrpf
-	h048LsMZOi1J/IBNw7czV+M/snbfiVrYZkBFMokD/YWPkgeJJ1qBhgWsgvRSFslee8ko2setl2L
-	pAn75vHmd7IxoyEPXoP06rj4SrnQPIvORdhIWPa1HPQ1nMpzXZdMLxphXEEOQ++5UpNSNKvZxuL
-	JYWDayYCALMZkECXy6HmuNq7Ybo2IbwznioQGKKIBUSw+xRHWIJrmfiQARm/I2kNx8ytbOV9Dol
-	t
-X-Google-Smtp-Source: AGHT+IElwpP/DQng7j4Oje4er7qQ/M9/KObJu58P5AwQY+utyeAiG9MFQncSMbCXC18YqE2yzss9aw==
-X-Received: by 2002:a5d:5848:0:b0:3a4:eeeb:7e79 with SMTP id ffacd0b85a97d-3b496606062mr1737174f8f.12.1751705537562;
-        Sat, 05 Jul 2025 01:52:17 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.222.89])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0af7sm4644670f8f.35.2025.07.05.01.52.16
+        d=1e100.net; s=20230601; t=1751705659; x=1752310459;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vvIRbUB61GVB8bR0tMGG9gJqcSl0CknkzZsodQ81bs4=;
+        b=mwbIfJv6+oo25asjsIx9u6Y6vWgDVcAL0i+Y2H8WSjWUznQ6PswAUZ+CmlxR9SwGCX
+         uJOzY/kamoI4uRECxE/QkEiHjcl1KHbDYwvLhZ1uZQAu2NNZtlvdWqPMskruy4f01aDR
+         MSaMr84/495UresHJfij3ySihzubQHopR8fftsnWsQFqUsznfGzP0AZL5vX3RtOrWprF
+         JWH3+hBa1Dv+d4s2zgj+vx2H2Z0KyvVp293HvvlODt+JkAulAw15grV7FCVgeNK4ky16
+         rlqcYFgE12NLYkmv57vICLywPgyDjR3iEddlR0Wjn/sTNX4FH/6YBubP7D5yL+dGSNOW
+         gl9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUaTB4e+mbSHt+uWuugkzdTMxXzwyvj/PLqYELXLs7PDFwU6/K7ksSs9UbeWf5A6j4NmpR7JhjTNoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5GIv6wJlu9eiujNGfbL4GeZ2HyPtAyXPgJSIEkHtPbu330jXy
+	+ihULDlNpC2L3ws0Dfr0T2C8gyFaof6pc9iL5T7N8SSVGH6PqPxoUoKR5nG8tw==
+X-Gm-Gg: ASbGncua04dEMoIbjwnFcBwvisVpIzS7Z7ueTPl6NXfH6RBYIRrknODRp5fL0ZhJHex
+	q9cz7Oom18XAI5wcqyr423eCWeP+9ZQgER1CcSY1kiGt0KPId1OclJl3ILFAJ0YjiKp8U8exKun
+	VGTCd8wrQ3c0TGXA9sewhX0VkMiKYhXcFgMIqKHZRpmyLHvRKX+w0RW6zaesKWt2O/ESKCDVXqA
+	A7q8JNc4wCheBDgVoOWKveBdps6gbYbGTaU81R4SKON0uFezcrRN9okO3TBd7oc04MRHu8kcs2/
+	fXa5P43taMhewMW5ZxyT5kF92JeLcwOHTmzfEaKVG1IXd0uUaTCgZYO1jZfwsdFM/bPAzHfYLYr
+	q4aSU9Fo5X2ep8OFgO3gd5o+JU6sO/El5z6/dB44Peqxu
+X-Google-Smtp-Source: AGHT+IGCTlSQAuwnvNNQjJ8nrzv2WSzfYMVMO6N9w8jD4ohSwwPC7KkRRgHbhVeb4v8FjfWeiQmsHQ==
+X-Received: by 2002:a05:600c:5028:b0:453:92e:a459 with SMTP id 5b1f17b1804b1-454b1f6de87mr57909105e9.16.1751705658618;
+        Sat, 05 Jul 2025 01:54:18 -0700 (PDT)
+Received: from Ansuel-XPS. (host-79-46-252-169.retail.telecomitalia.it. [79.46.252.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969aa1sm79906465e9.6.2025.07.05.01.54.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 01:52:16 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250626-exynos7870-dts-fixes-v1-0-349987874d9a@disroot.org>
-References: <20250626-exynos7870-dts-fixes-v1-0-349987874d9a@disroot.org>
-Subject: Re: [PATCH 0/3] Various devicetree fixes for Exynos7870 devices
-Message-Id: <175170553635.13627.13202029423234330131.b4-ty@linaro.org>
-Date: Sat, 05 Jul 2025 10:52:16 +0200
+        Sat, 05 Jul 2025 01:54:18 -0700 (PDT)
+Message-ID: <6868e83a.050a0220.2d26f8.0920@mx.google.com>
+X-Google-Original-Message-ID: <aGjoNqEY-r7CC9aX@Ansuel-XPS.>
+Date: Sat, 5 Jul 2025 10:54:14 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v21] pwm: airoha: Add support for EN7581 SoC
+References: <20250705072825.26497-1-ansuelsmth@gmail.com>
+ <k3s7wp52oljegusctucabvo2wcmx7defklk7fdtqh32a2vvcux@7tuafqra4nrw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <k3s7wp52oljegusctucabvo2wcmx7defklk7fdtqh32a2vvcux@7tuafqra4nrw>
 
-
-On Thu, 26 Jun 2025 13:02:55 +0530, Kaustabh Chakraborty wrote:
-> This patch series introduces a few minor fixes on Exynos7870 devices.
-> These fix USB gadget problems and serious crashes on certain variants of
-> devices. More information is provided in respective commits.
+On Sat, Jul 05, 2025 at 10:47:37AM +0200, Uwe Kleine-König wrote:
+> Hello Christian,
 > 
-> This series has no dependencies. Would be nice to get them merged in
-> 6.16 itself. I assume it's okay to cc stable as the -rc releases are
-> also owned by the "Stable Group" in git.kernel.org... [1] [2]
+> On Sat, Jul 05, 2025 at 09:28:20AM +0200, Christian Marangi wrote:
+> > Changes v21:
+> > - Revert offset to u64 in airoha_pwm_apply_bucket_config
+> >   (do_div require u64)
 > 
-> [...]
+> I didn't look in detail, but I wonder if you considered using a
+> different division function to keep offset not bigger than needed?
+> 
 
-Applied, thanks!
+Hi Uwe,
 
-[1/3] arm64: dts: exynos7870: add quirk to disable USB2 LPM in gadget mode
-      https://git.kernel.org/krzk/linux/c/e9355e894aebcbeacffd284644749190cc5f33a4
-[2/3] arm64: dts: exynos7870-on7xelte: reduce memory ranges to base amount
-      https://git.kernel.org/krzk/linux/c/2bdfa35a7bb6e3a319e7a290baa44720bc96e5e4
-[3/3] arm64: dts: exynos7870-j6lte: reduce memory ranges to base amount
-      https://git.kernel.org/krzk/linux/c/49a27c6c392dec46c826ee586f7ec8973acaeed7
+I used do_div since it can calculate both division and remainder in one
+go.
 
-Best regards,
+The kernel warning were present only on 32 bit and are caused because
+do_div implementation is different on 32 or 64 bit.
+
+On 64 bit it's simply
+
+rem = n % base
+div = n / base
+
+but on 32 bit it's much more complex and adds the check n to be an u64.
+
+Also on 64bit n is expected to be u64 but given the simplicity the type
+is not checked.
+
+I checked if there is some kind of do_div32 but it doesn't exist and
+also using cast doesn't work give the complexity of the macro define (I
+tried with (u64)offset.
+
+What do you think should be the best solution here?
+
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+	Ansuel
