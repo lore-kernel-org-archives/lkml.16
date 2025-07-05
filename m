@@ -1,106 +1,189 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB741F91E3
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Jul 2025 12:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF79B20DD47;
+	Sat,  5 Jul 2025 13:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751720254; cv=none; b=RJTer5H630ia1L0Nu1JNlF1IetG1aN3uweQADBd5gb3GjNu/k4TSXzGBYtQBz7z4ABLbrDNhMIr2c0eiiYnQJ5LTWp8PGNg1scScvMxQI/C++sFEq9H32RbYnrCJd0Uxtie64zDZxH1u1rtcRc9yMxFdO+aJ09jA04dZ4S9f6bo=
+	t=1751720523; cv=none; b=u0W9BlkC7TO1x7x3AQRZ0M2TDKkmyf9ZuEmYaUsvKEIEgkUaOLg/QigAnHMF7qhGBG2p36LK2UproaFHr6qawf6ldK68mRLnVb8a2AZpE8vJ8kGRLMVYNRE6OiRXrH0zR+fn7ujYJyCNWvBOXlvp/hctTkWVgEvkMCVFzRTWTkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751720254; c=relaxed/simple;
-	bh=R0OxNT1G3SL6trzh0na7MYaBn55/pd84UqEVeO7FTn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VboRxFNkmdhjONVKrNEBe08aB8mIsy5gWgU1UxqgEOc75nZ5QRGY1JXE6vhCjmkm704C2q8uyo/F5m6h2iUPXHxJhGkx3CcNRy1Ke0bmNxrLJyfXueAxATi+RSNuGKHFQtoDpOO+GUq0Qm22y8xzUZkuhiZaKSgwu4FwR6bODCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=N3/D55zt; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751720523; c=relaxed/simple;
+	bh=ClEZVwhmbkNN+DYn4N/u/hmThZk0uTkhPgmsjHGbk/M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qCLxi6BKP3UT5xWhIdL/9yv50MEMsJ7bmIdIedlFsq3/yHTOt5v2fEBwOZGdEMZOcv13S8VeHCpIn6bIepPVFYeXvnxZoyCrXDbQJRGMlYRyw/+ZkxAV6R7ViJXGGHv5DDy0EM3a+J29Kr6/80eJAIl1lr6mrAjUwhFAU29N8jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jGc9BlwX; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="N3/D55zt"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 864922590A;
-	Sat,  5 Jul 2025 14:57:28 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id z97oIdxZVT1l; Sat,  5 Jul 2025 14:57:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751720247; bh=R0OxNT1G3SL6trzh0na7MYaBn55/pd84UqEVeO7FTn8=;
-	h=From:To:Cc:Subject:Date;
-	b=N3/D55ztaA4IgW/FmhYIfBxQZnSDfpWh6Rz/AU5QiatlvwdgEo5iZAXPpJ2xaGRid
-	 joaBxEIdUvZrEgZ4mMQZFFryTUxfTQ2ZL4fDIY8zK7nr5KFX20b1eBur5/ro6PyHys
-	 lYSSu3YzPbEt53NOK0KkvAh7ALCoaBKpi2Lbkkwpn/aC2+pTAhCaSfuB9GyACKf4eV
-	 UM7VIEurNQ4J2kauOCnhkaM6UZZ2Bz0Hk3s4wEiZLPQW+BueAAaIEG0bVXYmHIbg3X
-	 5NwptVLrcBNdgZQIn1AyEC/ZPmqEdXg8uS7VVurieZQgkOzpAxMeLhQasQPzR0NnwJ
-	 ifY3/CdSgURjQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Miaoqian Lin <linmq006@gmail.com>,
-	Yao Zi <ziyao@disroot.org>,
-	Hongliang Wang <wanghongliang@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [PATCH] LoongArch: Avoid in-place string operation on FDT content
-Date: Sat,  5 Jul 2025 12:57:10 +0000
-Message-ID: <20250705125710.59994-1-ziyao@disroot.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jGc9BlwX"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751720518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zbwQTtgBBjV1PrfOsd92CG44T6/rae0SpShqAS13m7Q=;
+	b=jGc9BlwXBe+isXmogOgcp3BKCMmBTbTFTV/qgavtbQN8KhNx0KLvtRAulA4p8dTjzVz+cd
+	FoXcm/9r06qUMBSHRXhu/17U6GQDw8PaPpm+Vz2HGC7bBrSIjMnJkME90gQdFoXeoGtkAa
+	bFbXBrKM9sS6x3yQOzY8jmQBzePGOMc=
+From: Ze Huang <huang.ze@linux.dev>
+Date: Sat, 05 Jul 2025 21:01:25 +0800
+Subject: [PATCH v5 1/2] dt-bindings: usb: dwc3: add support for SpacemiT K1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250705-dwc3_generic-v5-1-9dbc53ea53d2@linux.dev>
+References: <20250705-dwc3_generic-v5-0-9dbc53ea53d2@linux.dev>
+In-Reply-To: <20250705-dwc3_generic-v5-0-9dbc53ea53d2@linux.dev>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Ze Huang <huang.ze@linux.dev>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751720506; l=3493;
+ i=huang.ze@linux.dev; s=20250705; h=from:subject:message-id;
+ bh=ClEZVwhmbkNN+DYn4N/u/hmThZk0uTkhPgmsjHGbk/M=;
+ b=OqKB6TRsZZ1U5MkWADMzwiSSFDdpN3tgEDaGwFid3eJwJ919oPhdDqAN5z9opFO9hJGVX+p7W
+ mqQZFsmKZnSAeii0xM+wHgIUfpYVTrSdl7Dr/MJJWr/jM11rzmpmcIP
+X-Developer-Key: i=huang.ze@linux.dev; a=ed25519;
+ pk=Kzc4PMu5PTo8eZZQ5xmTNL9jeXcQ9Wml0cs+vlQpBkg=
+X-Migadu-Flow: FLOW_OUT
 
-In init_cpu_fullname, a constant pointer to model property is retrieved.
-It's later modified by the strsep function, which is illegal and
-corrupts kernel's FDT copy. This is shown by dmesg,
+Add support for the USB 3.0 Dual-Role Device (DRD) controller embedded
+in the SpacemiT K1 SoC. The controller is based on the Synopsys
+DesignWare Core USB 3 (DWC3) IP, supporting USB3.0 host mode and USB 2.0
+DRD mode.
 
-	OF: fdt: not creating '/sys/firmware/fdt': CRC check failed
-
-Create a mutable copy of the model property and do in-place operations
-on it instead. loongson_sysconf.cpuname lives across the kernel
-lifetime, thus manually releasing isn't necessary.
-
-Also move of_node_put() for the root node after the usage of its
-property, since of_node_put() decreases the reference counter thus usage
-after the call is unsafe.
-
-Fixes: 44a01f1f726a ("LoongArch: Parsing CPU-related information from DTS")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Ze Huang <huang.ze@linux.dev>
 ---
- arch/loongarch/kernel/env.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/usb/spacemit,k1-dwc3.yaml  | 107 +++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
 
-diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-index 27144de5c5fe..fba141472ab9 100644
---- a/arch/loongarch/kernel/env.c
-+++ b/arch/loongarch/kernel/env.c
-@@ -40,15 +40,18 @@ void __init init_environ(void)
- static int __init init_cpu_fullname(void)
- {
- 	struct device_node *root;
-+	const char *model;
- 	int cpu, ret;
--	char *model;
-+	char *tmp;
- 
- 	/* Parsing cpuname from DTS model property */
- 	root = of_find_node_by_path("/");
--	ret = of_property_read_string(root, "model", (const char **)&model);
-+	ret = of_property_read_string(root, "model", &model);
-+	if (ret == 0) {
-+		tmp = kstrdup(model, GFP_KERNEL);
-+		loongson_sysconf.cpuname = strsep(&tmp, " ");
-+	}
- 	of_node_put(root);
--	if (ret == 0)
--		loongson_sysconf.cpuname = strsep(&model, " ");
- 
- 	if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname, "Loongson", 8)) {
- 		for (cpu = 0; cpu < NR_CPUS; cpu++)
+diff --git a/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..c967ad6aae50199127a4f8a17d53fc34e8d9480b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
+@@ -0,0 +1,107 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/spacemit,k1-dwc3.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SpacemiT K1 SuperSpeed DWC3 USB SoC Controller
++
++maintainers:
++  - Ze Huang <huang.ze@linux.dev>
++
++description: |
++  The SpacemiT K1 embeds a DWC3 USB IP Core which supports Host functions
++  for USB 3.0 and DRD for USB 2.0.
++
++  Key features:
++  - USB3.0 SuperSpeed and USB2.0 High/Full/Low-Speed support
++  - Supports low-power modes (USB2.0 suspend, USB3.0 U1/U2/U3)
++  - Internal DMA controller and flexible endpoint FIFO sizing
++
++  Communication Interface:
++  - Use of PIPE3 (125MHz) interface for USB3.0 PHY
++  - Use of UTMI+ (30/60MHz) interface for USB2.0 PHY
++
++allOf:
++  - $ref: snps,dwc3-common.yaml#
++
++properties:
++  compatible:
++    const: spacemit,k1-dwc3
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: usbdrd30
++
++  interrupts:
++    maxItems: 1
++
++  phys:
++    items:
++      - description: phandle to USB2/HS PHY
++      - description: phandle to USB3/SS PHY
++
++  phy-names:
++    items:
++      - const: usb2-phy
++      - const: usb3-phy
++
++  resets:
++    items:
++      - description: USB3.0 AHB reset line
++      - description: USB3.0 VCC reset line
++      - description: USB3.0 PHY reset line
++
++  vbus-supply:
++    description: A phandle to the regulator supplying the VBUS voltage.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - phys
++  - phy-names
++  - resets
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    usb@c0a00000 {
++        compatible = "spacemit,k1-dwc3";
++        reg = <0xc0a00000 0x10000>;
++        clocks = <&syscon_apmu 16>;
++        clock-names = "usbdrd30";
++        interrupts = <125>;
++        phys = <&usb2phy>, <&usb3phy>;
++        phy-names = "usb2-phy", "usb3-phy";
++        resets = <&syscon_apmu 8>,
++                 <&syscon_apmu 9>,
++                 <&syscon_apmu 10>;
++        vbus-supply = <&usb3_vbus>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        hub_2_0: hub@1 {
++            compatible = "usb2109,2817";
++            reg = <1>;
++            vdd-supply = <&usb3_vhub>;
++            peer-hub = <&hub_3_0>;
++            reset-gpios = <&gpio 3 28 1>;
++        };
++
++        hub_3_0: hub@2 {
++            compatible = "usb2109,817";
++            reg = <2>;
++            vdd-supply = <&usb3_vhub>;
++            peer-hub = <&hub_2_0>;
++            reset-gpios = <&gpio 3 28 1>;
++        };
++    };
+
 -- 
-2.49.0
+2.50.0
 
