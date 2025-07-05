@@ -1,128 +1,143 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690DD1DD0D4;
-	Sat,  5 Jul 2025 07:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2464319DF4A;
+	Sat,  5 Jul 2025 07:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751699414; cv=none; b=gBO/SiqAEvz6d3/+XOtxqOCpByCYeKvw/vuK7ERUZeOf9jETPvTvAylIkmaNgEuAW0ahdVkM7ztLPoN7R614COUkPh2+/M2Iob+g6jwm2IJ/7GfQIqg4714LvI8hLyXeCHLkRI3Ed5YHEn5rIyNx0IYtLy2gQsl7ohz912XUiic=
+	t=1751699806; cv=none; b=hww+PTisFr7wMghX4Qsh1pHmJtFaBfKqS09tWGANZ3NhSfbX8delA/7JLDcdR2mEybcx8gq7f9YgN/Y2zo4/zWUXYXl5xZjrajKLXCXYqtd17VXkJIvjLBd5HxbXvSwNrT+ie6orysg7w39P3QH1Bf8Y4aUnxhatOnxkhgmRP7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751699414; c=relaxed/simple;
-	bh=D7TQOOjltjXwEI9gZjZ2pDomlcz9NTXBEIbpgbwlSLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lREKmYpkqq88J2zU9hpiDo9Y4D2P788Ljqkx2ZTI3D50D3fVPNl1ts9cEJ+Jk795RGntlYxuBubHMBxeG798o70yJn4D4t7OCUCPKeJ/TsTq5EyenKmxjMWBAe9bVmR5MzjlYbmRtVZMMdORVwyUH20l8w0K7huTgnueQMtJTYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bZ1q55Hn2zYQtLs;
-	Sat,  5 Jul 2025 15:10:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 8EA471A0847;
-	Sat,  5 Jul 2025 15:10:08 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgBnxyTKz2hoUJLWAg--.53385S3;
-	Sat, 05 Jul 2025 15:10:04 +0800 (CST)
-Message-ID: <094a1420-9060-4dcf-9398-8873193f5f7b@huaweicloud.com>
-Date: Sat, 5 Jul 2025 15:10:02 +0800
+	s=arc-20240116; t=1751699806; c=relaxed/simple;
+	bh=tUhWmgK4dOMTc0iS2htVf8JYMWc1HQMBTCCneavHgjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HWZcbkeKirdVJXO0meHNm5BbiXFTollkYRRJ85t5zePfeN7s7A0hEE0CW+p3i0XecvEgqBDGCqpyIeaNbE6tpE9J8MSLsUB5AKk9wvN1We1vHdA/VYFoLsjUOMeA/BOANm98WsJr+kt2IOKmqDYOhbZHEoMbJ8rvo+HU5smDVLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQ2g3aM0; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQ2g3aM0"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4537fdec33bso9008665e9.1;
+        Sat, 05 Jul 2025 00:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751699802; x=1752304602; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8R5oTgaAPwIE+ySog9Pi/wJSy7DIcCAi0+86Q6mHWKY=;
+        b=iQ2g3aM0O+1MIrbxY2HjshMIKaIbeKaBxPnQRcZ69/gQjdWptmpArdTLnvjOp6jZIY
+         VHHE7+pZhUEpwB9l6iqyqxIcTWY7Mzzf86pTvPPXfgZ7DiUTzFGSWS+5+v34jmDbrwqW
+         TTRb8ZSnEr0yNX7nJxFPOaomJS2MDucRQBaI9r0ioaCbhgaFdH7zLG4VgfSlIyVIHYr1
+         yeCTQ+tR3kHuwGLXBgFbUWdrRTJ3fCEvgBHoR4o/JN9s79XQqwzKAt7Y9Wg38XGmhSvI
+         aoyWqCNcmj9Ofuge6ELxHnrZJMkijrwvB9IcHvipAaqg1WTMUMppEiF3z+DAw9gmispF
+         O+xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751699802; x=1752304602;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8R5oTgaAPwIE+ySog9Pi/wJSy7DIcCAi0+86Q6mHWKY=;
+        b=m8a1NOrwWdcaFvk3aHKxUFbsF7uJmrEcZ8pxosyfI7bx8RXALNcpxB9X9Yc0Zl/tsm
+         UOJYHBtZKH6QqlHp8R2RamgHvLZkDf8kKF56c9WOhemlNTjLCGk6oaKseKFR+SE7KPuj
+         lDXfSDjMD2PHAWbPXgKDpAQqFjdBASf/Ybf4LRGzVukqpYg/YAd2V1l0lWZZ2pIkcPiJ
+         MXgyDdgQKDW3tCKpu+ZOp9A+2UNxc0Gr3gFRZMlLCjDv0s4g8jCmgxJcMEw7+hDhQL5y
+         XcJgkbl8l/+A6smc7BAS3ZIJxFVNFNZ4UR6W8xWlqwGTeJPMEnFl6ehet88sEZmgtYmw
+         oswQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6t501G9jqXUv6VRYN4+3fCfc3gtIQlE36WFnl2BXrZqiOig7/RNP4H6ZCzUIjm2mf9x35VtQa+HbynfE=@vger.kernel.org, AJvYcCXE01j4xT74EqwRbiNNELHcY5W06qNA9FB76YWXtI/NV7SOGgWVKo1eDWniljHZCxe7NSmmzEbn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzB3ydBa6r0sslBLip6mLgobAEAbHRxDZRaLGqh6HNJt7WMNpaP
+	cdq1HI1/6/O4RiGkZn02dRFOgth9sIBHNTaqRkIXwqHWphj1cPGzqA3Q
+X-Gm-Gg: ASbGncuzxrRoZcj9V2hN2hpBgmtZo9PFyzshSDx/QYNc0IJdbL8ViIsqhP2T13NpFkV
+	pHCj3rUt2d7t0MBF/d2G0+PPoMNkuBUfN1SFaJ9e8Mlv8SiqOft+RBZCLTwDMxUo3//UtwMJVC2
+	NTD7KQF7adkUaOqPyiVvNEal7B4QyZ+eSLHCCZ+XNxWOeUkzELQorDcO2Tfwslwil3/BISLZnQ+
+	YJtob+jV4sEzM+NwXaTlClGjU78xoUHyM9LiW9fo+4r2l38lJkS5OTCA5cX4jpB5rX0HDvVhCGb
+	zqFQQobuIr/lvX7gRv5xY0B7FTckW54z+KKvqP84yff6/0t0ONDeZrS/ojtHzSxsY644IcS0LmR
+	qKFMwfl49tleurYE2Mg==
+X-Google-Smtp-Source: AGHT+IHXEwjcjQ9NX0f8W1fKeEpMnHB2PDebEu/auXAypGG0r6Beul+slgLTogHrnsvnqSeFZur0dw==
+X-Received: by 2002:a05:600c:1c21:b0:453:7b2b:ed2e with SMTP id 5b1f17b1804b1-454b4eb7e77mr42866925e9.24.1751699802184;
+        Sat, 05 Jul 2025 00:16:42 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9bdf038sm76279665e9.27.2025.07.05.00.16.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 00:16:41 -0700 (PDT)
+Date: Sat, 5 Jul 2025 08:16:40 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Feng Yang <yangfeng59949@163.com>, aleksander.lobakin@intel.com,
+ almasrymina@google.com, asml.silence@gmail.com, davem@davemloft.net,
+ ebiggers@google.com, edumazet@google.com, horms@kernel.org,
+ kerneljasonxing@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, stfomichev@gmail.com, willemb@google.com,
+ yangfeng@kylinos.cn
+Subject: Re: [PATCH v3] skbuff: Add MSG_MORE flag to optimize large packet
+ transmission
+Message-ID: <20250705081640.232efec3@pumpkin>
+In-Reply-To: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
+References: <20250703124453.390f5908@pumpkin>
+	<20250704092628.80593-1-yangfeng59949@163.com>
+	<1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
- with ARM64_64K_PAGES
-To: Joseph Qi <jiangqi903@gmail.com>
-Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- LTP List <ltp@lists.linux.it>, Theodore Ts'o <tytso@mit.edu>,
- Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Naresh Kamboju <naresh.kamboju@linaro.org>
-References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
- <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
- <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
- <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgBnxyTKz2hoUJLWAg--.53385S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJry3Gr1kKrW8KF1rCryrtFb_yoW8AF4rpa
-	y3Ja4DCF4UGr18JrWIqF1vqw17ta18tr48Xr9xGry5C3Z0yF1xur4SgF1j9F90vr1xuwnY
-	qr4q9a4I9ayjyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 2025/7/3 18:47, Joseph Qi wrote:
-> 
-> 
-> On 2025/7/3 15:26, Naresh Kamboju wrote:
->> On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
->>>
->>> Hi, Naresh!
->>>
->>> On 2025/6/26 20:31, Naresh Kamboju wrote:
->>>> Regressions noticed on arm64 devices while running LTP syscalls mmap16
->>>> test case on the Linux next-20250616..next-20250626 with the extra build
->>>> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
->>>>
->>>> Not reproducible with 4K page size.
->>>>
->>>> Test environments:
->>>> - Dragonboard-410c
->>>> - Juno-r2
->>>> - rk3399-rock-pi-4b
->>>> - qemu-arm64
->>>>
->>>> Regression Analysis:
->>>> - New regression? Yes
->>>> - Reproducibility? Yes
->>>>
->>>> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
->>>> transaction.c start_this_handle
->>>>
->>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->>>
->>> Thank you for the report. The block size for this test is 1 KB, so I
->>> suspect this is the issue with insufficient journal credits that we
->>> are going to resolve.
->>
->> I have applied your patch set [1] and tested and the reported
->> regressions did not fix.
->> Am I missing anything ?
->>
->> [1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
->>
-> 
-> I can also reproduce the similar warning with xfstests generic/730 under
-> 64k page size + 4k block size.
-> 
+On Fri, 4 Jul 2025 17:50:42 +0200
+Paolo Abeni <pabeni@redhat.com> wrote:
 
-Hi, Joseph!
+> On 7/4/25 11:26 AM, Feng Yang wrote:
+> > Thu, 3 Jul 2025 12:44:53 +0100 david.laight.linux@gmail.com wrote:
+> >   
+> >> On Thu, 3 Jul 2025 10:48:40 +0200
+> >> Paolo Abeni <pabeni@redhat.com> wrote:
+> >>  
+> >>> On 6/30/25 9:10 AM, Feng Yang wrote:  
+> >>>> From: Feng Yang <yangfeng@kylinos.cn>
+> >>>>
+> >>>> The "MSG_MORE" flag is added to improve the transmission performance of large packets.
+> >>>> The improvement is more significant for TCP, while there is a slight enhancement for UDP.    
+> >>>
+> >>> I'm sorry for the conflicting input, but i fear we can't do this for
+> >>> UDP: unconditionally changing the wire packet layout may break the
+> >>> application, and or at very least incur in unexpected fragmentation issues.  
+> >>
+> >> Does the code currently work for UDP?
+> >>
+> >> I'd have thought the skb being sent was an entire datagram.
+> >> But each semdmsg() is going to send a separate datagram.
+> >> IIRC for UDP MSG_MORE indicates that the next send() will be
+> >> part of the same datagram - so the actual send can't be done
+> >> until the final fragment (without MSG_MORE) is sent.  
+> > 
+> > If we add MSG_MORE, won't the entire skb be sent out all at once? Why doesn't this work for UDP?  
+> 
+> Without MSG_MORE N sendmsg() calls will emit on the wire N (small) packets.
+> 
+> With MSG_MORE on the first N-1 calls, the stack will emit a single
+> packet with larger size.
+> 
+> UDP application may relay on packet size for protocol semantic. i.e. the
+> application level message size could be expected to be equal to the
+> (wire) packet size itself.
 
-I cannot reproduce this issue on my machine. Theoretically, the 'rsv_credits'
-should be 113 under 64k page size + 4k block size, I don't think it would
-exceed the max user trans buffers. Could you please give more details?
-What is the configuration of your xfstests? and what does the specific error
-log look like?
+Correct, but the function is __skb_send_sock() - so you'd expect it to
+send the 'message' held in the skb to the socket.
+I don't think that the fact that the skb has fragments should make any
+difference to what is sent.
+In other words it ought to be valid for any code to 'linearize' the skb.
 
-Thanks,
-Yi.
+	David
+
+> 
+> Unexpectedly aggregating the packets may break the application. Also it
+> can lead to IP fragmentation, which in turn could kill performances.
+> 
+> > If that's not feasible, would the v2 version of the code work for UDP?  
+> 
+> My ask is to explicitly avoid MSG_MORE when the transport is UDP.
+> 
+> /P
+> 
 
