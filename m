@@ -1,28 +1,28 @@
 Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7C9295DB8;
-	Sun,  6 Jul 2025 18:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3471B2877F8;
+	Sun,  6 Jul 2025 18:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751827002; cv=none; b=tQdeENdk1GGYazR+MSrcn8vgo2eLYREJ8O3nm/EviHSMl9fZO70r/SznU9TBG6m0RY0JACkdyRdyfoO+4pVhIb5DddtQSL+h09hF5yo1DM64gkWvFwigvJKbers1MgJTW99Y48fxKyyG2h/YX6Z8oRanBykG3tsWNnpyX7YapBw=
+	t=1751827010; cv=none; b=PTf1w9+1LotTL7nKxZlzoBeEj1FrcpOm3A3gw9ITSsrOjClM6kONI6sqpFHKtBwmQWRzThBFhKKX6ZtlcYEkRbVEj5Jvxpl57UqSDMFTSLNic8o6jZum0hITyOpRGp+CN0enUvL1r/caQ6czlCqHS6BsfKlfQV7Lv7OmHS7R1j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751827002; c=relaxed/simple;
-	bh=DRMQbRZWUhGw5/lqb+APwMKFprX1xofy2byBElLuM7Y=;
+	s=arc-20240116; t=1751827010; c=relaxed/simple;
+	bh=mcTua/G5RFyVLlcXGFD05ezFGsyzRwRteazyZ5tQ4d8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vBge5MNtd67rxj0EvTWAqXtFz7d0XIb5t8N81i1/7/6KCBRvpilqx/2WcKscs4WVUpeF0CUR36L7cuVbvFxkaD/77VBz1oXibpDI2qfj/6Y9UTDDoWKxyXZcel2gvcN2yj/JOQC0NQSNTKM+KdghXDd9e8O07cYyUoNwrsIQhl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=IxiNZX2V; arc=none smtp.client-ip=173.249.15.149
+	 MIME-Version; b=QPZAq3ITJXrlbU9t4OEs6Cp+a157byXVUx5fwYWa9mptewdV3ynrR1aaXoSo5D4husVLwyhJBywjE7RlabWYQtVeMfW34ls/tgTzliXOEkuqt5plB5aUXL990+KsYACSfI7NheIA98E2LSv2F4jNFjbj8cYJW7t/0AQQar8qfNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=H89fz0Wi; arc=none smtp.client-ip=173.249.15.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="IxiNZX2V"
+	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="H89fz0Wi"
 dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
 	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Transfer-Encoding:In-Reply-To:References;
-	bh=iY45rPf6NfJfIsrjOR+vhY8BHVO+tt89pB/hI839SL0=;
-	b=IxiNZX2V7e1kYb8xWKqy97tsVTlgu3EcEdx1wo23BhXNCK5VF3YQnWSGF1xO7+wpm+VhGV8iRY05+pJTIjbVRClL3oqVrF9RtOzbGdsuO0jSBDLSxtXARo0TDZ0J54tzMljua3raN3QfwVOtXsKd34c1QWoj0hpMgdeynphtO4o=
+	bh=COLdE9Qe9niSYcTfJryg+Zp638/GiYsA4tgZ96AwDNU=;
+	b=H89fz0WiDbXFxi7w9rd0BB78nD+pHEbyVdxnxXC/bQh8iicC3PdioaRIbyNK36VQskutFwdN1/DI0sa+vyQufubC4ArqgHD4BwzQU2w+pwP617UTc7nz9AnYA8KOrJuRwCl3AD92Ri2LDqJp6+bZN8N+AW6qP+8aKEPaXTXZulQ=
 Received: from lukas-hpz440workstation.lan.sk100508.local (cm70-231.liwest.at [212.241.70.231])
 	by mail.netcube.li with ESMTPA
-	; Sun, 6 Jul 2025 20:36:21 +0200
+	; Sun, 6 Jul 2025 20:36:29 +0200
 From: Lukas Schmid <lukas.schmid@netcube.li>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Lukas Schmid <lukas.schmid@netcube.li>,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH v2 2/5] riscv: dts: allwinner: d1s-t113: Add pinctrl's required by NetCube Systems Nagami SoM
-Date: Sun,  6 Jul 2025 20:35:55 +0200
-Message-Id: <20250706183601.157523-3-lukas.schmid@netcube.li>
+Subject: [PATCH v2 4/5] ARM: dts: sunxi: add support for NetCube Systems Nagami Basic Carrier
+Date: Sun,  6 Jul 2025 20:35:57 +0200
+Message-Id: <20250706183601.157523-5-lukas.schmid@netcube.li>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250706183601.157523-1-lukas.schmid@netcube.li>
 References: <20250706183601.157523-1-lukas.schmid@netcube.li>
@@ -55,71 +55,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Added the following pinctrl's used by the NetCube Systems Nagami SoM
-  * i2c2_pins
-  * i2c3_pins
-  * i2s1_pins, i2s1_din_pins, i2s1_dout_pins
-  * spi1_pins
+The NetCube Systems Nagami Basic Carrier is a Carrier for the Nagami SoM
+It provides an ethernet port for the phy on the SoM and some USB-Ports.
+All other interfaces and gpios are available on pinheader, except for the
+SD-Interface which is available on a micro-sd slot.
 
 Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
 ---
- .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/allwinner/Makefile          |  2 +
+ ...n8i-t113s-netcube-nagami-basic-carrier.dts | 63 +++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 arch/arm/boot/dts/allwinner/sun8i-t113s-netcube-nagami-basic-carrier.dts
 
-diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-index e4175adb0..8dc3deccb 100644
---- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-@@ -78,6 +78,36 @@ dsi_4lane_pins: dsi-4lane-pins {
- 				function = "dsi";
- 			};
- 
-+			/omit-if-no-ref/
-+			i2c2_pins: i2c2-pins {
-+				pins = "PD20", "PD21";
-+				function = "i2c2";
-+			};
+diff --git a/arch/arm/boot/dts/allwinner/Makefile b/arch/arm/boot/dts/allwinner/Makefile
+index d799ad153..af287bb32 100644
+--- a/arch/arm/boot/dts/allwinner/Makefile
++++ b/arch/arm/boot/dts/allwinner/Makefile
+@@ -199,6 +199,7 @@ DTC_FLAGS_sun8i-h3-nanopi-r1 := -@
+ DTC_FLAGS_sun8i-h3-orangepi-pc := -@
+ DTC_FLAGS_sun8i-h3-bananapi-m2-plus-v1.2 := -@
+ DTC_FLAGS_sun8i-h3-orangepi-pc-plus := -@
++DTC_FLAGS_sun8i-t113s-netcube-nagami-basic-carrier := -@
+ DTC_FLAGS_sun8i-v3s-netcube-kumquat := -@
+ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a23-evb.dtb \
+@@ -257,6 +258,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-s3-lichee-zero-plus.dtb \
+ 	sun8i-s3-pinecube.dtb \
+ 	sun8i-t113s-mangopi-mq-r-t113.dtb \
++	sun8i-t113s-netcube-nagami-basic-carrier.dtb \
+ 	sun8i-t3-cqa3t-bv3.dtb \
+ 	sun8i-v3-sl631-imx179.dtb \
+ 	sun8i-v3s-anbernic-rg-nano.dtb \
+diff --git a/arch/arm/boot/dts/allwinner/sun8i-t113s-netcube-nagami-basic-carrier.dts b/arch/arm/boot/dts/allwinner/sun8i-t113s-netcube-nagami-basic-carrier.dts
+new file mode 100644
+index 000000000..1c4e691cd
+--- /dev/null
++++ b/arch/arm/boot/dts/allwinner/sun8i-t113s-netcube-nagami-basic-carrier.dts
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2025 Lukas Schmid <lukas.schmid@netcube.li>
++ */
 +
-+			/omit-if-no-ref/
-+			i2c3_pins: i2c3-pins {
-+				pins = "PG10", "PG11";
-+				function = "i2c3";
-+			};
++/dts-v1/;
++#include "sun8i-t113s-netcube-nagami.dtsi"
 +
-+			/omit-if-no-ref/
-+			i2s1_pins: i2s1-pins {
-+				pins = "PG12", "PG13";
-+				function = "i2s1";
-+			};
++/ {
++	model = "NetCube Systems Nagami Basic Carrier Board";
++	compatible = "netcube,nagami-basic-carrier", "netcube,nagami",
++				 "allwinner,sun8i-t113s";
++};
 +
-+			/omit-if-no-ref/
-+			i2s1_din_pins: i2s1-din-pins {
-+				pins = "PG14";
-+				function = "i2s1_din";
-+			};
++&can0 {
++	status = "okay";
++};
 +
-+			/omit-if-no-ref/
-+			i2s1_dout_pins: i2s1-dout-pins {
-+				pins = "PG15";
-+				function = "i2s1_dout";
-+			};
++&can1 {
++	status = "okay";
++};
 +
- 			/omit-if-no-ref/
- 			lcd_rgb666_pins: lcd-rgb666-pins {
- 				pins = "PD0", "PD1", "PD2", "PD3", "PD4", "PD5",
-@@ -126,6 +156,12 @@ spi0_pins: spi0-pins {
- 				function = "spi0";
- 			};
- 
-+			/omit-if-no-ref/
-+			spi1_pins: spi1-pins {
-+				pins = "PD10", "PD11", "PD12", "PD13", "PD14", "PD15";
-+				function = "spi1";
-+			};
++&ehci0 {
++	status = "okay";
++};
 +
- 			/omit-if-no-ref/
- 			uart1_pg6_pins: uart1-pg6-pins {
- 				pins = "PG6", "PG7";
++&ehci1 {
++	status = "okay";
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2s1 {
++	status = "okay";
++};
++
++&mmc0 {
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&spi1 {
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	status = "okay";
++};
 -- 
 2.39.5
 
