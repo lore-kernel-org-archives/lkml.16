@@ -1,182 +1,100 @@
-Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140CE2AD00;
-	Sun,  6 Jul 2025 10:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387103207;
+	Sun,  6 Jul 2025 10:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751796514; cv=none; b=k9B4A7yJ/m8CerlM5s8kX9RJbzCwLabxAQE3h5RxKrzw11LR7TrcwIHUBe8qP/9eY5RIPQ63J/ssi9Aog50Xh4Onvu+nso2qYOUf143uYR6OwOYU0LUOG1HV7J8rj2DJieV4KqFGWP/Ze9emOlvF+CnVEP47vlVvmd180l7CaBM=
+	t=1751796584; cv=none; b=PVMiYu+uOZAZJulPwM6EPnv5YvBeVyXPcDp98kHt+f+ueLwr0bhqIaB6p7wmhhYxkAnfz6P7ZFyd0+YjiOz0TYMSeqjhU64jBK/5SodPAl/3TAc9tHlcHwfH2837OyrLt7CyOmABva8ptQoxn2bf7YUxnPaBigtvdZ3fsJiEHXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751796514; c=relaxed/simple;
-	bh=n77T+/3wzWMkjN3HwXQrl2Yz514wfjWWjXOH1TaiAf4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oc+MPoOfclVr2fW0iLNeKKdwqaIucAxJ6GL3ONy48i+WDucia0/y7MmpU5jJcwpldBcDx7tf5nOpGyc1KoLGocpHkbppDAO1jCfbsoRK6bCmnE+lpqLdiNFsTF2RcOSTG6zoPJ9FIIt1uv6Iy179hyZA2O3FXpywAe5JqCT3ltA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=oyYJcxdv; arc=none smtp.client-ip=173.249.15.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
+	s=arc-20240116; t=1751796584; c=relaxed/simple;
+	bh=NrfxfUV4noESzV36/FpNEaK1ScHbu4sVg33P7kkdHiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gf3S78o6krueIx8DdibBZvZwRmtf6AvM+WD6Jfw2EtbXC1x5mWiU3FFkrx+ws8w8pvwzfmjjwWsbWlnos6uLU1iTvAjWV4IPkcrlaIWM2Q5fvqv4px9DpZA+aJdSXMoCQpKPuxJOaIjtblRYbIy/FAKWYgOpIriwL2IItx5nanc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/oDFaoV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="oyYJcxdv"
-dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
-	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:In-Reply-To:References;
-	bh=0T5ERNEDk8sZhawQuX8JVZNNOUKlYRbaNNvCcLZi7To=;
-	b=oyYJcxdvi2HSsrtA0NRNLP07hI9ZWZIgqk6i56SdDxhuilLTawGFGOSVJC912TFRMLct63t8lLnzoG7oTvvmDgV4EQBeh92HD+Ur9BHzL4r4O2nzndjBg/jeI4je5pMqv0FgdW6s+GlBpLEj4MSjeLNSdZYVlPYau+ThN9Towh0=
-Received: from lukas-hpz440workstation.localnet (cm70-231.liwest.at [212.241.70.231])
-	by mail.netcube.li with ESMTPSA
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
-	; Sun, 6 Jul 2025 12:08:20 +0200
-From: Lukas Schmid <lukas.schmid@netcube.li>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Maxime Ripard <mripard@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Subject:
- Re: [PATCH v1 3/7] dt-bindings: arm: sunxi: Add NetCube Systems Nagami Keypad
- Carrier Board
-Date: Sun, 06 Jul 2025 12:08:18 +0200
-Message-ID: <22754446.EfDdHjke4D@lukas-hpz440workstation>
-In-Reply-To: <8549188.T7Z3S40VBb@lukas-hpz440workstation>
-References:
- <20250705213900.3614963-1-lukas.schmid@netcube.li>
- <4648f0bf-2957-45bf-a6c1-01787e5d3e88@kernel.org>
- <8549188.T7Z3S40VBb@lukas-hpz440workstation>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/oDFaoV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51565C4CEED;
+	Sun,  6 Jul 2025 10:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751796583;
+	bh=NrfxfUV4noESzV36/FpNEaK1ScHbu4sVg33P7kkdHiA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D/oDFaoVNjE20lVuu7qT6sMcMeawbEMlFb5KdJpVXSurptYEaOGdYuuJa4TVypzBT
+	 y/L6ycN2rYw5GpEZMg30qRKeLx3q8qRc5lLE1UErP66xgEJBdVI95afjh6z4KhWVc6
+	 RT3b/tktjzjUqsLfglDbcvcRsS3sIhgjbPVSSNDRGKgX4Ut21LeYirXiITPQdwPVw3
+	 RK0UJAS1jZoWG5Pe+Y2q+DI8GDznigICcwaEnjHl93wELbjD10i/dMotqytyDSFEXe
+	 7WawQCRdxxFICIKky/8x4on5ihWdS7kcAJX3bOufrJJZn+/upkuekWVlrIEgXCa0uV
+	 /jp53LHMGu6iA==
+Date: Sun, 6 Jul 2025 11:09:36 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Marcelo Schmitt	
+ <marcelo.schmitt@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=	
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad4000: don't use shift_right()
+Message-ID: <20250706110936.665e27cc@jic23-huawei>
+In-Reply-To: <e490200ef3498d0b9798e918a5a78ff429b004da.camel@gmail.com>
+References: <20250702-iio-adc-ad4000-don-t-use-shift_right-v1-1-041c2d6c3950@baylibre.com>
+	<e490200ef3498d0b9798e918a5a78ff429b004da.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart7824363.EvYhyI6sBW";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---nextPart7824363.EvYhyI6sBW
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Lukas Schmid <lukas.schmid@netcube.li>
-Date: Sun, 06 Jul 2025 12:08:18 +0200
-Message-ID: <22754446.EfDdHjke4D@lukas-hpz440workstation>
-In-Reply-To: <8549188.T7Z3S40VBb@lukas-hpz440workstation>
-MIME-Version: 1.0
+On Wed, 02 Jul 2025 15:09:19 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-On Sonntag, 6. Juli 2025 11:58:16 CEST Lukas Schmid wrote:
-> On Sonntag, 6. Juli 2025 11:46:46 CEST Krzysztof Kozlowski wrote:
-> > On 06/07/2025 11:41, Lukas Schmid wrote:
-> > > On Sonntag, 6. Juli 2025 11:36:34 CEST Krzysztof Kozlowski wrote:
-> > >> On 06/07/2025 11:07, Lukas Schmid wrote:
-> > >>> On Sonntag, 6. Juli 2025 09:49:58 CEST Krzysztof Kozlowski wrote:
-> > >>>> On 05/07/2025 23:38, Lukas Schmid wrote:
-> > >>>>> The NetCube Systems Nagami Keypad Carrier is a custom board intended
-> > >>>>> to
-> > >>>>> fit a standard Ritto Intercom enclosure and provides a Keypad,
-> > >>>>> NFC-Reader
-> > >>>>> and Status-LED all controllable over Ethernet with PoE support.
-> > >>>>> 
-> > >>>>> Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
-> > >>>>> ---
-> > >>>>> 
-> > >>>>>  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 ++++++
-> > >>>>>  1 file changed, 6 insertions(+)
-> > >>>>> 
-> > >>>>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > >>>>> b/Documentation/devicetree/bindings/arm/sunxi.yaml index
-> > >>>>> 7919b5bf5..a2f16d064 100644
-> > >>>>> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > >>>>> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > >>>>> 
-> > >>>>> @@ -610,6 +610,12 @@ properties:
-> > >>>>>            - const: netcube,nagami
-> > >>>>>            - const: allwinner,sun8i-t113s
-> > >>>>> 
-> > >>>>> +      - description: NetCube Systems Nagami Keypad Carrier Board
-> > >>>>> +        items:
-> > >>>>> +          - const: netcube,nagami-keypad-carrier
-> > >>>> 
-> > >>>> That's just enum with previous entry. Don't make it over-complicated.
-> > >>>> 
-> > >>>> Best regards,
-> > >>>> Krzysztof
-> > >>> 
-> > >>> Just making sure here. The actual bindings are fine, but I should
-> > >>> merge
-> > >>> them into one patch, correct?
-> > >> 
-> > >> No, you got two comments what should be changed in the binding.
-> > >> 
-> > >> Best regards,
-> > >> Krzysztof
-> > > 
-> > > So if I understand correctly you want me to remove the
-> > > "allwinner,sun8i-t113s" from the carrier boards and keep it for the SoM?
-> > 
-> > No, I spoke nothing about that compatible. My comment is EXACTLY under
-> > the line being incorrect. That entry should have been made enum with
-> > previous board compatible. Look at other vendors, because this file
-> > repeats that pattern for some reason, eh...
-> > 
-> > Best regards,
-> > Krzysztof
-> 
-> Ah sorry. I think i understand now. You want the carrier boards in a single
-> entry with the different compatibles as the enum like:
-> 
->       - description: NetCube Systems Nagami SoM
->         items:
->           - const: netcube,nagami
->           - const: allwinner,sun8i-t113s
-> 
->       - description: NetCube Systems Nagami SoM based boards
->         items:
->           - enum:
->               - netcube,nagami-basic-carrier
->               - netcube,nagami-keypad-carrier
->           - const: netcube,nagami
->           - const: allwinner,sun8i-t113s
-> 
-> Best regards,
-> Lukas
-
-Oh, I will then drop the SoM's entry as well since the SoM is already defined 
-in the carrier boards then. So only
-
-      - description: NetCube Systems Nagami SoM based boards
-        items:
-          - enum:
-              - netcube,nagami-basic-carrier
-              - netcube,nagami-keypad-carrier
-          - const: netcube,nagami
-          - const: allwinner,sun8i-t113s
-
-correct?
-
-Sorry for the back-and-forth, and thanks for your patience.
-
-Best regards,
-Lukas
---nextPart7824363.EvYhyI6sBW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEPv6dcBmn59ssZMkSJnN+drMVRtgFAmhqSxMACgkQJnN+drMV
-RthYPgf7B7hvP/DGLODPXJ1qjUQvXaRZGtuTOiaLfm61dhyn2IsydYUhpwhhMViQ
-z6T4DAm9Eg8CcJqiTb1kckKS/dheJ+eom2IBK9LLb2JHbXaetlXlSvDfbWlTS1I2
-ofG6QKBDYHccjJiejjI2uEIAYALwCMjqxudUUCoMN2hz8euzwKx8dzEXfdWZmcRj
-OzeZsdwQkv8RvP+eiii1xdu/GbnMGKixs75n40v535LOdVWD/hptkJKMPW0fNe8A
-4Hd6uhLD7lZ3qIuEMZfvcCjOF/iCKafXpjCuK6CdFwfC5j+Sgrr3Z5zMAIJ3WRbr
-qCBfoSswKd8fkF5d6rVpVOBcBOPa5g==
-=JbSx
------END PGP SIGNATURE-----
-
---nextPart7824363.EvYhyI6sBW--
-
-
-
+> On Wed, 2025-07-02 at 08:23 -0500, David Lechner wrote:
+> > Drop use of shift_right() macro for unsigned value. The shift_right()
+> > macro is intended for signed values and is not needed for unsigned
+> > values.
+> >=20
+> > This was found by a static analysis tool [1].
+> >=20
+> > Link:
+> > https://github.com/analogdevicesinc/linux/pull/2831/files#diff-c14a34a6=
+492576d22e7192cc0f61ad0083190aeb627191596fe12462f0c6f21aR557
+> > =C2=A0[1]
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > --- =20
+>=20
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Applied.
+>=20
+> > =C2=A0drivers/iio/adc/ad4000.c | 2 +-
+> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
+> > index
+> > 5609a7845b6f50b5818613170df6b234f8f0c496..fd3d79fca78581e51bb904d0bcfed=
+a3d3663
+> > ea25 100644
+> > --- a/drivers/iio/adc/ad4000.c
+> > +++ b/drivers/iio/adc/ad4000.c
+> > @@ -554,7 +554,7 @@ static void ad4000_fill_scale_tbl(struct ad4000_sta=
+te *st,
+> > =C2=A0	val =3D mult_frac(st->vref_mv, MICRO, st->gain_milli);
+> > =C2=A0
+> > =C2=A0	/* Would multiply by NANO here but we multiplied by extra MILLI =
+*/
+> > -	tmp2 =3D shift_right((u64)val * MICRO, scale_bits);
+> > +	tmp2 =3D (u64)val * MICRO >> scale_bits;
+> > =C2=A0	tmp0 =3D div_s64_rem(tmp2, NANO, &tmp1);
+> > =C2=A0
+> > =C2=A0	/* Store scale for when span compression is disabled */
+> >=20
+> > ---
+> > base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
+> > change-id: 20250702-iio-adc-ad4000-don-t-use-shift_right-bda6e41152b6
+> >=20
+> > Best regards, =20
+>=20
 
