@@ -1,93 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A5C8F5E;
-	Sun,  6 Jul 2025 23:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8604919005E;
+	Sun,  6 Jul 2025 23:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751844422; cv=none; b=e0CDBXprJCVo+Rd/xVc9fX4jXo1zD/KrK42Fd9QWYXYL1o7OEZdWhUJ0Z6LwIjXCa6PJmZ89uzXgiosMlakVZQzu+7OAifvYp9Fk0PNszbecPTrmiWkS6940tjn6KPHwQSC+vylR6jczwK1qyPgkULGmIVih24xasN4TA2aCaBs=
+	t=1751844725; cv=none; b=N2pD8VLIFpvKcZ9jmvBA/w2WDkhjTaQcwKgoaDOGSW1iKUELn2aID+TGZSHB4vM9RoTcnNEqwY2xJx9FtULp4Cy3ZxGJ2X8xGUcz8TJEZgyKj7HKhkHYz6urcVYBPbtiYO43jcM/WvwnQTMYegJo4tyclng1wG12lPCizKVgBaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751844422; c=relaxed/simple;
-	bh=9lxGfmcUISozwu5W56EDirysK3lXO8hUwKf67tfvces=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mXWo1gIgFSqHY9CP8/yBJU0+xJQ0xQsayAz8x505cKCm3vQl1O4ugBvjeBAkmyZrRJ3keA2vUeQCEKnoWzMRtNoZkmwIFvXNoWJzu5usIUPGj2Dnf8TJt/RZCfl3dghBOAp2i4RO96I0ZTgXj5xmiwXxMn7/8XqrBnLGudmGgDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D48E6C4CEED;
-	Sun,  6 Jul 2025 23:27:01 +0000 (UTC)
-Received: by venus (Postfix, from userid 1000)
-	id C3119180F14; Mon, 07 Jul 2025 01:26:59 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Mon, 07 Jul 2025 01:26:58 +0200
-Subject: [PATCH] power: supply: core: fix static checker warning
+	s=arc-20240116; t=1751844725; c=relaxed/simple;
+	bh=0FWbnG7QyBNp1oI6at5H0KfJHP1RiWwGueRRH9I0rQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hIsruB1m6VEfPB37Lij9pH4TlRO9rBjCdoEMjWabcLSwkQTSd/aoYyFqtJgAmEr+jqz+u3KLI1Iv2UqG7UO81BdpMwg3tVVh2Fh78j2mFeLc9itoxmhezMmwha3gng/gu8ko6YlumgIzLK33TxxukRkKaeVcO9cYSz+bQD9sJO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MReIxx3c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MReIxx3c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4DF4C4CEED;
+	Sun,  6 Jul 2025 23:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751844725;
+	bh=0FWbnG7QyBNp1oI6at5H0KfJHP1RiWwGueRRH9I0rQA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MReIxx3c5U0V0PEN6qmIldU5ZLaa7fs7/P9TWin4tQB/xaxMlTuvOcyvk97KdrriR
+	 036MrKhwraHyPzJNoXTl6OdsjNZTgl3NMVIplm3K9gylbKogoIV+im46/c9i5Gr8N+
+	 mWuxKWQlyryHXtwwrP4LQsKCnqgDknwzUfLVwuAZ0pR3pQJ2HLpWVAW+LBCtRvqjjT
+	 xpBD+DTD0c2CO4tdOwR29XG6qMMkIyg68pejp4Tg0aE7yclzAUCdyir0kvTU+VCxaG
+	 4BCiVUdgHWRWcG8LTM9UzO4OoS+2cyq3pBLLnJ+HUtJiXgx+CQNsrWa77tlAwoiOml
+	 PbqjAuyRQcqFA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH v4 0/4] KUnit tests for SHA-2 and Poly1305
+Date: Sun,  6 Jul 2025 16:28:13 -0700
+Message-ID: <20250706232817.179500-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250707-fix-psy-static-checker-warning-v1-1-42d555c2b68a@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAEEGa2gC/x2NQQqDQAwAvyI5NxCXtkK/UjzEbNRQ2Eoi1SL+v
- UuPc5iZA0LdNODRHOD6sbB3qdBeGpCZy6RouTIkSjfqqMPRdlzii7HyaoIyq7zUcWMvViYc78x
- CNKRrzlAji2s1/oNnf54/3TcT5nAAAAA=
-X-Change-ID: 20250707-fix-psy-static-checker-warning-f6aac00b24dd
-To: Sebastian Reichel <sre@kernel.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Hans de Goede <hansg@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel@collabora.com, Sebastian Reichel <sebastian.reichel@collabora.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1426;
- i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=9lxGfmcUISozwu5W56EDirysK3lXO8hUwKf67tfvces=;
- b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBoawZD/YC+HXdf88AA+n/i6LFRetAV0P6P48i5Z
- F6eQRV+7r+JAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaGsGQwAKCRDY7tfzyDv6
- msPYD/wP1xG6JHwI+jEm2VNDIBGITXPK6BvlQvMua5qaEzW7jKlIZFz9pl+xqttQOV4NQ4dL17i
- 9NfChzAB/+Q1b0s5eG/KXMzEAROGF+UuAracYjYx7qoI4JZ2nKoJx70No8PV6YIq6j55w9GbX9n
- BmW8iI9E5hvtvJtWaqgzJsm8amn/kAzmYFRGl+tN84mh1hj1eleHgn4VWrE4lxfsc2O8/dCf6jf
- YJ3N0gvv1LL1ulXf9sAkj0Zh55GjvVAii1W2Clwd1zfA2YJCGpqbQb9DmZDX+XpMiXt6tTbFM1I
- rNECky/EYHaujudE8xqELAwcCqEYjsfP+1inXXTcuyuASYimfH2tMm20xXgHNnV0Tuzf4tGfR3J
- TfoDoQnY72BG7hjgqCyh2AVIlKunoW3DIkpy5JpGE4tNqkwuxNprrxTeQp3eIf+rfEzIc25sQG6
- GZCBOffkwEhR4DHe3NyVsbPTd9PI4d3EPQ0APvTt9FmQuYZJ4tyI7p7wZl0aVvuxMzN+V+f9FAv
- MKeSgF6AKarSoQbDslhOhqwo+IigPFNkib+AdDrmVw6dqIgI2BbBBFneO3XZeSTNpu0mCOf0bRA
- 1d2t+gYkEWvV04eU/n+6mnhwP0i4v9eeDzM6k2RXP+PALQEhCCvMIpv8XxuNC3d0YyEpkxq3MDg
- dxo6o023dQEGoRQ==
-X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
- fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
+Content-Transfer-Encoding: 8bit
 
-static checker complains, that the block already breaks if IS_ERR(np)
-and thus the extra !IS_ERR(np) check in the while condition is
-superfluous. Avoid the extra check by using while(true) instead. This
-should not change the runtime behavior at all and I expect the binary
-to be more or less the same for an optimizing compiler.
+This series is also available at:
 
-Fixes: f368f87b22da ("power: supply: core: convert to fwnnode")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-pm/285c9c39-482c-480c-8b0b-07111e39fdfe@sabinyo.mountain/
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- drivers/power/supply/power_supply_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git libcrypto-kunit-v4
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index aedb20c1d2767309ae716712f8be8002b988f1b4..7c3913155dc0b7e51cdefe2974b09a9259ccb4b9 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -212,7 +212,7 @@ static int __power_supply_populate_supplied_from(struct power_supply *epsy,
- 			break;
- 		}
- 		fwnode_handle_put(np);
--	} while (!IS_ERR(np));
-+	} while (true);
- 
- 	return 0;
- }
+This series adds the first KUnit tests for lib/crypto/, including tests
+for SHA-2 and Poly1305.
 
----
-base-commit: f9335bb4f5d4f3b913efd5872c2794d027dd85a6
-change-id: 20250707-fix-psy-static-checker-warning-f6aac00b24dd
+Changed in v4:
+- Added Poly1305 tests.
+- Split the addition of hash-test-template.h and gen-hash-testvecs.py
+  into a separate patch.
+- Added two more test cases to hash-test-template.h
+  (test_hash_all_lens_up_to_4096 and test_hash_interrupt_context_2).
+- Simplified test_hmac to use a single consolidated test vector.
+- Lots of other cleanups.
 
-Best regards,
+Changed in v3:
+- Split from SHA-512 and SHA-256 series, as per the request from Linus
+  that the tests be kept last on the branch.
+
+Eric Biggers (4):
+  lib/crypto: tests: Add hash-test-template.h and gen-hash-testvecs.py
+  lib/crypto: tests: Add KUnit tests for SHA-224 and SHA-256
+  lib/crypto: tests: Add KUnit tests for SHA-384 and SHA-512
+  lib/crypto: tests: Add KUnit tests for Poly1305
+
+ lib/crypto/Kconfig                    |   2 +
+ lib/crypto/Makefile                   |   2 +
+ lib/crypto/tests/Kconfig              |  46 ++
+ lib/crypto/tests/Makefile             |   5 +
+ lib/crypto/tests/hash-test-template.h | 680 ++++++++++++++++++++++++++
+ lib/crypto/tests/poly1305-testvecs.h  | 186 +++++++
+ lib/crypto/tests/poly1305_kunit.c     | 165 +++++++
+ lib/crypto/tests/sha224-testvecs.h    | 238 +++++++++
+ lib/crypto/tests/sha224_kunit.c       |  39 ++
+ lib/crypto/tests/sha256-testvecs.h    | 238 +++++++++
+ lib/crypto/tests/sha256_kunit.c       |  39 ++
+ lib/crypto/tests/sha384-testvecs.h    | 290 +++++++++++
+ lib/crypto/tests/sha384_kunit.c       |  39 ++
+ lib/crypto/tests/sha512-testvecs.h    | 342 +++++++++++++
+ lib/crypto/tests/sha512_kunit.c       |  39 ++
+ scripts/crypto/gen-hash-testvecs.py   | 146 ++++++
+ 16 files changed, 2496 insertions(+)
+ create mode 100644 lib/crypto/tests/Kconfig
+ create mode 100644 lib/crypto/tests/Makefile
+ create mode 100644 lib/crypto/tests/hash-test-template.h
+ create mode 100644 lib/crypto/tests/poly1305-testvecs.h
+ create mode 100644 lib/crypto/tests/poly1305_kunit.c
+ create mode 100644 lib/crypto/tests/sha224-testvecs.h
+ create mode 100644 lib/crypto/tests/sha224_kunit.c
+ create mode 100644 lib/crypto/tests/sha256-testvecs.h
+ create mode 100644 lib/crypto/tests/sha256_kunit.c
+ create mode 100644 lib/crypto/tests/sha384-testvecs.h
+ create mode 100644 lib/crypto/tests/sha384_kunit.c
+ create mode 100644 lib/crypto/tests/sha512-testvecs.h
+ create mode 100644 lib/crypto/tests/sha512_kunit.c
+ create mode 100755 scripts/crypto/gen-hash-testvecs.py
+
 -- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
+2.50.0
 
