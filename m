@@ -1,240 +1,91 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA325145355;
-	Sun,  6 Jul 2025 06:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96172E371A;
+	Sun,  6 Jul 2025 06:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751784135; cv=none; b=Vtvy964QW4c5DnBFpnJ3xAieVlcDzGmFM35L61yfs9bYZvIG2x5QoGmGf/4anf8Tu1Pg3gU6MvcHhFdT1aB//0fpV2KkXOvjq2mBn8n1Wl235wYa8Yx9SjamfTgoMD2RKPFYQuamv3Sjpg3yZj7s7pp8lkjlo8YTidhZvV5G1c0=
+	t=1751784689; cv=none; b=OQP+wweDi11eDlzVQ22lJVU61l7xd7fpFi7VuR4zjxHsBTvGIyuNH7PhSOQJUr1EOQkmQMg7oUwXU5L4m+2TJh+458oJSk1m2b1esLH700lWQhFPopF12Aw5rcLZi241rO/qIZgO88IzI+XgSL2FaaIjQ9K87JvFJt9FY3mZSr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751784135; c=relaxed/simple;
-	bh=JGoxqYa/JFYXWNg4+wRryNCN34sjiJyC14fsFDCLigY=;
+	s=arc-20240116; t=1751784689; c=relaxed/simple;
+	bh=upUy0d1WA/Xc8zitClR7qwrNXfZW7l3tBw2d5pzSSxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUzpBHwknqFO+cE/YpRAtF+8SFW1OKjxQmChM/qIk2uHukfEzu6g60U4Ze0nGDo/1HyJv0kq9L+l1HICVq8AhnP3G+7g1pDoBNcDCBgrDbm8SLoQAnuHFYMwwNFDcdWzRdVkfn0Oa8Xefb6MhCnslzgpG9wUJ/SL9vZ/G4sLOAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qX9sm5mf; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+NHxyi1ZioV4T/VDB78yjDZeWXZgaTo0sWMkG+Ilrrs0paxTQQr8H3kIk6oo45bfTlPSfiLPNQTmlHUvYcgkxErbTfSTxR/GgQWZBGt+XnGqPAVy2S1NJB80r/ab0pqhlnEaR4pwSAe/sx78CjTvZsu8tPWIqkL/7JlMunzGus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VoYOParV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qX9sm5mf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751784122;
-	bh=JGoxqYa/JFYXWNg4+wRryNCN34sjiJyC14fsFDCLigY=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VoYOParV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0067FC4CEED;
+	Sun,  6 Jul 2025 06:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751784688;
+	bh=upUy0d1WA/Xc8zitClR7qwrNXfZW7l3tBw2d5pzSSxw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qX9sm5mf1rD1MJgH2vLM7Aq3UdgMmmZenxbCuFuGPZh8OPoGTJELAZ9TAeUd7t393
-	 t1d4EwgIZEsmRVIONCA7E2D7J0PmDtyLMr8QyAma9f+aUtvCXkgaLajDioKR005vyc
-	 jWnLzB062gjLObX1FC41SpFTTyfN/ZClqsVdQX5I=
-Date: Sun, 6 Jul 2025 08:42:01 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Joshua Grisham <josh@joshuagrisham.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Antheas Kapenekakis <lkml@antheas.dev>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Prasanth Ksr <prasanth.ksr@dell.com>, 
-	Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v5 1/6] platform/x86: firmware_attributes_class: Add
- device initialization methods
-Message-ID: <05563b0c-861f-4046-9d50-87296d1bf6a2@t-8ch.de>
-References: <20250705-fw-attrs-api-v5-0-60b6d51d93eb@gmail.com>
- <20250705-fw-attrs-api-v5-1-60b6d51d93eb@gmail.com>
+	b=VoYOParVbOR3lvbXd5lzZCyK2Z1UK8NEkzlLbHP7FBZMhctmEnNKXso0uVf2O65JN
+	 qAmAQGubjnoGb6DP8nN70K6odJukibYg80oziDbf/ypc/8NJf502JfoWHyNZtUUuL9
+	 bGhu7bqej+EEWYiJgBSX3pXLu7t9KHyCgNpR4slM=
+Date: Sun, 6 Jul 2025 08:51:25 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Pascal Ernster <git@hardfalcon.net>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.12 000/218] 6.12.36-rc1 review
+Message-ID: <2025070618-outbreak-badge-bc22@gregkh>
+References: <20250703143955.956569535@linuxfoundation.org>
+ <3ca03800-3d4e-41ca-897d-a0d05d6499ba@hardfalcon.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250705-fw-attrs-api-v5-1-60b6d51d93eb@gmail.com>
+In-Reply-To: <3ca03800-3d4e-41ca-897d-a0d05d6499ba@hardfalcon.net>
 
-On 2025-07-05 00:33:56-0300, Kurt Borja wrote:
-> From: Thomas Weißschuh <linux@weissschuh.net>
+On Sat, Jul 05, 2025 at 03:50:32PM +0200, Pascal Ernster wrote:
+> [2025-07-03 16:39] Greg Kroah-Hartman:
+> > This is the start of the stable review cycle for the 6.12.36 release.
+> > There are 218 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat, 05 Jul 2025 14:39:10 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.36-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
 > 
-> Currently each user of firmware_attributes_class has to manually set up
-> kobjects, devices, etc.
 > 
-> Provide this infrastructure out-of-the-box through the newly introduced
-> fwat_device_register().
+> Hi Greg,
 > 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> Co-developed-by: Kurt Borja <kuurtb@gmail.com>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/firmware_attributes_class.c | 125 +++++++++++++++++++++++
->  drivers/platform/x86/firmware_attributes_class.h |  28 +++++
->  2 files changed, 153 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
-> index 736e96c186d9dc6d945517f090e9af903e93bbf4..290364202cce64bb0e9046e0b2bbb8d85e2cbc6f 100644
-> --- a/drivers/platform/x86/firmware_attributes_class.c
-> +++ b/drivers/platform/x86/firmware_attributes_class.c
-> @@ -2,7 +2,14 @@
->  
->  /* Firmware attributes class helper module */
->  
-> +#include <linux/cleanup.h>
-> +#include <linux/device.h>
-> +#include <linux/device/class.h>
-> +#include <linux/kdev_t.h>
-> +#include <linux/kobject.h>
->  #include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
->  #include "firmware_attributes_class.h"
->  
->  const struct class firmware_attributes_class = {
-> @@ -10,6 +17,122 @@ const struct class firmware_attributes_class = {
->  };
->  EXPORT_SYMBOL_GPL(firmware_attributes_class);
->  
-> +static void fwat_device_release(struct device *dev)
-> +{
-> +	struct fwat_device *fadev = to_fwat_device(dev);
-> +
-> +	kfree(fadev);
-> +}
-> +
-> +/**
-> + * fwat_device_register - Create and register a firmware-attributes class
-> + *			  device
-> + * @parent: Parent device
-> + * @name: Name of the class device
-> + * @drvdata: Drvdata of the class device
-> + * @groups: Extra groups for the "attributes" directory
-> + *
-> + * Return: pointer to the new fwat_device on success, ERR_PTR on failure
-> + */
-> +struct fwat_device *
-> +fwat_device_register(struct device *parent, const char *name, void *drvdata,
-> +		     const struct attribute_group **groups)
-> +{
-> +	struct fwat_device *fadev;
-> +	int ret;
-> +
-> +	if (!parent || !name)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	fadev = kzalloc(sizeof(*fadev), GFP_KERNEL);
-> +	if (!fadev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	fadev->groups = groups;
-> +	fadev->dev.class = &firmware_attributes_class;
-> +	fadev->dev.parent = parent;
-> +	fadev->dev.release = fwat_device_release;
-> +	dev_set_drvdata(&fadev->dev, drvdata);
-> +	ret = dev_set_name(&fadev->dev, "%s", name);
-> +	if (ret) {
-> +		kfree(fadev);
-> +		return ERR_PTR(ret);
-> +	}
-> +	ret = device_register(&fadev->dev);
-> +	if (ret)
-> +		return ERR_PTR(ret);
+> there seems to be a divergence between 6.12.36-rc1 and the current state of queue/6.12 or stable-queue/queue-6.12 (five patches dropped and two modified), but there doesn't seem to be an rc2 - is this intentional?
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/diff/?id2=08de5e8741606608ca5489679ec1604bb7f3d777&id=4c3f7f0935ba0c1ca54be4e82cc8f27595ab8e61
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/diff/queue-6.12?id=c0bc2de2a5416da11ffadb0d10da975d1bdb1ada&id2=e1bd69ff09807d5bf80f17f3279240cb223145a6
+> 
 
-I think we need a put_device() here.
+Yes, intentional, I only do new -rcs if people are reporting build/run
+errors on -rcs, but we drop patches that people ask us to drop or fix in
+the queue without doing new -rc releases as that's not really needed.
 
-> +
-> +	fadev->attrs_kset = kset_create_and_add("attributes", NULL, &fadev->dev.kobj);
-> +	if (!fadev->attrs_kset) {
-> +		ret = -ENOMEM;
-> +		goto out_device_unregister;
-> +	}
-> +
-> +	ret = sysfs_create_groups(&fadev->attrs_kset->kobj, groups);
-> +	if (ret)
-> +		goto out_kset_unregister;
+> In any case, I've applied all patches from the current version of stable-queue/queue-6.12 (commit id c0bc2de2a5416da11ffadb0d10da975d1bdb1ada) applied on top of a 6.12.35 kernel, compiled the result with GCC 15.1.0 as part of OpenWRT images for various platforms, and I've booted and tested those images on the following platforms without noticing any issues:
+> 
+> - x86_64: Intel Haswell VM
+> - MIPS 4KEc V7.0: Netgear GS108T v3 (SoC: Realtek RTL8380M)
+> - MIPS 4KEc V7.0: Netgear GS310TP v1 (SoC: Realtek RTL8380M)
+> - MIPS 74Kc V5.0: TP-Link Archer C7 v4 (SoC: Qualcomm QCA956X)
+> 
+> Not sure it that qualifies for a "Tested-by" though because of the divergence to 6.12.36-rc1.
 
-It would be nicer for userspace to add the device to the hierarchy
-only when it is set up fully.
-Replacing device_register() with a device_initialize() above and
-device_add() down here.
+A tested-by would be great if you want to provide it, thanks!
 
-> +
-> +	return fadev;
-> +
-> +out_kset_unregister:
-> +	kset_unregister(fadev->attrs_kset);
-
-I *think* the driver core should clean up any child objects
-automatically, so this is unnecessary.
-
-> +
-> +out_device_unregister:
-> +	device_unregister(&fadev->dev);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(fwat_device_register);
-> +
-> +void fwat_device_unregister(struct fwat_device *fadev)
-> +{
-> +	if (!fadev)
-> +		return;
-> +
-> +	sysfs_remove_groups(&fadev->attrs_kset->kobj, fadev->groups);
-> +	kset_unregister(fadev->attrs_kset);
-
-The also the two lines above would be unnecessary.
-
-> +	device_unregister(&fadev->dev);
-> +}
-> +EXPORT_SYMBOL_GPL(fwat_device_unregister);
-> +
-> +static void devm_fwat_device_release(void *data)
-> +{
-> +	struct fwat_device *fadev = data;
-> +
-> +	fwat_device_unregister(fadev);
-> +}
-> +
-> +/**
-> + * devm_fwat_device_register - Create and register a firmware-attributes class
-> + *			       device
-> + * @parent: Parent device
-> + * @name: Name of the class device
-> + * @data: Drvdata of the class device
-> + * @groups: Extra groups for the class device (Optional)
-> + *
-> + * Device managed version of fwat_device_register().
-> + *
-> + * Return: pointer to the new fwat_device on success, ERR_PTR on failure
-> + */
-> +struct fwat_device *
-> +devm_fwat_device_register(struct device *parent, const char *name, void *data,
-> +			  const struct attribute_group **groups)
-> +{
-> +	struct fwat_device *fadev;
-> +	int ret;
-> +
-> +	fadev = fwat_device_register(parent, name, data, groups);
-> +	if (IS_ERR(fadev))
-> +		return fadev;
-> +
-> +	ret = devm_add_action_or_reset(parent, devm_fwat_device_release, fadev);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return fadev;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_fwat_device_register);
-
-... and also all of the devm stuff.
-
-> +
->  static __init int fw_attributes_class_init(void)
->  {
->  	return class_register(&firmware_attributes_class);
-> @@ -23,5 +146,7 @@ static __exit void fw_attributes_class_exit(void)
->  module_exit(fw_attributes_class_exit);
->  
->  MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
-> +MODULE_AUTHOR("Thomas Weißschuh <linux@weissschuh.net>");
-> +MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
->  MODULE_DESCRIPTION("Firmware attributes class helper module");
->  MODULE_LICENSE("GPL");
-
-<snip>
+greg k-h
