@@ -1,136 +1,168 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF06CA6F;
-	Sun,  6 Jul 2025 14:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B62A1BB;
+	Sun,  6 Jul 2025 14:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751812222; cv=none; b=VtrVfBV6Jvb+Bh0RVSlYbQHeSE3sdEKW9hrWlr/dPN9eRoeEtra15uzWPxHSW0FFcMHhfvIyExSNXiU+sUtce0Uq/3BxHv4lH/HnQlkJHQwz2nNeq+prdQpMQBk9SCwwZDizCz+X6o1i4xXTchml9JAPvKi/9qDgi3PFIq1Ysuc=
+	t=1751812406; cv=none; b=JiblAEN6wyWk9tru+mnbCTyiEf9sXbH6eUFGAPXGT3uQ9tc8ShkvZGc4J1MHZf7qRvmbERP3WCc2p4TUVkXkjrh2VoTgxgu09fIXYLiL2+IXLBDIpsV8XwvNYp6h8d1yhnOkJlipVrLeHpZBrKNfEZ4ZfaOaQY6YMXP8IVhG/qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751812222; c=relaxed/simple;
-	bh=Os3p122TLkem1wFS19Yci4rOcV8RY/p5XKcAomC5zKk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=S/z5H27Q2OrZCuiUnaimJArEN+zvZ9kkhiQyO2RouLsE8OCSbMghXvqOLEl5F1GKSRwuYMJGvPPl8/4UkjWe+pTguyzU3y0qYpeCP96EB0U0Xm0UE2Rc3tHbTxYBHvHnY83be9OLPjAG4cv0oq5Iq0APQ0kU63o5ASTfVBQDwhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qij0/zJo; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751812406; c=relaxed/simple;
+	bh=GszBMgPIL9mHFHPRYSHqyi7DgkOJi1d97/cdu9eFZn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BpgyuDv8xtLmxqTqgOmZ+sOeFH660NIte1eFI/6KVDkpqGngIi30DF4eoXRwQM32uvMbs63iCBRrHU6oaXqeiJkf47WDW2eHKED2JFwu3+Z9SILJsqLRu5CD6IMGctk1QvKxnsTV6fO+0s5TOuO0a9KuVaQt7TX3JN8RPZpb7PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKDZv9Sc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qij0/zJo"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e8259b783f6so1757296276.3;
-        Sun, 06 Jul 2025 07:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751812219; x=1752417019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ILk6V+IjCGdWOhQWfk6SrwBKe81/cN3kOICCBDFtPzw=;
-        b=Qij0/zJotKtNvL0NFyrVDuBOhanG5L655xQWOAEGGEOnMUxHhNOOxB/wHbkx1MJjyy
-         20zm+EN2Xo7KJ8n384QjGtKu77x5mPFg3VPh5pRiAH45heOBuCiRJ9Jqo0Nf93LAW5yu
-         r9zHt6gfA6Z3RKsCZ22EQ/DBXIaEkrxRa1ovqZ1MHTWUfkqSuSjqZqokpod1wrk+RtCD
-         yf/5fa1TGXbnooP6TvhJ22KbrGyOxU4JatR22PYUVMroS+c31NanUThBnru4FZLs+aqL
-         AEfX1DIKeGQ9nlSTPja0paBENwkKRSSeKhfVrZutCIVeYx2q791fxuC2jMrezmh8J5nJ
-         eD/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751812219; x=1752417019;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ILk6V+IjCGdWOhQWfk6SrwBKe81/cN3kOICCBDFtPzw=;
-        b=tdFq5A2LXRfSQKT11V/1ZjJSys3cer6pBnh/K0ZF0mRRgFgibFwaqhQLE/6WS/9fGc
-         lztNmH77Q72QmE/5lU+WBpxS6j6dU6Jk4EQDJAaie/gw4XJ2r7KkA0xIwBDfLN+Frh5O
-         JQkR2bKXLG8+f5nL+kHWh8btXE/7kl3oBK/L7d4lpPOYg7Yd3C+DrPGmd8fDb7haPuEX
-         /1R1k90XkPYbllyq6ONTlnJJQ5SAD5lqgiErgwErLkmfq7oWe/4gKNrjINAwveZRqe0v
-         gm8dDuaavsWm94V1B8PoDs2WoUJ6Ih1owJyEf35WJahKEnrJO0GiPkY0yrBJDOUoiX21
-         gEOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCaQpRLqW9T7k2PuH3XZLmq3OxTW4n9Vl2yh4kSlXgBkKvBPoqfcemHMDK8L/W/xHtSoZflnIB@vger.kernel.org, AJvYcCWuqjA9TrQnZULVTSDXD4P+cVTTQHu7rKCN1inKbNpP3d51rdsEhLr4J23dvgaQp2Oh+mOO6PUE/0rIyTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV+IceVEMkv9/TwvpojLFtusEB2hCyG/7DWTPrkdFX0KMcI8/c
-	6Ae7hKauOJtT8KSHj7Z4Mo78VoDK2iFf1daYOQ2xvKbelQInT9o4UCGT
-X-Gm-Gg: ASbGncupq2WdgzJN3/2lf8a0o7RUsPtg4BfjKk5As/zpkN7prVV+20l+tYcFXYb+blt
-	FB6JlPeRYucLw8Zp/hwJOSp3KCD1hYD6BQQcRj/Hjn/qdk0Ar9PnAMGGs4GmSPKqYmUsOR9bHx8
-	RoWeq9Y4vzjGQw8tMxbb7UfpaM5Sg8M2csYZZFTGBOGUsvIUSadsumQb5vUfjduVhI9qOWARdfY
-	eOVKDqti9JyvFVLVU8X3ClOC5rYCadG45G9LYxJvDStsgjngYPYnW3sTFc4CbmBLCkQu+SAwEW4
-	VGydidDTERQOTMm1qWYsMMe0N8Qx7CxNzgigqBkaRsZRhLw0NEBMfdip7UZPKWeE/j1fqIf1Q7o
-	0mpx2eTC6yGMilx/A9RHtoq4PvKgo/FWaFDo05rA=
-X-Google-Smtp-Source: AGHT+IEBmKQ51ZAVM2knwYxTBZrzCKTaZIBinugB6wBxG5OAXF22jsYHYXdSZcwqnMwbxhIIzKhdhg==
-X-Received: by 2002:a05:690c:38a:b0:712:d946:788e with SMTP id 00721157ae682-7166b5f6d7emr106376527b3.14.1751812219293;
-        Sun, 06 Jul 2025 07:30:19 -0700 (PDT)
-Received: from localhost (234.207.85.34.bc.googleusercontent.com. [34.85.207.234])
-        by smtp.gmail.com with UTF8SMTPSA id 3f1490d57ef6-e899c440e7bsm2016366276.37.2025.07.06.07.30.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jul 2025 07:30:18 -0700 (PDT)
-Date: Sun, 06 Jul 2025 10:30:18 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Cong Wang <xiyou.wangcong@gmail.com>, 
- Fengyuan Gong <gfengyuan@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- toke@toke.dk, 
- edumazet@google.com, 
- "David S . Miller" <davem@davemloft.net>, 
- Jamal Hadi Salim <jhs@mojatatu.com>, 
- Jiri Pirko <jiri@resnulli.us>, 
- Stanislav Fomichev <sdf@fomichev.me>, 
- Kuniyuki Iwashima <kuniyu@google.com>, 
- Ahmed Zaki <ahmed.zaki@intel.com>, 
- Alexander Lobakin <aleksander.lobakin@intel.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- cake@lists.bufferbloat.net, 
- willemb@google.com
-Message-ID: <686a887a34d5a_3ad0f3294c@willemb.c.googlers.com.notmuch>
-In-Reply-To: <aGdZFhGu40UD6UDU@pop-os.localdomain>
-References: <20250702160741.1204919-1-gfengyuan@google.com>
- <aGdZFhGu40UD6UDU@pop-os.localdomain>
-Subject: Re: [PATCH net-next] net: account for encap headers in qdisc pkt len
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKDZv9Sc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03B9C4CEED;
+	Sun,  6 Jul 2025 14:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751812406;
+	bh=GszBMgPIL9mHFHPRYSHqyi7DgkOJi1d97/cdu9eFZn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iKDZv9ScfdI1Wi/lRv/5uIhMUsTaVhCqG+RoWcCYdqxf9xL960iv2mlayyM36bdyq
+	 bK1IzAqY+rLCanSz7v2blOuZt5Eimi1f+D+N1/rjRXIuFf62sMm+E5adkO7ZQ36PIW
+	 w7T+wS6JoyMB/IbwaGgh066RCz7eD1SDrbkfHvmHqH00k1mgNECBzVvSqByfMVohoJ
+	 H4uxNLzCkWNdTlHpnaoSkVdlb0q7H6kUJAjh7XwAzYnQ5u08XFkZEPc1cA0qtGKNrO
+	 OitG3C6wjnulFelbr3s8EEXguXFYMfekQGa25vslEaj/n9+P5d+gtME+RN0LDeUko8
+	 hUi2T3QWkkfeg==
+Date: Sun, 6 Jul 2025 17:33:04 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: David Matlack <dmatlack@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>, jasonmiu@google.com,
+	graf@amazon.com, changyuanl@google.com, rientjes@google.com,
+	corbet@lwn.net, rdunlap@infradead.org,
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
+	vincent.guittot@linaro.org, hannes@cmpxchg.org,
+	dan.j.williams@intel.com, david@redhat.com,
+	joel.granados@kernel.org, rostedt@goodmis.org,
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
+	linux@weissschuh.net, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
+	aleksander.lobakin@intel.com, ira.weiny@intel.com,
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
+	stuart.w.hayes@gmail.com
+Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
+Message-ID: <aGqJIFs8GpvHn_Yy@kernel.org>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-11-pasha.tatashin@soleen.com>
+ <20250624-akzeptabel-angreifbar-9095f4717ca4@brauner>
+ <CA+CK2bBu4ex9O5kPcR7++DVg3RM8ZWg3BCpcc6CboJ=aG8mVmQ@mail.gmail.com>
+ <20250625-akrobatisch-libellen-352997eb08ef@brauner>
+ <CALzav=d+XgS1bUs-v7+ws5nYU9y=4uc1c8oVLHrJ16qLpnUi9Q@mail.gmail.com>
+ <mafs0sejmse57.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <mafs0sejmse57.fsf@kernel.org>
 
-Cong Wang wrote:
-> On Wed, Jul 02, 2025 at 04:07:41PM +0000, Fengyuan Gong wrote:
-> > diff --git a/net/core/dev.c b/net/core/dev.c
-> > index 11da1e272ec20..dfec541f68e3a 100644
-> > --- a/net/core/dev.c
-> > +++ b/net/core/dev.c
-> > @@ -3944,7 +3944,10 @@ static void qdisc_pkt_len_init(struct sk_buff *skb)
-> >  		unsigned int hdr_len;
-> >  
-> >  		/* mac layer + network layer */
-> > -		hdr_len = skb_transport_offset(skb);
-> > +		if (!skb->encapsulation)
-> > +			hdr_len = skb_transport_offset(skb);
-> > +		else
-> > +			hdr_len = skb_inner_transport_offset(skb);
+On Thu, Jun 26, 2025 at 05:42:28PM +0200, Pratyush Yadav wrote:
+> On Wed, Jun 25 2025, David Matlack wrote:
 > 
-> This pattern seems repeated in a few places, other than the two you are
-> patching, I saw another one:
+> > On Wed, Jun 25, 2025 at 2:36 AM Christian Brauner <brauner@kernel.org> wrote:
+> >> >
+> >> > While I agree that a filesystem offers superior introspection and
+> >> > integration with standard tools, building this complex, stateful
+> >> > orchestration logic on top of VFS seemed to be forcing a square peg
+> >> > into a round hole. The ioctl interface, while more opaque, provides a
+> >> > direct and explicit way to command the state machine and manage these
+> >> > complex lifecycle and dependency rules.
+> >>
+> >> I'm not going to argue that you have to switch to this kexecfs idea
+> >> but...
+> >>
+> >> You're using a character device that's tied to devmptfs. In other words,
+> >> you're already using a filesystem interface. Literally the whole code
+> >> here is built on top of filesystem APIs. So this argument is just very
+> >> wrong imho. If you can built it on top of a character device using VFS
+> >> interfaces you can do it as a minimal filesystem.
+> >>
+> >> You're free to define the filesystem interface any way you like it. We
+> >> have a ton of examples there. All your ioctls would just be tied to the
+> >> fileystem instance instead of the /dev/somethingsomething character
+> >> device. The state machine could just be implemented the same way.
+> >>
+> >> One of my points is that with an fs interface you can have easy state
+> >> seralization on a per-service level. IOW, you have a bunch of virtual
+> >> machines running as services or some networking services or whatever.
+> >> You could just bind-mount an instance of kexecfs into the service and
+> >> the service can persist state into the instance and easily recover it
+> >> after kexec.
+> >
+> > This approach sounds worth exploring more. It would avoid the need for
+> > a centralized daemon to mediate the preservation and restoration of
+> > all file descriptors.
 > 
-> 2465 static netdev_features_t hns3_features_check(struct sk_buff *skb,
-> 2466                                              struct net_device *dev,
-> 2467                                              netdev_features_t features)
-> 2468 {
-> 2469 #define HNS3_MAX_HDR_LEN        480U
-> 2470 #define HNS3_MAX_L4_HDR_LEN     60U
-> 2471 
-> 2472         size_t len;
-> 2473 
-> 2474         if (skb->ip_summed != CHECKSUM_PARTIAL)
-> 2475                 return features;
-> 2476 
-> 2477         if (skb->encapsulation)
-> 2478                 len = skb_inner_transport_offset(skb);
-> 2479         else
-> 2480                 len = skb_transport_offset(skb);
+> One of the jobs of the centralized daemon is to decide the _policy_ of
+> who gets to preserve things and more importantly, make sure the right
+> party unpreserves the right FDs after a kexec. I don't see how this
+> interface fixes this problem. You would still need a way to identify
+> which kexecfs instance belongs to who and enforce that. The kernel
+> probably shouldn't be the one doing this kind of policy so you still
+> need some userspace component to make those decisions.
+> 
+> >
+> > I'm not sure that we can get rid of the machine-wide state machine
+> > though, as there is some kernel state that will necessarily cross
+> > these kexecfs domains (e.g. IOMMU driver state). So we still might
+> > need /dev/liveupdate for that.
+> 
+> Generally speaking, I think both VFS-based and IOCTL-based interfaces
+> are more or less equally expressive/powerful. Most of the ioctl
+> operations can be translated to a VFS operation and vice versa.
+> 
+> For example, the fsopen() call is similar to open("/dev/liveupdate") --
+> both would create a live update session which auto closes when the FD is
+> closed or FS unmounted. Similarly, each ioctl can be replaced with a
+> file in the FS. For example, LIVEUPDATE_IOCTL_FD_PRESERVE can be
+> replaced with a fd_preserve file where you write() the FD number.
+> LIVEUPDATE_IOCTL_GET_STATE or LIVEUPDATE_IOCTL_PREPARE, etc. can be
+> replaced by a "state" file where you can read() or write() the state.
+> 
+> I think the main benefit of the VFS-based interface is ease of use.
+> There already exist a bunch of utilites and libraries that we can use to
+> interact with files. When we have ioctls, we would need to write
+> everything ourselves. For example, instead of
+> LIVEUPDATE_IOCTL_GET_STATE, you can do "cat state", which is a bit
+> easier to do.
+>
+> As for downsides, I think we might end up with a bit more boilerplate
+> code, but beyond that I am not sure.
 
-From a quick grep, this is the only other case, right?
+One of the points in Christian's suggestion was that ioctl doesn't have to
+be bound to a misc device. Even if we don't use read()/write()/link() etc,
+we can have a filesystem that exposes, say, "control" file and that file
+has the same liveupdate_ioctl() in its fops as we have now in miscdev.
+
+The cost is indeed a bit of boilerplate code to create the filesystem, but
+it would be easier to extend for per-service and containers support.
+
+And we won't need sysfs entry for status, as it can be also pre-populated
+in kexecfs (or whatever it'll be called).
  
-> Maybe worth a helper now?
+> -- 
+> Regards,
+> Pratyush Yadav
 
-If only one more, I wouldn't respin for that.
+-- 
+Sincerely yours,
+Mike.
