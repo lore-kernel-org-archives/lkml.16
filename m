@@ -1,94 +1,82 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA73D202F67
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A859D1FBE9E;
+	Sun,  6 Jul 2025 10:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751797679; cv=none; b=eWhAzxHQFbgqfS8Pkv2ZXA//cSEQyf5wT7rTOVjrXm3oTUJxDn/mKiNnjKM93b7qE9HOu1jngipogqI0lopfA51H+0kA4HsDeoAV/QajosXgRgoghiqbSdWjBP1Iu0NMUBeHokxj8tTY9BhDOKv9MGrmJfHLu+TnnpxKiMduhnY=
+	t=1751797714; cv=none; b=eMQBZ1UUaCLuFPDTFl86rrHzBL8S54n0KUvpIueKRxyh466zQQhd4lO0ytNzC0Q2BDh0bM0innPRIBOp/IDzPMkt+EwrYdiNxhyV8Zr7EgoBleqOIpyxJT6CdlCPUm6t2jwlxl60PyFNQtt4v0xOSNl/GOEu0RPal4who/KHPnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751797679; c=relaxed/simple;
-	bh=9K+ZlIV9VyTnpA8DmHWdooGPTnN2QzCix4/ezMftv38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kLw7T1HOklWs/wmeOnNKWPxRuiQYCvosozirn62i7dGnHqykIitHtTf8D6PPJ2ANw+SV+ytNoACRvekENLtKmC87Vzvkj7LbGvLeVaujiwgF3tevK7YG7V1TmJ2iosxhmPJx9rs6rqttZDeJEhu1OpsvU0mQZP8Tg/kNjqYq1bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5331f409ed2so617842e0c.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 03:27:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751797676; x=1752402476;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=D5qeoi1n24XfufXve0BXfIa0gWLLUTNel49/JF9R7Qk=;
-        b=S4SHZfEPOBq94YaWwZofgWld3uAB3WovsD/7KhQWfAg6EYWdtTz7BSJ2af5MdtGek2
-         wMHqZ7eZHsWQ37VvEBiRkd39GAQfusxe6QgGcrdrwzu9HuZI0Njio+rQiJSWYkra2JI1
-         qyzu4TFPvOiIF0YY9lHHpZPqNbnmiuVb9fCZii21B/6x4tQIxIspER8gYDXG/TFc7Y9b
-         tSHApLiIVru3JtrXYMrafwV2Imvqp8Ooppe6cL9nu+F+42LtdetcLnfgTEZoeI4QuXEv
-         A6zD6t8P1+i3ICOX9YURiCvikZm7YlW+XL0XjinwPKWrreCktwsbknUQ01so2ANgG5Qj
-         oS2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWDVJoL/e4v8SSkN57XUzOXs6bo2vsnzlbWaQMNklzGMuFfkur2fzN3M70xfvE+Ny5kvD2IYrnp0vB49bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmyju2DcttpAYj51NB7n7JZlkLtwOq1QojbpWwmsni5a77K8Qx
-	x29Mq4lKUfFuHq43KH8xNlLileFwWD3CZYC/mNT+pzF19ChAPyw3TODS+s5VCQTQ
-X-Gm-Gg: ASbGncuhPUccI0HJInWwRPKKySmCeQM7ndEBpjDc1oMRnP43XYT1LMrplJVeYuUfJFW
-	hJF4F9kTt1W0o/K1A3AO4nfdTT/v8lOq7O5K5cvXiWrlxAZhigys8tWez9gu2jz06hRMbfxopva
-	Z59m5XqhKuRIsHTHneFcuXT0MwgDF+wA7x0Qm2ZiPFgfKPQ0od7O5/qKfaXDamdAcVYdrWEHC9I
-	BBfFJ2JeFiyHye4Yvu0iNY3AWVotfPLsQg2kULOsm7xUVVzNBiM3GjBTBp7PReXFvdQ/3/4OAEt
-	8fZiCyZAQFyFXdhVU0iFbT7sNA0/LuTsOutJ/PaRzt/Hsx+qbiR8PcmpzdjeJ8+wmr7n15VZ9Y6
-	DDZNkJdRR/IlVVV4U9JoZyWc2shvK
-X-Google-Smtp-Source: AGHT+IGbJVXDBZ9RW6cEeypalUkj9WJKeBLcke57uRRWVl0n51/wJqmuv+8yfViZ9M0ztVak1onkmQ==
-X-Received: by 2002:a05:6122:3548:b0:531:2f51:7676 with SMTP id 71dfb90a1353d-534f66772camr2699157e0c.9.1751797676269;
-        Sun, 06 Jul 2025 03:27:56 -0700 (PDT)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5347906c3e2sm882191e0c.29.2025.07.06.03.27.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Jul 2025 03:27:56 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5347686c12cso552178e0c.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 03:27:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXNOAb7CyxXrA5N/+piPYYgzhs3oy1Kt+CYwemTc3uWFPEvVcoaPiFmsrCwLJOARZ+tYe7pXukPfW1dz3E=@vger.kernel.org
-X-Received: by 2002:a05:6122:2522:b0:531:4041:c4c7 with SMTP id
- 71dfb90a1353d-534f6647ef7mr2383299e0c.7.1751797675864; Sun, 06 Jul 2025
- 03:27:55 -0700 (PDT)
+	s=arc-20240116; t=1751797714; c=relaxed/simple;
+	bh=sqsfmxEMIHdCJ5mIhZR1e9TAHhF/LbbsxqPufJRT8c8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zzg+gHW5TE0zrSK+DUoo0oJccPtDX9vVfEK1i6X88yZ+ffVvI2ZzLCC2nRecUPmhtslOYKi4gQ2kcW00ahXu8ZzN06VDHZlGQg58Lml8ZOwFcjHIVB55GgIjjxglJKpUZSwro4SYxPr6evFZRFvwa6F4hqVtFQMDuyvWScOBq4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhLFtpw5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhLFtpw5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CFDAC4CEED;
+	Sun,  6 Jul 2025 10:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751797714;
+	bh=sqsfmxEMIHdCJ5mIhZR1e9TAHhF/LbbsxqPufJRT8c8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fhLFtpw5+ZJG++ZceMLxqKTiBFoyym9P1c4cz7G4yl/7Bh0a0nb0QMvNVNSRCTeC0
+	 t8Gi35BLa3JTrBJxdLF7Rz6NjZwsescr6gs+n/M1LPXBDkyaxLG+kMKXsuBGbsvic5
+	 McFenVsS7vKQu6iQ1nYYF/7eLdO1lsrwPl8ock97VU82KPYjYEgVBh+mn5HLRMIgDh
+	 3+uldIEmPTpzU+hi/i9OhI3LGNK+5Kmm9LV5n5P1BuEN+53Ainsn3d40zEultgti1I
+	 Nw6NWq+eAHfEkgyP+i3ji4OVRrvN6dDDKQ6Z7uw6eHTEyFpUDNS8SUxi9I4Nx7grSJ
+	 dP+cwGMrImcMg==
+Date: Sun, 6 Jul 2025 11:28:25 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Gerald Loacker
+ <gerald.loacker@wolfvision.net>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?=
+ <barnabas.czeman@mainlining.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Waqar Hameed <waqar.hameed@axis.com>, Hans de
+ Goede <hansg@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jakob
+ Hauser <jahau@rocketmail.com>, David Laight <david.laight@aculab.com>, Al
+ Viro <viro@zeniv.linux.org.uk>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 35/80] iio: magnetometer: Remove redundant
+ pm_runtime_mark_last_busy() calls
+Message-ID: <20250706112825.5747acd1@jic23-huawei>
+In-Reply-To: <20250704075425.3219648-1-sakari.ailus@linux.intel.com>
+References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	<20250704075425.3219648-1-sakari.ailus@linux.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743115195.git.fthain@linux-m68k.org> <ec2d443d3c3213028bbbab7c2e0382cd53db75fe.1743115195.git.fthain@linux-m68k.org>
-In-Reply-To: <ec2d443d3c3213028bbbab7c2e0382cd53db75fe.1743115195.git.fthain@linux-m68k.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 6 Jul 2025 12:27:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXqZ8AVgx7i21PWQcv6MCCfv8nN+g3c5VieAAr_vB6qSw@mail.gmail.com>
-X-Gm-Features: Ac12FXyDnW8Qrbd8AeQfhiv1PJDIJ_HfDyd7HbCagdBx1CNeK_YtloNRAxfCHtE
-Message-ID: <CAMuHMdXqZ8AVgx7i21PWQcv6MCCfv8nN+g3c5VieAAr_vB6qSw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] m68k: Remove unused "cursor home" code from debug console
-To: Finn Thain <fthain@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Mar 2025 at 23:44, Finn Thain <fthain@linux-m68k.org> wrote:
-> The cursor home operation is unused and seems undesirable for logging.
-> Remove it. The console_not_cr label actually means "not line feed and
-> not carriage return either" so take the opportunity to replace it with
-> something less confusing. Rectify some inconsistent whitespace while
-> we're here.
->
-> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+On Fri,  4 Jul 2025 10:54:25 +0300
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-i.e. will queue in the m68k tree for v6.17.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
+> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
+> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
+> pm_runtime_mark_last_busy().
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> diff --git a/drivers/iio/magnetometer/bmc150_magn.c b/drivers/iio/magnetometer/bmc150_magn.c
+> index 761daead5ada..53d860e640a9 100644
+> --- a/drivers/iio/magnetometer/bmc150_magn.c
+> +++ b/drivers/iio/magnetometer/bmc150_magn.c
+> @@ -263,7 +263,6 @@ static int bmc150_magn_set_power_state(struct bmc150_magn_data *data, bool on)
+>  	if (on) {
+>  		ret = pm_runtime_resume_and_get(data->dev);
+>  	} else {
+> -		pm_runtime_mark_last_busy(data->dev);
+>  		ret = pm_runtime_put_autosuspend(data->dev);
+>  	}
+>  
+Drop {} in both legs now neither has multiple lines.
