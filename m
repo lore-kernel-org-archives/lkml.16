@@ -1,126 +1,134 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E572919005E;
-	Sun,  6 Jul 2025 23:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751844862; cv=pass; b=jcuZfsZJ+hk8WrGYA0NDbelXBqgPflxZSX3vFRMQuT1NFEl+f/ACyTWYdSTsYkMFQxh1+Wq9JoWtG56NmR+XhxsIc6CASMLrE1+3PtGUv3biglAGjBBZSn36pmJEZWzWlBg78SzXK9AnbZeeKFWJWraZhtusprwreu7JZ6neBoY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751844862; c=relaxed/simple;
-	bh=itjhecGpCikTA7dpGfNaSXg7eAyxUUlQBMvigTlb97k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqwzD+wYdi4Y72fHoqPnDTJuufPjwGr5cFE+6cbhkFQYBn3Q3S41FHAt4zUfwVw0YxJBzVtv8mzL79Q1HYFkHRN09kZPjAUmApeQqTHXywlzq8aUJwzvfjoQ77kUXlvDmsysSdlS7cF40exNbks8AZSPw0HBguZP4FB/i2dMmHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=fHqd48Hj; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="fHqd48Hj"
-ARC-Seal: i=1; a=rsa-sha256; t=1751844824; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BGHqLupuRiyOQ1O3SOFWjX1OzBR9/2L7EWvrdj4HC3DJ/jytlmR2oTGkvdkTTkiGWcc8Ijn6VTC1kcu+TMse5Y80UZe0qUlI6QQChhRRH7LGlSMsZEy+GsbqZ/7lN/ntpebKG6WsrhazZdgqCCUDZ1MmH2+12uixVLJqE9lKYMA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751844824; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=itjhecGpCikTA7dpGfNaSXg7eAyxUUlQBMvigTlb97k=; 
-	b=FSCPsjbHM/QxheLzaj2IeDe18PIhW0v9YYck/XB+AhqrAH+Igv0HShxRaF+Te00iJIxc6hvX71Zx45J6YXOVfO2/989rxIPCP8vy9sQrfNb1BC6Cpuo70EQrezls9lAIEly5Kwl7b0jx86Nr3F84LgSqfV/XV79qnmFxzs4Bulg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751844824;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=itjhecGpCikTA7dpGfNaSXg7eAyxUUlQBMvigTlb97k=;
-	b=fHqd48HjBTov/+ORYD0F1yxkLSXlu7JcNS+HeYvgngpp78UczV/swrwXMnSBXcsn
-	ZpocJNHdOcJepk9PPLo/xl+BkCf0242YbOp1zk0tR52eccGEVyS44J/A/RCSaEmq9fN
-	4ZqtNx/s+j96u+Ghlcc7+UlC+M4VRjM7Z5H2gBmo=
-Received: by mx.zohomail.com with SMTPS id 1751844821754603.230935627197;
-	Sun, 6 Jul 2025 16:33:41 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 2C647180F14; Mon, 07 Jul 2025 01:33:36 +0200 (CEST)
-Date: Mon, 7 Jul 2025 01:33:36 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Frank Li <Frank.li@nxp.com>, imx@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abelvesa@linux.com>, 
-	Robin Gong <b38343@freescale.com>, Robin Gong <yibin.gong@nxp.com>, 
-	Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v7 5/6] power: supply: pf1550: add battery charger support
-Message-ID: <i7qehdo46eegyj7ebp4hetr7jtwkxceoate6tqw6aukw4cbgsl@pl6lgh4k5m4o>
-References: <20250612-pf1550-v7-0-0e393b0f45d7@savoirfairelinux.com>
- <20250612-pf1550-v7-5-0e393b0f45d7@savoirfairelinux.com>
- <xgwx65axwiebh27hrq7rluuf7jynb7v4o77mf2zztsf64bx3bw@iagwzeumk2su>
- <aFwFhYoaWoSXcFdR@fedora>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4776219D8A3;
+	Sun,  6 Jul 2025 23:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751845097; cv=none; b=Flxcc583VrnuICVjz6hSqp0xEfM36HIb2j3YO0Y7YHjY5udi6qaex46VeirVQhDpc3XzBP2EM2HyCfCWrqjx8y00EVYuVXo475+iljBYEVg61lzPm69Dv/b4VxK/NBPX1FJS0WnEnmWbx87B6mpLtaBTVaZj+037S31QQ+ZSHkw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751845097; c=relaxed/simple;
+	bh=GIW4M+B02meitepEZRICFQHNNiA29C676M+kLF16Q4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hgxxuyn4ZDASWlws6gJKrYcMfBtyO2gfAs6Fq26CsZSWIs0uDb66TwF8OZlUArKyA3Oqqa5gdBZkKOAn+IsnPH/Wqdu8kug2dJBpvsPNdmjGIsCX7ItHpcKRpvBLMs08dldzmnyfHFxGGoCIMB7qQ9c1RMa36gtQRmmGyB4sbCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A98CB1E8D;
+	Sun,  6 Jul 2025 16:38:00 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB5DB3F694;
+	Sun,  6 Jul 2025 16:38:11 -0700 (PDT)
+Date: Mon, 7 Jul 2025 00:36:40 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej@kernel.org>, Samuel
+ Holland <samuel@sholland.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-sunxi@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: power: Add A523 PPU and PCK600 power
+ controllers
+Message-ID: <20250707003640.73e08911@minigeek.lan>
+In-Reply-To: <20250627152918.2606728-2-wens@kernel.org>
+References: <20250627152918.2606728-1-wens@kernel.org>
+	<20250627152918.2606728-2-wens@kernel.org>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hkm4pffdfaovyioh"
-Content-Disposition: inline
-In-Reply-To: <aFwFhYoaWoSXcFdR@fedora>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/251.827.75
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 27 Jun 2025 23:29:15 +0800
+Chen-Yu Tsai <wens@kernel.org> wrote:
 
---hkm4pffdfaovyioh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 5/6] power: supply: pf1550: add battery charger support
-MIME-Version: 1.0
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The A523 PPU is likely the same kind of hardware seen on previous SoCs.
+> 
+> The A523 PCK600, as the name suggests, is likely a customized version
+> of ARM's PCK-600 power controller. Comparing the BSP driver against
+> ARM's PPU datasheet shows that the basic registers line up, but
+> Allwinner's hardware has some additional delay controls in the reserved
+> register range. As such it is likely not fully compatible with the
+> standard ARM version.
+> 
+> Document A523 PPU and PCK600 compatibles.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Hello Samuel,
+Both PPUs are merely mentioned in the user manual, but do not have a
+register description. But the BSP source code confirms the mapping of
+the power domains used below, so:
 
-On Wed, Jun 25, 2025 at 10:19:49AM -0400, Samuel Kayode wrote:
-> The pf1550 charger receives a VBUS power input which can be provided eith=
-er by
-> an AC adapter or a USB bus. A depleted battery is charged using the VBUS =
-power
-> input (VBUSIN). When no power is supplied to VBUSIN, the pf1550 switches =
-the
-> load to the connected non-depleted battery.
->=20
-> I could have two power_supply_desc, one for battery and one for the exter=
-nal
-> power?
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-That's acceptable. But don't you have a fuel-gauge for the battery?
-If you register two POWER_SUPPLY_TYPE_BATTERY devices, then your
-board should have two batteries. If you have a fuel-gauge it will
-very likely provide much better battery data then anything you get
-out of pf1550.
+Cheers,
+Andre
 
-Greetings,
+> ---
+>  .../bindings/power/allwinner,sun20i-d1-ppu.yaml   |  2 ++
+>  .../power/allwinner,sun55i-a523-pck600.h          | 15 +++++++++++++++
+>  .../dt-bindings/power/allwinner,sun55i-a523-ppu.h | 12 ++++++++++++
+>  3 files changed, 29 insertions(+)
+>  create mode 100644 include/dt-bindings/power/allwinner,sun55i-a523-pck600.h
+>  create mode 100644 include/dt-bindings/power/allwinner,sun55i-a523-ppu.h
+> 
+> diff --git a/Documentation/devicetree/bindings/power/allwinner,sun20i-d1-ppu.yaml b/Documentation/devicetree/bindings/power/allwinner,sun20i-d1-ppu.yaml
+> index f578be6a3bc8..b9f550994512 100644
+> --- a/Documentation/devicetree/bindings/power/allwinner,sun20i-d1-ppu.yaml
+> +++ b/Documentation/devicetree/bindings/power/allwinner,sun20i-d1-ppu.yaml
+> @@ -18,6 +18,8 @@ properties:
+>      enum:
+>        - allwinner,sun20i-d1-ppu
+>        - allwinner,sun8i-v853-ppu
+> +      - allwinner,sun55i-a523-ppu
+> +      - allwinner,sun55i-a523-pck-600
+>  
+>    reg:
+>      maxItems: 1
+> diff --git a/include/dt-bindings/power/allwinner,sun55i-a523-pck600.h b/include/dt-bindings/power/allwinner,sun55i-a523-pck600.h
+> new file mode 100644
+> index 000000000000..6b3d8ea7bb69
+> --- /dev/null
+> +++ b/include/dt-bindings/power/allwinner,sun55i-a523-pck600.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +
+> +#ifndef _DT_BINDINGS_POWER_SUN55I_A523_PCK600_H_
+> +#define _DT_BINDINGS_POWER_SUN55I_A523_PCK600_H_
+> +
+> +#define PD_VE			0
+> +#define PD_GPU			1
+> +#define PD_VI			2
+> +#define PD_VO0			3
+> +#define PD_VO1			4
+> +#define PD_DE			5
+> +#define PD_NAND			6
+> +#define PD_PCIE			7
+> +
+> +#endif /* _DT_BINDINGS_POWER_SUN55I_A523_PCK600_H_ */
+> diff --git a/include/dt-bindings/power/allwinner,sun55i-a523-ppu.h b/include/dt-bindings/power/allwinner,sun55i-a523-ppu.h
+> new file mode 100644
+> index 000000000000..bc9aba73c19a
+> --- /dev/null
+> +++ b/include/dt-bindings/power/allwinner,sun55i-a523-ppu.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +
+> +#ifndef _DT_BINDINGS_POWER_SUN55I_A523_PPU_H_
+> +#define _DT_BINDINGS_POWER_SUN55I_A523_PPU_H_
+> +
+> +#define PD_DSP			0
+> +#define PD_NPU			1
+> +#define PD_AUDIO		2
+> +#define PD_SRAM			3
+> +#define PD_RISCV		4
+> +
+> +#endif /* _DT_BINDINGS_POWER_SUN55I_A523_PPU_H_ */
 
--- Sebastian
-
---hkm4pffdfaovyioh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhrB88ACgkQ2O7X88g7
-+po93Q/6A6bYXRf5lstEnL9kwKOfTphsoJCMbORUtvQ+oD/fFxd9tJ2CL8+hZ9GZ
-++4xcLZp7Qc6HnLXF3OjnZBjCsCVUd/uUyfH6fU6ZqrXqLTJC2hFHHsuIvJUw3zZ
-GQY06j7LYRgvXuM2orQoxqtyi1x/GnajlmYzeUzT5NvvWWyXPE+rOPea7DeLghvM
-VVtlcnRIFQO2K/ZS6U0reUFDlzzjX+BfiyRDciBRIj9Xb8L5vwEiUdKXe3edZXyR
-xZ9/shpsmELBMo2QNjKN3dT9ReGqX+z/MxubOhR5CdK54nYsxl5fSanVIvNZ9AF3
-0sMvhYm1Iop4JZ6pCJhCLd2GCrAsys1LQ0f/6ppYU+zH4DHYO1+gb/g/UN7uFdvy
-aGl1q3E2XBQXUdVPsoHCuPId77Om7+opGaxk+vEtCw0H1a/1cmLvkfvkShy+XqKP
-nb73pvL9o2zECr6zeb+M2Ff+/1zv+R2p2HVfv51CHYC/LHvZcs+2UVQ+ZlqOEB+X
-Vr/9khKhm2E/WOPoINRAWbu17bvy5TCfyAej6hJbAB/TGkNv1FjYBmxmLgb1BwDT
-NN9dJVyBoDh5hqn9qAvs/cP40RWuP/dABj6GZ6AHYWaJMHOb4eC7zavrvWSBemWn
-Sow9U1YcnEF2WcTpp6WtK0PO8T83Gae4fY1iRlWLjN2tkqYffUE=
-=hZ0x
------END PGP SIGNATURE-----
-
---hkm4pffdfaovyioh--
