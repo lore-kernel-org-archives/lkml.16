@@ -1,113 +1,114 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12031E834E
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 09:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2267735972;
+	Sun,  6 Jul 2025 09:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751792906; cv=none; b=cD6yf3juvFp5WBAkZVrc3mqmbQK8unaHc424Ukf0QdhwgHDm15IW/yT/RxLbscrRC64nl7yvMdpJ/uQ7jtUC6elgP4Seef+/vHDQj1TzLRsrif6RraYXVAFw5gRkJtSpb7oIhpMrDHGfiq6avtpT44qhVCLRPKPwVE+3bS8YmyY=
+	t=1751793073; cv=none; b=TNTiNrkBxWpE6VcUTW7E5IxquywFqPo0Nyin/2o4gOandsgojmAN2OCtQGr1M386n8gx7bF5o98kWLGGaxfsi3o9Cz1huZPgzSaDP30JBNcSmEFJ8aNlfZG22jWE0mD3DiCBNZ3b0krUcW6jejyx/use09gS5kio2Cmw3JCrufI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751792906; c=relaxed/simple;
-	bh=YeSqhPGOCSEzC/m1idgMdrl239XEwVQUOkljmT/rhbI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hp5ipxLSgiRXKrwfmyY6hzAuLih1Vb3t0q2S65c7yGYWIPcwYsFgJJYP2HQgfRO/pcHiT52+hHnbkEz0Hj0m2Bugn/mKdCb40HlrdnFTQcayuTzo2HH4h6OWLRfxw59b/ZVUAwUAdezuR178uOTInvNeJLufikpbthxjNy6WycY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-87f1b3a3e7bso272141241.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 02:08:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751792903; x=1752397703;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LKNWfzLihse4/vZiPvnOVJrcOayLdn1DUR/G7sfcSvI=;
-        b=BaLuTTfVikBtTuDiSoTaA/aH6ZI5qg5PnnJQInWHjdvXqwm2SMOijCg0Q+c9qxW2WU
-         /XM1gIFRK0KKrknD1txrYR4aK2F+qH++SREpjvbs92QJ5b8iNByusd0sUHfG5W1G01v6
-         REIGtxgaT+XUu2Sws+0y4n/KER6IJREE0G5qaJjxmeJL1Sfe/7kSBHgM9J9AKH0IGOM2
-         Bj8Lpu1fdTNtRKGV60AsM0Mwdr2YysxLG2ksGzmozFDJ7Iw9zjS8X0ya5bY4D0ne0JtQ
-         mN5Gp7mIZjSNVYXKFX3NhDml01Hu2KqqqiSL4wyzVI0foFCrPfApQyp9dnWirWPV9HQ6
-         hwag==
-X-Forwarded-Encrypted: i=1; AJvYcCUONEWuAbiJRc5kAmBVH1jRKq6Lj1ScB/Q6Ebl/FecXSExZlkNiysv0wzGjX/FTK1RVWgmde6QzpLfXvCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBmifIYY8FT3y7rneVguvxcL2bNp8ENFp4e0Y8hBrp8VxYy02O
-	sPJR9Oosfwk799arfwPFC+mHLMIrxjWBBf9htR2Wr7/oiAfzVH0KkMPa3W2UrX5R
-X-Gm-Gg: ASbGncuGQ3VOgrNy5nDHzL14jIVuAUbJug3M8XAUYyB0yrJ2s3dtxQw1418vi8zVAz+
-	HLFzM+5JYLjXo/XgUYExrqUK55D86H7PLQQb9921QCXaLfrdu9fpfXbZ8j5tkeagcf0Ly69AoMO
-	kIqi3TT4qMBbdZRW49nI0SMVt9qSw7Bv6WskFcVQGUMX7hbvsuFIXq8/ZtuiGRzOj/KuNpYDAxc
-	ej9tU4e4GDoUp6EhM6GdmOAXjuHhe4DWirOhe0H303pdzAbHdbwZV0ig3fLVBX30xnXqNEMobmc
-	SneRA063c8ElxF13wknxYe2dHtNw8a3IUQQg/OTz+32qlAYWl/X/F/JjFLZKVWMENf8HrGemZ1m
-	XK02yzlrkM3MQkRpysG3YD365
-X-Google-Smtp-Source: AGHT+IGsm3iNjE4c3o1t31BaSUavriov95zBsbTcrSFtl1SkIPmyD4sukPzlbL761jQYpjn2Xhcy0w==
-X-Received: by 2002:a05:6102:4188:b0:4e7:5f31:7443 with SMTP id ada2fe7eead31-4f2ee08c375mr5044722137.9.1751792903287;
-        Sun, 06 Jul 2025 02:08:23 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-886e922ee7dsm968540241.5.2025.07.06.02.08.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Jul 2025 02:08:22 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-87f1b3a3e7bso272136241.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 02:08:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWo+fUrSLWhfuCCJQ9dmU6A+SQMdRSL1ul7mvgcf+gpyyeMNA+ky4vbXHncJjr69njBKxI2/v8b9zNqlsw=@vger.kernel.org
-X-Received: by 2002:a05:6102:5489:b0:4eb:e04c:f5ed with SMTP id
- ada2fe7eead31-4f2edff096emr5969957137.2.1751792902713; Sun, 06 Jul 2025
- 02:08:22 -0700 (PDT)
+	s=arc-20240116; t=1751793073; c=relaxed/simple;
+	bh=4/MwW2GFqctxs8AwHFUVz/ovktRzCYfQs/DtWq+q+Tc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YJ0O/O/vDud9KEZAAj1VIqTRBaN+VRCq6Lk5DYv0k2ERfU4x4zctrvSVlG60nrbIxYmiP0NKZrIgfu1s9ZF6ZXVjWmxn6QCLUXObw3dKkAo3+ElUaRo0N02vL2dCA8oGFXLxqzQtAd59E3m3yK2L/McEvzaX5oSwGxnu7gWjTaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fD8M5i1J; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fD8M5i1J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751793072; x=1783329072;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4/MwW2GFqctxs8AwHFUVz/ovktRzCYfQs/DtWq+q+Tc=;
+  b=fD8M5i1JVv48UnHC/ZSXjbJVLYFMZrw0T4Xn+dmCZr8tK0Hh/2lFD5Rc
+   G2vOxpR8R+HU+jDUl3UurFVvd+RweAKbcvq+e8tunsW6JYYplgFktb7Kr
+   QFU5slizzVUKz57rHUThdYn4xYosBH63T5xLm9ayfKv6njGYFrpY93YXv
+   YUpxl49foRoJsNxHpzKSARDr5FGY/4q3Atqph9RBtBiLklDgvdyw9y8z6
+   T0KhnNE1eiylHhB44DUG32lPBTqsVFvxI1/wIj/HJf8ylxKCgGbTD7Bef
+   71Ipa/EV4xnqIrTxaUDiJUxWQDsGqRo7JuFBDNqPekUKKwlVdPHM5s8hI
+   w==;
+X-CSE-ConnectionGUID: FWwHqtZcRnyyjacCtiJ7jg==
+X-CSE-MsgGUID: JlzNgX1oQ06UgHmuI5N8mA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="54008307"
+X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
+   d="scan'208";a="54008307"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 02:11:12 -0700
+X-CSE-ConnectionGUID: jOcQzLO/Q36lCbTAGdlLzQ==
+X-CSE-MsgGUID: BBERMaveRQeTDCeutEmg9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
+   d="scan'208";a="158989402"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.198])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 02:11:06 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 6E1A91202F1;
+	Sun,  6 Jul 2025 12:11:12 +0300 (EEST)
+Date: Sun, 6 Jul 2025 09:11:12 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Nirujogi, Pratap" <pnirujog@amd.com>
+Cc: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hao Yao <hao.yao@intel.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	dongcheng.yan@intel.com, jason.z.chen@intel.com, jimmy.su@intel.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <aGo9sDWSiZGvOhR4@kekkonen.localdomain>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <20250614225257.GO10542@pendragon.ideasonboard.com>
+ <f6d1d8f7-d953-4f86-a196-f713726bd5f8@amd.com>
+ <ec790d0e-4bdb-49b9-80ad-f44e1b700a5e@linux.intel.com>
+ <702594a4-ebc3-471e-8551-d94f0dee2982@amd.com>
+ <0d45fca3-5b6f-42e5-acec-bca2dda25f15@linux.intel.com>
+ <aGTN5PbfyHTw529O@svinhufvud>
+ <91985c5e-fc69-4d12-b5b0-3dff0ba1b078@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f7b4c02a1c8ed74ccceb5535d7e1e202deada8ce.1750739568.git.fthain@linux-m68k.org>
-In-Reply-To: <f7b4c02a1c8ed74ccceb5535d7e1e202deada8ce.1750739568.git.fthain@linux-m68k.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 6 Jul 2025 11:08:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXmxV03tza_4M3+YJg9TT6yJKuvmNh9=JvdM7r-r-kR7A@mail.gmail.com>
-X-Gm-Features: Ac12FXxXbSZrezpm03lRHY3251vjUFPmaJuue3zNaD3M3TNEGWEHUr-PZeSeB6A
-Message-ID: <CAMuHMdXmxV03tza_4M3+YJg9TT6yJKuvmNh9=JvdM7r-r-kR7A@mail.gmail.com>
-Subject: Re: [PATCH v2] m68k/mac: Improve clocksource driver commentary
-To: Finn Thain <fthain@linux-m68k.org>
-Cc: Joshua Thompson <funaho@jurai.org>, linux-m68k@lists.linux-m68k.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91985c5e-fc69-4d12-b5b0-3dff0ba1b078@amd.com>
 
-On Tue, 24 Jun 2025 at 06:36, Finn Thain <fthain@linux-m68k.org> wrote:
-> qemu-system-m68k -M q800 has an old bug that causes the kernel to
-> occasionally complain about a soft lockup:
->
->     watchdog: BUG: soft lockup - CPU#0 stuck for 5107s!
->
-> There isn't any actual lockup. The via1 clocksource produced a large
-> jump in jiffies, causing the watchdog to detect a stale timestamp.
->
-> The 32-bit clocksource counter runs at 783360 Hz and its period is
-> about 5482 seconds. Applying the "nanosecond" approximation used in
-> get_timestamp() in kernel/watchdog.c then yields the duration reported
-> in the log message above (always 5107 or 5108 in my tests):
->
-> 0xffffffff / VIA_CLOCK_FREQ * 10**9 / 2**30 = 5106.209 seconds
->
-> It is notoriously difficult to correctly emulate a MOS6522 VIA chip. So
-> it seems wise to document the VIA clocksource driver better, especially
-> those hardware behaviours which the kernel relies upon.
->
-> Cc: Joshua Thompson <funaho@jurai.org>
-> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
-> ---
-> Changed since v1:
->  - The letters A through E could be mistaken for hex digits so number the
->    states using roman numerals instead.
+Hi Pratap,
 
-LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-i.e. will queue in the m68k tree for v6.17.
+On Wed, Jul 02, 2025 at 12:47:40PM -0400, Nirujogi, Pratap wrote:
+> > > If you have a spec of OV05C10 (I assume you do, as the developer of this
+> > > driver), it is not a issue.
+> > > Take P0:0x14 as an example, it's named as DPLL_NC_SEL in spec and set to
+> > > 0x78 in your reglist ov05c10_2888x1808_regs. If define all named
+> > > registers rather than the confusing magic hardcode, the driver code will
+> > > be more readable and easy to review.
+> > > I think this is what Sakari thought.
+> > 
+> > Yes. And even if it happens that a register write slips to a wrong list,
+> > we can fix it later.
+> > 
+> I agree with the suggestion on proper naming of register offsets, but
+> unfortunately we lack access to the spec. We are completely relying on the
+> sensor vendor for these sequences, which they are not willing to share the
+> details.
 
-Gr{oetje,eeting}s,
+I find it difficult to believe a company such as AMD would use a camera
+sensor without having documentation on it. It is essentially required for
+hardware design, too.
 
-                        Geert
+Have you asked around?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Kind regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sakari Ailus
