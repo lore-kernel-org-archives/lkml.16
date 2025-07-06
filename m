@@ -1,106 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6E5522F;
-	Sun,  6 Jul 2025 18:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1A29E10C;
+	Sun,  6 Jul 2025 18:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751826358; cv=none; b=a8XirDekdtofFBqldeBe47VlOvQBWAWe+TPzRaVHlKg9CydrA0m6vecf6Qm6fjPX3Cg2fFhSq8KjKiwOjkqZRxY1BjioeC5a1X/z1Ltkr1zj+KYIo1pk+klEXWOpbKncsKzRg+aUJtMo3X2ALhaEZO0igp2+5VUK9irCAmSvESg=
+	t=1751826361; cv=none; b=sQ2rGjMyKnKlds/TiRe+uOogmFz7v2OLUSdscXjskLTXUcaMpJDtzQBjhSHoIwrNtgaBGGCRiIvZSgnrzzF+qnkonKvTScuosgnAgb1IgFzbW3iaklZLNjyZ/zY5XqQeQmwnADmsV+SS/+8YYD4FXZVso22d4HUmKo9r5jMtMB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751826358; c=relaxed/simple;
-	bh=TiRh17OBztLl/5Um33JRzwwVspvarTEzm3jzvByfFbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AEBFWMyhHyi0iPw0OwF2shT+fPi0lYPXs8cML4JqLyx8t2MAEsPRO/y+/mGT92p4s14zGt3OqOgi4Kfq/Bv1cbdFhlJ61/PbDkIOyZ68C589IOAJ2Q7X/t+TctA73c/dLidTZ++yr0z/GD/FRCroQeg8N+JljSn5vlPaBfo+nK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vqe3go0t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751826361; c=relaxed/simple;
+	bh=SqNKvsyPaT4bxu4N9Hr2vwsF5W0btBXizOP0uAlV1Sk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qz52LjbdgXsv5FTDUcrUQn5ghKD7gURDBo7BE20uFy2Iluwu+WB2X3AaheHl0Q8QN5h3IH3fkUjf+F1DfJyAop2UxtPUnxzaQams49vzpKc/0OnCreXBEy+ZP4OA4sHRc8QaSo8EmFchb8WZ/N1SeI+OxQermTnTn7i8Vmvxj5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Ld+AhX43; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vqe3go0t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D7E9C4CEED;
-	Sun,  6 Jul 2025 18:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751826357;
-	bh=TiRh17OBztLl/5Um33JRzwwVspvarTEzm3jzvByfFbI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vqe3go0tIOi/wdCLN4qfOdxNrHYmlMt5FPsrNnA2BPXh6D+V8JgBEh/uOl8usVpnt
-	 LcdFvEGUR8qLAYzxBY1MgTrsNazo10ZAMc57diVKTS/PCwXV3cL7x6jkYdn+YyTz2v
-	 zVKzPyHEmFOzdKRIfXUd1fu+KF0rBZJnMTCp7Kepaund2hyAJsIvrt8UXsZV9d+gZO
-	 IXV7h5nmhmLW7Bo0j6JN46ORuPcQf8yPfJ9l19VrVfNRYnr8p4DSKuyY6ER0K/Tysf
-	 /l9g/3A8t9P8WPWJRQ2QQGxtZ04eCT8QvkwY5t4XqdCqtuuhRhz7TIgoEwQAqp6uAu
-	 MeOO4FnqNI0pQ==
-Message-ID: <fbfbd0e5-2c27-4f32-a3d7-9cf57fde5098@kernel.org>
-Date: Sun, 6 Jul 2025 20:25:52 +0200
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Ld+AhX43"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 144DD20E83;
+	Sun,  6 Jul 2025 20:25:58 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id d5-QImG36bsJ; Sun,  6 Jul 2025 20:25:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751826357; bh=SqNKvsyPaT4bxu4N9Hr2vwsF5W0btBXizOP0uAlV1Sk=;
+	h=From:Subject:Date:To:Cc;
+	b=Ld+AhX438ROcfab8eKAgnooY7HuCoCdlZr8EzF3O5BXJ4XizTaJ1JN2oYQCwm8JRy
+	 /sgnSLYAjEmjgvVGR1mT1avk0W+2msqycpcB87ImplB+vmWMqRXp+lGnpXnFMFwWVu
+	 YRYZUzqJgGaKlMNdJDO8muoPWVonKfhqyWzk5YRAAkq2Bk3VdKn7YiaOIPWxzl87ES
+	 UZ7LdAqVlBaHQVSNtwvveuR/Y5QN4Rr8IE7GY1DH51PVSdIAsU+x32SjdE4S1U0dWJ
+	 6xfBVCDMMjSxVwXtcpEjXckXsbUOENdAmbPE4ZW+pT48zPMQwHJYtEw0n0XRty94vG
+	 JpR9HcYUwCIcQ==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v3 00/13] Support for Exynos7870 DSIM bridge
+Date: Sun, 06 Jul 2025 23:55:34 +0530
+Message-Id: <20250706-exynos7870-dsim-v3-0-9879fb9a644d@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
- HMM_BO_DEVICE_INITED flag
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, andy@kernel.org,
- mchehab@kernel.org, sakari.ailus@linux.intel.com,
- gregkh@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-staging@lists.linux.dev, skhan@linuxfoundation.com,
- dan.carpenter@linaro.org
-References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
- <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
- <CAGn2d8OMRaeozOMxj1Ry8i9T3sJ5J1QqA_Jpk7wYO8KiUbpKBA@mail.gmail.com>
- <aGPYZhK65LaD0wVO@smile.fi.intel.com>
- <836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org>
- <CAGn2d8NBEwWm0mQ0YQ3KZ+V1Zon84zusfsQQV2foVmUTBAzEAQ@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <CAGn2d8NBEwWm0mQ0YQ3KZ+V1Zon84zusfsQQV2foVmUTBAzEAQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ6/amgC/2XNQQ6CMBCF4auYrq1pZ4SCK+9hXBTawiykpiUNh
+ HB3C240LP+XzDcLizaQjex2WliwiSL5IQeeT6zt9dBZTiY3AwGFKAC5nebBR1UpwU2kF3dQm9J
+ q1+oCWL56B+to2sXHM3dPcfRh3h8kua1fq5RwsJLkgkuNKJpWV7Vxd0MxeD9efOjYpiX4EUAdB
+ diEK2JTKlSVwX9hXdcPa7QIZ/IAAAA=
+X-Change-ID: 20250523-exynos7870-dsim-f29d6eafca52
+To: Inki Dae <inki.dae@samsung.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751826342; l=2560;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=SqNKvsyPaT4bxu4N9Hr2vwsF5W0btBXizOP0uAlV1Sk=;
+ b=5UGrf1rNSH5A3hsdHEVmc/wTiHGXdhyeYJsw1zTDSHwLuVQEJUZgSiPWGgFBnQ5IWPlqAWZhx
+ 00DazFKQRE+CP8hfrpPZGEZnvtnogRIiFxMtPQ/Uoe4rmHCPmVRFMn8
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-Hi, Abdelrahman
+This patch series introduces a lot of changes to the existing DSIM
+bridge driver, by introdcing new registers and making register offsets
+configurable for different SoCs. These preliminary changes are followed
+by the introduction of support for Exynos7870's DSIM IP block.
 
-On 1-Jul-25 5:45 PM, Abdelrahman Fekry wrote:
-> Hi Hans,
-> 
-> On Tue, Jul 1, 2025 at 4:54 PM Hans de Goede <hansg@kernel.org> wrote:
+Work is heavily inspired and only possible due to Samsung's vendor
+kernel sources. Testing has been done with Samsung Galaxy J7 Prime
+(samsung-on7xelte), Samsung Galaxy A2 Core (samsung-a2corelte), and
+Samsung Galaxy J6 (samsung-j6lte), all with DSI video mode panels.
 
-...
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Changes in v3:
+- support both legacy STATUS and LINK_STATUS & DPHY_STATUS split (daeinki)
+- Link to v2: https://lore.kernel.org/r/20250627-exynos7870-dsim-v2-0-1433b67378d3@disroot.org
 
->> Actually I'm pretty sure that there will be quite a few
->> error-handling paths with bugs in the atomisp code given
->> its overall quality. But lets clean things up first, that
->> should make addressing any such cases easier.
->>
-> I totally agree with this , i have submitted a patch that cleans the
-> custom sysfs atrributes
-> as you suggested as a beginning , the patch got reviewed by andy and dan
-> here is the link
-> https://lore.kernel.org/all/20250627100604.29061-1-abdelrahmanfekry375@gmail.com/
-> 
-> What do you think I should work on next after these two patches, do
-> you have any suggestions?
+Changes in v2:
+- added commit to isolate clock names for each variant
+- replaced clock names with generic ones (krzk)
+- added maxItems to clocks property in dtschema (krzk)
+- Link to v1: https://lore.kernel.org/r/20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org
 
-The hmm_alloc code can use some more cleanups:
+---
+Kaustabh Chakraborty (13):
+      drm/bridge: samsung-dsim: support separate LINK and DPHY status registers
+      drm/bridge: samsung-dsim: add SFRCTRL register
+      drm/bridge: samsung-dsim: add flag to control header FIFO wait
+      drm/bridge: samsung-dsim: allow configuring bits and offsets of CLKCTRL register
+      drm/bridge: samsung-dsim: allow configuring the MAIN_VSA offset
+      drm/bridge: samsung-dsim: allow configuring the VIDEO_MODE bit
+      drm/bridge: samsung-dsim: allow configuring PLL_M and PLL_S offsets
+      drm/bridge: samsung-dsim: allow configuring the PLL_STABLE bit
+      drm/bridge: samsung-dsim: increase timeout value for PLL_STABLE
+      drm/bridge: samsung-dsim: add ability to define clock names for every variant
+      dt-bindings: samsung,mipi-dsim: document exynos7870 DSIM compatible
+      drm/bridge: samsung-dsim: add driver support for exynos7870 DSIM bridge
+      drm/exynos: dsi: add support for exynos7870
 
-* hmm_get_mmu_base_addr() should be moved to drivers/staging/media/atomisp/pci/hmm/hmm.c
-  and then the "struct hmm_bo_device bo_device;" in hmm.c can be made static
+ .../bindings/display/bridge/samsung,mipi-dsim.yaml |  27 ++
+ drivers/gpu/drm/bridge/samsung-dsim.c              | 353 ++++++++++++++++-----
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            |   9 +
+ include/drm/bridge/samsung-dsim.h                  |  16 +-
+ 4 files changed, 317 insertions(+), 88 deletions(-)
+---
+base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
+change-id: 20250523-exynos7870-dsim-f29d6eafca52
 
-* hmm_init() sets hmm_initialized = true even on errors. It should
-  immediately exit (return ret) on errors instead of continue-ing
-  with calling hmm_alloc() even though hmm_bo_device_init() failed.
-
-* I've checked the code and hmm_init() is called before any hmm_alloc()
-  calls are made so the extra hmm_init() call in __hmm_alloc() can be
-  dropped.
-
-* After dropping the extra hmm_init() call in __hmm_alloc() the
-  hmm_initialized flag can be removed since it is now no longer read
-  anywhere.
-
-* And maybe you'll find more possible cleanups while working on this
-
-Regards,
-
-Hans
-
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
