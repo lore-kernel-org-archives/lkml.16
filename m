@@ -1,77 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7058915ADB4;
-	Sun,  6 Jul 2025 04:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFCF15ADB4;
+	Sun,  6 Jul 2025 04:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751776217; cv=none; b=CEW/07xuCwOS/w/zHSkezg03XzuYVKHGJe+tLpLLTCR32wMe8F6j2hnl82DT1J0eV1JCKKXDGGc0VCOUa4BkgaMiAfRXO6JJrwKXEGmXcEAkJFz9+zea9ioL7itE9kUZwkGi/On8lmvq2UQdw/Sf+9L10KnHcHUTrXCa9N2UU8Y=
+	t=1751776292; cv=none; b=efZWi4z90YbHihg36o7vsvdkDWCHnJQJrKRrtcCtAEtrgQBYf64RCJBZ86C3thwZo84beiXXIwQ3Pkf2ZXOph+USboGSr8GQQY+oL+dRDyWK3EkEBEVFuMpSfxeAiQXdezY8BMrsNWpq6wiNanc975r83F0LISRV8qJmQqSvAlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751776217; c=relaxed/simple;
-	bh=wooHoirHZtu0a5A+d2+8+BgRHGQ/MFCV+B8Pz8Sx2/I=;
+	s=arc-20240116; t=1751776292; c=relaxed/simple;
+	bh=Hq5aQNa3aom6TCoSy+iVuy9sh/cxbUw9rIyDrG1A4iI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dqSVeKI/sksAlOdqhS8aMkLKV2nI/W6uy3tmvMsoqvJHogaRjHVHM1aJ7JH2dDZ8nDblvOtY5HnXNmYxxZXCTktvOthpPM3fJ/pHji3zZEmPY2w/Krp0Ge6y8gey/vmVXICfy5NG6fUtB5NyoIxiaTzTJgexard41qGZFDsXQEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8GhsPsa; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2ibGmE5iE5Cl1KmOJZC7HoFuGoJXbc+1swsdR7EcApSKlInyr7Ad8ls9FrBxtrDr+SfYR7E2clETukFev7N1IbtyO4IAEKnl+GXtaC7/i/pVHCONhikLuXpXifCmwuQ7nJ7z/Y+sSb1oXlaQGf3EYg0cb4nVK81RKhzGjdpRyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq+2YEcP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8GhsPsa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751776216; x=1783312216;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wooHoirHZtu0a5A+d2+8+BgRHGQ/MFCV+B8Pz8Sx2/I=;
-  b=I8GhsPsa5bBSxilXEXZgPf3t+8qgnekKbzA+mtLu5oCl4pNcnuoGYJbw
-   AN1al6lBbAffkryVlumbw21onG+hougSD+bFObaHtatqfyHWRekvfI+wL
-   Rfphw7TveHEi9bywDNETbHkmkFD9Sz3FaLwj0drZVncymtpxZGe+QOOaP
-   s2iemOGooIK6LXfj2FZBuX0Mi88QIS32IVNgR4axzwVi1AD/QbIbkdJGU
-   dMWSi4MjqNKM6TSw1pbFp1iShff/Zerit/+mvvs92qbCZrFwqJqure2wu
-   HawP+tE35/pkIYhDDkt0nxQXCyf6muMqaKwyJ5g3axffKRr6XNAL+1qIc
-   w==;
-X-CSE-ConnectionGUID: OHYwXaQQR+WSwSL7AlFcNw==
-X-CSE-MsgGUID: M+b16x8BQdKpGqf0G6CCUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="65091574"
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="65091574"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 21:30:15 -0700
-X-CSE-ConnectionGUID: dp3PM6/bQKuctTFEjrYzCw==
-X-CSE-MsgGUID: OuBbdbJ3QhyP47pk4JZepQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="154337953"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 05 Jul 2025 21:30:10 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uYH0x-0004sd-1e;
-	Sun, 06 Jul 2025 04:30:07 +0000
-Date: Sun, 6 Jul 2025 12:29:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wander Lairson Costa <wander@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH v3 1/2] trace/preemptirq: reduce overhead of
- irq_enable/disable tracepoints
-Message-ID: <202507061226.y7g5eBuq-lkp@intel.com>
-References: <20250704170748.97632-2-wander@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq+2YEcP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62568C4CEEF;
+	Sun,  6 Jul 2025 04:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751776291;
+	bh=Hq5aQNa3aom6TCoSy+iVuy9sh/cxbUw9rIyDrG1A4iI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wq+2YEcPd7G1gYvqBSjPaEehRIX2ybqq3vogU8k/KQD0bdw+3478AEfjiystxqsuz
+	 0jtPrrJxX1yzsvCfZG8ZGgHrVPZj4qsiOI6CEdOxaT9hKVb47McfMTfxiB/1mIEt9n
+	 3ZzjM6lapSiMXemeEa6gYBH7FjG8hpJC5SaufnWuR7Q8Iu6WhAACwsRgMmUw+NiN8L
+	 TQuZfMfOhNGyqjB4y6To7jJ3vQgL+ZMhyv+pQqWoDlkMgTQjKSO/PvYlYmx6k49Y3w
+	 /UxdHQujj3I+rsNKhTmpVKrdp1gUTBnLbRMf3HLn8uqLOotcfeGkQhSHWWSH/AAJ4x
+	 ZcSeoVMyEd47g==
+Date: Sat, 5 Jul 2025 21:31:29 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Yangtao Li <frank.li@vivo.com>, linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: thead: th1520-ap: Correctly refer the parent for
+ c910 and osc_12m
+Message-ID: <aGn8IVkWQJjHMfCT@x1>
+References: <20250705052028.24611-1-ziyao@disroot.org>
+ <aGm+adSNdTHyN7K1@x1>
+ <aGnaZjMoWbW_FZfj@pie>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,132 +48,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250704170748.97632-2-wander@redhat.com>
+In-Reply-To: <aGnaZjMoWbW_FZfj@pie>
 
-Hi Wander,
+On Sun, Jul 06, 2025 at 02:07:51AM +0000, Yao Zi wrote:
+> On Sat, Jul 05, 2025 at 05:08:09PM -0700, Drew Fustini wrote:
+> > On Sat, Jul 05, 2025 at 05:20:28AM +0000, Yao Zi wrote:
+> > > clk_orphan_dump shows two suspicious orphan clocks on TH1520 when
+> > > booting the kernel with mainline U-Boot,
+> > > 
+> > > 	$ cat /sys/kernel/debug/clk/clk_orphan_dump | jq 'keys'
+> > > 	[
+> > > 	  "c910",
+> > > 	  "osc_12m"
+> > > 	]
+> > > 
+> > > where the correct parents should be c910-i0 for c910, and osc_24m for
+> > > osc_12m.
+> > 
+> > Thanks for sending this patch. However, I only see "osc_12m" listed in
+> > clk_orphan_dump. I tried the current next, torvalds master and v6.15 but
+> > I didn't ever see "c910" appear [1]. What branch are you using?
+> 
+> I think it has something to do with the bootloader: as you could see in
+> your clk_orphan_dump, the c910 clock is reparented to cpu-pll1, the
+> second possible parent which could be correctly resolved by the CCF,
+> thus c910 doesn't appear in the clk_orphan_dump.
+> 
+> But with the mainline U-Boot which doesn't reparent or reclock c910 on
+> startup, c910 should remain the reset state and take c910-i0 as parent,
+> and appear in the clk_orphan_dump.
 
-kernel test robot noticed the following build errors:
+Ah, thanks for the explanation. I'm on an old build:
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on tip/sched/core linus/master v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+U-Boot SPL 2020.01-g55b713fa (Jan 12 2024 - 02:17:34 +0000)
+FM[1] lpddr4x dualrank freq=3733 64bit dbi_off=n sdram init
+U-Boot 2020.01-g55b713fa (Jan 12 2024 - 02:17:34 +0000)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wander-Lairson-Costa/trace-preemptirq-reduce-overhead-of-irq_enable-disable-tracepoints/20250705-011058
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250704170748.97632-2-wander%40redhat.com
-patch subject: [PATCH v3 1/2] trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
-config: nios2-randconfig-r123-20250706 (https://download.01.org/0day-ci/archive/20250706/202507061226.y7g5eBuq-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 8.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250706/202507061226.y7g5eBuq-lkp@intel.com/reproduce)
+I would like to run mainline but I have the 8GB RAM LPi4a. Does mainline
+only work for the 16GB version right now?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507061226.y7g5eBuq-lkp@intel.com/
+> Another way to confirm the bug is to examine
+> /sys/kernel/debug/clk/c910/clk_possible_parents: without the patch, it
+> should be something like
+> 
+> 	osc_24m cpu-pll1
+> 
+> c910's parents are defined as
+> 
+> 	static const struct clk_parent_data c910_parents[] = {
+> 		{ .hw = &c910_i0_clk.common.hw },
+> 		{ .hw = &cpu_pll1_clk.common.hw }
+> 	};
+> 
+> and the debugfs output looks obviously wrong.
 
-All errors (new ones prefixed by >>):
+Thanks, yeah, without the patch I also see:
 
-   In file included from ./arch/nios2/include/generated/asm/cmpxchg.h:1,
-                    from include/asm-generic/atomic.h:12,
-                    from ./arch/nios2/include/generated/asm/atomic.h:1,
-                    from include/linux/atomic.h:7,
-                    from include/linux/jump_label.h:257,
-                    from include/linux/static_key.h:1,
-                    from include/linux/tracepoint-defs.h:11,
-                    from include/linux/irqflags.h:20,
-                    from include/asm-generic/bitops.h:14,
-                    from ./arch/nios2/include/generated/asm/bitops.h:1,
-                    from include/linux/bitops.h:68,
-                    from include/linux/log2.h:12,
-                    from kernel/bounds.c:13:
-   include/asm-generic/cmpxchg.h: In function '__generic_xchg':
->> include/asm-generic/cmpxchg.h:33:3: error: implicit declaration of function 'local_irq_save'; did you mean 'arch_local_irq_save'? [-Werror=implicit-function-declaration]
-      local_irq_save(flags);
-      ^~~~~~~~~~~~~~
-      arch_local_irq_save
->> include/asm-generic/cmpxchg.h:36:3: error: implicit declaration of function 'local_irq_restore'; did you mean 'arch_local_irq_restore'? [-Werror=implicit-function-declaration]
-      local_irq_restore(flags);
-      ^~~~~~~~~~~~~~~~~
-      arch_local_irq_restore
-   In file included from include/asm-generic/cmpxchg.h:89,
-                    from ./arch/nios2/include/generated/asm/cmpxchg.h:1,
-                    from include/asm-generic/atomic.h:12,
-                    from ./arch/nios2/include/generated/asm/atomic.h:1,
-                    from include/linux/atomic.h:7,
-                    from include/linux/jump_label.h:257,
-                    from include/linux/static_key.h:1,
-                    from include/linux/tracepoint-defs.h:11,
-                    from include/linux/irqflags.h:20,
-                    from include/asm-generic/bitops.h:14,
-                    from ./arch/nios2/include/generated/asm/bitops.h:1,
-                    from include/linux/bitops.h:68,
-                    from include/linux/log2.h:12,
-                    from kernel/bounds.c:13:
-   include/asm-generic/cmpxchg-local.h: In function '__generic_cmpxchg_local':
->> include/asm-generic/cmpxchg-local.h:26:2: error: implicit declaration of function 'raw_local_irq_save'; did you mean 'arch_local_irq_save'? [-Werror=implicit-function-declaration]
-     raw_local_irq_save(flags);
-     ^~~~~~~~~~~~~~~~~~
-     arch_local_irq_save
->> include/asm-generic/cmpxchg-local.h:47:2: error: implicit declaration of function 'raw_local_irq_restore'; did you mean 'arch_local_irq_restore'? [-Werror=implicit-function-declaration]
-     raw_local_irq_restore(flags);
-     ^~~~~~~~~~~~~~~~~~~~~
-     arch_local_irq_restore
-   cc1: some warnings being treated as errors
-   make[3]: *** [scripts/Makefile.build:98: kernel/bounds.s] Error 1
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1274: prepare0] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+==> c910-i0/clk_possible_parents <==
+cpu-pll0 osc_24m
 
+> 
+> There's another bug in CCF[1] which causes unresolvable parents are
+> shown as the clock-output-names of the clock controller's first parent
+> in debugfs, explaining the output.
 
-vim +33 include/asm-generic/cmpxchg.h
+Thanks for that fix. I now see '(missing)' for c910 too when I apply
+that patch:
 
-b4816afa3986704 David Howells 2012-03-28  22  
-b4816afa3986704 David Howells 2012-03-28  23  static inline
-82b993e8249ae3c Mark Rutland  2021-05-25  24  unsigned long __generic_xchg(unsigned long x, volatile void *ptr, int size)
-b4816afa3986704 David Howells 2012-03-28  25  {
-b4816afa3986704 David Howells 2012-03-28  26  	unsigned long ret, flags;
-b4816afa3986704 David Howells 2012-03-28  27  
-b4816afa3986704 David Howells 2012-03-28  28  	switch (size) {
-b4816afa3986704 David Howells 2012-03-28  29  	case 1:
-b4816afa3986704 David Howells 2012-03-28  30  #ifdef __xchg_u8
-b4816afa3986704 David Howells 2012-03-28  31  		return __xchg_u8(x, ptr);
-b4816afa3986704 David Howells 2012-03-28  32  #else
-b4816afa3986704 David Howells 2012-03-28 @33  		local_irq_save(flags);
-b4816afa3986704 David Howells 2012-03-28  34  		ret = *(volatile u8 *)ptr;
-656e9007ef58627 Arnd Bergmann 2023-03-02  35  		*(volatile u8 *)ptr = (x & 0xffu);
-b4816afa3986704 David Howells 2012-03-28 @36  		local_irq_restore(flags);
-b4816afa3986704 David Howells 2012-03-28  37  		return ret;
-b4816afa3986704 David Howells 2012-03-28  38  #endif /* __xchg_u8 */
-b4816afa3986704 David Howells 2012-03-28  39  
-b4816afa3986704 David Howells 2012-03-28  40  	case 2:
-b4816afa3986704 David Howells 2012-03-28  41  #ifdef __xchg_u16
-b4816afa3986704 David Howells 2012-03-28  42  		return __xchg_u16(x, ptr);
-b4816afa3986704 David Howells 2012-03-28  43  #else
-b4816afa3986704 David Howells 2012-03-28  44  		local_irq_save(flags);
-b4816afa3986704 David Howells 2012-03-28  45  		ret = *(volatile u16 *)ptr;
-656e9007ef58627 Arnd Bergmann 2023-03-02  46  		*(volatile u16 *)ptr = (x & 0xffffu);
-b4816afa3986704 David Howells 2012-03-28  47  		local_irq_restore(flags);
-b4816afa3986704 David Howells 2012-03-28  48  		return ret;
-b4816afa3986704 David Howells 2012-03-28  49  #endif /* __xchg_u16 */
-b4816afa3986704 David Howells 2012-03-28  50  
-b4816afa3986704 David Howells 2012-03-28  51  	case 4:
-b4816afa3986704 David Howells 2012-03-28  52  #ifdef __xchg_u32
-b4816afa3986704 David Howells 2012-03-28  53  		return __xchg_u32(x, ptr);
-b4816afa3986704 David Howells 2012-03-28  54  #else
-b4816afa3986704 David Howells 2012-03-28  55  		local_irq_save(flags);
-b4816afa3986704 David Howells 2012-03-28  56  		ret = *(volatile u32 *)ptr;
-656e9007ef58627 Arnd Bergmann 2023-03-02  57  		*(volatile u32 *)ptr = (x & 0xffffffffu);
-b4816afa3986704 David Howells 2012-03-28  58  		local_irq_restore(flags);
-b4816afa3986704 David Howells 2012-03-28  59  		return ret;
-b4816afa3986704 David Howells 2012-03-28  60  #endif /* __xchg_u32 */
-b4816afa3986704 David Howells 2012-03-28  61  
+root@lpi4amain:/sys/kernel/debug/clk# head c910/clk_possible_parents
+(missing) cpu-pll1
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> > I think it would be best for this patch to be split into separate
+> > patches for osc_12m and c910.
+> 
+> Okay, I originally thought these are relatively small fixes targeting
+> a single driver, hence put them together. I'll split it into two patches
+> in v2.
+
+I think the osc_12m is good as-is but I'm not sure what Stephen will
+think about using the string "c910-i0" in c910_parents[]. I think
+splitting it up will make discussion go faster.
+
+Thanks,
+Drew
