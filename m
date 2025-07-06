@@ -1,124 +1,98 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF38F1552FA
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA3620299E;
+	Sun,  6 Jul 2025 10:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751798645; cv=none; b=Ac5hY+RmqhRpTPA9dU1NsC5E5TA7k1doEqo8KK7uE0geGOzVjSsPe9y+ZjXS9Ovu1lAvvW2+Y9oUcl9lHWyfxeLtbf0BpCxuoI5oaiVNwPvYUVf1DC9MsL6iO3qO4oZYDOq33L23DPYYHTdHBDm3zZ5iQhDUnd0PSDptn7g0WY8=
+	t=1751798704; cv=none; b=MXFHeUQbUd9zLHVc6GPLT7kt4/d8PuSmH6U0P82E6VqcKVRLKBcJEXeDfluJaFf6TKxBUuFO+wNjfwjzxf8wIoV3nd13ZZkXxWmHraDbVwRSBwTmVxAzb9ESC5DoWzTJN9CSyuGjlr654AK7T3pcaCT6WGhGtxroNjosV2t39X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751798645; c=relaxed/simple;
-	bh=ljVTvv3ylF1q9GeYuLzJbrJ2pdJMNqnHTJ3mlwUP0Qw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nYjy/cHURFzXa4D8+kK4zBvul9llz2qrWwgiwYSQCfaa4/VHfyvXC5H1iIEAQuuimebamQaRjDGqUbMwN1jD3yARfwpO8hurevZI8/povlssWtYEuDDcsL3j+97tOVhI/KofohQnj6XVWb4dIuxtNxXWYDPSRiEKtUOjWg544kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87f4c8e9cdcso414069241.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 03:44:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751798642; x=1752403442;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+fryjNABzJeXYbuU+fJLRsiqin0eN86NG1i+dXCSHWg=;
-        b=Pe6MHHaWXC4JRsR9AvoYzKsuTR1G/nEG/l4Q7RuCCUF+JdIB4f8GR9hzAAnXq3MImJ
-         Z/5LxEOuGKMi9O5OdrYI/AtvdEYuGNys/5EL6a9zH4qnj0GaEaWQ+emBH9is2g9e+2Pp
-         +/dg9ZdRANCILkTS5Oq4l1s10vwD3L8R6J4nH8XmB2x2t5iDBbJ/E+lLDQWShZYdaLEY
-         cmkRWZHyJmUFpCxo1djzTxYvY4DD/PvowBEzssq0SS+GO0jYNW20Rdc6ABqBJ1NX50wC
-         FPr1yGSvwdjeDVXM0tvPDj5eQLCkI6SArLkDKK9MMfqGZ4ukmajXZZVqDTGUEhSf8MZW
-         gm5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWLsNai05eifQH9HT2gD2UVM4NMVZA7BYeiTZ0Dgwzll1XCUyH5AWLlHrdnYkamvgO3t8Aw330ez2mYdVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNT9mRaPqYefOR1OKnsAev53+E8F2dslj6oyYogoTaZBlWK+7K
-	timCN73cGpTeqofXbn3yNERhiY4BGKBHmpZHrAxU+lJ8tT6terl4vhjlIx4+zdet
-X-Gm-Gg: ASbGnctW1rrm04K1NDFHTssphFCmOEIReLrI6lTcGuZTa9U4bipw4yS9O7KnRh2CwOX
-	hV1Th2sPOuOo/gPiTQwP1bQe2cRiOiKRhpvCp6H+grWwW2dZmB5tB+F36L/5DbaPxFMBORRGtL4
-	rYQVfCM5IMK2VUDqcvmh/EdvPPAEdKytNK0VigaDciUI+FdPoWs2Kl998mdi1X5rOE9IfYnTIQo
-	+9TNZW8Ya8p0aV6UZaJ7osEJm6jghRQJ+T244RX+OjUSto6kl2/ihLHKzHHyIOFjqJOrva01ybE
-	OQVuA0hmSdNR0EpvR6wVkAU3yM7RNpTqu7tY5Hjq/b4JQ99kQpG1USDZqFWDRaAETPeiRvjtwi9
-	KY5QhKgFX6XXHpZlEORKqTcGW
-X-Google-Smtp-Source: AGHT+IEpA9Un46ZIUYO1ZggBKK2vsqzoE7p+efdr3cUXo1n8N7RABcjfJ7MHfqHExARMSaJao+shww==
-X-Received: by 2002:a05:6102:38cb:b0:4e5:a67d:92a6 with SMTP id ada2fe7eead31-4f305b22470mr2139960137.14.1751798642267;
-        Sun, 06 Jul 2025 03:44:02 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4f2ea73b424sm771971137.27.2025.07.06.03.44.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Jul 2025 03:44:02 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87f0ac304f0so407372241.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 03:44:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrhqIsHAPqLW0yJCJsGw6u2nv8/185Q8II3R4WAyiMa+0e8lIABANfMg2sSdP4lemjd+JML4FG7gUpJeA=@vger.kernel.org
-X-Received: by 2002:a05:6102:b02:b0:4ec:c50c:399f with SMTP id
- ada2fe7eead31-4f305a6fa78mr2353704137.11.1751798641763; Sun, 06 Jul 2025
- 03:44:01 -0700 (PDT)
+	s=arc-20240116; t=1751798704; c=relaxed/simple;
+	bh=relSNinZmZOhsw3SUrIKIcecYWDMki2gp5tmi3W3ukw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tHYVVp02OZTL9XmNp8xepDXgKHn89ETjoug5H/nWTW7c8dOddR+iSYYlCgvR0rOeU3PXa9oweJKFNQzP/JOFUcB0GKUld5iQQfKj4rvANmqbwCKxarXIqFVSQKYHtO4Ijvh9r6gE2mFXVhK0lWTlFu8RJvvhSqn6h1tlAYNrDho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZD6sbyev; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZD6sbyev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1983CC4CEED;
+	Sun,  6 Jul 2025 10:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751798703;
+	bh=relSNinZmZOhsw3SUrIKIcecYWDMki2gp5tmi3W3ukw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZD6sbyevNQWtttBPqjhEmI+oJWV/FQ7TsYfcJppRl85pe0PAb7wpjQkzoBBol/Zvl
+	 3msv5fbaGw+TraDwcmPtAhuDsv/lL++0tL2w8laWmOwCYQHAxm9RQ1QEqK581SECz7
+	 Vh+1rGdqqbtO/f/WPMc7vfZHzXjVeEXP1JACBt7HGNrxQJow15n/63pj9w4QbxPkyI
+	 Np06V1hjKl7MPqukKPMIczLAv5NcCu8ZCUHt/1ChaEGo/fQN008wV5tJsz807jaeQG
+	 xN46KtMLN0WBFd70DLbE72QW0bYk/uuOArm6U7LzrDrbOagPT37HemtrIrUKiv5VL+
+	 3V1G5ZnZT4gRQ==
+Date: Sun, 6 Jul 2025 11:44:55 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+Subject: Re: [PATCH v2 0/6] iio: Add support for MT6363/6373 Auxiliary ADC
+Message-ID: <20250706114455.26748e20@jic23-huawei>
+In-Reply-To: <ab0a407412c705e409d9d26591543713a092c13f.camel@gmail.com>
+References: <20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
+	<ab0a407412c705e409d9d26591543713a092c13f.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416114240.2929832-1-daniel@0x0f.com> <CAMuHMdV6efvaJuqVjnayyCs2KAbJmi52n0afLS=jh=nKN0y9Ng@mail.gmail.com>
-In-Reply-To: <CAMuHMdV6efvaJuqVjnayyCs2KAbJmi52n0afLS=jh=nKN0y9Ng@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 6 Jul 2025 12:43:50 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVEO+o0Py3ioC6ohbJooQdMhD9AXTHD1j1y+C_1TqSAAg@mail.gmail.com>
-X-Gm-Features: Ac12FXwVVv9iMUPL5V7yTBrj-e-SiCiCS33sv508W7QTGDAo-a5WgiT62Pf5vvw
-Message-ID: <CAMuHMdVEO+o0Py3ioC6ohbJooQdMhD9AXTHD1j1y+C_1TqSAAg@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Enable dead code elimination
-To: Daniel Palmer <daniel@0x0f.com>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 6 Jul 2025 at 11:14, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, 16 Apr 2025 at 13:42, Daniel Palmer <daniel@0x0f.com> wrote:
-> > Allow the experimental dead code elimination config to be enabled.
-> >
-> > For my 68000 nommu config this frees up a few hundred K of memory
-> > so seems worth while.
-> >
-> > Boot and build tested on nommu and mmu enabled configs.
-> >
-> > Before:
-> > Memory: 5388K/8192K available (1986K kernel code, 114K rwdata,
-> > 244K rodata, 92K init, 41K bss, 2624K reserved, 0K cma-reserved)
-> >
-> > After
-> > Memory: 5684K/8192K available (1714K kernel code, 112K rwdata,
-> > 228K rodata, 92K init, 37K bss, 2328K reserved, 0K cma-reserved)
-> >
-> > Signed-off-by: Daniel Palmer <daniel@0x0f.com>
->
-> Thanks for your patch!
->
-> Note that enabling this requires enabling CONFIG_EXPERT first, which is
-> currently enabled in the Coldfire defconfigs, but not in the Classic
-> defconfigs.  For atari_defconfig, I see a size reduction of ca. 150 KiB
-> (gcc 13.3.0).
+On Fri, 04 Jul 2025 13:39:56 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-Let's share the actual figures I had saved before:
+> On Thu, 2025-07-03 at 16:11 +0200, AngeloGioacchino Del Regno wrote:
+> > Changes in v2:
+> > =C2=A0- Added error checks to all regmap r/w operations
+> > =C2=A0- Moved adc_vref addition to different commit
+> > =C2=A0- Various other fixes
+> >=20
+> > This series adds support for the Auxiliary ADC IP found on the new
+> > MediaTek MT6363 and MT6373 PMICs, found on board designs featuring
+> > the MT8196 Chromebook SoC or the MT6991 Dimensity 9400 Smartphone SoC.
+> >=20
+> > AngeloGioacchino Del Regno (6):
+> > =C2=A0 dt-bindings: iio: adc: mt6359: Add MT6363 PMIC AuxADC
+> > =C2=A0 dt-bindings: iio: adc: mt6359: Add MT6373 PMIC AuxADC
+> > =C2=A0 iio: adc: mt6359: Add ready register index and mask to channel d=
+ata
+> > =C2=A0 iio: adc: mt6359: Move reference voltage to platform data
+> > =C2=A0 iio: adc: mt6359: Add support for MediaTek MT6363 PMIC AUXADC
+> > =C2=A0 iio: adc: mt6359: Add support for MediaTek MT6373 PMIC AUXADC
+> >=20
+> > =C2=A0.../iio/adc/mediatek,mt6359-auxadc.yaml=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> > =C2=A0drivers/iio/adc/mt6359-auxadc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 440 +++++++++++++++---
+> > =C2=A0.../iio/adc/mediatek,mt6363-auxadc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 24 +
+> > =C2=A0.../iio/adc/mediatek,mt6373-auxadc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 19 +
+> > =C2=A04 files changed, 416 insertions(+), 69 deletions(-)
+> > =C2=A0create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6363-au=
+xadc.h
+> > =C2=A0create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6373-au=
+xadc.h =20
+>=20
+>=20
+> LGTM,
+>=20
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+>=20
+Applied to the togreg branch of iio.git.  Initially pushed out as testing
+for 0-day to take a first look and see if we missed anything.
+Jonathan
 
-    $ bloat-o-meter vmlinux-v6.16-rc2+EXPERT{,+LD_DEAD_CODE_DATA_ELIMINATION}
-    add/remove: 0/2125 grow/shrink: 10275/32 up/down: 52254/-205419 (-153165)
-    [...]
-    Total: Before=5277826, After=5124661, chg -2.90%
-
-    dmesg:
-    -Memory: 265412K/276480K available (4345K kernel code, 486K
-rwdata, 1240K rodata, 164K init, 143K bss, 10440K reserved, 0K
-cma-reserved)
-    +Memory: 265616K/276480K available (4205K kernel code, 484K
-rwdata, 1180K rodata, 160K init, 143K bss, 10236K reserved, 0K
-cma-reserved)
-
-    gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
