@@ -1,100 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387103207;
-	Sun,  6 Jul 2025 10:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1251F5847;
+	Sun,  6 Jul 2025 10:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751796584; cv=none; b=PVMiYu+uOZAZJulPwM6EPnv5YvBeVyXPcDp98kHt+f+ueLwr0bhqIaB6p7wmhhYxkAnfz6P7ZFyd0+YjiOz0TYMSeqjhU64jBK/5SodPAl/3TAc9tHlcHwfH2837OyrLt7CyOmABva8ptQoxn2bf7YUxnPaBigtvdZ3fsJiEHXY=
+	t=1751796603; cv=none; b=V94SETD4TmJoHfqBx3vABTpxSQ3lPtqzWaCIKCNiUZ44X5w0ryra7imlVbmGxMbzI5ipsQO25TqEpedrhhwb0C5Yf9QY+sAn1DpFGGEBoIAnKTAbTEpgIIAdA1kBcGnodu02rqp2VJpCRISQ4NFACZ/wgM9jxCLrLU1mykZUMkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751796584; c=relaxed/simple;
-	bh=NrfxfUV4noESzV36/FpNEaK1ScHbu4sVg33P7kkdHiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gf3S78o6krueIx8DdibBZvZwRmtf6AvM+WD6Jfw2EtbXC1x5mWiU3FFkrx+ws8w8pvwzfmjjwWsbWlnos6uLU1iTvAjWV4IPkcrlaIWM2Q5fvqv4px9DpZA+aJdSXMoCQpKPuxJOaIjtblRYbIy/FAKWYgOpIriwL2IItx5nanc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/oDFaoV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751796603; c=relaxed/simple;
+	bh=jV5hk2L/22TCKsTCyR4AWVhsz/bZszE20n4bChKlIP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MAfwwXfrPwFyrL2MzP9/6w/FhbRYWX6XcQ2tqAVKwzlRzMA50V9DukrfM0mqUJYpFfc6RkbaoigQPblhgiXo4+5xKBkaZ2Uge91oCdi5fsKcXciFmyfPMBIUdSdR9NkqMWZz7OEAIBo5lO3ly4yAHgzDkmANow8bavA6bxku4/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+HgeWJy; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/oDFaoV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51565C4CEED;
-	Sun,  6 Jul 2025 10:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751796583;
-	bh=NrfxfUV4noESzV36/FpNEaK1ScHbu4sVg33P7kkdHiA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=D/oDFaoVNjE20lVuu7qT6sMcMeawbEMlFb5KdJpVXSurptYEaOGdYuuJa4TVypzBT
-	 y/L6ycN2rYw5GpEZMg30qRKeLx3q8qRc5lLE1UErP66xgEJBdVI95afjh6z4KhWVc6
-	 RT3b/tktjzjUqsLfglDbcvcRsS3sIhgjbPVSSNDRGKgX4Ut21LeYirXiITPQdwPVw3
-	 RK0UJAS1jZoWG5Pe+Y2q+DI8GDznigICcwaEnjHl93wELbjD10i/dMotqytyDSFEXe
-	 7WawQCRdxxFICIKky/8x4on5ihWdS7kcAJX3bOufrJJZn+/upkuekWVlrIEgXCa0uV
-	 /jp53LHMGu6iA==
-Date: Sun, 6 Jul 2025 11:09:36 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Marcelo Schmitt	
- <marcelo.schmitt@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=	
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad4000: don't use shift_right()
-Message-ID: <20250706110936.665e27cc@jic23-huawei>
-In-Reply-To: <e490200ef3498d0b9798e918a5a78ff429b004da.camel@gmail.com>
-References: <20250702-iio-adc-ad4000-don-t-use-shift_right-v1-1-041c2d6c3950@baylibre.com>
-	<e490200ef3498d0b9798e918a5a78ff429b004da.camel@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+HgeWJy"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cfb79177so11744655e9.0;
+        Sun, 06 Jul 2025 03:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751796600; x=1752401400; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jV5hk2L/22TCKsTCyR4AWVhsz/bZszE20n4bChKlIP8=;
+        b=S+HgeWJy1e75+KWEjW6SRfRYAIDcC4fNmVTfd0O3W5dZR33UWdser3JgPgOq97Tneq
+         /c3EfaVryD9l6/NeoI0EMhCG0g1tBobIo7oYaNtw2bEFwTeJAzlyKW0q6qrTnVgpdI1b
+         dhM2UYvEWT2DlmQMumCdWJ3GDzRriTxTopeDP7xiGPtS0QAaGXtJgiqLURxkfhXq/GJa
+         2wvSzSd8cdM3m25FxhH+xsnONmwiAykwYaUiv8SMl5g6dEIf0mp/7MLbWmcmF+pixzSR
+         8wNDOmnvl2VjZIfmyHod8YdFDXyyXjtVSf5tTQxel72KlE4gItKjYZzDYnbmF49M2RXQ
+         Hceg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751796600; x=1752401400;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jV5hk2L/22TCKsTCyR4AWVhsz/bZszE20n4bChKlIP8=;
+        b=sQoHNAFsNUTklITKm1uImpTfyX0ifOOHTZ37E1PFaFsvTwl04d7OPSbEP/YLTop5/B
+         0/00b7bNSWitI06ka/sMGY0A01PI5otxJuESx0fWKs3U33ejaXJ0c1KFpPgA/kbqgUf1
+         JhkdvybNYX5RUI+hFXgAGjhUAPZ67+/XoEEUbg5QE5pfPQ8ltvzq0BVPZzfN/TqN3svC
+         VTc0rbiqeEDN+hcGGrPJaM8zPIRfDcJ+x3LXfizjVbnKDxbL62llvYM4SDI3AuO0NsAn
+         QuWhoUVXFAFzFVtcjx/1eLr1rslvTs/M6hxapEqpjlSUopKaCOdK0Ufl7ZxtkLzWEoZL
+         v47w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsmGy1oeOeEjsndHhu8jB189pQZr81AFjagk+rmyJNAwvtRxKGCZCaMBPKzKjNTW6lvMD2iZ5AWSc=@vger.kernel.org, AJvYcCXYRQKoFFtN/7/5zEIMWNiHuGcGVl8wR8H8TwDiflluoKg4F6kkS3kgjgFkqVR94Uv+6vQpTA3nqGxQftQF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgYPV7N4/10buWFvsGnyoin5vzGn3zW40/PT9EX4BOiD4CqB0I
+	Q+yEql913Ricr44yxjyH/C534+iaE3D/K4LGjzoFaqYEoWap3FI+2YET
+X-Gm-Gg: ASbGnctSUVjs/ZTCby/G6cGpKifPG1iUjftxE4oOfgesKT/Juy5a4+Gn5aS6Bl050yI
+	Sm2L1LO8aTIl1sz5YeRQTGS8ghUfZfqyXrfWp+RQtiK0koqkJkWDEIZLGTfheNKazSp05Ou23nI
+	m0nVlZTt9RrLux8vp+Lefuu8URRl+o0HBS3RCLSu7dfuPMBgd/WAXp8d6h65S1xgwYwLCFVaY8k
+	RBjmE3RvljuLHrBdHATetQ3Ucb4XPDviP0i+y4i2HKE1tcPT+qlU6Cf1qtN9pCtBgN7x0BQQ7Me
+	tSQwIIzO0gDlqRat5ueCqdbXh2+lmEifqS5RSQuHOv/LeKbTUfCXG5f7WTAhgIx22I0R51Lr4O/
+	+FQ==
+X-Google-Smtp-Source: AGHT+IFboTpFzUmPBMceP5BQaZY52z0uD8klP61U5hlGg3Max/z1jvvjdVEPb6BxDr0QhRSMuQVpDw==
+X-Received: by 2002:a05:600c:4f16:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-454c576aacfmr1072985e9.16.1751796600196;
+        Sun, 06 Jul 2025 03:10:00 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9be0bacsm105336185e9.32.2025.07.06.03.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 03:09:59 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: ardb@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr
+Cc: gargaditya08@live.com,
+	jonathan@marek.ca,
+	kees@kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	lukas@wunner.de,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] efi/libstub: Print uefi status code on error messages
+Date: Sun,  6 Jul 2025 10:08:44 +0000
+Message-ID: <20250706100900.1481-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250706094354.1282-1-khaliidcaliy@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 02 Jul 2025 15:09:19 +0100
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
-
-> On Wed, 2025-07-02 at 08:23 -0500, David Lechner wrote:
-> > Drop use of shift_right() macro for unsigned value. The shift_right()
-> > macro is intended for signed values and is not needed for unsigned
-> > values.
-> >=20
-> > This was found by a static analysis tool [1].
-> >=20
-> > Link:
-> > https://github.com/analogdevicesinc/linux/pull/2831/files#diff-c14a34a6=
-492576d22e7192cc0f61ad0083190aeb627191596fe12462f0c6f21aR557
-> > =C2=A0[1]
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > --- =20
->=20
-> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-Applied.
->=20
-> > =C2=A0drivers/iio/adc/ad4000.c | 2 +-
-> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
-> > index
-> > 5609a7845b6f50b5818613170df6b234f8f0c496..fd3d79fca78581e51bb904d0bcfed=
-a3d3663
-> > ea25 100644
-> > --- a/drivers/iio/adc/ad4000.c
-> > +++ b/drivers/iio/adc/ad4000.c
-> > @@ -554,7 +554,7 @@ static void ad4000_fill_scale_tbl(struct ad4000_sta=
-te *st,
-> > =C2=A0	val =3D mult_frac(st->vref_mv, MICRO, st->gain_milli);
-> > =C2=A0
-> > =C2=A0	/* Would multiply by NANO here but we multiplied by extra MILLI =
-*/
-> > -	tmp2 =3D shift_right((u64)val * MICRO, scale_bits);
-> > +	tmp2 =3D (u64)val * MICRO >> scale_bits;
-> > =C2=A0	tmp0 =3D div_s64_rem(tmp2, NANO, &tmp1);
-> > =C2=A0
-> > =C2=A0	/* Store scale for when span compression is disabled */
-> >=20
-> > ---
-> > base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
-> > change-id: 20250702-iio-adc-ad4000-don-t-use-shift_right-bda6e41152b6
-> >=20
-> > Best regards, =20
->=20
-
+Sorry, i accidentally sent this twice and broke the email thread.
