@@ -1,87 +1,111 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BF31F0E3E
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 09:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF1C35972;
+	Sun,  6 Jul 2025 09:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751794163; cv=none; b=l5+WJnEcjI6ZV8nxaxdoe4XbLWNBYlxeXD6n9Bw/JXfBgfybn83FxbjBhBcXv2GJ4WlTr7RrtCl5VY4yon4q2D3Cjfm9Hgts0uMwm6Oew8pjdXN8ZYq+o54fH85d3nrzOKR1ePN2vLSvYrqAs1WIcQf3FUrj9qOAjB4D2w2rC5Q=
+	t=1751794446; cv=none; b=pvrD0VFwJKmUh43I29klg63PIHqXpNmwk5zaM+PwMXKmDYJMI6uahi+biwma9g+ih3duWU9rwSqjPjVNFGuxzSv8b+bhM59HYqK8mdwV/zpArIoK49xjxi1wbJhnrXrjKLBDxLMf64ZzGqWWx6YsIdZgF9Z8uD/IgrgR9P1tYlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751794163; c=relaxed/simple;
-	bh=CC41pVRdiQJRe7IDT4GFyh8uj0wNXZE9cLlsrCSHf00=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HTyTtJBsb9rntsJpgsJFEjYP8mIvpFuoOXcby8d0uuzExi2r9CZQblCSB4Bsz+9IsfImtcRrrBaYTKZ2w1vU025khTpOoQEdS6YuwUDEl6qphFmNPYDwq610H/bSwpAIxkqNr5EPmcyokpJsdIQXmXYca1uGhJqlTYFfs42GlMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OlNYeSLt; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751794446; c=relaxed/simple;
+	bh=aL1Zrrz6z/GX1s92tmOuCSb81YdX/7rki1eHHVMKrxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uPqlii5NrVOlCxh/eQ5esFdSFSOd9c9Pe5na0xgYfDM7GVCXxMX3BHJcIXcVEfTJCYbFamArYMyJdN9w9WQeKs6Qkvh7G1xclV23s3DcUK7VmBSRcvLvqQxClmcRojVEltO49ACJ0kH0bUlCBxtqiHAjpunozHgsQuChaXE9pf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bF/MP1t2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OlNYeSLt"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751794158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6AU93rX/4NmAUMCzl+yk6cEfK1BjjGSB9sBuojk4y04=;
-	b=OlNYeSLtfZ0CVPQyGdB+rQrCbAitBPvSkls8fZisHAbD6JvL/SmYGPyh5RJkug5hfafKnp
-	/j7a5z+pWRIRpYqPWLhby10LfZyKLtd4zMPsEX/NJBEdc+lfe9WRhe7xXEQXpCaKFUGZxA
-	oHhWi1PMH2YLgq+GBU1V9EF3jbnCA08=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	kernel test robot <lkp@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/sev: Replace memset(0) and kfree() with kfree_sensitive()
-Date: Sun,  6 Jul 2025 11:28:44 +0200
-Message-ID: <20250706092859.412471-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bF/MP1t2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A745C4CEED;
+	Sun,  6 Jul 2025 09:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751794445;
+	bh=aL1Zrrz6z/GX1s92tmOuCSb81YdX/7rki1eHHVMKrxE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bF/MP1t26Fo8B1kKVCql0AarvJq+7AczeYvI/FCYfqAd3D7hCADu7hXFfChh3hmBf
+	 f0Ez0JsQToO1y5kBI7bLmAtU9wkOkba5nIoGlluPu7+wHXHVg6gunnZhna12PhGeyV
+	 AdfzEbIJO4CuVsaCmR7LrJiH/WqjcC9FSt42/6y45ptLvornjfIfvngAcWCNG24v4l
+	 eoQ+R11asgFAsAM6E7bOonyyfzuqHZhq/wnrRg6gR4lfeGeSIqAchbHP1vs0QUeN74
+	 UH87v+GUxNLNN1o1wNlAWa6jnxh5EwRWpo5cf3SHY2pB5+bD/pB/PhQvSktqXmLrJY
+	 uUfbx3dH9g9YA==
+Date: Sun, 6 Jul 2025 10:33:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jonathan Santos <jonath4nns@gmail.com>
+Cc: aEwd4cS7j0Vvypg8@smile.fi.intel.com, Andy Shevchenko
+ <andriy.shevchenko@intel.com>, Jonathan Santos
+ <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v11 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff
+ attribute
+Message-ID: <20250706103354.0059d320@jic23-huawei>
+In-Reply-To: <aFGVAWi7CZAy0E8k@JSANTO12-L01.ad.analog.com>
+References: <cover.1749569957.git.Jonathan.Santos@analog.com>
+	<804d66f1858014d7278aec3344d81c223661e878.1749569957.git.Jonathan.Santos@analog.com>
+	<aEwd4cS7j0Vvypg8@smile.fi.intel.com>
+	<aFGVAWi7CZAy0E8k@JSANTO12-L01.ad.analog.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Replace memset(0) followed by kfree() with kfree_sensitive() to improve
-snp_msg_free() and silence the following Coccinelle/coccicheck warning
-reported by kfree_sensitive.cocci:
+On Tue, 17 Jun 2025 13:17:05 -0300
+Jonathan Santos <jonath4nns@gmail.com> wrote:
 
-  WARNING opportunity for kfree_sensitive/kvfree_sensitive
+> On 06/13, Andy Shevchenko wrote:
+> > On Wed, Jun 11, 2025 at 08:52:03AM -0300, Jonathan Santos wrote:  
+> > > Ad7768-1 has a different -3db frequency multiplier depending on
+> > > the filter type configured. The cutoff frequency also varies according
+> > > to the current ODR.
+> > > 
+> > > Add a readonly low pass -3dB frequency cutoff attribute to clarify to
+> > > the user which bandwidth is being allowed depending on the filter
+> > > configurations.  
+> >   
+> > > +/* -3dB cutoff frequency multipliers (relative to ODR) for each filter type. */
+> > > +static const int ad7768_filter_3db_odr_multiplier[] = {
+> > > +	[AD7768_FILTER_SINC5] = 204,		/* 0.204 */
+> > > +	[AD7768_FILTER_SINC3] = 262,		/* 0.2617 */
+> > > +	[AD7768_FILTER_SINC3_REJ60] = 262,	/* 0.2617 */
+> > > +	[AD7768_FILTER_WIDEBAND] = 433,		/* 0.433 */  
+> > 
+> > Just to be sure, is it 0.433 or 0.4333(3) actually? Sometimes datasheets have
+> > rounding that even may lead to problems (see TSC issues for some of the Intel
+> > CPUs in the past). That's behind my question.
+> >   
+> 
+> Every reference I have specifies it as 0.433, so I believe that is it.
+> 
+> > > +};  
+> > 
+> > ...
+> >   
+> > > +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> > > +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
+> > > +		*val = DIV_ROUND_CLOSEST(temp, 1000);  
+> > 
+> > MILLI? KILO/ MICRO/MILLI? ...?
+> >   
+> 
+> Yes, MILLI.
+I fixed this up and added units.h include and applied.
 
-No functional changes intended.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/r/202501141317.IrSGK4Et-lkp@intel.com/
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/x86/coco/sev/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index b6db4e0b936b..4bc8423cfd79 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1768,8 +1768,7 @@ void snp_msg_free(struct snp_msg_desc *mdesc)
- 	free_shared_pages(mdesc->request, sizeof(struct snp_guest_msg));
- 	iounmap((__force void __iomem *)mdesc->secrets);
- 
--	memset(mdesc, 0, sizeof(*mdesc));
--	kfree(mdesc);
-+	kfree_sensitive(mdesc);
- }
- EXPORT_SYMBOL_GPL(snp_msg_free);
- 
--- 
-2.50.0
+> 
+> Thanks,
+> Jonathan S.
+> 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> > 
+> >   
+> 
 
