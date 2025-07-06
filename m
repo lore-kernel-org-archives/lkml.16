@@ -1,77 +1,85 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15536610D;
-	Sun,  6 Jul 2025 03:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9456EACD;
+	Sun,  6 Jul 2025 04:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751774254; cv=none; b=knBsp9C6+2TXX7ZimO41FBB7yewfkLcA4iNyrdlkXTnRoJhuszUv0ElLqsFFSM2/ztxFE10XVTbF2iLSh7huWeLBal0iVyM+P7d/ub6JD9ge0zmgZ1Oms/SypMHXsGHdu2JwW/HBysjUkp56MbshAcAcvWhq9uFVWjxoabSMdPA=
+	t=1751774818; cv=none; b=JgTUbCMtAzR9hBh+bCtEPcu3G0bLs9OnNaIM595J+BcYwsuMf7Xw9uxjq9McyoqvDJsbruB8WTSnxhv+6MoUCEd/OzUxsAnpeF8AZOVVnuibdO3Dl2Ohe2xvuXRH4XQzgIJAiLrtB9QyRKIz2kSTYVFllpfKZCBc/RYJGfiYuKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751774254; c=relaxed/simple;
-	bh=Rx1JyxegzFIQK4tVItKzGHgdZz2Rc6omrsmPzvbRRCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uZnmvtG8W78USbgMSDuO1+MRDUh9F7S2kUYuFIOPfS7TrYA1v6c/u80cu0n/+BAF/tnKMZNt+IdTiTOUKMXMUMrQPoE0MDTJKLQiu5JZ4lISKGAEPIHmgXQEMRGSZ3qnKyl2vk4XH3Drvk75wBWXjGL1c+nAej6BZ9Ra3yEgBkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=C6cSl0n4; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C6cSl0n4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751773695;
-	bh=x7P/zlPuI+UXIwfl3tKst5KlD1UwibDUUwj+Izaz3Bw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=C6cSl0n4E2PZ38swJWYO03H8GBa+UY1mmGYmc5E0wfZr5QtrvnexNyC9nnY92T9e5
-	 AUgjrOEEDP+bSskkeD6LZt2Vq5RlD8irUniFvAWwENfYLumw++vC1SNBXoq7PffCX6
-	 PN+jDTx6dpCl5utnZ3r0O/A0b8viVCfea6lNW5dXSJhyhK+I4wNeUDmPRKfx/zIrOU
-	 YRp+0o3dy5PpJZanvkqaqq9H1r0JVDg24o+FKP2VXXk/JKmwKpKiPFA76DTFPOCYdq
-	 gygNFlL0WtD9NnOQzMB/vWOcj4YfXfbxzFSugC7gn7Ud1jbGsyj5AzD5csyqdGSvVr
-	 bOiRSFyOVfaOA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	s=arc-20240116; t=1751774818; c=relaxed/simple;
+	bh=ZvnxcHwiDjSH4zYWbfszHUNhAOzWLerR0q8cLLZfR0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lnbzh3tEruBWvP3peVr6AKLPlSpSefSmCbRfMo17QQjkfCy+sYsa62B7g+THH1aj2TE/zJFVsP5FxJ3AYZ/ne8B0LgUOB+tW3Xb0ZGOKKmhkkFPXwheYT5ioKl83PcSArY823HBxpVSUorGrMFSd+TlmxDMWxBX7/OuYzKBNSRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.48.207])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bZYHf6cX6z4wb0;
-	Sun,  6 Jul 2025 13:48:14 +1000 (AEST)
-Date: Sun, 6 Jul 2025 13:48:53 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: no release on Monday
-Message-ID: <20250706134853.549505dd@canb.auug.org.au>
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id D67A7341EC0;
+	Sun, 06 Jul 2025 04:06:55 +0000 (UTC)
+Date: Sun, 6 Jul 2025 04:06:46 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Stephen Boyd <sboyd@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Alex Elder <elder@riscstar.com>, linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Immutable tag between SpacemiT's reset and clock
+ trees for v6.17
+Message-ID: <20250706040646-GYA408198@gentoo>
+References: <20250703151823-GYA312602@gentoo>
+ <daf9ddad1aa24ee18abdc11a9b26ef03bdcbae16.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/47rlk/C+7trYJhvAktsmM=L";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <daf9ddad1aa24ee18abdc11a9b26ef03bdcbae16.camel@pengutronix.de>
 
---Sig_/47rlk/C+7trYJhvAktsmM=L
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Philipp,
 
-Hi all,
+On 12:02 Fri 04 Jul     , Philipp Zabel wrote:
+> On Do, 2025-07-03 at 15:18 +0000, Yixun Lan wrote:
+> > Hi Philipp,
+> > 
+> > Please pull the following change into the reset tree. This
+> > allows you to apply the patch 5 of the SpacemiT reset driver [1].
+> > 
+> > Thanks,
+> > Yixun Lan
+> > 
+> > Link: https://lore.kernel.org/r/20250702113709.291748-6-elder@riscstar.com [1]
+> 
+> Sorry I didn't notice before, this is missing k1-syscon.h from Patch 2.
+>  
+no problem
 
-There will be no release on Monday.  Normal service will resume on Tuesday.
+> Can we get a clock maintainer ack to place patch 2 in the shared tag as
+> well? Otherwise you could split patch 2 into soc and clk parts.
+for the ack, I'd assume Stephen have no objection (Cc him explicitly)
 
---=20
-Cheers,
-Stephen Rothwell
+technically, there is no problem to place more patches in the shared
+tag, since the tag will be both sent(by me) to clock and reset tree,
+so no conflicts in the end.
 
---Sig_/47rlk/C+7trYJhvAktsmM=L
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+if you expect to at least pass compiling test with patch 5 in reset
+branch only, then patch 1, 2, 3 should be included, otherwise need to
+pull clk branch for additional dependency patches.
 
------BEGIN PGP SIGNATURE-----
+I would propose to have shared tag to include patch 1-4, then you can
+pick patch 5, in this way, it should both pass all tests (both
+compile-time and run-time)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhp8iUACgkQAVBC80lX
-0GxEJwf/XuPHOaytAXLwThc/ufae/k9RTRhiTHjK8SYrimQCHqHdpNaou0FgyxO5
-YkXDzTwi0cnZaUp03kF9GBJ+7fi3/zfMpylzYgUAjRhFNaERv64U94g5mYuey6n0
-aX0kCX7IjYM4fooIazT6sN+MvuZ49JQTFY95u/RSi2XwHOPX5y+gaBIwjHgeAE7F
-4cAg+qpfYoCxVPpg5BvsR2vG8rGolr0YojdEruacHNCCSzYmThkF7Yb2RhdgX7zt
-iSLKWbYNj2rvQR49X9h/oqI0o84LwxVek3n7ipXkBiaXwmtGPx06vNW0k+77jAzf
-alePr0SjYaPVOkAqH8xOy+MsSUIdag==
-=21Xf
------END PGP SIGNATURE-----
+what do you think?
 
---Sig_/47rlk/C+7trYJhvAktsmM=L--
+-- 
+Yixun Lan (dlan)
