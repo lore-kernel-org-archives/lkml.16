@@ -1,95 +1,76 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F212BDC2A
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 20:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CDB1BF58
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 21:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751835563; cv=none; b=c3TgDnIlHXEhfVWwT8BmAnH6wEksL3+8s1mntXCJhC0c2RIcPhyy3yvywotaT/cwiOvk00Qk62Y+bU2yAC6u4RukJ6qfdQ+lkHlPyeN6w4DiTmrAqXxBpMJmYU7ToQnWhyZviJZI3p9qgcWjvsbJp1/TxHAhB37VQ+BgVyKJ/AE=
+	t=1751835924; cv=none; b=laeoZZVLOHKt2j/h+cGAcV36w/QH8GVs/XXlmRt/BDsjg/wknZ/IwDBh+yQweZpb43q1zFs0LLmCQ+KO9GqF5UdHBA2C7IDLD8Srr6WMM8W3Ku/bpyAOF80wKcJKdbaFJNfohl1EHBSyCrbJzPp6517E4cxJHGoGUZ7JtuoQ780=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751835563; c=relaxed/simple;
-	bh=IVC8qqc56eJ51C20ZdeUMUIfsSlO+M/T3VM+z+MxsYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JhwT6vdhOpjLY9XfWzGAa+0qtrToFQOlCmjWDYCGm8XYIQR3IgMg8/gcQjjEwYLD/aN+x3ruRPalwjpN87VKLEe7tpAd34XUuqeby+8zYiXNt9w++JV32T/9hBlZm4VVxttcUA4YmYwlKLuNpVtDvhs21kmC/LAcgEbKiDj8yII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=XoYrh0MH; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1751835924; c=relaxed/simple;
+	bh=DQq8YRm3/ytQV12mFqCC31vcZJM2dVv1ItsuEHy3B0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=e7f5YVd/6GLsakE014e3447UizBYDbT+e5kGzesQDaWJxgI6nIIiUSfjnlUrqmIIgowzBdTTUc+txy/JnOnP+NoHhq6L8CHPQ9S+oGhKaWNTRh7LMtnMPf/N7WUMzJ5JxJQao92HkNlvGiCdGCKE20AJjh5AiOz3ZXPBPYh0kGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m0RbrLaC; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="XoYrh0MH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1751835559;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m0RbrLaC"
+Message-ID: <f870e739-bbe7-4260-a847-1035f1c5b801@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751835910;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vSXbVhxIGkaH+o+88mv1rUZfsU9HWHbpjsI8nim4HX0=;
-	b=XoYrh0MHuUA15YN3NbeMii0ZK7rpfy8BQk7Dxny/ii04+hNc9F5SyTeMCaJN1lc6hVi/eS
-	lhU1YjmWTGi/Ht5900o2L2jxyuxkRPah0m+NZZGqdq8bmXd5qSFn9EnIU34BG4j5tjSibr
-	WmtfmGx5Z4S//VlVnUhG1dz8OUib7evavA2z2ReMXiQk8pe/uG+NUUTz8+bKSqZOKJ6YZ7
-	DPGS2dfYHsjWzNw569oggzJlWjyqPhjAT7kqLo6flMxvg8E+ZeR63e7+LLM/HzxyqIw09Q
-	aqLMSA9PXnpWyU0hXvsRXmwks6CfnvJyqzcCC7uV2gk+azwjisAWDuX7oiDXnA==
-From: Val Packett <val@packett.cool>
-To: Douglas Anderson <dianders@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Val Packett <val@packett.cool>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] drm/panel-edp: Add BOE NE14QDM panel for Dell Latitude 7455
-Date: Sun,  6 Jul 2025 17:50:27 -0300
-Message-ID: <20250706205723.9790-7-val@packett.cool>
-In-Reply-To: <20250706205723.9790-2-val@packett.cool>
-References: <20250706205723.9790-2-val@packett.cool>
+	bh=cV4Rqtm91hjKif3BbwFfQH+ZWTX/llutJehbPJVtTUY=;
+	b=m0RbrLaC9J8wxVcsEOtPnrCxYg7n7xp3elDOgNGnmrulrGJuxlwTIdtyz4dLifXV7RRYyf
+	7++v/Km428YPzyKEWrrkoJyCyHiHgDbCQRVsE75A2y61WpLTU7/Mx6/vicfGxc/YaPYZbV
+	3obKG5C5LLwUz/QoIsRzUnKCK5HY9ws=
+Date: Sun, 6 Jul 2025 14:04:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
+To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
+ jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <6865d59b.a70a0220.5d25f.0781.GAE@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <6865d59b.a70a0220.5d25f.0781.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Cannot confirm which variant exactly it is, as the EDID alphanumeric data
-contains '0RGNR' <0x80> 'NE14QDM' and ends there; but it's 60 Hz and with
-touch.
+在 2025/7/2 17:58, syzbot 写道:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-I do not have access to datasheets for these panels, so the timing is
-a guess that was tested to work fine on this laptop.
+Today I made tests with rdma-core after this patch is applied on the 
+linux upstream. All the test cases in rdma-core can pass successfully.
 
-Raw EDID dump:
+I will send this commit out based on the rdma next repository.
 
-00 ff ff ff ff ff ff 00 09 e5 1e 0b 00 00 00 00
-10 20 01 04 a5 1e 13 78 07 fd 85 a7 53 4c 9b 25
-0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-01 01 01 01 01 01 a7 6d 00 a0 a0 40 78 60 30 20
-36 00 2e bc 10 00 00 1a b9 57 00 a0 a0 40 78 60
-30 20 36 00 2e bc 10 00 00 1a 00 00 00 fe 00 30
-52 47 4e 52 80 4e 45 31 34 51 44 4d 00 00 00 00
-00 02 41 31 a8 00 01 00 00 1a 41 0a 20 20 00 8f
+Zhu Yanjun
 
-Signed-off-by: Val Packett <val@packett.cool>
----
- drivers/gpu/drm/panel/panel-edp.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 3796c41629cc..9a56e208cbdd 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1939,6 +1939,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0ac5, &delay_200_500_e50, "NV116WHM-N4C"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0ae8, &delay_200_500_e50_p2e80, "NV140WUM-N41"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b09, &delay_200_500_e50_po2e200, "NV140FHM-NZ"),
-+	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b1e, &delay_200_500_e80, "NE140QDM-N6A"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b34, &delay_200_500_e80, "NV122WUM-N41"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b43, &delay_200_500_e200, "NV140FHM-T09"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0b56, &delay_200_500_e80, "NT140FHM-N47"),
--- 
-2.49.0
+> 
+> Reported-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
+> Tested-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         6f8d023e RDMA/rxe: Fix rxe_skb_tx_dtor problem
+> git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13973770580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
+> compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+> 
+> Note: no patches were applied.
+> Note: testing is done by a robot and is best-effort only.
 
