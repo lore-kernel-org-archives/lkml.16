@@ -1,185 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9642029E110;
-	Sun,  6 Jul 2025 18:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3B3288C9D;
+	Sun,  6 Jul 2025 18:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751827630; cv=none; b=SzpECdLfyXDT+NnVaiLHO5ZCIDFU+8PV7yfS40539NKOjDHvy4JWXD+UE7Imfo9JvttcdrXv+eCSRS0EyxJ6/9BN9yO+JoRDJJfKS3dcc8rpmEr2g47bSCIK92nTbP7+JoNuSDuAfs5Ie4MK9efIPo87553MeUnsYkFRkJ5OS/I=
+	t=1751827676; cv=none; b=awwEszYIeOCFyMCbVY2FFrUKdglHh5tpS5TIFX4Z8eEDYQF3zV8Gn6xrQi+6A52ZcOhPb1unAqRpt+HDdE1rwgTMWzO9m3ksu4h4DyAPXBFGqVbFAFr5/MkBSeAHvU9tFjhbngGjq36XfrvXwV8yr9wDPosr+qjc9mPD/DbH7xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751827630; c=relaxed/simple;
-	bh=r8OPi+V5RSDBOd4VSGf3X7RVxzB62bXpNusFQZ+zrDM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h3QMrm+qdkDIRIBiMEB7hXuugolL1RiwqAIIOR/eupO+bTAFemWDKHDlKFxGcD32r4o9wXiGLBgGD2lg21yA/P3wOek9x5LTrVZjJ7uakBIk1iNvKlH1Nci9+qEim4KO3fRTj+SGGYX5lQOpRV3z2QfVFplkYThUm5Ix64EBEog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE2l42ch; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751827676; c=relaxed/simple;
+	bh=cLVy1mKDbWXN4aNjEWgP3z3+agHOP3HLGlEBVSPzMo0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YyOBkCPnF37PZqQituL0qPbCIYoDQyQwRWih9FCEXTfnRztZyPdWZsQI4EeRBPguPgXmIEMoQ6f2VqMOr3xnCYTK7tacQl7PpvQ4HnXncD5taYqUBI7vDWI2bthuoYjSUxYfO1Uk6jcJkijoOw3M9OSfJeDczSRkokLFyON3Jjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gi5aF+Bk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE2l42ch"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 28DC9C4AF11;
-	Sun,  6 Jul 2025 18:47:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gi5aF+Bk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380C5C4CEED;
+	Sun,  6 Jul 2025 18:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751827630;
-	bh=r8OPi+V5RSDBOd4VSGf3X7RVxzB62bXpNusFQZ+zrDM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=eE2l42chQKFkR6nzaI8333RpO7Utts6Ldi7Of3JbRr8kl+pybS/o5+S7VtiGx2T3t
-	 qnJRjwPuq6CXDaLmeO2zJWNQ541Kh3/vdhwIEKFoqyqTZpGRyE8VNPM5K5xoKJxQsk
-	 mq3sAHvRLB5MI1NCCx132eemGjtmcsEODzDJuv56QhFelA7XaUvYqfVv+Gk56z5+oy
-	 7tGRVbQTBNjShsP/glbjov+LZI0t0TC+8AGzr1pObWvsJepONYLh+cBvkZyQC5dLK3
-	 fgADjEu/jHuZft7UB072pFZ51bgDfvKnBV5craMrwq8prK+zLud1kaNdr25g+mPYuK
-	 Tvd+mvVRqaTzg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF28C83F10;
-	Sun,  6 Jul 2025 18:47:10 +0000 (UTC)
-From: Frank Li via B4 Relay <devnull+Frank.Li.nxp.com@kernel.org>
-Date: Sun, 06 Jul 2025 14:47:04 -0400
-Subject: [PATCH 08/11] ARM: dts: lpc: change node name 'button[0-9]' to
- button-[0-9]'
+	s=k20201202; t=1751827673;
+	bh=cLVy1mKDbWXN4aNjEWgP3z3+agHOP3HLGlEBVSPzMo0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Gi5aF+BkOP3T/VA9JQHYB6C/56PWFLJUd7wtGFlkFdhxYtiem2dv0IfpbK6tJ9AlN
+	 HcO8pguoHXH+bsEumkufysd1LM5Uq4WG+9uEYAVyElcohocskWgmym3zAgAR4cV39U
+	 60V3lW6edNbBz5lljCvfgbMVseQt8/EkJZVI6mN9vhVuK7CduwBi5PkMvKW06h5eKQ
+	 mglxOOqt9mPhZnUSQWppILgD1eBShf/dOq2p+OswraXym/990tDJu7wV6/M3Lq5r19
+	 LrzAdCV0fdgXZSuoJj8aQCkKcL8wdn7D41d6rlfWg6RQaAzSQZS0wSiwqE2/zdFhIp
+	 QqjFsXn+c8Zcw==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH mm-unstable] mm/damon/stat: reset enabled when DAMON start failed
+Date: Sun,  6 Jul 2025 11:47:50 -0700
+Message-Id: <20250706184750.36588-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250706-lpc18xxx_dts-v1-8-7ae8cdfe8d7d@nxp.com>
-References: <20250706-lpc18xxx_dts-v1-0-7ae8cdfe8d7d@nxp.com>
-In-Reply-To: <20250706-lpc18xxx_dts-v1-0-7ae8cdfe8d7d@nxp.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, vz@mleia.com, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751827628; l=3156;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=O0CmtFMiA/5+GFcpd4plsq9QzGUKBGisD91DfDl49E8=;
- b=MpIN6S64nW8nXpZdaC2MRTHAIxiu0ClgbIRwnjCtlNHbaKWtdyPPIQZtmPeGxj/aG/u5F0Etg
- vn4Iu0iyIxvDZly3zAZsrvgAshrigE6bOxrghsweoUiAe8/IFO+vxWH
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
- auth_id=121
-X-Original-From: Frank Li <Frank.Li@nxp.com>
-Reply-To: Frank.Li@nxp.com
+Content-Transfer-Encoding: 8bit
 
-From: Frank Li <Frank.Li@nxp.com>
+When damon_stat_start() fails, 'enabled' parameter is not reset.  As a
+result, users show the parameter 'Y' while it is not really working.
+Fix it by resetting 'enabled' to 'false' when damon_stat_start() failed.
 
-Change node name 'button[0-9]' to button-[0-9]' to fix below CHECK_DTB
-warning:
- arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dtb: pca_buttons (gpio-keys-polled): 'button0', ... do not match any of the regexes: '^(button|...', 'pinctrl-[0-9]+'
-
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Fixes: 00e74895aba3 ("mm/damon: introduce DAMON_STAT module") # mm-unstable
+Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts    | 16 ++++++++--------
- arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts | 10 +++++-----
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ mm/damon/stat.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts
-index 9d36283efe0f6ea26efedae9f7246c04f00cbdb7..18f757c569057f6e1bac6ab9d78bf936c7cad0c3 100644
---- a/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts
-+++ b/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts
-@@ -43,50 +43,50 @@ pca_buttons {
- 		poll-interval = <100>;
- 		autorepeat;
+diff --git a/mm/damon/stat.c b/mm/damon/stat.c
+index c35bd1852f0b..b75af871627e 100644
+--- a/mm/damon/stat.c
++++ b/mm/damon/stat.c
+@@ -225,8 +225,12 @@ static int damon_stat_enabled_store(
+ 		 */
+ 		return 0;
  
--		button0 {
-+		button-0 {
- 			label = "joy:right";
- 			linux,code = <KEY_RIGHT>;
- 			gpios = <&pca_gpio 8 GPIO_ACTIVE_LOW>;
- 		};
+-	if (enabled)
+-		return damon_stat_start();
++	if (enabled) {
++		err = damon_stat_start();
++		if (err)
++			enabled = false;
++		return err;
++	}
+ 	damon_stat_stop();
+ 	return 0;
+ }
+@@ -240,6 +244,9 @@ static int __init damon_stat_init(void)
+ 	/* probably set via command line */
+ 	if (enabled)
+ 		err = damon_stat_start();
++
++	if (err && enabled)
++		enabled = false;
+ 	return err;
+ }
  
--		button1 {
-+		button-1 {
- 			label = "joy:up";
- 			linux,code = <KEY_UP>;
- 			gpios = <&pca_gpio 9 GPIO_ACTIVE_LOW>;
- 		};
- 
- 
--		button2 {
-+		button-2 {
- 			label = "joy:enter";
- 			linux,code = <KEY_ENTER>;
- 			gpios = <&pca_gpio 10 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button3 {
-+		button-3 {
- 			label = "joy:left";
- 			linux,code = <KEY_LEFT>;
- 			gpios = <&pca_gpio 11 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button4 {
-+		button-4 {
- 			label = "joy:down";
- 			linux,code = <KEY_DOWN>;
- 			gpios = <&pca_gpio 12 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button5 {
-+		button-5 {
- 			label = "user:sw3";
- 			linux,code = <KEY_F1>;
- 			gpios = <&pca_gpio 13 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button6 {
-+		button-6 {
- 			label = "user:sw4";
- 			linux,code = <KEY_F2>;
- 			gpios = <&pca_gpio 14 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button7 {
-+		button-7 {
- 			label = "user:sw5";
- 			linux,code = <KEY_F3>;
- 			gpios = <&pca_gpio 15 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts
-index 9dc8c3cc2211001f30a5a15c3a04a240e4acd86b..7ccb4c2ca57102ac2d31c21c72a45bd3d72f2d86 100644
---- a/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts
-+++ b/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts
-@@ -60,31 +60,31 @@ gpio_joystick {
- 		poll-interval = <100>;
- 		autorepeat;
- 
--		button0 {
-+		button-0 {
- 			label = "joy_enter";
- 			linux,code = <KEY_ENTER>;
- 			gpios = <&gpio LPC_GPIO(4,8) GPIO_ACTIVE_LOW>;
- 		};
- 
--		button1 {
-+		button-1 {
- 			label = "joy_left";
- 			linux,code = <KEY_LEFT>;
- 			gpios = <&gpio LPC_GPIO(4,9) GPIO_ACTIVE_LOW>;
- 		};
- 
--		button2 {
-+		button-2 {
- 			label = "joy_up";
- 			linux,code = <KEY_UP>;
- 			gpios = <&gpio LPC_GPIO(4,10) GPIO_ACTIVE_LOW>;
- 		};
- 
--		button3 {
-+		button-3 {
- 			label = "joy_right";
- 			linux,code = <KEY_RIGHT>;
- 			gpios = <&gpio LPC_GPIO(4,12) GPIO_ACTIVE_LOW>;
- 		};
- 
--		button4 {
-+		button-4 {
- 			label = "joy_down";
- 			linux,code = <KEY_DOWN>;
- 			gpios = <&gpio LPC_GPIO(4,13) GPIO_ACTIVE_LOW>;
 
+base-commit: 93a51997eb1dda993197a9f82602b96d56056ce4
 -- 
-2.34.1
-
-
+2.39.5
