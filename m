@@ -1,212 +1,109 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555A6139D1B
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 21:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF2819F41C;
+	Sun,  6 Jul 2025 21:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751837427; cv=none; b=Jy6O0yBalCR+RuWUG4hmWST9VXPJCLftCLBThbip/JCyDMT5UViJZyVz8/+iM6HAN6BRnmChGWBg5MVqQlJ0nT1q0awVOjkalATOJd5cT/JdQfsXvjBMhoNsonmvWDvTCPBBgctcBV//RPVakZpzkBw1IhUpovLW6FaiYXcOQf8=
+	t=1751838075; cv=none; b=XVpTs4kZPznLPDh7+p5tk70CLsoywNjYGHTxrhTZ93frm6EqDRUS6FQRnunPj2n+zbK8Ib7Ab2X2IpDxd+nq2tN5cfM8yxrnu6cej4yGYG8A/nRh2FxIU5RpOtrGKA2I9cMMaI8UrI0bhepcGHknpsYnue5FgEQnmF+9YOlEaz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751837427; c=relaxed/simple;
-	bh=tXaGITA0/0XKX+miIZYvHe7kR9e4fSJruF1Pm857A34=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OA6ClGMFsqc1Zf4AtMRnX5/VG3Doh82hh6oroNGqplGoooSEQg0M1cPtf7bLNI958s3k9EiQLI7/lyFrxkYcTtm1UnPDALrWbaRUdzEzORscgvusA9ldqZrutLb4UBfFtDGSDPPDfLIBAFgpAUYseqFD/m6X9QPdM2unnvn4mS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-869e9667f58so522435539f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 14:30:25 -0700 (PDT)
+	s=arc-20240116; t=1751838075; c=relaxed/simple;
+	bh=KYU15iGRWMySB7s0gh0SKffjxn00VauBUYrQ/jqPQok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a5vljz7bpmiCE1ZX67mhu8dwQ9ptnwHY04ygeyV99wrs5E07J/WmmPVT1eDNGoPCUnXnx4T1BaJRmB79O//0mHvZ0q3HYUy1rXEK4hj2V8hAaG3GqkMLSI0apgzs41tN2Mc7gtLHvxjHU8dQf1JWACxelpixVuYq3uaLELyXE2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UjyRKWZB; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjyRKWZB"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74924255af4so2283342b3a.1;
+        Sun, 06 Jul 2025 14:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751838073; x=1752442873; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UEFRrppcFHZATwPoos54W9hcQwwdollH5Hvdy1WxMYo=;
+        b=UjyRKWZB59No8YDAKavtOwcw35qhKrNkEkhHnj8Q5OkcImMQouHWEWTEt9r6+jwZnG
+         ndDY3eI7NNQpPcIUz2IAoCIogFHKZOcUOByUKwasHi8S0ByPhjZRWzkILvMlDeaCMgX/
+         3Hm/pwYBakbeMgOYXCMKA2/iRjGHRO9YXXATZsFVM3nVc3MmSF+ikAUscLP2ip/9PHgv
+         9YCLC5deQ5ChtQr2/YIMLVfbaB9guEEGEwwl8mzmJaM63CR0zvubE6JIQ3f8naT6oUa1
+         3KJTm046Dqv3lY1MCKAhN9cid6BCejLyFlukhQ2Yv4P9+f+EWvLp548hmfAjLTFDl7A4
+         NXow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751837424; x=1752442224;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RrjMT1Wj24+rLr8+0c1itao75RJEnt0jPKn6Ilo3Yg0=;
-        b=RAk4lMIRQdZuqeNact8RT1YWmOKvTTnKPJsBAQcQKBfwOHHvVASxTvn5WXlBz6rqjK
-         rEt/nM3xnyfNh4+zenXB67i/XVnz6PbdBvy/G3k84uqM6vMZzS86Ubq4EQ49FSMirlSx
-         CxFhrIzbKSotUpKvw99xdqCH6WWsPGn62mC1ENF3upranFmPEePkjQmM0inTR+0DF8hw
-         ZDHLLFRpHUyeOjJsmjytG+Gd68C1wAlo8iylJLKH1LOTFii3m8qdvcSAKtllhCczFm1C
-         PJ5WgZYOI6yoqyh9qc8SEOfnj8MgtcGadJM9qlLD0LAzPivXYUl3yvaEDDxwh/3rGUC9
-         4xYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1QHK8R+i7m7sfv79/tKNDeaWtggNBZV3dRdGPKyc/djIoxiopattdQZZGvZ0+e/VvMyAeLG6GAY0/Dqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoeEFyoa4RI3urDAfAA3ToDwlzkxJ9bBn/G5AQRkp3gihusFyO
-	GbKQcJiMVXutNo8qY3qhs6g51uaK7G4/FKth3bk7RFKKENSjx3TZr59O20w/aLHicJtsJKOBFLN
-	YRZX/ArnlPHDzR219ToOiu5LQoorSxMHT1jcmWJnIVzYHNRrHiq49lsuCWhY=
-X-Google-Smtp-Source: AGHT+IEN+ea1FxCBj/zHweJDdhdodocuj4KLF975a55OIzzMCKsfH4nfQpZFSrj3838KYHwF3o2G8tFmXQPwL+y+Z4w9xmmuK1MH
+        d=1e100.net; s=20230601; t=1751838073; x=1752442873;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UEFRrppcFHZATwPoos54W9hcQwwdollH5Hvdy1WxMYo=;
+        b=IvrbQymGTFxbxpd/EncCr/wzbWBY9C1n+8NwuwVrDcf3LfHSEvZaXqdVFGRSbfolPS
+         i3TwiExT1HZxQj3GYjbzjfEq+aE3EyYwFxyWoxl5XIBuo1fmUuN/Tc1BKJonwSVEe5um
+         7xcaMpLrXdGPV410Ii+7Sa4//OGWOmBV+DYY9MX6iV23V/YA03BV1B9veBV8kfh/9Wyc
+         Me1doGsV8RcPOOpy1q840AoyiJrFnlchEdQCDcXyaLXNfZaScd+yyZKZScRbpQcegO+n
+         weCcYbLGJcPBjsQjg38WYoFmy8rHdjr3KlJHXyyL6usu/bSl994SnvPycepr390zC/XD
+         DGgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeRbdznxlBlD/3LNCYYjDmKLoB0H1YBbTkUOeBpIVQXM0a80iLoTYf0GsMpMLljgjVQePf1qO14Lum@vger.kernel.org, AJvYcCV9gMdPuob3HRv7Iv5bs5k23hjij3IDm9s1zJeGFiRF7bozpwEZfjE26UQC5FuFygw++xKpGb+LgLWf3g==@vger.kernel.org, AJvYcCWSlsAHhjVjqIB/M5+zVlvLPPMmjls/kFyBTbAJda0d3iOXzcrOtG5ybPkTeFJMYN14HgYWWX7dbTmjJ/87@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLk13pYdIbeMzaNGxH5Z+H5CQDK6rFUtza4znqBvAyXsUU7tOY
+	I3wKY9LsAUXE9mXkJDrc+1MET6Y5AIRSUPUfdWmnGFGjkfSDpwtftlJHn5XlGah2bPc=
+X-Gm-Gg: ASbGncvRiuss64TERzkdFHgcKAFw3OMZ+oGqD3XuBh/meZh7HjMr9V4qnAdM8eQupY4
+	7XLj1zu2YzOqUsLfSUcD3JY5CI72TI1+kWd3j1bUJcT9g3easW1wbM7cneAprbkRav8cIBO+Eaw
+	a2rZbssQLcm4MmhJBh7nfKroVpoV4uok4xdxPMZm4dADtRpVcR57CTc/nNfqmyGawHMBV7QXUy3
+	0GW+FyBAStiSQrCiE08Dz6kdcknSiTRePvsnrjhmsoVh/W6LF19oCgdWM9RG/4Mw58P/FQ2RBx5
+	we2qq/n/z6o1cBGbQ0UYYLsa5w89Vlpc0hhPzcgge3E=
+X-Google-Smtp-Source: AGHT+IGwKdpyijxHBEuxiWpktwVPqOdmEARgRAnlFV+5B6kzie1HeDmU+tDrXvf31ZBdmm2Ca65x7w==
+X-Received: by 2002:a05:6a00:2354:b0:73f:f816:dd78 with SMTP id d2e1a72fcca58-74ce8ab166amr15315143b3a.15.1751838073517;
+        Sun, 06 Jul 2025 14:41:13 -0700 (PDT)
+Received: from archlinux.lan ([2601:644:8200:dab8::1f6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74cfad75020sm4126416b3a.109.2025.07.06.14.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 14:41:13 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	yangshiji66@qq.com,
+	ansuelsmth@gmail.com,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Stanislaw Gruszka <stf_xl@wp.pl>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-mips@vger.kernel.org (open list:MIPS),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC support),
+	linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC support)
+Subject: [PATCH 0/6] wifi: rt2x00: add OF bindings + cleanup
+Date: Sun,  6 Jul 2025 14:41:05 -0700
+Message-ID: <20250706214111.45687-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c24f:0:b0:3df:29c8:49ff with SMTP id
- e9e14a558f8ab-3e13724def5mr92799755ab.22.1751837424455; Sun, 06 Jul 2025
- 14:30:24 -0700 (PDT)
-Date: Sun, 06 Jul 2025 14:30:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686aeaf0.a00a0220.c7b3.0065.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in __bch2_alloc_to_v4
-From: syzbot <syzbot+487dd8c670b175dd59ed@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+It doesn't even compile. Added OF bindings, documentation, and other
+stuff to hopefully this doesn't happen again.
 
-syzbot found the following issue on:
+Rosen Penev (6):
+  wifi: rt2x00: fix compilation
+  wifi: rt2x00: remove mod_name from platform_driver
+  wifi: rt2800soc: allow loading from OF
+  wifi: rt2x00: soc: move and modernize probe
+  dt-bindings: net: wireless: rt2800: add
+  MIPS: dts: ralink: mt7628a: add wifi binding
 
-HEAD commit:    c435a4f487e8 Merge tag 'riscv-for-linus-6.16-rc5' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=127673d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b29b1a0d7330d4a8
-dashboard link: https://syzkaller.appspot.com/bug?extid=487dd8c670b175dd59ed
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+ .../bindings/net/wireless/ralink,rt2800.yaml  |  49 +++++++++
+ arch/mips/boot/dts/ralink/mt7620a.dtsi        |  10 ++
+ drivers/net/wireless/ralink/rt2x00/Kconfig    |   2 +-
+ .../net/wireless/ralink/rt2x00/rt2800soc.c    |  75 ++++++++++++-
+ .../net/wireless/ralink/rt2x00/rt2x00soc.c    | 104 ------------------
+ .../net/wireless/ralink/rt2x00/rt2x00soc.h    |   2 +-
+ 6 files changed, 133 insertions(+), 109 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/ralink,rt2800.yaml
 
-Unfortunately, I don't have any reproducer for this issue yet.
+-- 
+2.50.0
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-c435a4f4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3a184d1ad283/vmlinux-c435a4f4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/db5931917c56/bzImage-c435a4f4.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+487dd8c670b175dd59ed@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in __bch2_alloc_to_v4+0x7b/0x8b0 fs/bcachefs/alloc_background.c:388
-Read of size 64 at addr ffff888055140ba8 by task kworker/u4:5/1035
-
-CPU: 0 UID: 0 PID: 1035 Comm: kworker/u4:5 Not tainted 6.16.0-rc4-syzkaller-00286-gc435a4f487e8 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: btree_update btree_interior_update_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x2b0/0x2c0 mm/kasan/generic.c:189
- __asan_memcpy+0x29/0x70 mm/kasan/shadow.c:105
- __bch2_alloc_to_v4+0x7b/0x8b0 fs/bcachefs/alloc_background.c:388
- bch2_alloc_to_v4 fs/bcachefs/alloc_background.h:236 [inline]
- bch2_trigger_alloc+0x323/0x4090 fs/bcachefs/alloc_background.c:871
- run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:-1 [inline]
- bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:554 [inline]
- __bch2_trans_commit+0xa84/0x8870 fs/bcachefs/btree_trans_commit.c:1023
- bch2_trans_commit fs/bcachefs/btree_update.h:241 [inline]
- btree_update_nodes_written fs/bcachefs/btree_update_interior.c:729 [inline]
- btree_interior_update_work+0x1082/0x27d0 fs/bcachefs/btree_update_interior.c:867
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-Allocated by task 5334:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4328 [inline]
- __kmalloc_noprof+0x27a/0x4f0 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- bch2_journal_key_insert+0x50/0x140 fs/bcachefs/btree_journal_iter.c:342
- do_bch2_trans_commit_to_journal_replay+0x127/0xd70 fs/bcachefs/btree_trans_commit.c:966
- __bch2_trans_commit+0x1b67/0x8870 fs/bcachefs/btree_trans_commit.c:1030
- bch2_trans_commit fs/bcachefs/btree_update.h:241 [inline]
- bch2_gc_alloc_done fs/bcachefs/btree_gc.c:951 [inline]
- bch2_check_allocations+0x2ee0/0x57b0 fs/bcachefs/btree_gc.c:1100
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:484 [inline]
- __bch2_run_recovery_passes+0x395/0x1010 fs/bcachefs/recovery_passes.c:539
- bch2_run_recovery_passes+0x184/0x210 fs/bcachefs/recovery_passes.c:610
- bch2_fs_recovery+0x2690/0x3a50 fs/bcachefs/recovery.c:1005
- bch2_fs_start+0xaaf/0xda0 fs/bcachefs/super.c:1213
- bch2_fs_get_tree+0xb39/0x1520 fs/bcachefs/fs.c:2488
- vfs_get_tree+0x92/0x2b0 fs/super.c:1804
- do_new_mount+0x24a/0xa40 fs/namespace.c:3902
- do_mount fs/namespace.c:4239 [inline]
- __do_sys_mount fs/namespace.c:4450 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4427
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888055140b80
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 40 bytes inside of
- allocated 88-byte region [ffff888055140b80, ffff888055140bd8)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x55140
-flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000000 ffff88801a441280 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 13, tgid 13 (kworker/u4:1), ts 69427733463, free_ts 0
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2451 [inline]
- allocate_slab+0x8a/0x3b0 mm/slub.c:2619
- new_slab mm/slub.c:2673 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
- __slab_alloc mm/slub.c:3949 [inline]
- __slab_alloc_node mm/slub.c:4024 [inline]
- slab_alloc_node mm/slub.c:4185 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x305/0x4f0 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- cfg80211_inform_single_bss_data+0x905/0x1ac0 net/wireless/scan.c:2339
- cfg80211_inform_bss_data+0x1fb/0x3b20 net/wireless/scan.c:3222
- cfg80211_inform_bss_frame_data+0x3d7/0x730 net/wireless/scan.c:3313
- ieee80211_bss_info_update+0x746/0x9e0 net/mac80211/scan.c:226
- ieee80211_rx_bss_info net/mac80211/ibss.c:1094 [inline]
- ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1573 [inline]
- ieee80211_ibss_rx_queued_mgmt+0xa36/0x2ae0 net/mac80211/ibss.c:1600
- ieee80211_iface_process_skb net/mac80211/iface.c:1668 [inline]
- ieee80211_iface_work+0x806/0xfe0 net/mac80211/iface.c:1722
- cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
-page_owner free stack trace missing
-
-Memory state around the buggy address:
- ffff888055140a80: 00 00 00 00 00 00 00 00 00 00 03 fc fc fc fc fc
- ffff888055140b00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
->ffff888055140b80: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
-                                                    ^
- ffff888055140c00: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
- ffff888055140c80: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
