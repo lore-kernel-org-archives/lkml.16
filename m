@@ -1,220 +1,217 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazrln10223027.outbound.protection.outlook.com [52.103.171.27])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55EC2AD0B;
-	Sun,  6 Jul 2025 17:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.171.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751822244; cv=fail; b=V+hq/gn3X8u7S9YhDmYE4QECUZzIUpAlec/NebhkjlPuo03tktFoCrcgkE/es2zORkuJTO/1REzqrj4/ha2aFMsbpR3OLCCVu6mS7W9VPWmNKoTnkPju406PO/eZfuAZIrgtCMTGk4pIthBMALdDtmkVyE+DTMHrRrUCf4SN3+0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751822244; c=relaxed/simple;
-	bh=s7VMnlcYRlXdsDWTq+cogAwm02sTkoT4f7G3RQwGrhs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sxfjGAE/4jINgvnslrTltht2Ohl62tHBD1e2r+iYOxou3W8VGaekPIjxuAgB5n38aJhkdbAZR774XA/XFRO3SwlyE235xAoeLaDG8wCOCfg0GkKzARPIK+8H6KwXystS8BscJXc6KICVKjNTW5WWOvKgS6Zd5dxzD8Tur1Jck8Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=jbR6q9SU; arc=fail smtp.client-ip=52.103.171.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1451B4231;
+	Sun,  6 Jul 2025 17:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751822292; cv=none; b=FYAJ0r8gPufvltciRdQvUu8uHj8qbxjRLdxJuDT7MKY6I4NGlJGs4jnGXYoRjTuEstAMnBw1vd+zu4tUkxBdZdRJUwO2F9ar3A0ZAOfubhaCaFAf1usol9By4o1sWPgTJ3javjvmPBmKqhRwYhjXqviWZ6TjZNqY04KhbnE1okY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751822292; c=relaxed/simple;
+	bh=1HwVVHxxxISmQTQVPhbtfc0NLL6jhJqkabzJ9Zx/MXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ij09g3VW87t8rpw+JrGxxf82ROtfzETuwM3tyKQGmzTGn6m37wug/kUddrpVieGtNoLrUzzrKvOiGdIrtzhRDJg6wiKgFG0p2Q0O/UWtBl12n/tSV5cs6EnD9pTlteECARtFmMNv3vwaTp9NbxneHO0tOpM5pehQc6ATO1GRopE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6zZC+cX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="jbR6q9SU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dSzyWhhKh7DnzisasmcQSqEdRko6WJYzobhFSPt8RQVRetmyp1xfZfcUekZArVZ8SsgX0ngkJfafD6jrbcMFHTVOiTwWucRQIzn2WyHAbP9dvZQ8OwqqE6y/pY7dN8w6bYhwm4c2lEUYeEbLPsYDjv2Ivkyr4O8ogf6lBdqixPnACitvRMBHR8AN38OTWx097BTseiQ1WtuwASStLR2MF4G9J/CYHikMlIvGW+JzTHoI0XSOayYKmhQCcXMItpP/PabLwXOC2AJ+kH60ZUUHgXFXACcbTOTzUroHU1V5/fLlCnylyQmTYTrlWqmtarSgD2SsqoaDTI6K+NEOM9ShNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l9sKOw91WAFiMFFKG33jvuNxfpHDF4CfgkdwnKhB5Vk=;
- b=WDF1rBRTEcqOyoyfZEHvYFTzhS6RPZE838ff+v58OIxxj8bz7zBrINLuMZGba5BUqmBx7fjNOl6JdddVOiSRb6F68iCk+rdG7CqkldpLTddqZ2BHPIQNqw3Gb2OsW81rKcfyLJ4culrCf0vLH7ei5F3qKCNQMiUNcjWcozsvsJwjPbn0CSG3t3T+kbkuki6dhnvpiA9Z9pu40QSyzFgdxwqcpXavvGXubNGO/t+06QCtc+R5U4ULSQVuNkRWZj2CX7GSFndhVrfKNKX8Ok5eUl6gqpT1G6ofIzA3brOEnjL7D5BVJnbuQ3u7kOv6WjfZ/92o2bHBJZihuwKIOexAEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 175.98.123.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
- dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l9sKOw91WAFiMFFKG33jvuNxfpHDF4CfgkdwnKhB5Vk=;
- b=jbR6q9SUOOIAOU5gvHR4sg60OqYmUtP+koRy3UEyx3o0hk3ufWRPLfGGjhnwHKKCgWtDHBaue14zuKLUkg6brHuz9gXPFpeiFn5lck0vr9chMYIesK89Ng6ub6EVTcz00xQpt+7mZ/3RDmqbIZbXoJnLZ/B7qfFeBnvHkcaeBuw=
-Received: from TYCP286CA0095.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2b4::18)
- by TY1PPF538CF1BBD.apcprd03.prod.outlook.com (2603:1096:408::a57) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Sun, 6 Jul
- 2025 13:42:23 +0000
-Received: from TY2PEPF0000AB85.apcprd03.prod.outlook.com
- (2603:1096:400:2b4:cafe::f5) by TYCP286CA0095.outlook.office365.com
- (2603:1096:400:2b4::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.26 via Frontend Transport; Sun,
- 6 Jul 2025 13:42:23 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
- TY2PEPF0000AB85.mail.protection.outlook.com (10.167.253.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Sun, 6 Jul 2025 13:42:22 +0000
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
- (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Sun, 6 Jul
- 2025 21:42:15 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Sun, 6 Jul 2025 21:42:15 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id A95B55F652;
-	Sun,  6 Jul 2025 16:42:14 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id A69CCDC3163; Sun,  6 Jul 2025 16:42:14 +0300 (IDT)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <avifishman70@gmail.com>, <tali.perry1@gmail.com>,
-	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
-	<benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 2/2] arm64: dts: nuvoton: add refclk and update peripheral clocks for NPCM845
-Date: Sun, 6 Jul 2025 16:42:07 +0300
-Message-ID: <20250706134207.2168184-3-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250706134207.2168184-1-tmaimon77@gmail.com>
-References: <20250706134207.2168184-1-tmaimon77@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6zZC+cX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE571C4CEED;
+	Sun,  6 Jul 2025 17:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751822292;
+	bh=1HwVVHxxxISmQTQVPhbtfc0NLL6jhJqkabzJ9Zx/MXc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=h6zZC+cXzgOaO5+IwP3AoTQ/wfAVpkWM5NT12r97TvTSbmJBt+Ynu2/eWQLiEjzrI
+	 jv83F50/pu/8OLaBniXWZkGZI64hS3OqJjcTkIwbdndHqTN+avWsVA3KuP2UL0cmnL
+	 H9Riby+dsJCHfgxpA4CHq7xy1YZRZXTyaV/gcf5pN+eC8s/gncuhgbP3Y6vdDkLMsf
+	 6Btcu5mpCy2emxwAxurdwHXMG9Lr+evx2snFpcnpSOsqp4zv1R/4tP8rPUKlkk116n
+	 zl0LaOsJZEQjTqJyWMWCqNOtIVkfhXDd+5PrhkH6/2UTbhKnoZKvtdyuWIJfbmbave
+	 nuUBaMQgCDALg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 96106CE09E9; Sun,  6 Jul 2025 10:18:11 -0700 (PDT)
+Date: Sun, 6 Jul 2025 10:18:11 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>, rcu@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH RFC 2/3] rcu: Refactor expedited handling check in
+ rcu_read_unlock_special()
+Message-ID: <941d82f3-1c09-4db2-ae22-a80d04227673@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250705203918.4149863-1-joelagnelf@nvidia.com>
+ <20250705203918.4149863-2-joelagnelf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB85:EE_|TY1PPF538CF1BBD:EE_
-X-MS-Office365-Filtering-Correlation-Id: f632c777-5207-4162-1c5d-08ddbc92ef3a
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|61400799027|48200799018|7093399015|7416014|376014|82310400026|35950700016|35450700002;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?W/HaM+wWkOwtBHfVauKQDZIIXceKfwW/Z8Au3jNe57Zz0ORd68c0h33gBjXI?=
- =?us-ascii?Q?Bidh52NNFYrVucp61Kl7QaC4pkv/hSIEM1+jxTZ6Wb0z3WsuSlTjyylGsE0A?=
- =?us-ascii?Q?bM1RigIsvflHA3MamKLxfTzZcZLK7iNYo9wSWpjjOGNdFCRyyKaLIortakbg?=
- =?us-ascii?Q?mrlyqaZpnlsnQrKGzFk/VyujWfyiO10Pm7FwVDsxQPJ+RbmZsJurnYuymJqF?=
- =?us-ascii?Q?7TpfofZGFbvlS/NNFtTawxhIdyxb0SN0l7bCsw1kF7538Y1DpJ6cgOVw9bJu?=
- =?us-ascii?Q?XrYWF1RSr2afOpmRW39Hu45fNWStNjOZg2kYKci36JJeyzCF4H+2AtS0Et3L?=
- =?us-ascii?Q?pgQY9cV8Oxmiq4eTVHCHT9vPHk9QarlKTtZVjCAKQJkwVDMhZ9Mnpvc0rayw?=
- =?us-ascii?Q?ZEehkeO5mntUUtjSq79d0d4luJDpSRjG3o3fBNxbBaibLKrSOdbDlGVE+DCs?=
- =?us-ascii?Q?S5eqfFKtni8CebQsf2heBUEu/8IueRWsO2xIYi4QvUo+kFhWoIC1DrxCnIAa?=
- =?us-ascii?Q?b61Zd0j9kOchk8a1LIrItfD9AsrW3kpOL0YFvE4I60fSE831KTaGRyTUPkhW?=
- =?us-ascii?Q?cCColDX/mmVKN6zpE5X4A0g2qmO5mLPXJzdE3G3VYsNRG587bzLnK8AIEl7/?=
- =?us-ascii?Q?0Hu7MX0glYxs8jBpuCAxVvKbNoPW6V+/avzoNKnBjR/j91Mm46JjuxeWH4p1?=
- =?us-ascii?Q?EIvBV4Tk2p03axkxNUREONGZuwuca4Z/ZkI50SDG/LhDGz3ruSsud4kcRmED?=
- =?us-ascii?Q?YZOvpTGF/YpEa1aXjeguqXjDTgoew6nl6lDmzO7HErzK4YVOg1hBaKovhBJo?=
- =?us-ascii?Q?auDjlOs5+erjDWB5IX0KIaR2dyedLxR8Y79kkA5K25zt1ESnGICC8IoUoEB9?=
- =?us-ascii?Q?Is02sDlNn52WQTNMaDPxjrAYJ1ynbeAoqT7XIMU57VCffXGzq/BmMdQ3nnn2?=
- =?us-ascii?Q?NlIa/JwMv9yY9G1aHSWp2aRbuUGhAuqnhylKEggy8woJNcco+xyzgXtfVL3I?=
- =?us-ascii?Q?Mxbun4GF1MamSNE4jMS2pVYMyJSMuoJeTTD1leB0TejJdZGtDgYkcg2SZyXX?=
- =?us-ascii?Q?s49qEc210oZZ9zdi0fBgJuVU6Ol/5HKj080rSMwMfd6FUcFocYKhYiPjoeU7?=
- =?us-ascii?Q?kKWTh8Zd8RBFqdCP3Mt/Xag6lTZ0Sy+uWFShrAq9YGN/AV9/pDhyka8WveBf?=
- =?us-ascii?Q?cP3tEGHeFQ9jMInPSyxtfz9nikwgpYxYp8remPNusQwYMMM9lB5Rlj2Yg5+3?=
- =?us-ascii?Q?LvBtQ/uWCJ7eDuHndFOEvAhXxbXf7MXm4WgJWK0ymbyy/PKb00S1ZSf+T3YI?=
- =?us-ascii?Q?RnE949HvgxUW1RrkRM9QN5XnbbdeENmltosBxFokmumYruylYIJ7eziFJsSr?=
- =?us-ascii?Q?fDApIY/z+p4EkVbciZktvJl9XB3XhXYBUGlYCek2M0DvofxGnYxPupmlP5fX?=
- =?us-ascii?Q?wz1QXjohqNfFkccGdoUCjVKd5kYfk8dSZAJzDst9P43uBzIA3VN6U/q5A8xR?=
- =?us-ascii?Q?T/O+e9nRXR+3YvkFyAamvLLPmUiFKm+8ZkAh?=
-X-Forefront-Antispam-Report:
-	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230040)(61400799027)(48200799018)(7093399015)(7416014)(376014)(82310400026)(35950700016)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2025 13:42:22.0450
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f632c777-5207-4162-1c5d-08ddbc92ef3a
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB85.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PPF538CF1BBD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705203918.4149863-2-joelagnelf@nvidia.com>
 
-Add a 25 MHz fixed-clock node (refclk) in the NPCM845-EVB board device
-tree to represent the external reference clock used by the NPCM845 reset
-and clock controller.
+On Sat, Jul 05, 2025 at 04:39:16PM -0400, Joel Fernandes wrote:
+> Extract the complex expedited handling condition in rcu_read_unlock_special()
+> into a separate function rcu_unlock_needs_exp_handling() with detailed
+> comments explaining each condition.
+> 
+> This improves code readability. No functional change intended.
 
-Update peripherals (timer0, watchdog0-2) in the NPCM845 device tree to
-reference this refclk directly instead of the previous clock controller
-output (NPCM8XX_CLK_REFCLK).
+Very nice!!!
 
-Depends-on: arm64: dts: nuvoton: Combine NPCM845 reset and clk nodes
+Some questions and comments interspersed below.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 9 +++++----
- arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts     | 6 ++++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
+							Thanx, Paul
 
-diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-index 2a36d0b2824e..04a5029bfc7e 100644
---- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-+++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-@@ -52,6 +52,7 @@ clk: rstc: reset-controller@f0801000 {
- 			reg = <0x0 0xf0801000 0x0 0xC4>;
- 			nuvoton,sysgcr = <&gcr>;
- 			#reset-cells = <2>;
-+			clocks = <&refclk>;
- 			#clock-cells = <1>;
- 		};
- 
-@@ -76,7 +77,7 @@ timer0: timer@8000 {
- 				compatible = "nuvoton,npcm845-timer";
- 				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <0x8000 0x1C>;
--				clocks = <&clk NPCM8XX_CLK_REFCLK>;
-+				clocks = <&refclk>;
- 				clock-names = "refclk";
- 			};
- 
-@@ -148,7 +149,7 @@ watchdog0: watchdog@801c {
- 				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <0x801c 0x4>;
- 				status = "disabled";
--				clocks = <&clk NPCM8XX_CLK_REFCLK>;
-+				clocks = <&refclk>;
- 				syscon = <&gcr>;
- 			};
- 
-@@ -157,7 +158,7 @@ watchdog1: watchdog@901c {
- 				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <0x901c 0x4>;
- 				status = "disabled";
--				clocks = <&clk NPCM8XX_CLK_REFCLK>;
-+				clocks = <&refclk>;
- 				syscon = <&gcr>;
- 			};
- 
-@@ -166,7 +167,7 @@ watchdog2: watchdog@a01c {
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <0xa01c 0x4>;
- 				status = "disabled";
--				clocks = <&clk NPCM8XX_CLK_REFCLK>;
-+				clocks = <&refclk>;
- 				syscon = <&gcr>;
- 			};
- 		};
-diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
-index eeceb5b292a8..2638ee1c3846 100644
---- a/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
-+++ b/arch/arm64/boot/dts/nuvoton/nuvoton-npcm845-evb.dts
-@@ -19,6 +19,12 @@ chosen {
- 	memory@0 {
- 		reg = <0x0 0x0 0x0 0x40000000>;
- 	};
-+
-+	refclk: refclk-25mhz {
-+		compatible = "fixed-clock";
-+		clock-frequency = <25000000>;
-+		#clock-cells = <0>;
-+	};
- };
- 
- &serial0 {
--- 
-2.34.1
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> ---
+>  kernel/rcu/tree_plugin.h | 80 +++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 71 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index baf57745b42f..8504d95bb35b 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -647,6 +647,72 @@ static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
+>  	local_irq_restore(flags);
+>  }
+>  
+> +/*
+> + * Check if expedited grace period processing during unlock is needed.
+> + *
+> + * This function determines whether expedited handling is required based on:
+> + * 1. Task blocking an expedited grace period
 
+This is a heuristic.  What we are actually checking is whether the task
+is blocking *some* grace period and whether at least one task (maybe
+this one, maybe not) is blocking an expedited grace period.
+
+Why not an exact check?  Because that would mean traversing the list
+starting at ->exp_tasks, and that list could potentially contain every
+task in the system.  And I have received bug reports encountered on
+systems with hundreds of thousands of tasks.
+
+I could imagine a more complex data structure that semi-efficiently
+tracked exact information, but I could also imagine this not being worth
+the effort.
+
+> + * 2. CPU participating in an expedited grace period
+> + * 3. Strict grace period mode requiring expedited handling
+> + * 4. RCU priority boosting needs when interrupts were disabled
+
+s/boosting/deboosting/
+
+> + *
+> + * @t: The task being checked
+> + * @rdp: The per-CPU RCU data
+> + * @rnp: The RCU node for this CPU
+> + * @irqs_were_disabled: Whether interrupts were disabled before rcu_read_unlock()
+> + *
+> + * Returns true if expedited processing of the rcu_read_unlock() is needed.
+> + */
+> +static bool rcu_unlock_needs_exp_handling(struct task_struct *t,
+> +				      struct rcu_data *rdp,
+> +				      struct rcu_node *rnp,
+> +				      bool irqs_were_disabled)
+> +{
+> +	/*
+> +	 * Check if this task is blocking an expedited grace period.
+> +	 * If the task was preempted within an RCU read-side critical section
+> +	 * and is on the expedited grace period blockers list (exp_tasks),
+> +	 * we need expedited handling to unblock the expedited GP.
+
+Please see above for the heuristic nature of this check.
+
+> +	 */
+> +	if (t->rcu_blocked_node && READ_ONCE(t->rcu_blocked_node->exp_tasks))
+> +		return true;
+> +
+> +	/*
+> +	 * Check if this CPU is participating in an expedited grace period.
+> +	 * The expmask bitmap tracks which CPUs need to check in for the
+> +	 * current expedited GP. If our CPU's bit is set, we need expedited
+> +	 * handling to help complete the expedited GP.
+> +	 */
+> +	if (rdp->grpmask & READ_ONCE(rnp->expmask))
+> +		return true;
+> +
+> +	/*
+> +	 * In CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels, all grace periods
+> +	 * are treated as short for testing purposes even if that means
+> +	 * disturbing the system more. Check if either:
+> +	 * - This CPU has not yet reported a quiescent state, or
+> +	 * - This task was preempted within an RCU critical section
+> +	 * In either case, requird expedited handling for strict GP mode.
+
+s/requird/required/  ;-)
+
+> +	 */
+> +	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
+> +	    ((rdp->grpmask & READ_ONCE(rnp->qsmask)) || t->rcu_blocked_node))
+> +		return true;
+> +
+> +	/*
+> +	 * RCU priority boosting case: If a task is subject to RCU priority
+> +	 * boosting and exits an RCU read-side critical section with interrupts
+> +	 * disabled, we need expedited handling to ensure timely deboosting.
+> +	 * Without this, a low-priority task could incorrectly run at high
+> +	 * real-time priority for an extended period effecting real-time
+
+s/effecting/degrading/ to be more precise.
+
+> +	 * responsiveness. This applies to all CONFIG_RCU_BOOST=y kernels,
+> +	 * not just PREEMPT_RT.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_RCU_BOOST) && irqs_were_disabled && t->rcu_blocked_node)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  /*
+>   * Handle special cases during rcu_read_unlock(), such as needing to
+>   * notify RCU core processing or task having blocked during the RCU
+> @@ -666,18 +732,14 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  	local_irq_save(flags);
+>  	irqs_were_disabled = irqs_disabled_flags(flags);
+>  	if (preempt_bh_were_disabled || irqs_were_disabled) {
+> -		bool expboost; // Expedited GP in flight or possible boosting.
+> +		bool needs_exp; // Expedited handling needed.
+>  		struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  		struct rcu_node *rnp = rdp->mynode;
+>  
+> -		expboost = (t->rcu_blocked_node && READ_ONCE(t->rcu_blocked_node->exp_tasks)) ||
+> -			   (rdp->grpmask & READ_ONCE(rnp->expmask)) ||
+> -			   (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
+> -			   ((rdp->grpmask & READ_ONCE(rnp->qsmask)) || t->rcu_blocked_node)) ||
+> -			   (IS_ENABLED(CONFIG_RCU_BOOST) && irqs_were_disabled &&
+> -			    t->rcu_blocked_node);
+> +		needs_exp = rcu_unlock_needs_exp_handling(t, rdp, rnp, irqs_were_disabled);
+> +	
+>  		// Need to defer quiescent state until everything is enabled.
+> -		if (use_softirq && (in_hardirq() || (expboost && !irqs_were_disabled))) {
+> +		if (use_softirq && (in_hardirq() || (needs_exp && !irqs_were_disabled))) {
+>  			// Using softirq, safe to awaken, and either the
+>  			// wakeup is free or there is either an expedited
+>  			// GP in flight or a potential need to deboost.
+> @@ -690,7 +752,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  			set_tsk_need_resched(current);
+>  			set_preempt_need_resched();
+>  			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+> -			    expboost && rdp->defer_qs_iw_pending != DEFER_QS_PENDING && cpu_online(rdp->cpu)) {
+> +			    needs_exp && rdp->defer_qs_iw_pending != DEFER_QS_PENDING && cpu_online(rdp->cpu)) {
+>  				// Get scheduler to re-evaluate and call hooks.
+>  				// If !IRQ_WORK, FQS scan will eventually IPI.
+>  				if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
+> -- 
+> 2.43.0
+> 
