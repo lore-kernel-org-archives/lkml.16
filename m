@@ -1,211 +1,120 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5831D5CFE;
-	Sun,  6 Jul 2025 04:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077C819343B;
+	Sun,  6 Jul 2025 04:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751776645; cv=none; b=r7aHQKmVyu+aYmGIRXx31cxTwHjlZAoktvzjUdILzYkLBfL+AGNylw08r+8ZYXS3pZ2C5zANVLAnE6fgnjQo1JtsFnYeXrV6Jj5OkuFuLJVPsHpd+VsiJs5PVWuxcxZm+mByOA9IIgm5jGasyZD3eai6SqDGVc+Cr3ly3N37TOw=
+	t=1751776841; cv=none; b=s1Xo0GCW2BAYUDzDvDUsaEHKKNoXdCSqrmRL45dETADyw4gA2VtEylJG+OS7zVTUzT4GnMKCQr0SVXW/dSpUaPdpK3K9sbUipTXU/22WADohah3/HPw/tAvXtCUNCjxu9G3u48Vt4fhgt8WzCBNVMvavYdhfho41hb/kCDd+tng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751776645; c=relaxed/simple;
-	bh=Doct89OeyNO072Y2Ys7bCVOd+ekwZZ2v2r0ziNK3ALY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cSOt3BHB03+Kx+IY4l/XAWDYn4Vkfz96lnq6MeJf9Bnsvts2hPaZIt/r2siM4gSBnSKyGX5i0Coc+kRzAGyLfaLeg8Zt37VK7Qa28OXRbDEy+R51RlmZd+AyyeCK/bLPfXhGpAuy+KUBfKjNZIF6ECAPz377AEbFzT2fSFcT2rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9wQ/Ath; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751776841; c=relaxed/simple;
+	bh=yD7hy+qvA/sqLOhhyRdGian/38CtG4QZ1NJCxIqtssE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t43YmVz/23ptGCkB6cGue6fqblkSk+Tx2uomW7opyYMpUE7og3xoHMnAAWs629wFmw2miPTrbvRK/AIDBsNls4WGjgzweJu5M8U6PVdM7zdYowAOk5B7KRmQYZDf6uF9zCBTNoeFUtLlO+6vJ5vY3aEJdhndclt8Fiaht5Edc3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avQ40iEf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9wQ/Ath"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747fba9f962so1573496b3a.0;
-        Sat, 05 Jul 2025 21:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751776643; x=1752381443; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=78u4kXViM2gstT6OJkwZc50WiKMJcTjBxWIBBOazpAI=;
-        b=A9wQ/AthfS8Z1qGdi8uzDvwBn1LKRdGAGjp978NjVTCp95NYJruZe6tcdPoLvZlcfv
-         S0mqjYqU3STrpOnyW9q6z7PDbcivMBkt8QDkJ+zK5802wgnrO1rIPzcfazt5zB/xIGky
-         T9cm5BkR1zb5KcfcDePduKp8HozfqzuOOUv3BqGrTUg9J67rZTcC6j3AjhzCeuuQH1Yb
-         DcJYUegejC+FMc1vNgbkUQhqNhKJQkss/r0jC0sl+/DaTrHDm4PuBZ9NyZohmN1ykpTK
-         a57Gc0QbjBw2MsvGfd9gXRJgaFI+siNAe8gy2KttjlaMb+3Z2qts0rsmMjBJq8Nb9nsm
-         nLWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751776643; x=1752381443;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=78u4kXViM2gstT6OJkwZc50WiKMJcTjBxWIBBOazpAI=;
-        b=ATjAtbFpSRvhAnoDYvQm+XLCjFbm4R4v+iXAxd66Uo/9i9sJPUOfks/AimFtcGu1Mk
-         3NA1MyRLQfmqypYE/AghQwSsEbKRsl2UoUqwZPTIfeaZ51z7qQw9nQRg87Q0hE7BbSyx
-         XnMbWXrbXAqF6V8IuHkxYJ3SSFlJX8cr2ffkhCFMRhWF+yf+Fr+QJ1D/F1bW+aLqHMPx
-         q+KGaLdS+cyXzGrMp/+2z+yINLdpRZdwmiQtu36yD5yvrwZsUWGLFYynfe9q94qECKzN
-         arUVm2Gq6dwEpLxTnoHf3tTg/TwoCYr8iYDbEWAUCZicfFApKTxgseTJLnfR7tjLP/ZV
-         t+jA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVxJbwLglFcnonJnEGXuIYG8ZrVo8DK1QyUsIq2kLaFQGqIxsUufO0G8CfioqyGrc5ORt7drEzgWKDoWY=@vger.kernel.org, AJvYcCXjZi59LXPE52BdMmUpJEc5EElNBCEXjnDLcAeIVZQW4oEcyZbRy8UTsZqbjecTacMUSakKUdXc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYajtRpX41cly5zRMd2SaEa8nN7l71DuNCZ37FhDg1++3m9Wwz
-	oyOIY3NYF7CVYoVr/M446FZgX04Eia5btBm6uqAOj5FpVzSSfNYd3F1e
-X-Gm-Gg: ASbGncuW4x1UQndueoezD9GDvcCk2VRkfqKWz9tdOOduXOEnd7rN/2+YbFABQsN5xb2
-	VPGqok6I9Poi4Q/hiexPQZr0K4Fi2UVyFZcGV+6uUFyhvBKaO/hMDI3I9dsNH1EKZUdRvL0bSFe
-	GnjsdYhZ3dcDFXqMcFnIw7xCpsLldgtzcqAWBihX9mQpkm0jVuMEVlSEqrOmUs2Q+cZjsq9B2dr
-	ACmQ4nzmSOWzAOy7lx2PMnkHyOsNzKVhETxDTEHtEypbpHlyNHig0QagvcMy79npKGAqOfLWB6o
-	w0+iH+5k8Jc1nlenKmoVJrga+QBtBYGFMrKqwgahNz9as52if0+7dReOpyTxAL1FAg==
-X-Google-Smtp-Source: AGHT+IH2y2QqKJnnc+SmoDKhK3pmoL1e3dI0WHkyQabKVkG03aZHUFCwpTWKs/9Ba4zbMfwP3glYUw==
-X-Received: by 2002:a05:6a00:1a93:b0:744:a240:fb1b with SMTP id d2e1a72fcca58-74ce5f5f908mr12036995b3a.5.1751776642904;
-        Sat, 05 Jul 2025 21:37:22 -0700 (PDT)
-Received: from [127.0.0.1] ([47.89.83.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cc2cesm6105137b3a.59.2025.07.05.21.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 21:37:22 -0700 (PDT)
-From: Xuewei Niu <niuxuewei97@gmail.com>
-X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Date: Sun, 06 Jul 2025 12:36:32 +0800
-Subject: [PATCH net-next v5 4/4] test/vsock: Add ioctl SIOCINQ tests
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avQ40iEf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7337BC4CEF1;
+	Sun,  6 Jul 2025 04:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751776840;
+	bh=yD7hy+qvA/sqLOhhyRdGian/38CtG4QZ1NJCxIqtssE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=avQ40iEf43hpf73MdaoS6qgkZ7zLUoNH+dTJpWx0nG+bv3ahSO5tzyH/fw39+18fT
+	 lCOzoW9Wr27hKzrXyHlJSeZcJSNYwL1vFTLvTzAh/TSo3LcfyhbdQj6DJVhea3pqAQ
+	 PO2P3ynl+y63kSZES5Ta/wHe9RW+AnNXXO73uWKafZf05w/+/Cw+IbmBpgXm2digVV
+	 6zM0GVfEaMUOyfNxAfiSWTSpHh/l3dUaQHfQT8GjGkKSrSUZXkvxbRpYRQ2+DnT6T5
+	 RpEzyoIDfRb7GPtyzRD+HMPFNrPL2Vb3LB7L4W03WYqI6WD2+UQLh+lonKszKflULF
+	 6LQXXjYUhcsxw==
+Date: Sat, 5 Jul 2025 21:40:39 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: Avoid DT fetch in possible_parent_show if clk_hw is
+ provided
+Message-ID: <aGn+R1/y8AxoZPsH@x1>
+References: <20250705095816.29480-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250706-siocinq-v5-4-8d0b96a87465@antgroup.com>
-References: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
-In-Reply-To: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Xuewei Niu <niuxuewei.nxw@antgroup.com>, fupan.lfp@antgroup.com
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705095816.29480-2-ziyao@disroot.org>
 
-Add SIOCINQ ioctl tests for both SOCK_STREAM and SOCK_SEQPACKET.
+On Sat, Jul 05, 2025 at 09:58:17AM +0000, Yao Zi wrote:
+> When showing a parent for which clk_core_get_parent_by_index fails, we
+> may try using the parent's global name or the local name. If this fails
+> either, the parent clock's clock-output-names is fetched through
+> DT-index.
+> 
+> struct clk_hw pointer takes precedence with DT-index when registering
+> clocks, thus most drivers only zero the index member of struct
+> clk_parent_data when providing the parent through struct clk_hw pointer.
+> If the pointer cannot resovle to a clock, clk_core_get_parent_by_index
+> will fail as well, in which case possible_parent_show will fetch the
+> parent's clock-output-names property, treat the unintended, zeroed index
+> as valid, and yield a misleading name if the clock controller does come
+> with a clocks property.
+> 
+> Let's add an extra check against the struct clk_hw pointer, and only
+> perform the DT-index-based fetch if it isn't provided.
+> 
+> Fixes: 2d156b78ce8f ("clk: Fix debugfs clk_possible_parents for clks without parent string names")
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+> 
+> This was found when fixing the wrong parent description of
+> clk-th1520-ap.c[1]. Without the patch,
+> 
+> 	# cat /sys/kernel/debug/clk/c910/clk_possible_parents
+> 	osc_24m cpu-pll1
+> 
+> The first parent should be c910-i0, provided by an unresolvable struct
+> clk_hw pointer. osc_24m is the first (and only) parent specified in
+> devicetree for the clock controller. With the patch,
+> 
+> 	# cat /sys/kernel/debug/clk/c910/clk_possible_parents
+> 	(missing) cpu-pll1
+> 
+> [1]: https://lore.kernel.org/linux-riscv/20250705052028.24611-1-ziyao@disroot.org/
+> 
+>  drivers/clk/clk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 0565c87656cf..280d3a470228 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3594,7 +3594,7 @@ static void possible_parent_show(struct seq_file *s, struct clk_core *core,
+>  	} else if (core->parents[i].fw_name) {
+>  		seq_printf(s, "<%s>(fw)", core->parents[i].fw_name);
+>  	} else {
+> -		if (core->parents[i].index >= 0)
+> +		if (!core->parents[i].hw && core->parents[i].index >= 0)
+>  			name = of_clk_get_parent_name(core->of_node, core->parents[i].index);
+>  		if (!name)
+>  			name = "(missing)";
+> -- 
+> 2.49.0
+> 
 
-The client waits for the server to send data, and checks if the SIOCINQ
-ioctl value matches the data size. After consuming the data, the client
-checks if the SIOCINQ value is 0.
+Tested-by: Drew Fustini <fustini@kernel.org>
 
-Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
----
- tools/testing/vsock/vsock_test.c | 79 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+I've tested this using next-20250704 on with the TH1520-based LPi 4a.
+Without the patch, I also get the misleading output:
 
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index be6ce764f69480c0f9c3e2288fc19cd2e74be148..a66d2360133dd0e36940a5907679aeacc8af7714 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -24,6 +24,7 @@
- #include <linux/time64.h>
- #include <pthread.h>
- #include <fcntl.h>
-+#include <linux/sockios.h>
- 
- #include "vsock_test_zerocopy.h"
- #include "timeout.h"
-@@ -1307,6 +1308,54 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
- 	close(fd);
- }
- 
-+static void test_unread_bytes_server(const struct test_opts *opts, int type)
-+{
-+	unsigned char buf[MSG_BUF_IOCTL_LEN];
-+	int client_fd;
-+
-+	client_fd = vsock_accept(VMADDR_CID_ANY, opts->peer_port, NULL, type);
-+	if (client_fd < 0) {
-+		perror("accept");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	for (int i = 0; i < sizeof(buf); i++)
-+		buf[i] = rand() & 0xFF;
-+
-+	send_buf(client_fd, buf, sizeof(buf), 0, sizeof(buf));
-+	control_writeln("SENT");
-+
-+	close(client_fd);
-+}
-+
-+static void test_unread_bytes_client(const struct test_opts *opts, int type)
-+{
-+	unsigned char buf[MSG_BUF_IOCTL_LEN];
-+	int fd;
-+
-+	fd = vsock_connect(opts->peer_cid, opts->peer_port, type);
-+	if (fd < 0) {
-+		perror("connect");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	control_expectln("SENT");
-+	/* The data has arrived but has not been read. The expected is
-+	 * MSG_BUF_IOCTL_LEN.
-+	 */
-+	if (!vsock_ioctl_int(fd, SIOCINQ, MSG_BUF_IOCTL_LEN)) {
-+		fprintf(stderr, "Test skipped, SIOCINQ not supported.\n");
-+		goto out;
-+	}
-+
-+	recv_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
-+	/* All data has been consumed, so the expected is 0. */
-+	vsock_ioctl_int(fd, SIOCINQ, 0);
-+
-+out:
-+	close(fd);
-+}
-+
- static void test_stream_unsent_bytes_client(const struct test_opts *opts)
- {
- 	test_unsent_bytes_client(opts, SOCK_STREAM);
-@@ -1327,6 +1376,26 @@ static void test_seqpacket_unsent_bytes_server(const struct test_opts *opts)
- 	test_unsent_bytes_server(opts, SOCK_SEQPACKET);
- }
- 
-+static void test_stream_unread_bytes_client(const struct test_opts *opts)
-+{
-+	test_unread_bytes_client(opts, SOCK_STREAM);
-+}
-+
-+static void test_stream_unread_bytes_server(const struct test_opts *opts)
-+{
-+	test_unread_bytes_server(opts, SOCK_STREAM);
-+}
-+
-+static void test_seqpacket_unread_bytes_client(const struct test_opts *opts)
-+{
-+	test_unread_bytes_client(opts, SOCK_SEQPACKET);
-+}
-+
-+static void test_seqpacket_unread_bytes_server(const struct test_opts *opts)
-+{
-+	test_unread_bytes_server(opts, SOCK_SEQPACKET);
-+}
-+
- #define RCVLOWAT_CREDIT_UPD_BUF_SIZE	(1024 * 128)
- /* This define is the same as in 'include/linux/virtio_vsock.h':
-  * it is used to decide when to send credit update message during
-@@ -2276,6 +2345,16 @@ static struct test_case test_cases[] = {
- 		.run_client = test_stream_transport_change_client,
- 		.run_server = test_stream_transport_change_server,
- 	},
-+	{
-+		.name = "SOCK_STREAM ioctl(SIOCINQ) functionality",
-+		.run_client = test_stream_unread_bytes_client,
-+		.run_server = test_stream_unread_bytes_server,
-+	},
-+	{
-+		.name = "SOCK_SEQPACKET ioctl(SIOCINQ) functionality",
-+		.run_client = test_seqpacket_unread_bytes_client,
-+		.run_server = test_seqpacket_unread_bytes_server,
-+	},
- 	{},
- };
- 
+ # cat /sys/kernel/debug/clk/c910/clk_possible_parents
+ osc_24m cpu-pll1
 
--- 
-2.34.1
+With this patch applied, the output now reflects the missing parent:
 
+ # cat /sys/kernel/debug/clk/c910/clk_possible_parents
+ (missing) cpu-pll1
+
+Thanks,
+Drew
