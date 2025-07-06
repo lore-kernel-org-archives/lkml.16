@@ -1,183 +1,161 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazrln10222018.outbound.protection.outlook.com [52.103.194.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87040F4E2;
-	Sun,  6 Jul 2025 14:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.194.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751811257; cv=fail; b=IGa9LqnryOZcVbAERlJ/mxSZT5NXTdsZnvVaTvCdzFnO7Fu+rdyawepTKMNAPkWx7RO2mwdWdqQS8lpv5c9l1M4H3Mr3DBOkcoqF0HNaOQdYxGZ56TKhp3jE7dBFQsKqRSxC9EeDzr3yB2i/Qb05drx/2yiPUGxXkYC4098n69w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751811257; c=relaxed/simple;
-	bh=H5FLtaZsQXutzGECPQ6miEskFjXMJ9XRwO8HCVTmTvM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P3GPUTh0NgQbqcPwSkT5K4neHTSOmClbu/CgELHpq/2ZxpZoHnLBgaRv7ZLzbjbsP0dOmumBfLsD7+VgOKq5r8kM/bPxxrKcW14hFlLRZFXPhVqG5xMlyOu4ehgbcMlNrH8hN8FGLFXx8zOY5sD77Alht5CurDcQxhLrNFa9iOA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=tV9HqWWe; arc=fail smtp.client-ip=52.103.194.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50E21BF58
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 14:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751811723; cv=none; b=laRSshK4n5M+b/Lm36fkRclbCmLkyEDfr6PLIuVwx4NfESEGbS65PzLhHyyhAaY7oXO1qd+cHmxlrBldgwJZBzumV0bEM7cmdr6d34S8FQGjv5j/rrUoF+MlMad0YzJHjXww/9hGoKFz3dIQKTdkDJAz7v8a6IYpB0OcetWe2pw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751811723; c=relaxed/simple;
+	bh=hGj9ba+WBBvZ9zms61zCDePnwkxudsa8B9DOmH+mpyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qExwdHdb6uLfTIDfvMLxZwcE7cQiipHslo4BmhfO+LSv4zuJo0W9FX5qROv+oHIndy71ofK0RsqN2Z6kgIq5TjXDm16e7YUdFaPS4x3Ow+EkiIjNEuA5m0AcfmDTCwcjmMI2TwMcIYbh+oH7kRpTowcYHNW5FxLNO+Fgj0CGUpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DZG1zwTR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="tV9HqWWe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Drp8TUHm3LZDSp3y/EhDqsEOgdg1z+B5Gyhj8tqOXdcP9KgsTxHROaRtrAbSe48S6bHnVOIWOjchYUH86dW1Q351F6GOIpj6R3vIbezLWWWWrpvzyenBuFPJFtKGyksPCK8mDQD1bzkdA7PaenTQPlEiMRasAZgM/LahU0sGUt90xucTuX6kXRyFqv5mzKaqAosdtw2L3lsTzFgI0APTMDtBDBEV+2Z4Z3qPk49GJLQN7slZ5Zaa8BAO8miyuXY53xfzj+uDVTZcBs+77tDW5ZU5kiHe7D62rAsNhfmu47eyrsUJ+FU8SW8tQRq3wSf0W4P8KCW3VSPQrXSkUf/ujg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DHVP6Jxn9qePOmfBPh2lMaoICnHmKhheR/oyM5OYcms=;
- b=sMb63v75TyA669/zoIkoArKNgtaY/wVogdoFfkmE53cuGDIbX6eZeAW6Akm1YO7ZwFlFluELrSwnWrcDQZStxeqITa1/CAL2AgBeZX91vOdiQgQuMf8LVbqTWQjFH69+nzFrQGoBt5fqL9h3gwXnVfQcuA4ZFF8ZMlf3Bd8ZIY1sI7KxeVPnQSKtOEstZjpRdgFR3rIBpEWj7KlKBgHBAd6JX2u0wXB0fk+R8/2BAqB54yQpkqpZVpEy3PYbFg0ydSDhTGMyIAwNbIEvF2nLN6rldZM0VG37a+kN4LqrvcyIoth1Nl4z3JsaScszH4gaNk2QNHu7MZ7KsFvPv4pwwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 175.98.123.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
- dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHVP6Jxn9qePOmfBPh2lMaoICnHmKhheR/oyM5OYcms=;
- b=tV9HqWWeAn3fGeQfVCVi7kQsM+CcLIL+2Tb58QlmPs5i75bttZRoKgIzh6ZS+uP8E/wHHCE9gIm7z/9sH+DBZ3jL6Ohb5RLe0A7hnVwdz2O4S/uJopRivWveSq7wU9GKnsQ/OvokGKPsIv74m1hYkTSaRACaIkUhIu/M/Uyxvd4=
-Received: from TYCP286CA0098.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2b4::19)
- by KL1PR03MB8317.apcprd03.prod.outlook.com (2603:1096:820:10b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.25; Sun, 6 Jul
- 2025 13:42:21 +0000
-Received: from TY2PEPF0000AB85.apcprd03.prod.outlook.com
- (2603:1096:400:2b4:cafe::b) by TYCP286CA0098.outlook.office365.com
- (2603:1096:400:2b4::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.26 via Frontend Transport; Sun,
- 6 Jul 2025 13:42:20 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
- TY2PEPF0000AB85.mail.protection.outlook.com (10.167.253.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Sun, 6 Jul 2025 13:42:18 +0000
-Received: from NTHCML01A.nuvoton.com (10.1.8.177) by NTHCCAS02.nuvoton.com
- (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Sun, 6 Jul
- 2025 21:42:15 +0800
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01A.nuvoton.com
- (10.1.8.177) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Sun, 6 Jul
- 2025 21:42:15 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Sun, 6 Jul 2025 21:42:14 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id 4BA8F5F5DA;
-	Sun,  6 Jul 2025 16:42:14 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id 48D2ADC3163; Sun,  6 Jul 2025 16:42:14 +0300 (IDT)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <avifishman70@gmail.com>, <tali.perry1@gmail.com>,
-	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
-	<benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 1/2] arm64: dts: nuvoton: combine NPCM845 reset and clk nodes
-Date: Sun, 6 Jul 2025 16:42:06 +0300
-Message-ID: <20250706134207.2168184-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250706134207.2168184-1-tmaimon77@gmail.com>
-References: <20250706134207.2168184-1-tmaimon77@gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DZG1zwTR"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566AJ1xH029846
+	for <linux-kernel@vger.kernel.org>; Sun, 6 Jul 2025 14:22:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+LR59wvaFC1B+jtg9kXlIKRe6vvfPELWKIv1ziuV/xg=; b=DZG1zwTRrWIo8NW0
+	SH7dNDOOY81dG4Haah1W7G5s6GBOxUmt/s7GxQNYDfhqYyGqftftKCN5PYZVkBd5
+	eW/2QXQhinMuQhSGlqvitrcR7+3/wr/H8NceFMJlQhSZsHGMs4T58P8Khl8cZ5YR
+	JRRTaDYfv7Xjl9T9OUVMyHNoHS6Y38lRdZf9HatRxhAIzegnGiIbL5t/hb6IAmO+
+	nt33oMNdKtP3rnCcGBG/q0YMWWlDmr01jTleGo5CDH+NkX9vdCAwiXhAg7BXJVDg
+	ewsraXQEi7s6klzhN5KkVsiYrjtsvVjTAou7UNMP2VfxwHItNevWpjm/pwtIClth
+	rVj0ww==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pv974g3j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 14:22:01 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b38d8ee46a5so1677436a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 07:22:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751811720; x=1752416520;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+LR59wvaFC1B+jtg9kXlIKRe6vvfPELWKIv1ziuV/xg=;
+        b=kAEsv3SYE6qY43pMCDLs/sYEXldx7irTVvUhOQigdqgLpL7GugGKpInCaI1cUagcOW
+         L9POXg3Bt/ppLY3jy9mG+YpkEezG25CtPmgygIrqKbSKiGk6b5USlBDjnM37wcB2OC32
+         D+FTvGeFkSWqinLWhVOrbyCpn6urtDwrTaqBwsT5AoujDE/HkKxGqzajGx7gbhvjxLQZ
+         atINYjng+ZoPESg1CumCbMYLx8w6dyAzXDNeR7ZqHCqGqbFEDmyxSBojGUoLaCTZH20o
+         saDuCKrgMAG2diYIIBA4JiECKVPFvR4807D6uDYGbgQt7mUW1DUBkcsofbeUtHRx7b/o
+         dzFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhUGUYiwxZabFfGZJoYhIB+hRD6sJa4FyYQCQr11ndbhTovB8VmFX+I6T9ktrNr9yYNVYoqByp92gJ7/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx39khiDdm3H6JcBuw6EPNNujfMtPHKQzjLVBZ+GnwLAHGZSu/4
+	Zt3Z2ShhTAKxbcMamQ4MbaprcJr3Hbh0TAHhXMjFWityiE5lmNTa1gM6cgkdzAxij+4NwSkMEe7
+	Bf4APGEdNK1G5TWxzUKSLTEh7IV/bYSbx6kSYiKl3u9ggGCDOXaNfk2q9r3xalcy1MSY=
+X-Gm-Gg: ASbGnct4e31VViusHmyFfegVJiqvSyHHBa20voSgQxiqZSA6Mq34Ietkni6VTjvaqPt
+	cdn8cjBbZwcTcmVqyB/QdpaqTSao7m8C77rGygqG9Jof8FA7bkqniho6RbOaZPC8aLI2pGgBM7f
+	jom5GdXJfpUMn8cqjJeDqjSplzXa+bznxApHXaAloiNiTgkaYxhBmoYcartgURjpf/Q/k+/21xg
+	v1O81r/C+BmjtKsrQCjysnbOI7BkhXgdbc7zwdVoFB8wKoO51XBaEByWxF+e9yasAcp4V6Yzrnj
+	UBo0DHpXzOqHT+ML/rOKVzSsFheL4bzy4DzzzdCjSw==
+X-Received: by 2002:a17:902:c943:b0:221:751f:cfbe with SMTP id d9443c01a7336-23c8595204cmr167337135ad.19.1751811720115;
+        Sun, 06 Jul 2025 07:22:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFO93oCbUuKR455AbSvqBvRYCReXzTUnYblW52a/kTh3+cnV2a1b0uxIXTMZ96Ppo2+XoCvjw==
+X-Received: by 2002:a17:902:c943:b0:221:751f:cfbe with SMTP id d9443c01a7336-23c8595204cmr167336735ad.19.1751811719650;
+        Sun, 06 Jul 2025 07:21:59 -0700 (PDT)
+Received: from [192.168.1.5] ([106.222.234.15])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8431a4c6sm63428015ad.46.2025.07.06.07.21.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Jul 2025 07:21:59 -0700 (PDT)
+Message-ID: <c20a9713-6f8d-4c20-a031-dc448404d073@oss.qualcomm.com>
+Date: Sun, 6 Jul 2025 19:51:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB85:EE_|KL1PR03MB8317:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a02e867-afef-407e-9b05-08ddbc92ed47
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|48200799018|35950700016|376014|7416014|7093399015|61400799027|82310400026|35450700002;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1J/ceICg/rMkBC8jNfhibEMvJyI7S2Tj9ptdbUDUhi3V0Dof7jWLduhl8Yi5?=
- =?us-ascii?Q?bU190GbRIknyJGGfZwwbnV+jlMMw/5r6kZuwJIouHrFZriR/DUqHxAyOZ+XI?=
- =?us-ascii?Q?X5vawo8hAp/9JLcB7Fn+EGZRk7cJMz9wcAReYP+WCZ8LeU+nb+f9J70ghal/?=
- =?us-ascii?Q?TDcIiNZvcofWxWNRIgm6ASf8rEmpqoB99UIyHuga98wlrk7omdLjYTtc3C1m?=
- =?us-ascii?Q?rM6Dt8aGtPSYYute34o1gae55ZwHjISKlggcdFJWYUloNOjxYqN7F4H48KUY?=
- =?us-ascii?Q?ltfFgGKOdZNtKWjn5nxa+iviQ9yPiGvN4XdG1H5twMs2FGJp1bvq3IqHNQM7?=
- =?us-ascii?Q?9fxK6figXtDO0WBP8UWP8GU0dLYqeL54AEj0LUnfPEFws8faPUI+qDf/QOuX?=
- =?us-ascii?Q?Pm3EsUi5Mb72NupoxR3xb6qM2W/JOCjAe+8frGSxPGukY7YGrZN4JnFxV7Xl?=
- =?us-ascii?Q?8zOmfJgABVF2nyiX4SsDDHYTA8H9QC1dMyneqcZp3BodprQtVOY+7gRv2lJY?=
- =?us-ascii?Q?eRpBm910WgqxSy6eFPtu1nVymwH9a28d6vWFHHhGSZ9Zko5bR2e8pzBQsCYg?=
- =?us-ascii?Q?N4xWOcHf0n9WAyYw3Af23XJKWJ8n1IxmoiynhanRmgdWqVU0VsxR9Ngprb4u?=
- =?us-ascii?Q?E2/VZDMWYR3S8y8cG5Q+v/WKXXC4yrPfklcFyZ2hJebYSxHeJFj4Dy+l9mX7?=
- =?us-ascii?Q?qDHKRk/dIQveYfr9i8OS4QQp+S79kFUEC9EPJ6SAdbysI3574kv5FKN1JXJK?=
- =?us-ascii?Q?AQ1D1zP4Ljyok9QvUTmJbJeZuGzPyMJMeq6ZpJVqC6yGwz29mTe0inPyTOMU?=
- =?us-ascii?Q?gnRKgd3H0ziPiegosY25t5RsFkg2BczuJD8nobzXjQSlJj2FE9OJ8hY9ietv?=
- =?us-ascii?Q?zOAFPwzfiYgEKimq60oKdMv1VzxXs8+4AiQiccQAWyFnU1VfTbRoTZGLbqaj?=
- =?us-ascii?Q?J8vIJO7o9uQiEFNFlU8jqBC3HXlkvvIHibx3EKtA0t5YJLtu/EcqTXtE+SvY?=
- =?us-ascii?Q?Nuu/mB/P9WHc1I8BhYOSiDdgHjlgJxTuvWFC1gyRQcLqTphZJXpgeq5jeRQh?=
- =?us-ascii?Q?6P/GLbppBCbHe5ljQeinCxqjgVmwn/GW0wBK8iI1kgn9tp1xKs1/738rorE4?=
- =?us-ascii?Q?FZmaF0XgvMeY13/JevMp5Rhct20AEA6i/EGa1B7Af/jn10sIbJhwy0bhQbJh?=
- =?us-ascii?Q?QZ7a0QGcb0p5KGYBLgTwbw+yyCbUjA3CE44tfeQjezrMocMcUrq/Dpo6Fu9B?=
- =?us-ascii?Q?FvGKOlBcj+1Z0alduK6dk58Lq6C9xuAJEBQmlveLAQXmR743NDElpFaZBA5O?=
- =?us-ascii?Q?Dz9wjmHKpdPEFDLcyJEIL4U5WvhhIDB/kXF66W1yjtqeB6T1V9G4sNqqmKxN?=
- =?us-ascii?Q?L9nS9qIP8o/wfBgUVgx962nVysNusFGcXqxMB1TksiW1nQGcWJZM1AnnXT17?=
- =?us-ascii?Q?ZM1Mg3miIeyBuZHaoV9zYD6vlB6BSKLhebYINXutOoUuKgs/z4nYqIcwe1v+?=
- =?us-ascii?Q?dCqRcOJiuXhpGZVLLLs9xHAc8TyfqZ3BOu2g?=
-X-Forefront-Antispam-Report:
-	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230040)(48200799018)(35950700016)(376014)(7416014)(7093399015)(61400799027)(82310400026)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2025 13:42:18.7782
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a02e867-afef-407e-9b05-08ddbc92ed47
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB85.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB8317
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] iommu/arm-smmu: disable PRR on SM8250
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+Cc: iommu@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Akhil P Oommen <akhilpo@oss.qualcomm.com>
+References: <20250705-iommu-fix-prr-v2-1-406fecc37cf8@oss.qualcomm.com>
+From: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250705-iommu-fix-prr-v2-1-406fecc37cf8@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=FrUF/3rq c=1 sm=1 tr=0 ts=686a8689 cx=c_pps
+ a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=D9rl3thw99EfY5kE3N+1UQ==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=idnX5w4AHIxaUxQtNqEA:9 a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA2MDA5MSBTYWx0ZWRfX45JfCggvF6O1
+ gixpB57BHVYePO/as8pJDQrBTBctD0MPIUS+s7rodVjiBqwUiMqoGG/8GtbXwhHs6L4BZ7FnaI5
+ WKMm2z0tCyDNACm2eKipvlFdbmzDSvoRlLYL5zpvH3YwFtNdWH9PrLO96kd0IPBDwA0XLBnxM3v
+ 2plkJ4mOnAieO9OyuaVtJ01IyAoL5FjKgHCrKUFMqAOLVxmQARG30m3g2pqz8c63hDiDVHxSIB8
+ oFo/cXmRLeuFfTayr3MDqHnrFiq/Bw4F165abVUFuI9N0ZWe56r6owsdOSeGFYs0NRYT7OfsPEI
+ YRq6VqRm5ENKbSH1mBXZSQoa0xkeZKDG7ptW0JDS1QY3yIvhfYVs9WmvXiDxwOAtObD699LuIu8
+ 1ZA6Q7gjobp6aYuvCr7+xOuedp9+JxwGPkPz7P6sRGfjcG8QyHYJTY2g0blqP0kDWhql1sJh
+X-Proofpoint-GUID: BLTkZtTYJ7NFTPEGSe_vcC65Mk0BaOtJ
+X-Proofpoint-ORIG-GUID: BLTkZtTYJ7NFTPEGSe_vcC65Mk0BaOtJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-04_07,2025-07-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 clxscore=1015 mlxscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
+ adultscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507060091
 
-Combine the NPCM845 reset and clock controller nodes into a single node
-with compatible "nuvoton,npcm845-reset" in nuvoton-common-npcm8xx.dtsi,
-using the auxiliary device framework to provide clock functionality.
+On 7/5/2025 9:38 PM, Dmitry Baryshkov wrote:
+> On SM8250 / QRB5165-RB5 using PRR bits resets the device, most likely
+> because of the hyp limitations. Disable PRR support on that platform.
+> 
+> Fixes: 7f2ef1bfc758 ("iommu/arm-smmu: Add support for PRR bit setup")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Update the register range to 0xC4 to cover the shared reset and clock
-registers at 0xf0801000.
+Reviewed-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
 
-Remove the separate nuvoton,npcm845-clk node, as the reset driver now
-handles clocks via an auxiliary device.
+Unfortunately, there is no way to detect firmware support for PRR safely
+from KMD.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi      | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+-Akhil.
 
-diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-index fead4dde590d..2a36d0b2824e 100644
---- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-+++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-@@ -47,17 +47,12 @@ ahb {
- 		interrupt-parent = <&gic>;
- 		ranges;
- 
--		rstc: reset-controller@f0801000 {
-+		clk: rstc: reset-controller@f0801000 {
- 			compatible = "nuvoton,npcm845-reset";
--			reg = <0x0 0xf0801000 0x0 0x78>;
--			#reset-cells = <2>;
-+			reg = <0x0 0xf0801000 0x0 0xC4>;
- 			nuvoton,sysgcr = <&gcr>;
--		};
--
--		clk: clock-controller@f0801000 {
--			compatible = "nuvoton,npcm845-clk";
-+			#reset-cells = <2>;
- 			#clock-cells = <1>;
--			reg = <0x0 0xf0801000 0x0 0x1000>;
- 		};
- 
- 		apb {
--- 
-2.34.1
+> ---
+> I currently don't have access to other devices from these generations.
+> It might be necessary to apply the same workaround to other platforms.
+> ---
+> Changes in v2:
+> - Simplify the workaround as the issue seems to be limited to SM8250
+>   only (Rob)
+> - Link to v1: https://lore.kernel.org/r/20250705-iommu-fix-prr-v1-1-ef725033651c@oss.qualcomm.com
+> ---
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> index 62874b18f6459ad9a8b0542ab81c24e3e745c53d..53d88646476e9f193a6275d9c3ee3d084c215362 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> @@ -355,7 +355,8 @@ static int qcom_adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
+>  	priv->set_prr_addr = NULL;
+>  
+>  	if (of_device_is_compatible(np, "qcom,smmu-500") &&
+> -			of_device_is_compatible(np, "qcom,adreno-smmu")) {
+> +	    !of_device_is_compatible(np, "qcom,sm8250-smmu-500") &&
+> +	    of_device_is_compatible(np, "qcom,adreno-smmu")) {
+>  		priv->set_prr_bit = qcom_adreno_smmu_set_prr_bit;
+>  		priv->set_prr_addr = qcom_adreno_smmu_set_prr_addr;
+>  	}
+> 
+> ---
+> base-commit: 7244e36657076b597ac21d118be9c0b0f15fc622
+> change-id: 20250705-iommu-fix-prr-600451b1d304
+> 
+> Best regards,
 
