@@ -1,116 +1,76 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19B0FBF0
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 08:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2F5FBF0;
+	Sun,  6 Jul 2025 08:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751790650; cv=none; b=AEhgGzJLXANxLgFIboFWUmAizMuen92QAdPwZe3lzXToB4IAQpmA+WSM7TZQiWzGIT2m3A4FuvBCLZb6u6xrpUxb3QBxW5sInDSUIf9p0IL7y8hctNE6srgKSENypaJgql/1tslyn/r820oRPPgD02UnQj9RV859aWF8TJyHNT4=
+	t=1751790702; cv=none; b=SDeq7dKKgFQHn/UrW421tGRBS6aNZ1IETgUR5KX8PpPQYyIxLM/RuxcCwy2YKkZ3gWzztZ1Jry6TyemzcVeP7HRFm/Nbbj3Hr8ACff5cZ7OoJR6jxjzk119rgZaS0s/1FljoNbRwOfHcMt8R97pf/SGznqrlr6rOrvfk1KZ790k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751790650; c=relaxed/simple;
-	bh=ArJ7PveElx3Wr6Gl51JBH21PaM7qp5nCvfvSROX2Owg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GRstcIe2phvATBD/m573WE7SMuhBM+G1Sr4DEiBB6fo37xs5jBg2tpgQP5ieiKZKOlBu9dMtuX6VDD6WEHegf/fGo8lTzModRkjFPyxMoPGXBZjOrjDulh+ClMy5/1VIHgFtkmznEgFJfjaHXfC6nVbMRPy86tUUuuuz8osACRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=C5BFEQeU reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1751790702; c=relaxed/simple;
+	bh=J362V9HqbGoQd9LWr+mHt5hW3pTQQVMO1t0p9pcy80c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VGww2BMX8CtHejNoqVgGmFtKHobK8Tm2NpavEjgSVlQGwvQcwg7A2O7luL564+qNrR7qMRc0ntBPCzCcXuf0oXs7GOTpTkVF/NHypkkzEziKCPh9ylgC5GdL5klCLFVcJmOXAkmwyAoaoxe1e6miHHmHD3s7fG/9yD0mLCogHXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=2ssupT+z; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="C5BFEQeU"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D4B2240E019D;
-	Sun,  6 Jul 2025 08:30:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RyBTuq0y9EPs; Sun,  6 Jul 2025 08:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751790642; bh=IfgpitmB0jLnCRobwzv/bHCTWf9mMvl5I41YPbGo8z0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=C5BFEQeUAuPqw8McfAvgxa+/X/Twfg9+9f2OpKo9XogHvjOftobX5H1UDO0D2ujq9
-	 g83+7TYMth7tQcuv6r9AqaGBD7RyIRImCqJXD+k7dcx39j+zX8RMD1QxLJVJngJ57O
-	 ZvMZAW3YARtk5KHluwCxDNG3P8wcdI9AVs0CIYS7m9GrU4XJv1MwbP/Qlpk/lIkl9Q
-	 YCzWeZ6R68qwLlRdNE76CPCPiyMw5xR/tHTQOJwRCVenHdok7IGMl6ApP2VlqXHJBS
-	 REr9FCKgw3GaqhhcuTvL/nMt86o24VhtRszCqHIVDiSW2qKAXdN7VQCHZey909BbQW
-	 q0RdVyU02z8BFomJYQOJhutX1Y2U13PplwUu8Bfgy9qUccbyV4o9Vgpf07D0CxU0Ia
-	 c8KjA7ftepeyuWzixCV/Dea5GUZ7uINrvNVf1lCLdxddp4LIbBaVzbBfrzRid8pJhY
-	 gBGlSWdNz+5Z4s5sVjgZIJhCwGpAYlrnIWzTg/qGuhT9B88LTtdnrlzvjFGyeKBrQp
-	 mjPqaagJkkp+6nEHA4r/3hH2S5l7tCqfwieQjF++mqoOhtWVN4fDqGY/kC/P9q1FrA
-	 xvUMPwhyLTbZmNaFMgwuVhCDqdTWXcCN4zRQX90l4F30tPeR3u6ftPMtlr2jatBVN9
-	 zT2OKpBcxq88XqK6jEt8BtVM=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 67C9640E0184;
-	Sun,  6 Jul 2025 08:30:39 +0000 (UTC)
-Date: Sun, 6 Jul 2025 10:30:33 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] sched/urgent for v6.16-rc5
-Message-ID: <20250706083033.GAaGo0KbMDFzyQQLmR@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="2ssupT+z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1751790699; bh=J362V9HqbGoQd9LWr+mHt5hW3pTQQVMO1t0p9pcy80c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=2ssupT+z2wSVi7hxEZzZHkTr0XYgoBJnmBJak321AeF/APQoi5Rmzb0O9DVtzF+l3
+	 YhCpI+9rSN9TQ62MjK2g82T1k/Yw2V5msww2PDtpJ7bcWwhZSO7Xggy4QaLW9d4thV
+	 r34b+OfmgI54MfSYeNmIKYAtmoQLVDQCbAZBrMNs=
+Message-ID: <226fd16c-8071-43c7-9ecc-9bd95e319aaf@lucaweiss.eu>
+Date: Sun, 6 Jul 2025 10:31:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/4] remoteproc: qcom_q6v5_pas: Use resource with CX PD
+ for MSM8974
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
+ <20250621-msm8974-rpmpd-switch-v1-2-0a2cb303c446@lucaweiss.eu>
+ <hwewzj4ygfbb22vxrahjfc3b4oxyagh3nkd26bs3p5k2fcxr6m@mkgtyjkxz3d7>
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <hwewzj4ygfbb22vxrahjfc3b4oxyagh3nkd26bs3p5k2fcxr6m@mkgtyjkxz3d7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 05-07-2025 10:57 p.m., Dmitry Baryshkov wrote:
+> On Sat, Jun 21, 2025 at 03:19:57PM +0200, Luca Weiss wrote:
+>> MSM8974 requires the CX power domain, so use the msm8996_adsp_resource
+>> which has cx under proxy_pd_names and is otherwise equivalent.
+>>
+>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>> ---
+>>   drivers/remoteproc/qcom_q6v5_pas.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Hmm. You are modifying the ADSP configuration in the driver, but at the
+> same time you've dropped CX supply from the MSS remoteproc.
 
-please pull the sched/urgent lineup for v6.16-rc5.
+The qcom_q6v5_mss driver has this support for .fallback_proxy_supply, 
+which are used in case the power domain is not specified.
 
-Thx.
+So no driver change is necessary in the mss driver for both old and new 
+devicetrees, but the adsp driver does not have this fallback, so that's 
+why the adsp config is updated.
 
----
+Does that make it clear?
 
-The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81=
-af:
-
-  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/sch=
-ed_urgent_for_v6.16_rc5
-
-for you to fetch changes up to fc975cfb36393db1db517fbbe366e550bcdcff14:
-
-  sched/deadline: Fix dl_server runtime calculation formula (2025-07-04 1=
-0:35:56 +0200)
-
-----------------------------------------------------------------
-- Fix the calculation of the deadline server task's runtime as this misha=
-p was
-  preventing realtime tasks from running
-
-- Avoid a race condition during migrate-swapping two tasks
-
-- Fix the string reported for the "none" dynamic preemption option
-
-----------------------------------------------------------------
-Peter Zijlstra (1):
-      sched/core: Fix migrate_swap() vs. hotplug
-
-Thomas Wei=C3=9Fschuh (1):
-      sched: Fix preemption string of preempt_dynamic_none
-
-kuyo chang (1):
-      sched/deadline: Fix dl_server runtime calculation formula
-
- kernel/sched/core.c     |  7 ++++++-
- kernel/sched/deadline.c | 10 +++++-----
- kernel/stop_machine.c   | 20 ++++++++++----------
- 3 files changed, 21 insertions(+), 16 deletions(-)
-
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards
+Luca
