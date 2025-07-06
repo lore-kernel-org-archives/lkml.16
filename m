@@ -1,113 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7351F473C;
-	Sun,  6 Jul 2025 09:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00471ACECE;
+	Sun,  6 Jul 2025 09:42:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751794926; cv=none; b=hMqjQXvaLmsnJMNsPYQJXC+qIGrPRor83cPY35Q8Hok8UkUgHgQPivJkrvX0WVyftnJKZbOgewe1LHOGLhTRvp3e9HOHphrVDT3q/sWNmaGS2/jYbzeDAfA747nd8W1LfUc6kGHlq269rrV1R6ZcAHH69qjoWl/Otu7FeJbr2NM=
+	t=1751794948; cv=none; b=TMjPyl9K1vrHradRBIpzHRDN+wv2Yzh2Sv4rHFjXqNwXWaeLPMrg3hzNwqMYRjCz23wwyCe7X0NOGovdfqbW+9G1ohTNehee6p2kCBciw4UfTsZ+soIswOZ+G497/f8E1I8B561bawgVrjupATyQPh2RZwzL67ZtZTo3tihnOd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751794926; c=relaxed/simple;
-	bh=RbHFP10ikaccYr68d3kx6SBLaCOvtQEFFYuO8lgKhzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NjaPsV2niqY9DdvuwLOUkGQrStbMll04a2TwCTH7nBliGxkzQ9/Brr0ruaTFmCiABGHf2Cxs5+AAmLlnrEp5A1J/2SuVHwuE/9gWWI4YG7OJGlJTVzZJJtB32a2aQx4DFWIu5GWvQXIWOLhD9iOxSv5xK7TOYe7vULDVLDEjTMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qN58nwDG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751794948; c=relaxed/simple;
+	bh=o8BGQC3EzZGSOI3FyUhUCrX+ZNPQ+odHc8p2fXNTVV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xi6DXUWDC0Pg9cdYPzmIUTSrNxv8VQyaa3p1p3quagy/l6J0eje9EPQ2X+iSjD0h7ZxGUn6WIfbIm/nvi0zilAn+D18ASKq8qeRCiiamjarbzgYupDbqAHItHAQZLHw6RWSyeJOu6QCtc2mx8kY3B47yOK3uw4t5ys6hcUy7P8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cosgfw7O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qN58nwDG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C853C4CEED;
-	Sun,  6 Jul 2025 09:42:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cosgfw7O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D50C4CEED;
+	Sun,  6 Jul 2025 09:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751794926;
-	bh=RbHFP10ikaccYr68d3kx6SBLaCOvtQEFFYuO8lgKhzg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qN58nwDGr2BDRxdFvmVRsHyihUM1lRp5Beeunym6yVN5dHpBO54XybJw3EnjWDwFz
-	 14s48dM1b3O1ZBMvMfn9hDizDHbPoq/Z1LGcwfuaOsET1WKAyCee53td4oVnQ77nXI
-	 Ri9puilG/Ls1f4Y6/CRtrvdNwH+bOF6gPJ5BwiOmaZxVx9H35bOWoWsdVHSo0/+hgI
-	 sS097MXAPI5SC/5T36+dlGUoAVmOCvPNet7BICCnuYbtRChvnY8eR2jZrzGBnG1pZa
-	 N7xQUGOn4VaRMQia2G3T43a0VCckVDwVVpGcLmmp5JyhXULCP/2DNi2clGFa8ePcFw
-	 ykZTOYIvl8JnA==
-Date: Sun, 6 Jul 2025 10:41:59 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andrew Ijano <andrew.ijano@gmail.com>
-Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] iio: accel: sca3000: use sysfs_emit_at() instead
- of sprintf()
-Message-ID: <20250706104159.59e525ee@jic23-huawei>
-In-Reply-To: <CANZih_SWg03U1jOn63++A=+_9GkzFhtK7S563hdb2m=tk5SK0A@mail.gmail.com>
-References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
-	<20250618031638.26477-5-andrew.lopes@alumni.usp.br>
-	<20250621185824.69a11319@jic23-huawei>
-	<CANZih_SWg03U1jOn63++A=+_9GkzFhtK7S563hdb2m=tk5SK0A@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	s=k20201202; t=1751794947;
+	bh=o8BGQC3EzZGSOI3FyUhUCrX+ZNPQ+odHc8p2fXNTVV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cosgfw7OD5N9f1YO5bJbOa83XZ4JMVkSbkguRs80O69y3GGteo9tWkzcOirgCf7Em
+	 jkHuJ4elK4UKgwYJZIv9c85KZ17eqtqhc9TNi4vWVaUQWZYIIhG0Loz1g3KBUm0r0O
+	 4vPLvs/9gvUO1VX6/VAgfPHg8s9cbX2x7CC5YdRpSArBEKj/cs74U3cnpMguV6UCmh
+	 lTo+rJn9VR8CYCAFBKlrAeUBGGQOSTMF3NuxpgnHj9ql8aslnrrdcOGKpE5hrAcqh/
+	 ISo2Gp0Xu00Qxl2xozTcFBcvYOqzniK78rehprmr7yQzEY6nkxxczLXTQTovjhBsEq
+	 zycQmYuci/gnQ==
+Date: Sun, 6 Jul 2025 11:42:25 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, 
+	andre.draszik@linaro.org, peter.griffin@linaro.org, neil.armstrong@linaro.org, 
+	kauschluss@disroot.org, ivo.ivanov.ivanov1@gmail.com, m.szyprowski@samsung.com, 
+	s.nawrocki@samsung.com, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com, dev.tailor@samsung.com, 
+	faraz.ata@samsung.com, muhammed.ali@samsung.com, selvarasu.g@samsung.com
+Subject: Re: [PATCH v4 3/6] dt-bindings: phy: samsung,usb3-drd-phy: add
+ ExynosAutov920 combo HS phy
+Message-ID: <20250706-grouse-of-pastoral-bloom-7d79b0@krzk-bin>
+References: <20250701120706.2219355-1-pritam.sutar@samsung.com>
+ <CGME20250701120002epcas5p2c4d728d599a819057bcc40b724881276@epcas5p2.samsung.com>
+ <20250701120706.2219355-4-pritam.sutar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250701120706.2219355-4-pritam.sutar@samsung.com>
 
-On Sat, 5 Jul 2025 00:45:05 -0300
-Andrew Ijano <andrew.ijano@gmail.com> wrote:
+On Tue, Jul 01, 2025 at 05:37:03PM +0530, Pritam Manohar Sutar wrote:
+> This phy supports USB3.1 SSP+(10Gbps) protocol and is backwards
 
-> On Sat, Jun 21, 2025 at 2:58=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> > > @@ -423,16 +423,16 @@ sca3000_show_available_3db_freqs(struct device =
-*dev,
-> > >  {
-> > >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> > >       struct sca3000_state *st =3D iio_priv(indio_dev);
-> > > -     int len;
-> > > +     unsigned int len =3D 0; =20
-> >
-> > No need to initialize as set on the next line =20
->=20
-> That makes sense! I=C2=B4ll change that.
->=20
-> > =20
-> > >
-> > > -     len =3D sprintf(buf, "%d", st->info->measurement_mode_3db_freq);
-> > > +     len =3D sysfs_emit_at(buf, len, "%d", st->info->measurement_mod=
-e_3db_freq); =20
-> >
-> > sysfs_emit() when you know you are at the start.
-> > =20
-> Ok! Thanks.
->=20
-> > =20
-> > >       if (st->info->option_mode_1)
-> > > -             len +=3D sprintf(buf + len, " %d",
-> > > +             len +=3D sysfs_emit_at(buf, len, " %d",
-> > >                              st->info->option_mode_1_3db_freq); =20
-> > Fix alignment.
-> > =20
-> > >       if (st->info->option_mode_2)
-> > > -             len +=3D sprintf(buf + len, " %d",
-> > > +             len +=3D sysfs_emit_at(buf, len, " %d",
-> > >                              st->info->option_mode_2_3db_freq); =20
-> >
-> > same here. =20
->=20
-> Actually, both cases are aligned. I checked the code and they have the
-> same number of tabs, and in this email they have the same number of
-> spaces.
-> However, since I'm not reading this diff with a monospaced font, for
-> me it appears to be different but this is caused by the difference in
-> size of "-" and "+".
-> Maybe this is why it appears to be different for you too?
-Key as in earlier reply is parameters that need to go on an additional line
-are not aligned as particular number of tabs, they are aligned to under
-the parameters on the first line.
+What is "this"? You add here HS PHY, so HS is 3.1?
 
-The only normal reason to break with that rule is on particularly long
-lines.
+If this is the same phy, why are you adding another compatible?
 
-Jonathan
-
->=20
-> Thanks,
-> Andrew
+Best regards,
+Krzysztof
 
