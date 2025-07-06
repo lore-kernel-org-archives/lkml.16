@@ -1,144 +1,300 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69B41B3925
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 23:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751843352; cv=none; b=pmsSMnqsORFrws8gsT+QUQHO5C+eGEsJGCmAQwLJRT5KK3ZLtZ6gdREKMlVK4R9PqUF+fcO9826gTNes4G+mP8hLRmOc3k+oHNMcadYATU1+ZQwPh7gajacAiC3bHsk4EAgYLtSQuKzW0CUpFj+8uRm1JLk4b6So/ybr87wZpbc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751843352; c=relaxed/simple;
-	bh=oB2tgyIlqhlAAL7FhpYwuTEpvoVXsD8POM8pltt03Es=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TbJHEv4o09PeeOJLWwV4ULil8e8+2a5QT/iLYc8xYNm8LFfRWIHdbPHZxOA1q6aH/55i7ee49LxlJYLa8rHN2now9NUT9JSZ+ys52u5782mploHt6xxRFONMaeGi8bFlAofA85q5+PmbhlrpMyl6dcL5k3+f88wwkVXK5n3CCag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=GUur+13C; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1114192598;
+	Sun,  6 Jul 2025 23:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751843499; cv=pass; b=SFqUGt0DEMHvYtSglPRPqCZ8shEle7H4vZW1wMpfGDjSGNmL8MHPKwfd7NuaDX7C9CrJ6q8eUtR6+Lnx4/pCHJHIlE9r1ARMfY4+vUJNr3fpFPvLx72PiTAPjhI9jCOpo1X9JHVtdNaOkAE/RB+hL1IwD2Yy1YSTBMOCw6qilQM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751843499; c=relaxed/simple;
+	bh=dveEPten9kKIeSU6lAE8WM6x7Udea1WnYKbmUOZg+Uk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UmJjOLDpy+JeASu22aOLOj4cvuFrrDFi7Sm12zTBBtybim7TJ8XcDdP6K4f2hIYp9ALXS1x3EeMyVulKOXHKEdRLdVpy4sAXypzRILEicROqJyekcCOQsVmAhExhwv6CVxpxZFfKu+kpRGTWq5vH9JOg6ClUxBVpbg6e66UKPa0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=VgJhzpJM; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="GUur+13C"
-Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:3a87:0:640:845c:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id 63FAE60ACD;
-	Mon,  7 Jul 2025 02:07:05 +0300 (MSK)
-Received: from d-tatianin-lin.yandex-team.ru (unknown [2a02:6bf:8080:41f::1:27])
-	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id a6pCSa0GheA0-lla0LRIy;
-	Mon, 07 Jul 2025 02:07:04 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1751843224;
-	bh=LrCpVuLAUvZWC17CNToIYvvgAeo7G8QEmG5JEtbD7Vo=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=GUur+13C7ypxM6BBbH+w9Jfcj8F7eHQf/dlIpIke3Ja1s2axFlaoHBeFKXCHDxtb6
-	 H5sdOMPpL8Xdpb6G51BoVnP0XBhoAszIBoTG73/yJJWqTHfU3AhCWvtxioU99zxzyH
-	 qU4ywkYWAgsaA94yqzGKAY++NdgoyW+6VWw1X/nY=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Daniil Tatianin <d-tatianin@yandex-team.ru>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Daniil Tatianin <d-tatianin@yandex-team.ru>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Thomas Huth <thuth@redhat.com>,
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="VgJhzpJM"
+ARC-Seal: i=1; a=rsa-sha256; t=1751843489; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WXmwZ4FxLPpgiwVbm8hBGn17ub3YplxKy7RQ/ZD3wpPs3OMwH/v6052P3yRG2IrN5XIFNmyVPnkyooxaE8ILWuD5IEO/a0UI4h0bWvC3mrB5sAfkgPRaaV4OJGAaAIot/1cM7jCHpaIS6HXexiZMdPlMz20YIGk6lgK+cTFccik=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751843489; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XP0+m/UnDXQpweK9dnK+RA1k9ixaxdiA68NmWqu5mDk=; 
+	b=dUBlbJPuRCy1TuVVwGuHH1HGMxF5dqvLuXj0kw4YrwWqSRWTddjzL2IH8KnsB8z2Lo0lsntRrzGJTTWWxnNb7oyXpYzRfOxH0jl0OuM49YVy70ZxnzS1KlYVt19MQy+6LaLvn47vUS5GzxgiiCeHFBAzv3Rsc0X/GEf+w0i4fYY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751843489;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=XP0+m/UnDXQpweK9dnK+RA1k9ixaxdiA68NmWqu5mDk=;
+	b=VgJhzpJMTIq1urYGcvQf0DvswvsjvoktxOpDfb93P5MptTnBmoOdb/u4XqpStQ4w
+	GUfM39BbTWUgty5PnoFfIfFCku2IXk94CpKAPz2OkTDoMZYcox4mmWgc+kqqy8mCOuh
+	MioIRLQlg26W2rSnqG5Epi608m0zJ4IVq2Hs+25o=
+Received: by mx.zohomail.com with SMTPS id 1751843486842881.752729641784;
+	Sun, 6 Jul 2025 16:11:26 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 2B398180F17; Mon, 07 Jul 2025 01:11:23 +0200 (CEST)
+Date: Mon, 7 Jul 2025 01:11:23 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] arch/x86/ptrace: remove misleading comments about pt_regs
-Date: Mon,  7 Jul 2025 02:06:28 +0300
-Message-Id: <20250706230628.240966-1-d-tatianin@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH 1/3] power: supply: core: Add
+ power_supply_get/set_property_direct()
+Message-ID: <e5fxtycfe2fmtsejbgas6lvjjgiixwr672lvutdhcebsn67tei@l2x5tavcvtrw>
+References: <20250627205124.250433-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qpzuedv6i4g34dxe"
+Content-Disposition: inline
+In-Reply-To: <20250627205124.250433-1-W_Armin@gmx.de>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/251.827.75
+X-ZohoMailClient: External
 
-This comment hasn't been true for at least 10 years, ever since commit
-ff467594f2a4 ("x86/asm/entry/64: Save all regs on interrupt entry").
 
-Remove to prevent reader confusion.
+--qpzuedv6i4g34dxe
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] power: supply: core: Add
+ power_supply_get/set_property_direct()
+MIME-Version: 1.0
 
-Signed-off-by: Daniil Tatianin <d-tatianin@yandex-team.ru>
----
- arch/x86/include/asm/ptrace.h          | 8 ++------
- arch/x86/include/uapi/asm/ptrace-abi.h | 7 ++-----
- arch/x86/include/uapi/asm/ptrace.h     | 7 ++-----
- 3 files changed, 6 insertions(+), 16 deletions(-)
+Hi,
 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 50f75467f73d..dcc6f8beae2c 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -101,11 +101,7 @@ struct fred_ss {
- };
- 
- struct pt_regs {
--	/*
--	 * C ABI says these regs are callee-preserved. They aren't saved on
--	 * kernel entry unless syscall needs a complete, fully filled
--	 * "struct pt_regs".
--	 */
-+	/* C ABI says these regs are callee-preserved. */
- 	unsigned long r15;
- 	unsigned long r14;
- 	unsigned long r13;
-@@ -113,7 +109,7 @@ struct pt_regs {
- 	unsigned long bp;
- 	unsigned long bx;
- 
--	/* These regs are callee-clobbered. Always saved on kernel entry. */
-+	/* These regs are callee-clobbered. */
- 	unsigned long r11;
- 	unsigned long r10;
- 	unsigned long r9;
-diff --git a/arch/x86/include/uapi/asm/ptrace-abi.h b/arch/x86/include/uapi/asm/ptrace-abi.h
-index 5823584dea13..b06535b1226b 100644
---- a/arch/x86/include/uapi/asm/ptrace-abi.h
-+++ b/arch/x86/include/uapi/asm/ptrace-abi.h
-@@ -26,17 +26,14 @@
- #else /* __i386__ */
- 
- #if defined(__ASSEMBLER__) || defined(__FRAME_OFFSETS)
--/*
-- * C ABI says these regs are callee-preserved. They aren't saved on kernel entry
-- * unless syscall needs a complete, fully filled "struct pt_regs".
-- */
-+/* C ABI says these regs are callee-preserved. */
- #define R15 0
- #define R14 8
- #define R13 16
- #define R12 24
- #define RBP 32
- #define RBX 40
--/* These regs are callee-clobbered. Always saved on kernel entry. */
-+/* These regs are callee-clobbered. */
- #define R11 48
- #define R10 56
- #define R9 64
-diff --git a/arch/x86/include/uapi/asm/ptrace.h b/arch/x86/include/uapi/asm/ptrace.h
-index e0b5b4f6226b..c48e56bc6fa0 100644
---- a/arch/x86/include/uapi/asm/ptrace.h
-+++ b/arch/x86/include/uapi/asm/ptrace.h
-@@ -42,17 +42,14 @@ struct pt_regs {
- #ifndef __KERNEL__
- 
- struct pt_regs {
--/*
-- * C ABI says these regs are callee-preserved. They aren't saved on kernel entry
-- * unless syscall needs a complete, fully filled "struct pt_regs".
-- */
-+/* C ABI says these regs are callee-preserved. */
- 	unsigned long r15;
- 	unsigned long r14;
- 	unsigned long r13;
- 	unsigned long r12;
- 	unsigned long rbp;
- 	unsigned long rbx;
--/* These regs are callee-clobbered. Always saved on kernel entry. */
-+/* These regs are callee-clobbered. */
- 	unsigned long r11;
- 	unsigned long r10;
- 	unsigned long r9;
--- 
-2.34.1
+On Fri, Jun 27, 2025 at 10:51:22PM +0200, Armin Wolf wrote:
+> Power supply extensions might want to interact with the underlying
+> power supply to retrieve data like serial numbers, charging status
+> and more. However doing so causes psy->extensions_sem to be locked
+> twice, possibly causing a deadlock.
+>=20
+> Provide special variants of power_supply_get/set_property() that
+> ignore any power supply extensions and thus do not touch the
+> associated psy->extensions_sem lock.
+>=20
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
 
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  drivers/power/supply/power_supply_core.c | 82 ++++++++++++++++++++----
+>  include/linux/power_supply.h             |  8 +++
+>  2 files changed, 78 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
+ply/power_supply_core.c
+> index aedb20c1d276..e70ffedf1a80 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -1241,9 +1241,8 @@ bool power_supply_has_property(struct power_supply =
+*psy,
+>  	return false;
+>  }
+> =20
+> -int power_supply_get_property(struct power_supply *psy,
+> -			    enum power_supply_property psp,
+> -			    union power_supply_propval *val)
+> +static int __power_supply_get_property(struct power_supply *psy, enum po=
+wer_supply_property psp,
+> +				       union power_supply_propval *val, bool use_extensions)
+>  {
+>  	struct power_supply_ext_registration *reg;
+> =20
+> @@ -1253,10 +1252,14 @@ int power_supply_get_property(struct power_supply=
+ *psy,
+>  		return -ENODEV;
+>  	}
+> =20
+> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
+> -		power_supply_for_each_extension(reg, psy) {
+> -			if (power_supply_ext_has_property(reg->ext, psp))
+> +	if (use_extensions) {
+> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
+> +			power_supply_for_each_extension(reg, psy) {
+> +				if (!power_supply_ext_has_property(reg->ext, psp))
+> +					continue;
+> +
+>  				return reg->ext->get_property(psy, reg->ext, reg->data, psp, val);
+> +			}
+>  		}
+>  	}
+> =20
+> @@ -1267,20 +1270,49 @@ int power_supply_get_property(struct power_supply=
+ *psy,
+>  	else
+>  		return -EINVAL;
+>  }
+> +
+> +int power_supply_get_property(struct power_supply *psy, enum power_suppl=
+y_property psp,
+> +			      union power_supply_propval *val)
+> +{
+> +	return __power_supply_get_property(psy, psp, val, true);
+> +}
+>  EXPORT_SYMBOL_GPL(power_supply_get_property);
+> =20
+> -int power_supply_set_property(struct power_supply *psy,
+> -			    enum power_supply_property psp,
+> -			    const union power_supply_propval *val)
+> +/**
+> + * power_supply_get_property_direct - Read a power supply property witho=
+ut checking for extensions
+> + * @psy: The power supply
+> + * @psp: The power supply property to read
+> + * @val: The resulting value of the power supply property
+> + *
+> + * Read a power supply property without taking into account any power su=
+pply extensions registered
+> + * on the given power supply. This is mostly useful for power supply ext=
+ensions that want to access
+> + * their own power supply as using power_supply_get_property() directly =
+will result in a potential
+> + * deadlock.
+> + *
+> + * Return: 0 on success or negative error code on failure.
+> + */
+> +int power_supply_get_property_direct(struct power_supply *psy, enum powe=
+r_supply_property psp,
+> +				     union power_supply_propval *val)
+> +{
+> +        return __power_supply_get_property(psy, psp, val, false);
+> +}
+> +EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
+> +
+> +
+> +static int __power_supply_set_property(struct power_supply *psy, enum po=
+wer_supply_property psp,
+> +				       const union power_supply_propval *val, bool use_extensions)
+>  {
+>  	struct power_supply_ext_registration *reg;
+> =20
+>  	if (atomic_read(&psy->use_cnt) <=3D 0)
+>  		return -ENODEV;
+> =20
+> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
+> -		power_supply_for_each_extension(reg, psy) {
+> -			if (power_supply_ext_has_property(reg->ext, psp)) {
+> +	if (use_extensions) {
+> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
+> +			power_supply_for_each_extension(reg, psy) {
+> +				if (!power_supply_ext_has_property(reg->ext, psp))
+> +					continue;
+> +
+>  				if (reg->ext->set_property)
+>  					return reg->ext->set_property(psy, reg->ext, reg->data,
+>  								      psp, val);
+> @@ -1295,8 +1327,34 @@ int power_supply_set_property(struct power_supply =
+*psy,
+> =20
+>  	return psy->desc->set_property(psy, psp, val);
+>  }
+> +
+> +int power_supply_set_property(struct power_supply *psy, enum power_suppl=
+y_property psp,
+> +			      const union power_supply_propval *val)
+> +{
+> +	return __power_supply_set_property(psy, psp, val, true);
+> +}
+>  EXPORT_SYMBOL_GPL(power_supply_set_property);
+> =20
+> +/**
+> + * power_supply_set_property_direct - Write a power supply property with=
+out checking for extensions
+> + * @psy: The power supply
+> + * @psp: The power supply property to write
+> + * @val: The value to write to the power supply property
+> + *
+> + * Write a power supply property without taking into account any power s=
+upply extensions registered
+> + * on the given power supply. This is mostly useful for power supply ext=
+ensions that want to access
+> + * their own power supply as using power_supply_set_property() directly =
+will result in a potential
+> + * deadlock.
+> + *
+> + * Return: 0 on success or negative error code on failure.
+> + */
+> +int power_supply_set_property_direct(struct power_supply *psy, enum powe=
+r_supply_property psp,
+> +				     const union power_supply_propval *val)
+> +{
+> +	return __power_supply_set_property(psy, psp, val, false);
+> +}
+> +EXPORT_SYMBOL_GPL(power_supply_set_property_direct);
+> +
+>  int power_supply_property_is_writeable(struct power_supply *psy,
+>  					enum power_supply_property psp)
+>  {
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 45468959dd98..f21f806bfb38 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -878,15 +878,23 @@ static inline int power_supply_is_system_supplied(v=
+oid) { return -ENOSYS; }
+>  extern int power_supply_get_property(struct power_supply *psy,
+>  			    enum power_supply_property psp,
+>  			    union power_supply_propval *val);
+> +int power_supply_get_property_direct(struct power_supply *psy, enum powe=
+r_supply_property psp,
+> +				     union power_supply_propval *val);
+>  #if IS_ENABLED(CONFIG_POWER_SUPPLY)
+>  extern int power_supply_set_property(struct power_supply *psy,
+>  			    enum power_supply_property psp,
+>  			    const union power_supply_propval *val);
+> +int power_supply_set_property_direct(struct power_supply *psy, enum powe=
+r_supply_property psp,
+> +				     const union power_supply_propval *val);
+>  #else
+>  static inline int power_supply_set_property(struct power_supply *psy,
+>  			    enum power_supply_property psp,
+>  			    const union power_supply_propval *val)
+>  { return 0; }
+> +static inline int power_supply_set_property_direct(struct power_supply *=
+psy,
+> +						   enum power_supply_property psp,
+> +						   const union power_supply_propval *val)
+> +{ return 0; }
+>  #endif
+>  extern void power_supply_external_power_changed(struct power_supply *psy=
+);
+> =20
+> --=20
+> 2.39.5
+>=20
+
+--qpzuedv6i4g34dxe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhrApYACgkQ2O7X88g7
++pqbGA//dMkwYFqfbt8gSNnbWqEeDC3XElEFRw7OUmbGCxm9KkPR02iDlV91V3Po
+Bocfmv/NeO1F+1m+KUudUGDKk6QH4KKKdjzkRxfwhO+FwvILTvLZhCbWR4Mdx1sM
++eWJA5DiyZK7zD5Vf3Uy0nxclM17FZbiNfx8uTzc0XlAugqH2/QSsWBsx7lxl7PV
+xBY4dacMV6L57gSX/OTvWY3d4/g8kEq/vQrvN8P7q4YtL+bD7Q9lRVA8ro+jLQDv
++VQanACbQolzvgynjVNYY+hvJsUj/ihDS+vRkSN3QpboxRPF0HeDgv2RfNctQY8j
+iHCzenx/mbAv2vOIY8BYjTuA4x30BUKeHJO22J/YenLa0yd8zagJiAPRTHe6V0ho
+M8j0Xl4QdC0XyMqgRbzrSkW8L9yo/PkUWOWMr4ibk1J/J1n5QWrzb8FdMnWLAiG9
+TMK7iDlpX98q3+XfMaPLOG7nWNtvXu+RlLl2LCocnOlZV+4YgUILPljx1J6RRomN
+xfmkrisdi3LaCpJzD4WMiP2ULjR9vW2Z5o9eSYnJphPxEUpMn//XeeUguD7Uukes
+VB3VwQomTfmU94X8y3uGG2nIQhsy1aUqsacGe+Gx7anqE49tmz0rRViOTHa3A9Sw
+ht40OiVYIuZr7tf0SKINaQPHXoplL5yqYrazOgAtVDtQ96RqkNs=
+=pwuJ
+-----END PGP SIGNATURE-----
+
+--qpzuedv6i4g34dxe--
