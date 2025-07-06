@@ -1,135 +1,113 @@
-Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF741D5CE8;
-	Sun,  6 Jul 2025 09:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7351F473C;
+	Sun,  6 Jul 2025 09:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751794908; cv=none; b=XXAbUQVAurgEXD6WOVFo80U0ZBNu2ZSTRSdl7WhOCBoHfQv4Y5QMfIl5d6TywQhdqR1g83I5WHNwyKinlwXd3CPOova0vRQbQCszMlzjRfrwR7Vq0icJdL/RnYwPYZHS8Cl5zQaJf2mmavdTYhIl1TZwlgeQV+Kqr6BGPqFW1iA=
+	t=1751794926; cv=none; b=hMqjQXvaLmsnJMNsPYQJXC+qIGrPRor83cPY35Q8Hok8UkUgHgQPivJkrvX0WVyftnJKZbOgewe1LHOGLhTRvp3e9HOHphrVDT3q/sWNmaGS2/jYbzeDAfA747nd8W1LfUc6kGHlq269rrV1R6ZcAHH69qjoWl/Otu7FeJbr2NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751794908; c=relaxed/simple;
-	bh=Xi20BYTgtvSL7wbwXI2dPYfVQxDlWwuB4hQBwMpMsIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T4jPpTP/BlyjYPD14XjXcbGaAWZJtWCOJQ2R6KsKu2AZ6w+sb4fxFSwvl8dwtwBsWtEicZGbshvhqYM+sPT9R9IU11ikpDwuqmauBjqetBRGS/Gy4wEWLiZVH3OJo4F0GckiX86fZM3+EJCn4Zga0UsGX6VG518xHkrfGEosgBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=WM1oT5px; arc=none smtp.client-ip=173.249.15.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
+	s=arc-20240116; t=1751794926; c=relaxed/simple;
+	bh=RbHFP10ikaccYr68d3kx6SBLaCOvtQEFFYuO8lgKhzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NjaPsV2niqY9DdvuwLOUkGQrStbMll04a2TwCTH7nBliGxkzQ9/Brr0ruaTFmCiABGHf2Cxs5+AAmLlnrEp5A1J/2SuVHwuE/9gWWI4YG7OJGlJTVzZJJtB32a2aQx4DFWIu5GWvQXIWOLhD9iOxSv5xK7TOYe7vULDVLDEjTMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qN58nwDG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="WM1oT5px"
-dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
-	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:In-Reply-To:References;
-	bh=Tx6cDw7EKbhkJw6fG1D90ClaQuotZ1sAaoIkU3c1stM=;
-	b=WM1oT5pxVG9Iy9k5huD7gAh1ZzQlWUQf6t5rW9vfWRI3KVBlDO4eHl8jOQaokGwLNAz7ECOOaXQ6nT7snNJEwX7rtI0Yu/1HoS2ngzmKLM1TBLLFRCFvrhB5+JVaJ2FvcT7Y6I4C5Q+1107J2YwAaluYa2HuD0Qw7j1fQPir9gU=
-Received: from lukas-hpz440workstation.localnet (cm70-231.liwest.at [212.241.70.231])
-	by mail.netcube.li with ESMTPSA
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
-	; Sun, 6 Jul 2025 11:41:43 +0200
-From: Lukas Schmid <lukas.schmid@netcube.li>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Maxime Ripard <mripard@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Subject:
- Re: [PATCH v1 3/7] dt-bindings: arm: sunxi: Add NetCube Systems Nagami Keypad
- Carrier Board
-Date: Sun, 06 Jul 2025 11:41:42 +0200
-Message-ID: <2998364.e9J7NaK4W3@lukas-hpz440workstation>
-In-Reply-To: <6f257dd2-b88c-4dc2-a2ee-f92de4e0412b@kernel.org>
-References:
- <20250705213900.3614963-1-lukas.schmid@netcube.li>
- <4994705.GXAFRqVoOG@lukas-hpz440workstation>
- <6f257dd2-b88c-4dc2-a2ee-f92de4e0412b@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qN58nwDG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C853C4CEED;
+	Sun,  6 Jul 2025 09:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751794926;
+	bh=RbHFP10ikaccYr68d3kx6SBLaCOvtQEFFYuO8lgKhzg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qN58nwDGr2BDRxdFvmVRsHyihUM1lRp5Beeunym6yVN5dHpBO54XybJw3EnjWDwFz
+	 14s48dM1b3O1ZBMvMfn9hDizDHbPoq/Z1LGcwfuaOsET1WKAyCee53td4oVnQ77nXI
+	 Ri9puilG/Ls1f4Y6/CRtrvdNwH+bOF6gPJ5BwiOmaZxVx9H35bOWoWsdVHSo0/+hgI
+	 sS097MXAPI5SC/5T36+dlGUoAVmOCvPNet7BICCnuYbtRChvnY8eR2jZrzGBnG1pZa
+	 N7xQUGOn4VaRMQia2G3T43a0VCckVDwVVpGcLmmp5JyhXULCP/2DNi2clGFa8ePcFw
+	 ykZTOYIvl8JnA==
+Date: Sun, 6 Jul 2025 10:41:59 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/4] iio: accel: sca3000: use sysfs_emit_at() instead
+ of sprintf()
+Message-ID: <20250706104159.59e525ee@jic23-huawei>
+In-Reply-To: <CANZih_SWg03U1jOn63++A=+_9GkzFhtK7S563hdb2m=tk5SK0A@mail.gmail.com>
+References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
+	<20250618031638.26477-5-andrew.lopes@alumni.usp.br>
+	<20250621185824.69a11319@jic23-huawei>
+	<CANZih_SWg03U1jOn63++A=+_9GkzFhtK7S563hdb2m=tk5SK0A@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3359771.aeNJFYEL58";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---nextPart3359771.aeNJFYEL58
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Lukas Schmid <lukas.schmid@netcube.li>
-Date: Sun, 06 Jul 2025 11:41:42 +0200
-Message-ID: <2998364.e9J7NaK4W3@lukas-hpz440workstation>
-In-Reply-To: <6f257dd2-b88c-4dc2-a2ee-f92de4e0412b@kernel.org>
-MIME-Version: 1.0
+On Sat, 5 Jul 2025 00:45:05 -0300
+Andrew Ijano <andrew.ijano@gmail.com> wrote:
 
-On Sonntag, 6. Juli 2025 11:36:34 CEST Krzysztof Kozlowski wrote:
-> On 06/07/2025 11:07, Lukas Schmid wrote:
-> > On Sonntag, 6. Juli 2025 09:49:58 CEST Krzysztof Kozlowski wrote:
-> >> On 05/07/2025 23:38, Lukas Schmid wrote:
-> >>> The NetCube Systems Nagami Keypad Carrier is a custom board intended to
-> >>> fit a standard Ritto Intercom enclosure and provides a Keypad,
-> >>> NFC-Reader
-> >>> and Status-LED all controllable over Ethernet with PoE support.
-> >>> 
-> >>> Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
-> >>> ---
-> >>> 
-> >>>  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 ++++++
-> >>>  1 file changed, 6 insertions(+)
-> >>> 
-> >>> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >>> b/Documentation/devicetree/bindings/arm/sunxi.yaml index
-> >>> 7919b5bf5..a2f16d064 100644
-> >>> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >>> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> >>> 
-> >>> @@ -610,6 +610,12 @@ properties:
-> >>>            - const: netcube,nagami
-> >>>            - const: allwinner,sun8i-t113s
-> >>> 
-> >>> +      - description: NetCube Systems Nagami Keypad Carrier Board
-> >>> +        items:
-> >>> +          - const: netcube,nagami-keypad-carrier
-> >> 
-> >> That's just enum with previous entry. Don't make it over-complicated.
-> >> 
-> >> Best regards,
-> >> Krzysztof
-> > 
-> > Just making sure here. The actual bindings are fine, but I should merge
-> > them into one patch, correct?
-> 
-> No, you got two comments what should be changed in the binding.
-> 
-> Best regards,
-> Krzysztof
+> On Sat, Jun 21, 2025 at 2:58=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> > > @@ -423,16 +423,16 @@ sca3000_show_available_3db_freqs(struct device =
+*dev,
+> > >  {
+> > >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> > >       struct sca3000_state *st =3D iio_priv(indio_dev);
+> > > -     int len;
+> > > +     unsigned int len =3D 0; =20
+> >
+> > No need to initialize as set on the next line =20
+>=20
+> That makes sense! I=C2=B4ll change that.
+>=20
+> > =20
+> > >
+> > > -     len =3D sprintf(buf, "%d", st->info->measurement_mode_3db_freq);
+> > > +     len =3D sysfs_emit_at(buf, len, "%d", st->info->measurement_mod=
+e_3db_freq); =20
+> >
+> > sysfs_emit() when you know you are at the start.
+> > =20
+> Ok! Thanks.
+>=20
+> > =20
+> > >       if (st->info->option_mode_1)
+> > > -             len +=3D sprintf(buf + len, " %d",
+> > > +             len +=3D sysfs_emit_at(buf, len, " %d",
+> > >                              st->info->option_mode_1_3db_freq); =20
+> > Fix alignment.
+> > =20
+> > >       if (st->info->option_mode_2)
+> > > -             len +=3D sprintf(buf + len, " %d",
+> > > +             len +=3D sysfs_emit_at(buf, len, " %d",
+> > >                              st->info->option_mode_2_3db_freq); =20
+> >
+> > same here. =20
+>=20
+> Actually, both cases are aligned. I checked the code and they have the
+> same number of tabs, and in this email they have the same number of
+> spaces.
+> However, since I'm not reading this diff with a monospaced font, for
+> me it appears to be different but this is caused by the difference in
+> size of "-" and "+".
+> Maybe this is why it appears to be different for you too?
+Key as in earlier reply is parameters that need to go on an additional line
+are not aligned as particular number of tabs, they are aligned to under
+the parameters on the first line.
 
-So if I understand correctly you want me to remove the "allwinner,sun8i-t113s" 
-from the carrier boards and keep it for the SoM?
+The only normal reason to break with that rule is on particularly long
+lines.
 
-Best regards,
-Lukas
---nextPart3359771.aeNJFYEL58
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Jonathan
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEPv6dcBmn59ssZMkSJnN+drMVRtgFAmhqRNYACgkQJnN+drMV
-Rtgc2ggAg2Nrmm5+cnCBI7/+eAqaPrOuJ58OsFqoNuxGRtkqTCEJMrnk9aphn+QO
-R+KYZmxhxFv8GTKAgfPdAG54XMVUTXV2upUYad0Qk2D2IbiPG/HU6Cd3EkxEtMum
-NICpcxvZid1uNT0WzzYsD3Agn3DsYNrvVFTPUhx413QWykIxtDw0yOAzIw+HPWCN
-8/1HSh+3TVj/Pk9HSuaBDzQ1faa9JHTsGoCQDsXGsybl2gis+J3CjR3MaNnCLKd4
-bwOnxGLUmwKl4JBD2t/sK+rUXi52phr3wcUQeHmCxhXegO3ck9kdCMRCSPAzHuqL
-zI6pL/QFThBIepZbBw12Vdv0YjmKJg==
-=qoZP
------END PGP SIGNATURE-----
-
---nextPart3359771.aeNJFYEL58--
-
-
-
+>=20
+> Thanks,
+> Andrew
 
