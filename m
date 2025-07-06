@@ -1,319 +1,138 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBEC80B;
-	Sun,  6 Jul 2025 00:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA21632;
+	Sun,  6 Jul 2025 00:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751760429; cv=none; b=TZagMLt7HXPl58m0Cktj46/cRfT5Z9yy5KC3Fh+tf5oSRgwRcXcIftX2Jr23tE1R7kNXanRt+KIhi4QmJCBm9dEjn54NjeDv4z7yEv5NBNCJes2sAf+JlNOgHn3D4TZahTNo7SqveII05/ixjQNkwDWucLnRP6OvV2teAIEM6PQ=
+	t=1751760492; cv=none; b=ofhHZXPOSAK55K3QlShvj28/+p36nL7nzv8/4voJ9gXIGdKjXFXLmRiFEUwdPHQQAgtgF4oGoBD3Q6+66qr2Ft/jphJmndbyxCEXyRhxdeN1lh59Oi2F1yHwo8NitlkVuNCI8qNrGf7FyGjjg+/1atqsWdTr4Whn7a9Ay9vwFqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751760429; c=relaxed/simple;
-	bh=ZAB548LQDZBrJBh5YWoRXDTriGUozRf+t4s+9DCamyc=;
+	s=arc-20240116; t=1751760492; c=relaxed/simple;
+	bh=uC1minF/xwR/V1v5iYqpAyv3Ym5sMrGVxIQWTllzRes=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GAtq2HMVZ5lrEdLBJqRSiHN2Ol5ANjIqUz5IUDtxkCfuj9y/KsNpmiws7Ack9LbjuvQJ4gnOnL1hOO7NBmF1BWU1vNdahzjbxT4za9Hz14RpXsRzCyGJJkWPk6NYe+ArIz5hpM7isklf0BiySWZZFXUbj9KUSZTAZJjJamQtz8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id F25041F00053;
-	Sun,  6 Jul 2025 00:06:59 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 8A93BACA8A2; Sun,  6 Jul 2025 00:06:58 +0000 (UTC)
-X-Spam-Level: 
-Received: from collins (unknown [192.168.1.1])
-	by laika.paulk.fr (Postfix) with ESMTPSA id 71A79ACA89B;
-	Sun,  6 Jul 2025 00:06:55 +0000 (UTC)
-Date: Sun, 6 Jul 2025 02:06:53 +0200
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=pzEJ8toUEF+qA7A9pe1VxmB2rvglkexVZT5M3s8s7F2nhl2sQo5083DB/qXnU4q7qAdZOIE1FHvE4FxjODGhe9S03wM6dUZy5seihypMCEA+r+8oeMnukLZFX3FiP/6+pyJCxdqO0WRYG6FlfMgUXfCd4cGuT8wXe+0pZcKmS80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cn5YbIGv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cn5YbIGv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881BEC4CEE7;
+	Sun,  6 Jul 2025 00:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751760491;
+	bh=uC1minF/xwR/V1v5iYqpAyv3Ym5sMrGVxIQWTllzRes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cn5YbIGv/LWgzDD/2gs1sB4MOBgTQ9kmN/yTMO/m/ydNNvX9NXIwRYu1SIRWiFM4H
+	 R5qHXwhx9WhkvVMmiXnKlwz0oo5HX3AGuexgO5f7amECuv+gAoZ8v8TPwBza2ptSAL
+	 0azXhLyXarYVS+FlF4GtSRCskeR2XPUlZqU8TOp/U5SZ9ZkxrvKsSTd4AGd9uK/iZh
+	 RzHiDADc0DVNndkxeZuh7H0lBYaBEduxf/zu+PeP5YBcEHYmbs24QeZlQl4H4daH14
+	 f46PLwfA12gizZVkO4VwkB0YhDmWaFCQLnniDlX/ZV2Hz9Lvm1wqz2x0fqOR1jgazH
+	 lb0pUrQdtPevg==
+Date: Sat, 5 Jul 2025 17:08:09 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
 	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Icenowy Zheng <icenowy@aosc.xyz>,
-	Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 1/2] clk: sunxi-ng: v3s: Fix de clock definition
-Message-ID: <aGm-HRnhxAQmj8d9@collins>
-References: <20250704154008.3463257-1-paulk@sys-base.io>
- <4cd84b9e2227c9225d977107eb05b9c3813b8846.camel@icenowy.me>
- <aGhNFe3wGLX8aUC6@collins>
- <1d51b75f7b85ddb588bbb24366b36df63a60712e.camel@icenowy.me>
+	Stephen Boyd <sboyd@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Yangtao Li <frank.li@vivo.com>, linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: thead: th1520-ap: Correctly refer the parent for
+ c910 and osc_12m
+Message-ID: <aGm+adSNdTHyN7K1@x1>
+References: <20250705052028.24611-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="RtSzGXCSjNLtl0Rj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d51b75f7b85ddb588bbb24366b36df63a60712e.camel@icenowy.me>
+In-Reply-To: <20250705052028.24611-1-ziyao@disroot.org>
 
+On Sat, Jul 05, 2025 at 05:20:28AM +0000, Yao Zi wrote:
+> clk_orphan_dump shows two suspicious orphan clocks on TH1520 when
+> booting the kernel with mainline U-Boot,
+> 
+> 	$ cat /sys/kernel/debug/clk/clk_orphan_dump | jq 'keys'
+> 	[
+> 	  "c910",
+> 	  "osc_12m"
+> 	]
+> 
+> where the correct parents should be c910-i0 for c910, and osc_24m for
+> osc_12m.
 
---RtSzGXCSjNLtl0Rj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for sending this patch. However, I only see "osc_12m" listed in
+clk_orphan_dump. I tried the current next, torvalds master and v6.15 but
+I didn't ever see "c910" appear [1]. What branch are you using?
 
-Hi,
+I think it would be best for this patch to be split into separate
+patches for osc_12m and c910.
 
-Le Sat 05 Jul 25, 14:38, Icenowy Zheng a =C3=A9crit :
-> =E5=9C=A8 2025-07-04=E6=98=9F=E6=9C=9F=E4=BA=94=E7=9A=84 23:52 +0200=EF=
-=BC=8CPaul Kocialkowski=E5=86=99=E9=81=93=EF=BC=9A
-> > Hi,
-> >=20
-> > Le Fri 04 Jul 25, 23:54, Icenowy Zheng a =C3=A9crit :
-> > > =E5=9C=A8 2025-07-04=E6=98=9F=E6=9C=9F=E4=BA=94=E7=9A=84 17:40 +0200=
-=EF=BC=8CPaul Kocialkowski=E5=86=99=E9=81=93=EF=BC=9A
-> > > > The de clock is marked with CLK_SET_RATE_PARENT, which is really
-> > > > not
-> > > > necessary (as confirmed from experimentation) and significantly
-> > > > restricts flexibility for other clocks using the same parent.
-> > >=20
-> > > With it not setting parent, is arbitary pixel clocks still
-> > > possible?
-> >=20
-> > Absolutely and the clock tree is very much improved, I think the flag
-> > was the
-> > reason that was preventing it from naturally keeping the tcon and de
-> > clocks
-> > under the video pll in my case.
-> >=20
-> > Now it can provide both the 33 Mhz for the pixel clock and runs the
-> > mixer at
-> > nearly 150 MHz. The video pll now runs at 297 MHz which is a perfect
->=20
-> Did you test other pixel clocks?
->=20
-> I suggest you to try a RGB-to-VGA bridge and test possible pixel clocks
-> on the VGA port.
+> The correct parent of c910, c910-i0, is registered with
+> devm_clk_hw_register_mux_parent_data_table(), which creates a clk_hw
+> structure from scratch. But it's assigned as c910's parent by
+> referring &c910_i0_clk.common.hw, confusing the CCF since this clk_hw
+> structure is never registered.
 
-I don't have any such bridge and the V3/V3s boards I have would not easily
-allow connecting such a display. But I would be glad if someone wants to te=
-st
-the patch with such a setup.
+I recall Stephen Boyd had the feedback when trying to upstream this
+driver to avoid strings for parents and instead use clk_parent_data or
+clk_hw pointers directly [2]. It was difficult to find alternitves to
+parent strings in all instances.
 
-Cheers,
+> Meanwhile, osc_12m refers the external oscillator by setting
+> clk_parent_data.fw_name to osc_24m, which is obviously wrong since no
+> clock-names property is allowed for compatible thead,th1520-clk-ap.
+> 
+> For c910, refer c910-i0 by its name; for osc_12m, refer the external
+> clock input by index. This eliminates these orphan clocks.
+> 
+> Fixes: ae81b69fd2b1 ("clk: thead: Add support for T-Head TH1520 AP_SUBSYS clocks")
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  drivers/clk/thead/clk-th1520-ap.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+> index ebfb1d59401d..74da1a61e6f0 100644
+> --- a/drivers/clk/thead/clk-th1520-ap.c
+> +++ b/drivers/clk/thead/clk-th1520-ap.c
+> @@ -427,7 +427,7 @@ static struct ccu_mux c910_i0_clk = {
+>  };
+>  
+>  static const struct clk_parent_data c910_parents[] = {
+> -	{ .hw = &c910_i0_clk.common.hw },
+> +	{ .index = -1, .name = "c910-i0" },
 
-Paul
+Stephen - would this use of a parent string be acceptable?
 
+>  	{ .hw = &cpu_pll1_clk.common.hw }
+>  };
+>  
+> @@ -582,7 +582,14 @@ static const struct clk_parent_data peri2sys_apb_pclk_pd[] = {
+>  	{ .hw = &peri2sys_apb_pclk.common.hw }
+>  };
+>  
+> -static CLK_FIXED_FACTOR_FW_NAME(osc12m_clk, "osc_12m", "osc_24m", 2, 1, 0);
+> +struct clk_fixed_factor osc12m_clk = {
+> +	.div		= 2,
+> +	.mult		= 1,
+> +	.hw.init	= CLK_HW_INIT_PARENTS_DATA("osc_12m",
+> +						   osc_24m_clk,
+> +						   &clk_fixed_factor_ops,
+> +						   0),
+> +};
 
-> > fit for
-> > csi-sclk camera main clock, so the algorithm is doing its job at its
-> > best!
-> >=20
-> > So this means that I no longer have to change the mixer clock to 297
-> > MHz to
-> > keep it under the video pll. It pretty much solves all my problems at
-> > once.
-> >=20
-> > Here is the relevant clk_summary extract:
-> > =C2=A0=C2=A0=C2=A0 pll-video=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 297000000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0
-> > deviceless=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no_conne=
-ction_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 csi-sclk=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0
-> > 297000000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0
-> > 1cb8000.isp=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mod=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 1cb0000.camera=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mod=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 1cb1000.csi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mod=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tcon=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0
-> > 33000000=C2=A0=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
-=C2=A0=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1c0c000.lcd-
-> > controller=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tcon-c=
-h0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tcon-data-clock=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 33000000=C2=A0=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
-=C2=A0=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > deviceless=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no_conne=
-ction_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 297000000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0
-> > 1000000.clock=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mod=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wb-div=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0
-> > 297000000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > deviceless=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no_conne=
-ction_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 wb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 297000000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > deviceless=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no_conne=
-ction_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mixer0-div=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 148500000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > deviceless=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no_conne=
-ction_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 mixer0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0
-> > 148500000=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=C2=A0=
-=C2=A0=C2=A0 50000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Y=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > 1100000.mixer=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mod=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-> >=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > > >=20
-> > > > In addition the source selection (parent) field is marked as
-> > > > using
-> > > > 2 bits, when it the documentation reports that it uses 3.
-> > > >=20
-> > > > Fix both issues in the de clock definition.
-> > > >=20
-> > > > Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-> > > > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> > > > ---
-> > > > =C2=A0drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 3 +--
-> > > > =C2=A01 file changed, 1 insertion(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> > > > b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> > > > index 52e4369664c5..df345a620d8d 100644
-> > > > --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> > > > +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> > > > @@ -347,8 +347,7 @@ static
-> > > > SUNXI_CCU_GATE(dram_ohci_clk,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0"dram-ohci",=C2=A0=C2=A0=C2=A0=C2=A0"dram",
-> > > > =C2=A0
-> > > > =C2=A0static const char * const de_parents[] =3D { "pll-video", "pl=
-l-
-> > > > periph0" };
-> > > > =C2=A0static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de", de_parents,
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x104, 0, 4, 24, 2, BIT(31),
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLK_SET_RATE_PARENT);
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x104, 0, 4, 24, 3, BIT(31), =
-0);
-> > > > =C2=A0
-> > > > =C2=A0static const char * const tcon_parents[] =3D { "pll-video", "=
-pll-
-> > > > periph0" };
-> > > > =C2=A0static SUNXI_CCU_M_WITH_MUX_GATE(tcon_clk, "tcon", tcon_paren=
-ts,
-> > >=20
-> >=20
->=20
+I think this hunk is a good fix for osc_12m. I applied the patch and
+osc_12m no longer appears in clk_orphan_dump [3]. clk_summary now shows
+osc_12m under osc_24m.
 
---=20
-Paul Kocialkowski,
+>  
+>  static const char * const out_parents[] = { "osc_24m", "osc_12m" };
+>  
+> -- 
+> 2.49.0
+> 
 
-Independent contractor - sys-base - https://www.sys-base.io/
-Free software developer - https://www.paulk.fr/
-
-Expert in multimedia, graphics and embedded hardware support with Linux.
-
---RtSzGXCSjNLtl0Rj
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhpvh0ACgkQhP3B6o/u
-lQzw3BAAlZqZNsqv5fI1/5xfOK0MrnTVr2yeWJVICGYxyzcojdETTioT9fGpIvZd
-+RTggHTRC5yXn6nHtfcsSZeJooEBQc327qTLBlZEilcr6eWaTwqvGzQujuO59oTK
-ULLJk5dpMlTOYopK0zgIu7Yiv7bU0i1E3LG7A5a60JWT51qrWXKV8kvvRSFZYfRj
-E+ckIIcJhcU4z8MkWuX2aVbORAVJCNa2P8pMbj03VxkaSFOG2fkblnX62Ke9UmZN
-gJsPcvW3MLhYfUDQRJEs10EtvGrvOQ8b5/6sB8nyik3GJcTnQYoyCgNUlMd//qCL
-mtkCJeWhxnKtFfrubCBut3zh79PE8eZj5Zqjk5XY8XgzEQsaXk6gU+UQExUrRYm0
-+QBwLNwqlAkQkTP2Jo2W3DwptF1nh/npAMTYhxenA0MmAzm3iyu5MJRwSmOhSuw8
-TiMGlysGjbZSHzYmXKoHQUlQ37gkIrOMDNpQZsbqfx9rmED1kVdwzN19fz7rojD4
-+gBvLSc+56oJyPm267oXgfPort5tHncJlJtD6C2n66Z9wVWKWeUwWzq1PvTvn4IW
-ePThwkZ3jLr9PO4l8rIADpl7MU0GpH6KyYtMdWG0jQ8EdY667T5ah+6teFmVZdA0
-qmqpvetS96j0PTDhrzhBX7d47rOey3M9XO71qZ36QLbeNJxmO6o=
-=LLPO
------END PGP SIGNATURE-----
-
---RtSzGXCSjNLtl0Rj--
+[1] https://gist.github.com/pdp7/d00f0f4fe3fcf368ce253d606dc7b01f
+[2] https://lore.kernel.org/all/91c3373b5b00afc1910b704a16c1ac89.sboyd@kernel.org/
+[3] https://gist.github.com/pdp7/30e51ed013d4bedf0c6abc5717e0b6a5
