@@ -1,118 +1,133 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4945D3C2F;
-	Sun,  6 Jul 2025 17:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8143C2F;
+	Sun,  6 Jul 2025 17:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751821253; cv=none; b=Sht1lCA3J27s495PQ36pv6rUM2APGDkdjcBgpzbDhnkmnI0Y27vYIbdAbKImfObYAS4hz86IfEXMcOH/wrVGeFh+bJ4r08MVjeONqSpugSArgwQ8FnfAsOZVwGMrVFYL60dHfqXJ68zfAEKuIUJKMRr1bkua+rnFQjuH0lZlEjU=
+	t=1751821277; cv=none; b=j+MQ4rwmE284IXqJRkH2HGK9cPTegCh15VnS9crI1u/r2a1T2iThzFv2EKd2/06KXgYUCsXnm3puW2KB48h0GpUc7R2lg1MPIWUvjJWIQEcW47Mu0uzQodF3AMbA4HRC1Y4ZDrkdt9aksgwwLalXDJb1c+8agWh4dq5CbUREatQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751821253; c=relaxed/simple;
-	bh=FuTGRgSAWVVOTPTM4iY3nLVMHbEOiMxhp6w/u1qIitA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fbFjqY4kgo9nPpqPn6/kKDzGcC5If4j2Y/l5pJStD/WJMD5zWA1hE7SifHh+D1esx3RsXzU7nhYRBtfdO08uTcf8y+88luQ3NYoLbRZCsHA+oMKh971ood3cmUoLnB8MEIXwkMJhOWEBdSVcJ6oHp4xCHFELoEL3NRjW5j9zd8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4iqBf+D; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751821277; c=relaxed/simple;
+	bh=i7FjqQB9e86KPDAjZ6ecIlH1DvkdwOFhgxZF87a9aYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=stt0DuX2v65u1YkDy2yPyg6hrpK2z+h9/rt6AGTH5/I4KE/kj8wx4Kpi6op8LWz+D2WjEDTidITYqlC69hIfs970Ysw0WL2Q3prmNOsK1Pr1HgNaVPkvG+tA9xKBmMhM6ooZCPTcU+qIBjY+uCa60eEa0zcHDenGs4LKrfBbi+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nljP5jVa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4iqBf+D"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d3f72391so23938275e9.3;
-        Sun, 06 Jul 2025 10:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751821250; x=1752426050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oqPmHRXTvUmmlCHl2ubMMo6baAfA2qIsMqJbDb231OA=;
-        b=a4iqBf+DDnApjpbSahHDxiSNAF6H+xnViMV2b+Rwc2ll+zewJLwwhQPDaTLbSHn0zG
-         XBSaVchSIqAwrSOH7rp7aQd28CqcrOrVCukFZsOx6qGHKX1BH2ycAGvlCjIEjjUYGhl6
-         7os3pwdyN2Xg+lLA1lfaFbO32ySMqbeyC82Z3Hxvwpz+ZfIPc6Sn5HoWEc1KmNeeYD9d
-         uZAgyGZNTpK4nCVF9wLpJCLp9IqQmSeblbt0vo1EQqA9gBy5ORzzZOojAFmu/jEGutc0
-         FIuu8RY54OBYl73AyZyrTC5n1klmECvoYKZQoBfSILGqpdmpfVvbXnCK5TX2t+QforCb
-         j/hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751821250; x=1752426050;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oqPmHRXTvUmmlCHl2ubMMo6baAfA2qIsMqJbDb231OA=;
-        b=vBSQULtvcjBpw/mnIfYMPJuhcRnw2nbwK3+KtlUkeTjMlHTE1oe1mIHwpoXGmRJKRP
-         +5A488MqwqgjWJ7A9F7M3xWCAJ7a9SciYmPkGc5bAOqfB7CAW2rKJ84EzrZoVFUWNP2w
-         VDb5C4MoMOOoNEGyV6MhPH5rBmcgfZQX2KkNmN44jPwVOx+J8J35iA/EW+YsaWeJt0lt
-         QARxSHfwAcZAsa2nvQm/LLaFwIjQ3DLKn+/LpLtv7oKOtfH07S8pU3KBjNnUYTfUth0U
-         zvoYMA+A5oXZDrw3Mqcns46lqP90nPMWThgm4/79jAa24JPNFPQur0tmiIAJSMDeRF7J
-         VWZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAaKPVPrG+RwPd3yRUa7YigvrPzbIXPd0/t7ozndPyYpNSj5w4if36LF1kNQBJNbL4MaQPbdJ+YCw=@vger.kernel.org, AJvYcCWdu0Ndst1DBU1aPLQ6TFqnPir+NWdN+Ex4yc7IopLSEaJxbKbTZVZeyCse0XnrxjVcdDviTqGrBTbDpgse@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6Ht/t118sWTkrLOXu31PCMOQPGA8mOgD9pupH5lO+mXG1SoL+
-	UslOk7UihWXOLsmK5Bg2n4w3im/2k73dnpGXV4ISmPZ52aml1BXskBBf
-X-Gm-Gg: ASbGnctoIzhJpdh8JWMJIuUU+1HDxm0tCL/z8xGfYcW0lKmbS65KqY1KUqo96IFfRTm
-	n8l9UYLJ1Wj0X63b+ez1x0j3+AO8ERzJxpHn1Rz0Wk7wbptcVPlnq/PQQz5UtxL/Nf4JpDf0ZUE
-	qNI91jzlzvDOaWPur3d7fGL+IRDrxopEG5w03di4BOom98KWtNCLrGYo8fBRpJPGmWYBMi0PU1V
-	Eh1E/e3PLo7joHWt7Miz7cxLsF9hbxW4q1ylWhjeB5HVgAHidcBn5UmnP569qmP7qcuDoWPU7ru
-	6QydsMUpNGZCQMOTDnq/hDPwuyPavrgkEqONu7ufPNkRPHrpBOPtvGkhpLJEprmWqiHu/bbZesy
-	T
-X-Google-Smtp-Source: AGHT+IFYnNXzW8pZtpPwme80Li3YAU/twWpziA5QZ1BVLVPRP1HBYFVFDGHr7cRBiYWFM1wUal6TnA==
-X-Received: by 2002:a05:6000:2502:b0:3a4:f744:e00e with SMTP id ffacd0b85a97d-3b4964f4e0dmr6671679f8f.4.1751821249997;
-        Sun, 06 Jul 2025 10:00:49 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225a720sm7958695f8f.77.2025.07.06.10.00.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jul 2025 10:00:49 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: ardb@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: alex@ghiti.fr,
-	jonathan@marek.ca,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	viro@zeniv.linux.org.uk,
-	gourry@gourry.net,
-	ilias.apalodimas@linaro.org,
-	lukas@wunner.de,
-	gargaditya08@live.com,
-	kees@kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH v3 1/2] efi/libstub: Print error message if efi_allocate_bootparams() fails
-Date: Sun,  6 Jul 2025 16:58:28 +0000
-Message-ID: <20250706165850.1090-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nljP5jVa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 550FBC4CEED;
+	Sun,  6 Jul 2025 17:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751821276;
+	bh=i7FjqQB9e86KPDAjZ6ecIlH1DvkdwOFhgxZF87a9aYU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=nljP5jVaRdXI9qxFnCM0VRIwzcK/bkCR/yXiXvXd9seiBwcwYRX+GDYhsy5ne4Ul+
+	 ZedkZzMb3tArHWB4L/OwMXEPdACOgFqg3VmYGZBwe7OWzOoJXi1GlVvrCd38wkA9Yq
+	 EIm4v6v0lPberWLe1DRfvpPq3GTGJOQ/i5Vu5fjqeBkQ9iFSkP9O8XT6tUOocjZB8z
+	 L0BP4FrqijHX2s5M20rmQh2eG2+9RAMyawIup7qDR49aysOA2md8lEHk6BHiX2lVmo
+	 QQOLniNeXaYj4uPUcVsSzm+G4dIsB0XwblRwiodxM+RLZGUHjkk+yiAiyZ9hzZ8R+t
+	 6hEzdY0uKd/9w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id F06C5CE09E9; Sun,  6 Jul 2025 10:01:15 -0700 (PDT)
+Date: Sun, 6 Jul 2025 10:01:15 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrea Righi <arighi@nvidia.com>,
+	Frederic Weisbecker <frederic@kernel.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH v2] smp: Document preemption and stop_machine() mutual
+ exclusion
+Message-ID: <dbdd31b5-e341-4191-835a-eb473a21b0ab@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250705172328.4114289-1-joelagnelf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250705172328.4114289-1-joelagnelf@nvidia.com>
 
-From: Khalid Ali <khaliidcaliy@gmail.com>
+On Sat, Jul 05, 2025 at 01:23:27PM -0400, Joel Fernandes wrote:
+> Recently while revising RCU's cpu online checks, there was some discussion
+> around how IPIs synchronize with hotplug.
+> 
+> Add comments explaining how preemption disable creates mutual exclusion with
+> CPU hotplug's stop_machine mechanism. The key insight is that stop_machine()
+> atomically updates CPU masks and flushes IPIs with interrupts disabled, and
+> cannot proceed while any CPU (including the IPI sender) has preemption
+> disabled.
+> 
+> Cc: Andrea Righi <arighi@nvidia.com>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
+> Cc: rcu@vger.kernel.org
+> Co-developed-by: Frederic Weisbecker <frederic@kernel.org>
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 
-Print error message in case efi_allocate_bootparams() fails before exit.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-Change the direct call of efi_exit() to "goto fail". This allows the
-general error message in fail label to get printed.
-
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- drivers/firmware/efi/libstub/x86-stub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index cafc90d4caaf..13d8eba06e4b 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -824,7 +824,7 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
- 	if (!IS_ENABLED(CONFIG_EFI_HANDOVER_PROTOCOL) || !boot_params) {
- 		status = efi_allocate_bootparams(handle, &boot_params);
- 		if (status != EFI_SUCCESS)
--			efi_exit(handle, status);
-+			goto fail;
- 	}
- 
- 	hdr = &boot_params->hdr;
--- 
-2.49.0
-
+> ---
+> v1->v2: Reworded a bit more (minor nit).
+> 
+>  kernel/cpu.c |  4 ++++
+>  kernel/smp.c | 12 ++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index a59e009e0be4..a8ce1395dd2c 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -1310,6 +1310,10 @@ static int takedown_cpu(unsigned int cpu)
+>  
+>  	/*
+>  	 * So now all preempt/rcu users must observe !cpu_active().
+> +	 *
+> +	 * stop_machine() waits for all CPUs to enable preemption. This lets
+> +	 * take_cpu_down() atomically update CPU masks and flush last IPI
+> +	 * before new IPIs can be attempted to be sent.
+>  	 */
+>  	err = stop_machine_cpuslocked(take_cpu_down, NULL, cpumask_of(cpu));
+>  	if (err) {
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index 974f3a3962e8..842691467f9e 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -93,6 +93,9 @@ int smpcfd_dying_cpu(unsigned int cpu)
+>  	 * explicitly (without waiting for the IPIs to arrive), to
+>  	 * ensure that the outgoing CPU doesn't go offline with work
+>  	 * still pending.
+> +	 *
+> +	 * This runs in stop_machine's atomic context with interrupts disabled,
+> +	 * thus CPU offlining and IPI flushing happen together atomically.
+>  	 */
+>  	__flush_smp_call_function_queue(false);
+>  	irq_work_run();
+> @@ -418,6 +421,10 @@ void __smp_call_single_queue(int cpu, struct llist_node *node)
+>   */
+>  static int generic_exec_single(int cpu, call_single_data_t *csd)
+>  {
+> +	/*
+> +	 * Preemption must be disabled by caller to mutually exclude with
+> +	 * stop_machine() atomically updating CPU masks and flushing IPIs.
+> +	 */
+>  	if (cpu == smp_processor_id()) {
+>  		smp_call_func_t func = csd->func;
+>  		void *info = csd->info;
+> @@ -640,6 +647,11 @@ int smp_call_function_single(int cpu, smp_call_func_t func, void *info,
+>  	/*
+>  	 * prevent preemption and reschedule on another processor,
+>  	 * as well as CPU removal
+> +	 *
+> +	 * get_cpu() disables preemption, ensuring mutual exclusion with
+> +	 * stop_machine() where CPU offlining and last IPI flushing happen
+> +	 * atomically versus this code. This guarantees here that the cpu_online()
+> +	 * check and IPI sending are safe without losing IPIs due to offlining.
+>  	 */
+>  	this_cpu = get_cpu();
+>  
+> -- 
+> 2.43.0
+> 
