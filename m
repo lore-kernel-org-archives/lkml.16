@@ -1,184 +1,156 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazrln10222018.outbound.protection.outlook.com [52.103.171.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA32628C
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 16:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751818520; cv=none; b=P40c6XP41hg3aF86sAF4m37KeTWDm+Cd9zGiAEY/cdgT6m4O/5uGGipdFAoFj9IViG1TbqmqKcYWiSBMGayIkCBQ/x2johjzkqjF+t1aFGeT18QkrdmWUVqqRrGJscLa8WvD6xw88EEd7f01x2QDx7OfydbqIDSFGzYmr+WeaKY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751818520; c=relaxed/simple;
-	bh=gAl855rLWquCepFOF4TJTi7lIXQsNdl/NaKUIwd2ESw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ECGd03JVWaFotHrOVptCgFNxxvwTO+zXG//7la7AWKxoXDjgZFsHNmMregf+mW84uQ+ji4p5VLsG/4h7/Uyi8s5RrW99rX8jdodix2ATVqtlbR4l9XKyUxSUqKkdl257MQSKcBC0V8WsH0FTUyTcvYrv37Vbbv8ItUAMPfGhO58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JBAp93tD; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518C22628C;
+	Sun,  6 Jul 2025 16:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.171.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751818559; cv=fail; b=AqNQ6v06NY6ChRRs3+5txdO89+iaYVDIBHWL7tig/uwiICa6P36kOyeN5KmAwq8CjQnkIFX4qynkxeYBiWzYFpsrK/S4w5RKJx1TgDDOY9uwaU47SOW7wKvxo/gaFqUGsDUVzYMAv58Mo+Nn9EG8s2SlhEhO/c1ol/V3UGZm+1E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751818559; c=relaxed/simple;
+	bh=f06z6MulOoq35pk9y7Z5bTztTVb2ZPSPycP5W45txEQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hSZHWjuv5dH4S9iIxVsnk/QVXnAGRXFi2JaOCdiPcpEUEg/kSo30iYxnW6SyOt2cfYhKzV/gFxKcA9JTePv6IUsNb9n47jzctX+XzCHFn848jvrGxdCdHasPegSgjMF4VWhEvuuGGUFGgrE+UAZ3ACUgsB5AuHCT+TbbupOo0LU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=WGidmDgD; arc=fail smtp.client-ip=52.103.171.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JBAp93tD"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2e95ab2704fso2324797fac.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 09:15:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="WGidmDgD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WWzt6V6CZ0wVn8Yx0M38zO4VphGXkwe1XfTextXVMaGSV/1mNPSqnOEzk9PqZl/KURqA7KB/F/Kry9GzB2kKlsL4ZYADFoqg9t/w9swwbtyDqktKKKRe2ur0WIcAzce66ipgydMHthxzp8uuMHG+yqCwLkrLdFqqV6f6RYbGeQ+qvIQF7+BYj+luEwnyNHm4upqqf+BguJ6njd8TJhYsIZY9dKz3rUvdFHGe11n6G00zAqAeWj1FH4Kr8dG11eOvUukAJdF3oFeN6OYplLfTgvp3qp+Hh7JbKiAOvp2H4scKYeZ25OGtipEPg2orSWmvpkbALuEXi4QVDnFZEPH4HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PWkrVEjH+Kng9OzO2UeygUYz6JuQlLQhSUoFiGBq62U=;
+ b=maxLllMBoZxPQZFuhrPhaZOCdOCPkTpVqdqieJN93GrMuw+PO58iWExqgAm41ApKkaxDUHFLym3ZDK+tT1IxR+p/c451oBxALNTBfD9I+5wb3OztWxHFDlD+Wh7xWTh8diZtVlqLTHw7CRj7gLhT7/OaJIooRqRT2kfxyqEIjwWXcj4EauyqPzXnq98eA664q3N3enZczMuGX7e1QxSnxQqELCRjSX/sk38pAUWMtIiF8iFa281nMfKqhbfd9fBUWkNWIOBsLqWKVC0NDbxxSz7Fb1kauXMmmFQaZ/x6LKPV5XBJh6UyACQUgHtkFYx3TJBWNN9jo5wGR+dPRF4XnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 211.75.126.7) smtp.rcpttodomain=gmail.com
+ smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
+ action=none header.from=gmail.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751818516; x=1752423316; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7CCuIhaGw2JUP5L8X9VuvKKmy1/AXHlJm0W9YGonXO4=;
-        b=JBAp93tDdjtqW7hELY1jleZr4J4UJBOt4lAE7Z40k5qRtW7t4IKWIohbJTZwNMxT0D
-         Zn0AAGPk4CE5GK4NIJoUBdKe1QNGo14De++yr5QJ0e6/M0O1+8A92MLVn3h447VWlDLm
-         8vkaBJZmtP/PFhdiFh037KlZHS9hExzNDQkx25a8nXbisqg23XMGW+I+xCcA+rXXd/Zv
-         7msUTIePkrQhLgQ7zkBfl9JIcssYhHXtF9MWPO5yHuuT1hL9neJ98Eun5ZVusutC4E8i
-         26dGvrEWXCcs8ykfxd6SIIoCHlbXtCHejQhrjxy+f3WTQetvd5SHszp2myFDSBWne2FL
-         ac7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751818516; x=1752423316;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7CCuIhaGw2JUP5L8X9VuvKKmy1/AXHlJm0W9YGonXO4=;
-        b=kN0vvcPserOmdWRMiCozqsg7a+mQXjoOQCZBUOH4v3l9neDL7NPA1jiu7tf1PVcF86
-         zdSQjoN6oQYE9OrJ6Yg8HkdzVcMHNgAiF7W+e8+hXfgODDRdL5XBdyxuC56rpV50NZSg
-         AgTj0be2LDm13fmmyYqeZSRhFQII6hk28W2+ALG17h50ygz1jLz0ZJp4VaiE2AE7R+TT
-         anPl2xuJ+R6G5SM3jHGer0eUXYFYMFJIwKEDZc6XLeWCz+tdhlzaECHqLE7N599xWyFc
-         DouuJjaiRsRLWZqQkCJSr9f27i8b8N8I7DXqwzpyWCiPIA0yxRuVAwq1UCsq1/YqBHzi
-         X8Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpbwvDwRctpOYVO1AJAq8VZTfBbe2krzlc1OHL+SfV8V284T09W0NHCJAkueDhSmGnUSWE4Rc9A7qJlgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymE1qMNbrp9MN7OBWPbAEKqAEvktMVvtNKpptNts0/rHlhGeAV
-	ovz/B9b9whr3q80UweS+th48b+cNI92zJ8vl7IF3tSscf/M2rzP5Q+SZ6ZxDpJp6fAc=
-X-Gm-Gg: ASbGncttcOSZVE+vdloRfhCxZGSW6Ymd9VVz5P2kxpeNFkb0JpaPcBzBHkmAZgh90Rl
-	by01I4YFbKLKKJ8u55mFRw3fD3pJhNOttubLAPC0ldOaiSzOQcynyfrkrI8+isKe5AvqWtDs3Qa
-	2o2nsLpiAg+4LFtoEkgoXO2SJ2xkS+OdG0OMd8QrL6yc8B2jN/ddeYH1BoCfIvoSdphLMecPjcL
-	4baGUfRymCagn0RX3ZPCkqMkr87EKAralj30bw4mr41q5rOvuwfy2Zc08nrCZp4jh8S/a0SpgTz
-	YXLvBBlJFSPR2dNzOPU7Gx/mJGVXtxT99xbmsYW5gAigUj5so9fkI8coCeYvCBTHIWTsB1q8RZK
-	eXacmDd0t/UK+nwi6aWmBhE4wCfZajs8b7ldWqDTDABXxMoo=
-X-Google-Smtp-Source: AGHT+IFCTPIZ0WXVRAmR7v768qE2jySN2EB/oekDv6XWLXwEPF+k2fWpAsncS+4yrAvfVEulhT/Vvw==
-X-Received: by 2002:a05:6871:79a5:b0:2d4:e101:13dd with SMTP id 586e51a60fabf-2f791cebf01mr7263590fac.1.1751818516500;
-        Sun, 06 Jul 2025 09:15:16 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:29a:290f:4321:4624? ([2600:8803:e7e4:1d00:29a:290f:4321:4624])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f79020d17csm1749699fac.34.2025.07.06.09.15.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Jul 2025 09:15:15 -0700 (PDT)
-Message-ID: <ca0be466-6673-425d-97ab-292791253a63@baylibre.com>
-Date: Sun, 6 Jul 2025 11:15:14 -0500
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PWkrVEjH+Kng9OzO2UeygUYz6JuQlLQhSUoFiGBq62U=;
+ b=WGidmDgDTYcw8RjHk5FMpeIWOVMA/BiZkCgaBLBOMyer0c/cwMspGI7YM16VQn2ok+38mpoNREKET3Kn26qiE7IO25nx3oa3HNFBLsVzmanGQAMX1BzzD0GsmR1iMX6IeRc6uH7gaG+N2YUmpvftUIr5nYD0JHE4frLT5UZfAbo=
+Received: from SI2P153CA0004.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::23) by
+ TYZPR03MB8839.apcprd03.prod.outlook.com (2603:1096:405:a5::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.23; Sun, 6 Jul 2025 13:42:18 +0000
+Received: from SG1PEPF000082E1.apcprd02.prod.outlook.com
+ (2603:1096:4:140:cafe::e4) by SI2P153CA0004.outlook.office365.com
+ (2603:1096:4:140::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.3 via Frontend Transport; Sun, 6
+ Jul 2025 13:42:17 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 211.75.126.7) smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not
+ signed) header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of taln60.nuvoton.co.il: DNS Timeout)
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ SG1PEPF000082E1.mail.protection.outlook.com (10.167.240.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Sun, 6 Jul 2025 13:42:15 +0000
+Received: from NTHCML01A.nuvoton.com (10.1.8.177) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Sun, 6 Jul
+ 2025 21:42:14 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01A.nuvoton.com
+ (10.1.8.177) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Sun, 6 Jul
+ 2025 21:42:14 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Sun, 6 Jul 2025 21:42:14 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id C9F9B5F5D9;
+	Sun,  6 Jul 2025 16:42:13 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id BA2C5DC3163; Sun,  6 Jul 2025 16:42:13 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <avifishman70@gmail.com>, <tali.perry1@gmail.com>,
+	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
+	<benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/2] NPCM845 reset and clock device tree updates
+Date: Sun, 6 Jul 2025 16:42:05 +0300
+Message-ID: <20250706134207.2168184-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: manual merge of the iio tree with the spi tree
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, Mark Brown <broonie@kernel.org>,
- Jonathan Santos <Jonathan.Santos@analog.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- linux-iio@vger.kernel.org
-References: <20250703163824.2f08d866@canb.auug.org.au>
- <20250703093122.00000684@huawei.com>
- <b0b0443d-143f-4e41-b8b8-91c6726e838f@baylibre.com>
- <20250706115053.368ce9e9@jic23-huawei>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250706115053.368ce9e9@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E1:EE_|TYZPR03MB8839:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42f7e12a-542c-429a-96b1-08ddbc92eba0
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|61400799027|48200799018|7093399015|35950700016|376014|7416014|35450700002;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zg6/V6ZICYcOdhVwlQ03c7Z9BVCSCAXlGT3rI5el1hdh9Das1gjnVi30RNBu?=
+ =?us-ascii?Q?/pXc9lNtEfBeB1OhbarC3f56hiq9Y2LvdkkGFF6U/i/+BfTn3SrAq6jiszY5?=
+ =?us-ascii?Q?d79yrPETFVHKH2ryNEgUwr5O4+FO06cx/PsdxLE/bDI2vSTSNa2rRPpKM+ZN?=
+ =?us-ascii?Q?ILjm2CWkzkPbKQlTPYoAEdtWGsC+m5ib9w9qTBg/3CotazRokfqlqPNRhlrC?=
+ =?us-ascii?Q?YVqDXvUJBj+p/ZO+7Lci2Y6chQSpXHuaCaYL7AiFsdxugais9+s/djHI6yvL?=
+ =?us-ascii?Q?ejYK2n5wBniaQ3EbIDYr+1iKZcHi4PtwCpMhzvzkp08RnuHuy9tGcZ/ZZYt8?=
+ =?us-ascii?Q?xmvwudx2w2Dl3zeyldn79oSB3w8Rnwri/vzMUW2wqlbeBsm/pNQmGYfaSLI2?=
+ =?us-ascii?Q?CLu2rQ4XHSy6EwVUKSs7bXIZz4sbq20edMSAoSGqYi7sES+euEmtOoH9KiQh?=
+ =?us-ascii?Q?1SFrgRoIEpbtoUYkD75VK7LeFyxha+nnAMDmDIQ92O3mlwy11Y66aDpgvaf5?=
+ =?us-ascii?Q?1hUFDraRX8uxN6107qzaQt17qi3ttaZ50wnlop3UET+Z28gEoZ5A7l9tlc+O?=
+ =?us-ascii?Q?M+6s2mLZ8ez+PNz6IHtwDAfUDE3jTOFnsgOrJxdQ49X7XtOuFpfsLlF0hxIz?=
+ =?us-ascii?Q?cloFu7NO4rT+cEFiPzbV9wMu8QG3UhsyKH5qaMCNLUYgPwTvhOFv3LuWu4QD?=
+ =?us-ascii?Q?bnncbfy7yXIHSn7VD2UL+w5gO0C4k6Cb99nfqcWl74QC0YzEFnvMtGZrroQt?=
+ =?us-ascii?Q?3BawRzJcYfzT+DzqXudZ5qJof9aqeP2zQr6HpDshMobl398qvIwiRL3JvYdJ?=
+ =?us-ascii?Q?paAMQ50HSVsDbElMkicWNTI+MrrwarqWDPqL5gmxjXsPNxxhiO3ZzL1MjTnx?=
+ =?us-ascii?Q?uUU60QcGmsP0/CZL6ryUzXipi039OPIgxaC+BRbW9+8Jgb1Z9ryFr22fdx2M?=
+ =?us-ascii?Q?8I0KoVgjcG3ZzuqkOO6RXnf2yvW5SdEoWym7rAUyL9grcT+Oy7VjsQUKKFLc?=
+ =?us-ascii?Q?PEbHs2D0fjnR5odTYD1lwFtUVsc3/mU9d+p73GvwMFmGDyK1uYh/YM521J09?=
+ =?us-ascii?Q?T/DIZCYrWmFi7Gs1HCA7tPcdgaQSiTBZNGZOc8HOl4P5H3CGBMMVbIQE9b53?=
+ =?us-ascii?Q?jQP4YA+0yuVbKTpe05njh/srNLzyOA5Z85YZmd0TzkQXrk3k3Fewy54t7a+H?=
+ =?us-ascii?Q?1c7qwUrEGB7CvSUEjqAXp1ZtNbzvxtxebnev/imxn1EPDtIjjAGE8j1PYMn9?=
+ =?us-ascii?Q?z2wXOWVJ7WFoo6CR0/+Lbi7tiZi4MUc+kRulraSlrcvsm0hGn/RMH8Htg3vF?=
+ =?us-ascii?Q?1cplhZIVvnK0eA/MUJC13ImSbemsZna97E54Lr4EgfTMC/qi/72chVoeE02M?=
+ =?us-ascii?Q?GPwMFvUt4tyjuZVYV4kp6gjVI5Cvz0XSaIeoHXUHr3cUbz/x5+Jl9gAkdgku?=
+ =?us-ascii?Q?PyFRhMoMjB4Rc72w/n588la38w00wPZbelNlHZS8oMIYpy3q3nUxRf/gmxG7?=
+ =?us-ascii?Q?nxnoEak8nnOHdVRZ0Rfbn8IOJBreVP3XCMu4?=
+X-Forefront-Antispam-Report:
+	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(82310400026)(61400799027)(48200799018)(7093399015)(35950700016)(376014)(7416014)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2025 13:42:15.9720
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42f7e12a-542c-429a-96b1-08ddbc92eba0
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG1PEPF000082E1.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8839
 
-On 7/6/25 5:50 AM, Jonathan Cameron wrote:
-> On Thu, 3 Jul 2025 07:28:07 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
->> On 7/3/25 3:31 AM, Jonathan Cameron wrote:
->>> On Thu, 3 Jul 2025 16:38:24 +1000
->>> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>   
->>>> Hi all,
->>>>
->>>> Today's linux-next merge of the iio tree got a conflict in:
->>>>
->>>>   MAINTAINERS
->>>>
->>>> between commit:
->>>>
->>>>   e47a324d6f07 ("dt-bindings: trigger-source: add ADI Util Sigma-Delta SPI")
->>>>
->>>> from the spi tree and commit:
->>>>
->>>>   0dd88eaa7126 ("dt-bindings: trigger-source: add generic GPIO trigger source")
->>>>
->>>> from the iio tree.
->>>>
->>>> I fixed it up (see below) and can carry the fix as necessary. This
->>>> is now fixed as far as linux-next is concerned, but any non trivial
->>>> conflicts should be mentioned to your upstream maintainer when your tree
->>>> is submitted for merging.  You may also want to consider cooperating
->>>> with the maintainer of the conflicting tree to minimise any particularly
->>>> complex conflicts.
->>>>  
->>> Thanks Stephen,
->>>
->>> David, do you prefer these merged or kept as separate entries?  
->>
->> Ah, shoot, I forgot that we had added the gpio one and just made
->> one section like this.
->>
->> I think it would make sense to also merge the new adi one with
->> the reset to keep things compact.
->>
-> Is there a path to do that cleanly given the multiple trees things are
-> coming from?  Maybe this is a let things resolve whatever way this cycle
-> and tidy up next?
+This series updates the NPCM845 device tree for the integrated reset and
+clock controller using the auxiliary device framework.
+Patch 1 combines the reset and clock nodes into nuvoton,npcm845-reset.
+Patch 2 adds a 25 MHz refclk and updates peripherals to use it.
 
-Agree, waiting seems the simplest option.
+Tested on NPCM845 evaluation board.
 
-> 
->>>
->>> I don't think it matters either way in practice though this is the
->>> more complex merge (the other being just putting the blocks in order.
->>>
->>> We can put a note in the pull request on preference but ultimately Linus
->>> will resolve this however he prefers! 
->>>
->>> Jonathan
->>>
->>>   
->>>> -- 
->>>> Cheers,
->>>> Stephen Rothwell
->>>>
->>>> diff --cc MAINTAINERS
->>>> index dd764b947dab,d0809d62ff48..000000000000
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@@ -25333,19 -25201,15 +25341,20 @@@ TRADITIONAL CHINESE DOCUMENTATIO
->>>>   M:	Hu Haowen <2023002089@link.tyut.edu.cn>
->>>>   S:	Maintained
->>>>   W:	https://github.com/srcres258/linux-doc
->>>>  -T:	git git://github.com/srcres258/linux-doc.git doc-zh-tw
->>>>  +T:	git https://github.com/srcres258/linux-doc.git doc-zh-tw
->>>>   F:	Documentation/translations/zh_TW/
->>>>   
->>>> + TRIGGER SOURCE
->>>> + M:	David Lechner <dlechner@baylibre.com>
->>>> + S:	Maintained
->>>> + F:	Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
->>>> + F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
->>>> + 
->>>>  +TRIGGER SOURCE - ADI UTIL SIGMA DELTA SPI
->>>>  +M:	David Lechner <dlechner@baylibre.com>
->>>>  +S:	Maintained
->>>>  +F:	Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-spi.yaml
->>>>  +
->>>> - TRIGGER SOURCE - PWM
->>>> - M:	David Lechner <dlechner@baylibre.com>
->>>> - S:	Maintained
->>>> - F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
->>>> - 
->>>>   TRUSTED SECURITY MODULE (TSM) INFRASTRUCTURE
->>>>   M:	Dan Williams <dan.j.williams@intel.com>
->>>>   L:	linux-coco@lists.linux.dev  
->>
->>
-> 
+Tomer Maimon (2):
+  arm64: dts: nuvoton: combine NPCM845 reset and clk nodes
+  arm64: dts: nuvoton: add refclk and update peripheral clocks for
+    NPCM845
+
+ .../dts/nuvoton/nuvoton-common-npcm8xx.dtsi   | 20 ++++++++-----------
+ .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts  |  6 ++++++
+ 2 files changed, 14 insertions(+), 12 deletions(-)
+
+-- 
+2.34.1
 
