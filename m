@@ -1,213 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94EF19D092
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC941DB95E
 	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751796458; cv=none; b=OoAYGNo5DpPzV22pjcugOkA2PZNlD3MQ8IgWtMT3qZtgTyCPsWbUK1yTxDqhtzm9C43Lqu9gxLOIv+CpZXdLdbO9xoA6Tc/6nN7JNvT07X8uQ/hf3fW2ZM2WhbcASVWhaBN9xK1gXPiz3xnIMmJIazxRQs8Ip3LmLwKXR0uQABE=
+	t=1751796460; cv=none; b=X4UQC5UeE5YddEWEd2WZP5HkRfMQ5/MJj2Ygh3vPuIKbsTpzHNC8QCyMmQEDjq1p11hgKork6yNN8nWFUi9jWqpZPMKqNSvZHNQqscYt9KwZfqkqBEakqut+WAma7umCBCA7PN2NR79k4LjZL2h45Oz9Ha7iMsZe78gAnke8mOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751796458; c=relaxed/simple;
-	bh=XqIrucQsltQ/dUKIhFeaygB0TAAeHN/6G5y01VMcvqM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=rs8GLKUx0CZ2AsMqLI4yUFHGEIQQZ9j5NcK05yh53OUCTslpWnyBjdiZLctGNbgkOR15kKO+1APOhWs6rCR7TBc/TKPW6PFeJaLKGTEh9hEonIeSSUbkVIHP9lL9vELhlceI7iwEUYe95Bgz87qvEqEvkTpV1l+aEVnmixL3Oko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WsC3Bchd; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751796460; c=relaxed/simple;
+	bh=X1ddAkR6r58MOmKvQKSsmhHFJ2Z0j+1GOywGC+qg2IM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=dwTmXfaMjlxjSSoxd1xsyQr5GqDUrTDFiNcFU7VG0DA1uAbdlTMv+fcIJ5KUNp0g6wmvA8ZcSKND7ltxwqaF9sUk9nsedkD4NqcUlvbKIHC0nlCCl2WnIWOQ/zviklqlFXTQhErZduNXiO9aSpQLV15O4wteXUXADnl6JW2Zqs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=GLYYiPlf; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WsC3Bchd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751796457; x=1783332457;
-  h=date:from:to:cc:subject:message-id;
-  bh=XqIrucQsltQ/dUKIhFeaygB0TAAeHN/6G5y01VMcvqM=;
-  b=WsC3BchdnNsneX6SNBEOl/lSD91salA0Q1SxD12TwcSVPZUaMUjv942A
-   i/Ke8/BVBkoftjtP3oLit5Y6y5Z19u3GMAOgCYKRKrajiDKl24Ct8d3ho
-   zI97LZ/fJTAxG3solScN/ow+3jfEpSr0hPIoVpDkjn6VzSwH1yAW4lDCd
-   eoSX6fajeIUyTFTZJkwe5l6mTtxWycyxSPTjFelc/72TWZ8USIa/Rh+rd
-   NEaByDz/bMa6z/kx3vWMEIVf1lm3Ee1bdfnWjqHOAyj1DeFijE6mAZxkG
-   qYoSUM/jRw4B6MX9qtSCNx8S4aYLDJQpxCjCgjqMWt3G1xvh0JenQhJF4
-   w==;
-X-CSE-ConnectionGUID: 9zn7WECySoifyAvMUT09uw==
-X-CSE-MsgGUID: 9ZpeLcVBQJysY4uZ5kPy/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="64284599"
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="64284599"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 03:07:37 -0700
-X-CSE-ConnectionGUID: 81Q5OJk5QqOOQrZEjAw89g==
-X-CSE-MsgGUID: +wTOODjBT7iTsg+9DpnHaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="159240068"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Jul 2025 03:07:35 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uYMHV-00050t-0U;
-	Sun, 06 Jul 2025 10:07:33 +0000
-Date: Sun, 06 Jul 2025 18:06:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 14cf20bfadb3f5058350cd1be4856836fcb5afe3
-Message-ID: <202507061822.Dc10OSV2-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="GLYYiPlf"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751796454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DNC8u3mnnYqkifuAxCAn9WLN0+7etet2UpFGM0Q0muA=;
+	b=GLYYiPlfLk8FgxcvvzkCj3TNUdIGzKuuEbKMbFy2Ahm0huPXJHwEuSK9UTdDWvg2iC7mfq
+	JIIhB3gwxUucP/FNLKkVjJC8X95Dyz/CbwVHRLy9U+YQQZWhiKZ2NdonPLjbepZlesK41C
+	+sge7unmeb2LNPUlAqAkDuC6TqHDsUvMy/8kAMHmbaw6QlYgjxpZ2son+T1yW1CUg08mfS
+	KE0wUtBiYWBTrL5pm3v3gSV640HoS0L7YGUaza3ZscIy7RWolxEuBhZPR0UtwX0/GFTkb9
+	Z8bIsbjr85FyfC1Occv96E8Qys7mC1E8uwYsRp9ztR3Z3wGTuWMEcuwdH8c3RQ==
+Content-Type: multipart/signed;
+ boundary=48696b13996c954d2523b795f4ed39a48c4c5615ae4bc44190dfce43a0dc;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sun, 06 Jul 2025 12:07:24 +0200
+Message-Id: <DB4W0GOQZ8MZ.MA7QXHJWCTK2@cknow.org>
+Cc: <hjc@rock-chips.com>, <heiko@sntech.de>, <andy.yan@rock-chips.com>,
+ <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+ <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+ <dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rockchip/drm: vop2: make vp registers nonvolatile
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Piotr Zalewski" <pZ010001011111@proton.me>
+References: <20250706083629.140332-2-pZ010001011111@proton.me>
+In-Reply-To: <20250706083629.140332-2-pZ010001011111@proton.me>
+X-Migadu-Flow: FLOW_OUT
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 14cf20bfadb3f5058350cd1be4856836fcb5afe3  Merge sched/urgent into tip/urgent
+--48696b13996c954d2523b795f4ed39a48c4c5615ae4bc44190dfce43a0dc
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-elapsed time: 870m
+Hi Piotr,
 
-configs tested: 136
-configs skipped: 3
+On Sun Jul 6, 2025 at 10:36 AM CEST, Piotr Zalewski wrote:
+> Make video port registers nonvolatile. As DSP_CTRL register is written
+> to twice due to gamma LUT enable bit which is set outside of the main
+> DSP_CTRL initialization within atomic_enable (for rk356x case it is also
+> necesarry to always disable gamma LUT before writing a new LUT) there is
+> a chance that DSP_CTRL value read-out in gamma LUT init/update code is
+> not the one which was written by the preceding DSP_CTRL initialization
+> code within atomic_enable. This might result in misconfigured DSP_CTRL
+> which leads to no visual output[1]. Since DSP_CTRL write takes effect
+> after VSYNC[1] the issue is not always present. When tested on Pinetab2
+> with kernel 6.14 it happenes only when DRM is compiled as a module[1].
+> In order to confirm that it is a timing issue I inserted 18ms udelay
+> before vop2_crtc_atomic_try_set_gamma in atomic enable and compiled DRM
+> as module - this has also fixed the issue.
+>
+> [1] https://lore.kernel.org/linux-rockchip/562b38e5.a496.1975f09f983.Core=
+mail.andyshrk@163.com/
+>
+> Reported-by: Diederik de Haas <didi.debian@cknow.org>
+> Closes: https://lore.kernel.org/linux-rockchip/DAEVDSTMWI1E.J454VZN0R9MA@=
+cknow.org/
+> Suggested-by: Andy Yan <andy.yan@rock-chips.com>
+> Signed-off-by: Piotr Zalewski <pZ010001011111@proton.me>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+With a new version of a patch, you're supposed to add the tags you
+received for previous versions, like my Tested-by tag [1].
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250706    gcc-8.5.0
-arc                   randconfig-002-20250706    gcc-12.4.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-21
-arm                   randconfig-001-20250706    clang-21
-arm                   randconfig-002-20250706    clang-21
-arm                   randconfig-003-20250706    gcc-8.5.0
-arm                   randconfig-004-20250706    gcc-14.3.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250706    clang-21
-arm64                 randconfig-002-20250706    clang-21
-arm64                 randconfig-003-20250706    clang-17
-arm64                 randconfig-004-20250706    gcc-9.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250706    gcc-9.3.0
-csky                  randconfig-002-20250706    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250706    clang-21
-hexagon               randconfig-002-20250706    clang-18
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250706    gcc-12
-i386        buildonly-randconfig-002-20250706    gcc-12
-i386        buildonly-randconfig-003-20250706    clang-20
-i386        buildonly-randconfig-004-20250706    clang-20
-i386        buildonly-randconfig-005-20250706    gcc-12
-i386        buildonly-randconfig-006-20250706    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20250706    clang-18
-loongarch             randconfig-002-20250706    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       alldefconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250706    gcc-9.3.0
-nios2                 randconfig-002-20250706    gcc-13.3.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250706    gcc-15.1.0
-parisc                randconfig-002-20250706    gcc-9.3.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                     mpc5200_defconfig    clang-21
-powerpc               randconfig-001-20250706    gcc-8.5.0
-powerpc               randconfig-002-20250706    clang-21
-powerpc               randconfig-003-20250706    clang-21
-powerpc64             randconfig-001-20250706    gcc-8.5.0
-powerpc64             randconfig-002-20250706    clang-17
-powerpc64             randconfig-003-20250706    gcc-13.4.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv             nommu_k210_sdcard_defconfig    gcc-15.1.0
-riscv                    nommu_virt_defconfig    clang-21
-riscv                 randconfig-001-20250706    gcc-11.5.0
-riscv                 randconfig-002-20250706    clang-19
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250706    gcc-8.5.0
-s390                  randconfig-002-20250706    gcc-9.3.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                          polaris_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250706    gcc-14.3.0
-sh                    randconfig-002-20250706    gcc-15.1.0
-sh                           se7721_defconfig    gcc-15.1.0
-sh                           sh2007_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250706    gcc-8.5.0
-sparc                 randconfig-002-20250706    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250706    gcc-10.5.0
-sparc64               randconfig-002-20250706    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250706    gcc-12
-um                    randconfig-002-20250706    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250706    gcc-12
-x86_64      buildonly-randconfig-002-20250706    gcc-12
-x86_64      buildonly-randconfig-003-20250706    clang-20
-x86_64      buildonly-randconfig-004-20250706    clang-20
-x86_64      buildonly-randconfig-005-20250706    clang-20
-x86_64      buildonly-randconfig-006-20250706    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  nommu_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250706    gcc-8.5.0
-xtensa                randconfig-002-20250706    gcc-10.5.0
+(unless the new version has changed so much you feel they should not be
+carried over; you then need to explicitly describe that and why you
+dropped them)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+  Diederik
+
+[1] https://lore.kernel.org/linux-rockchip/DAZ4BALHEJ9M.10FO1U9IYP4WA@cknow=
+.org/
+
+> ---
+>
+> Notes:
+>     Changes in v2:
+>         - add spaces before and after '+'
+>    =20
+>     Link to v1: https://lore.kernel.org/linux-rockchip/20250628180914.117=
+7177-2-pZ010001011111@proton.me/
+>
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/d=
+rm/rockchip/rockchip_drm_vop2.c
+> index d0f5fea15e21..0931cb636493 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> @@ -2589,12 +2589,13 @@ static int vop2_win_init(struct vop2 *vop2)
+>  }
+> =20
+>  /*
+> - * The window registers are only updated when config done is written.
+> - * Until that they read back the old value. As we read-modify-write
+> - * these registers mark them as non-volatile. This makes sure we read
+> - * the new values from the regmap register cache.
+> + * The window and video port registers are only updated when config
+> + * done is written. Until that they read back the old value. As we
+> + * read-modify-write these registers mark them as non-volatile. This
+> + * makes sure we read the new values from the regmap register cache.
+>   */
+>  static const struct regmap_range vop2_nonvolatile_range[] =3D {
+> +	regmap_reg_range(RK3568_VP0_CTRL_BASE, RK3588_VP3_CTRL_BASE + 255),
+>  	regmap_reg_range(0x1000, 0x23ff),
+>  };
+> =20
+
+
+--48696b13996c954d2523b795f4ed39a48c4c5615ae4bc44190dfce43a0dc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGpK3wAKCRDXblvOeH7b
+bsgGAQDKhtYMoJQQ6FyMfHefj094BK4k7kSFaqb99MqJAY/8fwD/adNayRiFMkDa
+f4C/qQzbsts/+9/ZEZYYu/MNmFatvQU=
+=/7Mh
+-----END PGP SIGNATURE-----
+
+--48696b13996c954d2523b795f4ed39a48c4c5615ae4bc44190dfce43a0dc--
