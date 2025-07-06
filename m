@@ -1,211 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44A9192580
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 07:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930601865EE;
+	Sun,  6 Jul 2025 08:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751788528; cv=none; b=B/5RmsudNVrgD+ZPVmFum6FVYs/d77OoHIWW6AZO4jB9918PzKWgxg0zjCFe1Dx3jc1k54VG244KHBhiWh6H/xwZ3zrpa+AlnMu9DuxqCfGljXomCiaVmlvN5V8BtPlYmdQkvuctl68FE4jJrYTQrzQySr9dI7plfMZzNH2MELY=
+	t=1751789087; cv=none; b=bZyh1jZ8l4s2mtsG7zDKR2N//XsSK5TUm13UZIj3v6JrrV0HmFPIzcVB65reRi0Vax+rutn9LlbpyT1ogvSTMwbJhk5wMTkXe3lWQ2kG3QXW6tLggZ6sP2RolMH5bcd1Z24Ixld5pynDnwoCrI4chrtSbhDDApiMZAoMHSEd31g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751788528; c=relaxed/simple;
-	bh=eXQI8EUcya3f8OCDBztN3NRP9pZNoUUUbAFoDJtCsmo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=IwhO5Qlv65u42+Da8IoYTbQaRe6M+qDnuAvNie81hcwLcjs0Mcyb3fv1E+gGKOEOagoLpdJeZryJRXdktKs8cSei3fcEKTJEtPjRZwSfasjRcLYvEmL7QZVOs31XN0JX92lF6oclbkEMew0ulwgkVEAiWBqzEi/Zyfm7+SzvxcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iVGAkdy1; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751789087; c=relaxed/simple;
+	bh=rWitimji/TArZoN7xNQcJhAHxmy74el6SQ28neA1wDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=W10kMj7M5K5y8YysRR/CRfru2URb1hadoi7M/7pDgNd3aUOpIlx4e/MaXZ1ePm9yDbbx+yjUPH0BBBpdQm3bIf3it6uJCMFdg8K1pzeUQrajzZlhNnzOLnhIhnttgemI7jnuoRr5rvkpOFYTowK2WYKrmrvDi+2uR6M6/U6Akok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=e/Xezt7N; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iVGAkdy1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751788527; x=1783324527;
-  h=date:from:to:cc:subject:message-id;
-  bh=eXQI8EUcya3f8OCDBztN3NRP9pZNoUUUbAFoDJtCsmo=;
-  b=iVGAkdy1ZEEm2CLi26xz93F/NXVlqT4AT5K8DtChenlEDtmmCdz9k8lg
-   KdrU+NZu/zhYn8yv0EC2qED6QYwkvsctY7QSkainJMa9QGZPtTR3FivpD
-   tPEO1fTpqIAnCE1KPxaXP3VFZOdYIR3sd8OQRW1REjWtHYnOFsybmQtow
-   4scJ8AgPCL5qLIthCrOTngvk3uzV5K/sgbu2CutLgHEzEpa/tIZd/rLPS
-   NbZFRqLs/awAa1g7Ug4mgNmNp4S2HLCgaXtjT2QWjV0uv/qqNvgfHq1pw
-   MXbG8nWL6sWsnE1sx8c073Z+eFnIy42JvR9jRjg9+eTeIuandiQU+EMql
-   g==;
-X-CSE-ConnectionGUID: 8BUDx/E0Qu6B4i2MFpx6VA==
-X-CSE-MsgGUID: sQyO1rXXRe6GRfMshF33Pg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="57841350"
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="57841350"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 00:55:26 -0700
-X-CSE-ConnectionGUID: Da/Psmp7R1+XQu9NYF3RZg==
-X-CSE-MsgGUID: sOIEq10eTrSATWmZPke06g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="154365351"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 06 Jul 2025 00:55:26 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uYKDa-0004xD-2m;
-	Sun, 06 Jul 2025 07:55:22 +0000
-Date: Sun, 06 Jul 2025 15:54:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 8784fb5fa2e0042fe3b1632d4876e1037b695f56
-Message-ID: <202507061517.liJnB2df-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="e/Xezt7N"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 173DF40E0198;
+	Sun,  6 Jul 2025 08:04:26 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tByoW6Y3RtQZ; Sun,  6 Jul 2025 08:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751789062; bh=++minv9RSmkgrrFu2G5MHkvmAC7Xah7qbPgFSQE+CnE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=e/Xezt7Nel+SvkugAot3jDMs6kzqiw05EGYSjeNgZRfXJ6S48E/dKOXPaGGw5Oqly
+	 q4Is0DZwKmx/ZwM7WQ2hTJFdae1Ew99dZtwXl6vvXuxItbIsVnldMARV0N/3eB+2SN
+	 Q3OwIMY5nppFJ6x74w1gJRgU+9eSGcB/c+ihi7uPJdKrtx/YPgJbSjw5tKDsMR7Y0z
+	 doQ1504YwHdfuV+oW668ImK8g9zUGjEwRgXNas/RUW5sD55DFLpUF2cigv8xRxUNpd
+	 ZuIsLRB0kYQaAi9DVa8M7ezbseKG9i1qMUe/BmsNa4gVl3Ef6rsBzUeGJ4H3g3TWGP
+	 7g6Q2T+pSE7NAS2YYKquhgX2fCjWw4Zu9RWB7hiohuhKmptdNLAz56mXvVn+n/ox7+
+	 JFOhtyUtAkTcI1/d6MXZzWKNQxi925iPiHcRh+AeSBIVhSnFG2weHUOhHowINdmiEf
+	 y9q/mPHseytTO2Dpn7+l1JzF5RzgSQK/TUqH9g++4jbGBGLU5HTeL9f3+HyG9bxXK2
+	 /FbV1nO4ay6U2y6D7gdHZmzcN/Bqu86X2pOvCA1gAhzjBhtd/Zycg6Q9V+AoBx0IUr
+	 gWspnNGJsKxz/Ar6+5c71Y5vM9+RM6aiOdvkC8Y0yv+qBj8LGx4q1BZwh0lexqCBFr
+	 oU3Gb2Jxuu3luEboSEtL3tto=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5552140E0184;
+	Sun,  6 Jul 2025 08:04:19 +0000 (UTC)
+Date: Sun, 6 Jul 2025 10:04:10 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC urgent for v6.16-rc5
+Message-ID: <20250706080410.GAaGot-nOKs75u4yKR@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: 8784fb5fa2e0042fe3b1632d4876e1037b695f56  Merge irq/drivers into tip/master
+Hi Linus,
 
-elapsed time: 738m
+please pull an urgent EDAC fix for v6.16-rc5.
 
-configs tested: 134
-configs skipped: 3
+Thx.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+---
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250706    gcc-8.5.0
-arc                   randconfig-002-20250706    gcc-12.4.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-21
-arm                   randconfig-001-20250706    clang-21
-arm                   randconfig-002-20250706    clang-21
-arm                   randconfig-003-20250706    gcc-8.5.0
-arm                   randconfig-004-20250706    gcc-14.3.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250706    clang-21
-arm64                 randconfig-002-20250706    clang-21
-arm64                 randconfig-003-20250706    clang-17
-arm64                 randconfig-004-20250706    gcc-9.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250706    gcc-9.3.0
-csky                  randconfig-002-20250706    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250706    clang-21
-hexagon               randconfig-002-20250706    clang-18
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250706    gcc-12
-i386        buildonly-randconfig-002-20250706    gcc-12
-i386        buildonly-randconfig-003-20250706    clang-20
-i386        buildonly-randconfig-004-20250706    clang-20
-i386        buildonly-randconfig-005-20250706    gcc-12
-i386        buildonly-randconfig-006-20250706    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-21
-loongarch             randconfig-001-20250706    clang-18
-loongarch             randconfig-002-20250706    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       alldefconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250706    gcc-9.3.0
-nios2                 randconfig-002-20250706    gcc-13.3.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250706    gcc-15.1.0
-parisc                randconfig-002-20250706    gcc-9.3.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                     mpc5200_defconfig    clang-21
-powerpc               randconfig-001-20250706    gcc-8.5.0
-powerpc               randconfig-002-20250706    clang-21
-powerpc               randconfig-003-20250706    clang-21
-powerpc64             randconfig-001-20250706    gcc-8.5.0
-powerpc64             randconfig-002-20250706    clang-17
-powerpc64             randconfig-003-20250706    gcc-13.4.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv             nommu_k210_sdcard_defconfig    gcc-15.1.0
-riscv                    nommu_virt_defconfig    clang-21
-riscv                 randconfig-001-20250706    gcc-11.5.0
-riscv                 randconfig-002-20250706    clang-19
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250706    gcc-8.5.0
-s390                  randconfig-002-20250706    gcc-9.3.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                          polaris_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250706    gcc-14.3.0
-sh                    randconfig-002-20250706    gcc-15.1.0
-sh                           se7721_defconfig    gcc-15.1.0
-sh                           sh2007_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250706    gcc-8.5.0
-sparc                 randconfig-002-20250706    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250706    gcc-10.5.0
-sparc64               randconfig-002-20250706    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250706    gcc-12
-um                    randconfig-002-20250706    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250706    gcc-12
-x86_64      buildonly-randconfig-002-20250706    gcc-12
-x86_64      buildonly-randconfig-003-20250706    clang-20
-x86_64      buildonly-randconfig-004-20250706    clang-20
-x86_64      buildonly-randconfig-005-20250706    clang-20
-x86_64      buildonly-randconfig-006-20250706    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  nommu_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250706    gcc-8.5.0
-xtensa                randconfig-002-20250706    gcc-10.5.0
+The following changes since commit a3f3040657417aeadb9622c629d4a0c2693a0f93:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  EDAC/amd64: Fix size calculation for Non-Power-of-Two DIMMs (2025-06-25 16:40:03 +0200)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.16_rc5
+
+for you to fetch changes up to 1e14ea901dc8d976d355ddc3e0de84ee86ef0596:
+
+  EDAC: Initialize EDAC features sysfs attributes (2025-06-30 10:57:24 +0200)
+
+----------------------------------------------------------------
+- Initialize sysfs attributes properly to avoid lockdep complaining about
+  an uninitialized lock class
+
+----------------------------------------------------------------
+Shiju Jose (1):
+      EDAC: Initialize EDAC features sysfs attributes
+
+ drivers/edac/ecs.c        | 4 +++-
+ drivers/edac/mem_repair.c | 1 +
+ drivers/edac/scrub.c      | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
