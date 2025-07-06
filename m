@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F292BCF75;
-	Sun,  6 Jul 2025 20:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3101D2BE7AC;
+	Sun,  6 Jul 2025 20:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751832037; cv=none; b=T560T4Qoq4jm2O8R6dgdOoCl+cZ4qx5ojj3vW8NSHGI6d7U0d0Kw5qXhwudBPkj7DO9+Ohj5msTYp5oSDFuuBdNZyvJmu7Qwk2FVn3/8e3QpcRZ4OAYC3oey5FAlKeSzU5jsH7talhQReQXevaZvE9BrQ9s9qyMb9hLJr9A0N/I=
+	t=1751832037; cv=none; b=OB1swLS/yiIHOeo+/tSo48Aeo8bHF7Rr5MSk9CDat7p5Vwy+Jjz4YWb36n5DnPDzmeZEfh+XW49ftY6RzjazMpBRCALxEoHY37N8CToqgqqxlG9mT82ryw9oHoJVUl1oAdTUtSSAbzsS4ELlA1FNftCiLQyZKT00CiaL5AyBR2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751832037; c=relaxed/simple;
-	bh=arW9HamBDNLK1yN3sYPk8GcM8z+8LRLU5gO/RN527TA=;
+	bh=dnbBIoiWMyEPhOBD2O+z/mHI1a/WsMzxyryGAQlSQsA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TgxvML/MLM95AYSEEppI+Ke+3jdOhTaa+iaBqeu0L9TCagqG+WfvVB0+C03V26yrzA7o35UTmjoxPe4XlTe2GpOLSdavqhrj8f7q7Db4smxo95XboIq72vZ6ls4L63r4Wotk/H5EnkiRBtQegMep32FhZgybP3SedL0Ftufr1WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToRJq6fY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U6cGhK/sElkxCaM5T1ntLMEZuEDlM4MpCvk6sRMzEOxU4eiZ60hxfDyEBpfHFE/BAnvwEs9tC8sCLpDODGJGX2zcu0U7qJiHj+LV6ah+m9YbpCf4e3m3v5So8Hiv2SuThOdZlkUo/d+svLEY0GUVly0TovELVYH4EABknQ8A5gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fck4arrF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToRJq6fY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC5CC4CEF1;
-	Sun,  6 Jul 2025 20:00:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fck4arrF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D54FC4CEF3;
+	Sun,  6 Jul 2025 20:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751832035;
-	bh=arW9HamBDNLK1yN3sYPk8GcM8z+8LRLU5gO/RN527TA=;
+	s=k20201202; t=1751832036;
+	bh=dnbBIoiWMyEPhOBD2O+z/mHI1a/WsMzxyryGAQlSQsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ToRJq6fY2uHmmSXBV+y5yfAj4+RYgewQgtMYQI9cnh/YJJ35fO8AbtImb2cAiFPbq
-	 Y/8O+/vMt3ALjdNk7L3JbN2Qy4NPFrWv2JivT+LctVl+s9nf8LPH1BagIRI8OWz8fK
-	 p52tHZYlc4kzP+0S85hV1JtmzuS+PNciFusmjtPyjdCa95I4bVobY2qP0NOD+Mngp+
-	 01+SEHAufJrEGkFYSGJkQjRTuZr15O+myKC0FcE8ZQxgRX4N1KvAbi5Cdgf92dNTqx
-	 P1eD40XDQAWzN8JUv0G2a+GNbUxZLeOCZZDCqXq7rV5bGapONn6ke2Uq0c8Zbr5vkA
-	 Q3z+TavRLsyEQ==
+	b=Fck4arrF4zOiEsMM2KixvP9bY4CrTLZdZmsGgyAw4WFOQ3EuBfiM5q7+fYkRi9jrc
+	 2iSARDSXSgWCcG+Aok1uQ8KZJrFt+y8QVZADce3/aW4+tAw+djptIGH+zqNMhGL02i
+	 PtfhySHItgjb30S+G2+AKDAuGxUf6WgGoHzWfKhNRzAzWJFxizsOM+dFQFO2ChtILw
+	 Ec/Elo4Vt15QtAqaqI34j8F+LTXxpQCSkTx79mgOL9l8JhoL18bsO0JMiOqxHn3bT7
+	 3emhbaSmmTKkY0GOeANGAU0cnsaX2d0Zf64Icv22zpPs3H90buLXg4F/3b6QOr4Iks
+	 BBbhFyVj+JDPg==
 From: SeongJae Park <sj@kernel.org>
 To: 
 Cc: SeongJae Park <sj@kernel.org>,
@@ -34,9 +34,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	kernel-team@meta.com,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH 10/14] mm/damon/vaddr: put pid in cleanup_target()
-Date: Sun,  6 Jul 2025 13:00:14 -0700
-Message-Id: <20250706200018.42704-11-sj@kernel.org>
+Subject: [RFC PATCH 11/14] mm/damon/sysfs: remove damon_sysfs_destroy_targets()
+Date: Sun,  6 Jul 2025 13:00:15 -0700
+Message-Id: <20250706200018.42704-12-sj@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250706200018.42704-1-sj@kernel.org>
 References: <20250706200018.42704-1-sj@kernel.org>
@@ -48,85 +48,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement cleanup_target() callback for [f]vaddr, which calls put_pid()
-for each target that will be destroyed.  Also remove redundant put_pid()
-calls in core and sysfs, which was required to be done redundantly due
-to the lack of such self cleanup in vaddr.
+The function was introduced for putting pids and deallocating
+unnecessary targets.  Hence it is called before damon_destroy_ctx().
+Now vaddr puts pid for each target destruction (cleanup_target()).
+damon_destroy_ctx() deallocates the targets anyway.  So
+damon_sysfs_destroy_targets() has no reason to exist.  Remove it.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- mm/damon/core.c  |  2 --
- mm/damon/sysfs.c | 10 ++--------
- mm/damon/vaddr.c |  6 ++++++
- 3 files changed, 8 insertions(+), 10 deletions(-)
+ mm/damon/sysfs.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index ce1087b5436f..6d526c5263d3 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -1099,8 +1099,6 @@ static int damon_commit_targets(
- 		} else {
- 			struct damos *s;
- 
--			if (damon_target_has_pid(dst))
--				put_pid(dst_target->pid);
- 			damon_destroy_target(dst_target, dst);
- 			damon_for_each_scheme(s, dst) {
- 				if (s->quota.charge_target_from == dst_target) {
 diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
-index f2f9f756f5a2..5eba6ac53939 100644
+index 5eba6ac53939..b0f7c60d655a 100644
 --- a/mm/damon/sysfs.c
 +++ b/mm/damon/sysfs.c
-@@ -1298,13 +1298,9 @@ static int damon_sysfs_set_attrs(struct damon_ctx *ctx,
- static void damon_sysfs_destroy_targets(struct damon_ctx *ctx)
- {
- 	struct damon_target *t, *next;
--	bool has_pid = damon_target_has_pid(ctx);
- 
--	damon_for_each_target_safe(t, next, ctx) {
--		if (has_pid)
--			put_pid(t->pid);
-+	damon_for_each_target_safe(t, next, ctx)
- 		damon_destroy_target(t, ctx);
--	}
+@@ -1295,14 +1295,6 @@ static int damon_sysfs_set_attrs(struct damon_ctx *ctx,
+ 	return damon_set_attrs(ctx, &attrs);
  }
  
+-static void damon_sysfs_destroy_targets(struct damon_ctx *ctx)
+-{
+-	struct damon_target *t, *next;
+-
+-	damon_for_each_target_safe(t, next, ctx)
+-		damon_destroy_target(t, ctx);
+-}
+-
  static int damon_sysfs_set_regions(struct damon_target *t,
-@@ -1387,10 +1383,8 @@ static void damon_sysfs_before_terminate(struct damon_ctx *ctx)
- 	if (!damon_target_has_pid(ctx))
- 		return;
+ 		struct damon_sysfs_regions *sysfs_regions)
+ {
+@@ -1337,7 +1329,6 @@ static int damon_sysfs_add_target(struct damon_sysfs_target *sys_target,
+ 		struct damon_ctx *ctx)
+ {
+ 	struct damon_target *t = damon_new_target();
+-	int err = -EINVAL;
  
--	damon_for_each_target_safe(t, next, ctx) {
--		put_pid(t->pid);
-+	damon_for_each_target_safe(t, next, ctx)
- 		damon_destroy_target(t, ctx);
--	}
+ 	if (!t)
+ 		return -ENOMEM;
+@@ -1345,16 +1336,10 @@ static int damon_sysfs_add_target(struct damon_sysfs_target *sys_target,
+ 	if (damon_target_has_pid(ctx)) {
+ 		t->pid = find_get_pid(sys_target->pid);
+ 		if (!t->pid)
+-			goto destroy_targets_out;
++			/* caller will destroy targets */
++			return -EINVAL;
+ 	}
+-	err = damon_sysfs_set_regions(t, sys_target->regions);
+-	if (err)
+-		goto destroy_targets_out;
+-	return 0;
+-
+-destroy_targets_out:
+-	damon_sysfs_destroy_targets(ctx);
+-	return err;
++	return damon_sysfs_set_regions(t, sys_target->regions);
  }
  
- /*
-diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
-index 46554e49a478..5c992317ee4c 100644
---- a/mm/damon/vaddr.c
-+++ b/mm/damon/vaddr.c
-@@ -627,6 +627,11 @@ static bool damon_va_target_valid(struct damon_target *t)
- 	return false;
+ static int damon_sysfs_add_targets(struct damon_ctx *ctx,
+@@ -1458,13 +1443,11 @@ static int damon_sysfs_commit_input(void *data)
+ 	test_ctx = damon_new_ctx();
+ 	err = damon_commit_ctx(test_ctx, param_ctx);
+ 	if (err) {
+-		damon_sysfs_destroy_targets(test_ctx);
+ 		damon_destroy_ctx(test_ctx);
+ 		goto out;
+ 	}
+ 	err = damon_commit_ctx(kdamond->damon_ctx, param_ctx);
+ out:
+-	damon_sysfs_destroy_targets(param_ctx);
+ 	damon_destroy_ctx(param_ctx);
+ 	return err;
  }
- 
-+static void damon_va_cleanup_target(struct damon_target *t)
-+{
-+	put_pid(t->pid);
-+}
-+
- #ifndef CONFIG_ADVISE_SYSCALLS
- static unsigned long damos_madvise(struct damon_target *target,
- 		struct damon_region *r, int behavior)
-@@ -711,6 +716,7 @@ static int __init damon_va_initcall(void)
- 		.prepare_access_checks = damon_va_prepare_access_checks,
- 		.check_accesses = damon_va_check_accesses,
- 		.target_valid = damon_va_target_valid,
-+		.cleanup_target = damon_va_cleanup_target,
- 		.cleanup = NULL,
- 		.apply_scheme = damon_va_apply_scheme,
- 		.get_scheme_score = damon_va_scheme_score,
 -- 
 2.39.5
