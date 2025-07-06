@@ -1,96 +1,114 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE45A205E2F;
-	Sun,  6 Jul 2025 13:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505544C9D;
+	Sun,  6 Jul 2025 13:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751807859; cv=none; b=RHU/ZwneqvJrXXyWYaxX3s2OLc1OSQGY2bN1Ol430bCCKf9AoMsabzYlU/hwvVpWe/C1CIKKLz/m9R4I5r6kp9g6p/HylhZcn00Yy0v2q8zNffrcpjDuN/KbApE3MmIHzF1xnvU4UaSf0B8je9Jn4xLjOgXfg4VR9sIyzknwGHI=
+	t=1751808158; cv=none; b=RGVQTXA67+1wRCQ4Zk0EnnElqTry5NISxv+4dWSelvP19DN6VNgmitLZW5/D+NZGyjvqq6oAZTwerVDlwQGcAPGH5JUxBtOQjJ3DJVQzepA2BaDJfs7nlvkwlnmBxT8ynMXJ2dVoRUmulubrzaPVY0h7QbgaQk4h9227N2cdspQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751807859; c=relaxed/simple;
-	bh=Mv/shLjCKwn0QObl0EoTZZfjn3MUjEkt7hwbMWVsVCU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tBe/6xHxa57vSIw3vOe/AhWQnSfDynXnthqIOZv3KTSgc7SdMBLpSPsBVcu2bJmNQ9Yw3YaMiT3eKu3mWXSzCT0Tbyi4BaUN6MFrarFfLmza82TVeulftwUBLCGIgqFJQSSf9BjqFWxdK6pcxWIJAJzDaQ+UZgF3Z2OonJ23P8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553dceb342fso2273105e87.0;
-        Sun, 06 Jul 2025 06:17:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751807853; x=1752412653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L0y9e3VsPZwS3i8gc70lCXlWKvcLrZlEitoiyjDH0k0=;
-        b=fkEuLTqckZja5LX7wQJGYnq+R/19hgwMMIjTy5ExS4T42a+1QtWMXjjcBK4kFEX6Hy
-         nKAWKwB7tPPYfuo7sG5VAIJOCzzSXbnmSlSdJVsjJD17XSFECgQd9sw8BGusrn+38lb9
-         +PE26fJhUy1gFIH08F1O67cb/Jj/f4OHXIjpePZMPhMvj0Vk88An8CvWSKXdUmhkafdu
-         dE+xWxkBEKs+jjVzcBQT9ix+kezVwo9tgyRSVXumOOtZvAQF+paOtRAKWC4mkIIb9MBI
-         94spjmjTFbCZldqFamW3IDM0/d0SVuJdtctahaB3zMwcwqJhCrNIyi5VCtQav3oHLaY4
-         1s9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUX7mWVTSeZtwYaXJB32xG0rphPrPI+GJs3i7kF+A8sslx2RFJdupMB5cJ7VaTAoFwrbKxiCrOXfmvOoMyc@vger.kernel.org, AJvYcCWNkzwvsCKPRn4Bj5Z/5NYHAtAbonP5EyVrfzBrrTfVl4Q2KlBo654EhAZnVRhhwQmMGqQDVvCc8o99@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7YBbO5X8mx6zQfbyyRP2zVV9q9rkgjil5/Qw/BAfOQWC6bKU0
-	BNEj7Jh+GqL6v+VP1/5BklJMdJxaZUab/5serSOulwCTsk6LR/xp4rBPLlgRVG2xzNI=
-X-Gm-Gg: ASbGncsFix1uQEoEojW/n0doAVVOaPiP5VodLEKmUZjloYapzkiXFPzDoYAjGgKEmrh
-	pDGuayFdoRa/N2gnxRTxSBNoxojB9ZWn3GXZk1wghzeP1bNI8/B5lxMM3OI4SjPiLP0U4P2aRCQ
-	vv/u/tt5JMLLPzYtuJAYwNGppfENdr1O/L5m/NTXluj/+60wMsgRsSjal/DXyF0Ot+hfnzhaLXV
-	6MrcG+79+1NPt5TiffsWxxgyFgo6ROFpzR/aAQhlr/dHdccUHK9m6CdEp++WScBiNcQiOTEGiXD
-	gTzlsbjLgKVcpHv5mUmVQlsPsJjEgVCMFi6xc6ldVmfIR0Jy8tlEgdjjrVTd7hjnAdlMqPQKlhw
-	2lbeZr3pKxOCcG8KHHdo=
-X-Google-Smtp-Source: AGHT+IG7GWnwLy8cVwbGtYFu+mWQ7KLEnUINmqaOuXi1ChF3zzxD+L4Z74LlaATNvLAoAa8lyF5xnQ==
-X-Received: by 2002:a05:6512:2256:b0:553:3532:5b30 with SMTP id 2adb3069b0e04-557e553f329mr1086873e87.27.1751807852655;
-        Sun, 06 Jul 2025 06:17:32 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384d16c7sm954153e87.253.2025.07.06.06.17.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Jul 2025 06:17:32 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32f1aaf0d60so11513251fa.1;
-        Sun, 06 Jul 2025 06:17:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/HeNevDKuAw7Qer2nyxpPlfpwkU3Y1/EOyiXnSDuYRtnJzBqSC0XPK69DpZrh3s/9YtaczTAd/0lG@vger.kernel.org, AJvYcCXINOKaB0pUkpierPyTeLRM41mJP8RGad3I6/jbODfLpjmYsLbRsz1SuF3YeEpINJGc1nN2Uu/ShjbPPVDm@vger.kernel.org
-X-Received: by 2002:a05:651c:1104:b0:32b:755e:6cc8 with SMTP id
- 38308e7fff4ca-32f19af1307mr14177851fa.31.1751807852041; Sun, 06 Jul 2025
- 06:17:32 -0700 (PDT)
+	s=arc-20240116; t=1751808158; c=relaxed/simple;
+	bh=+BvUX9y9HlznKTksf6XPUyfiHbJBnA3CB04YdeM1+w8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=R4ov2vRpB/IS+GdLkyPtOUcKAoSdi6wZROL4zRZ7wPEIQoUtIbjanDA9psGHNNyIJapOI+dUT9lGGyJDLQZcYhfa09UijofxV+sK64wkpQ/Fk9OoNM1i5vz1ykzWZJ2C7hZ/ksHDdMmA1L1Ih8aPo49KrVSF6+mCddUO8F3XSYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=QXuWPtnj; arc=none smtp.client-ip=134.0.28.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="QXuWPtnj"
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+	by mxout3.routing.net (Postfix) with ESMTP id C915C604DB;
+	Sun,  6 Jul 2025 13:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1751808148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EB6hNHt8FOhHLQ2d1gn4ZCXh4990JbNQXr8yU3xNg5Y=;
+	b=QXuWPtnjGrubMHvjoedppmQdjg5/RwFPMhmlbV5gQoeTmfH2yxE0oTsLz6Aer4dC65al4V
+	m4L0ER2jwxIQ6GGlGQV9c4ruSRZlN+mMKD8QT1ck5ZGwok/S+Hv7JQRh/jnoPlkTNrsqu0
+	9Z1k0oXV9RxDiHhcOgDlV5q7toYSD88=
+Received: from frank-u24.. (fttx-pool-194.15.86.111.bambit.de [194.15.86.111])
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 702CD1226A5;
+	Sun,  6 Jul 2025 13:22:27 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Georgi Djakov <djakov@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Johnson Wang <johnson.wang@mediatek.com>,
+	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Felix Fietkau <nbd@nbd.name>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v8 02/16] dt-bindings: net: mediatek,net: allow up to 8 IRQs
+Date: Sun,  6 Jul 2025 15:21:57 +0200
+Message-ID: <20250706132213.20412-3-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250706132213.20412-1-linux@fw-web.de>
+References: <20250706132213.20412-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250706095804.50475-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250706095804.50475-2-krzysztof.kozlowski@linaro.org>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Sun, 6 Jul 2025 21:17:18 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65XF=A5Qrm8FrLQaZXLLs5T-0osBLP3Fz3UabrTi5xUXQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzvgRNdcFpttWg_IhO6gnULQzwACTFMlrJqzvSYihRttnVAncFXhqPJE4A
-Message-ID: <CAGb2v65XF=A5Qrm8FrLQaZXLLs5T-0osBLP3Fz3UabrTi5xUXQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: arm: sunxi: Combine board variants into enums
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, lukas.schmid@netcube.li
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jul 6, 2025 at 5:58=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> The common style in all bindings for enumerating similar variants is to
-> use 'enum', not 'oneOf', so all boards of same variant or using same SoM
-> should be grouped under enum.  It is more readable, more compact and
-> makes easier to find actual devices from the same family/type.  Also
-> there is completely no point to repeat the compatible in the description
-> (incircuit,icnova-a20-adb4006 implies this is "ICnova A20 ADB4006" and
-> pine64,pinephone-1.2 implies "Pine64 PinePhone (1.2)").
->
-> Combine two easily visible cases: ICnova A20 and Pine64 PinePhone.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Increase the maximum IRQ count to 8 (4 FE + 4 RSS/LRO).
 
-I can take it through the sunxi tree if you prefer. We do have new
-boards coming in this cycle, but I don't think there is any overlap
-in the board binding file.
+Frame-engine-IRQs (max 4):
+MT7621, MT7628: 1 IRQ
+MT7622, MT7623: 3 IRQs (only two used by the driver for now)
+MT7981, MT7986, MT7988: 4 IRQs (only two used by the driver for now)
+
+Mediatek Filogic SoCs (mt798x) have 4 additional IRQs for RSS and/or
+LRO.
+
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+---
+v8: separate irq-count change from interrupt-names patch
+---
+ Documentation/devicetree/bindings/net/mediatek,net.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+index 175d1d011dc6..766224e4ed86 100644
+--- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
++++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+@@ -40,7 +40,7 @@ properties:
+ 
+   interrupts:
+     minItems: 1
+-    maxItems: 4
++    maxItems: 8
+ 
+   power-domains:
+     maxItems: 1
+-- 
+2.43.0
+
