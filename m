@@ -1,207 +1,281 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D638329A5
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 03:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0312E3717;
+	Sun,  6 Jul 2025 03:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751772946; cv=none; b=Flz5MyfKe00WrOgR4DyvAcDdOWZUdsrSiaD22FaD2zfp+rBqFzfYNXKS4ETseVBnsBxkd/GUeWI7JUBuSRD8AR5weW1x1DfkleCb76/i/HuUGuquAz0yboGrKqe7TQSqil0t+XGNpup2bzVbX3+OnHX2i2Ftvt6gVKPNmJQoTXI=
+	t=1751773421; cv=none; b=FHUcVQrxPO4TqydEZF32JqT+KI5vOgOFiXIxkFVCybUPJ3PIKmb8q1h55WnkykriTWne031iaESenI/I1wLdE9y9KbNAMv1HSLIcCnrPPPZTWNb6N+i9zqb698eOdrH0Lu7cbMLiIXZL4K/aZnef6WRwF8lYXd2q9nWB8SfAMhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751772946; c=relaxed/simple;
-	bh=XUEjV1+nQgo6kAcZ42o2onvzE1dkFgMP0aI/wjt4TDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tI58UWYfTax4MfI7yYqfkWT/VdW2X53uJ6gfKZq5Q90K2ND0nrhpCUbIM7Yn8rbRyJUt9AEqMJ4KO0gi7/P2vUEOEC9dDMXiFKCAEyLEOICUcoVHZArtv+ACLFbVzDuznrri9WPxA1p8llK65KqA3eOZPwEI+COlvb1tUSzycLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QogZX6tE; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751773421; c=relaxed/simple;
+	bh=3AMMnlHd1U6wIG7D7DIX4qEiRdedgR7xMDzzdt7Pa2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sY4llNp19srQM81kM+B8NwsW71OI56pXmPnJ3JeIRk7XIZhTcJLsfyD/SYtNHQlNhcfUt9OQHSNtKvEuw6HAFzCDJD1Brd5SL/QhulyyEQoBtoDp3F1JA9y6GfKBV7Kz4AdjXE0CjS2rHCap/RfpoSh0Qq9udk/cMcbq3pnc60M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWTzKb6t; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QogZX6tE"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751772934; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=ry7sk0Q8RX4Rog7LIxYwem8OESuZgL7xJk2VRGHdz4U=;
-	b=QogZX6tEHoTaRXiTSrtQIwECHQxs2a3tiGduP7B4H/AonyXXd7UoB1P9Fs9pEXHK/0iXxabnpMXoDf7126Dl2uBocoSvGCOOmQde+7uJgxs8mEeQ/Ly/jF/eLo4Sds/BaYxpe2idWVbYgDtQvviAmr9TMDmQuJK+4zQQ+9Tnwrw=
-Received: from 30.134.69.216(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WhjEL7l_1751772931 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 06 Jul 2025 11:35:32 +0800
-Message-ID: <452cad4b-e0c7-4792-9272-69199fa52a55@linux.alibaba.com>
-Date: Sun, 6 Jul 2025 11:35:30 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWTzKb6t"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235ef62066eso32178655ad.3;
+        Sat, 05 Jul 2025 20:43:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751773419; x=1752378219; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=692z2j5JqybfGJs3QP4P1sOhZFmW1Px0hlvoTc305Gc=;
+        b=AWTzKb6tQFAg98mGjMPXTABq0yFgpDvD/ryI1Js1NiFt6xvC6s32tvR3S5WVw4rWdz
+         c5riqHOeu+IT3ioU6mokEexgvOQYI+EvFLqqqnxWhued/dtaFIDJEIT4/+CKY0v40bxT
+         Vmv4vvt101PViPnrs8VwqjNbH5jV9fvy9N18CuZez/qK1VTn2WL8rZe7epdLkb4tERqz
+         lGE8kx7p1qMgMQGffQnkqYrdZGy6hqcjeWriaUtuna8vogRFyy3AtYMBOJTygCL90yUj
+         wgXb6ZMtnMF2iSAkBCIFQqSThWmVy/OaVHhodWRXTLvrOUq68lr5KUWTpRF+JqoaHuk2
+         OqQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751773419; x=1752378219;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=692z2j5JqybfGJs3QP4P1sOhZFmW1Px0hlvoTc305Gc=;
+        b=G9J+51l7U+2+qJD54bch/u75I49G+4zrutMzs5KmGKi/Aweo71f3vR3uMAQjjgesTC
+         sWcM1hvv0GjkDV/nKUG8Ow0WhYl+LnGj3G3P1YQkjU6ckzhEHEbj6HJqirL3idxS14+/
+         RRl4eDoNtVO7UDjOWduRURszCNUuyHIwcjAVE9gSQv5/fWBpxHANGMDcj77TIttl1gdq
+         V0yHbRZ3LJB/8tC25zOv1+bgEWK9kS9C6lFmjRg87x7r4/q0u0dk2AUDvIvYaQSDXCZO
+         GXf/NTEM02Jk064bkOovBeJitgo3j5J+b8VdJVlyvNTL5GHRfocaKqhPYEWNFuf4QRkr
+         Mcpg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ML0qjls1jUj2Fl7tnDqpJygjz2Q1KSTkAhh7l13VLDb6MPUUoSLCvZVZxWMbsy0NmhUbPyDgI9Jt+dYX@vger.kernel.org, AJvYcCUsrI1weJo/YLmxK9IPYMxpQ/AeE1IH6w0jTyIcnFMEnbvrkoRXm8JMEhDbe1FCl2XNuxJjGGmMU3T04y2O/w==@vger.kernel.org, AJvYcCV6cpVzPenSMjyM1shrpVGAvvjPgIaQ3b6Om4KbR/yCd1NwfMSM0JVRoppJw9dmfBkzuuwXudpQ4oLL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDqaYoiDVsLZy86nr8j6N5fM4lgtQlYgyMUs3g1QKr8Uu4BVky
+	wFVZLGpJXCc+5ed0bJaoV9HF1YFkl+emucNDI3FEeJA5Bog03DAJKp0WidoVMg==
+X-Gm-Gg: ASbGncvESZRnBXtiwl1RmID+9a6SCeJAHwEobemLnjDX73+MvIRxITahkifxoJmOvoN
+	hpxPH+XRhU5i6FAcVBrtUpzsCxM2sFC1hy1s7jAVfoIq1iP/pi1aiLa4nWmpcbes7TY4EU1JbKU
+	hpOwgmwVpqqdfEuR8jXa4OETNUpGyj3nHh61JthOJcyeDmeRnLuvTgH72o1pErvjGDw6JVl0Z0G
+	unFqMQi87IBxXBNEiUdPCdNFbINg6D4pRHmGzTPCGYdrfDLjTYQPSmVKR1kaIUlhD/X+XYd63EQ
+	wdVEIkVIO/KbRSbsGkGJZJFF3HeG2B1Q3qk99t9TouVKKtovZejTD7Tlg7uuit1Jc3JFQZKNuA=
+	=
+X-Google-Smtp-Source: AGHT+IHx+IYrXKr3xB977sY51qAuIeSph3F9p1dTKzgWZE2kmv8QVjP1JAIdDGrLhfrOpI54EvpjOw==
+X-Received: by 2002:a17:902:fc8e:b0:234:c5c1:9b84 with SMTP id d9443c01a7336-23c90fd83c1mr54275325ad.37.1751773419007;
+        Sat, 05 Jul 2025 20:43:39 -0700 (PDT)
+Received: from nuvole.lan ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8457e4d2sm57092205ad.148.2025.07.05.20.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 20:43:38 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: konrad.dybcio@oss.qualcomm.com
+Cc: aliceryhl@google.com,
+	andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	ebiggers@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	joel.granados@kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	len.brown@intel.com,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lossin@kernel.org,
+	mingo@kernel.org,
+	mitltlatltl@gmail.com,
+	ojeda@kernel.org,
+	robh@kernel.org,
+	sfr@canb.auug.org.au,
+	vanyang@smail.nju.edu.cn,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: sc8280xp: Add initial support for Ntmer TW220
+Date: Sun,  6 Jul 2025 11:43:02 +0800
+Message-ID: <20250706034303.5404-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <de111b27-9126-4c03-a7bb-8cce9ea2780e@oss.qualcomm.com>
+References: <de111b27-9126-4c03-a7bb-8cce9ea2780e@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/9] mm/shmem, swap: tidy up swap entry splitting
-To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
-References: <20250704181748.63181-1-ryncsn@gmail.com>
- <20250704181748.63181-5-ryncsn@gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250704181748.63181-5-ryncsn@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Sat, Jun 28, 2025 at 3:48 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+> On 6/17/25 11:29 AM, Pengyu Luo wrote:
+> > The Ntmer TW220 is a WOS tablet based on the Qualcomm SC8280XP platform,
+> > also known as the Robo&Kala 2-in-1 Laptop. Thanks to Hong for providing
+> > the unlocked device and early development work. This patch adds an
+> > initial device tree to enable basic functionality.
+> >
+> > Currently supported components include:
+> > - Bluetooth & Wi-Fi (board file regeneration required)
+> > - Battery charging (up to 15V/3A fixed PDO) and reporting via pmic-glink
+> > - Flash LEDs (front and rear)
+> > - Hall sensor (lid detection)
+> > - Keyboard (via Bluetooth or USB)
+> > - NVMe SSD
+> > - Power and volume keys
+> > - Simple-framebuffer
+> > - Sound (playback and capture; top-left DMIC only, top-right works only
+> >   on Windows)
+> > - Touchscreen and stylus (requires GPI DMA support [1] and stylus support [2])
+> > - USB Type-C ports
+> >
+> > The following components are currently non-functional:
+> > - Cameras (GalaxyCore GC5035; only sensor ID is detectable, no frames in libcamera;
+> >   partial driver can be found on LKML archives)
+> > - DSI display (blank screen with `dsi_err_worker: status=4`; primary DSI register
+> >   dump included below)
+> > - Stylus wireless charger (CPS4035)
+> > - UCSI over GLINK
+> >
+> > [1]: https://lore.kernel.org/linux-arm-msm/20250617090032.1487382-3-mitltlatltl@gmail.com
+> > [2]: https://lore.kernel.org/linux-input/20250605054855.403487-2-mitltlatltl@gmail.com
+> >
+> > Note: This series does **not** include any confidential material. Those
+> > who wish to run Linux on this device should contact Ntmer, as the
+> > bootloader is locked via secure boot.
+> >
+> > Co-developed-by: Hong Zhu <vanyang@smail.nju.edu.cn>
+> > Signed-off-by: Hong Zhu <vanyang@smail.nju.edu.cn>
+> > Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> >
+> > dsi_ctrl, reg = <0 0x0ae94000 0 0x400>;
+> > 0xae94000 20050001 000001f3 0000000b dddd1011
+>
+> This is not something we want in the commit log
+>
 
+I will remove it. I need help, then I attached it, two of my sc8280xp
+devices require dsi to work. Reversing and guessing wasted a lot of
+time. I will appreciate it if qcom could support it.
 
-On 2025/7/5 02:17, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
-> 
-> Instead of keeping different paths of splitting the entry before the
-> swap in start, move the entry splitting after the swapin has put
-> the folio in swap cache (or set the SWAP_HAS_CACHE bit). This way
-> we only need one place and one unified way to split the large entry.
-> Whenever swapin brought in a folio smaller than the shmem swap entry,
-> split the entry and recalculate the entry and index for verification.
-> 
-> This removes duplicated codes and function calls, reduces LOC,
-> and the split is less racy as it's guarded by swap cache now. So it
-> will have a lower chance of repeated faults due to raced split.
-> The compiler is also able to optimize the coder further:
-> 
-> bloat-o-meter results with GCC 14:
-> 
-> With DEBUG_SECTION_MISMATCH (-fno-inline-functions-called-once):
-> ./scripts/bloat-o-meter mm/shmem.o.old mm/shmem.o
-> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-82 (-82)
-> Function                                     old     new   delta
-> shmem_swapin_folio                          2361    2279     -82
-> Total: Before=33151, After=33069, chg -0.25%
-> 
-> With !DEBUG_SECTION_MISMATCH:
-> ./scripts/bloat-o-meter mm/shmem.o.old mm/shmem.o
-> add/remove: 0/1 grow/shrink: 1/0 up/down: 949/-750 (199)
-> Function                                     old     new   delta
-> shmem_swapin_folio                          2878    3827    +949
-> shmem_split_large_entry.isra                 750       -    -750
-> Total: Before=33086, After=33285, chg +0.60%
-> 
-> Since shmem_split_large_entry is only called in one place now. The
-> compiler will either generate more compact code, or inlined it for
-> better performance.
-> 
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> ---
->   mm/shmem.c | 53 +++++++++++++++++++++--------------------------------
->   1 file changed, 21 insertions(+), 32 deletions(-)
-> 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index e43becfa04b3..217264315842 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2266,14 +2266,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   	struct address_space *mapping = inode->i_mapping;
->   	struct mm_struct *fault_mm = vma ? vma->vm_mm : NULL;
->   	struct shmem_inode_info *info = SHMEM_I(inode);
-> +	swp_entry_t swap, index_entry;
->   	struct swap_info_struct *si;
->   	struct folio *folio = NULL;
->   	bool skip_swapcache = false;
-> -	swp_entry_t swap;
->   	int error, nr_pages, order, split_order;
-> +	pgoff_t offset;
->   
->   	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
-> -	swap = radix_to_swp_entry(*foliop);
-> +	swap = index_entry = radix_to_swp_entry(*foliop);
->   	*foliop = NULL;
->   
->   	if (is_poisoned_swp_entry(swap))
-> @@ -2321,46 +2322,35 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   		}
->   
->   		/*
-> -		 * Now swap device can only swap in order 0 folio, then we
-> -		 * should split the large swap entry stored in the pagecache
-> -		 * if necessary.
-> -		 */
-> -		split_order = shmem_split_large_entry(inode, index, swap, gfp);
-> -		if (split_order < 0) {
-> -			error = split_order;
-> -			goto failed;
-> -		}
-> -
-> -		/*
-> -		 * If the large swap entry has already been split, it is
-> +		 * Now swap device can only swap in order 0 folio, it is
->   		 * necessary to recalculate the new swap entry based on
-> -		 * the old order alignment.
-> +		 * the offset, as the swapin index might be unalgined.
->   		 */
-> -		if (split_order > 0) {
-> -			pgoff_t offset = index - round_down(index, 1 << split_order);
-> -
-> +		if (order) {
-> +			offset = index - round_down(index, 1 << order);
->   			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
->   		}
->   
-> -		/* Here we actually start the io */
->   		folio = shmem_swapin_cluster(swap, gfp, info, index);
->   		if (!folio) {
->   			error = -ENOMEM;
->   			goto failed;
->   		}
-> -	} else if (order > folio_order(folio)) {
-> +	}
-> +alloced:
-> +	if (order > folio_order(folio)) {
->   		/*
-> -		 * Swap readahead may swap in order 0 folios into swapcache
-> +		 * Swapin may get smaller folios due to various reasons:
-> +		 * It may fallback to order 0 due to memory pressure or race,
-> +		 * swap readahead may swap in order 0 folios into swapcache
->   		 * asynchronously, while the shmem mapping can still stores
->   		 * large swap entries. In such cases, we should split the
->   		 * large swap entry to prevent possible data corruption.
->   		 */
-> -		split_order = shmem_split_large_entry(inode, index, swap, gfp);
-> +		split_order = shmem_split_large_entry(inode, index, index_entry, gfp);
->   		if (split_order < 0) {
-> -			folio_put(folio);
-> -			folio = NULL;
->   			error = split_order;
-> -			goto failed;
-> +			goto failed_nolock;
->   		}
->   
->   		/*
-> @@ -2369,15 +2359,13 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   		 * the old order alignment.
->   		 */
->   		if (split_order > 0) {
-> -			pgoff_t offset = index - round_down(index, 1 << split_order);
-> -
-> +			offset = index - round_down(index, 1 << split_order);
->   			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+> [...]
+>
+> > +     gpio-leds {
+> > +             compatible = "gpio-leds";
+> > +
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&camf_indicator_en>, <&camr_indicator_en>;
+>
+> property-n
+> property-names
+>
+> in that order, across the file, please
+>
 
-Obviously, you should use the original swap value 'index_entry' to 
-calculate the new swap value.
+Ack
 
-With the following fix, you can add:
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Tested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> [...]
+>
+> > +             wsa-dai-link {
+> > +                     link-name = "WSA Playback";
+> > +
+> > +                     cpu {
+> > +                             sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
+> > +                     };
+> > +
+> > +                     codec {
+>
+> 'co'dec < 'cp'u
+>
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index d530df550f7f..1e8422ac863e 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2361,7 +2361,7 @@ static int shmem_swapin_folio(struct inode *inode, 
-pgoff_t index,
-                  */
-                 if (split_order > 0) {
-                         offset = index - round_down(index, 1 << 
-split_order);
--                       swap = swp_entry(swp_type(swap), 
-swp_offset(swap) + offset);
-+                       swap = swp_entry(swp_type(swap), 
-swp_offset(index_swap) + offset);
-                 }
-         } else if (order < folio_order(folio)) {
-                 swap.val = round_down(swap.val, 1 << folio_order(folio));
+Ack
 
+> [...]
+>
+> > +/*
+> > + * cci0_i2c1
+> > + * sda: gpio115, scl: gpio116
+> > + *
+> > + * CAMI ov9234 @36 @48
+> > + *
+> > + * power on sequence
+> > + * gpio7 out low
+> > + * l3q 1p8
+> > + * l6q 2p8
+> > + * l2q 1p2
+> > + * gpio7 out high
+> > + * msleep 5
+> > + * cam_cc_mclk4_clk 2.4MHz (gpio6)
+> > + */
+>
+> It would be useful to enable these buses and set up what we can,
+> otherwise this is quite a lot of text for comments..
+>
+
+Ack
+
+> [...]
+>
+> > +&spi22 {
+> > +     status = "okay";
+> > +     pinctrl-0 = <&spi22_default>;
+> > +     pinctrl-names = "default";
+>
+> status should be the last property (before subnodes), preferably
+> with a newline before it, so:
+>
+> pinctrl-0 = <&spi22_default>;
+> pinctrl-names = "default";
+>
+> status = "okay";
+>
+
+Ack
+
+>
+> > +
+> > +     touchscreen@0 {
+> > +             /*
+> > +              * The ACPI device ID is GXTS7986, its exact suffix is unknown.
+> > +              * The Windows driver suggests it is a GTBerlinB variant and
+> > +              * communicates via HID over SPI, which aligns with the Linux
+> > +              * driver `drivers/hid/hid-goodix-spi.c`.
+> > +              *
+> > +              * However, the HID descriptor read from the device appears
+> > +              * garbled, preventing proper probe with the HID driver. In
+> > +              * contrast, the driver at
+> > +              * `drivers/input/touchscreen/goodix_berlin_spi.c` shares many
+> > +              * similarities and functions correctly with this hardware.
+> > +              *
+> > +              * Therefore, we choose to use the goodix_berlin_spi driver
+> > +              * instead.
+>
+> Is this something you could work out with the aforementioned drivers'
+> maintainers?
+>
+
+Since the ts device works well, I am still occupied with dsi things,
+I may contact them later.
+
+BTW, could you please review the gpi dma patches, touchscreen depends
+on it, it is still hanging there, thanks in advance.
+https://lore.kernel.org/linux-arm-msm/20250617090032.1487382-3-mitltlatltl@gmail.com
+
+> [...]
+>
+> > +&pcie4_port0 {
+> > +     wifi@0 {
+> > +             compatible = "pci17cb,1103";
+> > +             reg = <0x10000 0x0 0x0 0x0 0x0>;
+> > +
+> > +             vddrfacmn-supply = <&vreg_pmu_rfa_cmn_0p8>;
+> > +             vddaon-supply = <&vreg_pmu_aon_0p8>;
+> > +             vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
+> > +             vddwlmx-supply = <&vreg_pmu_wlmx_0p8>;
+> > +             vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
+> > +             vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
+> > +             vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
+> > +             vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
+> > +             vddrfa1p8-supply = <&vreg_pmu_rfa_1p7>;
+> > +
+> > +             /*
+> > +              * bus=pci,vendor=17cb,device=1103,subsystem-vendor=17cb,
+> > +              * subsystem-device=0108,qmi-chip-id=18,qmi-board-id=255
+> > +              *
+> > +              * Regenerate board file, x13s one works well
+>
+> Please post on the ath11k mailing list and propose and ask for
+> that variant to be included
+>
+
+Ack
+
+Best wishes,
+Pengyu
