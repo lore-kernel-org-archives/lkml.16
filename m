@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A720ED;
-	Sun,  6 Jul 2025 07:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2F31D86FF;
+	Sun,  6 Jul 2025 07:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751788147; cv=none; b=SoocNaIi1eJfAqJk0FY7Mug9UxMztyigKz5UXO6/VGcMCrZSlBUnwxCgnOazxa1rhcTNNlA5ovdNt0huC6pd6j2KrqXCUQWGmJTBydo5bJRXmjiX8MkFmw2N5mzldwSwAybunviTLQOoRz4aHq0/cRd3tOLZ+K6onV8+p8GIPsI=
+	t=1751788207; cv=none; b=gsCi4rNBnJN8K6aqyhEg8xhX5vq2Q78UHXrhVTwh+AfxQZYQHGkZjYinPYdFZUE8HAUWJfpD3kFQLMIlQWeNSMOoYLKHprd2gOvJWSdcsSz4M2VY9FZ0CP8cJhye7DK9XFylkLO/uMrLjOUIAmOwop51RxvDC66O/PyVOM31S7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751788147; c=relaxed/simple;
-	bh=AeZgX8cv+dxBuYiCzTTJneqt3O+c34B/6XcL8I/f+GY=;
+	s=arc-20240116; t=1751788207; c=relaxed/simple;
+	bh=QcELM78RwX+zB8kvhnjQOG8WKbuPJwRJrloYcgXk5Ec=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OZXZP+dr0XIfASgaGet02A6+oo/Wz1TZc6CJ63apquaLDos4ablyDW3PFsvp7CX4AO+oLUVmA7LQR3NvhqTeLeJyVySbnzCYDvyaFAaKyrZ4ygsxQTDz3aN9MMOcN3JR1uVdfQspdTz1b2431+8hzP84dsrcpf+eutBuA37sLt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aa9IEyYL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Is4nAkuKdCEraIlcH663AC7KYKvwzjkl46/w2SDFNNFavw5HLd9bciUrW81ToflbxJr7FKz8dkAqmLpXzQNADq3MVEUW1H5+jtY4QoVJOVoJBRlsF0jPpNYITzNKzYfbbZreKrcQp8E2MwygEQW0rGI3rJmI7xGgfK5exxpKdpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VonSMRCl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aa9IEyYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB8BC4CEED;
-	Sun,  6 Jul 2025 07:49:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VonSMRCl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87735C4CEED;
+	Sun,  6 Jul 2025 07:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751788145;
-	bh=AeZgX8cv+dxBuYiCzTTJneqt3O+c34B/6XcL8I/f+GY=;
+	s=k20201202; t=1751788206;
+	bh=QcELM78RwX+zB8kvhnjQOG8WKbuPJwRJrloYcgXk5Ec=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Aa9IEyYLHCmmDZ42NL0UQcqfIUhmB4fpD3to6sNKiqN+7P2SxaO2Rx833ery3M8rL
-	 X2mEbZ/eyVXh33XOPjN3iubU6JSl7DImN8Ym+0sz7pZBWJYDtX8XaKq81HYOtfhXds
-	 O+KHl41hTX7kNG5HSTJvKJqNpKj/ny5w+j3SENhccRTaE3Sq4FSwsIOPlUoG3cFiqv
-	 ZUvOwrO4lcFzs/alLHFD7jNF2rvzwSobYJkZ9bKiKG2SN8qrDdE9pQPDxUaiBGQ+1D
-	 8/0UIsJihqhilniZkkNaWUFA3krEmD54fIdIu+CzMnZHtLxjNFC41DZgu2wGGhchwJ
-	 CBuFwzNpd+bHQ==
-Message-ID: <f0c53c19-74bd-4ac4-98e6-35fe962cf05e@kernel.org>
-Date: Sun, 6 Jul 2025 09:48:58 +0200
+	b=VonSMRClmGAbKAV/HhsQl9+7wjvRBfsaCHZWdW9AuzvFayd7HkGBKCEMAdSTEB15z
+	 GnZwDNsnZa+H76FFEjW8ymHO/zl3yqnnWlY9Tk3sq5DzHFiENWgG4P/8otaNi3wgqa
+	 l6k8XAoYbqrzcPImiOkeUqOIIGyG/6F1e9SxVSKpzuSglb1qaBjkVv2M/06Tu/QCE7
+	 9wpL+R/yuclPNpPdbdxuqmnHbL8XRvsdZaqO/Ms0c56LP/3rlz2uL9Ch7DqyfsrrKv
+	 HXp1A2eF9ciYj7/dXMtPZsE/7xhBJBN7FFdMXd+Z/dc3OZxSosizB5ZWfV0Xxd4yJs
+	 XUeXpM9MKoI5A==
+Message-ID: <21e0785e-b2f6-4b31-8887-0c22bd686dc8@kernel.org>
+Date: Sun, 6 Jul 2025 09:49:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/7] dt-bindings: arm: sunxi: Add NetCube Systems
- Nagami SoM
+Subject: Re: [PATCH v1 3/7] dt-bindings: arm: sunxi: Add NetCube Systems
+ Nagami Keypad Carrier Board
 To: Lukas Schmid <lukas.schmid@netcube.li>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
@@ -49,7 +49,7 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-riscv@lists.infradead.org
 References: <20250705213900.3614963-1-lukas.schmid@netcube.li>
- <20250705213900.3614963-2-lukas.schmid@netcube.li>
+ <20250705213900.3614963-4-lukas.schmid@netcube.li>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,35 +95,34 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250705213900.3614963-2-lukas.schmid@netcube.li>
+In-Reply-To: <20250705213900.3614963-4-lukas.schmid@netcube.li>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 05/07/2025 23:38, Lukas Schmid wrote:
-> The NetCube Systems Nagami is an System on Module base on the Allwinner
-> T113s SoC. It is intended to be used in low cost devices which require
-> simple layouts and low BOM cost.
+> The NetCube Systems Nagami Keypad Carrier is a custom board intended to
+> fit a standard Ritto Intercom enclosure and provides a Keypad, NFC-Reader
+> and Status-LED all controllable over Ethernet with PoE support.
 > 
 > Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
 > ---
->  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> index 7807ea613..3c4353884 100644
+> index 7919b5bf5..a2f16d064 100644
 > --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
 > +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> @@ -599,6 +599,11 @@ properties:
->            - const: netcube,kumquat
->            - const: allwinner,sun8i-v3s
+> @@ -610,6 +610,12 @@ properties:
+>            - const: netcube,nagami
+>            - const: allwinner,sun8i-t113s
 >  
-> +      - description: NetCube Systems Nagami SoM
+> +      - description: NetCube Systems Nagami Keypad Carrier Board
 > +        items:
-> +          - const: netcube,nagami
-As pointed out by next patch, SoM cannot be used alone and this entry
-make little sense.
+> +          - const: netcube,nagami-keypad-carrier
 
-BTW, squash all bindings patches into one, so we see complete picture.
+
+That's just enum with previous entry. Don't make it over-complicated.
 
 Best regards,
 Krzysztof
