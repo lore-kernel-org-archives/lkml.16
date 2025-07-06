@@ -1,176 +1,78 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BBC2E371A;
-	Sun,  6 Jul 2025 08:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF79254652;
+	Sun,  6 Jul 2025 08:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751791208; cv=none; b=MohRIAQBGgK958hJcSXXFBB2ruD6yo7jmeAFPLSfh9z0RBxfBntSgthZbNk6N2iiT0CbNIGw5+NCp2o+qNBSR7y5Y+2lqqADmeG/+Myt2KkxR2XinsN4mzUnBAWTbeLb/9rq6/BI3tZPDloyPzYVjkLbvK5f5DQgvcZV7cHjl7o=
+	t=1751791488; cv=none; b=MU2SFjamkRJrS7+JHoibkc63phR/WlD7manvDhTpYCvauwpzBnWH63UTxcFE2ZZJTciAfTbklvl0IjjKwgcLJ6xBzoeuJ0LtxiyZKe1IIo2EvnEe9Z/zQVvnLp+GfOHZArUbGJIqJlIyo31Pxsyt35Iq/ClKK2X4qU8da6lCuM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751791208; c=relaxed/simple;
-	bh=qXv649VKrWAK5HkhC3c0jT3TdBk+KKcbPDok3jB1VX4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FAfrLE9MWoN/5WR14x0fBy6su0i4D0QE6FRUCo0nIp0eB5G5KL1ypPGUBNzOtv4TJ2wNLSKAkvkHsHgviXeV4W0gyDd/GCIa475B4BRXzWroKdyfyA8wawHWoRJTK0ok1u/xNV2tlZRr4R0PU727G66DwTIc+I8shd6l0fZuQYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bZgLJ0JlkztS2G;
-	Sun,  6 Jul 2025 16:20:56 +0800 (CST)
-Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
-	by mail.maildlp.com (Postfix) with ESMTPS id 220A7180B6A;
-	Sun,  6 Jul 2025 16:22:03 +0800 (CST)
-Received: from [10.174.177.210] (10.174.177.210) by
- kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sun, 6 Jul 2025 16:22:02 +0800
-Message-ID: <ce70f346-88c4-c508-b716-a4af7eadea1e@huawei.com>
-Date: Sun, 6 Jul 2025 16:22:01 +0800
+	s=arc-20240116; t=1751791488; c=relaxed/simple;
+	bh=SrfvA4klo4zj6WDJudJ9E6sL8ZfUxBmkAFhJ20dj/u0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rd0r41l5NY2rBOGKYY3B15WGinoMvUY0dnyUMUln863ivR0gpsdbWM0MFvX78J4zoZnxz2Ntef4AUxz+0UTjncdVH+9oWyoVoVyt3p9UJYA08paJV2qqtOYXUwlesXmB36AfjcfWVlbkzixWmW/lt19Sn7Ii0tNSvFbdNTTgZgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gBszkqQ8; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gBszkqQ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1751791483;
+	bh=SrfvA4klo4zj6WDJudJ9E6sL8ZfUxBmkAFhJ20dj/u0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gBszkqQ8mVuleOeCdaBkeTcMfoHC7tvlv9FbPL92ih7XflO2PEC4ZXlwoxslRdvEa
+	 z6r/DNyy3Ts/woXH7TCFYi4QJKcPeVTFg0qK3mxXgPEDdJo5CO7dASzGmShCePJIk0
+	 64/Nf7+K1cuTwYdt6H8MB6w/XRJexjMa63ycBbGw=
+Date: Sun, 6 Jul 2025 10:44:42 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] tools/nolibc: add support for clock_nanosleep() and
+ nanosleep()
+Message-ID: <a8cf1929-e663-468d-a842-a1a4f4a3b2fe@t-8ch.de>
+References: <20250704-nolibc-nanosleep-v1-1-d79c19701952@linutronix.de>
+ <20250706062633.GB29601@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] nfs: fix the race of lock/unlock and open
-To: Li Lingfeng <lilingfeng3@huawei.com>, <trondmy@kernel.org>,
-	<anna@kernel.org>, <jlayton@kernel.org>, <bcodding@redhat.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<lilingfeng@huaweicloud.com>
-References: <20250419085709.1452492-1-lilingfeng3@huawei.com>
-From: yangerkun <yangerkun@huawei.com>
-In-Reply-To: <20250419085709.1452492-1-lilingfeng3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemf100006.china.huawei.com (7.202.181.220)
+In-Reply-To: <20250706062633.GB29601@1wt.eu>
 
-nfs4_reclaim_locks already given us solution:
+On 2025-07-06 08:26:33+0200, Willy Tarreau wrote:
+> On Fri, Jul 04, 2025 at 04:19:48PM +0200, Thomas Weißschuh wrote:
+> > +static __attribute__((unused))
+> > +int sys_clock_nanosleep(clockid_t clockid, int flags, const struct timespec *rqtp,
+> > +			struct timespec *rmtp)
+> > +{
+> > +#if defined(__NR_clock_nanosleep)
+> > +	return my_syscall4(__NR_clock_nanosleep, clockid, flags, rqtp, rmtp);
+> > +#elif defined(__NR_clock_nanosleep_time64)
+> > +	struct __kernel_timespec krqtp, krmtp;
+> > +	int ret;
+> > +
+> > +	__nolibc_timespec_user_to_kernel(rqtp, &krqtp);
+> > +	ret = my_syscall4(__NR_clock_nanosleep_time64, clockid, flags, &krqtp, &krmtp);
+> > +	if (rmtp)
+> > +		__nolibc_timespec_kernel_to_user(&krmtp, rmtp);
+> > +	return ret;
+> > +#else
+> > +	return __nolibc_enosys(__func__, clockid, flags, rqtp, rmtp);
+> > +#endif
+> 
+> I don't know which archs do not have clock_nanosleep, but if it becomes
+> needed on some of them, we could probably fall back to pslelect() if
+> available, of course, and ignore the clockid.
 
-static int nfs4_reclaim_locks(struct nfs4_state *state, const struct 
-nfs4_state_recovery_ops *ops)
-...
-	/* Guard against delegation returns and new lock/unlock calls */
-	down_write(&nfsi->rwsem);
-	spin_lock(&flctx->flc_lock);
+No architecture should ever run into the #else.
+It is mostly for completeness and consistency with other architectures.
+As for falling back to pselect(), the clockid is indeed important :-)
 
-Can you help try this way?
+> Acked-by: Willy Tarreau <w@1wt.eu>
 
-在 2025/4/19 16:57, Li Lingfeng 写道:
-> LOCK may extend an existing lock and release another one and UNLOCK may
-> also release an existing lock.
-> When opening a file, there may be access to file locks that have been
-> concurrently released by lock/unlock operations, potentially triggering
-> UAF.
-> While certain concurrent scenarios involving lock/unlock and open
-> operations have been safeguarded with locks – for example,
-> nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
-> locks_lock_inode_wait() – there remain cases where such protection is not
-> yet implemented.
-> 
-> The issue can be reproduced through the following steps:
-> T1: open in read-only mode with three consecutive lock operations applied
->      lock1(0~100) --> add lock1 to file
->      lock2(120~200) --> add lock2 to file
->      lock3(50~150) --> extend lock1 to cover range 0~200 and release lock2
-> T2: restart nfs-server and run state manager
-> T3: open in write-only mode
->      T1                            T2                                T3
->                              start recover
-> lock1
-> lock2
->                              nfs4_open_reclaim
->                              clear_bit // NFS_DELEGATED_STATE
-> lock3
->   _nfs4_proc_setlk
->    lock so_delegreturn_mutex
->    unlock so_delegreturn_mutex
->    _nfs4_do_setlk
->                              recover done
->                                                  lock so_delegreturn_mutex
->                                                  nfs_delegation_claim_locks
->                                                  get lock2
->     rpc_run_task
->     ...
->     nfs4_lock_done
->      locks_lock_inode_wait
->      ...
->       locks_dispose_list
->       free lock2
->                                                  use lock2
->                                                  // UAF
->                                                  unlock so_delegreturn_mutex
-> 
-> Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix this
-> issue.
-> 
-> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->   fs/nfs/nfs4proc.c | 19 +++++++++++++++----
->   1 file changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 970f28dbf253..297ee2442c02 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
->   		.inode = calldata->lsp->ls_state->inode,
->   		.stateid = &calldata->arg.stateid,
->   	};
-> +	struct nfs4_state_owner *sp = calldata->ctx->state->owner;
->   
->   	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
->   		return;
->   	switch (task->tk_status) {
->   		case 0:
->   			renew_lease(calldata->server, calldata->timestamp);
-> +			mutex_lock(&sp->so_delegreturn_mutex);
->   			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
-> +			mutex_unlock(&sp->so_delegreturn_mutex);
->   			if (nfs4_update_lock_stateid(calldata->lsp,
->   					&calldata->res.stateid))
->   				break;
-> @@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   {
->   	struct nfs4_lockdata *data = calldata;
->   	struct nfs4_lock_state *lsp = data->lsp;
-> +	struct nfs4_state_owner *sp = data->ctx->state->owner;
->   
->   	if (!nfs4_sequence_done(task, &data->res.seq_res))
->   		return;
-> @@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   				data->timestamp);
->   		if (data->arg.new_lock && !data->cancelled) {
->   			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
-> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
-> +			mutex_lock(&sp->so_delegreturn_mutex);
-> +			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0) {
-> +				mutex_unlock(&sp->so_delegreturn_mutex);
->   				goto out_restart;
-> +			}
-> +			mutex_unlock(&sp->so_delegreturn_mutex);
->   		}
->   		if (data->arg.new_lock_owner != 0) {
->   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
-> @@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
->   	int status;
->   
->   	request->c.flc_flags |= FL_ACCESS;
-> -	status = locks_lock_inode_wait(state->inode, request);
-> -	if (status < 0)
-> -		goto out;
->   	mutex_lock(&sp->so_delegreturn_mutex);
->   	down_read(&nfsi->rwsem);
-> +	status = locks_lock_inode_wait(state->inode, request);
-> +	if (status < 0) {
-> +		up_read(&nfsi->rwsem);
-> +		mutex_unlock(&sp->so_delegreturn_mutex);
-> +		goto out;
-> +	}
->   	if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
->   		/* Yes: cache locks! */
->   		/* ...but avoid races with delegation recall... */
+Thanks!
