@@ -1,48 +1,50 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D282BD024
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 20:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651AA288C2D
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 20:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751835538; cv=none; b=s6V6JV6FjztXgFL2HPAwNKMxPguG+ft9f/8WmLYxY1FXqb6KIYqF77XgsVEatdwJyHWWA3hLTIYhmCE+J3Rz1xZX/zUr8J8y7wu3RnklDlv4DrJRD56GZJe2mN78zCRgkVF3DLho5c+IOY7BkXpg7LkA8kqAkGgmksgeeP1+5Rs=
+	t=1751835542; cv=none; b=QI6jt0ZP1UalkWPgn8VYVmFyolBwQJJ4ry+a2U4fz0MBttPO9MjDOfTDcr8cadW61K8omObxOWtH0Upr5kV1yvpbchyeNgN+UIn1CHCTAkvV7o7RFt+onk+yFssjFt6AkCMuZYfnoUo16YV949X3Ees/DZbjKpXZFIcPHJ1v2tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751835538; c=relaxed/simple;
-	bh=oJe0Jvb+e6o3LdcbttuWCAKKRAx4UqgdZHR+g1QlkL4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WSNSFzauVWY73lto3lsv4Cq4IpbjadX+8k/ZK3UCm9XBJooP0ZywkJKWht9mwg6r24WV28k5M8JZc0q37SKuX2mzHkpuVaL83YKMhqkY9vtpgm8JZmhhXZfmh9U8pFwIuYQJGdxzrIZJbkjyGLg3VNRLf2hbZVV4ACKaxok7qto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=k4UjhD18; arc=none smtp.client-ip=95.215.58.180
+	s=arc-20240116; t=1751835542; c=relaxed/simple;
+	bh=ho2rwTSdEsBwxt3Tg5cPYOoKqzB5TlXOnmxJt71JOnQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iwbBbbo5CC7tWgNCt0Zu0t5Df+5wfNHkcmN+e0dHxtau9pPe6rv4r8G3KPPEU97ITnX0SAOeMSlX36zkSZMaqqZfDGOoezk6h+4YaGysPLoEAWSNxmhgzopkH2ogoVekCJkuVOhWfh/IZns8CIC8nR9CTKxeAC7tmD2+un5izHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=YLHExb1l; arc=none smtp.client-ip=95.215.58.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="k4UjhD18"
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="YLHExb1l"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1751835523;
+	s=key1; t=1751835538;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=q+xpk0bl4k6HE3bnotHGuna2LqDZpkUgnqbHeuK51nQ=;
-	b=k4UjhD18vFJB1H+3OgcpK/ctGCu5JpEjuzxS7t33gZs4/GhhR15Qx8p6EN3uxvp5xkUJgQ
-	5ey9kDfJPvGrtPyU6HrzieE9Q7gpGE6pIfdglxo+g+056yCdLiXn77xN8ATHghZhbNKLY3
-	10/PN4LwZF1+C5xVHlStNfVLZNMJ4x5rnaz14/e3IDajpOsN5NeVyk+VAQRGDYUTKogaRI
-	kOGgkN/SR7MtNB+oo01wtYgBMlUimm/5PFKasTxNaO7SdqX/5VPmhG+UA4ULqggGBhyhaf
-	j5EBOy9nbjo9fA/REcgw68KbuZBZNHao5yKE6Wp4jkkNg76b0aW3R/Ln9oHWHg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OpPPvZlTf161qo41zEM/rvDpNb0+czAede4+ebWXEe0=;
+	b=YLHExb1l8hwWbzRscCHRVhQFL7m6ipWFBWsK39JzxQp/AzdWicAyU+dIswq3Q3wn9F4pc4
+	tMimOuMYJu2YgIJg8sUuny5S64yAi3L5CuB8YJ8OA8hgVYY3dAY3mhXeQ/f0S3OrE4Olm2
+	NwU/Wexbje/waXXP0xn+KxDn2p+5eox7UAShNgyvKycX8M57o/+e+EMUA9NM+Jo38/sjwh
+	AB9PLQUkoRZhNkcvQqaiyH3n6rltDJb88bJNE5FY/6yNPQzxzshZloBIZenEvJnE206WvQ
+	VGR9NUPG1z/IS75SvAu5Feco18JubzRo95N8WuFexGkHU1FuySD4rWaJs5fIFg==
 From: Val Packett <val@packett.cool>
-To: 
-Cc: Val Packett <val@packett.cool>,
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
+To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Val Packett <val@packett.cool>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] Add Dell Inspiron 7441 / Latitude 7455 (X1E-80-100)
-Date: Sun,  6 Jul 2025 17:50:22 -0300
-Message-ID: <20250706205723.9790-2-val@packett.cool>
+Subject: [PATCH v3 2/5] dt-bindings: arm: qcom: Add Dell Latitude 7455
+Date: Sun,  6 Jul 2025 17:50:24 -0300
+Message-ID: <20250706205723.9790-4-val@packett.cool>
+In-Reply-To: <20250706205723.9790-2-val@packett.cool>
+References: <20250706205723.9790-2-val@packett.cool>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,39 +54,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The unified series for Dell Thena laptops.
+Document the X1E80100-based Dell Latitude 7455 laptop, codename Thena
+(the codename is shared with the near-identical Inspiron 14 Plus 7441).
 
-Changes since v2[1]:
+Signed-off-by: Val Packett <val@packett.cool>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-- Fixed From/Co-developed-by on the big patch
-- Fixed one remaining "inspirIon"
-- Fixed codec/cpu alphabetical order in audio nodes (copy-paste..)
-- Made the common dtsi an 'x1-' one in preparation for x1p models
-
-[1]: https://lore.kernel.org/all/20250701231643.568854-1-val@packett.cool/
-
-Bryan O'Donoghue (2):
-  dt-bindings: arm: qcom: Add Dell Inspiron 14 Plus 7441
-  arm64: dts: qcom: Add support for Dell Inspiron 7441 / Latitude 7455
-
-Val Packett (3):
-  dt-bindings: arm: qcom: Add Dell Latitude 7455
-  firmware: qcom: scm: Allow QSEECOM on Dell Inspiron 7441 / Latitude
-    7455
-  drm/panel-edp: Add BOE NE14QDM panel for Dell Latitude 7455
-
- .../devicetree/bindings/arm/qcom.yaml         |    2 +
- arch/arm64/boot/dts/qcom/Makefile             |    4 +
- arch/arm64/boot/dts/qcom/x1-dell-thena.dtsi   | 1657 +++++++++++++++++
- .../x1e80100-dell-inspiron-14-plus-7441.dts   |   52 +
- .../dts/qcom/x1e80100-dell-latitude-7455.dts  |   53 +
- drivers/firmware/qcom/qcom_scm.c              |    2 +
- drivers/gpu/drm/panel/panel-edp.c             |    1 +
- 7 files changed, 1771 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/x1-dell-thena.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-inspiron-14-plus-7441.dts
- create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-latitude-7455.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 8e3b804864fa..162f80123cf6 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1147,6 +1147,7 @@ properties:
+               - asus,vivobook-s15
+               - asus,zenbook-a14-ux3407ra
+               - dell,inspiron-14-plus-7441
++              - dell,latitude-7455
+               - dell,xps13-9345
+               - hp,elitebook-ultra-g1q
+               - hp,omnibook-x14
 -- 
 2.49.0
 
