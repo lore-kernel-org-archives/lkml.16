@@ -1,168 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B62A1BB;
-	Sun,  6 Jul 2025 14:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C5249E5;
+	Sun,  6 Jul 2025 14:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751812406; cv=none; b=JiblAEN6wyWk9tru+mnbCTyiEf9sXbH6eUFGAPXGT3uQ9tc8ShkvZGc4J1MHZf7qRvmbERP3WCc2p4TUVkXkjrh2VoTgxgu09fIXYLiL2+IXLBDIpsV8XwvNYp6h8d1yhnOkJlipVrLeHpZBrKNfEZ4ZfaOaQY6YMXP8IVhG/qo=
+	t=1751812585; cv=none; b=Mj34goKXISx7z0kcLc2y3EvVytTGSiNie6XrYMtOsxzLf+f4YQ+vqGhoRfbJX05a3EA0BJXbBMpsL87RGbvWfBZGF6R0tTRKyTa7vR1ng1pMHAeDz3oXC3BlYIHJmwlYaoWiaKB12TwjZPn/FfwpmTpQGLQvi7HbxRYKRl4rWFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751812406; c=relaxed/simple;
-	bh=GszBMgPIL9mHFHPRYSHqyi7DgkOJi1d97/cdu9eFZn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BpgyuDv8xtLmxqTqgOmZ+sOeFH660NIte1eFI/6KVDkpqGngIi30DF4eoXRwQM32uvMbs63iCBRrHU6oaXqeiJkf47WDW2eHKED2JFwu3+Z9SILJsqLRu5CD6IMGctk1QvKxnsTV6fO+0s5TOuO0a9KuVaQt7TX3JN8RPZpb7PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKDZv9Sc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751812585; c=relaxed/simple;
+	bh=ekByHfhCU5YFqk89HOWrsMr+RRd71IlBqB2XanDxxo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tFSyDmMP3anZt1pHytH9Yf4Mqzn5KKPMQOq90zrv8o9QQkx/4cza9jEB/gzKYO7zv9MvsHOYNxl/KlsLIH6wYcr5ChMdtchciH2k5v6WOdcwx5WahNF1HLcOIz4weMKuX9GmcUiCWDNOrNB4K47PBGBpQr6ilKxclDrQeOWfzVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ll4o4Sol; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKDZv9Sc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03B9C4CEED;
-	Sun,  6 Jul 2025 14:33:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ll4o4Sol"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6AFC4CEED;
+	Sun,  6 Jul 2025 14:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751812406;
-	bh=GszBMgPIL9mHFHPRYSHqyi7DgkOJi1d97/cdu9eFZn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iKDZv9ScfdI1Wi/lRv/5uIhMUsTaVhCqG+RoWcCYdqxf9xL960iv2mlayyM36bdyq
-	 bK1IzAqY+rLCanSz7v2blOuZt5Eimi1f+D+N1/rjRXIuFf62sMm+E5adkO7ZQ36PIW
-	 w7T+wS6JoyMB/IbwaGgh066RCz7eD1SDrbkfHvmHqH00k1mgNECBzVvSqByfMVohoJ
-	 H4uxNLzCkWNdTlHpnaoSkVdlb0q7H6kUJAjh7XwAzYnQ5u08XFkZEPc1cA0qtGKNrO
-	 OitG3C6wjnulFelbr3s8EEXguXFYMfekQGa25vslEaj/n9+P5d+gtME+RN0LDeUko8
-	 hUi2T3QWkkfeg==
-Date: Sun, 6 Jul 2025 17:33:04 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: David Matlack <dmatlack@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>, jasonmiu@google.com,
-	graf@amazon.com, changyuanl@google.com, rientjes@google.com,
-	corbet@lwn.net, rdunlap@infradead.org,
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
-	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
-	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
-	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
-	vincent.guittot@linaro.org, hannes@cmpxchg.org,
-	dan.j.williams@intel.com, david@redhat.com,
-	joel.granados@kernel.org, rostedt@goodmis.org,
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
-	linux@weissschuh.net, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
-	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
-	aleksander.lobakin@intel.com, ira.weiny@intel.com,
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
-	stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-Message-ID: <aGqJIFs8GpvHn_Yy@kernel.org>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com>
- <20250624-akzeptabel-angreifbar-9095f4717ca4@brauner>
- <CA+CK2bBu4ex9O5kPcR7++DVg3RM8ZWg3BCpcc6CboJ=aG8mVmQ@mail.gmail.com>
- <20250625-akrobatisch-libellen-352997eb08ef@brauner>
- <CALzav=d+XgS1bUs-v7+ws5nYU9y=4uc1c8oVLHrJ16qLpnUi9Q@mail.gmail.com>
- <mafs0sejmse57.fsf@kernel.org>
+	s=k20201202; t=1751812585;
+	bh=ekByHfhCU5YFqk89HOWrsMr+RRd71IlBqB2XanDxxo0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ll4o4Sol1xB9CHvaGKW/406YEBaUdZrTWq6lLV1dFJM2KaUURPnzXKOKi4uTgdkBT
+	 1ARmrnpLtOY7KMVDB1gDHAyrmr+XQkK70EWXKhVUZTeRpMdo/Te6dPK1XIjfMDqk2F
+	 JNs1d4BtRaLfWKAppA6dwapoZGigjAsBXAI15chD5JjzbpP/CbfnqPMJBmp90fFLDj
+	 EHmkjyr7KRKy+owRH85kLyWUqRUpvY0QS8x+4o2UU6BdcNMgrQEf7O3k+wuUb6uyo7
+	 mitoySK8mt5KCmY4x8lFrjn65/4yysdrxaisXKCB964z8BXN/NQ+lJ6TdguYwgTZoQ
+	 TtD7bp2k/QZEQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: David Airlie <airlied@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	kvm@vger.kernel.org (open list:VFIO DRIVER),
+	linux-sound@vger.kernel.org (open list:SOUND),
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v7 0/9] Adjust fbcon console device detection
+Date: Sun,  6 Jul 2025 09:36:04 -0500
+Message-ID: <20250706143613.1972252-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <mafs0sejmse57.fsf@kernel.org>
 
-On Thu, Jun 26, 2025 at 05:42:28PM +0200, Pratyush Yadav wrote:
-> On Wed, Jun 25 2025, David Matlack wrote:
-> 
-> > On Wed, Jun 25, 2025 at 2:36 AM Christian Brauner <brauner@kernel.org> wrote:
-> >> >
-> >> > While I agree that a filesystem offers superior introspection and
-> >> > integration with standard tools, building this complex, stateful
-> >> > orchestration logic on top of VFS seemed to be forcing a square peg
-> >> > into a round hole. The ioctl interface, while more opaque, provides a
-> >> > direct and explicit way to command the state machine and manage these
-> >> > complex lifecycle and dependency rules.
-> >>
-> >> I'm not going to argue that you have to switch to this kexecfs idea
-> >> but...
-> >>
-> >> You're using a character device that's tied to devmptfs. In other words,
-> >> you're already using a filesystem interface. Literally the whole code
-> >> here is built on top of filesystem APIs. So this argument is just very
-> >> wrong imho. If you can built it on top of a character device using VFS
-> >> interfaces you can do it as a minimal filesystem.
-> >>
-> >> You're free to define the filesystem interface any way you like it. We
-> >> have a ton of examples there. All your ioctls would just be tied to the
-> >> fileystem instance instead of the /dev/somethingsomething character
-> >> device. The state machine could just be implemented the same way.
-> >>
-> >> One of my points is that with an fs interface you can have easy state
-> >> seralization on a per-service level. IOW, you have a bunch of virtual
-> >> machines running as services or some networking services or whatever.
-> >> You could just bind-mount an instance of kexecfs into the service and
-> >> the service can persist state into the instance and easily recover it
-> >> after kexec.
-> >
-> > This approach sounds worth exploring more. It would avoid the need for
-> > a centralized daemon to mediate the preservation and restoration of
-> > all file descriptors.
-> 
-> One of the jobs of the centralized daemon is to decide the _policy_ of
-> who gets to preserve things and more importantly, make sure the right
-> party unpreserves the right FDs after a kexec. I don't see how this
-> interface fixes this problem. You would still need a way to identify
-> which kexecfs instance belongs to who and enforce that. The kernel
-> probably shouldn't be the one doing this kind of policy so you still
-> need some userspace component to make those decisions.
-> 
-> >
-> > I'm not sure that we can get rid of the machine-wide state machine
-> > though, as there is some kernel state that will necessarily cross
-> > these kexecfs domains (e.g. IOMMU driver state). So we still might
-> > need /dev/liveupdate for that.
-> 
-> Generally speaking, I think both VFS-based and IOCTL-based interfaces
-> are more or less equally expressive/powerful. Most of the ioctl
-> operations can be translated to a VFS operation and vice versa.
-> 
-> For example, the fsopen() call is similar to open("/dev/liveupdate") --
-> both would create a live update session which auto closes when the FD is
-> closed or FS unmounted. Similarly, each ioctl can be replaced with a
-> file in the FS. For example, LIVEUPDATE_IOCTL_FD_PRESERVE can be
-> replaced with a fd_preserve file where you write() the FD number.
-> LIVEUPDATE_IOCTL_GET_STATE or LIVEUPDATE_IOCTL_PREPARE, etc. can be
-> replaced by a "state" file where you can read() or write() the state.
-> 
-> I think the main benefit of the VFS-based interface is ease of use.
-> There already exist a bunch of utilites and libraries that we can use to
-> interact with files. When we have ioctls, we would need to write
-> everything ourselves. For example, instead of
-> LIVEUPDATE_IOCTL_GET_STATE, you can do "cat state", which is a bit
-> easier to do.
->
-> As for downsides, I think we might end up with a bit more boilerplate
-> code, but beyond that I am not sure.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-One of the points in Christian's suggestion was that ioctl doesn't have to
-be bound to a misc device. Even if we don't use read()/write()/link() etc,
-we can have a filesystem that exposes, say, "control" file and that file
-has the same liveupdate_ioctl() in its fops as we have now in miscdev.
+This series started out as changes to VGA arbiter to try to handle a case
+of a system with 2 GPUs that are not VGA devices.  This was discussed
+but decided not to overload the VGA arbiter for non VGA devices.
 
-The cost is indeed a bit of boilerplate code to create the filesystem, but
-it would be easier to extend for per-service and containers support.
+Instead move the x86 specific detection of framebuffer resources into x86
+specific code that the fbcon can use to properly identify the primary
+device. This code is still called from the VGA arbiter, and the logic does
+not change there. To avoid regression default to VGA arbiter and only fall
+back to looking up with x86 specific detection method.
 
-And we won't need sysfs entry for status, as it can be also pre-populated
-in kexecfs (or whatever it'll be called).
- 
-> -- 
-> Regards,
-> Pratyush Yadav
+In order for userspace to also be able to discover which device was the
+primary video display device create a new sysfs file 'boot_display'.
+
+A matching userspace implementation for this file is available here:
+Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+Link: https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
+
+Dave Airlie has been pinged for a comment on this approach.
+Dave had suggested in the past [1]:
+
+"
+ But yes if that doesn't work, then maybe we need to make the boot_vga
+ flag mean boot_display_gpu, and fix it in the kernel
+"
+
+This was one of the approached tried in earlier revisions and it was
+rejected in favor of creating a new sysfs file (which is what this
+version does).
+
+It is suggested that this series merge entirely through the PCI tree.
+
+Link: https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/37#note_2938602 [1]
+Mario Limonciello (9):
+  PCI: Add helper for checking if a PCI device is a display controller
+  vfio/pci: Use pci_is_display()
+  vga_switcheroo: Use pci_is_display()
+  iommu/vt-d: Use pci_is_display()
+  ALSA: hda: Use pci_is_display()
+  Fix access to video_is_primary_device() when compiled without
+    CONFIG_VIDEO
+  PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+  fbcon: Use screen info to find primary device
+  PCI: Add a new 'boot_display' attribute
+
+ Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
+ arch/parisc/include/asm/video.h         |  2 +-
+ arch/sparc/include/asm/video.h          |  2 ++
+ arch/x86/include/asm/video.h            |  2 ++
+ arch/x86/video/video-common.c           | 13 ++++++-
+ drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+ drivers/iommu/intel/iommu.c             |  2 +-
+ drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++++++
+ drivers/pci/vgaarb.c                    | 31 +++--------------
+ drivers/vfio/pci/vfio_pci_igd.c         |  3 +-
+ include/linux/pci.h                     | 15 ++++++++
+ sound/hda/hdac_i915.c                   |  2 +-
+ sound/pci/hda/hda_intel.c               |  4 +--
+ 13 files changed, 97 insertions(+), 35 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.43.0
+
