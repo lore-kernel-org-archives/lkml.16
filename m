@@ -1,120 +1,189 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DF62E36F7
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 02:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4604129A5;
+	Sun,  6 Jul 2025 02:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751767370; cv=none; b=fQMiAz5m2HtPzhzqnJ9N+fxnoB60oYM4mRtJRB8+vqx0OzJ+IMJfxKt4SZG7tTwXVFnbUrengqxLkftz7gd8K3FYUpWICbmGUQF+wAJ1wlVf7zs7l7HD7L758hxzy64h9gP4csn96AfsMvwXhXU9jkikrmuR1C3DPe9k7+4gFac=
+	t=1751767696; cv=none; b=kk1HupXfkLHP4MT9B3DGOSqT/fI0BP0/Bd96B8+BpKpLRl2oq+5HI+1TlLXjDKzqWQSVVqNkVxK6z1Z12vZBanLfRGCHoDUngl2xpFZBAW+w7t87CJRixVo6wA/g6a42VtOzWFsoFoE5+/B6VJve0dGAe7LkZrwVnfcmvoL+DNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751767370; c=relaxed/simple;
-	bh=zyw48Pb28uomgfngxmw37ECuUBQIpAcx0E2IZegK+MA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzdj6vV/P6/UHHPeOQy+zc6XhW1Zy9nBCuS6c71mEqJAPdeSToMbGk94BKgMmNZgkgvZ7d36Yx74O3YPvsUP1kXO+fhmTnkeqM38LNyv9EbX9rT/6AtFxsqWGmo2IN3FKEIpoFErXGqZD+aXw1YOex+DOkjnik8gP90Nplhcqjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hPoNrRwl; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751767696; c=relaxed/simple;
+	bh=qbb9qUQDN3f4Sd+pgIv8uMMRUnNZzrqkxxKE9i/HdpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSE6UqrYN0IlXtykSLODVFFu8LdqhaLPMYMYUFqeQKZ9voh94GvtTcVAhSLyXUjM9BKlNuZayEuwPduBTwqEz5Dh1O/3wXTdAuKM3ouSZVman3nmvfzXrDmnMW2diMWPkI9vF7nOa/jvAZYefvVaXfGOzNs0rB0m9qg7YFM1OlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Nh6pRZBb; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hPoNrRwl"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751767359; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=vKqkCgAf7cYzIMgHnnwt59iT3vK6UK8KUiIkhUoH3to=;
-	b=hPoNrRwlGXYIWkTpsFImUk0cNTovAMPfGrIhnoy8DVXTZujXLjQuF9ekb4wc19hOQDVDpvrWhJsOkx/XUBQ4eDOOCgAW3dITiDgMB4sPwXen8TgrZeCK6Rtm8JmhvSy7mAWbFyBtVIhhnVcKj7ie4WnY4d3q8eDl3w+MLYyI2RU=
-Received: from 30.134.69.216(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Whi6eBO_1751767356 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 06 Jul 2025 10:02:37 +0800
-Message-ID: <4c055849-d7dd-4b9f-9666-fcb0bccf8681@linux.alibaba.com>
-Date: Sun, 6 Jul 2025 10:02:35 +0800
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Nh6pRZBb"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 5CFED2307C;
+	Sun,  6 Jul 2025 04:08:10 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id HydFQqZyg1UX; Sun,  6 Jul 2025 04:08:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751767689; bh=qbb9qUQDN3f4Sd+pgIv8uMMRUnNZzrqkxxKE9i/HdpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Nh6pRZBbZPbBVd6rlqgXn6VkyHqMJeBET1dH+mWBb7uE3Plod4Kf0xBby7O3n2UEm
+	 MyDBuaKcAHw8RrGdnjsjCmXLZNCw+raNm12XtTiNj/bvgF86ItZPn54KRDEZuDz7s8
+	 39D+UTmRY7mlezXftdI/JAL93Gpohpfyj+EovDfDmliH/mXnN6FVxHg7DVyBH59LUC
+	 bIIQblzD/tfr9oSgkFdJ4pDKrBn9UOGpchrrXumQ4lKsdNSsw7hDKHSp34kAVEDwb0
+	 +dUCQVhcG5viSTLTQsyqTUD6WBkZPLcleq7Nd8ubcpAn75el59BNU0ck6SyX9tm8qj
+	 xQq9Qk8U6Wvfw==
+Date: Sun, 6 Jul 2025 02:07:51 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Drew Fustini <fustini@kernel.org>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Yangtao Li <frank.li@vivo.com>, linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: thead: th1520-ap: Correctly refer the parent for
+ c910 and osc_12m
+Message-ID: <aGnaZjMoWbW_FZfj@pie>
+References: <20250705052028.24611-1-ziyao@disroot.org>
+ <aGm+adSNdTHyN7K1@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: fault in complete folios instead of individual
- pages for tmpfs
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: hughd@google.com, david@redhat.com, ziy@nvidia.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <440940e78aeb7430c5cc8b6d2088ae98265b9809.1751599072.git.baolin.wang@linux.alibaba.com>
- <20250704151858.73d35a24b4c2f53bdb0c1b85@linux-foundation.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250704151858.73d35a24b4c2f53bdb0c1b85@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGm+adSNdTHyN7K1@x1>
 
+On Sat, Jul 05, 2025 at 05:08:09PM -0700, Drew Fustini wrote:
+> On Sat, Jul 05, 2025 at 05:20:28AM +0000, Yao Zi wrote:
+> > clk_orphan_dump shows two suspicious orphan clocks on TH1520 when
+> > booting the kernel with mainline U-Boot,
+> > 
+> > 	$ cat /sys/kernel/debug/clk/clk_orphan_dump | jq 'keys'
+> > 	[
+> > 	  "c910",
+> > 	  "osc_12m"
+> > 	]
+> > 
+> > where the correct parents should be c910-i0 for c910, and osc_24m for
+> > osc_12m.
+> 
+> Thanks for sending this patch. However, I only see "osc_12m" listed in
+> clk_orphan_dump. I tried the current next, torvalds master and v6.15 but
+> I didn't ever see "c910" appear [1]. What branch are you using?
 
+I think it has something to do with the bootloader: as you could see in
+your clk_orphan_dump, the c910 clock is reparented to cpu-pll1, the
+second possible parent which could be correctly resolved by the CCF,
+thus c910 doesn't appear in the clk_orphan_dump.
 
-On 2025/7/5 06:18, Andrew Morton wrote:
-> On Fri,  4 Jul 2025 11:19:26 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
-> 
->> After commit acd7ccb284b8 ("mm: shmem: add large folio support for tmpfs"),
->> tmpfs can also support large folio allocation (not just PMD-sized large
->> folios).
->>
->> However, when accessing tmpfs via mmap(), although tmpfs supports large folios,
->> we still establish mappings at the base page granularity, which is unreasonable.
->>
->> We can map multiple consecutive pages of a tmpfs folios at once according to
->> the size of the large folio. On one hand, this can reduce the overhead of page
->> faults; on the other hand, it can leverage hardware architecture optimizations
->> to reduce TLB misses, such as contiguous PTEs on the ARM architecture.
->>
->> Moreover, tmpfs mount will use the 'huge=' option to control large folio
->> allocation explicitly. So it can be understood that the process's RSS statistics
->> might increase, and I think this will not cause any obvious effects for users.
->>
->> Performance test:
->> I created a 1G tmpfs file, populated with 64K large folios, and write-accessed it
->> sequentially via mmap(). I observed a significant performance improvement:
-> 
-> That doesn't sound like a crazy thing to do.
-> 
->> Before the patch:
->> real	0m0.158s
->> user	0m0.008s
->> sys	0m0.150s
->>
->> After the patch:
->> real	0m0.021s
->> user	0m0.004s
->> sys	0m0.017s
-> 
-> And look at that.
-> 
->> diff --git a/mm/memory.c b/mm/memory.c
->> index 0f9b32a20e5b..9944380e947d 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -5383,10 +5383,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
->>   
->>   	/*
->>   	 * Using per-page fault to maintain the uffd semantics, and same
->> -	 * approach also applies to non-anonymous-shmem faults to avoid
->> +	 * approach also applies to non shmem/tmpfs faults to avoid
->>   	 * inflating the RSS of the process.
->>   	 */
->> -	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
->> +	if (!vma_is_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
->>   	    unlikely(needs_fallback)) {
->>   		nr_pages = 1;
->>   	} else if (nr_pages > 1) {
-> 
-> and that's it?
-> 
-> I'm itching to get this into -stable, really.  What LTS user wouldn't
-> want this?  
+But with the mainline U-Boot which doesn't reparent or reclock c910 on
+startup, c910 should remain the reset state and take c910-i0 as parent,
+and appear in the clk_orphan_dump.
 
-This is an improvement rather than a bugfix, so I don't think it needs 
-to go into LTS.
+Another way to confirm the bug is to examine
+/sys/kernel/debug/clk/c910/clk_possible_parents: without the patch, it
+should be something like
 
-Could it be viewed as correcting an oversight in
-> acd7ccb284b8?
+	osc_24m cpu-pll1
 
-Yes, I should have added this optimization in the series of the commit 
-acd7ccb284b8. But obviously, I missed this :(.
+c910's parents are defined as
+
+	static const struct clk_parent_data c910_parents[] = {
+		{ .hw = &c910_i0_clk.common.hw },
+		{ .hw = &cpu_pll1_clk.common.hw }
+	};
+
+and the debugfs output looks obviously wrong.
+
+There's another bug in CCF[1] which causes unresolvable parents are
+shown as the clock-output-names of the clock controller's first parent
+in debugfs, explaining the output.
+
+> I think it would be best for this patch to be split into separate
+> patches for osc_12m and c910.
+
+Okay, I originally thought these are relatively small fixes targeting
+a single driver, hence put them together. I'll split it into two patches
+in v2.
+
+> > The correct parent of c910, c910-i0, is registered with
+> > devm_clk_hw_register_mux_parent_data_table(), which creates a clk_hw
+> > structure from scratch. But it's assigned as c910's parent by
+> > referring &c910_i0_clk.common.hw, confusing the CCF since this clk_hw
+> > structure is never registered.
+> 
+> I recall Stephen Boyd had the feedback when trying to upstream this
+> driver to avoid strings for parents and instead use clk_parent_data or
+> clk_hw pointers directly [2]. It was difficult to find alternitves to
+> parent strings in all instances.
+
+Yes, especially the predefined clock types which always allocate a new
+struct clk_hw, so one has to choose between filling the parent data
+dynamically or using the parent's name.
+
+> > Meanwhile, osc_12m refers the external oscillator by setting
+> > clk_parent_data.fw_name to osc_24m, which is obviously wrong since no
+> > clock-names property is allowed for compatible thead,th1520-clk-ap.
+> > 
+> > For c910, refer c910-i0 by its name; for osc_12m, refer the external
+> > clock input by index. This eliminates these orphan clocks.
+> > 
+> > Fixes: ae81b69fd2b1 ("clk: thead: Add support for T-Head TH1520 AP_SUBSYS clocks")
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  drivers/clk/thead/clk-th1520-ap.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+> > index ebfb1d59401d..74da1a61e6f0 100644
+> > --- a/drivers/clk/thead/clk-th1520-ap.c
+> > +++ b/drivers/clk/thead/clk-th1520-ap.c
+> > @@ -427,7 +427,7 @@ static struct ccu_mux c910_i0_clk = {
+> >  };
+> >  
+> >  static const struct clk_parent_data c910_parents[] = {
+> > -	{ .hw = &c910_i0_clk.common.hw },
+> > +	{ .index = -1, .name = "c910-i0" },
+> 
+> Stephen - would this use of a parent string be acceptable?
+> 
+> >  	{ .hw = &cpu_pll1_clk.common.hw }
+> >  };
+> >  
+> > @@ -582,7 +582,14 @@ static const struct clk_parent_data peri2sys_apb_pclk_pd[] = {
+> >  	{ .hw = &peri2sys_apb_pclk.common.hw }
+> >  };
+> >  
+> > -static CLK_FIXED_FACTOR_FW_NAME(osc12m_clk, "osc_12m", "osc_24m", 2, 1, 0);
+> > +struct clk_fixed_factor osc12m_clk = {
+> > +	.div		= 2,
+> > +	.mult		= 1,
+> > +	.hw.init	= CLK_HW_INIT_PARENTS_DATA("osc_12m",
+> > +						   osc_24m_clk,
+> > +						   &clk_fixed_factor_ops,
+> > +						   0),
+> > +};
+> 
+> I think this hunk is a good fix for osc_12m. I applied the patch and
+> osc_12m no longer appears in clk_orphan_dump [3]. clk_summary now shows
+> osc_12m under osc_24m.
+
+Thanks for the confirmation!
+
+> >  
+> >  static const char * const out_parents[] = { "osc_24m", "osc_12m" };
+> >  
+> > -- 
+> > 2.49.0
+> > 
+> 
+> [1] https://gist.github.com/pdp7/d00f0f4fe3fcf368ce253d606dc7b01f
+> [2] https://lore.kernel.org/all/91c3373b5b00afc1910b704a16c1ac89.sboyd@kernel.org/
+> [3] https://gist.github.com/pdp7/30e51ed013d4bedf0c6abc5717e0b6a5
+
+Regards,
+Yao Zi
+
+[1]: https://lore.kernel.org/linux-clk/20250705095816.29480-2-ziyao@disroot.org/
