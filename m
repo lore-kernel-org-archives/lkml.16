@@ -1,65 +1,65 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13CC1553A3;
-	Sun,  6 Jul 2025 16:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA32628C
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 16:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751818485; cv=none; b=QdqlLxXJmmLr3NL9zEKRNzVSKc2c5lawPVlXkqTwc5KWOf1bCrSZBvjQmQ6ymsbmObaW4PJQbsfHWGN+FvOxWt/UfK/hLCKfyeS7jitNgPa7pFqaiutGMQvt+wR3WEP6MBZ7QSJ3CRSy/FrVe4NUCPfxWgBFQjwS15Skln1Rf7g=
+	t=1751818520; cv=none; b=P40c6XP41hg3aF86sAF4m37KeTWDm+Cd9zGiAEY/cdgT6m4O/5uGGipdFAoFj9IViG1TbqmqKcYWiSBMGayIkCBQ/x2johjzkqjF+t1aFGeT18QkrdmWUVqqRrGJscLa8WvD6xw88EEd7f01x2QDx7OfydbqIDSFGzYmr+WeaKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751818485; c=relaxed/simple;
-	bh=laTGGfAaAvImciOaO7fNMFckl7ixOBbXVKugeiv59kY=;
+	s=arc-20240116; t=1751818520; c=relaxed/simple;
+	bh=gAl855rLWquCepFOF4TJTi7lIXQsNdl/NaKUIwd2ESw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mgtc+ci4M+GnhUFe4wT5KbLRKK0CZhYHfdhXxGB242XJ0ZlQs6P0XKpy6Sd2S4YVka5aqF3f3srntkY/znXE4NiiE2hZmVSLPVl3azQdPocBgx38ARRCTKtsKOg16hGikXnZXjie1l8/mtI1AcBvWsJsHpHN2GnYVPNDGcov2lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhaJLCd1; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=ECGd03JVWaFotHrOVptCgFNxxvwTO+zXG//7la7AWKxoXDjgZFsHNmMregf+mW84uQ+ji4p5VLsG/4h7/Uyi8s5RrW99rX8jdodix2ATVqtlbR4l9XKyUxSUqKkdl257MQSKcBC0V8WsH0FTUyTcvYrv37Vbbv8ItUAMPfGhO58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JBAp93tD; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhaJLCd1"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-73a44512c8aso628972a34.0;
-        Sun, 06 Jul 2025 09:14:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JBAp93tD"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2e95ab2704fso2324797fac.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 09:15:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751818483; x=1752423283; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751818516; x=1752423316; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tow9CQhi9sUBVbyo0yxEMa0Gy/ddOaj9tdySQPgAbL8=;
-        b=UhaJLCd1mGnJRFu6WLWC9shvzpCWxG5mJBC4MAo96ZtkDYxZpJlauv4zokkUlQ8PHP
-         1mMhPgmtOSMfwrG0PkBr82hsthLU21YeDlaC24WjAE0+JNHFh5AqzVj9z12ufqCCNmj5
-         n8BsOnbLkyToy6zZ6dH27KY1ut4g9s35j+SPBxvApgrKDf9Uvv/0LGW4CHWiKfZjcRWs
-         iyedkMOxk4OEtpL2oyPhWJ0cxbRmqT9OKdxDdMM0r0X+M+cIGHW4jJGIYoWICccn1EzE
-         mM1uQw45bpvPg0zQN3qn7EbKCXvJdTqqYvkkWHQOjfd3BL0J7xSXSNp7E6TPvsSOW4F9
-         ygUA==
+        bh=7CCuIhaGw2JUP5L8X9VuvKKmy1/AXHlJm0W9YGonXO4=;
+        b=JBAp93tDdjtqW7hELY1jleZr4J4UJBOt4lAE7Z40k5qRtW7t4IKWIohbJTZwNMxT0D
+         Zn0AAGPk4CE5GK4NIJoUBdKe1QNGo14De++yr5QJ0e6/M0O1+8A92MLVn3h447VWlDLm
+         8vkaBJZmtP/PFhdiFh037KlZHS9hExzNDQkx25a8nXbisqg23XMGW+I+xCcA+rXXd/Zv
+         7msUTIePkrQhLgQ7zkBfl9JIcssYhHXtF9MWPO5yHuuT1hL9neJ98Eun5ZVusutC4E8i
+         26dGvrEWXCcs8ykfxd6SIIoCHlbXtCHejQhrjxy+f3WTQetvd5SHszp2myFDSBWne2FL
+         ac7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751818483; x=1752423283;
+        d=1e100.net; s=20230601; t=1751818516; x=1752423316;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tow9CQhi9sUBVbyo0yxEMa0Gy/ddOaj9tdySQPgAbL8=;
-        b=ZaarpQ72s0stGlpSslbV4VHzpHICAidXz1cm++nNV4BoM19hZ9myRm3pDZd8HXpdXB
-         wC+ST/ZZMuco/XqVHyHUN0FeQlb7QLPefAA/uLoFlc5Tgfjj8okSm+o8NWcXZoeXiwQF
-         cIgjl/XX9b88tsupp1eVpVOHlsDgN4BBEV2yO1kwz6ERJ7TxqFhj9GhZMffCweMw+xcg
-         Fbl6zBeORBMkGOV9xdmb/Saqw1fyoYDj248O+WpnT5PDUv/2rdBssErpKBcTSvfc4F1D
-         vHIjcnREuGy9g8+AbpAb4CAeBkFw4obq4QKoJZJo5UXR7AVSN4ebR97yJ/vaPodMI0r1
-         rMwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgTidf+uAoazVu9bhJeZnovz6jKQzebiRSHhxRPfF5spiP9n5S/XRbSZK0XreS+RAMAgdjWkZZFzW9XWBG@vger.kernel.org, AJvYcCV5hsyeLdqC+QgyMFlRto8yL3hkfYiCwF1+9R1rxvs/33/5bfAd/o0Atnjh5FOzRNFMD0BgLt3cUhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmW24CkOzI74EXq0z1zzKystrXj+8Xk1WN3VXzvkXwXSf5jc20
-	74nfu2pwH5yhSzwYpB+0BOkiluXu2FaKt4ZsB53If04i7Zs8MeEBxIZI
-X-Gm-Gg: ASbGncs80cujHIcbOf69O3LmphwcXcIK99lNJbVWNSGrixvBdx8I+9haSDA0STIqaSa
-	vz0izntSLes895utt57TyoG1RYhYfr4/R1yef8G8LKWtZsVJT96q1egm2t+SXznEasdRvETXSxN
-	ow6GDdm0EYf/qe9r3McQ7s+nqTdiLGAu76ixpjWL561cVt/a/+9J6mJyT+AB/ofl51jYZKFrP9j
-	9cLTM/GrsCVEgIYqhOexvzrhwKl4L9CsMY5p1pHIXnB3YoQLIqESbXnnrya5I2VE9CjONZ2/3yz
-	8IU64g5+OpnlVhdJkUd5oAZNm8wQJIgcN//snt96Aphj2fAIiibJ/lOral3YpDd+WQD5SspBUg/
-	CQV7tW2sqIRVd37FI5XTON3becAV8ORoW8gh2CDzGas78iaCCa420qTs3Lthh
-X-Google-Smtp-Source: AGHT+IGa60gYFXb3W9RG+HjHAcoPPiV4LZvBTo8M0JPJ2v+kXJVQ0Fk5avb5r6vRBD4KySYrywK88A==
-X-Received: by 2002:a05:6830:800a:b0:73c:c4c0:7f46 with SMTP id 46e09a7af769-73cc4c082f1mr806157a34.21.1751818482919;
-        Sun, 06 Jul 2025 09:14:42 -0700 (PDT)
-Received: from ?IPV6:2603:8080:7400:36da:b492:b6dc:5573:e1d2? ([2603:8080:7400:36da:b492:b6dc:5573:e1d2])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73c9f753ee3sm1233539a34.24.2025.07.06.09.14.41
+        bh=7CCuIhaGw2JUP5L8X9VuvKKmy1/AXHlJm0W9YGonXO4=;
+        b=kN0vvcPserOmdWRMiCozqsg7a+mQXjoOQCZBUOH4v3l9neDL7NPA1jiu7tf1PVcF86
+         zdSQjoN6oQYE9OrJ6Yg8HkdzVcMHNgAiF7W+e8+hXfgODDRdL5XBdyxuC56rpV50NZSg
+         AgTj0be2LDm13fmmyYqeZSRhFQII6hk28W2+ALG17h50ygz1jLz0ZJp4VaiE2AE7R+TT
+         anPl2xuJ+R6G5SM3jHGer0eUXYFYMFJIwKEDZc6XLeWCz+tdhlzaECHqLE7N599xWyFc
+         DouuJjaiRsRLWZqQkCJSr9f27i8b8N8I7DXqwzpyWCiPIA0yxRuVAwq1UCsq1/YqBHzi
+         X8Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpbwvDwRctpOYVO1AJAq8VZTfBbe2krzlc1OHL+SfV8V284T09W0NHCJAkueDhSmGnUSWE4Rc9A7qJlgQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymE1qMNbrp9MN7OBWPbAEKqAEvktMVvtNKpptNts0/rHlhGeAV
+	ovz/B9b9whr3q80UweS+th48b+cNI92zJ8vl7IF3tSscf/M2rzP5Q+SZ6ZxDpJp6fAc=
+X-Gm-Gg: ASbGncttcOSZVE+vdloRfhCxZGSW6Ymd9VVz5P2kxpeNFkb0JpaPcBzBHkmAZgh90Rl
+	by01I4YFbKLKKJ8u55mFRw3fD3pJhNOttubLAPC0ldOaiSzOQcynyfrkrI8+isKe5AvqWtDs3Qa
+	2o2nsLpiAg+4LFtoEkgoXO2SJ2xkS+OdG0OMd8QrL6yc8B2jN/ddeYH1BoCfIvoSdphLMecPjcL
+	4baGUfRymCagn0RX3ZPCkqMkr87EKAralj30bw4mr41q5rOvuwfy2Zc08nrCZp4jh8S/a0SpgTz
+	YXLvBBlJFSPR2dNzOPU7Gx/mJGVXtxT99xbmsYW5gAigUj5so9fkI8coCeYvCBTHIWTsB1q8RZK
+	eXacmDd0t/UK+nwi6aWmBhE4wCfZajs8b7ldWqDTDABXxMoo=
+X-Google-Smtp-Source: AGHT+IFCTPIZ0WXVRAmR7v768qE2jySN2EB/oekDv6XWLXwEPF+k2fWpAsncS+4yrAvfVEulhT/Vvw==
+X-Received: by 2002:a05:6871:79a5:b0:2d4:e101:13dd with SMTP id 586e51a60fabf-2f791cebf01mr7263590fac.1.1751818516500;
+        Sun, 06 Jul 2025 09:15:16 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:29a:290f:4321:4624? ([2600:8803:e7e4:1d00:29a:290f:4321:4624])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f79020d17csm1749699fac.34.2025.07.06.09.15.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Jul 2025 09:14:42 -0700 (PDT)
-Message-ID: <6eb6a85b-8991-4874-abc1-6c247b2c8050@gmail.com>
-Date: Sun, 6 Jul 2025 11:14:39 -0500
+        Sun, 06 Jul 2025 09:15:15 -0700 (PDT)
+Message-ID: <ca0be466-6673-425d-97ab-292791253a63@baylibre.com>
+Date: Sun, 6 Jul 2025 11:15:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,54 +67,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] Documentation: typography refresh
-To: Jonathan Corbet <corbet@lwn.net>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>,
+Subject: Re: linux-next: manual merge of the iio tree with the spi tree
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, Mark Brown <broonie@kernel.org>,
+ Jonathan Santos <Jonathan.Santos@analog.com>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Federico Vaga <federico.vaga@vaga.pv.it>, Akira Yokosawa <akiyks@gmail.com>,
- Carlos Bilbao <carlos.bilbao@kernel.org>, Avadhut Naik
- <avadhut.naik@amd.com>, Alex Shi <alexs@kernel.org>,
- Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
- Thomas Gleixner <tglx@linutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Stanislav Fomichev <sdf@google.com>, David Vernet <void@manifault.com>,
- Miguel Ojeda <ojeda@kernel.org>, James Seo <james@equiv.tech>,
- Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20250619042318.17325-2-bagasdotme@gmail.com>
- <75f99fce-affa-4acc-afeb-2a9f70a6d907@oracle.com>
- <aFjNA1TkBiHXNKPD@archie.me> <250eb150-ef18-4e62-9791-f2ec4801cd39@gmail.com>
- <fb2d7547-dd6e-4f6a-978f-b92ae2eb20cb@gmail.com>
- <CAOc0haLSQVO9RexsMDRJ9zx=TPOi5yC6ADX4VLSbFvi1bhP_iw@mail.gmail.com>
- <87ikk8kf61.fsf@trenco.lwn.net>
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ linux-iio@vger.kernel.org
+References: <20250703163824.2f08d866@canb.auug.org.au>
+ <20250703093122.00000684@huawei.com>
+ <b0b0443d-143f-4e41-b8b8-91c6726e838f@baylibre.com>
+ <20250706115053.368ce9e9@jic23-huawei>
 Content-Language: en-US
-From: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-In-Reply-To: <87ikk8kf61.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250706115053.368ce9e9@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 7/6/25 5:50 AM, Jonathan Cameron wrote:
+> On Thu, 3 Jul 2025 07:28:07 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
+> 
+>> On 7/3/25 3:31 AM, Jonathan Cameron wrote:
+>>> On Thu, 3 Jul 2025 16:38:24 +1000
+>>> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>   
+>>>> Hi all,
+>>>>
+>>>> Today's linux-next merge of the iio tree got a conflict in:
+>>>>
+>>>>   MAINTAINERS
+>>>>
+>>>> between commit:
+>>>>
+>>>>   e47a324d6f07 ("dt-bindings: trigger-source: add ADI Util Sigma-Delta SPI")
+>>>>
+>>>> from the spi tree and commit:
+>>>>
+>>>>   0dd88eaa7126 ("dt-bindings: trigger-source: add generic GPIO trigger source")
+>>>>
+>>>> from the iio tree.
+>>>>
+>>>> I fixed it up (see below) and can carry the fix as necessary. This
+>>>> is now fixed as far as linux-next is concerned, but any non trivial
+>>>> conflicts should be mentioned to your upstream maintainer when your tree
+>>>> is submitted for merging.  You may also want to consider cooperating
+>>>> with the maintainer of the conflicting tree to minimise any particularly
+>>>> complex conflicts.
+>>>>  
+>>> Thanks Stephen,
+>>>
+>>> David, do you prefer these merged or kept as separate entries?  
+>>
+>> Ah, shoot, I forgot that we had added the gpio one and just made
+>> one section like this.
+>>
+>> I think it would make sense to also merge the new adi one with
+>> the reset to keep things compact.
+>>
+> Is there a path to do that cleanly given the multiple trees things are
+> coming from?  Maybe this is a let things resolve whatever way this cycle
+> and tidy up next?
 
-On 7/3/25 18:50, Jonathan Corbet wrote:
-> Carlos Bilbao <carlos.bilbao.osdev@gmail.com> writes:
->
->> Some, we can talk about it, I’d personally like to see a small flag
->> displayed to the left of the language options at the top button.
-> If I understand you correctly, that's dangerous territory...flags and
-> languages are fraught with all kinds of disagreement and discord.  The
-> conventional wisdom is to avoid the use of flags to represent
-> languages.
+Agree, waiting seems the simplest option.
 
-
-Fair, thanks!
-
-
->
-> Thanks,
->
-> jon
-
-
-Carlos
+> 
+>>>
+>>> I don't think it matters either way in practice though this is the
+>>> more complex merge (the other being just putting the blocks in order.
+>>>
+>>> We can put a note in the pull request on preference but ultimately Linus
+>>> will resolve this however he prefers! 
+>>>
+>>> Jonathan
+>>>
+>>>   
+>>>> -- 
+>>>> Cheers,
+>>>> Stephen Rothwell
+>>>>
+>>>> diff --cc MAINTAINERS
+>>>> index dd764b947dab,d0809d62ff48..000000000000
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@@ -25333,19 -25201,15 +25341,20 @@@ TRADITIONAL CHINESE DOCUMENTATIO
+>>>>   M:	Hu Haowen <2023002089@link.tyut.edu.cn>
+>>>>   S:	Maintained
+>>>>   W:	https://github.com/srcres258/linux-doc
+>>>>  -T:	git git://github.com/srcres258/linux-doc.git doc-zh-tw
+>>>>  +T:	git https://github.com/srcres258/linux-doc.git doc-zh-tw
+>>>>   F:	Documentation/translations/zh_TW/
+>>>>   
+>>>> + TRIGGER SOURCE
+>>>> + M:	David Lechner <dlechner@baylibre.com>
+>>>> + S:	Maintained
+>>>> + F:	Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+>>>> + F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
+>>>> + 
+>>>>  +TRIGGER SOURCE - ADI UTIL SIGMA DELTA SPI
+>>>>  +M:	David Lechner <dlechner@baylibre.com>
+>>>>  +S:	Maintained
+>>>>  +F:	Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-spi.yaml
+>>>>  +
+>>>> - TRIGGER SOURCE - PWM
+>>>> - M:	David Lechner <dlechner@baylibre.com>
+>>>> - S:	Maintained
+>>>> - F:	Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
+>>>> - 
+>>>>   TRUSTED SECURITY MODULE (TSM) INFRASTRUCTURE
+>>>>   M:	Dan Williams <dan.j.williams@intel.com>
+>>>>   L:	linux-coco@lists.linux.dev  
+>>
+>>
+> 
 
