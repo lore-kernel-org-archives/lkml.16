@@ -1,101 +1,56 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AD514386D;
-	Sun,  6 Jul 2025 08:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19B0FBF0
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 08:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751790551; cv=none; b=tMCJeiv1z8BzSu7RUpUz4HKvlPXXz8SugHpBq3N0hhWALLwM/vtUr4J1Hv4PZNR5DAGhYHFynH4trCjF3zlEkug2FwTM/BAr33HeEkkZTWDycXPoiNFdIvZ005dyn1ujzbyG4vvd6687cb5j3HySuWFT8d6JX3GTFImvGEuCVvI=
+	t=1751790650; cv=none; b=AEhgGzJLXANxLgFIboFWUmAizMuen92QAdPwZe3lzXToB4IAQpmA+WSM7TZQiWzGIT2m3A4FuvBCLZb6u6xrpUxb3QBxW5sInDSUIf9p0IL7y8hctNE6srgKSENypaJgql/1tslyn/r820oRPPgD02UnQj9RV859aWF8TJyHNT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751790551; c=relaxed/simple;
-	bh=X204WyJpXGJE8pcg02RS6uMl/7b6/IB2aPkZ6MPIwSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=esQOTIHjaHNVuOG7SSQw+VP+TCwTGRJKzz6OqMs0e4hzdjkkLQAYLO9wIEqc7/TIyfmyDnqHDbXwGe/S/ZBhY97U0XGS6p3m8h4DSXDtaITOInN3DC2u/dAJ7Ori0EVsV7hqXoygFarR7nVJN8De/4taj6OM60ZqQtO9xKZzhCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=UmS58mOU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mvPlRr+R; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1751790650; c=relaxed/simple;
+	bh=ArJ7PveElx3Wr6Gl51JBH21PaM7qp5nCvfvSROX2Owg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GRstcIe2phvATBD/m573WE7SMuhBM+G1Sr4DEiBB6fo37xs5jBg2tpgQP5ieiKZKOlBu9dMtuX6VDD6WEHegf/fGo8lTzModRkjFPyxMoPGXBZjOrjDulh+ClMy5/1VIHgFtkmznEgFJfjaHXfC6nVbMRPy86tUUuuuz8osACRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=C5BFEQeU reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="UmS58mOU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mvPlRr+R"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id BAB9C1D00241;
-	Sun,  6 Jul 2025 04:29:07 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Sun, 06 Jul 2025 04:29:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751790547;
-	 x=1751876947; bh=AleHfUjihkJKz/UBvekuq0kDimlhUhmI5K7F26DJ5Qc=; b=
-	UmS58mOUpr4TqTiC47XKB9WBXhZg7pvgAkfYrTCzJa0AXKXAyXH2qsoDxyhSNjGw
-	TO4kNDzXvwEtv6L4gwBljepPS0fPzP/vg2UfxphXA3EMNv+w8M/EIzjNxPVhCSt7
-	j6os2b7otepCCtg8rAYW3XpeixE/GdybZ/Nh5XHvPA+YDcg5svkwIS7SEP7BZ49u
-	VQ1QdIoq9Gu/z11tK60AkltLENvLtXIiuXg+LhGZTARPDGmHwg7SXmX8YawE0GUv
-	xzChn2Xz5PleGzI/8bpzFx1N7kQNpregnXfcDXFyp7ZgmA692zAn2j4asJZu4DAk
-	Niq5LDqaPLHSwKk6IOEIBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751790547; x=
-	1751876947; bh=AleHfUjihkJKz/UBvekuq0kDimlhUhmI5K7F26DJ5Qc=; b=m
-	vPlRr+RUWK7Hk8c5FinYxV9Hk63QqIScOpNS2zosSGZycSdOpAkUquNfPs7gNgVj
-	JHxzsUbi42WDorrWkMPu19v3sP6SixNZax8RtyOFJFB0SDE+klQCVJVH7NbPynRp
-	1QHpxpyyb72xjR/QS7SWTl1+isL40xLQd0cch+LPxlZl71W4dL80vLDd86Hl7YG9
-	0pTgBIYwMQxm3eSIH6geAwyAzFKg7uG5RTzbQE96XUtIddrPUzu+Fg0MBdb0FUUJ
-	isCDIJ3gHCRYBwzldQpvExHwSj2VcyQJj8lyLhIHZ4pNTGovXAQfbWszP6eIJc9t
-	I+GYGCa/HkH/LFjLEmmgA==
-X-ME-Sender: <xms:0jNqaKFELhcDIL94s7J2JkEJRpQ7EEGTSEEhva-FyBNH7sUC6M6LBA>
-    <xme:0jNqaLX6vZovBLcLKxZhu-qpklsHuV7rSM26StKiPhcR6a6mvL_CPrElXY3fLQEd4
-    Pi70XgmhEXK5ZEMUFM>
-X-ME-Received: <xmr:0jNqaEK1Xp7Lpj_5Rmm4gGp5BTXhiEzKHq8vSbSs8dEEYrmGHzA4XP-ySClmLZrkDMbwLERyrTRLJChxBRTZwwGOVZfizNV_j0k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvkeeggecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhhnvgcu
-    ifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtthgvrhhnpeevfe
-    ekuedutedtvdffvefhvedvkefhgfevheefhfffheeftefgteffuefgveefhfenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruh
-    drnhgvthdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpd
-    hrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprgdrhhhi
-    nhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhm
-    pdhrtghpthhtohepsghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhes
-    phhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlh
-    drohhrgh
-X-ME-Proxy: <xmx:0zNqaEHl5x5GZzeiP-lkezzO9vIeOgNZeK4XlXPuaduT13rAi2Td0A>
-    <xmx:0zNqaAXH5HIFqo_nJnrJq0uctLseIFKbY5n0n9YvkCnRFwh-D93hDA>
-    <xmx:0zNqaHPXucWx3H_i9bdlnKup1MfPzWONLXltrpnAeaxfDQYcma1H0Q>
-    <xmx:0zNqaH2fU_LuhBcOMQrsfLy3ez917N95wPrjGAZWivND0mAQG_t_gg>
-    <xmx:0zNqaEdJL74sOBC4AI8aI1s_A3l3G0EWkMpQilbyUbtHg6ELWqEv8Pbb>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 6 Jul 2025 04:29:06 -0400 (EDT)
-Date: Sun, 6 Jul 2025 10:29:04 +0200
-From: Janne Grunau <j@jannau.net>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Tamir Duberstein <tamird@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	Daniel Almeida <daniel.almeida@collabora.com>
-Subject: Re: [PATCH 3/3] rust: xarray: add `insert` and `reserve`
-Message-ID: <20250706082904.GB1546990@robin.jannau.net>
-References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com>
- <20250701-xarray-insert-reserve-v1-3-25df2b0d706a@gmail.com>
- <CANiq72nf-h86GszE3=mLpWHi5Db+Tj0TRyUe9ANfjdNbesBEEg@mail.gmail.com>
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="C5BFEQeU"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D4B2240E019D;
+	Sun,  6 Jul 2025 08:30:46 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id RyBTuq0y9EPs; Sun,  6 Jul 2025 08:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751790642; bh=IfgpitmB0jLnCRobwzv/bHCTWf9mMvl5I41YPbGo8z0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=C5BFEQeUAuPqw8McfAvgxa+/X/Twfg9+9f2OpKo9XogHvjOftobX5H1UDO0D2ujq9
+	 g83+7TYMth7tQcuv6r9AqaGBD7RyIRImCqJXD+k7dcx39j+zX8RMD1QxLJVJngJ57O
+	 ZvMZAW3YARtk5KHluwCxDNG3P8wcdI9AVs0CIYS7m9GrU4XJv1MwbP/Qlpk/lIkl9Q
+	 YCzWeZ6R68qwLlRdNE76CPCPiyMw5xR/tHTQOJwRCVenHdok7IGMl6ApP2VlqXHJBS
+	 REr9FCKgw3GaqhhcuTvL/nMt86o24VhtRszCqHIVDiSW2qKAXdN7VQCHZey909BbQW
+	 q0RdVyU02z8BFomJYQOJhutX1Y2U13PplwUu8Bfgy9qUccbyV4o9Vgpf07D0CxU0Ia
+	 c8KjA7ftepeyuWzixCV/Dea5GUZ7uINrvNVf1lCLdxddp4LIbBaVzbBfrzRid8pJhY
+	 gBGlSWdNz+5Z4s5sVjgZIJhCwGpAYlrnIWzTg/qGuhT9B88LTtdnrlzvjFGyeKBrQp
+	 mjPqaagJkkp+6nEHA4r/3hH2S5l7tCqfwieQjF++mqoOhtWVN4fDqGY/kC/P9q1FrA
+	 xvUMPwhyLTbZmNaFMgwuVhCDqdTWXcCN4zRQX90l4F30tPeR3u6ftPMtlr2jatBVN9
+	 zT2OKpBcxq88XqK6jEt8BtVM=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 67C9640E0184;
+	Sun,  6 Jul 2025 08:30:39 +0000 (UTC)
+Date: Sun, 6 Jul 2025 10:30:33 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sched/urgent for v6.16-rc5
+Message-ID: <20250706083033.GAaGo0KbMDFzyQQLmR@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -104,20 +59,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72nf-h86GszE3=mLpWHi5Db+Tj0TRyUe9ANfjdNbesBEEg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 06:56:17PM +0200, Miguel Ojeda wrote:
-> On Tue, Jul 1, 2025 at 6:27 PM Tamir Duberstein <tamird@gmail.com> wrote:
-> >
-> > Add `Guard::{insert,reserve}` and `Guard::{insert,reserve}_limit`, which
-> > are akin to `__xa_{alloc,insert}` in C.
-> 
-> Who will be using this? i.e. we need to justify adding code, typically
-> by mentioning the users.
+Hi Linus,
 
-xa_alloc() / reserve() is used by asahi. It's still using our own
-abstraction but I'm in the progress of rebase onto the upstream xarray
-abstractions from v6.16-rc1. Once I'm done I'll reply with "Tested-by:".
+please pull the sched/urgent lineup for v6.16-rc5.
 
-Janne
+Thx.
+
+---
+
+The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81=
+af:
+
+  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/sch=
+ed_urgent_for_v6.16_rc5
+
+for you to fetch changes up to fc975cfb36393db1db517fbbe366e550bcdcff14:
+
+  sched/deadline: Fix dl_server runtime calculation formula (2025-07-04 1=
+0:35:56 +0200)
+
+----------------------------------------------------------------
+- Fix the calculation of the deadline server task's runtime as this misha=
+p was
+  preventing realtime tasks from running
+
+- Avoid a race condition during migrate-swapping two tasks
+
+- Fix the string reported for the "none" dynamic preemption option
+
+----------------------------------------------------------------
+Peter Zijlstra (1):
+      sched/core: Fix migrate_swap() vs. hotplug
+
+Thomas Wei=C3=9Fschuh (1):
+      sched: Fix preemption string of preempt_dynamic_none
+
+kuyo chang (1):
+      sched/deadline: Fix dl_server runtime calculation formula
+
+ kernel/sched/core.c     |  7 ++++++-
+ kernel/sched/deadline.c | 10 +++++-----
+ kernel/stop_machine.c   | 20 ++++++++++----------
+ 3 files changed, 21 insertions(+), 16 deletions(-)
+
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
