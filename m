@@ -1,101 +1,131 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A4E15D1
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 16:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8486915D1;
+	Sun,  6 Jul 2025 16:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751818174; cv=none; b=dqLoPVhp+2nQ0yIfbLNAZUjDh0trJnNzII+fWlf4MQ/agmToBvcWQ1iZJQE5XsG9UI91aF8CWaGcjFNX63B5x222W4HoVrc5LVBlq/emLKdMjJlYaqOMvVo/iF9ns079LDeWaoU/vy3emAeQ1aVTbwnnj3HSX6BlMl9QTIPCkHE=
+	t=1751818259; cv=none; b=sHt715SasiJa4+eHKx1J7lmjt297BAKdFbAjoWRGijX6NRyzmcF+wF/b/zGHsn1sf7075cuaMGv50Q11G0v8RaRZxGsU5M9F1bzguBw/zweNuv+Foktr5lJG697t0KmR4mH8xlJAi54cJLs30I6h9SD6XzZJlHjY8gSuNKJvb3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751818174; c=relaxed/simple;
-	bh=dluMG5TwwdUhJImwnbyIw4PVkx2mgF/2C48hpLjNHs4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CfeK5xAVg6MI00D56LMwlZF+A+ncvc84a+UT3r3vBjKI6K16yedQi9a5H8JsCulC1uSkAu1H2gWQZP9h8s/Bu7ZPwhII+IEZ8bIalUdT32H1RiiUp12eXJ9+qMBa/FrgeBBXEjKNlIC5WyJq9KA92TA3RIiMp59UiQBRUj3uXdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SHLyWrSg; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751818259; c=relaxed/simple;
+	bh=W4z+DhE+690s6ZsS02gbHOefeqFV25uvHqTaF8NqBKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J690QaMCL3YznDWkBTfgPPni1YuZlunOpLNUPmgDQvLR+sIcmzLMKhJo2B3FWcFvY1T6vut1moSH9v94Wf8wn1werOSerFiJ6bIFTqwgWcE6+8/nNSjPVO04lGndWNA/9V89h0EpF5YuwTVN8gh0zhR0+17PAEh9KCeSP4kAhEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gT6ZE57e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SHLyWrSg"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751818168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GCVdB7erSf5MrQ7MsULHMTx9BYT2MXfK/PWg2XLJn78=;
-	b=SHLyWrSgVjMTH1jt7nyh98k5cyutOKCHjRVA6VD5KUT1buWJrZlJL84C4g+fGhM198RSJY
-	FKNOYMdAaY6I1r400D/d2r/NB9lG6vN/qZzC9kuWI4a1TMXF3RTxGFy6/RWgy8wbgr3vN6
-	GLVi4wiwAgVVi3hdi0gxNuzJsH1/Bhw=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: mts64: Replace deprecated strcpy() with strscpy()
-Date: Sun,  6 Jul 2025 18:09:03 +0200
-Message-ID: <20250706160906.416270-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gT6ZE57e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40AC1C4CEEF;
+	Sun,  6 Jul 2025 16:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751818259;
+	bh=W4z+DhE+690s6ZsS02gbHOefeqFV25uvHqTaF8NqBKo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gT6ZE57exdUBczZv91YxpELfwe9rt3qw7d3CVcPepAFHQOElX5dQmL62fpX9+JTD8
+	 DQ5AxC7prU8YKks7BGejjPAJpqCER8tE3lsC5up3Rmjtgw/1q9GrFdMjo8EOXperLZ
+	 DTRRE0hQilaO6Q0BhRkfFFv/zgkwM9zZ+T4aYBdnVDGjONmAI2Z1fpfaV2j67dWkoB
+	 PitNmv21AQEOMtcqqMFKCYHNJYeQwxZqNkKUsPpCKzSTgbKSZciXEjzR+0AfkqGwEU
+	 0chzXjZlhkZzQyUbtGFkw0wXs8uBZI58cwo8AW0CJg/u/5BgHPHqgOVScLINNMpy/q
+	 F8s24aiCX5jeQ==
+Date: Sun, 6 Jul 2025 17:10:51 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, eraretuya@gmail.com, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v11 1/8] iio: accel: adxl345: simplify interrupt mapping
+Message-ID: <20250706171051.678c2519@jic23-huawei>
+In-Reply-To: <20250702230315.19297-2-l.rubusch@gmail.com>
+References: <20250702230315.19297-1-l.rubusch@gmail.com>
+	<20250702230315.19297-2-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-strcpy() is deprecated; use strscpy() instead.
+On Wed,  2 Jul 2025 23:03:08 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-No functional changes intended.
+> Refactor the sensor interrupt mapping by utilizing regmap_assign_bits(),
+> which accepts a boolean value directly. Introduce a helper function to
+> streamline the identification of the configured interrupt line pin. Also,
+> use identifiers from units.h to represent the full 8-bit register when
+> setting bits.
+> 
+> This is a purely refactoring change and does not affect functionality.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I'd really like to reduce the number of patches outstanding so I'll
+apply a few of these now.
 
-Link: https://github.com/KSPP/linux/issues/88
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- sound/drivers/mts64.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Applied this one.
 
-diff --git a/sound/drivers/mts64.c b/sound/drivers/mts64.c
-index 17f215bad0ec..bbeebbe467ea 100644
---- a/sound/drivers/mts64.c
-+++ b/sound/drivers/mts64.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <sound/core.h>
- #include <sound/initval.h>
- #include <sound/rawmidi.h>
-@@ -763,7 +764,7 @@ static int snd_mts64_rawmidi_create(struct snd_card *card)
- 		return err;
- 
- 	rmidi->private_data = mts;
--	strcpy(rmidi->name, CARD_NAME);
-+	strscpy(rmidi->name, CARD_NAME);
- 	rmidi->info_flags = SNDRV_RAWMIDI_INFO_OUTPUT |
- 		            SNDRV_RAWMIDI_INFO_INPUT |
-                             SNDRV_RAWMIDI_INFO_DUPLEX;
-@@ -791,7 +792,7 @@ static int snd_mts64_rawmidi_create(struct snd_card *card)
- 		mts->midi_input_substream[substream->number] = substream;
- 		switch(substream->number) {
- 		case MTS64_SMPTE_SUBSTREAM:
--			strcpy(substream->name, "Miditerminal SMPTE");
-+			strscpy(substream->name, "Miditerminal SMPTE");
- 			break;
- 		default:
- 			sprintf(substream->name,
-@@ -929,8 +930,8 @@ static int snd_mts64_probe(struct platform_device *pdev)
- 		dev_dbg(&pdev->dev, "Cannot create card\n");
- 		return err;
- 	}
--	strcpy(card->driver, DRIVER_NAME);
--	strcpy(card->shortname, "ESI " CARD_NAME);
-+	strscpy(card->driver, DRIVER_NAME);
-+	strscpy(card->shortname, "ESI " CARD_NAME);
- 	sprintf(card->longname,  "%s at 0x%lx, irq %i", 
- 		card->shortname, p->base, p->irq);
- 
--- 
-2.50.0
+Jonathan
+
+> ---
+>  drivers/iio/accel/adxl345_core.c | 34 +++++++++++++++++++-------------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index e21ec6c15d15..6c437d7a59ed 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -1088,6 +1088,19 @@ static const struct iio_info adxl345_info = {
+>  	.hwfifo_set_watermark = adxl345_set_watermark,
+>  };
+>  
+> +static int adxl345_get_int_line(struct device *dev, int *irq)
+> +{
+> +	*irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT1");
+> +	if (*irq > 0)
+> +		return ADXL345_INT1;
+> +
+> +	*irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT2");
+> +	if (*irq > 0)
+> +		return ADXL345_INT2;
+> +
+> +	return ADXL345_INT_NONE;
+> +}
+> +
+>  /**
+>   * adxl345_core_probe() - Probe and setup for the accelerometer.
+>   * @dev:	Driver model representation of the device
+> @@ -1203,23 +1216,16 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+>  	if (ret)
+>  		return ret;
+>  
+> -	irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT1");
+> -	if (irq < 0) {
+> -		intio = ADXL345_INT2;
+> -		irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT2");
+> -		if (irq < 0)
+> -			intio = ADXL345_INT_NONE;
+> -	}
+> -
+> +	intio = adxl345_get_int_line(dev, &irq);
+>  	if (intio != ADXL345_INT_NONE) {
+>  		/*
+> -		 * Any bits set to 0 in the INT map register send their respective
+> -		 * interrupts to the INT1 pin, whereas bits set to 1 send their respective
+> -		 * interrupts to the INT2 pin. The intio shall convert this accordingly.
+> +		 * In the INT map register, bits set to 0 route their
+> +		 * corresponding interrupts to the INT1 pin, while bits set to 1
+> +		 * route them to the INT2 pin. The intio should handle this
+> +		 * mapping accordingly.
+>  		 */
+> -		regval = intio ? 0xff : 0;
+> -
+> -		ret = regmap_write(st->regmap, ADXL345_REG_INT_MAP, regval);
+> +		ret = regmap_assign_bits(st->regmap, ADXL345_REG_INT_MAP,
+> +					 U8_MAX, intio);
+>  		if (ret)
+>  			return ret;
+>  
 
