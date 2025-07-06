@@ -1,63 +1,63 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9861BD4F7;
-	Sun,  6 Jul 2025 04:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4C21C54AA;
+	Sun,  6 Jul 2025 04:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751775860; cv=none; b=OoWU5STMrJjVhduwts6DL/LV5Z40+GOmiRfaKKNNs4IqPI9sPXGKX7TO9okXrDEnP4/QQaT79+2+3YXDbjDmki+VyVZiGdEuFT8Ojg0Xop5w2vu1r3ClHDPTsPFdjj+SeEk9FdqnubdOUEWJguCZCRl2NpH4GpNFNw7KVOjLr6c=
+	t=1751775862; cv=none; b=jnTqx6vxB/EmhJgd9ME402Hud+E2TVXRBmP4s+8d++Ie4/ssmOBPjllbrSVs0+S/NK7uGsegiI6bRUvgBviLUKCqr/QVv/l3fZzTBom7QSPfZCIWwrPSxd6yK6G8ygzpjFwNHW8/zZ1E9FQT1hnoAeO34bBI3X/u6Zek9wP0yNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751775860; c=relaxed/simple;
-	bh=e4sXPKrnc3fLVMVTpyD19399RSNDY12wmkvO93ocJD4=;
+	s=arc-20240116; t=1751775862; c=relaxed/simple;
+	bh=bFP/OSPwfVEI7fCZaWROP9/QB+EszFYqM7erMBZkACw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EbjUd/jyqHuYSfBiNRFJoWuJyruQD5XxxF93T5rxICF5Tv/0Qf+Q7VJsKfHgVeOEhj4theAuhs1ypzQjT2ipyxZtFWneCT+FKVRs6KyxgmVhW+AyVvyf1Hob7shsq0RtO1F8vCFr5axX+xKi7LR9MlsQ1lGQoS39t3VguZUB9R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A4guEl3q; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=u3YoQ7uEXSubakQFcN36hd1628ASRRMwisRMGg4MQNIRFrGY2YnR4b5wMqZY/KPJXRg8VPklLxcRVpsZpzr2amzJTv2ZWSfGoNvnmPetJYUqMBd0mTsSr7xSHj7QuMnicZ3H2jkBGjswmS6fGNaFyzVsZ9J/iy2IQgLBfy8rsR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qn+2Nizz; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4guEl3q"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74924255af4so1933338b3a.1;
-        Sat, 05 Jul 2025 21:24:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qn+2Nizz"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7426c44e014so1602972b3a.3;
+        Sat, 05 Jul 2025 21:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751775857; x=1752380657; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751775859; x=1752380659; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a5hvQYwSO1DDyOFBRxzz4gXM+LbX6JZNHrIcl99wJbw=;
-        b=A4guEl3qNG6qfdEX7A9siwAEWt69N7jUXdJNcdJQ+QXtlto0Y8b0W98lKZK+mEeyRN
-         cQ172sCrRcJHSkPNLh6/K0xX6zH7r/mK8vt9Lv52YVJ/NtSF60y3MR6a3G1m3WvRWAer
-         tgnyNwoSPYGGl2MUpyb8aOgxPkZAzIJdgqkLuFFHKEjEIIuAHeejnwmDQhc2CmfcxMwF
-         OJfF7x8mXOjaj0ZwX3R19tuw4cFFApySX+ZPxVS12gqcPQJ5PkbAsRpGjoZ6AU4sR6Yz
-         mluN25JFQs9bNdROqP8zD/0VnSoQt4A/1tNdS16O7b16xrWYHIeGpdimh4IPeRjzC/va
-         9/EA==
+        bh=d4zGUQOdnJ69KAUBlNTKEGfxN8OGbSwbnbCSpcFHfJs=;
+        b=Qn+2Nizz0cx0hd6GxV/EhIjMpcCoLEFRv0Ri6XDgmlxbPvg3WQNi/NR90dEDpRcWxt
+         v6OMTSzh673mAXNj1u8VKGF3EJHOPKYJM0fhgZftYPGclsIdLyyntAtwHg9qvezgQQIJ
+         OpFLIn3UMj8ypDmz1lUs2NiQ3az/3TzESFBmSvWhvRlU6oBTjXH8WPuY8ckJ23HkVLIx
+         J4GP+jVbWUv2GhvfDw5GsFx9mk3xg1P1lftA4+v9KHJDleqfK/BvS9BzKopfV/k0L4VW
+         2fXJ3FdZFJrbtu1ajNM0J/+8YsoFp+RPl8hV/RfiNhhQesHOc2VYtnxfObd/0NjO32WT
+         XdWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751775857; x=1752380657;
+        d=1e100.net; s=20230601; t=1751775859; x=1752380659;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a5hvQYwSO1DDyOFBRxzz4gXM+LbX6JZNHrIcl99wJbw=;
-        b=GAJHAzRDa1d5jIobX43dKYnT4MSVsTdHWh69gvXy3g06m9H5FI5aoiTvdtJ08jt+KM
-         bgavuZ4BEgaeoVV/JAPB2KEkh94+z0uYKJVdIMdFNCSFCsZo3Ajq/XiXl766eBVhzwqU
-         wI21u3F5OmxjkiEdjncnVDcUaBtG1X0HRsSXB6YPTsm8lwDdIgddCmx73RXSe2pwJw1k
-         JrfX0PYsmsiYL+LLqyRhrZFtCU0o3h+JsheZJh2g/GiVn4ekafrbPsLXA+fwRBLB7BGd
-         2rEz5ooJr10KTYY3j/w8UAbXBxT8a8XUdwT6lZCeQ603NaoO7pzsXsQRwkAVAI81wAi7
-         jUWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVH0Vi8y0NMAecD2LYhWItGapXmySm54bzKmZBvRZFOlFLYwVrTw8hr2lRW8QtTnjxEDHCcC48a6HWdMskE@vger.kernel.org, AJvYcCVw5/6ATWkLCktXBeUiRNANUioKlTBs/kjI562xFKses3BKJALdnJa6jtScSHTlNPbr6aLafBhr/Y9e@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0LCMeOv9XARnryVyHT5Aru8x7y6LK+cN+QL5tYxBmTFXUspmO
-	zsEZxfa3E0KtMF/0/V8n7EZoSoWBidQ0Keb0sAuon7rliP52nNSoT1CB
-X-Gm-Gg: ASbGncuFsyavsGAAMIjvUsVVjbr0TP6s1rWphU3KWvkwKzxCVwNbuWins9Ml8qOe0jZ
-	w7xc8mu+F8Zjbx41We9uAggz4jk/Wx+78ptcbnJMdTl/Rj2hPXW5hYmq4Ot7qKVK1X4A41MfI/T
-	FK96lhE6/sdmoeNdMB//DO32WM+EozKvDdOi9jTHbeU4mi3f2po8PW5Z383nOBXZa2CpwgfkAP0
-	LFoGYwhmfYFCEeVuZxocA5FRobJwKXhR6u73tq1aPWDmaRx1l63ufIBLyqyaliiCL2CKp2N+ZDA
-	IbvJsSV5+LC+cF/wE6c68tgvmIAa+1GGBU5QvdA9vHzSv2LYBfmyYu+6Kb76c5fzMw9dmYWb3V6
-	uzH3eGd6U+xySfmaEVMrI3KbMYoLOja4Khu3Q7E3QTwfzdcnYsA==
-X-Google-Smtp-Source: AGHT+IEDh07y4O5UrpWhHEn8NMy7TKn3Wcl/ge+wEXWwvw6/1ARreXKO3us1HCxZEGHLcjY9QbNDfQ==
-X-Received: by 2002:a05:6a00:6ca6:b0:74c:f1d8:c42a with SMTP id d2e1a72fcca58-74cf1d90239mr7504338b3a.13.1751775857389;
-        Sat, 05 Jul 2025 21:24:17 -0700 (PDT)
+        bh=d4zGUQOdnJ69KAUBlNTKEGfxN8OGbSwbnbCSpcFHfJs=;
+        b=EPZLc9Feu1MjU9IK3Y81cjIYidq/IldGOHUJE9WV3ogPoslEqhkJFFy4hUGbJAwjVT
+         QuAXTBwG4G5QPLDmcK29cPq9PqalYohZ6NWACfWR0BkgIXGpdbmemTtrCwtcZDmGU+5y
+         dBqGZtOFLkKJ1oVVn4SugyEDHcp1TqTDT5NE4dWf/ghOXkKSNWu/eC01WJKLH49Zd8x6
+         k699lrwmAMD6AY8DZSU1c3yRNd3Z9sFO4cXlho+HZibWLZ6obM7lQc5wGoS7dNcrS90f
+         C1B4twBRvlWl0IR1RChwZFrd8DYsSV4fUHze8its2jYS4vAggHAif02cnWOR+tFERNBa
+         6+Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCW57ly5vsFKnQI96DA1dWdLmGF15adXcLd9rlEagO0FhHeFylA5o1ujUlJuNtgpkbkmA0yGHrtN6c2Hn3HN@vger.kernel.org, AJvYcCWAwMucGL5Bc1FnFUkjHaI4yM6P6tKI5xDHWxvPc7+Sr7n+Tl8QFV4c2QK785Utq8LDC4Q6q/rtaeOj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGKdCx8r3o0jL6iSeaPDT/S54JtBY9sKiVWF7B3/iiKdJ39shn
+	BTTkESYSKn5XIEgHeLpZPOpbet3yyW5SRUfNFT0loH+9wawaHBlz8uGA
+X-Gm-Gg: ASbGnctiQLXMocqbiN5blqv1G87tfjuLGhPc3me0Saf9bXGJ9BiBtMfrVFbJodR/CDe
+	AtR2hoxENyxRrC629VYbl+RXwnDgtwZGnVZScZ8TwqHgdLN/bXSd2KUBrcVROU7NJkU3gQy2lMR
+	+pzqMtG9LgKWAlh3VyQ0h2T+TkA1EeOKG8yg4T9HJ7Hhx7uH2NKNYk9kReGMHCuF32gs/kZJ+4h
+	nyZQDG7+8Qe66uSPy6O/ZdZLW597VNtJ6VqOffmxzXUfkwfMzl8rpAMXMZ7YQSzPeRkdCAPUwD0
+	CoV3j6RLj+wdL/s88gYgLMFczN0bL4h2hzEUiBCnvXVtdwlyQf0PH/4VId6htpvK3kb3QTIgoSW
+	+nEQjJhqFYnIdhF0s+8uW+3w+T4UFuGTHD1C3g70=
+X-Google-Smtp-Source: AGHT+IHRyoxO9wJjn3WxYHJI0BaRuQ8jiymleujUzsWOOYUm3nMO8dl2iwjV6yLqVVunAz/SEaHFiw==
+X-Received: by 2002:a05:6a00:23c6:b0:748:fd94:e62a with SMTP id d2e1a72fcca58-74cf6f17155mr6130664b3a.1.1751775858985;
+        Sat, 05 Jul 2025 21:24:18 -0700 (PDT)
 Received: from localhost.localdomain (c-76-133-73-115.hsd1.ca.comcast.net. [76.133.73.115])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce417f206sm5287067b3a.76.2025.07.05.21.24.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce417f206sm5287067b3a.76.2025.07.05.21.24.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 21:24:16 -0700 (PDT)
+        Sat, 05 Jul 2025 21:24:18 -0700 (PDT)
 From: rentao.bupt@gmail.com
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -71,9 +71,9 @@ To: Rob Herring <robh@kernel.org>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Tao Ren <taoren@meta.com>
 Cc: Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 5/9] ARM: dts: aspeed: wedge400: Extend data0 partition to 64MB
-Date: Sat,  5 Jul 2025 21:23:55 -0700
-Message-ID: <20250706042404.138128-6-rentao.bupt@gmail.com>
+Subject: [PATCH v2 6/9] ARM: dts: aspeed: Move flash layout out of Facebook netbmc-common.dtsi
+Date: Sat,  5 Jul 2025 21:23:56 -0700
+Message-ID: <20250706042404.138128-7-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250706042404.138128-1-rentao.bupt@gmail.com>
 References: <20250706042404.138128-1-rentao.bupt@gmail.com>
@@ -87,30 +87,69 @@ Content-Transfer-Encoding: 8bit
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Extend wedge400 BMC flash's data0 partition to 64MB for larger
-persistent storage.
+Move BMC flash layout from ast2600-facebook-netbmc-common.dtsi to each
+BMC platform so it's easier to apply different layout settings.
+
+The fuji data0 partition was already extended to 64MB in Meta
+environment. Elbert flash layout is not changed.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 ---
 Changes in v2:
   - None (the patch is introduced in v2).
 
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-wedge400.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts     | 6 ++++++
+ arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts       | 6 ++++++
+ .../arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi | 2 --
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-wedge400.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-wedge400.dts
-index 3e4d30f0884d..cf6c768cbad5 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-wedge400.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-wedge400.dts
-@@ -92,7 +92,7 @@ tpm@0 {
-  * Both firmware flashes are 128MB on Wedge400 BMC.
-  */
- &fmc_flash0 {
--#include "facebook-bmc-flash-layout-128.dtsi"
-+#include "facebook-bmc-flash-layout-128-data64.dtsi"
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts
+index 74f3c67e0eff..673cabbec92e 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts
+@@ -50,6 +50,12 @@ spi_gpio: spi {
+ 	};
  };
  
- &fmc_flash1 {
++&fmc {
++	flash@0 {
++#include "facebook-bmc-flash-layout-128.dtsi"
++	};
++};
++
+ &lpc_ctrl {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
+index 840d19d6b1d4..71f58ad1ff06 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
+@@ -223,6 +223,12 @@ eeprom@2 {
+ 	};
+ };
+ 
++&fmc {
++	flash@0 {
++#include "facebook-bmc-flash-layout-128-data64.dtsi"
++	};
++};
++
+ &i2c0 {
+ 	multi-master;
+ 	bus-frequency = <1000000>;
+diff --git a/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi b/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi
+index 208cf6567ed4..4f819bf8c909 100644
+--- a/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi
++++ b/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi
+@@ -54,8 +54,6 @@ flash@0 {
+ 		status = "okay";
+ 		m25p,fast-read;
+ 		label = "spi0.0";
+-
+-#include "facebook-bmc-flash-layout-128.dtsi"
+ 	};
+ 
+ 	flash@1 {
 -- 
 2.47.1
 
