@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9542D1D90DD;
-	Sun,  6 Jul 2025 07:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0581F3A1BA;
+	Sun,  6 Jul 2025 07:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751786650; cv=none; b=RCDUQM7j72rkNcqDLJLS4lZSzei0UdqmpuzeQmPwebdTcUrTRQe/r3c+xRZmxaPAz3GqGALWjkV58QyHk0XJ5N2MUdlsWoUIRPMPVVcGz2RANfn76qd/FidlLRhrSaFK7/jJCAmw3sxaiVgbUirAAc3W6wLua+/uCL0gd4Rpkfo=
+	t=1751787017; cv=none; b=dF4ENF1x5tcIPgQ7MrR5A2JMpTK9zNZgzO7AHU1xrp8iGg5yB2UugKwZOs9E4Q4tM05jy6MHZtF6mEHfEMPBSf2k9eqytCcifRGNBdl8o5HdlguXOJz/tFbtVzQbrTJsq3rk1xQM4sPgUccTpra+Leew4EMjtrWmjoAw0TdDs8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751786650; c=relaxed/simple;
-	bh=GXloaSvCws91FWcTEY826uJkkXeu9ViMmss5Tzk2+zA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uqd8VeKcelMhzSXsZcRt6rbkk4AWDlVt2vIx96Yq0TJK1igT5sBPmEhHYzr8HomESzS/YjmhHNQfbAo831WO/oRebV6kFz7PQBqnHZNf5dIInTCeHerAQTEa98EBa0oWRag9qhf4SteIQRm1TAT+3WchyPj+uaYwIvPcNnPgUiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tC+J2TaE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751787017; c=relaxed/simple;
+	bh=s9hrCTWTPI1VCAW9HJlKnjf06cjZnN/QG7Pirq9QLqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QgrrDYg4NgaELMfRsJ43P4+mAEjqtTENO9Q7lm0WjK1bjpjUim23c0yqEwTJqQDjqkeqL+i9Vjbxn0QVblUjKoSJM45K+KHTfJN82V9moDzLLrclS/otiVY5eXEkx2oqQKVACRsQA2hiraKAMc4AVC17p9w7TkWVVStNT+wFzcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YPm6az/O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tC+J2TaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E53B8C4CEED;
-	Sun,  6 Jul 2025 07:24:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YPm6az/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F09B5C4CEED;
+	Sun,  6 Jul 2025 07:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751786650;
-	bh=GXloaSvCws91FWcTEY826uJkkXeu9ViMmss5Tzk2+zA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=tC+J2TaE3G34vQ2iuThIuT6V4t04I0qj4jfqGEawToE2u+U5oDLkMygdaTJXSXDt4
-	 qmn5zrEQoXRMyoE41Yy2zFmEMtiG4Fox6x8Rw4n38AFP+uPFoR76gS1fqz/LBiRP5H
-	 8caft/vh+BCaVfamn9Lcm/H7aGNmSO3Cvz9IT5GCsm4uZ5DKaQS+ccl2liPbon9WNP
-	 mL3RG6lbJQnfXLdCqzJEmSrlrDJat3Z0cc7IPyt7p1hJkzgJJ1Su6mlQ8y7lcyfduf
-	 6s535wD17A4V1H5Lk5tzk1xbv/yDEy5mOqQEN8raKHYCKTOmVg6XQYikkfhsDeRbr5
-	 9lHWusOwORA2w==
-Message-ID: <a303bf21-a4d7-46ca-ba4e-2f70f39e6b10@kernel.org>
-Date: Sun, 6 Jul 2025 09:24:04 +0200
+	s=k20201202; t=1751787016;
+	bh=s9hrCTWTPI1VCAW9HJlKnjf06cjZnN/QG7Pirq9QLqg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YPm6az/OnCB3kTJ7WXoq9Q9xITi5wQDOAcoLeRBuX8qQm5yUwQavlMArudWf5d/aZ
+	 PA6U2ly3uQw6gw7GFPBFtxEsZCst/jX/aFdsKDoqAhJH0DTmGddANGI+8Ubet3HWok
+	 YJXnnoceYaUAhgKG/OIFJuvr/KnN3D60Dk1ENr46rK6qlAfIB0Cos564VmQfDQrQHU
+	 4AT67+vyv76rH4QzOsGCGtMj+/QyYxPgaQozpRWiPekpTCBZTdTkZtvwgW9ppT+koi
+	 6lQf85iqctUW3fZd9XG/XmAQOe4tYRhxvZG0DQccSgbWfGZPyRkKrJeEH089c1+S7s
+	 kw7MERkyxMHJg==
+Message-ID: <2558e64e-1164-4794-a4bc-b400b90e20fa@kernel.org>
+Date: Sun, 6 Jul 2025 09:30:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/9] dt-bindings: arm: aspeed: add Facebook Darwin
- board
-To: rentao.bupt@gmail.com, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v1 1/4] dt-bindings: media: Add Sony IMX585 CMOS image
+ sensor
+To: Will Whang <will@willwhang.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
- Tao Ren <taoren@meta.com>
-References: <20250706042404.138128-1-rentao.bupt@gmail.com>
- <20250706042404.138128-9-rentao.bupt@gmail.com>
+ <conor+dt@kernel.org>,
+ "open list:SONY IMX585 SENSOR DRIVER" <linux-media@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>
+References: <20250702063836.3984-1-will@willwhang.com>
+ <20250702063836.3984-2-will@willwhang.com>
+ <2c558cde-b257-404e-805c-a59e41852bc6@kernel.org>
+ <CAFoNnry_BDeH9ERiDsncdpaH-f_qKqXyyM3e=M=j5ogJidU68g@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,40 +95,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250706042404.138128-9-rentao.bupt@gmail.com>
+In-Reply-To: <CAFoNnry_BDeH9ERiDsncdpaH-f_qKqXyyM3e=M=j5ogJidU68g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/07/2025 06:23, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
+On 06/07/2025 08:52, Will Whang wrote:
+>>> +          link-frequencies:
+>>> +            description: Select the MIPI-CSI2 link speed in Mhz
+>>> +            items:
+>>> +              enum: [ 297000000, 360000000, 445500000, 594000000,
+>>> +                      720000000, 891000000, 1039500000 ]
+>>> +
+>>> +        required:
+>>> +          - data-lanes
+>>> +          - link-frequencies
+>>> +
+>>> +    required:
+>>> +      - endpoint
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>
+>> And why here is different? BTW, here it is correct.
+>>
+> Sorry I'm not sure if I get your comment correctly but I think this updated
+> version is what you mean?
+
+I meant the order of properties listed here and in properties: section.
+
 > 
-> Document the new compatibles used on Meta/Facebook Darwin board.
-> 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> ---
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
----
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
 
 Best regards,
 Krzysztof
