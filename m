@@ -1,158 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F130CA5A;
-	Sun,  6 Jul 2025 16:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4945D3C2F;
+	Sun,  6 Jul 2025 17:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751821053; cv=none; b=ghs/Dc1Myd2OKAcTuH4bjhBc2EuDiW3AqezTrYhSjXJqU1U5xZT6RHTzbo1oqmu074htc5/QHLI45sPVKJ1n8Cvi4thA9AGq9p6VJ1Qi/GhnRUbvGpsHczjsNGbWUcYzJYTKBZbfxrQaHIWCTNegTBSbLOhN3GQZ/vCc2ApP0Pc=
+	t=1751821253; cv=none; b=Sht1lCA3J27s495PQ36pv6rUM2APGDkdjcBgpzbDhnkmnI0Y27vYIbdAbKImfObYAS4hz86IfEXMcOH/wrVGeFh+bJ4r08MVjeONqSpugSArgwQ8FnfAsOZVwGMrVFYL60dHfqXJ68zfAEKuIUJKMRr1bkua+rnFQjuH0lZlEjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751821053; c=relaxed/simple;
-	bh=gpb/EVfKUa4gnUADXJe0IatdMtMGE550muM4uGKqsN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iXdVaUd2nhuQxUGgt9U4nP0afR2qO2+8wHF90vI3PqjS2NRQq2bcUJMksHJ1vAENKWVL448hHYAlFe6jloR88oHzUAK8L+kbDbbjA8viMU7RVMCmRjEDVm/Gdd7EoLsWxtcUS2pcTGEaw9G08GGjtL3qZdjnqnOSLZt8UDBMtcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyzsgCY3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751821253; c=relaxed/simple;
+	bh=FuTGRgSAWVVOTPTM4iY3nLVMHbEOiMxhp6w/u1qIitA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fbFjqY4kgo9nPpqPn6/kKDzGcC5If4j2Y/l5pJStD/WJMD5zWA1hE7SifHh+D1esx3RsXzU7nhYRBtfdO08uTcf8y+88luQ3NYoLbRZCsHA+oMKh971ood3cmUoLnB8MEIXwkMJhOWEBdSVcJ6oHp4xCHFELoEL3NRjW5j9zd8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4iqBf+D; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyzsgCY3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B879C4CEEF;
-	Sun,  6 Jul 2025 16:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751821051;
-	bh=gpb/EVfKUa4gnUADXJe0IatdMtMGE550muM4uGKqsN8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RyzsgCY3Zuu1lTj+EAE0DDU9aCubOaB18TUMcLFCVXmuRVi1ElcLw2Zg6FK9ISWqR
-	 mhBzYZOV2P+i/q0HwCRAcI/Hcp+usaulyIspLTl1Yda7shndP9NoGcE+4oB5Wg4LTF
-	 5kndqcBecR/OsXFohvgxpI3ZtsPHDbOv2Na32OCntTObux7R71k38ihF+azmNR/n6x
-	 QWsJqT0MjYPz66FgqGJOhe30BVScS6mgwdNzxdYe8tZgsGGHXXq0oxc7GTjcQJ7WC7
-	 eA9cPA0EZlxYqyjEr7GTdQafsQqq3rFPgvLFlSiuAxPNqD9qdBL7BUjJXChsMFD6J+
-	 6lmqJQSqsEs9A==
-Date: Sun, 6 Jul 2025 17:57:25 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: adc: ad7173: fix num_slots
-Message-ID: <20250706175725.39e79105@jic23-huawei>
-In-Reply-To: <78342e10-7211-44de-8a92-40872a69b60d@baylibre.com>
-References: <20250704-iio-adc-ad7173-fix-num_slots-on-most-chips-v2-1-a74941609143@baylibre.com>
-	<f023c92b-183c-4157-a6eb-ff722dfd716a@baylibre.com>
-	<20250706111529.360a3095@jic23-huawei>
-	<78342e10-7211-44de-8a92-40872a69b60d@baylibre.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4iqBf+D"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d3f72391so23938275e9.3;
+        Sun, 06 Jul 2025 10:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751821250; x=1752426050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oqPmHRXTvUmmlCHl2ubMMo6baAfA2qIsMqJbDb231OA=;
+        b=a4iqBf+DDnApjpbSahHDxiSNAF6H+xnViMV2b+Rwc2ll+zewJLwwhQPDaTLbSHn0zG
+         XBSaVchSIqAwrSOH7rp7aQd28CqcrOrVCukFZsOx6qGHKX1BH2ycAGvlCjIEjjUYGhl6
+         7os3pwdyN2Xg+lLA1lfaFbO32ySMqbeyC82Z3Hxvwpz+ZfIPc6Sn5HoWEc1KmNeeYD9d
+         uZAgyGZNTpK4nCVF9wLpJCLp9IqQmSeblbt0vo1EQqA9gBy5ORzzZOojAFmu/jEGutc0
+         FIuu8RY54OBYl73AyZyrTC5n1klmECvoYKZQoBfSILGqpdmpfVvbXnCK5TX2t+QforCb
+         j/hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751821250; x=1752426050;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oqPmHRXTvUmmlCHl2ubMMo6baAfA2qIsMqJbDb231OA=;
+        b=vBSQULtvcjBpw/mnIfYMPJuhcRnw2nbwK3+KtlUkeTjMlHTE1oe1mIHwpoXGmRJKRP
+         +5A488MqwqgjWJ7A9F7M3xWCAJ7a9SciYmPkGc5bAOqfB7CAW2rKJ84EzrZoVFUWNP2w
+         VDb5C4MoMOOoNEGyV6MhPH5rBmcgfZQX2KkNmN44jPwVOx+J8J35iA/EW+YsaWeJt0lt
+         QARxSHfwAcZAsa2nvQm/LLaFwIjQ3DLKn+/LpLtv7oKOtfH07S8pU3KBjNnUYTfUth0U
+         zvoYMA+A5oXZDrw3Mqcns46lqP90nPMWThgm4/79jAa24JPNFPQur0tmiIAJSMDeRF7J
+         VWZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAaKPVPrG+RwPd3yRUa7YigvrPzbIXPd0/t7ozndPyYpNSj5w4if36LF1kNQBJNbL4MaQPbdJ+YCw=@vger.kernel.org, AJvYcCWdu0Ndst1DBU1aPLQ6TFqnPir+NWdN+Ex4yc7IopLSEaJxbKbTZVZeyCse0XnrxjVcdDviTqGrBTbDpgse@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6Ht/t118sWTkrLOXu31PCMOQPGA8mOgD9pupH5lO+mXG1SoL+
+	UslOk7UihWXOLsmK5Bg2n4w3im/2k73dnpGXV4ISmPZ52aml1BXskBBf
+X-Gm-Gg: ASbGnctoIzhJpdh8JWMJIuUU+1HDxm0tCL/z8xGfYcW0lKmbS65KqY1KUqo96IFfRTm
+	n8l9UYLJ1Wj0X63b+ez1x0j3+AO8ERzJxpHn1Rz0Wk7wbptcVPlnq/PQQz5UtxL/Nf4JpDf0ZUE
+	qNI91jzlzvDOaWPur3d7fGL+IRDrxopEG5w03di4BOom98KWtNCLrGYo8fBRpJPGmWYBMi0PU1V
+	Eh1E/e3PLo7joHWt7Miz7cxLsF9hbxW4q1ylWhjeB5HVgAHidcBn5UmnP569qmP7qcuDoWPU7ru
+	6QydsMUpNGZCQMOTDnq/hDPwuyPavrgkEqONu7ufPNkRPHrpBOPtvGkhpLJEprmWqiHu/bbZesy
+	T
+X-Google-Smtp-Source: AGHT+IFYnNXzW8pZtpPwme80Li3YAU/twWpziA5QZ1BVLVPRP1HBYFVFDGHr7cRBiYWFM1wUal6TnA==
+X-Received: by 2002:a05:6000:2502:b0:3a4:f744:e00e with SMTP id ffacd0b85a97d-3b4964f4e0dmr6671679f8f.4.1751821249997;
+        Sun, 06 Jul 2025 10:00:49 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47225a720sm7958695f8f.77.2025.07.06.10.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 10:00:49 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: ardb@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: alex@ghiti.fr,
+	jonathan@marek.ca,
+	chenhuacai@kernel.org,
+	jiaxun.yang@flygoat.com,
+	viro@zeniv.linux.org.uk,
+	gourry@gourry.net,
+	ilias.apalodimas@linaro.org,
+	lukas@wunner.de,
+	gargaditya08@live.com,
+	kees@kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH v3 1/2] efi/libstub: Print error message if efi_allocate_bootparams() fails
+Date: Sun,  6 Jul 2025 16:58:28 +0000
+Message-ID: <20250706165850.1090-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun, 6 Jul 2025 11:08:06 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
-> On 7/6/25 5:15 AM, Jonathan Cameron wrote:
-> > On Fri, 4 Jul 2025 12:04:04 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >   
-> >> On 7/4/25 11:21 AM, David Lechner wrote:  
-> >>> Fix the num_slots value for most chips in the ad7173 driver. The correct
-> >>> value is the number of CHANNELx registers on the chip.
-> >>>
-> >>> In commit 4310e15b3140 ("iio: adc: ad7173: don't make copy of
-> >>> ad_sigma_delta_info struct"), we refactored struct ad_sigma_delta_info
-> >>> to be static const data instead of being dynamically populated during
-> >>> driver probe. However, there was an existing bug in commit 76a1e6a42802
-> >>> ("iio: adc: ad7173: add AD7173 driver") where num_slots was incorrectly
-> >>> set to the number of CONFIGx registers instead of the number of
-> >>> CHANNELx registers. This bug was partially propagated to the refactored
-> >>> code in that the 16-channel chips were only given 8 slots instead of
-> >>> 16 although we did managed to fix the 8-channel chips and one of the
-> >>> 4-channel chips in that commit. However, we botched two of the 4-channel
-> >>> chips and ended up incorrectly giving them 8 slots during the
-> >>> refactoring.
-> >>>
-> >>> This patch fixes that mistake on the 4-channel chips and also
-> >>> corrects the 16-channel chips to have 16 slots.
-> >>>
-> >>> Fixes: 4310e15b3140 ("iio: adc: ad7173: don't make copy of ad_sigma_delta_info struct")
-> >>> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> >>> ---
-> >>> Changes in v2:
-> >>> - Improve commit message.
-> >>> - Link to v1: https://lore.kernel.org/r/20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com
-> >>> ---
-> >>>  drivers/iio/adc/ad7173.c | 37 +++++++++++++++++++++++++++----------
-> >>>  1 file changed, 27 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> >>> index dd9fa35555c79ead5a1b88d1dc6cc3db122502be..9c197cea11eb955becf4b9b97246379fa9c5da13 100644
-> >>> --- a/drivers/iio/adc/ad7173.c
-> >>> +++ b/drivers/iio/adc/ad7173.c
-> >>> @@ -771,10 +771,27 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_8_slots = {
-> >>>  	.num_slots = 8,
-> >>>  };
-> >>>  
-> >>> +static const struct ad_sigma_delta_info ad7173_sigma_delta_info_16_slots = {
-> >>> +	.set_channel = ad7173_set_channel,
-> >>> +	.append_status = ad7173_append_status,
-> >>> +	.disable_all = ad7173_disable_all,
-> >>> +	.disable_one = ad7173_disable_one,
-> >>> +	.set_mode = ad7173_set_mode,
-> >>> +	.has_registers = true,
-> >>> +	.has_named_irqs = true,    
-> >>  
-> >>> +	.supports_spi_offload = true,    
-> >>
-> >> Well drat, I was too quick with the update and the bots [1] noticed that
-> >> this conflicts with the in-flight patch that added this field [2].
-> >>
-> >> I guess we can drop this one line, but then the other patch will wait
-> >> until this fix makes its way back into the togreg/testing branches.  
-> > 
-> > I'm lost - what would you prefer we do here?  For now I have [2] on my
-> > tree but can drop just that one patch if it unwinds this complexity.  
-> 
-> I was hoping you would tell me. :-p
-> 
-> In any case, we should apply this patch, with the supports_spi_offload
-> line dropped, first so that it backports cleanly to the stable release(s).
-> 
-> But where to apply this patch depends on if you are planning on doing
-> another fixes-togreg this release cycle or not. Or we could just opt
-> to take the slow path to avoid the dependency dance and just apply
-> both patches to iio/togreg and let it make it's way to stable after
-> the next merge cycle.
+Print error message in case efi_allocate_bootparams() fails before exit.
 
-I'll almost certainly do another fixes pull, but it might not get into upstream
-of my togreg branch fast enough. 
+Change the direct call of efi_exit() to "goto fail". This allows the
+general error message in fail label to get printed.
 
-For now is just dropping patch 12 from the main series enough to avoid the
-conflict?  If so send me a clean version of this and I'll apply that to the
-fixes-togreg branch and we can hopefully get a round trip to pick up patch 12
-on top of it.
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ drivers/firmware/efi/libstub/x86-stub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Jonathan
-
-> 
-> >>
-> >> [1]: https://lore.kernel.org/linux-iio/202507050018.iWEJiG04-lkp@intel.com/
-> >> [2]: https://lore.kernel.org/linux-iio/20250701-iio-adc-ad7173-add-spi-offload-support-v3-12-42abb83e3dac@baylibre.com/
-> >>  
-> >>> +	.addr_shift = 0,
-> >>> +	.read_mask = BIT(6),
-> >>> +	.status_ch_mask = GENMASK(3, 0),
-> >>> +	.data_reg = AD7173_REG_DATA,
-> >>> +	.num_resetclks = 64,
-> >>> +	.num_slots = 16,
-> >>> +};
-> >>> +    
-> >>  
-> >   
-> 
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index cafc90d4caaf..13d8eba06e4b 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -824,7 +824,7 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+ 	if (!IS_ENABLED(CONFIG_EFI_HANDOVER_PROTOCOL) || !boot_params) {
+ 		status = efi_allocate_bootparams(handle, &boot_params);
+ 		if (status != EFI_SUCCESS)
+-			efi_exit(handle, status);
++			goto fail;
+ 	}
+ 
+ 	hdr = &boot_params->hdr;
+-- 
+2.49.0
 
