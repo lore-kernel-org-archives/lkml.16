@@ -1,82 +1,123 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260792E3711;
-	Sun,  6 Jul 2025 08:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AD514386D;
+	Sun,  6 Jul 2025 08:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751790501; cv=none; b=mErTtMtwszwPnOx5Ku7za9zjNizZdQGsqPZCgGVD9BrymY4CannQMQCS7ya4o5T2kWaAqd+Hx2qFWDrAe2zv/mu2YXWXLABbTRuslINjQmMVJKKDYjR+rXGROxm/NVEuiAfPSL4+anuJRotbwt3MQV+SybCDaA2S2XQuHTOHdUo=
+	t=1751790551; cv=none; b=tMCJeiv1z8BzSu7RUpUz4HKvlPXXz8SugHpBq3N0hhWALLwM/vtUr4J1Hv4PZNR5DAGhYHFynH4trCjF3zlEkug2FwTM/BAr33HeEkkZTWDycXPoiNFdIvZ005dyn1ujzbyG4vvd6687cb5j3HySuWFT8d6JX3GTFImvGEuCVvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751790501; c=relaxed/simple;
-	bh=J1k5lZEu3LgIv6pN+ZoKssHUNWojfkyaGTyqt2ecRxY=;
+	s=arc-20240116; t=1751790551; c=relaxed/simple;
+	bh=X204WyJpXGJE8pcg02RS6uMl/7b6/IB2aPkZ6MPIwSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tte1XANzGiIYXG51L4tJCX9j2RSH4cPIas/TSmG3aTaNNWALdfZcVyNi/BrfcNK+658F3caYnjYP+R4Y2Dktx82lb7hyfbz13GxhpO4OwsFTJIM8h8roX/FIZtf2cDb1WNCtZrNyt6hWzvUGKWf6lUI63UvYxW+Ng2v3TFMxFqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Xiai2+3Z; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=esQOTIHjaHNVuOG7SSQw+VP+TCwTGRJKzz6OqMs0e4hzdjkkLQAYLO9wIEqc7/TIyfmyDnqHDbXwGe/S/ZBhY97U0XGS6p3m8h4DSXDtaITOInN3DC2u/dAJ7Ori0EVsV7hqXoygFarR7nVJN8De/4taj6OM60ZqQtO9xKZzhCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=UmS58mOU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mvPlRr+R; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Xiai2+3Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751790496;
-	bh=J1k5lZEu3LgIv6pN+ZoKssHUNWojfkyaGTyqt2ecRxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xiai2+3Z52amY6IYj95jg7PBs+DMg3EzaD/Puq1zk41nTtP7bxKerJTkzZeWRYs27
-	 LB/fJP/8bRCd+d7YNxecDTqTVgQaZ1zOqqlYZSf2px1T27blw3mZ3Z6nh7P9p1cn6z
-	 yg5yCwWOGBaCoqYWU8jzhJqRQQDUP5+ydvkVOR08=
-Date: Sun, 6 Jul 2025 10:28:16 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Joshua Grisham <josh@joshuagrisham.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Antheas Kapenekakis <lkml@antheas.dev>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Prasanth Ksr <prasanth.ksr@dell.com>, 
-	Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v5 4/6] platform/x86: samsung-galaxybook: Transition new
- firmware_attributes API
-Message-ID: <0e0521b9-a3eb-45f7-aa97-250fb48d1c18@t-8ch.de>
-References: <20250705-fw-attrs-api-v5-0-60b6d51d93eb@gmail.com>
- <20250705-fw-attrs-api-v5-4-60b6d51d93eb@gmail.com>
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="UmS58mOU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mvPlRr+R"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id BAB9C1D00241;
+	Sun,  6 Jul 2025 04:29:07 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Sun, 06 Jul 2025 04:29:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751790547;
+	 x=1751876947; bh=AleHfUjihkJKz/UBvekuq0kDimlhUhmI5K7F26DJ5Qc=; b=
+	UmS58mOUpr4TqTiC47XKB9WBXhZg7pvgAkfYrTCzJa0AXKXAyXH2qsoDxyhSNjGw
+	TO4kNDzXvwEtv6L4gwBljepPS0fPzP/vg2UfxphXA3EMNv+w8M/EIzjNxPVhCSt7
+	j6os2b7otepCCtg8rAYW3XpeixE/GdybZ/Nh5XHvPA+YDcg5svkwIS7SEP7BZ49u
+	VQ1QdIoq9Gu/z11tK60AkltLENvLtXIiuXg+LhGZTARPDGmHwg7SXmX8YawE0GUv
+	xzChn2Xz5PleGzI/8bpzFx1N7kQNpregnXfcDXFyp7ZgmA692zAn2j4asJZu4DAk
+	Niq5LDqaPLHSwKk6IOEIBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751790547; x=
+	1751876947; bh=AleHfUjihkJKz/UBvekuq0kDimlhUhmI5K7F26DJ5Qc=; b=m
+	vPlRr+RUWK7Hk8c5FinYxV9Hk63QqIScOpNS2zosSGZycSdOpAkUquNfPs7gNgVj
+	JHxzsUbi42WDorrWkMPu19v3sP6SixNZax8RtyOFJFB0SDE+klQCVJVH7NbPynRp
+	1QHpxpyyb72xjR/QS7SWTl1+isL40xLQd0cch+LPxlZl71W4dL80vLDd86Hl7YG9
+	0pTgBIYwMQxm3eSIH6geAwyAzFKg7uG5RTzbQE96XUtIddrPUzu+Fg0MBdb0FUUJ
+	isCDIJ3gHCRYBwzldQpvExHwSj2VcyQJj8lyLhIHZ4pNTGovXAQfbWszP6eIJc9t
+	I+GYGCa/HkH/LFjLEmmgA==
+X-ME-Sender: <xms:0jNqaKFELhcDIL94s7J2JkEJRpQ7EEGTSEEhva-FyBNH7sUC6M6LBA>
+    <xme:0jNqaLX6vZovBLcLKxZhu-qpklsHuV7rSM26StKiPhcR6a6mvL_CPrElXY3fLQEd4
+    Pi70XgmhEXK5ZEMUFM>
+X-ME-Received: <xmr:0jNqaEK1Xp7Lpj_5Rmm4gGp5BTXhiEzKHq8vSbSs8dEEYrmGHzA4XP-ySClmLZrkDMbwLERyrTRLJChxBRTZwwGOVZfizNV_j0k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvkeeggecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhhnvgcu
+    ifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtthgvrhhnpeevfe
+    ekuedutedtvdffvefhvedvkefhgfevheefhfffheeftefgteffuefgveefhfenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruh
+    drnhgvthdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpd
+    hrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprgdrhhhi
+    nhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhm
+    pdhrtghpthhtohepsghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    epghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhes
+    phhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlh
+    drohhrgh
+X-ME-Proxy: <xmx:0zNqaEHl5x5GZzeiP-lkezzO9vIeOgNZeK4XlXPuaduT13rAi2Td0A>
+    <xmx:0zNqaAXH5HIFqo_nJnrJq0uctLseIFKbY5n0n9YvkCnRFwh-D93hDA>
+    <xmx:0zNqaHPXucWx3H_i9bdlnKup1MfPzWONLXltrpnAeaxfDQYcma1H0Q>
+    <xmx:0zNqaH2fU_LuhBcOMQrsfLy3ez917N95wPrjGAZWivND0mAQG_t_gg>
+    <xmx:0zNqaEdJL74sOBC4AI8aI1s_A3l3G0EWkMpQilbyUbtHg6ELWqEv8Pbb>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 6 Jul 2025 04:29:06 -0400 (EDT)
+Date: Sun, 6 Jul 2025 10:29:04 +0200
+From: Janne Grunau <j@jannau.net>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Tamir Duberstein <tamird@gmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	Daniel Almeida <daniel.almeida@collabora.com>
+Subject: Re: [PATCH 3/3] rust: xarray: add `insert` and `reserve`
+Message-ID: <20250706082904.GB1546990@robin.jannau.net>
+References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com>
+ <20250701-xarray-insert-reserve-v1-3-25df2b0d706a@gmail.com>
+ <CANiq72nf-h86GszE3=mLpWHi5Db+Tj0TRyUe9ANfjdNbesBEEg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250705-fw-attrs-api-v5-4-60b6d51d93eb@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72nf-h86GszE3=mLpWHi5Db+Tj0TRyUe9ANfjdNbesBEEg@mail.gmail.com>
 
-On 2025-07-05 00:33:59-0300, Kurt Borja wrote:
-> Transition to new firmware_attributes API.
+On Tue, Jul 01, 2025 at 06:56:17PM +0200, Miguel Ojeda wrote:
+> On Tue, Jul 1, 2025 at 6:27 PM Tamir Duberstein <tamird@gmail.com> wrote:
+> >
+> > Add `Guard::{insert,reserve}` and `Guard::{insert,reserve}_limit`, which
+> > are akin to `__xa_{alloc,insert}` in C.
 > 
-> Defining firmware_attributes groups statically through
-> DEFINE_FWAT_ENUM_GROUP() incurs in a minor ABI change. In particular the
-> display_name_language_code attribute is no longer created. Fortunately,
-> this doesn't break user-space compatibility, because this attribute is
-> not required, neither by the ABI specification nor by user-space tools.
-> 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/platform/x86/samsung-galaxybook.c | 244 ++++++++----------------------
->  1 file changed, 61 insertions(+), 183 deletions(-)
+> Who will be using this? i.e. we need to justify adding code, typically
+> by mentioning the users.
 
-<snip>
+xa_alloc() / reserve() is used by asahi. It's still using our own
+abstraction but I'm in the progress of rebase onto the upstream xarray
+abstractions from v6.16-rc1. Once I'm done I'll reply with "Tested-by:".
 
->  
->  static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxybook)
->  {
-> +	struct fwat_device *fdev;
->  	bool value;
->  	int err;
->  
-> -	err = devm_mutex_init(&galaxybook->platform->dev, &galaxybook->fw_attr_lock);
-
-The mutex is still used, so this can't be removed.
-
-> -	if (err)
-> -		return err;
-> -
-
-<snip>
+Janne
