@@ -1,96 +1,132 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F78628F5
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 02:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E2179CF;
+	Sun,  6 Jul 2025 02:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751768159; cv=none; b=NYJUn88PMAHnJ2gerkLChLmARwZSw27X/HtPfGuePRtspfTsQFLI55Y8S/ydlj2aUTvrkf9Ma4b7wMAAy12Ta/Ou/ljI7YIK0B7Y+dg3FiGWuZe/U474V6BpVRU7uX0/brskNXO6gAnTyC8Z6i3rVYjH7z4eB2AklBYSRDcIeTQ=
+	t=1751768363; cv=none; b=shIG0bq0oQRVivrySzz/+rlZMlb4ayY6Lu/xqx/aAYvmBNG0ghGzX0TbOiOlsqjqLuBz9dlpPpDuhK36fVQAjAkvBsiJ0N8r9Ojv1wUJwVZofuqEEBQvDDMgE36OrA3KaLSO6F/WdjCWcnea5PE4Oq1PhpX1TXedVKBG8ZzbD1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751768159; c=relaxed/simple;
-	bh=0hOd5w6qUU/xWgPPo7blf3Vdr6C+GYp1WvB2Mif01Ng=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=f4EBXi+ClcvN85Nh584xNKAEOUofLitVPezLxCtalp2rYkSx5SRNxdzZQBy3mz6PDHEnVawsn0TbcvTquBOehrxWvXGVN4afdHgQrPlR1cygXWepMVYm/qno8bHNHaFh2hsAWnYInkkogoTc3SIAkTAnh9A72LDzOu+c7X2XzE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=oh7QSgh5; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1751768363; c=relaxed/simple;
+	bh=tUbCSwU5Jowh3wPb7XVpRJ6zQmAC06swk6BRTH/UJxY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EPhs6ZihxVuovGiFWhuvysSCT1vm8ZJwEX3Jj/1gkE+GTTb+ypJQ+Z1Jxb7EslpAJ+N6eRV0RVi6i6WPhplMTPHsWzfd8HdqKmYLys1nZfSIJsWM0j5zpqK1M0kKgGprB+0GnmR+QIJ8W0oEPu9o+11HXpoQgsxuFVa4bC4+VD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FIZro0P2; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="oh7QSgh5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1751767837; bh=dGbmNL/NX0SCUbLxNQkJPjpd3jiYOrIue8mSZNgCADU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oh7QSgh5rmvsY1t1v9BWfF/1G+C4WwSreQw+5hPPcoT0C7RXxFAgMqUkvNk9mnU9P
-	 RIe9FpDYLeR7ywaLNwbw9F7cDC9mLZifTLjAhJRdKUKfjsEJWBIY+VF1nDu2zMCKTY
-	 9p+aBjsNThEdEfwsg8nQI1FtXgi8SQKrRvBvNruI=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id 2A3B9498; Sun, 06 Jul 2025 10:10:35 +0800
-X-QQ-mid: xmsmtpt1751767835ta572bduy
-Message-ID: <tencent_AAF2ED2ACD1879CE6C5C2C296C349724EA0A@qq.com>
-X-QQ-XMAILINFO: M1rD3f8svNznxXceUNw71hA/4zH0a7tmTh+Id3P67R/cVAsa7sC62TbF03/5Sa
-	 HwEJ/icgi7yYH3y+K5EwHsn5Lew00/fzmGqqLKtz3gbdoKBFeaoremIvsl14J750Ccrbw1qVstqw
-	 h4eCeEc74u90i7iBm8oKPx0Oc1Ae2IxSXu9qipK2uTqHW0MMexn65O1DHrRk4VzqZgYgf61r+4A8
-	 Nh1MbCcrcx/s6l5VqRB0LSr6Y6DqbgejNUgGWlMe5P8iVfqpKFTgqJDnu9IZHI6yBsX4BAWv0+uP
-	 AyBmPphQV0ypr3wOXf3VnLPWQ2W+zdYyIyetalE4AE0I46CLa6YN7CSUxloQNlRk/3L6RhGPJBF6
-	 AIV+3aTH1TN2oRp8rJYg9Bn5vMmp0qfG7uQEB/VTFVUpqncQaEv1caFiRf6SVXYIHBTnwn4WG3Hw
-	 UcDYiAqc04ejztHz9rxejWIX962lbq5qPpcnTH46KKBDInbOfVy6dusZHUUM6+wVmAGdt+H75UIX
-	 /TAwa3ABmZciy15Yju+MDVJE1Nw7Q0oIggEk6J3tTiFQ5902aaukCmrccajgv2KSqrYS22MDR5zC
-	 dGURdkzrXyum72P/mBduB6YetE0cB3PS7NpqCXU+CUAjrwJvxxkZEunS4ahfUqCii+mrPgrvIhbo
-	 58DZusIMcyNCzVlQ/SwQ2QGN6NbzuZKBakqaZHK8heibrdYJ66K/kUBDBz6451blfDsfUTI+/IyI
-	 AfropGGnteD9eY+73qq1fFX+95wwK/3HesYqr8PNw4Hhe9yPPKhA4psNatC1enzG7xSX6zwFKP7s
-	 yS4GmQYu7+poLHvUBQJHFx8f2bnEYrypnH8K+Y/B5BCjg7YuyI8kFoa0e2qvoaOfOfZvzQ6jswDh
-	 KLpq0lL675KqKIUIarG/HcukCnGki4NKgR7RBFjuzCxlY3O6dbNJaZd1LRydkE9oK/jl6pbdm4WV
-	 Ob4+Knh0edwnek87E39oaPR+iPtLnuyVDWbJwn/r1r03FBfxsW57upgmyY+Lds
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
-Cc: abbotti@mev.co.uk,
-	hsweeten@visionengravers.com,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] commdi: pcl726: Prevent invalid irq number
-Date: Sun,  6 Jul 2025 10:10:35 +0800
-X-OQ-MSGID: <20250706021034.2900953-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <68690648.a00a0220.c7b3.0037.GAE@google.com>
-References: <68690648.a00a0220.c7b3.0037.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIZro0P2"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-611a7c617a7so627754eaf.1;
+        Sat, 05 Jul 2025 19:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751768360; x=1752373160; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jbmtru+wvv9iaiIqRCJqLfhLW/sqA4MtYcTYSE3DYlo=;
+        b=FIZro0P2oPVLsneD7kqZyj7aF2vc6nfYL7lzkiuTw/4w5LJY2zuIBB/C9j91BG6qnF
+         xfQWUqPH1n0fJUAOV6uv3ia6gE/GERslG/Z+3FLDaw4tlph8YFJjDVZH8hsuJDVPFnoi
+         zKRrWqHq6MPN2Lk+Qgx7SHoEEz4eS42eaVyWrqBxfmf5JGKG9P7kuCc4Hnue5dW5Xtzx
+         cje9Q3ZPyZ+tgQmfu1xnCkW7ecsc9TTAmLCza9Viwgz3GtLVD/QptwLIHtZtmhV0Pd7+
+         odvxKievGz08KWsvMqoWlwUytV16tPUpJpaxe0+UU74SdlaP3mz0tivRNBNnRZMvoS9q
+         LSgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751768360; x=1752373160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jbmtru+wvv9iaiIqRCJqLfhLW/sqA4MtYcTYSE3DYlo=;
+        b=rtll4qWBTuSSjKPAv7r3yo3hu2eEDx3uV3Xae+nUO8d36/umjgM7xzELR+UOFEpErI
+         qR8K3WTO2l/5kqebQSWBp5vFUlTOhD4NoRz4TnRVNLaktbEN1j0jFdKeictUSx1Xfe26
+         UC9Irl1JSkciG/N+oTWfvSlyuRRzzPKUIMl9gg8HxNn48y5Ak7VRxKMgvILbAA85epXg
+         N4ZhPujSTQ0rfYfU3El6+dk6Vd/qtpaXu/JLVcj6+NlnDy1yIkhwBxZm/Cauf6RrlOOl
+         mMkUANxXBUXIQwKJOlb/N8CTsySome03zfXUM96kUC/9eFNkwA21t8Sh9EAE9Tj0PkHn
+         CZYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVivA84b9cJbg3Xys6wRtx827JSbQTvUX7MOXGWnEj77Pc8bv8Ekb3FyEQpVTy05YJPZGetOvbdGZ3KSqjb@vger.kernel.org, AJvYcCXI2nXzrMylvyhnBc9CoVf89bUJvggc7WFYq7InBwTz5nUTdw6lBI+Jrr6PfQKcl5+W7ZQk78zqXw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB+yek86OEKFJ2PxqvSM0sWVBbQrnbNpZlMDaKcIBF94Iw8CzG
+	sYKBDXdEG66ddDNbIEq6ZakdkpPY8w+dZ75Cm9bKqNrOJxYGiArQdarggKJv8zADmTn08+2hhZG
+	sDrk3BhE5YkttK9+I2EMH5Etes2hovfU=
+X-Gm-Gg: ASbGncsyvjuIwS0FycZ9QG+PoAgQz5FMxqYSIZLxdNEEKuqOBV5fGK6g9u/xDw4ShSt
+	BcHSG9ATMCuSPN8F6yimrS9sRMoYUyaCEIdcE319GKkzwsnJk9oEQyupyxHRLQy4Sf3eejHiP7v
+	M/LeT+kCw9w9QmtFGwtSzdCUDpL+iZsAVSl1L82rGebuGYHs3QpxTWuJA=
+X-Google-Smtp-Source: AGHT+IFaBJSesBn0WSVJ0IIVxKm/TxA4fD+0RZM9p5s2ZMBaAb90nctYJY22HsL82cQXdYtVLEmS7HK8y7ohZWuZ9LM=
+X-Received: by 2002:a05:6808:4fd0:b0:404:b5c6:46f3 with SMTP id
+ 5614622812f47-40d04430f85mr6118516b6e.21.1751768359660; Sat, 05 Jul 2025
+ 19:19:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
+ <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com> <fac9a5fb-7a39-4c12-9dca-d2338b6dad8c@linaro.org>
+In-Reply-To: <fac9a5fb-7a39-4c12-9dca-d2338b6dad8c@linaro.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Sat, 5 Jul 2025 21:19:08 -0500
+X-Gm-Features: Ac12FXz2RB4UDzYre8bHkjjgt82_1jpXQFP5mvqTmgDzsQQ25eNA59giIV4Cv_A
+Message-ID: <CABb+yY1pn3+dFd=e80PaqEP2saF84f3buPt=ZYnTjDbSv3RN6g@mail.gmail.com>
+Subject: Re: [PATCH] mailbox: stop the release and reacquire of the chan lock
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: peter.griffin@linaro.org, andre.draszik@linaro.org, 
+	willmcvicker@google.com, cristian.marussi@arm.com, sudeep.holla@arm.com, 
+	kernel-team@android.com, arm-scmi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The reproducer passed in an irq number(0x80008000) that was too large,
-which triggered the oob.
-
-Added an interrupt number check to prevent users from passing in an irq
-number that was too large.
-
-Fixes: fff46207245c ("staging: comedi: pcl726: enable the interrupt support code")
-Reported-by: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=5cd373521edd68bebcb3
-Tested-by: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- drivers/comedi/drivers/pcl726.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/comedi/drivers/pcl726.c b/drivers/comedi/drivers/pcl726.c
-index 0430630e6ebb..8802f33f1954 100644
---- a/drivers/comedi/drivers/pcl726.c
-+++ b/drivers/comedi/drivers/pcl726.c
-@@ -328,6 +328,9 @@ static int pcl726_attach(struct comedi_device *dev,
- 	 * Hook up the external trigger source interrupt only if the
- 	 * user config option is valid and the board supports interrupts.
- 	 */
-+	if (it->options[1] < 0 || it->options[1] > 31)
-+		return -EINVAL;
-+
- 	if (it->options[1] && (board->irq_mask & (1 << it->options[1]))) {
- 		ret = request_irq(it->options[1], pcl726_interrupt, 0,
- 				  dev->board_name, dev);
--- 
-2.43.0
-
+On Fri, Jul 4, 2025 at 7:30=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro.=
+org> wrote:
+>
+> Hi, Jassi,
+>
+> Sorry for the delay, I was out for a while.
+>
+> On 6/23/25 12:41 AM, Jassi Brar wrote:
+> > On Fri, Jun 6, 2025 at 8:41=E2=80=AFAM Tudor Ambarus <tudor.ambarus@lin=
+aro.org> wrote:
+> >>
+> >> There are two cases where the chan lock is released and reacquired
+> >> were it shouldn't really be:
+> >>
+> >> 1/ released at the end of add_to_rbuf() and reacquired at the beginnin=
+g
+> >> of msg_submit(). After the lock is released at the end of add_to_rbuf(=
+),
+> >> if the mailbox core is under heavy load, the mailbox software queue ma=
+y
+> >> fill up without any of the threads getting the chance to drain the
+> >> software queue.
+> >>         T#0 acquires chan lock, fills rbuf, releases the lock, then
+> >>         T#1 acquires chan lock, fills rbuf, releases the lock, then
+> >>         ...
+> >>         T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
+> >> We shall drain the software queue as fast as we can, while still holdi=
+ng
+> >> the channel lock.
+> >>
+> > I don't see any issue to fix to begin with.
+> > T#0 does drain the queue by moving on to submit the message after
+> > adding it to the rbuf.
+>
+> The problem is that the code releases the chan->lock after adding the
+> message to rbuf and then reacquires it on submit. A thread can be
+> preempted after add_to_rbuf(), without getting the chance to get to
+> msg_submit().
+>
+> Let's assume that
+> T#0 adds to rbuf and gets preempted by T#1
+> T#1 adds to rbuf and gets preempted by T#2
+> ...
+> T#n-1 adds to rbuf and gets preempted by T#n
+>
+> We fill the mailbox software queue without any thread getting to
+> msg_submit().
+>
+I get that but I still don't see a problem.
+When the queue gets filled the next submission will be rejected and
+have to wait until the mailbox gets some work done. Which is the
+expected behaviour. And will be the same even if we don't release the
+lock between add_to_rbug and and msg_submit and there are enough
+mbox_send_message calls coming in faster than the transmission bus.
+Thanks.
