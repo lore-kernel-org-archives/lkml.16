@@ -1,108 +1,125 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1037C3207;
-	Sun,  6 Jul 2025 10:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DCC2E36F4;
+	Sun,  6 Jul 2025 10:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751796660; cv=none; b=EBbEN/nHk7LsDMBupLA22tBCgvywn70AMOOuReyWtTt6qRQiCx1H52rt5kSamVJluMiOpB/2Z+TfifyWnrJmqQtIw9QAi1pvew57q8Fb7v+0p033zqVyu0ZFajkZXSEic/acS6FdvfvapJ3KA3a+Hlm0nF0zCS1tvK/UnuH3vpg=
+	t=1751796936; cv=none; b=B9KI9pab/5idBMOz1ufWqdkbffx4GsDLKe+QAc9jzQxwj0Zi5LcHnGXQzdr3ynB4jtp7JfNootJ6+6itYocfTYAqXK0xUE3C0vp9QvyT2TUUJJrbq2jwQIGuGpemC9qDsX5JOjCESeSvd7loUUmaljD4IN8tuT0jsSTOSyWFxus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751796660; c=relaxed/simple;
-	bh=afZUfxdkb5Ks6vyj3hqUZVZfCAXWgRmfLcN/HQnz4RY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qm4DMuopbtOqnDeacT+MXLPtY/RSujA7kAzmqa+1wGh/wFmmMfDf3qmHRcsfIEU082ht+ENCyRX4s2TFJ2998+ul8Ajh8h8U4KNtA9S42HyzY9PLJcdif7E2xsG6oD0MGSW7aljL8SY6NuK3DkyBrc0O4vy4zvr8pQQfamR2wwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ObeV/uaU; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1751796936; c=relaxed/simple;
+	bh=oGuBidC0zWuD2QFcUHv7r6XN9hXK/RZ4p8aZ9s8T64I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tgUZnbaJwlpFeskixOqyX0IkQK5I30TAWayr1xuqIWvfoVxTOrfSMFD3paU/iTTFaQsmWvf0N3zVzeDs2O3eF8tmX4D7AMOu4ezcvMGNesl2IWB6ZCwOUW4JVAAdsg72DpYmb/2DCBM6YdlDmTcFV0RwJGF1Q+5wiLGSNP0Stpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRA+ujo3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ObeV/uaU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9haV9aTUDDiNQXjFQryFZWilFLS3MvagruKpPoAm5Gw=; b=ObeV/uaUNE0I4Y3/DRfwn8vH4Q
-	ZO2Mv2+qO2bL4rWOb4ULI26+iN3zooJHkM6XchfBUBpBImRBZWEpcATvceTleEhvd0XWaxxmki6T1
-	IZZe02lU3N2iK0PNw0UMdU8jj2Jun/gVHJhsTwttl2TwFuV1PMZaWUwozONCDhl6jcLLXW+b1JFLN
-	iS8z3gVRvgSIY+FYvn4EEIKTKezufe3N75/FdjWdU6+XnWngTm4kBOSf/DtaFNis4JIUUABlgLrlX
-	DBta5ZrVCu1D5499RmxhYyQZzESUgzOspnQRhVQbBb/n/wqQxP7vDnSX0ypT69mI0F4OhLVYtUUrm
-	niNYX5IQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52150)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uYMKd-0003yH-1A;
-	Sun, 06 Jul 2025 11:10:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uYMKa-0007zX-1h;
-	Sun, 06 Jul 2025 11:10:44 +0100
-Date: Sun, 6 Jul 2025 11:10:44 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"biju.das.au" <biju.das.au@gmail.com>
-Subject: Re: [PATCH net-next] net: stmmac: dwmac-renesas-gbeth: Add PM
- suspend/resume callbacks
-Message-ID: <aGpLpLDPdcPByC7j@shell.armlinux.org.uk>
-References: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
- <aGl9e9Exvq1fVI0s@shell.armlinux.org.uk>
- <TYCPR01MB11332BCE03B3533784711A5BF864DA@TYCPR01MB11332.jpnprd01.prod.outlook.com>
- <TY3PR01MB113460004F6A57B3AAD77E86E864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <TY3PR01MB113467D8E13143E412B119270864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRA+ujo3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A34F1C4CEED;
+	Sun,  6 Jul 2025 10:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751796935;
+	bh=oGuBidC0zWuD2QFcUHv7r6XN9hXK/RZ4p8aZ9s8T64I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CRA+ujo3RENAtBtPr3ajXVM2GxGzR3G9Y4UKQeYO+/mJS23FpI6FDcNdJ8GCICMnd
+	 b1vTq4eLe64QBXMVddQw2LE29i6AG/VVzf2NPZ02SRKoMGjNzoJZFom1VTpWyg2PKK
+	 cL74hjDe4hTJXUdjJ92+d+uSiai8QrhT5boc6nlSBE7BHeyUZeiJhl01Ms/06zRS2z
+	 RKIrMzZ45dsXX/y1XtQuTH/wqpzhN/Vr5M6A/2Nlb/h6dm5e0D3Sh9j+OisWis0fyU
+	 PRxGCiHZ4OTDXZSRMlsJjMTJbRKmH//jnC35N0gaqvZxtne6g3jKKHyM04M9DpuCLa
+	 Ig3j/KNU4syTQ==
+Date: Sun, 6 Jul 2025 11:15:29 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: adc: ad7173: fix num_slots
+Message-ID: <20250706111529.360a3095@jic23-huawei>
+In-Reply-To: <f023c92b-183c-4157-a6eb-ff722dfd716a@baylibre.com>
+References: <20250704-iio-adc-ad7173-fix-num_slots-on-most-chips-v2-1-a74941609143@baylibre.com>
+	<f023c92b-183c-4157-a6eb-ff722dfd716a@baylibre.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY3PR01MB113467D8E13143E412B119270864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jul 06, 2025 at 09:55:28AM +0000, Biju Das wrote:
-> Just adding some logs:
-> Currently PHY resume is called twice
-> [   35.754933]  kszphy_resume+0x3c/0xf0
-> [   35.754940]  phy_resume+0x3c/0x74
-> [   35.754949]  phylink_prepare_resume+0x58/0xa0
-> [   35.754957]  stmmac_resume+0x90/0x2a0
-> [   35.771296]  stmmac_pltfr_resume+0x3c/0x4c
+On Fri, 4 Jul 2025 12:04:04 -0500
+David Lechner <dlechner@baylibre.com> wrote:
+
+> On 7/4/25 11:21 AM, David Lechner wrote:
+> > Fix the num_slots value for most chips in the ad7173 driver. The correct
+> > value is the number of CHANNELx registers on the chip.
+> > 
+> > In commit 4310e15b3140 ("iio: adc: ad7173: don't make copy of
+> > ad_sigma_delta_info struct"), we refactored struct ad_sigma_delta_info
+> > to be static const data instead of being dynamically populated during
+> > driver probe. However, there was an existing bug in commit 76a1e6a42802
+> > ("iio: adc: ad7173: add AD7173 driver") where num_slots was incorrectly
+> > set to the number of CONFIGx registers instead of the number of
+> > CHANNELx registers. This bug was partially propagated to the refactored
+> > code in that the 16-channel chips were only given 8 slots instead of
+> > 16 although we did managed to fix the 8-channel chips and one of the
+> > 4-channel chips in that commit. However, we botched two of the 4-channel
+> > chips and ended up incorrectly giving them 8 slots during the
+> > refactoring.
+> > 
+> > This patch fixes that mistake on the 4-channel chips and also
+> > corrects the 16-channel chips to have 16 slots.
+> > 
+> > Fixes: 4310e15b3140 ("iio: adc: ad7173: don't make copy of ad_sigma_delta_info struct")
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > ---
+> > Changes in v2:
+> > - Improve commit message.
+> > - Link to v1: https://lore.kernel.org/r/20250703-iio-adc-ad7173-fix-num_slots-on-most-chips-v1-1-326c5d113e15@baylibre.com
+> > ---
+> >  drivers/iio/adc/ad7173.c | 37 +++++++++++++++++++++++++++----------
+> >  1 file changed, 27 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+> > index dd9fa35555c79ead5a1b88d1dc6cc3db122502be..9c197cea11eb955becf4b9b97246379fa9c5da13 100644
+> > --- a/drivers/iio/adc/ad7173.c
+> > +++ b/drivers/iio/adc/ad7173.c
+> > @@ -771,10 +771,27 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_8_slots = {
+> >  	.num_slots = 8,
+> >  };
+> >  
+> > +static const struct ad_sigma_delta_info ad7173_sigma_delta_info_16_slots = {
+> > +	.set_channel = ad7173_set_channel,
+> > +	.append_status = ad7173_append_status,
+> > +	.disable_all = ad7173_disable_all,
+> > +	.disable_one = ad7173_disable_one,
+> > +	.set_mode = ad7173_set_mode,
+> > +	.has_registers = true,
+> > +	.has_named_irqs = true,  
 > 
-> and
+> > +	.supports_spi_offload = true,  
 > 
-> [   35.771258]  kszphy_resume+0x3c/0xf0
-> [   35.771263]  __phy_resume+0x28/0x54
-> [   35.771270]  phy_start+0x7c/0xb4
-> [   35.771275]  phylink_start+0xb8/0x210
-> [   35.771282]  phylink_resume+0x7c/0xc4
-> [   35.771288]  stmmac_resume+0x1ec/0x2a0
-> [   35.771296]  stmmac_pltfr_resume+0x3c/0x4c
+> Well drat, I was too quick with the update and the bots [1] noticed that
+> this conflicts with the in-flight patch that added this field [2].
+> 
+> I guess we can drop this one line, but then the other patch will wait
+> until this fix makes its way back into the togreg/testing branches.
 
-This shouldn't be a problem. Phylib will do this, and PHY drivers are
-expected to cope.
+I'm lost - what would you prefer we do here?  For now I have [2] on my
+tree but can drop just that one patch if it unwinds this complexity.
+> 
+> [1]: https://lore.kernel.org/linux-iio/202507050018.iWEJiG04-lkp@intel.com/
+> [2]: https://lore.kernel.org/linux-iio/20250701-iio-adc-ad7173-add-spi-offload-support-v3-12-42abb83e3dac@baylibre.com/
+> 
+> > +	.addr_shift = 0,
+> > +	.read_mask = BIT(6),
+> > +	.status_ch_mask = GENMASK(3, 0),
+> > +	.data_reg = AD7173_REG_DATA,
+> > +	.num_resetclks = 64,
+> > +	.num_slots = 16,
+> > +};
+> > +  
+> 
 
-For example, on non-MAC managed PM PHYs, mdio_bus_phy_resume() will
-call phy_init_hw() followed by phy_resume(). If a MAC subsequently is
-brought up, phy_start() will be called, which will also call
-__phy_resume().
-
-If this is upsetting the KSZ PHY, then the KSZ PHY driver needs fixing.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
