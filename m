@@ -1,138 +1,125 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD2B2882A9;
-	Sun,  6 Jul 2025 17:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2890C3595C;
+	Sun,  6 Jul 2025 17:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751821777; cv=none; b=f3SC0jY9D9IgFF+CjZiEasM3XkDtC4B68naslVWHxdupHD3YGVoKEhv69Oap5IwARZs5QsdCR2235qPY+Tgzsy5tawN6yWWmt0HR7PLa8eLgsVrYdMcKbU2DYH5FSGr2cPfZubP7z8zegTOGPk8P7oQzFglmppBsCb2lQ+Fbr+s=
+	t=1751821831; cv=none; b=ccEhSBJzRv5M+vuoN1NdU3lWFbP08Z/X3LRTQNRgXZnj7xZXbo/IzmB2nGds84GMX9vdZA4LRqyKW04/UrlzpUVVtvSo/tAld4BvWPFebWb4DYHWzO5lB5dXpy2PnnYzcM2uIUk4Qa/w6dmqwGoH75YAO/poZm7J3FYjkFkOa+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751821777; c=relaxed/simple;
-	bh=Hc4ngSAjDssjvAcpzFrGEHUpIrfzVejNbQxf7kJLeqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SN9VXf1ajYC6mtO2yBvpwX866GGTZ2A+1i7nK73mqrwED5we/LHltBCm3ZjagW09JHxtkW+JGVbbc1nQakBqHOLKn6dFPEoJ7MypOA+H17HJW9xHFWove7A5SVeR6j/GBjVaC63siPQFfHnckWAdKxgN7pIFEVg/aox23HhmNuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=KaE/xcLE; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1751821831; c=relaxed/simple;
+	bh=b58MCPEgWLQQXb7kXK0EP8YWqtQapdQ2JCbpH7nRPvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gHvFzm4wFYxjqaFhZJGvxJNlldYVA6gb9ag8oMM1ca9w7D4JF6lj6RJEJIpYnLzUlEK8uGyvgK1QKwt16K1I0KXcrtHwb810fGkEr5sjK2YumBDJQ0GfSf6lIDM82zqUSWuCMGknnVj2L2RY4KdvvaoZ2heSOAW/JfMb16yGHrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qquTHZ23; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="KaE/xcLE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1751821771; bh=Hc4ngSAjDssjvAcpzFrGEHUpIrfzVejNbQxf7kJLeqI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=KaE/xcLEy7F6wmsYESlPyLsMMBqyc+zSMbYp4TzDG0WqBRQUUit+2lNC1G9MQV6dS
-	 r1oY1p0u6hoc40cyScpu7EwmFGYZfkQyWPl8G8gVbbkhAesQx9PR4FWD6MczYzJIVH
-	 Ctpu5CUCA8hbilzYynuULPM4Gffjh52IahsBNtjE=
-Message-ID: <a1f18aa8-7650-4009-a874-d1d6c69e334d@lucaweiss.eu>
-Date: Sun, 6 Jul 2025 19:09:31 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qquTHZ23"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F406C4CEED;
+	Sun,  6 Jul 2025 17:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751821830;
+	bh=b58MCPEgWLQQXb7kXK0EP8YWqtQapdQ2JCbpH7nRPvs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qquTHZ23LqjW8K35B8Rn5ofOcSLpF4SUfpqdbmsjkaiHwqM+tvLAfvzzvEDtqtUgI
+	 MtCGW2LlSfNdU1AJAqO4zw5VBCLCCkkxFJwgMUlbIdJ3yMhL24jyOzeNkeeEgFawhB
+	 cK4haHrn7CNvAMTtiK/tiudvy0+asQth5eWqyaJP19ochbeMTKbb0OMIjgV3neseqA
+	 FKutvOO1sCgiBZcWkvAyCvjFKaOMQHLeYja4IDN/l8shvOstoyXJ5M/mgaLzXTnGQU
+	 aNBkKi+CAVoeTq7i2ChPyL8R+tk5s1TQBKpQbk9jS1Dbkpou5ZyEQMJ2NYUT0xEybn
+	 4hCi6j2Lbadig==
+Date: Sun, 6 Jul 2025 18:10:19 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lars@metafoo.de,
+ Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, broonie@kernel.org,
+ lgirdwood@gmail.com
+Subject: Re: [PATCH v7 00/12] iio: adc: Add support for AD4170 series of
+ ADCs
+Message-ID: <20250706181019.75c3d33c@jic23-huawei>
+In-Reply-To: <aGbm5zZMN4FIohM_@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1751289747.git.marcelo.schmitt@analog.com>
+	<aGTpNNaW7cXC18Jt@smile.fi.intel.com>
+	<aGUfapky2uh2tsFt@debian-BULLSEYE-live-builder-AMD64>
+	<aGUi7r2dgnbqLOAH@smile.fi.intel.com>
+	<aGWBgLLtOzVGwXek@debian-BULLSEYE-live-builder-AMD64>
+	<aGaP-HBbIbfEoKlo@smile.fi.intel.com>
+	<aGbm5zZMN4FIohM_@debian-BULLSEYE-live-builder-AMD64>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4] remoteproc: qcom_q6v5_mss: support loading MBN file on
- msm8974
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Sibi Sankar <quic_sibis@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20250706-msm8974-fix-mss-v4-1-630907dbd898@oss.qualcomm.com>
-From: Luca Weiss <luca@lucaweiss.eu>
-In-Reply-To: <20250706-msm8974-fix-mss-v4-1-630907dbd898@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 06-07-2025 4:47 p.m., Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> On MSM8974 / APQ8074, MSM8226 and MSM8926 the MSS requires loading raw
-> MBA image instead of the ELF file. Skip the ELF headers if mba.mbn was
-> specified as the firmware image.
+On Thu, 3 Jul 2025 17:24:07 -0300
+Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-Appears to work on my msm8974pro-fairphone-fp2!
+> On 07/03, Andy Shevchenko wrote:
+> > On Wed, Jul 02, 2025 at 03:59:12PM -0300, Marcelo Schmitt wrote:  
+> > > On 07/02, Andy Shevchenko wrote:  
+> > > > On Wed, Jul 02, 2025 at 09:00:42AM -0300, Marcelo Schmitt wrote:  
+> > > > > On 07/02, Andy Shevchenko wrote:  
+> > > > > > On Mon, Jun 30, 2025 at 10:57:32AM -0300, Marcelo Schmitt wrote:  
+> > 
+> > ...
+> >   
+> > > > > > >  6 files changed, 3601 insertions(+)  
+> > > > > > 
+> > > > > > This is weird. At least patches 11 & 12 have '-' lines...
+> > > > > >   
+> > > > > Yeah, sorry about that. These ADCs are fancy such that the base driver is about
+> > > > > 1500 LoCs due to channel setup handling and support for multiple combinations of
+> > > > > voltage references and channel setups.
+> > > > > 
+> > > > > About the '-' lines, I will rework ad4170_parse_channel_node() on earlier
+> > > > > patches to avoid 3 line removals in patch 11. Patch 12 is only makes sense
+> > > > > after patch 7 and I think it would lead to '-' lines if coming before patch 10
+> > > > > since both increment the number of IIO channels. Anyway, I'll see how to further
+> > > > > reduce the number of lines being removed.  
+> > > > 
+> > > > My point is that the above statistics is mangled and I don't know how I can
+> > > > trust the contents of this series if it already lied about that.  
+> > > 
+> > > Looks like git format-patch summarizes the changes from all patches when
+> > > printing the statistics to the cover letter. Also, git format-patch doc [1]
+> > > says the 'changes' dirstat option (default behavior) doesn't count
+> > > rearranged lines as much as other changes.  
+> > 
+> > TIL. Thanks for pointing that out.
+> >   
+> > > There are cover letters of other
+> > > patch sets where the number of '-' lines don't match the sum of lines
+> > > removed by each patch. [2] and [3] are examples of that.  
+> > 
+> > That's different I believe due to the diff algorithm in use
+> > (btw, do you use histogramm?).  
+> 
+> Nope, I was using the default diff algorithm to generate the patches.
+> I tried the --histogram option today but didn't notice any difference. Maybe
+> default and histogram output the same result for the ad4170 set.
+> I'll send v8 using histogram alg. Nevertheless, is there any preferred alg for
+> generating patches (so I can use what's best on next patch sets)? 
 
-Tested-by: Luca Weiss <luca@lucaweiss.eu> # msm8974pro-fairphone-fp2
+Given the size and complexity of this driver, I've applied it to the testing
+branch of iio.git to get some extra build coverage.  Last minute reviews
+still welcome but I may ask for patches on top depending on what they affect.
 
-[  175.530764] remoteproc remoteproc1: powering up fc880000.remoteproc
-[  175.544439] remoteproc remoteproc1: Booting fw image mba.mbn, size 299792
-[  177.707706] qcom-q6v5-mss fc880000.remoteproc: MBA booted without 
-debug policy, loading mpss
-[  180.375633] remoteproc remoteproc1: remote processor 
-fc880000.remoteproc is now up
-[  180.841751] wwan wwan0: port wwan0at0 attached
-[  180.846972] wwan wwan0: port wwan0at1 attached
-[  181.004199] wwan wwan0: port wwan0qmi0 attached
-(this is with 'firmware-name = "mba.mbn", "modem.mbn";')
+Hence applied to the togreg branch of iio.git and pushed out as testing for
+0-day to take a poke at them.
 
-I can also test on other MSM8974 devices and MSM8926 if you think that's 
-useful.
+Thanks,
 
-Regards
-Luca
+Jonathan
 
 > 
-> Fixes: a5a4e02d083d ("remoteproc: qcom: Add support for parsing fw dt bindings")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
-> Changes in v4:
-> - Expanded to cover MSM8226 and MSM8926.
-> - Link to v3: https://lore.kernel.org/r/20250706-msm8974-fix-mss-v3-1-8b5ae61c86a9@oss.qualcomm.com
+> Thanks,
+> Marcelo
 > 
-> Changes in v3:
-> - Reverted back to the simple patch from v1
-> - Added define for 0x1000 (Konrad)
-> - Added MBA firmware size check
-> - Corrected the Fixes tag to point to the commit adding firmware-name
->    support
-> - Link to v2: https://lore.kernel.org/r/20230508153524.2371795-1-dmitry.baryshkov@linaro.org
-> 
-> Changes in v2:
-> - Replace fixed offset 0x1000 with the value obtained from ELF headers
-> - Implement ELF validity checks
-> - Link to v1: https://lore.kernel.org/r/20230507172041.2320279-1-dmitry.baryshkov@linaro.org
-> ---
->   drivers/remoteproc/qcom_q6v5_mss.c | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 0c0199fb0e68d6286f1e238d110539554d1d5f14..636f00d481ea80508fc9db28d8e2e225ea52372c 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -498,6 +498,8 @@ static void q6v5_debug_policy_load(struct q6v5 *qproc, void *mba_region)
->   	release_firmware(dp_fw);
->   }
->   
-> +#define MSM8974_B00_OFFSET 0x1000
-> +
->   static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->   {
->   	struct q6v5 *qproc = rproc->priv;
-> @@ -516,7 +518,16 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->   		return -EBUSY;
->   	}
->   
-> -	memcpy(mba_region, fw->data, fw->size);
-> +	if ((qproc->version == MSS_MSM8974 ||
-> +	     qproc->version == MSS_MSM8226 ||
-> +	     qproc->version == MSS_MSM8926) &&
-> +	    fw->size > MSM8974_B00_OFFSET &&
-> +	    !memcmp(fw->data, ELFMAG, SELFMAG))
-> +		memcpy(mba_region,
-> +		       fw->data + MSM8974_B00_OFFSET,
-> +		       fw->size - MSM8974_B00_OFFSET);
-> +	else
-> +		memcpy(mba_region, fw->data, fw->size);
->   	q6v5_debug_policy_load(qproc, mba_region);
->   	memunmap(mba_region);
->   
-> 
-> ---
-> base-commit: b12a9fa1c88a441daa33f15edfa3ded8cd6d3556
-> change-id: 20250706-msm8974-fix-mss-e1b8e114b7e0
-> 
-> Best regards,
 
