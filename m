@@ -1,87 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122B22874FF;
-	Sun,  6 Jul 2025 16:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEC41FCF41;
+	Sun,  6 Jul 2025 16:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751818288; cv=none; b=MqflLLbVU/jStF3eXhsA/UUVk4FHzEfr8YgD/gTpkAJhulb9mcid1nd8uhcitd8zfQ5BwBsV04UjL2BXqXCO/Y5fD1mlPhq5K4WPRZ+hM9UYlseNH7SdR8kNr8JDSpAQvJbAjd/ydEk0x9VkMW6XznS7u7mpHfBdZKEmwfzPcBo=
+	t=1751818292; cv=none; b=LMsQdcPqVQ/L3C3fuTasTioO6lqpXEd+tzgZsVXOY8/kJwwKqX4lMJYM6NaaCwk59g+f7jhz4IwK5nGLNg0KqWWHr8ytJNHTQMQacH8Swdt1grhGy/rgPII7Ombv0rwMOtiNc5C3RIL50ZOE2Mbh8gI9svhsbq6rNdvEtQio8U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751818288; c=relaxed/simple;
-	bh=7jU92AnpfZj64PrwM7NKYl5HyZCvxQF5Go8pK+xOnUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k45XVG/bN7LLq8jtrXDhrN5N1SRXWYYAJ324pvh9vm0XTGFjXLtZurqFXYkamdNyqNu4oTgVJk+wZBXLZwdb6ntAZYGwvtVaMX15ecBjc1jSqcIWiYkQc44LmXo/XBWjwdiT2rg/W+jXJwswcuWtcoYNqGvfY/3xM1fnT2RhqlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iutQM//x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751818292; c=relaxed/simple;
+	bh=Bqy+M1r7hDOA2HVYAa4Rb0N11aBHHTCWwI1Zq/lXBDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TDYY7RVNSXupMZhVy8LjIL7Z++6rWlDDEtmv7N6/xCD2DJxutHxIqc+aSiXgZ2K/KuUjuCR5U8Og8JpAfx3LQNIIDEU8OebN+QhAyLwTsLj3L/YrC2gdGTfw5cvCRsHRjUkFTP2e+Nnsa7t7PzpA+1771xnWt4tkJ2QYALUgf/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhfDL+LI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iutQM//x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45700C4CEED;
-	Sun,  6 Jul 2025 16:11:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhfDL+LI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8565CC4CEED;
+	Sun,  6 Jul 2025 16:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751818287;
-	bh=7jU92AnpfZj64PrwM7NKYl5HyZCvxQF5Go8pK+xOnUo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iutQM//xnXHZ0QeH6Sftz3cYZOiasJMY+xdGgfkiEN5LTDYSyB5V8nQ89UYzi3zzW
-	 qE9f/ON8QiVv2ApId9BJODaB0o03tMc9h2mkWxCG5KGEXgS0dMIimwWXCCWxMWXtdI
-	 0hadBvB+f0S/2XFCG7P+br/LrJQyNaC0J70p08GBkhWaxnVzzPqFVN/8MMjQsmJlnM
-	 XCK3BXC0bebMh+RXg90OBHaSuD1x3y3hXcrCFiZyycyWTAoPm/JMdTkJcmEHSgd9bo
-	 vSkYA2KmkWo5NkAuADIZQ7BvTCCpx34+oiJ8YB3itL5gUOfd975d+L4FMrQS/mLLPC
-	 CYnh922nvxuZg==
-Date: Sun, 6 Jul 2025 17:11:21 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, eraretuya@gmail.com
-Subject: Re: [PATCH v11 2/8] iio: accel: adxl345: simplify reading the FIFO
-Message-ID: <20250706171114.240334cf@jic23-huawei>
-In-Reply-To: <20250702230315.19297-3-l.rubusch@gmail.com>
-References: <20250702230315.19297-1-l.rubusch@gmail.com>
-	<20250702230315.19297-3-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	s=k20201202; t=1751818292;
+	bh=Bqy+M1r7hDOA2HVYAa4Rb0N11aBHHTCWwI1Zq/lXBDE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uhfDL+LIrOgAUHqT9QKBUPJIpHC4YQ8K7PsvACtIZzQDefg7GmxHUd5s7C1btWtxX
+	 sgKB7ngO9DzgwrQQmxBV6HIClXXOVVS4xYz/jA/TCc+SVSh+yIDJX//aXYW0zuUnZA
+	 f9UD0LA3bGR7LXZx89KRorlqGCzxCRF+YI7RA5JRlm86nKewTDH1Fm1OcEylLyKhzx
+	 qygmr+IaDdpiVuu5dusVbA9rh8RuBR68nQ46SedUmyPzuJqlRzK+8jw/TvbLgxp57W
+	 FQEI1qNHrwgY2CssKEXQo2R0gQnhHizImfirNqjQKFng533Y90mduuiE8JkjQVGFL5
+	 Q0A/E9UKosyHw==
+Message-ID: <f7074f3f-cdd3-4476-8711-0e932357bbfc@kernel.org>
+Date: Sun, 6 Jul 2025 18:11:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [rft, PATCH v2 0/3] media: atomisp: replace math macros
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-staging@lists.linux.dev
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20250519155028.526453-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250519155028.526453-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed,  2 Jul 2025 23:03:09 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+Hi,
 
-> Bulk FIFO reading can be streamlined by eliminating redundant variables and
-> simplifying the process of reading x-, y-, and z-axis measurement sets.
+On 19-May-25 5:46 PM, Andy Shevchenko wrote:
+> Kill unused definitions that may use custom macros from math_support.h
+> and reduce usage of the latter and even kill some of them at the end
+> of the series.
 > 
-> This is a refactoring change with no expected impact on functionality.
+> Please, apply only after tests that confirm everything is working
+> as expected.
 > 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-Applied.
-> ---
->  drivers/iio/accel/adxl345_core.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+> Changelog v2:
+> - added a cleanup patch 1
+> - removed potential div-by-0 conversions
+
+Thanks, patch looks good to me and this time things don't crash
+during testing:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+Tested-by: Hans de Goede <hansg@kernel.org>
+
+I have merged the series in my media-atomisp branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
+
+And this series will be included in my next
+pull-request to Mauro (to media subsystem maintainer)
+
+Regards,
+
+Hans
+
+
+
+
+
+> v1:
+> https://lore.kernel.org/linux-media/20240923085652.3457117-1-andriy.shevchenko@linux.intel.com/
 > 
-> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-> index 6c437d7a59ed..b7dfd0007aa0 100644
-> --- a/drivers/iio/accel/adxl345_core.c
-> +++ b/drivers/iio/accel/adxl345_core.c
-> @@ -885,15 +885,12 @@ static int adxl345_get_samples(struct adxl345_state *st)
->   */
->  static int adxl345_fifo_transfer(struct adxl345_state *st, int samples)
->  {
-> -	size_t count;
->  	int i, ret = 0;
->  
-> -	/* count is the 3x the fifo_buf element size, hence 6B */
-> -	count = sizeof(st->fifo_buf[0]) * ADXL345_DIRS;
->  	for (i = 0; i < samples; i++) {
-> -		/* read 3x 2 byte elements from base address into next fifo_buf position */
->  		ret = regmap_bulk_read(st->regmap, ADXL345_REG_XYZ_BASE,
-> -				       st->fifo_buf + (i * count / 2), count);
-> +				       st->fifo_buf + (i * ADXL345_DIRS),
-> +				       sizeof(st->fifo_buf[0]) * ADXL345_DIRS);
->  		if (ret)
->  			return ret;
->  
+> Andy Shevchenko (3):
+>   media: atomisp: Remove unused header
+>   media: atomisp: Replace macros from math_support.h
+>   media: atomisp: Remove no more used macros from math_support.h
+> 
+>  .../pci/hive_isp_css_include/math_support.h   |   5 -
+>  .../kernels/anr/anr_1.0/ia_css_anr_types.h    |   4 +-
+>  .../pci/isp/kernels/dpc2/ia_css_dpc2_param.h  |   6 +-
+>  .../isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c |   4 +-
+>  .../isp/kernels/eed1_8/ia_css_eed1_8_param.h  |  22 +--
+>  .../isp/kernels/fpn/fpn_1.0/ia_css_fpn.host.c |   6 +-
+>  .../isp/kernels/sc/sc_1.0/ia_css_sc_param.h   |   2 +-
+>  .../pci/isp/modes/interface/input_buf.isp.h   |   6 +-
+>  .../pci/isp/modes/interface/isp_const.h       | 157 ------------------
+>  .../pci/runtime/debug/src/ia_css_debug.c      |   1 -
+>  .../atomisp/pci/runtime/frame/src/frame.c     |  29 ++--
+>  .../atomisp/pci/runtime/ifmtr/src/ifmtr.c     |  11 +-
+>  .../pci/runtime/isys/src/virtual_isys.c       |   2 +-
+>  .../staging/media/atomisp/pci/sh_css_defs.h   |  12 +-
+>  .../media/atomisp/pci/sh_css_internal.h       |   8 +-
+>  .../media/atomisp/pci/sh_css_param_dvs.h      |  22 +--
+>  .../staging/media/atomisp/pci/sh_css_params.c |  12 +-
+>  17 files changed, 77 insertions(+), 232 deletions(-)
+>  delete mode 100644 drivers/staging/media/atomisp/pci/isp/modes/interface/isp_const.h
+> 
 
