@@ -1,106 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D0A1A9B3D;
-	Sun,  6 Jul 2025 10:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D831A9B3D
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751798132; cv=none; b=fRc/lJZVq2NBHQ7PoTqDuvcY7Mnv9Rm3uZhkpGJL+JCP5pkF9A2Y/WrDhu5TaCoLUYM04SlF+/M6BUelSbNqUpxz03w5WBeVUCSPb4iy61qjPOAViev38Y0/eUpkdy9FGX3nArKS/wpZwo4gNPuNcDix75sVV9LXi+QM0EOe92k=
+	t=1751798279; cv=none; b=FQ+dD0kDT9FbpuxkqpnETONmkn3ZUWoFeA6+I38wfhTdnM7DcNvWJ4JOr0jfBbBgdlO4PM9nYJJxQ/Fcchei4qGyTL0J7pgwKFp9w5XOzCFaTon8JdboAhMsul7Cl72um9QIVkROk9znOifFGQ1U1lLA5Ydk34vxczcCJ+xm5+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751798132; c=relaxed/simple;
-	bh=iw9W7eKsGSO+1wAmPx6nLdHMNNWYLY9hCIj8UzZY+Hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LtKEuKYN6SuvcvO82dK/zQxLtko8ltptT4E+75E6j2U4ZvaOMCkJTQPgA1j5cV8TQwnVDV2oKk9BMyt9NypOeh9+HLgOrwdLjQZb5TmFB3llG6PtP5nt0q0b4oS8ayT90vI4MMl7p0LS9MZjejOl0To0lG5TA/J0oP3jfe2viCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIGTvz0j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751798279; c=relaxed/simple;
+	bh=E7WbkHCv89+rDLqIaI2wpWPIl9rauYcYwaKabic4VV4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=dfU5lykZrDGLo7x1DSVW8pOqeoF417o5rYl77LqWoBit/iOxZCCoMhNbgOyUNC0u2DhVZmJXIkAJPmTwSx8sgULdGFAGK0J0mg8GVpnH2Ug/wMnolEJ5U36dTlh2rSz//BlWdJDEX8Vm9/h0AU4WqhP/1ys9K3bwX3H0tdr/iug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=Vt8GoLra; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WIGTvz0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 051B0C4CEED;
-	Sun,  6 Jul 2025 10:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751798131;
-	bh=iw9W7eKsGSO+1wAmPx6nLdHMNNWYLY9hCIj8UzZY+Hc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WIGTvz0j1n2CFLGuOvApT9PP/1fHOEQ1aJwoEOOcgWC+pVTgyTSFOVeBsQ1oJDwU1
-	 G9kTtY04mkfLteVI7bBG3ZmzurfBV0/cUAab7A1tA7IUeEdKqyzk33+3qnRdO8M18q
-	 BBdRE77ciOnVrKtZl0lKrEExCusnH6TYHV0vNnF/m+MmuRWeNlgbr0ox+7jM9YKtBU
-	 aiR6EtkdzOOBTlwd2I3Ep54eYjmsKKYIFCB5BpkiAskJ+5xo82wA5TEAYXzTzzKLFJ
-	 e6Ganorx29zxoJf3Sw2/Wzno8oPx21jAJxJa9Pahh07jQ8jLlVPwSyrqKO2VSpVBGz
-	 D+/t1vylrtZSg==
-Date: Sun, 6 Jul 2025 11:35:25 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Guillaume Ranquet
- <granquet@baylibre.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7173: fix channels index for syscalib_mode
-Message-ID: <20250706113525.3996d46b@jic23-huawei>
-In-Reply-To: <20250703-iio-adc-ad7173-fix-channels-index-for-syscalib_mode-v1-1-7fdaedb9cac0@baylibre.com>
-References: <20250703-iio-adc-ad7173-fix-channels-index-for-syscalib_mode-v1-1-7fdaedb9cac0@baylibre.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="Vt8GoLra"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751798274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PnW12e1DZsxOkvydzK2HotnR5pZwii2x2f3jZwicm8A=;
+	b=Vt8GoLraIM5ywXcd7lswFjjkdTl92SP2XM4E6PxZMkUlHGLM6t1FT4FOkuMuoh0kx6Cpjq
+	IOKS4t7aid/kF7tRlc1rhEfKJA+RmyQTquc6oDfnpmwnEZbrovIQtLyCBiBZ0OKbMzpj4J
+	4C29m+1CZYiMhrSGscHQX4ZTCqiTnW/5WVoD0GziwaeULxO8at3Hhe3bV4yJq+ktJkfGgs
+	hMDF8/YL6f1P2mseJshq8AszjutKxCJ0KfX0JUhsc1tu9v4IGmqHIZpT0Qgq1qtCm9DiAM
+	KXkg8Z0Tku/37sJIDh34vkQKOEhsQ5o8vFUki7JmQtB2/yyvanUucpTodjrAzw==
+Content-Type: multipart/signed;
+ boundary=aa40d9dc28db920960fba5ac249def83a08213f8b1a374e4a5946d696ea9;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sun, 06 Jul 2025 12:37:40 +0200
+Message-Id: <DB4WNMVBIWYS.273Z54K6O7DTM@cknow.org>
+To: "Piotr Zalewski" <pZ010001011111@proton.me>
+Cc: <hjc@rock-chips.com>, <heiko@sntech.de>, <andy.yan@rock-chips.com>,
+ <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+ <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+ <dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rockchip/drm: vop2: make vp registers nonvolatile
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+References: <20250706083629.140332-2-pZ010001011111@proton.me>
+ <DB4W0GOQZ8MZ.MA7QXHJWCTK2@cknow.org>
+ <OWFHI491RHadO01jlQPA34GX28LC7SseKfNRwqQy4etkkJyP1YeF_0EDdAgpSXx5RW7go62EAOkedW5nbyn_hlz_K-NUrnNJeDFWv0OOSO8=@proton.me>
+In-Reply-To: <OWFHI491RHadO01jlQPA34GX28LC7SseKfNRwqQy4etkkJyP1YeF_0EDdAgpSXx5RW7go62EAOkedW5nbyn_hlz_K-NUrnNJeDFWv0OOSO8=@proton.me>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 03 Jul 2025 14:51:17 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+--aa40d9dc28db920960fba5ac249def83a08213f8b1a374e4a5946d696ea9
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-> Fix the index used to look up the channel when accessing the
-> syscalib_mode attribute. The address field is a 0-based index (same
-> as scan_index) that it used to access the channel in the
-> ad7173_channels array throughout the driver. The channels field, on
-> the other hand, may not match the address field depending on the
-> channel configuration specified in the device tree and could result
-> in an out-of-bounds access.
-> 
-> Fixes: 031bdc8aee01 ("iio: adc: ad7173: add calibration support")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Applied and marked for stable.
-> ---
->  drivers/iio/adc/ad7173.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> index dd9fa35555c79ead5a1b88d1dc6cc3db122502be..03412895f6dc71fcf8a07d09eb9f94a3840f02ef 100644
-> --- a/drivers/iio/adc/ad7173.c
-> +++ b/drivers/iio/adc/ad7173.c
-> @@ -318,7 +318,7 @@ static int ad7173_set_syscalib_mode(struct iio_dev *indio_dev,
->  {
->  	struct ad7173_state *st = iio_priv(indio_dev);
->  
-> -	st->channels[chan->channel].syscalib_mode = mode;
-> +	st->channels[chan->address].syscalib_mode = mode;
->  
->  	return 0;
->  }
-> @@ -328,7 +328,7 @@ static int ad7173_get_syscalib_mode(struct iio_dev *indio_dev,
->  {
->  	struct ad7173_state *st = iio_priv(indio_dev);
->  
-> -	return st->channels[chan->channel].syscalib_mode;
-> +	return st->channels[chan->address].syscalib_mode;
->  }
->  
->  static ssize_t ad7173_write_syscalib(struct iio_dev *indio_dev,
-> @@ -347,7 +347,7 @@ static ssize_t ad7173_write_syscalib(struct iio_dev *indio_dev,
->  	if (!iio_device_claim_direct(indio_dev))
->  		return -EBUSY;
->  
-> -	mode = st->channels[chan->channel].syscalib_mode;
-> +	mode = st->channels[chan->address].syscalib_mode;
->  	if (sys_calib) {
->  		if (mode == AD7173_SYSCALIB_ZERO_SCALE)
->  			ret = ad_sd_calibrate(&st->sd, AD7173_MODE_CAL_SYS_ZERO,
-> 
-> ---
-> base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
-> change-id: 20250703-iio-adc-ad7173-fix-channels-index-for-syscalib_mode-49b404e99e0c
-> 
-> Best regards,
+Hi Piotr,
 
+On Sun Jul 6, 2025 at 12:20 PM CEST, Piotr Zalewski wrote:
+>> With a new version of a patch, you're supposed to add the tags you
+>> received for previous versions, like my Tested-by tag [1].
+>>=20
+>> (unless the new version has changed so much you feel they should not be
+>> carried over; you then need to explicitly describe that and why you
+>> dropped them)
+> =20
+> Forgot... Should i send it as PATCH v2 RESEND?
+
+I don't think that's needed; the maintainer will let you know if that's
+desirable or that they will add it (back) when committing.
+
+Cheers,
+  Diederik
+
+--aa40d9dc28db920960fba5ac249def83a08213f8b1a374e4a5946d696ea9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGpR+wAKCRDXblvOeH7b
+boTTAQDVgBuxetL0DzvGcPFtwx7T7bTDcAoRnoFed53ZDkf+HQD/brK8092SqQNi
+RV1KGSdH+z83fO99mi6WCkgzDwRGFAQ=
+=8I9F
+-----END PGP SIGNATURE-----
+
+--aa40d9dc28db920960fba5ac249def83a08213f8b1a374e4a5946d696ea9--
