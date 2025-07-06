@@ -1,139 +1,260 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20DD20371E
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 16:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68973165F1A;
+	Sun,  6 Jul 2025 16:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751819141; cv=none; b=hrptK2+tu0I36lalN7Kd7vUiJ1cbnERLG/si6VUz6iuIojwUCZge4bs11aEqmdXikT6qGiMBIFYn5dI3DAm+hK7IRedhMdKiftXUuxRlYtIfSsmTyPQ3HiGPXMXJg7PQbqCpsKsYOA/mdjXXwmbHtbfqO0ucbJiLusDzekY3WW4=
+	t=1751819583; cv=none; b=u9/fgaRDHGhEqbGzGo+dTVIEBUwysnEFzxsLhPSUU+kqda/Q5pTwaLizWez1POmUS4JQxEYXRS9JeqrKJxEDdYusKYZpfTV0NrG41CxRo9khSyAc1v/XN1wKjgPt1sN2bnY84MNpIVWWDDdkGzzBpaPoZ1FhX2j1OwYxrdxK74g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751819141; c=relaxed/simple;
-	bh=5B7hOPWMSOFFasGScbIFxjP7FxHLHAP9qeeOGfDlHhE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WI79U5uXMpiqYYWYhH85Cf7z4UG7mGffEtjf4HTNgzF67UpLvJ3mfQixB2chIZl9ocYQKSnxsvokhrJTJgQRVTmfTsjQWC6lWDrR4+LHwzxiu/soek1zMdt40POSKyra7zu9Pm99vYSgtP4J3Z/k1n0+hnXEImgQq0jllfMS5kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.us; spf=pass smtp.mailfrom=gmx.us; dkim=pass (2048-bit key) header.d=gmx.us header.i=len.bao@gmx.us header.b=j6Wl7XQf; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.us
+	s=arc-20240116; t=1751819583; c=relaxed/simple;
+	bh=D3csnNiWzV+4H8jKc6H3AANx0qZiRfy9ICHeopQoqUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AIfJB3+sQnBF1B3QqcVeKTp0dHV2IHpv26jU6NNWSFXGBdRDhGw13EIGiyvy5aacWTl1zI8tJsoVz4gA0L1zACrdzkTLfSuav1atVeq/XHDjLuLkHUaVGWrulOZnEsfKH8acAkqFbcygl2ZTRLY3tRl65C+lgCwHRVyFvPui3P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caKjmjNo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.us header.i=len.bao@gmx.us header.b="j6Wl7XQf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.us;
-	s=s31663417; t=1751819128; x=1752423928; i=len.bao@gmx.us;
-	bh=3jIyMsJnSy+l51ldMn9A3Ee71iCGmD9e6ZKCMwz6msM=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=j6Wl7XQfXGhef8xeGPelzIsrOjO2g4YHH74HLFwpqD5H8e+8vflMZdF5/ACv+VKr
-	 t0iVfCWGKdSi3rjf0k0+MxHVQU2OTLVE1pzn3RK+09+F4MbfpNwy/RPS9AlgBJ1ns
-	 rJM82F3y1ZgLNsKdBIP0Vvp6/borSL374x0dC3T6GUW337aUcfTLj/arcC7vqs+mC
-	 uEBAZ1x6aTgSj5agaIE1d6mjkSw2YQSUSMi7ckm2MawKJr1JAAJurPZoc80YlgZyJ
-	 MNar0gJzMxqVjhrdx1AIdSQBitkv0YuCn10/2EaycxHSIxqhlyQu1OBEc1GZXugYe
-	 A+taJwGowleT5HUVrw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from ubuntu ([79.159.188.137]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1M89Gj-1ucamB2JSF-006zHY; Sun, 06
- Jul 2025 18:25:28 +0200
-From: Len Bao <len.bao@gmx.us>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Len Bao <len.bao@gmx.us>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/dp: Remove dead code after return statement
-Date: Sun,  6 Jul 2025 16:24:24 +0000
-Message-ID: <20250706162431.15029-1-len.bao@gmx.us>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caKjmjNo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7433C4CEED;
+	Sun,  6 Jul 2025 16:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751819582;
+	bh=D3csnNiWzV+4H8jKc6H3AANx0qZiRfy9ICHeopQoqUg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=caKjmjNo3TtFswOeaowun5Tzf1O6QYV2asbNjhArS3WeYX3isz5K0RlNReCrrRdgt
+	 CX8SLXOFN58G5ffmHocgwHLyXwfjvL6K+s9JseXyyfWWpNH6z7cdGPsZBhSgjMuN22
+	 mSwso4k9Uix41z2SpMxPzD8geKz7X5jlGSonqWL0dGCikIwnJppZ+Anmo90HgB2ESM
+	 hxpS8GjVWM64GjtW4vG0zkwzEIJlBcEmRTripjS5u47XYywbIUkY+KjlRoRLv6RWtW
+	 SbAmPBAVfNCHjOEGUkioocDeUhc1xNZtZHyCodlc7VsOxoJOELge4GgXweyyFWHi1H
+	 0FC+g+J27n/dA==
+Message-ID: <878c2301-7c3e-4325-917f-cc1d7ce4191a@kernel.org>
+Date: Sun, 6 Jul 2025 18:32:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RHlu5KZ7dEWVmI+L0jb/2dxeZ51aOYx3Brk+XhbyCMuwuwsua2h
- DgkxHsngZTUS52ALRcoOZFnT4ytpYCwQENJe792NnO4iOvV+LyGl4luw1xqPjO1gTPWlCS2
- vpx5nN0hHhIhxtmdljC13yj1kZ3yi/JX48gc5qBfxVEKIN4lWydB9XauZHkTjggB56k4oqt
- rW0DJjtkx1+pn8jstWsbA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OqNaUK7HVCA=;r5jFjER/zgYasbYrUZE74jzmP4v
- y6WAT7z0X/QNOyw0x8jhbfmfSuq4GIKOVVCMYkRtylpmwZK5L4gI/iFbPVj5XjkPGz0EjbgW3
- F+AHzW+RwyLzoQNCBzXBTtbQPGuSDWqGYlS1i+BAr2L9FE1WW0QFmCCERiwtrny6x7KP6vADv
- UjEQHTMtiHrD/+XbzZnh26Gp+mUZ9uBRfTNYfP+F/4eU9m7WoWVblriH/hJqfVKX5zoIWbfN8
- ipxmW+AGShU+jK8zkkh2d3kII+U9tIZ4pfFeDqA9xM4Yk4UK96pep8qWV7bW90DcEg6G6W9Qn
- urb2wbALMbohd6oFrMbSmihmjUdQ7gWCCEF77Ayn1fDGqVGDbhQ4Pf2sZHt9oQ6syvwO/zcdB
- n7nFIXS/YIhNEIlQ/iml/o/6V/BITr8hXNWBEMr7faOWzaJDK/U4krOMY4MPB0zxmkU+xeh1H
- 9pNHpnqWqIDm6rqDOOVlyL/8BpZmrJyCy0i9DINgOXIjWUBrW354ydp8y9Wi1YpiaHWRzijje
- AiUhPMvYY/+HgB20MKXwnHiyOGsCM8b6+VJD9unzCozek8ZQMtVwpt7xEFXWJahXLxvuEbpjV
- rRYa2fcJbUC59GR/6v6oXDTx5ZGbxk03JiBY3ZHzx3a5BUzhXN7TCL41mSBQ+xfSWcB6nVAid
- XSqWQ4aN5pVhmrWVzw4kBJX7MPQh3nhZqehy3vCARWVJaTd9e/xDlk60V3UdrTn+6spoHnzX1
- Niw73LWPVAR3hmGnjUdTwRoE8T16hUfDaM/XPA9AVQ4zonJ0mFwB0tTQSxbJOZYCvLyvMhoUL
- o2elykPsBie7BwbkkYsuw4dJodLRgQm5yXSuI9GHS8UVAuFFpUQ9Zj6+XoTf2aPxQa4NtuAvI
- ZWukHk3jaJeE8lPN9VrjtdjsYDvB8JlSIygymMekMNFdp19t/QpzDABa4Nar8WTwIvW7nrUlM
- 8G6U9WCrwrDVcJXHcpNw6IlJ6I7Zl33zIGPBBXvsxyzF5a9a7gJC+Wr4OaKem3WdUe5q9DXBO
- bilYbQHCcMr6axZmZYI0+DAM7bn2Izimc6gk6npcdoOlUccahDInmutLzHa6BRjQNE3j7pQ/2
- 6UYQ/HmqAVoFnif6EyW8KAaWRvvkLECaOYzOJnO2ZH3UAZQixFpK0S+12ujQHTZ2s8b/FRFV2
- bNXFSOfHQWT8OJi7dQAmRCe8/Llj3a18km+SCMpesfx1f8cQTa+rySzGxstD7AT84VmvyWbU4
- jLEpupcChHUMv+mv2gjWHMuEAZPKM+uJE9CWlXhvn5+lgKK/DGzu1cJ6ZOr2Q/y2Vucuya+FF
- qZpfEYM5oYpDwyTtHPVJtEFDBKWoUPdJkmkdeN/hF30ZoCtPdv4e9OfFg25KAVUcRU59UsEWC
- bbKPDF+pXTQDdVDK57GGsPzj/knqpwYW24O3MsKb4sNvCSZXEsZ6Bsz4+3sXOrB7tRDKc0nR1
- XZnMqsYpby1N6x7e6WHFaG6APLax+JjyfRN1Kup5MNk/OSOAb6LK40qtXd+9hrg2slyQwyWX5
- ZnPD4Cv9EHLPqLaf023ggLT2RHeE4odYpi/4aWO18qXFxtCScv+6vzNsd0d5lUYL8Z/gj56bA
- c0NKyVeD9OhTlO7yY96C/XrGmOzf7F2YrVnd8t3vqOsXXlfUhkLN3P//lyJ+KommpyFYonaN5
- pQH4wbTD7GdMsA58cysPnudIj1mFoldo5W5A7AKs/DFtGmF/o9YAFIcIgP3srnyZitbFXf2QT
- rSO3NNunFvqKbPbG/hR2VkIX1bNkQBV7167nvhi/iAPCWbXM7/5KUD3LUmZ7o8NyApZ95IAQ3
- vyG14UE/MbaPw09nFXAnvagfaNkEX7a00n6jXITUIfSFN4ONzTTUnaJ2yELn5vwjkdEYm5+Tu
- 2IdHDWlqqvvo3ZpYIYMb/lgfPLLIBrPJl23EzUhFX+XtcGg9w0/7guvYzOQMHs7BSKx/mKZEh
- 2BbejYFqh4/DkjAY/PhHvZR37uXPp/MuhIZ4uSUdT7Xq044MsLNmR6lxSBFuOIaUTjrHt6bss
- jLPAI2zPt/mVreUYL+roUXLX6BZR8Pa4eIn/x0WPMSEA5AmG9zbG5i55Vg7IyvWvHylzfShCz
- c5qJPo5FMDnFKLD7MxEoq4hKJ41Qj98MFhvjdAv0V5IOtmcnM8GMOqpVCFq2XZPwG1VLkNn37
- JkANfGh7TKiTXMXV0YEVY9vPd24BkA7tl372XAis3BlALQXeRI8XbNbNcyGnIiXu9wg0IYjUn
- JqIP2PHNOFu3Pzh0qyFsmoaHhQRh6zU+vfZHWVhJOw4TWZeIEemlya3F3yZlunbNtYrkLO/+B
- qL26J0PJ6O9s0o3O37v/dSfueNazpRoU2jndyC1/8Xf3wv0kfwQTIE//w9kIftYxhl72Jb2f8
- 8+sSWbrao/pyxqcZiZr4IhzLcrEXLQduR1FhHAduKoAEEG6R3Fw3zGcsaINTgbqpaGyp5Fgkx
- ixJhxa3yp/pUWoJdjerlSjkvsfKCYx1m0SERt5wm4BzeRqaBgIfhLKxx6k2vA5chrk9L0odO3
- XuewlNnJKS34zf42nq0DWwdJSpAQ771QZ0Mxlp23W0byJ7Ho2okhPoExGdSlsb+3/5tBof1ZS
- vG/JuvMwWAX3OjeKhcCZz9UTexGBnrXrFvt8SzEnBTwv79VH06dezKNUODTRGBvsTH8m/kD0L
- jeKtEjtMZKuHrM+UttGartgFKupi+n1eRQnd12eGTaXLeKEHV8P0lPfaD3OSv2I60dv82EFS4
- OB0upga4TSO3+DR1e7jRL/bpTm1AD3eMzp5qRwA7G4G3NShKl7jBwkAqjvFc0wa2swLJQU+Gi
- FidWB89zvwtPNpQlyzSMTDxpfRWOryxktL1tdOq3ePMq06T6N2LTNMdr8Hbjx94YdeWdIT9lC
- GuB44ysDzq0iSkf8+40G9Dfr27dOsdUl+n8fA9o7tHD72Arczjfer78MJqLa/rP7Q1j+NtMsg
- UPAUc6kUWmca9KbNH0gPW6jnkgagJj2kLjLJbbVEqWWtCSWaP8ooDsTBmvjhXm6oA2zSkQD5x
- NKzfjAFE003MPXr7YwFd2wWdVqHV0WhHhtNgPID+trR0A1uVu9gc0lB3sCJE8WJG379lgQ0p/
- HNsW3JxpUGdhOXBh62Uct2v7k8t/qhhNliKsAQ9F1SMBmM6Pv3Gzuys1eM1eWYI/w2LkrSRO5
- 0O1cwvMqGdWiItGtoZ3JTQcNT5qGvvngif0+c+g7Badh9VdY07P/i+Bxazjp39nkyJL3945WB
- NkCJ3DbkqaYzQKgLRD0C29ZwHCU+0PUitCMddiHYsM0qNzOO8AMicgvMbEmqaBmC4gg7fHHGT
- fFHCidwN9foHPvVBzW1ycL0XBW2tw==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] staging: media: atomisp: Remove custom sysfs
+ attributes from atomisp_drvfs.c
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, andy@kernel.org, gregkh@linuxfoundation.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-kernel-mentees@lists.linux.dev,
+ skhan@linuxfoundation.org, dan.carpenter@linaro.org
+References: <20250704161051.16733-1-abdelrahmanfekry375@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250704161051.16733-1-abdelrahmanfekry375@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Coverity noticed that the code after the return statement in the
-"drm_dp_pcon_frl_configure_2" function is never reached. So, it can be
-safely removed.
+Hi,
 
-Coverity-id: 1648885
-Fixes: af67978ee37e5 ("drm/display: dp: use new DCPD access helpers")
-Signed-off-by: Len Bao <len.bao@gmx.us>
-=2D--
- drivers/gpu/drm/display/drm_dp_helper.c | 4 ----
- 1 file changed, 4 deletions(-)
+Thank you for your patch.
 
-diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/dis=
-play/drm_dp_helper.c
-index dc622c78d..de047e30d 100644
-=2D-- a/drivers/gpu/drm/display/drm_dp_helper.c
-+++ b/drivers/gpu/drm/display/drm_dp_helper.c
-@@ -3586,10 +3586,6 @@ int drm_dp_pcon_frl_configure_2(struct drm_dp_aux *=
-aux, int max_frl_mask,
- 		buf &=3D ~DP_PCON_FRL_LINK_TRAIN_EXTENDED;
-=20
- 	return drm_dp_dpcd_write_byte(aux, DP_PCON_HDMI_LINK_CONFIG_2, buf);
--	if (ret < 0)
--		return ret;
--
--	return 0;
- }
- EXPORT_SYMBOL(drm_dp_pcon_frl_configure_2);
-=20
-=2D-=20
-2.43.0
+On 4-Jul-25 6:10 PM, Abdelrahman Fekry wrote:
+> Continue the cleanup of the AtomISP driver as discussed with Hans and Andy
+> in [1].
+> 
+> Tackle TODO item: "Remove custom sysfs files created by atomisp_drvfs.c":
+> - Remove the sysfs attributes `dbglvl`, `dbgfun`, and `dbgopt`.
+> - Delete their associated show/store handler functions.
+> - Remove the corresponding attribute group definitions.
+> - Keep `dbg_attr_groups[]` as an empty array to preserve compatibility.
+
+That is the last bit left over in the atomisp_drvfs.c file.
+
+Instead of pointing atomisp_pci_driver.driver.dev_groups to the empty
+`dbg_attr_groups[]` the initialization of atomisp_pci_driver.driver.dev_groups
+can simply be removed (making it NULL, which is allowed).
+
+And then the entire atomisp_drvfs.[c|h] files can both be removed.
+
+Since I'm about the send out a pull-request with atomisp changes
+for kernel 6.17 I've made this change myself and squashed it
+into your patch (keeping you as the author of course), see:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/commit/?h=media-atomisp&id=532fd10da0f58e7f313ff576bb1e6cab1f758bbe
+
+And I've also dropped the TODO list item for this :)
+
+Regards,
+
+Hans
+
+
+
+> 
+> Link: https://lore.kernel.org/all/836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org/ [1]
+> Suggested-by: Hans de Goede <hansg@kernel.org>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+> ---
+> v3:
+> - fix style warning
+> v2:
+> - modify the reference link line.
+> 
+>  .../staging/media/atomisp/pci/atomisp_drvfs.c | 138 ------------------
+>  1 file changed, 138 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+> index 31c82c3c0d33..c25fd3ff003d 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+> @@ -1,9 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * Support for atomisp driver sysfs interface
+> - *
+> - * Copyright (c) 2014 Intel Corporation. All Rights Reserved.
+> - */
+> 
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+> @@ -16,140 +11,7 @@
+>  #include "hmm/hmm.h"
+>  #include "ia_css_debug.h"
+> 
+> -#define OPTION_BIN_LIST			BIT(0)
+> -#define OPTION_BIN_RUN			BIT(1)
+> -#define OPTION_VALID			(OPTION_BIN_LIST | OPTION_BIN_RUN)
+> -
+> -/*
+> - * dbgopt: iunit debug option:
+> - *        bit 0: binary list
+> - *        bit 1: running binary
+> - *        bit 2: memory statistic
+> - */
+> -static unsigned int dbgopt = OPTION_BIN_LIST;
+> -
+> -static inline int iunit_dump_dbgopt(struct atomisp_device *isp,
+> -				    unsigned int opt)
+> -{
+> -	int ret = 0;
+> -
+> -	if (opt & OPTION_VALID) {
+> -		if (opt & OPTION_BIN_LIST) {
+> -			ret = atomisp_css_dump_blob_infor(isp);
+> -			if (ret) {
+> -				dev_err(isp->dev, "%s dump blob infor err[ret:%d]\n",
+> -					__func__, ret);
+> -				goto opt_err;
+> -			}
+> -		}
+> -
+> -		if (opt & OPTION_BIN_RUN) {
+> -			if (isp->asd.streaming) {
+> -				atomisp_css_dump_sp_raw_copy_linecount(true);
+> -				atomisp_css_debug_dump_isp_binary();
+> -			} else {
+> -				ret = -EPERM;
+> -				dev_err(isp->dev, "%s dump running bin err[ret:%d]\n",
+> -					__func__, ret);
+> -				goto opt_err;
+> -			}
+> -		}
+> -	} else {
+> -		ret = -EINVAL;
+> -		dev_err(isp->dev, "%s dump nothing[ret=%d]\n", __func__, ret);
+> -	}
+> -
+> -opt_err:
+> -	return ret;
+> -}
+> -
+> -static ssize_t dbglvl_show(struct device *dev, struct device_attribute *attr,
+> -			   char *buf)
+> -{
+> -	unsigned int dbglvl = ia_css_debug_get_dtrace_level();
+> -
+> -	return sysfs_emit(buf, "dtrace level:%u\n", dbglvl);
+> -}
+> -
+> -static ssize_t dbglvl_store(struct device *dev, struct device_attribute *attr,
+> -			    const char *buf, size_t size)
+> -{
+> -	unsigned int dbglvl;
+> -	int ret;
+> -
+> -	ret = kstrtouint(buf, 10, &dbglvl);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (dbglvl < 1 || dbglvl > 9)
+> -		return -ERANGE;
+> -
+> -	ia_css_debug_set_dtrace_level(dbglvl);
+> -	return size;
+> -}
+> -static DEVICE_ATTR_RW(dbglvl);
+> -
+> -static ssize_t dbgfun_show(struct device *dev, struct device_attribute *attr,
+> -			   char *buf)
+> -{
+> -	unsigned int dbgfun = atomisp_get_css_dbgfunc();
+> -
+> -	return sysfs_emit(buf, "dbgfun opt:%u\n", dbgfun);
+> -}
+> -
+> -static ssize_t dbgfun_store(struct device *dev, struct device_attribute *attr,
+> -			    const char *buf, size_t size)
+> -{
+> -	struct atomisp_device *isp = dev_get_drvdata(dev);
+> -	unsigned int opt;
+> -	int ret;
+> -
+> -	ret = kstrtouint(buf, 10, &opt);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return atomisp_set_css_dbgfunc(isp, opt);
+> -}
+> -static DEVICE_ATTR_RW(dbgfun);
+> -
+> -static ssize_t dbgopt_show(struct device *dev, struct device_attribute *attr,
+> -			   char *buf)
+> -{
+> -	return sysfs_emit(buf, "option:0x%x\n", dbgopt);
+> -}
+> -
+> -static ssize_t dbgopt_store(struct device *dev, struct device_attribute *attr,
+> -			    const char *buf, size_t size)
+> -{
+> -	struct atomisp_device *isp = dev_get_drvdata(dev);
+> -	unsigned int opt;
+> -	int ret;
+> -
+> -	ret = kstrtouint(buf, 10, &opt);
+> -	if (ret)
+> -		return ret;
+> -
+> -	dbgopt = opt;
+> -	ret = iunit_dump_dbgopt(isp, dbgopt);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return size;
+> -}
+> -static DEVICE_ATTR_RW(dbgopt);
+> -
+> -static struct attribute *dbg_attrs[] = {
+> -	&dev_attr_dbglvl.attr,
+> -	&dev_attr_dbgfun.attr,
+> -	&dev_attr_dbgopt.attr,
+> -	NULL
+> -};
+> -
+> -static const struct attribute_group dbg_attr_group = {
+> -	.attrs = dbg_attrs,
+> -};
+> 
+>  const struct attribute_group *dbg_attr_groups[] = {
+> -	&dbg_attr_group,
+>  	NULL
+>  };
+> --
+> 2.25.1
+> 
 
