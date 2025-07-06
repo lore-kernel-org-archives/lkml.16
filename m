@@ -1,301 +1,850 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2074.outbound.protection.outlook.com [40.107.92.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DDB17A309;
-	Sun,  6 Jul 2025 19:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751829430; cv=fail; b=tp7teOeBOfwPvEtkd3WUduob0AGFXPkHL4jO/0bC6kfagjDXY70EGWHfPMD6mQqvBOMaQjxpK+geXcnC9kcCQ+zmHOKQtz6BUHZEzj4r5O/5Gqd5AiJKQLrTjTqlFN5Br7iQ/n8IicfCfZ8Fon0URc4JoJpw5Gy7VUifg0noaj8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751829430; c=relaxed/simple;
-	bh=UtgQufAws2vk7ZI0QQkQxwAwa0dWoqNLNUA09KSgeds=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Cc4C8xXnxozj/Mvq5OKFYZx4eq4+ZgaIJXcdghvkmVkq9ynP2dyGOR+ozUF/e2AI7ahv0PJlU5Agjw644WAir3xuBckS/A9gUNClZA/HG+HtYV3QgzXsZ1f2fw6IaDBoShbqFObx7xlFTjTfD6mj+hMeeNOZmE+bPtr04qeJYmY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Z5AP3vh1; arc=fail smtp.client-ip=40.107.92.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F049B186A;
+	Sun,  6 Jul 2025 19:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751830216; cv=none; b=etYEeSXMUMkeQ4GLb7yDxMMRwLvwu/Kov7Ko4BrTki+5DsXP8Jn38uSVt5Sc+D4H2ZVPdc/NHgYSS78vJLFcgxYVdyJn+OLncWS+EkTN9Xe7MVGUEoF5QICmU1MURgBKAjb3io0w6xrdSbyqab8BHFmrxdynTysVCqmMQpC2pqE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751830216; c=relaxed/simple;
+	bh=MwC6VsesIfu8Xr86R80tm+V+xdkL2l9dW73o8widTqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZQAh1S81sdMFb09hiGVnxr56IIWgDzKZ1lmNWuJpvLwiNZ7YiJE07eM78Oma+h4rGFs0d5Mi8slBdOO4cgacCtphRNJvRswP8m6MRn0l09nwH681dQpmW8G36BqMl+g0m1yVihPw5bD6JcrIIUeL4ZRGkpzYUkSzUnUXhQXj01g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WD94kMYY; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Z5AP3vh1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QZWNzgjwVR7TAxJAFM9AUdY3sPC5+jEBmKBQn1W2roWnOvjrR+v4btx7O5YJ2HMyO9IvQ5cs4YFZ9XjY3EnnrSl5Rgq6a1abOypX7kE1HvUKMhlBNkC2SM0jTNh7iGLliOVEJEnJDOTMzVIgtZ/IGAHhU7zs74OBNLatv88BGWZP9h23AmElnes58HxTrgaKoldHZylT8fNvFRCKUbUvuYQp+J00L0Ttp1DVeXORQOb7FHcoDBOgrXmm0k5pfrF2pw0Fr2l5Pp81GquUNqFyD4L4O94cd/eXLfS8lKTo5Zo4fOJOpmK2Zd79hVX9K10Ebo+GPFSX5mZ1xuQLxfNytQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WvBc8sFMdBGtk5sPuA+BrPJvAmsY4Fb9XudjztDGZcA=;
- b=Eqnw7gyuRmvoNJgPsYhEdGRNRjtgZTpU1jhnSNRdryl15lS9lcYWH21Ha0dv3a7ML0FVnBo7jk825ygyNQOu7KlWqgEY7g+N+OszJDAf27KSGN1M6mU2zwxjVuGCRU/f0sYJRKbH2jUBJyDFrUCbLRE7oi8+j/b6eOSMj9bGGEaYGZYh+RTrbntETSnVMtBemIiFAMu4Fov/1ZLgOcgRa8KO3yBrYqW8LcmsySyEU0wLoS1UvGPsJHu4UusDbDjnG26LtXd7eY0FjwaFkTHDXdBzQGjFasXFjkk75VN/rhPqjZdLTZi/QAViVVRGHWu94y0/SZ0q1m0rHxJda5DKIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WvBc8sFMdBGtk5sPuA+BrPJvAmsY4Fb9XudjztDGZcA=;
- b=Z5AP3vh17z+nTfULJX5HEsxUl0oCaihKjXYq5AT8Mroie3/8IEMQmOCvqE76HL133w53r5uf2GkJZO6ePLYRFaRA9LJnj0XuZBP+7Y+ReEXvnoEYbwVCjI39e3JctwaI1XXb5NNF4dgaTBZkWizIZmtsQ3RvV1hCIpubncBaDnr22fsJE+BYtXdVQ99f09aq0IXqhcxcEA2qeL5VnynW97K6NETmEYcMDndAVbvOaeawd+P7abcO+ulKB9wg8JMWhbnwCaxnoQJV3zwjgFEKnYmwFNBRyawRVlfegQPZx5kmMP5YWtR6Eh3d3HVGWGI6XxzRruW49MoaVy7IZlJyMQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by DS0PR12MB8574.namprd12.prod.outlook.com (2603:10b6:8:166::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Sun, 6 Jul
- 2025 19:17:03 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%7]) with mapi id 15.20.8901.018; Sun, 6 Jul 2025
- 19:17:02 +0000
-Message-ID: <52679e35-c6a4-4e0c-876a-a80a1a9b2bd8@nvidia.com>
-Date: Sun, 6 Jul 2025 15:16:54 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/3] rcu: Refactor expedited handling check in
- rcu_read_unlock_special()
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, rcu@vger.kernel.org,
- linux-rt-devel@lists.linux.dev
-References: <20250705203918.4149863-1-joelagnelf@nvidia.com>
- <20250705203918.4149863-2-joelagnelf@nvidia.com>
- <941d82f3-1c09-4db2-ae22-a80d04227673@paulmck-laptop>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <941d82f3-1c09-4db2-ae22-a80d04227673@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR11CA0006.namprd11.prod.outlook.com
- (2603:10b6:208:23b::11) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WD94kMYY"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-40ad1f7c23bso1621782b6e.2;
+        Sun, 06 Jul 2025 12:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751830213; x=1752435013; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HwKP6G3mr7e283MHaXYrGJd3BjhcgAOXuDqxk4dK7CQ=;
+        b=WD94kMYY0rNSB7PYRorN+Xeq+aE4hNTvGbKY6s0Oqy9DE3/KaZBTwLuNgSlT1ImsHd
+         7mIGa6cNLCMMxYUqtEyibOLylw3PWRoSfSSeeVYeblf2Yk9+D126ukhpr9izb+5b+Wfu
+         3LzBlq5pviEpJPRd7LmFNDbG2kdd5nXAJ6Uvo6k2leglWIqrdSeO68ak2vt2FNGahmal
+         OxWAE+PWLkFOmSEK7HNpuxqlQWqGnOCVak2BPeku+B3giCAGVzdihDcfVSazbceXTfnD
+         Uqm9UIBPIGAHBBJ9jrT8Kw2Kk6sIPm+3LEn8AMh6Gb4c1ljp11JQEHnN4V/PZbYXd6wT
+         trCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751830213; x=1752435013;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HwKP6G3mr7e283MHaXYrGJd3BjhcgAOXuDqxk4dK7CQ=;
+        b=kudyOlZkfcaS3yMPImIeMaNY9Jp2y0VNWQFn2PL3s9LFv0VDxlcflwpXJfLeSJZQrc
+         UL1v+pR1zqhXarmmlkA/y/TFcYz+jOSUHDZ7x77Nq0p1lcHRpze1svPc0+IyP4T4Cr65
+         8jeKYmdcdQBZJF/RFuVlz12hMDR6QefNAPsPOaSnz5cEmgAQ/yYu8YEH+LsOBVEjOBhj
+         DIibAgUue7iZy3AWRvBkDLkSeeyoeEAk6NkjodfgsS7Ouee4yKtdcpG1L0xnpiO9fVmR
+         nu0lWaS9ZpN3lnrhQxWlifyhVVgjOFoax8kKllyfMMdOlmzz/qzSO4t9dq0fcIkLENTE
+         Zl2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWfhSDucjOy727V6iaOSS5nHNJ39rSoSEP3+nbI9do3HYtu/uOjOeEAaqMK6YeXmUe1SS4fgbQhKBAnvIfx@vger.kernel.org, AJvYcCXRw9yHFiMVfCcJ3cvKasug333DZ/sJZrPWO+SioYd4dcrIRnAX52GVjboPh27eYjGuaF+5e0ESgRHC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqyCRgPtQV9/n/viKNlSsQ/s4lqq3oum/cg5WPVwZPiYHfHS4N
+	oMG/ukGHFjaYYdq6FgGZWNHu0fot55/OzLr36xFDWvkrg7qL8oH1Nc2JVkv3nSXGyrTVbC9L+HT
+	rrY+G7y1F4KeI5sIl7g/Sk0t7RoT5xsb5HBV7
+X-Gm-Gg: ASbGncsQqeuy3o9ZU3xwGZqUO9lvJ2sEVb8RGmL3P8bHVODdiWENWF3+hiGHe7S5JXl
+	hhFg21P6CKIwoaEPrzfuDtwTZzxrqGkTvu/2Ot+r5oXWLYyd2dOH8HOORaV1HBoQZhYgKoNct0T
+	MJbyRbWXNYimxkx/CYdj+WbT/CWjND6gDPgtE7YZDYRvuK
+X-Google-Smtp-Source: AGHT+IGswMQKFIHWCdUWc7U1iaLyRGmXzS1p7Be/8giiy8S6nvzNR+yD37G2iTdLFDhrSkRuZ1Zi48SrHqS5uaR6W8I=
+X-Received: by 2002:a05:6808:1898:b0:3fa:3a0:137b with SMTP id
+ 5614622812f47-40d073dd732mr6251534b6e.29.1751830212840; Sun, 06 Jul 2025
+ 12:30:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DS0PR12MB8574:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61f5c009-159b-4120-27b0-08ddbcc1b02b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?anUwSkxwM2RwMjV5b2t6aFhiamVGVEN2c2ptdUhvUUNNSzhvK0RBcXZSTnlw?=
- =?utf-8?B?TjEzczYyM0tpaW1SekFjRmZlT0lRTGIzOWduajl4NGw4dndyVG4wWjN2ZmtW?=
- =?utf-8?B?TGFWK1JVUU9vY24rT0dtcTlFOWFMWU9CbGtsS2xQcWhTTEtwVTVSMzl4OEc4?=
- =?utf-8?B?VXgrZFFVaVBwOEk0K3M0TmZvMXZKeHhyNktkRmd1WDc1bGVPZGZpL25uRGpL?=
- =?utf-8?B?VzVqaTVQTktsZGJVYjBMRW9HV1ZJRlFvVk1NemdPdzlxenJHYnREYXBCeTY1?=
- =?utf-8?B?ZnVvV2pMdWUzQllMR3FUcDB6aEFTb2dUVk56N1docGJXM3pTU1ByY0tlOWlP?=
- =?utf-8?B?bWpVT09WS1FZUHlRak9IbXV1amlKKyt6bHIyOCt4RUU0NE1PU1llWTZoRUYz?=
- =?utf-8?B?NnNPMEtPRE5VaFV1TXNvaUxtVGt0VStvRGQ5cVF2UEdMS3VjQWtvMlJWV2gr?=
- =?utf-8?B?RHZadlRJWDJjZ2hXWm92RFFYNHlFWmNGbkZBb0ZJZzNZRUFzaitudFFmZ05m?=
- =?utf-8?B?RjZxSk5JMFg4OGdxYUhMMzF1Zko1RlM3YS83Y2Jpd3Izbkp1YUZKZitubFAr?=
- =?utf-8?B?NUttTUZTclRERFhMb0dhTzYwenFjSVBaVEU3azdPbzdtY0RnN2xHWlMzSXlm?=
- =?utf-8?B?UndLSzN5SkR5S09pdlV4SW1rOWdqOXVFcGF4a3k3NHIzMHdLK256b2daNkgw?=
- =?utf-8?B?b2VyclQwaFppcnp6ZG9Za2EzNGxsUjljVlNldytEUDBQMXU2dHBmY2NvQUV4?=
- =?utf-8?B?L0lER1JidTJneDB5dkkzZHFySEN2b3FJZVo2Wm1YTDVBRFhib3FNWkhneVcr?=
- =?utf-8?B?OHQwZkc2Nk01SUtlelhkZ3RyNEk1QzlsMlRYaFBVQUlQa1dLakJZYSttUjhl?=
- =?utf-8?B?SnVOYWNabWFJN1VwSWhFSGVnQnpGVFNDNXcrNjZaRVBjZFhFSjcrSFMrNTV2?=
- =?utf-8?B?ZmNYOGRxbG9Rd2xXNlZIK2wyT3FjS29QTVA0OHJ1K3htTFdGU09YcHhXOUJN?=
- =?utf-8?B?RUl4dHhuNmtzSWkwUVIvTDNnYzFHNkNQQkw3cVhxb25kd1BZbGJrSHVJV1Br?=
- =?utf-8?B?ajhYSzZMeXRPNElnaUZUVktUcS9rMWtTL2w0TG5UQ2ZBWWxtQU1wYnVSZzVX?=
- =?utf-8?B?U2M2TGxCbjRuNzJvVVlyUnJzam8zU09SdjVLSDNpY1pORzN3NTJCT1hKb1pt?=
- =?utf-8?B?cGM3QU9lNlZHTlpSMS8wNThBeFlELzFLY0JERWNsekVneVFwbmljTHNNZ2dM?=
- =?utf-8?B?WGJLOEVUTFBxUlZyaGJqR1QvbXRncmJjOWpxWDByMUV4Y2lpL20xaEVRaURm?=
- =?utf-8?B?TllsdVZIVmZ5dVQzM3QzU2c2U2pxd0wrSndpK2FDMXJYcFpId0dEZEkweFg2?=
- =?utf-8?B?NmJQVDBQcytFdy9nQld1TXNnNG10NExqKy81b0FaSEJZajJOZHdkR0pFbnVv?=
- =?utf-8?B?K09FR1p3dWFVMGFPblNxQVNvL2cycWkzbWt6UVVIUnFWTjRURXQvSFdabllh?=
- =?utf-8?B?SXdMVGFHem13NklLS3o3Z1pnOW5tSzdrcmR6TXhsZVhhOTBoTzlGYjEvUnc5?=
- =?utf-8?B?cjJFZHZSL29qcTFhTkJMTGx6aDhlNkdMVXNjOHA2ZitBaGxBcGthVDRrVG5U?=
- =?utf-8?B?b0JpWGlESUcyUmdyZlFvNCt3V24xM2p1MW9kSS9sZjU0TWE3VDNPcWZ0bnlU?=
- =?utf-8?B?SVlYNkliZUUyOGRsYmhybks1ZzRLNFZWRFA4T3oybW1hWlIyOUpBZlZGOXoz?=
- =?utf-8?B?S3ZoWFdEOXR2SERmZ1NFRC9QYWFRTFczTFhCQklEcE9qYWFhSCsvZTVOb2RC?=
- =?utf-8?B?ZThWc2JtajJXcUUvR3l1aUdkUDhBWVhlNTFkaUg3YWIrN0JJZUxqeXIxbnor?=
- =?utf-8?B?OHQyUFFZTzJWams4cDhpYzBER3ZqZ2RjSDVOb1hVVU1PSGpGdWd2UDJ6UTZV?=
- =?utf-8?Q?zpv2fPxH48c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NEdDbTQyUWdYODhha2hQOWtpSHB1c1NITUQwQ0dxTHdQZEJvbmxSblgyQWtP?=
- =?utf-8?B?TlhuT1pOMkRzWXl4bW1RUnBhSE1wcVVid0pPN0ZVTTVCZ1drUTRuTDA2dnFX?=
- =?utf-8?B?MWhnUVdrdTJiNmR0NFQ0VExxRW45K05Ea09FNWhNVWxlOTUvbWVNS3diYTFY?=
- =?utf-8?B?U0duRUxCR0lIS1o0allBZVMxYWorYzJwZWJ4c1pCenl3aEIyNkt5VDlFZVcw?=
- =?utf-8?B?Q0xKMVIxQXMzMC9PTlQvajUydi9LcEtpaHdzOENXcWU3SFE1UVIzUm5JNHFB?=
- =?utf-8?B?ckJFNVFBWHBiOFJqZHBKQ3hhUnE2L0U5emVXMFk4NCtUT2c3MnJXOFVsYThG?=
- =?utf-8?B?UzNpeS9LVmtlMytaQlEzN3R3M3BLMnloV0hCbEJYTFB6VVVuSW5NNkpFc2FC?=
- =?utf-8?B?U3ZXZnZ4clZ6TVYvV0w0cXd4OTUyMzBrTDdFeWc5K0p0eXZUcXhINkk3VUR0?=
- =?utf-8?B?aFdVT0o2dGVqZ1NmR2t3eG1namkyQk82Sk5rbzBYa2ZGQVNPcHRlTHF6d1V4?=
- =?utf-8?B?Tk9PeVlqdTViUlVLOXc3NmlYeFhidUJWVVRiWk1CTFlTSkNYWE03dTBScXR3?=
- =?utf-8?B?OVhiNStkcFFHZEJiaEc2Nis1WG5WNjlySHhmWUtiSVVVTmtTakJoZVlZY2pD?=
- =?utf-8?B?UUZNRUpWZ21xeHZLUS9PK1o5Vkx0SWhyVTBJeVorUUxoYzBkYVRKUzc3dlRo?=
- =?utf-8?B?dGRmMVNWSHI4dzlYemd2UnVwRkhwRWh6V01idlBMelBEQk1nYkpWY3BxSTdx?=
- =?utf-8?B?V1lDZGFRbllKUnlvaEFpZ3FWK2ZhTmN0ZUpXR09yTmdOK2tjdmcxZ1VjT2xU?=
- =?utf-8?B?STY3QjhqREppOUxNUjYvenBNM21ENE9EUmgrMFM4NE0venBGMDV2RDc0Q3p3?=
- =?utf-8?B?YTVIeGVyZjlwbk9rRmQwOHNqZG5NWndXakhFWmVhMUxrdnpTT054Vm52dGJQ?=
- =?utf-8?B?ME56ZlpCKzVYcGI1QVJsNXhReVg0cDBpQVZIYjZDSnpiTm5GT2c4Y0l3RFYw?=
- =?utf-8?B?Q0VHcEtGVlhvNmJrN0NXY0gwWkdIOHdvSi9qUHZSamwvVEZKMWliQm4wUDI5?=
- =?utf-8?B?NTZXN3ZabVAwa0dHOUtlNDM4MEpCUVFVbnBQdVJyY2szekpaR0VVcGU5YitB?=
- =?utf-8?B?Nk9KR1ViZFRwcHN4RFdJZ2J3ai92Z1N3WGtjU3ByREpiYWdXbVNaRWsyOWFx?=
- =?utf-8?B?Z3RzTGJnZnR6N1Qzb0lNL05JUFRUMnU2a3NRZnJoN1A3RElQTzc2eU5YYTJT?=
- =?utf-8?B?ZXZlcEE2OGx0ZTF6VnhVR3BrcFowczNRcUgyTzQraUVqZDQ2UC9CVi9NdFV3?=
- =?utf-8?B?T0RWWkJtN1kvRU4rQXlsbUhFOGxFSkgzSmxwUE1qR1Q0Zis4ZGI3MExpbU1C?=
- =?utf-8?B?cTU0ZkIxNmNSam81bjArNWdabi96L25jQmMraHFJbkVqMzBnd3UvbHQzL3Fl?=
- =?utf-8?B?c3F2b25CRjcrRzRtaUM2WWtaTXQzMURRZS90aWFSOG5zandIOFZFMWdZQ2RR?=
- =?utf-8?B?MWZyZStxUS9hNlMyTFV2bUg5UEVBWjF3ZlV2dndPcjhkS1B0M205MlVLWDQ3?=
- =?utf-8?B?NlZpYVQ1V0ZSODVicllqVnFmTmlqZDg1YjZtNnFBaDVNNkozczNUR0Myd1lC?=
- =?utf-8?B?WHQ0dVVmS2hzaVFQUTNGc3FmTjd1blorUktEcW1tZVlHR1l2WGV5WHVwN0Zp?=
- =?utf-8?B?LzNxb0dCTDJDczBhNm5yTlJmRW9wdThXcWRqZ01tbzluejZUVTZQN29MV3p2?=
- =?utf-8?B?ek1WVGZCUU13aDZqWllsbFYyZy96Zk40SUlTSStMMmFuZTY1blBtSUFmMEYr?=
- =?utf-8?B?U2tWb2l5dThWWWtiT3Y0MkJkY2w2M3Bob2YwaFRGMXR3Rmt0ZkFWcVBjQUF2?=
- =?utf-8?B?VG1MY2JjZUkvbmtNa1NPSzFzMjFjejhXZjZRR3lOeGZ5SUZ5OW9oWnpnZDNK?=
- =?utf-8?B?NXRKazdDd0VVKzJBQXBIczNQRE9Ecno1M0JXN3Q2TzlySEROUU40eDl5OUJH?=
- =?utf-8?B?R2xWNUd2Mi82OFh3YWxSTVlTSVJVcG1vbTNMdnNzVUlhdnhzbWhCWFRIK2hs?=
- =?utf-8?B?d00yZGE0cDVUd241SVlZVWc1L2YwM1doVldyWFI2dEp2OG9QVUY3SElleXlE?=
- =?utf-8?Q?Jr+XHfJQdi+ajRi2JOmQeUpz7?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61f5c009-159b-4120-27b0-08ddbcc1b02b
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2025 19:17:02.8220
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fMZnPUAvfIr9+hYOHjk6+Xmlo9Qcmjd+tJfV7BkBi55UVN19aygeZPu3hmvWcGQk3lmYq8FnYoAR+m6bqIyyUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8574
+References: <20250609031627.1605851-1-peter.chen@cixtech.com> <20250609031627.1605851-6-peter.chen@cixtech.com>
+In-Reply-To: <20250609031627.1605851-6-peter.chen@cixtech.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Sun, 6 Jul 2025 14:30:01 -0500
+X-Gm-Features: Ac12FXxKMp5I47A30_JrDffzqkmGaLva-S5f0RsvuBH8ACww2CYRPOBLwUB5q7g
+Message-ID: <CABb+yY17OOBx73655OhBp8At1b81w9M61zzGu4uhXcMTw4Q=Dw@mail.gmail.com>
+Subject: Re: [PATCH v9 5/9] mailbox: add CIX mailbox driver
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, maz@kernel.org, 
+	sudeep.holla@arm.com, kajetan.puchalski@arm.com, eballetb@redhat.com, 
+	Guomin Chen <Guomin.Chen@cixtech.com>, Gary Yang <gary.yang@cixtech.com>, 
+	Lihua Liu <Lihua.Liu@cixtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
+On Sun, Jun 8, 2025 at 10:16=E2=80=AFPM Peter Chen <peter.chen@cixtech.com>=
+ wrote:
+>
+> From: Guomin Chen <Guomin.Chen@cixtech.com>
+>
+> The CIX mailbox controller, used in the Cix SoCs, like sky1.
+> facilitates message transmission between multiple processors
+> within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
+> and others.
+>
+> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
+> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
+> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+> ---
+> Changes for v9:
+> - Move macro definitions above where they are used
+> - Remove the brackets around the number
+> - Merging and sorting local variable definitions
+> - free the irq in the error path
+>
+> Changes for v3 (As mailbox patch set):
+> - Update MODULE_AUTHOR.
+> - Remove the extra blank lines.
+>
+> Changes for v2 (As mailbox patch set):
+> - Update the real name and email address.
+> - Remove the ACPI header files.
+> - Update the Copyright from 2024 to 2025.
+> - Update the Module License from "GPL" to "GPL v2"
+> - Add an interface for message length to limit potential out-of-bound acc=
+ess
+>
+>  drivers/mailbox/Kconfig       |  10 +
+>  drivers/mailbox/Makefile      |   2 +
+>  drivers/mailbox/cix-mailbox.c | 635 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 647 insertions(+)
+>  create mode 100644 drivers/mailbox/cix-mailbox.c
+>
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 68eeed660a4a..4fef4797b110 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -340,4 +340,14 @@ config THEAD_TH1520_MBOX
+>           kernel is running, and E902 core used for power management amon=
+g other
+>           things.
+>
+> +config CIX_MBOX
+> +        tristate "CIX Mailbox"
+> +        depends on ARCH_CIX || COMPILE_TEST
+> +        depends on OF
+> +        help
+> +          Mailbox implementation for CIX IPC system. The controller supp=
+orts
+> +          11 mailbox channels with different operating mode and every ch=
+annel
+> +          is unidirectional. Say Y here if you want to use the CIX Mailb=
+ox
+> +          support.
+> +
+>  endif
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index 13a3448b3271..786a46587ba1 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -72,3 +72,5 @@ obj-$(CONFIG_QCOM_CPUCP_MBOX) +=3D qcom-cpucp-mbox.o
+>  obj-$(CONFIG_QCOM_IPCC)                +=3D qcom-ipcc.o
+>
+>  obj-$(CONFIG_THEAD_TH1520_MBOX)        +=3D mailbox-th1520.o
+> +
+> +obj-$(CONFIG_CIX_MBOX) +=3D cix-mailbox.o
+> diff --git a/drivers/mailbox/cix-mailbox.c b/drivers/mailbox/cix-mailbox.=
+c
+> new file mode 100644
+> index 000000000000..eecb53d59dfe
+> --- /dev/null
+> +++ b/drivers/mailbox/cix-mailbox.c
+> @@ -0,0 +1,635 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2025 Cix Technology Group Co., Ltd.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "mailbox.h"
+> +
+> +/*
+> + * The maximum transmission size is 32 words or 128 bytes.
+> + */
+> +#define CIX_MBOX_MSG_LEN       32      /* Max length =3D 32 words */
+maybe call it CIX_MBOX_MAX_MSG_WORDS
 
-On 7/6/2025 1:18 PM, Paul E. McKenney wrote:
-> On Sat, Jul 05, 2025 at 04:39:16PM -0400, Joel Fernandes wrote:
->> Extract the complex expedited handling condition in rcu_read_unlock_special()
->> into a separate function rcu_unlock_needs_exp_handling() with detailed
->> comments explaining each condition.
->>
->> This improves code readability. No functional change intended.
-> 
-> Very nice!!!
+> +#define MBOX_MSG_LEN_MASK      0x7fL   /* Max length =3D 128 bytes */
+> +
+> +/* Register define */
+> +#define REG_MSG(n)     (0x0 + 0x4*(n))                 /* 0x0~0x7c */
+> +#define REG_DB_ACK     REG_MSG(CIX_MBOX_MSG_LEN)       /* 0x80 */
+> +#define ERR_COMP       (REG_DB_ACK + 0x4)              /* 0x84 */
+> +#define ERR_COMP_CLR   (REG_DB_ACK + 0x8)              /* 0x88 */
+> +#define REG_F_INT(IDX) (ERR_COMP_CLR + 0x4*(IDX+1))    /* 0x8c~0xa8 */
+> +#define FIFO_WR                (REG_F_INT(MBOX_FAST_IDX+1))    /* 0xac *=
+/
+> +#define FIFO_RD                (FIFO_WR + 0x4)                 /* 0xb0 *=
+/
+> +#define FIFO_STAS      (FIFO_WR + 0x8)                 /* 0xb4 */
+> +#define FIFO_WM                (FIFO_WR + 0xc)                 /* 0xb8 *=
+/
+> +#define INT_ENABLE     (FIFO_WR + 0x10)                /* 0xbc */
+> +#define INT_ENABLE_SIDE_B      (FIFO_WR + 0x14)        /* 0xc0 */
+> +#define INT_CLEAR      (FIFO_WR + 0x18)                /* 0xc4 */
+> +#define INT_STATUS     (FIFO_WR + 0x1c)                /* 0xc8 */
+> +#define FIFO_RST       (FIFO_WR + 0x20)                /* 0xcc */
+> +
+> +/* [0~7] Fast channel
+> + * [8] doorbell base channel
+> + * [9]fifo base channel
+> + * [10] register base channel
+> + */
+> +#define MBOX_FAST_IDX          7
+> +#define MBOX_DB_IDX            8
+> +#define MBOX_FIFO_IDX          9
+> +#define MBOX_REG_IDX           10
+> +#define CIX_MBOX_CHANS         11
+> +
+if it is not really a single controller owning different channels,
+maybe implement only what you currently use.
 
-Thanks!
+And s/MBOX/CIX/ to keep everything CIX specific. Here and elsewhere.
 
-> 
-> Some questions and comments interspersed below.
+> +#define MBOX_TX                0
+> +#define MBOX_RX                1
+> +
+> +#define DB_INT_BIT     BIT(0)
+> +#define DB_ACK_INT_BIT BIT(1)
+> +
+> +#define FIFO_WM_DEFAULT                CIX_MBOX_MSG_LEN
+> +#define FIFO_STAS_WMK          BIT(0)
+> +#define FIFO_STAS_FULL         BIT(1)
+> +#define FIFO_STAS_EMPTY                BIT(2)
+> +#define FIFO_STAS_UFLOW                BIT(3)
+> +#define FIFO_STAS_OFLOW                BIT(4)
+> +
+> +#define FIFO_RST_BIT           BIT(0)
+> +
+> +#define DB_INT                 BIT(0)
+> +#define ACK_INT                        BIT(1)
+> +#define FIFO_FULL_INT          BIT(2)
+> +#define FIFO_EMPTY_INT         BIT(3)
+> +#define FIFO_WM01_INT          BIT(4)
+> +#define FIFO_WM10_INT          BIT(5)
+> +#define FIFO_OFLOW_INT         BIT(6)
+> +#define FIFO_UFLOW_INT         BIT(7)
+> +#define FIFO_N_EMPTY_INT       BIT(8)
+> +#define FAST_CH_INT(IDX)       BIT((IDX)+9)
+> +
+> +#define SHMEM_OFFSET 0x80
+> +
+> +enum cix_mbox_chan_type {
+> +       CIX_MBOX_TYPE_DB,
+> +       CIX_MBOX_TYPE_REG,
+> +       CIX_MBOX_TYPE_FIFO,
+> +       CIX_MBOX_TYPE_FAST,
+> +};
+> +
+> +struct cix_mbox_con_priv {
+> +       enum cix_mbox_chan_type type;
+> +       struct mbox_chan        *chan;
+> +       int index;
+> +};
+> +
+> +struct cix_mbox_priv {
+> +       struct device *dev;
+> +       int irq;
+> +       int dir;
+> +       bool tx_irq_mode;       /* flag of enabling tx's irq mode */
+> +       void __iomem *base;     /* region for mailbox */
+> +       unsigned int chan_num;
+tx_irq_mode and chan_num are unused
 
-I replied inline below:
 
-> 
-> 							Thanx, Paul
-> 
->> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
->> ---
->>  kernel/rcu/tree_plugin.h | 80 +++++++++++++++++++++++++++++++++++-----
->>  1 file changed, 71 insertions(+), 9 deletions(-)
->>
->> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
->> index baf57745b42f..8504d95bb35b 100644
->> --- a/kernel/rcu/tree_plugin.h
->> +++ b/kernel/rcu/tree_plugin.h
->> @@ -647,6 +647,72 @@ static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
->>  	local_irq_restore(flags);
->>  }
->>  
->> +/*
->> + * Check if expedited grace period processing during unlock is needed.
->> + *
->> + * This function determines whether expedited handling is required based on:
->> + * 1. Task blocking an expedited grace period
-> 
-> This is a heuristic.  What we are actually checking is whether the task
-> is blocking *some* grace period and whether at least one task (maybe
-> this one, maybe not) is blocking an expedited grace period.
+> +       struct cix_mbox_con_priv con_priv[CIX_MBOX_CHANS];
+> +       struct mbox_chan mbox_chans[CIX_MBOX_CHANS];
+> +       struct mbox_controller mbox;
+> +       bool use_shmem;
+> +};
+> +
+> +/*
+> + * The CIX mailbox supports four types of transfers:
+> + * CIX_MBOX_TYPE_DB, CIX_MBOX_TYPE_FAST, CIX_MBOX_TYPE_REG, and CIX_MBOX=
+_TYPE_FIFO.
+> + * For the REG and FIFO types of transfers, the message format is as fol=
+lows:
+> + */
+> +union cix_mbox_msg_reg_fifo {
+> +       u32 length;     /* unit is byte */
+> +       u32 buf[CIX_MBOX_MSG_LEN]; /* buf[0] must be the byte length of t=
+his array */
+> +};
+> +
+> +static struct cix_mbox_priv *to_cix_mbox_priv(struct mbox_controller *mb=
+ox)
+> +{
+> +       return container_of(mbox, struct cix_mbox_priv, mbox);
+> +}
+> +
+> +static void cix_mbox_write(struct cix_mbox_priv *priv, u32 val, u32 offs=
+et)
+> +{
+> +       if (priv->use_shmem)
+> +               iowrite32(val, priv->base + offset - SHMEM_OFFSET);
+> +       else
+> +               iowrite32(val, priv->base + offset);
+> +}
+> +
+> +static u32 cix_mbox_read(struct cix_mbox_priv *priv, u32 offset)
+> +{
+> +       if (priv->use_shmem)
+> +               return ioread32(priv->base + offset - SHMEM_OFFSET);
+> +       else
+> +               return ioread32(priv->base + offset);
+> +}
+> +
+use_shmem is set for only CIX_MBOX_TYPE_DB, but it affects every read/write=
+.
+Maybe instead adjust the base for TYPE_DB?
 
-Makes sense, I changed this to:
+> +static bool mbox_fifo_empty(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +
+> +       return ((cix_mbox_read(priv, FIFO_STAS) & FIFO_STAS_EMPTY) ? true=
+ : false);
+> +}
+> +
+> +/*
+> + *The transmission unit of the CIX mailbox is word.
+> + *The byte length should be converted into the word length.
+> + */
+> +static inline u32 mbox_get_msg_size(void *msg)
+> +{
+> +       u32 len;
+> +
+> +       len =3D ((u32 *)msg)[0] & MBOX_MSG_LEN_MASK;
+> +       return DIV_ROUND_UP(len, 4);
+> +}
+> +
+> +static int cix_mbox_send_data_db(struct mbox_chan *chan, void *data)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +
+> +       /* trigger doorbell irq */
+> +       cix_mbox_write(priv, DB_INT_BIT, REG_DB_ACK);
+> +
+> +       return 0;
+> +}
+> +
+> +static int cix_mbox_send_data_reg(struct mbox_chan *chan, void *data)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       union cix_mbox_msg_reg_fifo *msg =3D data;
+> +       u32 len, i;
+> +
+> +       if (!data)
+> +               return -EINVAL;
+> +
+> +       len =3D mbox_get_msg_size(data);
+> +       for (i =3D 0; i < len; i++)
+> +               cix_mbox_write(priv, msg->buf[i], REG_MSG(i));
+> +
+> +       /* trigger doorbell irq */
+> +       cix_mbox_write(priv, DB_INT_BIT, REG_DB_ACK);
+> +
+> +       return 0;
+> +}
+> +
+> +static int cix_mbox_send_data_fifo(struct mbox_chan *chan, void *data)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       union cix_mbox_msg_reg_fifo *msg =3D data;
+> +       u32 len, val_32, i;
+> +
+> +       if (!data)
+> +               return -EINVAL;
+> +
+> +       len =3D mbox_get_msg_size(data);
+> +       cix_mbox_write(priv, len, FIFO_WM);
+> +       for (i =3D 0; i < len; i++)
+> +               cix_mbox_write(priv, msg->buf[i], FIFO_WR);
+> +
+> +       /* Enable fifo empty interrupt */
+> +       val_32 =3D cix_mbox_read(priv, INT_ENABLE);
+> +       val_32 |=3D FIFO_EMPTY_INT;
+> +       cix_mbox_write(priv, val_32, INT_ENABLE);
+> +
+> +       return 0;
+> +}
+> +
+> +static int cix_mbox_send_data_fast(struct mbox_chan *chan, void *data)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp =3D chan->con_priv;
+> +       u32 *arg =3D (u32 *)data;
+> +       int index =3D cp->index;
+> +
+> +       if (!data)
+> +               return -EINVAL;
+> +
+> +       if (index < 0 || index > MBOX_FAST_IDX) {
+> +               dev_err(priv->dev, "Invalid Mbox index %d\n", index);
+> +               return -EINVAL;
+> +       }
+> +
+> +       cix_mbox_write(priv, arg[0], REG_F_INT(index));
+> +
+> +       return 0;
+> +}
+> +
+> +static int cix_mbox_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp =3D chan->con_priv;
+> +
+> +       if (priv->dir !=3D MBOX_TX) {
+> +               dev_err(priv->dev, "Invalid Mbox dir %d\n", priv->dir);
+> +               return -EINVAL;
+> +       }
+> +
+> +       switch (cp->type) {
+> +       case CIX_MBOX_TYPE_DB:
+> +               cix_mbox_send_data_db(chan, data);
+> +               break;
+> +       case CIX_MBOX_TYPE_REG:
+> +               cix_mbox_send_data_reg(chan, data);
+> +               break;
+> +       case CIX_MBOX_TYPE_FIFO:
+> +               cix_mbox_send_data_fifo(chan, data);
+> +               break;
+> +       case CIX_MBOX_TYPE_FAST:
+> +               cix_mbox_send_data_fast(chan, data);
+> +               break;
+> +       default:
+> +               dev_err(priv->dev, "Invalid channel type: %d\n", cp->type=
+);
+> +               return -EINVAL;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static void cix_mbox_isr_db(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       u32 int_status;
+> +
+> +       int_status =3D cix_mbox_read(priv, INT_STATUS);
+> +
+> +       if (priv->dir =3D=3D MBOX_RX) {
+> +               /* rx interrupt is triggered */
+> +               if (int_status & DB_INT) {
+> +                       cix_mbox_write(priv, DB_INT, INT_CLEAR);
+> +                       mbox_chan_received_data(chan, NULL);
+> +                       /* trigger ack interrupt */
+> +                       cix_mbox_write(priv, DB_ACK_INT_BIT, REG_DB_ACK);
+> +               }
+> +       } else {
+> +               /* tx ack interrupt is triggered */
+> +               if (int_status & ACK_INT) {
+> +                       cix_mbox_write(priv, ACK_INT, INT_CLEAR);
+> +                       mbox_chan_received_data(chan, NULL);
+> +               }
+> +       }
+> +}
+> +
+> +static void cix_mbox_isr_reg(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       u32 int_status;
+> +
+> +       int_status =3D cix_mbox_read(priv, INT_STATUS);
+> +
+> +       if (priv->dir =3D=3D MBOX_RX) {
+> +               /* rx interrupt is triggered */
+> +               if (int_status & DB_INT) {
+> +                       u32 data[CIX_MBOX_MSG_LEN], len, i;
+> +
+> +                       cix_mbox_write(priv, DB_INT, INT_CLEAR);
+> +                       data[0] =3D cix_mbox_read(priv, REG_MSG(0));
+> +                       len =3D mbox_get_msg_size(data);
+> +                       for (i =3D 1; i < len; i++)
+> +                               data[i] =3D cix_mbox_read(priv, REG_MSG(i=
+));
+> +
+> +                       /* trigger ack interrupt */
+> +                       cix_mbox_write(priv, DB_ACK_INT_BIT, REG_DB_ACK);
+> +                       mbox_chan_received_data(chan, data);
+> +               }
+> +       } else {
+> +               /* tx ack interrupt is triggered */
+> +               if (int_status & ACK_INT) {
+> +                       cix_mbox_write(priv, ACK_INT, INT_CLEAR);
+> +                       mbox_chan_txdone(chan, 0);
+> +               }
+> +       }
+> +}
+> +
+> +static void cix_mbox_isr_fifo(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       u32 int_status, status;
+> +
+> +       int_status =3D cix_mbox_read(priv, INT_STATUS);
+> +
+> +       if (priv->dir =3D=3D MBOX_RX) {
+> +               /* FIFO waterMark interrupt is generated */
+> +               if (int_status & (FIFO_FULL_INT | FIFO_WM01_INT)) {
+> +                       u32 data[CIX_MBOX_MSG_LEN] =3D { 0 }, i =3D 0;
+> +
+> +                       cix_mbox_write(priv, (FIFO_FULL_INT | FIFO_WM01_I=
+NT), INT_CLEAR);
+> +                       do {
+> +                               data[i++] =3D cix_mbox_read(priv, FIFO_RD=
+);
+> +                       } while (!mbox_fifo_empty(chan) && i < CIX_MBOX_M=
+SG_LEN);
+> +
+> +                       mbox_chan_received_data(chan, data);
+> +               }
+> +               /* FIFO underflow is generated */
+> +               if (int_status & FIFO_UFLOW_INT) {
+> +                       status =3D cix_mbox_read(priv, FIFO_STAS);
+> +                       dev_err(priv->dev, "fifo underflow: int_stats %d\=
+n", status);
+> +                       cix_mbox_write(priv, FIFO_UFLOW_INT, INT_CLEAR);
+> +               }
+> +       } else {
+> +               /* FIFO empty interrupt is generated */
+> +               if (int_status & FIFO_EMPTY_INT) {
+> +                       u32 val_32;
+> +
+> +                       cix_mbox_write(priv, FIFO_EMPTY_INT, INT_CLEAR);
+> +                       /* Disable empty irq*/
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE);
+> +                       val_32 &=3D ~FIFO_EMPTY_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE);
+> +                       mbox_chan_txdone(chan, 0);
+> +               }
+> +               /* FIFO overflow is generated */
+> +               if (int_status & FIFO_OFLOW_INT) {
+> +                       status =3D cix_mbox_read(priv, FIFO_STAS);
+> +                       dev_err(priv->dev, "fifo overlow: int_stats %d\n"=
+, status);
+> +                       cix_mbox_write(priv, FIFO_OFLOW_INT, INT_CLEAR);
+> +               }
+> +       }
+> +}
+> +
+> +static void cix_mbox_isr_fast(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp =3D chan->con_priv;
+> +       u32 int_status, data;
+> +
+> +       /* no irq will be trigger for TX dir mbox */
+> +       if (priv->dir !=3D MBOX_RX)
+> +               return;
+> +
+> +       int_status =3D cix_mbox_read(priv, INT_STATUS);
+> +
+> +       if (int_status & FAST_CH_INT(cp->index)) {
+> +               cix_mbox_write(priv, FAST_CH_INT(cp->index), INT_CLEAR);
+> +               data =3D cix_mbox_read(priv, REG_F_INT(cp->index));
+> +               mbox_chan_received_data(chan, &data);
+> +       }
+> +}
+> +
+> +static irqreturn_t cix_mbox_isr(int irq, void *arg)
+> +{
+> +       struct mbox_chan *chan =3D arg;
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp =3D chan->con_priv;
+> +
+> +       switch (cp->type) {
+> +       case CIX_MBOX_TYPE_DB:
+> +               cix_mbox_isr_db(chan);
+> +               break;
+> +       case CIX_MBOX_TYPE_REG:
+> +               cix_mbox_isr_reg(chan);
+> +               break;
+> +       case CIX_MBOX_TYPE_FIFO:
+> +               cix_mbox_isr_fifo(chan);
+> +               break;
+> +       case CIX_MBOX_TYPE_FAST:
+> +               cix_mbox_isr_fast(chan);
+> +               break;
+> +       default:
+> +               dev_err(priv->dev, "Invalid channel type: %d\n", cp->type=
+);
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int cix_mbox_startup(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp =3D chan->con_priv;
+> +       int index =3D cp->index, ret;
+> +       u32 val_32;
+> +
+> +       ret =3D request_irq(priv->irq, cix_mbox_isr, 0,
+> +                         dev_name(priv->dev), chan);
+The same irq is requested for each channel. How do you expect it to
+work? Maybe request it just once in probe and pass the 'priv' instead
+of 'chan' , and in the cix_mbox_isr handle according to INT_STATUS
 
- * 1. Task blocking an expedited grace period (based on a heuristic, could be
- *    false-positive, see below.)
+> +       if (ret) {
+> +               dev_err(priv->dev, "Unable to acquire IRQ %d\n", priv->ir=
+q);
+> +               return ret;
+> +       }
+> +
+> +       switch (cp->type) {
+> +       case CIX_MBOX_TYPE_DB:
+> +               /* Overwrite txdone_method for DB channel */
+> +               chan->txdone_method =3D TXDONE_BY_ACK;
+> +               fallthrough;
+> +       case CIX_MBOX_TYPE_REG:
+> +               if (priv->dir =3D=3D MBOX_TX) {
+> +                       /* Enable ACK interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE);
+> +                       val_32 |=3D ACK_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE);
+> +               } else {
+> +                       /* Enable Doorbell interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE_SIDE_B)=
+;
+> +                       val_32 |=3D DB_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
+> +               }
+> +               break;
+> +       case CIX_MBOX_TYPE_FIFO:
+> +               /* reset fifo */
+> +               cix_mbox_write(priv, FIFO_RST_BIT, FIFO_RST);
+> +               /* set default watermark */
+> +               cix_mbox_write(priv, FIFO_WM_DEFAULT, FIFO_WM);
+> +               if (priv->dir =3D=3D MBOX_TX) {
+> +                       /* Enable fifo overflow interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE);
+> +                       val_32 |=3D FIFO_OFLOW_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE);
+> +               } else {
+> +                       /* Enable fifo full/underflow interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE_SIDE_B)=
+;
+> +                       val_32 |=3D FIFO_UFLOW_INT|FIFO_WM01_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
+> +               }
+> +               break;
+> +       case CIX_MBOX_TYPE_FAST:
+> +               /* Only RX channel has intterupt */
+> +               if (priv->dir =3D=3D MBOX_RX) {
+> +                       if (index < 0 || index > MBOX_FAST_IDX) {
+> +                               dev_err(priv->dev, "Invalid index %d\n", =
+index);
+> +                               ret =3D -EINVAL;
+> +                               goto failed;
+> +                       }
+> +                       /* enable fast channel interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE_SIDE_B)=
+;
+> +                       val_32 |=3D FAST_CH_INT(index);
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
+> +               }
+> +               break;
+> +       default:
+> +               dev_err(priv->dev, "Invalid channel type: %d\n", cp->type=
+);
+> +               ret =3D -EINVAL;
+> +               goto failed;
+> +       }
+> +       return 0;
+> +
+> +failed:
+> +       free_irq(priv->irq, chan);
+> +       return ret;
+> +}
+> +
+> +static void cix_mbox_shutdown(struct mbox_chan *chan)
+> +{
+> +       struct cix_mbox_priv *priv =3D to_cix_mbox_priv(chan->mbox);
+> +       struct cix_mbox_con_priv *cp =3D chan->con_priv;
+> +       int index =3D cp->index;
+> +       u32 val_32;
 
-And the below comment to:
+Never saw this style before, may simply use val
 
-        /*
-         * Check if this task is blocking an expedited grace period. If the
-         * task was preempted within an RCU read-side critical section and is
-         * on the expedited grace period blockers list (exp_tasks), we need
-         * expedited handling to unblock the expedited GP. This is not an exact
-         * check because 't' might not be on the exp_tasks list at all - its
-         * just a fast heuristic that can be false-positive sometimes.
-         */
-        if (t->rcu_blocked_node && READ_ONCE(t->rcu_blocked_node->exp_tasks))
-                return true;
+> +
+> +       switch (cp->type) {
+> +       case CIX_MBOX_TYPE_DB:
+> +       case CIX_MBOX_TYPE_REG:
+> +               if (priv->dir =3D=3D MBOX_TX) {
+> +                       /* Disable ACK interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE);
+> +                       val_32 &=3D ~ACK_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE);
+> +               } else if (priv->dir =3D=3D MBOX_RX) {
+> +                       /* Disable Doorbell interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE_SIDE_B)=
+;
+> +                       val_32 &=3D ~DB_INT;
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
+> +               }
+> +               break;
+> +       case CIX_MBOX_TYPE_FIFO:
+> +               if (priv->dir =3D=3D MBOX_TX) {
+> +                       /* Disable empty/fifo overflow irq*/
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE);
+> +                       val_32 &=3D ~(FIFO_EMPTY_INT | FIFO_OFLOW_INT);
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE);
+> +               } else if (priv->dir =3D=3D MBOX_RX) {
+> +                       /* Disable fifo WM01/underflow interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE_SIDE_B)=
+;
+> +                       val_32 &=3D ~(FIFO_UFLOW_INT | FIFO_WM01_INT);
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
+> +               }
+> +               break;
+> +       case CIX_MBOX_TYPE_FAST:
+> +               if (priv->dir =3D=3D MBOX_RX) {
+> +                       if (index < 0 || index > MBOX_FAST_IDX) {
+> +                               dev_err(priv->dev, "Invalid index %d\n", =
+index);
+> +                               break;
+> +                       }
+> +                       /* Disable fast channel interrupt */
+> +                       val_32 =3D cix_mbox_read(priv, INT_ENABLE_SIDE_B)=
+;
+> +                       val_32 &=3D ~FAST_CH_INT(index);
+> +                       cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
+> +               }
+> +               break;
+> +
+> +       default:
+> +               dev_err(priv->dev, "Invalid channel type: %d\n", cp->type=
+);
+> +               break;
+> +       }
+> +
+> +       free_irq(priv->irq, chan);
+> +}
+> +
+> +static const struct mbox_chan_ops cix_mbox_chan_ops =3D {
+> +       .send_data =3D cix_mbox_send_data,
+> +       .startup =3D cix_mbox_startup,
+> +       .shutdown =3D cix_mbox_shutdown,
+> +};
+> +
+> +static void cix_mbox_init(struct cix_mbox_priv *priv)
+> +{
+> +       struct cix_mbox_con_priv *cp;
+> +       int i;
+> +
+> +       for (i =3D 0; i < CIX_MBOX_CHANS; i++) {
+> +               cp =3D &priv->con_priv[i];
+> +               cp->index =3D i;
+> +               cp->chan =3D &priv->mbox_chans[i];
+> +               priv->mbox_chans[i].con_priv =3D cp;
+> +               if (cp->index <=3D MBOX_FAST_IDX)
+> +                       cp->type =3D CIX_MBOX_TYPE_FAST;
+> +               if (cp->index =3D=3D MBOX_DB_IDX) {
+> +                       cp->type =3D CIX_MBOX_TYPE_DB;
+> +                       priv->use_shmem =3D true;
+> +               }
+> +               if (cp->index =3D=3D MBOX_FIFO_IDX)
+> +                       cp->type =3D CIX_MBOX_TYPE_FIFO;
+> +               if (cp->index =3D=3D MBOX_REG_IDX)
+> +                       cp->type =3D CIX_MBOX_TYPE_REG;
+> +       }
+> +}
+> +
+> +static int cix_mbox_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct cix_mbox_priv *priv;
+> +       const char *dir_str;
+> +       int ret;
+> +
+> +       priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       priv->dev =3D dev;
+> +       priv->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(priv->base))
+> +               return PTR_ERR(priv->base);
+> +
+> +       priv->irq =3D platform_get_irq(pdev, 0);
+> +       if (priv->irq < 0)
+> +               return priv->irq;
+> +
+> +       if (device_property_read_string(dev, "cix,mbox-dir", &dir_str)) {
+> +               dev_err(priv->dev, "cix,mbox_dir property not found\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (!strcmp(dir_str, "tx"))
+> +               priv->dir =3D 0;
+> +       else if (!strcmp(dir_str, "rx"))
+> +               priv->dir =3D 1;
+> +       else {
+> +               dev_err(priv->dev, "cix,mbox_dir=3D%s is not expected\n",=
+ dir_str);
+> +               return -EINVAL;
+> +       }
+> +
+> +       cix_mbox_init(priv);
+> +
+> +       priv->mbox.dev =3D dev;
+> +       priv->mbox.ops =3D &cix_mbox_chan_ops;
+> +       priv->mbox.chans =3D priv->mbox_chans;
+> +       priv->mbox.txdone_irq =3D true;
+> +       priv->mbox.num_chans =3D CIX_MBOX_CHANS;
+> +       priv->mbox.of_xlate =3D NULL;
+> +
+> +       platform_set_drvdata(pdev, priv);
+> +       ret =3D devm_mbox_controller_register(dev, &priv->mbox);
+> +       if (ret)
+> +               dev_err(dev, "Failed to register mailbox %d\n", ret);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct of_device_id cix_mbox_dt_ids[] =3D {
+> +       { .compatible =3D "cix,sky1-mbox" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, cix_mbox_dt_ids);
+> +
+> +static struct platform_driver cix_mbox_driver =3D {
+> +       .probe =3D cix_mbox_probe,
+> +       .driver =3D {
+> +               .name =3D "cix_mbox",
+> +               .of_match_table =3D cix_mbox_dt_ids,
+> +       },
+> +};
+> +
+> +static int __init cix_mailbox_init(void)
+> +{
+> +       return platform_driver_register(&cix_mbox_driver);
+> +}
+> +arch_initcall(cix_mailbox_init);
+> +
+> +MODULE_AUTHOR("Cix Technology Group Co., Ltd.");
+> +MODULE_DESCRIPTION("CIX mailbox driver");
+> +MODULE_LICENSE("GPL");
 
-Hope that looks Ok.
+GPL v2 ? according to the SPDX-License-Identifier
 
-> 
-> Why not an exact check?  Because that would mean traversing the list
-> starting at ->exp_tasks, and that list could potentially contain every
-> task in the system.  And I have received bug reports encountered on
-> systems with hundreds of thousands of tasks.
+And please make sure you run scripts/checkpatch.pl
 
-Got it.
-
-> 
-> I could imagine a more complex data structure that semi-efficiently
-> tracked exact information, but I could also imagine this not being worth
-> the effort.
-> 
->> + * 2. CPU participating in an expedited grace period
->> + * 3. Strict grace period mode requiring expedited handling
->> + * 4. RCU priority boosting needs when interrupts were disabled
-> 
-> s/boosting/deboosting/
-> 
-
-Fixed, thanks.
-
-> 
->> +	 */
->> +	if (t->rcu_blocked_node && READ_ONCE(t->rcu_blocked_node->exp_tasks))
->> +		return true;
->> +
->> +	/*
->> +	 * Check if this CPU is participating in an expedited grace period.
->> +	 * The expmask bitmap tracks which CPUs need to check in for the
->> +	 * current expedited GP. If our CPU's bit is set, we need expedited
->> +	 * handling to help complete the expedited GP.
->> +	 */
->> +	if (rdp->grpmask & READ_ONCE(rnp->expmask))
->> +		return true;
->> +
->> +	/*
->> +	 * In CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels, all grace periods
->> +	 * are treated as short for testing purposes even if that means
->> +	 * disturbing the system more. Check if either:
->> +	 * - This CPU has not yet reported a quiescent state, or
->> +	 * - This task was preempted within an RCU critical section
->> +	 * In either case, requird expedited handling for strict GP mode.
-> 
-> s/requird/required/  ;-)
-
-I meant "require" :-D. Will fix.
-
-> 
->> +	 */
->> +	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
->> +	    ((rdp->grpmask & READ_ONCE(rnp->qsmask)) || t->rcu_blocked_node))
->> +		return true;
->> +
->> +	/*
->> +	 * RCU priority boosting case: If a task is subject to RCU priority
->> +	 * boosting and exits an RCU read-side critical section with interrupts
->> +	 * disabled, we need expedited handling to ensure timely deboosting.
->> +	 * Without this, a low-priority task could incorrectly run at high
->> +	 * real-time priority for an extended period effecting real-time
-> 
-> s/effecting/degrading/ to be more precise.
-> 
-
-Fixed, thanks.
-
- - Joel
-
+thanks
