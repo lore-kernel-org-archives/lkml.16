@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AF850276;
-	Sun,  6 Jul 2025 15:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F88415B54A;
+	Sun,  6 Jul 2025 15:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751814077; cv=none; b=ZrscLb74RqQqY0CIYLrC8QArnfowjassihdobrSN/PWT0TQhRbgRBfbeXi//9Mlq6WIMsa3aEcFPcgJ00YGp2mAur+GsM+AwvEeefBIBYOj2A/96LPZ8djcJbKfmheDV9i/anBVzzcDHzPjf10y8HZfhXbgL+0yyEiRUYnCjbh4=
+	t=1751814089; cv=none; b=HNQ48sqry4Uy1ZnAvyqNr0tn+Mhkc0VwVZTeRUnDRLru2/r6IZexgtA6U+80zteVXXXsao375j3OplCaTD9LOO/ZnW7+VMAp6ZtNZn2fenwKz0yk8PsKpj2FjAtRAuN106OZb8Y6NZ3QMhLiTdsdzajKcMGA2/obYpVQDyD9Ouk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751814077; c=relaxed/simple;
-	bh=7VkRLspSfHnIw6gLfAaj/UDDRsi5S7auVnwsMV1mP6o=;
+	s=arc-20240116; t=1751814089; c=relaxed/simple;
+	bh=xPCDaYe5bhsjIvhALV2YKGJzS/UhpegtfpjqIz3uM3E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iUBYZXEQzRTgkbyAXnEo0Cu6nTlbGgo7mTtsxv7Uc5UNVC9UxK+XCdNVoPEWGjsrFvSzwZISrWlDJx2jkm1MKR8aMM0XCm+7PBIEgFv0VJhv8FPTc53LCwWAJFbAc8m1C/LJqi3IHkiCN3DWHzrOpyJKG5ffs0uxRkoyWC5flaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CToiR76T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IpEThYFma2/4F6bFnyDBktKrWe08K2D+nhlwNMgeZqNASnhHqYDcPGCCfkwFKkPh1MLlZSsx/IDbhgtMMgegqdzSz7w8MPC4YRtL75klQg0XqQajIUylBI5WSnjljClLi9+vi1rFLOVMg/n+DxGrWqGPJQ+sKJv8pAOgQVA4ziw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uFYByJcD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CToiR76T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D20ABC4CEF2;
-	Sun,  6 Jul 2025 15:01:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uFYByJcD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22F5C4CEED;
+	Sun,  6 Jul 2025 15:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751814076;
-	bh=7VkRLspSfHnIw6gLfAaj/UDDRsi5S7auVnwsMV1mP6o=;
+	s=k20201202; t=1751814088;
+	bh=xPCDaYe5bhsjIvhALV2YKGJzS/UhpegtfpjqIz3uM3E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CToiR76Tx4UKpbM1pUXbjn/9CgaaCBwVPC0Anq5PrexJTja9z7mo/CrN83URXG+LT
-	 VImssuydPOpGiYIxfW6CgIfvCBIGFd5RRH12B8j+AvbKA4qqnQqLrBsckqkJzW0aDU
-	 YIXS0fatbAYUT4dev+OYpg8ah3YGtUiaiPuGguDEzEuaOzqMZ1CrG7xOPYrTEIy7yD
-	 8WbMhdvpSY6T+kcxwdKHl8R5AYJn2CIPxcUcP8LpLSys4fU30BBROj1PF9/qZ1fIXJ
-	 RnsoTZXw/xZreVffbTjyRcEH/ByBwsDi5CMpVbNj+EFYW5jJhq0Q6+tWeG/X3tME+X
-	 thmfnlI89kgiw==
-Message-ID: <079b73bf-c266-4ffc-8adc-488dfd2c53f9@kernel.org>
-Date: Sun, 6 Jul 2025 17:01:14 +0200
+	b=uFYByJcDwLY3+3qGrOCaAQSGhSHefKhTXQSmdr2n5TfDZest4MWm6AenPgXoV1tTK
+	 atJ+N2SgSUBP6E9jBmiL1FnDjODSPY1Du2lGuDeSdbti7SU4Babv+F/2DdK8Mapkg2
+	 J7HavSa0K/s9kuofaAO1oQi93GAQQbF6ibcaBW5F79NMJl94MVTTIFeRHW1iid18ON
+	 pEz0cnMN9gq5Vh1tTQWlZOewPru6jYxGCaJRT5jm1XtmTe2dKY3Jq1ZlikwD0ptg+f
+	 i8d7H86vcYsLAAQpjCGhVAhkLiXA5O3S10OKElU8XX9r7Af4Vq+wiAMDhZb6AKjoBx
+	 vBr+3AP62SwgQ==
+Message-ID: <ec2cf624-5849-4491-8a3f-2070d2766ec6@kernel.org>
+Date: Sun, 6 Jul 2025 17:01:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,16 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4 V2] Staging: media: atomisp: i2c: struct definition
+Subject: Re: [PATCH 4/4 V2] Staging: media: atomisp: i2c: struct definition
  style
 To: Thomas Andreatta <thomasandreatta2000@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
  Thomas Andreatta <thomas.andreatta2000@gmail.com>
 References: <20250619084420.146151-1-thomas.andreatta2000@gmail.com>
- <20250619084420.146151-3-thomas.andreatta2000@gmail.com>
+ <20250619084420.146151-4-thomas.andreatta2000@gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250619084420.146151-3-thomas.andreatta2000@gmail.com>
+In-Reply-To: <20250619084420.146151-4-thomas.andreatta2000@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -70,81 +70,83 @@ Hans
 
 
 > ---
->  drivers/staging/media/atomisp/i2c/gc2235.h | 16 ++++++++--------
+>  drivers/staging/media/atomisp/i2c/ov2722.h | 16 ++++++++--------
 >  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/staging/media/atomisp/i2c/gc2235.h b/drivers/staging/media/atomisp/i2c/gc2235.h
-> index 6c743a17f198..7dd9a676fb98 100644
-> --- a/drivers/staging/media/atomisp/i2c/gc2235.h
-> +++ b/drivers/staging/media/atomisp/i2c/gc2235.h
-> @@ -179,21 +179,21 @@ struct gc2235_write_ctrl {
->  	struct gc2235_write_buffer buffer;
->  };
->  
-> -static struct gc2235_reg const gc2235_stream_on[] = {
-> +static const struct gc2235_reg gc2235_stream_on[] = {
->  	{ GC2235_8BIT, 0xfe, 0x03}, /* switch to P3 */
->  	{ GC2235_8BIT, 0x10, 0x91}, /* start mipi */
->  	{ GC2235_8BIT, 0xfe, 0x00}, /* switch to P0 */
->  	{ GC2235_TOK_TERM, 0, 0 }
->  };
->  
-> -static struct gc2235_reg const gc2235_stream_off[] = {
-> +static const struct gc2235_reg gc2235_stream_off[] = {
->  	{ GC2235_8BIT, 0xfe, 0x03}, /* switch to P3 */
->  	{ GC2235_8BIT, 0x10, 0x01}, /* stop mipi */
->  	{ GC2235_8BIT, 0xfe, 0x00}, /* switch to P0 */
->  	{ GC2235_TOK_TERM, 0, 0 }
->  };
->  
-> -static struct gc2235_reg const gc2235_init_settings[] = {
-> +static const struct gc2235_reg gc2235_init_settings[] = {
->  	/* System */
->  	{ GC2235_8BIT, 0xfe, 0x80 },
->  	{ GC2235_8BIT, 0xfe, 0x80 },
-> @@ -268,7 +268,7 @@ static struct gc2235_reg const gc2235_init_settings[] = {
+> diff --git a/drivers/staging/media/atomisp/i2c/ov2722.h b/drivers/staging/media/atomisp/i2c/ov2722.h
+> index bc36133f3722..00317d105305 100644
+> --- a/drivers/staging/media/atomisp/i2c/ov2722.h
+> +++ b/drivers/staging/media/atomisp/i2c/ov2722.h
+> @@ -236,7 +236,7 @@ struct ov2722_write_ctrl {
 >   * Register settings for various resolution
 >   */
->  #if ENABLE_NON_PREVIEW
-> -static struct gc2235_reg const gc2235_1296_736_30fps[] = {
-> +static const struct gc2235_reg gc2235_1296_736_30fps[] = {
->  	{ GC2235_8BIT, 0x8b, 0xa0 },
->  	{ GC2235_8BIT, 0x8c, 0x02 },
+>  #if 0
+> -static struct ov2722_reg const ov2722_QVGA_30fps[] = {
+> +static const struct ov2722_reg ov2722_QVGA_30fps[] = {
+>  	{OV2722_8BIT, 0x3718, 0x10},
+>  	{OV2722_8BIT, 0x3702, 0x0c},
+>  	{OV2722_8BIT, 0x373a, 0x1c},
+> @@ -346,7 +346,7 @@ static struct ov2722_reg const ov2722_QVGA_30fps[] = {
 >  
-> @@ -321,7 +321,7 @@ static struct gc2235_reg const gc2235_1296_736_30fps[] = {
->  	{ GC2235_TOK_TERM, 0, 0 }
 >  };
 >  
-> -static struct gc2235_reg const gc2235_960_640_30fps[] = {
-> +static const struct gc2235_reg gc2235_960_640_30fps[] = {
->  	{ GC2235_8BIT, 0x8b, 0xa0 },
->  	{ GC2235_8BIT, 0x8c, 0x02 },
+> -static struct ov2722_reg const ov2722_480P_30fps[] = {
+> +static const struct ov2722_reg ov2722_480P_30fps[] = {
+>  	{OV2722_8BIT, 0x3718, 0x10},
+>  	{OV2722_8BIT, 0x3702, 0x18},
+>  	{OV2722_8BIT, 0x373a, 0x3c},
+> @@ -455,7 +455,7 @@ static struct ov2722_reg const ov2722_480P_30fps[] = {
+>  	{OV2722_TOK_TERM, 0, 0},
+>  };
 >  
-> @@ -373,7 +373,7 @@ static struct gc2235_reg const gc2235_960_640_30fps[] = {
+> -static struct ov2722_reg const ov2722_VGA_30fps[] = {
+> +static const struct ov2722_reg ov2722_VGA_30fps[] = {
+>  	{OV2722_8BIT, 0x3718, 0x10},
+>  	{OV2722_8BIT, 0x3702, 0x18},
+>  	{OV2722_8BIT, 0x373a, 0x3c},
+> @@ -565,7 +565,7 @@ static struct ov2722_reg const ov2722_VGA_30fps[] = {
 >  };
 >  #endif
 >  
-> -static struct gc2235_reg const gc2235_1600_900_30fps[] = {
-> +static const struct gc2235_reg gc2235_1600_900_30fps[] = {
->  	{ GC2235_8BIT, 0x8b, 0xa0 },
->  	{ GC2235_8BIT, 0x8c, 0x02 },
->  
-> @@ -418,7 +418,7 @@ static struct gc2235_reg const gc2235_1600_900_30fps[] = {
->  	{ GC2235_TOK_TERM, 0, 0 }
+> -static struct ov2722_reg const ov2722_1632_1092_30fps[] = {
+> +static const struct ov2722_reg ov2722_1632_1092_30fps[] = {
+>  	{OV2722_8BIT, 0x3021, 0x03}, /* For stand wait for
+>  				a whole frame complete.(vblank) */
+>  	{OV2722_8BIT, 0x3718, 0x10},
+> @@ -667,7 +667,7 @@ static struct ov2722_reg const ov2722_1632_1092_30fps[] = {
+>  	{OV2722_TOK_TERM, 0, 0}
 >  };
 >  
-> -static struct gc2235_reg const gc2235_1616_1082_30fps[] = {
-> +static const struct gc2235_reg gc2235_1616_1082_30fps[] = {
->  	{ GC2235_8BIT, 0x8b, 0xa0 },
->  	{ GC2235_8BIT, 0x8c, 0x02 },
->  
-> @@ -463,7 +463,7 @@ static struct gc2235_reg const gc2235_1616_1082_30fps[] = {
->  	{ GC2235_TOK_TERM, 0, 0 }
+> -static struct ov2722_reg const ov2722_1452_1092_30fps[] = {
+> +static const struct ov2722_reg ov2722_1452_1092_30fps[] = {
+>  	{OV2722_8BIT, 0x3021, 0x03}, /* For stand wait for
+>  				a whole frame complete.(vblank) */
+>  	{OV2722_8BIT, 0x3718, 0x10},
+> @@ -769,7 +769,7 @@ static struct ov2722_reg const ov2722_1452_1092_30fps[] = {
 >  };
 >  
-> -static struct gc2235_reg const gc2235_1616_1216_30fps[] = {
-> +static const struct gc2235_reg gc2235_1616_1216_30fps[] = {
->  	{ GC2235_8BIT, 0x8b, 0xa0 },
->  	{ GC2235_8BIT, 0x8c, 0x02 },
+>  #if 0
+> -static struct ov2722_reg const ov2722_1M3_30fps[] = {
+> +static const struct ov2722_reg ov2722_1M3_30fps[] = {
+>  	{OV2722_8BIT, 0x3718, 0x10},
+>  	{OV2722_8BIT, 0x3702, 0x24},
+>  	{OV2722_8BIT, 0x373a, 0x60},
+> @@ -877,7 +877,7 @@ static struct ov2722_reg const ov2722_1M3_30fps[] = {
+>  };
+>  #endif
 >  
+> -static struct ov2722_reg const ov2722_1080p_30fps[] = {
+> +static const struct ov2722_reg ov2722_1080p_30fps[] = {
+>  	{OV2722_8BIT, 0x3021, 0x03}, /* For stand wait for a whole
+>  					frame complete.(vblank) */
+>  	{OV2722_8BIT, 0x3718, 0x10},
+> @@ -983,7 +983,7 @@ static struct ov2722_reg const ov2722_1080p_30fps[] = {
+>  };
+>  
+>  #if 0 /* Currently unused */
+> -static struct ov2722_reg const ov2722_720p_30fps[] = {
+> +static const struct ov2722_reg ov2722_720p_30fps[] = {
+>  	{OV2722_8BIT, 0x3021, 0x03},
+>  	{OV2722_8BIT, 0x3718, 0x10},
+>  	{OV2722_8BIT, 0x3702, 0x24},
 
