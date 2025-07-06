@@ -1,87 +1,122 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2631524F
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829272AE96;
+	Sun,  6 Jul 2025 10:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751798813; cv=none; b=QpQ8HTLGlPwOQbk1F3X/UQk9GZM36Z4BnDBAqtCzZZ7fJnim6/PZP2xx0Y79VqBWharGGdGbI2viLdGtPyNkbVFfY91n1VDtyehkHo1WeTHjRtInG3PhLKTL2xX5itZUrhGgNz0E5h9VMHb/i7Ew/6CZEjj0NroOgnRU+VK0Wjk=
+	t=1751799011; cv=none; b=KLHpIbhu5McUnE2R65jZwG0vBoGk41OLLbcddPUEXck8b4SyUYbLHMTGr4yYjRTzY4NvVcWqx7OlzyBo/i63gP90c25j6Hqr0Lp8sA+OV1aaVXZArh8O6XBCR1DeXDnB5uZCCPcoVXLS+1JCGje34jbldRRSLLNjSCga6BrMB6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751798813; c=relaxed/simple;
-	bh=1csdPJkrYHqiTa7aBB4h7tPO9DoYuuIveSxw3PXJbts=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jrpAnHwO5jygrXiO0zt8Fb7U2WftPoNIIrHz/Mr7GHb22uTD18sglLDJMYO6OUkbGjhvsYmE95EcjGYNdBD0oNaDLAKHIc0Flk9fXsuk6lLjCDhfHM81/HiDdYpGFq23UmYMHzPj0T6/tMrVHR4KfRA6KpTkwC2gFlHo/VspT84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Fv7E4uY+; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1751799011; c=relaxed/simple;
+	bh=rnlOCsOx8oCuPmV5KoaTeoAVYCzmPUH79UN0xUbYiqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ez7Cye3PC42v+IgKuAKqyDg6ksxKyfrIBxDnXH7ALkDYdH6EHrsGMVJ86zgg4rdw2NsaJjfg62U8yXXuvuqWGDmqrO/1xkChVaLH6RAM50qtHZy+VWgfDZ3kAaZl5K5pUTnfURF1TzS4NaBVgp2sNF5SvLUSnMUYArZIkvt4L6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du7bI8mF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Fv7E4uY+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=1csdPJkrYHqiTa7aBB4h7tPO9DoYuuIveSxw3PXJbts=; b=Fv7E4uY+Zu9UYX7fPZFpy6q6Fn
-	4qZleqGkmvnnsKgTWZalmNha82+2YZxq21TUUsgBclr3OO9eQ2wEcv5puHoYGgVyP/J07OZBhRsAY
-	uCy5DyjvCYgO4yuiEfLjAHOaMC/PWOrfEJ4MkFk6vvRP3ZMkF0q3Oa/HqWRjVFvqr4vwB0Fr4qm7O
-	BRXdTRhGtCmeL5El4kJ7JJ8J1PsQMORmIw7bZe/T6jyqegTYDJCsJgzdY/CBbSzSq34+Yy+/C+LWx
-	RMFzxrAK4NrmIUo/Oaq+s+yTBJAipo/tyvE8PKUDZhXsvDVMmBx+vrve3XUiIIDxhTqMGj6xxAtIh
-	T1KPJGzg==;
-Received: from i53875a35.versanet.de ([83.135.90.53] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uYMt8-0002wB-6E; Sun, 06 Jul 2025 12:46:26 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Piotr Zalewski <pZ010001011111@proton.me>,
- Diederik de Haas <didi.debian@cknow.org>
-Cc: hjc@rock-chips.com, andy.yan@rock-chips.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rockchip/drm: vop2: make vp registers nonvolatile
-Date: Sun, 06 Jul 2025 12:46:25 +0200
-Message-ID: <4207630.fIoEIV5pvu@diego>
-In-Reply-To: <DB4WNMVBIWYS.273Z54K6O7DTM@cknow.org>
-References:
- <20250706083629.140332-2-pZ010001011111@proton.me>
- <OWFHI491RHadO01jlQPA34GX28LC7SseKfNRwqQy4etkkJyP1YeF_0EDdAgpSXx5RW7go62EAOkedW5nbyn_hlz_K-NUrnNJeDFWv0OOSO8=@proton.me>
- <DB4WNMVBIWYS.273Z54K6O7DTM@cknow.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du7bI8mF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70B18C4CEED;
+	Sun,  6 Jul 2025 10:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751799011;
+	bh=rnlOCsOx8oCuPmV5KoaTeoAVYCzmPUH79UN0xUbYiqs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Du7bI8mF3pklE/y4wUYkC+0Swb4+ZE1tnVHV1pau0A5sSa61VWSBKWpVL2czGSeqq
+	 lP9A1hKIDFXO8GV8cQzZ9UFCY1b3qqlB4jivrH9tEhHRkfQVs77ulQopLiVkBrFmUL
+	 xygqxKpX2s3I2hgb/HIHeLDXRvw+8w0X4nIcS7R+KBibZ1DZr1tRQg7LLmZENCi1RQ
+	 i9wXQrwxnKEabvFeT8ncG/gVoLFQ7WrYHy0I5X308DLRppzRgCYb3QLYZCSCjNegV7
+	 thYQv774XI2xsFTcmojrX3GNRaoF60dcqZuLOLdkFeFxKfwC7Ku0Jp630Sz7PWde2R
+	 WCiV6kOCHacVw==
+Date: Sun, 6 Jul 2025 11:50:03 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: akshay bansod <akbansd@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Lorenzo Bianconi
+ <lorenzo@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-kernel-mentees@lists.linuxfoundation.org, skhan@linuxfoundation.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+Message-ID: <20250706115003.5752261c@jic23-huawei>
+In-Reply-To: <2413481.ElGaqSPkdT@mbox>
+References: <20250703053900.36530-1-akbansd@gmail.com>
+	<aGaIMjkYBmfMmCBn@smile.fi.intel.com>
+	<2413481.ElGaqSPkdT@mbox>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Am Sonntag, 6. Juli 2025, 12:37:40 Mitteleurop=C3=A4ische Sommerzeit schrie=
-b Diederik de Haas:
-> Hi Piotr,
+On Thu, 03 Jul 2025 22:28:13 +0530
+akshay bansod <akbansd@gmail.com> wrote:
+
+> On Thursday, 3 July 2025 10:12=E2=80=AFpm +0530 Andy Shevchenko wrote:
+> > On Thu, Jul 03, 2025 at 11:08:59AM +0530, Akshay Bansod wrote: =20
+> > > Update the sysfs interface for sampling frequency and scale attribute=
+s.
+> > > Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
+> > > and recommended for use in sysfs. =20
+> >=20
+> > 'must' is stronger than 'recommendation'.
+> > Of has the documentation been changed lately?
+> >=20
+> > ...
+> >  =20
+> > > st_lsm6dsx_sysfs_sampling_frequency_avail(struct device *dev, =20
+> >  =20
+> > >  	odr_table =3D &sensor->hw->settings->odr_table[sensor->id];
+> > >  	for (i =3D 0; i < odr_table->odr_len; i++)
+> > > -		len +=3D scnprintf(buf + len, PAGE_SIZE - len, "%d.%03d ",
+> > > -				 odr_table->odr_avl[i].milli_hz / 1000,
+> > > -				 odr_table->odr_avl[i].milli_hz % 1000);
+> > > +		len +=3D sysfs_emit_at(buf, len, "%d.%03d ",
+> > > +				     odr_table->odr_avl[i].milli_hz / 1000,
+> > > +				     odr_table->odr_avl[i].milli_hz % 1000);
+> > >  	buf[len - 1] =3D '\n'; =20
+> >=20
+> > My gosh, this is error prone. I'm wondering when some CIs will start to
+> > complain on this line. But this was already before your change...
+> >  =20
+> I'm planning to drop It entirely or should I replace it with another `sys=
+fs_emit_at()` ?
+> I've seen other device driver returning space terminated buffers. Maybe I=
+'m overlooking
+> something.
+
+It is rather ugly currently but not a bug as such as we know we don't actua=
+lly run
+out of space in the page (it would just overwrite last byte in that case so=
+ odd
+output, but not a bug) and that we always print something so just as you su=
+ggest
+sysfs_emit_at(buf, len - 1, "\n"); is safe.  It also checks under and overf=
+low
+so that safe + hopefully won't trip up static analysis tools.
+
 >=20
-> On Sun Jul 6, 2025 at 12:20 PM CEST, Piotr Zalewski wrote:
-> >> With a new version of a patch, you're supposed to add the tags you
-> >> received for previous versions, like my Tested-by tag [1].
-> >>=20
-> >> (unless the new version has changed so much you feel they should not be
-> >> carried over; you then need to explicitly describe that and why you
-> >> dropped them)
-> > =20
-> > Forgot... Should i send it as PATCH v2 RESEND?
+> > >  	return len; =20
+> >=20
+> > ...
+> >  =20
+> > >  	fs_table =3D &hw->settings->fs_table[sensor->id];
+> > >  	for (i =3D 0; i < fs_table->fs_len; i++)
+> > > -		len +=3D scnprintf(buf + len, PAGE_SIZE - len, "0.%09u ",
+> > > -				 fs_table->fs_avl[i].gain);
+> > > +		len +=3D sysfs_emit_at(buf, len, "0.%09u ",
+> > > +				     fs_table->fs_avl[i].gain);
+> > >  	buf[len - 1] =3D '\n'; =20
+> >=20
+> > Ditto.
+> >=20
+> >  =20
 >=20
-> I don't think that's needed; the maintainer will let you know if that's
-> desirable or that they will add it (back) when committing.
-
-The problem is then remembering to manually collect the tags from a
-previous series.
-
-=46or my reference, it was
-Tested-by: Diederik de Haas <didi.debian@cknow.org>
-
-So hopefully I'll remember now :-) and there is no need for a resend
-at this time.
-
-
-Heiko
-
+> regards,
+> Akshay Bansod
+>=20
+>=20
+>=20
+>=20
 
