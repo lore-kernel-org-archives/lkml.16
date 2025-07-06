@@ -1,104 +1,70 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from mail.mixaill.net (mail.mixaill.net [144.76.234.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D491A76D0
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 20:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B08BBE5E
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 20:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.234.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751833870; cv=none; b=BCbL6nNBvm3H2m8FWfaSXmJh8rlWg4zLQlWbUJGBfEfZUgHoh9JGOq5dXwLU4qenoWH/eLiw1u8BBtB94WlxmSq8V1kZcwyp/28+HM+GyHroJOUWPK3Ezm29S3vYQ12jA6RK+PBBeWcvd8EDCclI5Ch5CHUNxJk2vzbwqEEFm3o=
+	t=1751833893; cv=none; b=gSeZkrUVNLkQg4IaCJJ+uIjMYcvevQz6igMrcZf29MyJkykTJcWTH9uiV7jxhOht4sFtm4nMavRCkhCstX4r2l9GFq9kAsAnZlkUSTeNEHzfOJ/er8D0cyhjcO3MDZ8xYZsUnv6b8+dATFp03RztpIzNOoCD49YcBfpPDG+GAqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751833870; c=relaxed/simple;
-	bh=gvkt1iq1VIgX+7yiZNz1mCKk+gey9NsbUrQWsmeuPyY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=jOxl7Ik72A51Bh0/j35pQa0rZzOyej6HvIF286cJuLHBU1QSyzXDE15XVQdIby7OSM54n9YOSRxrN91UVVDpOO0aRk3bm5zFjIqBTLu5U7fS7qaqrb6lDQj7cJLCVSyRU8Db6znyiNK2RrnrV7g/HotEMRp77bhhhooixjoe8wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=star-ark.net; spf=pass smtp.mailfrom=star-ark.net; dkim=pass (2048-bit key) header.d=star-ark.net header.i=@star-ark.net header.b=Uu9YAdmF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BplTOpbL; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=star-ark.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=star-ark.net
+	s=arc-20240116; t=1751833893; c=relaxed/simple;
+	bh=gcU+UcYp/914LtP3LulC00fYo+9oiTUvJrVaJpNjKs0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kNflHFqSo5WLoA3iN1qA76MpBQWElb2TXLxlAJRh8KGBIIp0/ZjPMMVztt240YJ4P1XN5E9oCkCqETw+ADjxpNw8a1eQpdBCOw9D6DIm1uON3znNg9NDie+pMl7ty8DV+Qa49FaRivq3I0irS1FOaeCDNNnaWJS5iOE0yQ6Q1W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net; spf=pass smtp.mailfrom=mixaill.net; dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b=oOkaxDBu; arc=none smtp.client-ip=144.76.234.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mixaill.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=star-ark.net header.i=@star-ark.net header.b="Uu9YAdmF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BplTOpbL"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id C0AD3EC07BC;
-	Sun,  6 Jul 2025 16:31:06 -0400 (EDT)
-Received: from phl-imap-16 ([10.202.2.88])
-  by phl-compute-01.internal (MEProxy); Sun, 06 Jul 2025 16:31:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=star-ark.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1751833866;
-	 x=1751920266; bh=yYcFfoXuFF5HUmksrlq6atyZzV+Wg33Jvb+63D+a7sQ=; b=
-	Uu9YAdmFA8sLyvPI0gQOFRITjqSW7el0NdObXjNHN4TL+ODOYeLvFTLUh9OLKRIp
-	FBNFXNsyn9pBJT2332SbpjaZonIKzyGvtStvamzKvqpAaHSmiBJZOafNHArvbHQm
-	dczcQ1zW8LJ4E61hH4yumlvOTqyS2BFDBQ4SXR8UXveokwAwrITONR2kN6G8n3UM
-	1Hs7UDHYRWCAALn4KF29AyptU7W3H3f2QfEIrmvk8a92/Fr/3tso2/+MmSz/lg9Q
-	MMaA7NB0p0AP8J+CMAswuqb5MYpIotnztxn3dsHjR1kT7VAnA4YX56S/XX5ISVau
-	l0WF+/UENpLq6FzFAu1XMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751833866; x=
-	1751920266; bh=yYcFfoXuFF5HUmksrlq6atyZzV+Wg33Jvb+63D+a7sQ=; b=B
-	plTOpbLdKLA+4UiYuc7rMWAOcUBxN6/XkvwTKQYx3Hs2G7PP2sXxOV8NLH3UAbjI
-	HgAjasTwBj1f0zBmjWgrznWm62JOSSK3cyYjeddeI9KfykkDBxIaioa/Ww329qKY
-	KY6iYE79kCl06g2H5lOW6gIpIozx4KF/gb44PZGui5kXxYp1m10xwSpMfaj9dA5V
-	nlZoUyGPUEavEwmmw0YYIZ/6SvlvTOg5On1N0kJGB9aPH4Djx8FuIET2ESHROYby
-	NISSSPEAER6i4KUIKqoutyZZnFq7NybtkPyKID5hs82o1/654c8aeyfawH4GqQGm
-	GBmj/qPPn8N7OrAg0OXoA==
-X-ME-Sender: <xms:Ct1qaEDaEYJazlyp_Obt8Q2QYK24eHiTMw6tKZbNtQ9k9T1LEpXipA>
-    <xme:Ct1qaGiJpWZ7TQ6NlLEqZb1Vk8bH0nVQPhpk58uQh3_XHn8cKcwls3m1b4r3cbDCS
-    kBTAx3DTgzU44W6TZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvleekkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdfnihhllhhi
-    rghnuceuvghrrhihfdcuoehlihhllhhirghnsehsthgrrhdqrghrkhdrnhgvtheqnecugg
-    ftrfgrthhtvghrnhepgfdtgeegtdehfeefkefgfeffieekfedvtdeiudffvdevudekvdfh
-    heekfefhfffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homheplhhilhhlihgrnhesshhtrghrqdgrrhhkrdhnvghtpdhnsggprhgtphhtthhopeef
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouh
-    hnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuh
-    igrdhorhhgrdhukh
-X-ME-Proxy: <xmx:Ct1qaHlJL0GRmZlskkBIlPfLHtAqx5LFqMC1Af3B3wJp4TVPAPu71Q>
-    <xmx:Ct1qaKxqlCu9wX-lf1imltdLomF6zawQAHKOk07O6979NzHihysoeA>
-    <xmx:Ct1qaJS326CWqWGe0WJc1QoV-8x-D8aaaEW_NITF4UrGQZ-m7d07hg>
-    <xmx:Ct1qaFa-0vksuz-OfsBkAj_ZcP4fWfDCJ-pZje2QQX_IPRzWn6d5wA>
-    <xmx:Ct1qaD0zIBjjJUZfeqeOPS8Ipy38z8SIBrLkPrV9ERXBX3WN84n9qzWl>
-Feedback-ID: i8db94900:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6E7CD2CC0081; Sun,  6 Jul 2025 16:31:06 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b="oOkaxDBu"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9086C610CD;
+	Sun,  6 Jul 2025 20:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mixaill.net; s=dkim;
+	t=1751833889; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=4VZQYg93SyyXK/wCT2Zksrf8X/INrnR/YJa2agpIGS4=;
+	b=oOkaxDBup5zPxRuKGibrnPkOY5PLlDzenV/37ZtnXdXaAUq73lke9oCFQNx5dIrrRor9jb
+	w10d6N9oU9GEsBqhZA63tkAXr+D/Ga9hemJlK7hZhfHHnlnS1Gtyb8t9xnSZPE5z/v1fJJ
+	6Me11BCH5sHZnAjaFCOMz/1rQN3AGPjSboOsOVHynX72NV5rHD5eiDlJ2vDPyb9u+tnCmY
+	0ofw8uOVpwueh1i0GWc+9LscibbW0/7JQEJIjpLwxG32Ou3yRzRzMj4T+O6MZBlVb2uw0F
+	/JCWZEViz5HcuMMcSQGluS4cv/2jZXvPcbHywVrVGI6bLoIv6VJkaginIp1awg==
+Message-ID: <cbb411e3-cdd9-48df-988b-04bb09268ebc@mixaill.net>
+Date: Sun, 6 Jul 2025 23:31:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T04916d410c8c63fd
-Date: Sun, 06 Jul 2025 22:29:02 +0200
-From: "Lillian Berry" <lillian@star-ark.net>
-To: "Andrew Morton" <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, "Al Viro" <viro@zeniv.linux.org.uk>
-Message-Id: <6325572b-994d-42da-999a-6c98f240301f@app.fastmail.com>
-In-Reply-To: <20250706131324.613340ff7e99231c383409f5@linux-foundation.org>
-References: <20250706185142.1294007-1-lillian@star-ark.net>
- <20250706131324.613340ff7e99231c383409f5@linux-foundation.org>
-Subject: Re: [PATCH] init/main.c: add warning when file specified in rdinit is
- inaccessible
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] x86/rdrand: disable RDSEED on AMD Cyan Skillfish
+To: Borislav Petkov <bp@alien8.de>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, Rik van Riel <riel@surriel.com>
+References: <20250524145319.209075-1-me@mixaill.net>
+ <20250617200551.GIaFHKnyPV_XsSjlMP@fat_crate.local>
+ <1ebe845b-322b-4929-9093-b41074e9e939@mixaill.net>
+ <20250706170741.GAaGqtXT99yYVoEmCh@fat_crate.local>
+Content-Language: en-US
+From: Mikhail Paulyshka <me@mixaill.net>
+In-Reply-To: <20250706170741.GAaGqtXT99yYVoEmCh@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sun, Jul 6, 2025, at 10:13 PM, Andrew Morton wrote:
-> "is inaccessible or does not exist", please.
-Will update.
+On 7/6/25 8:07 PM, Borislav Petkov wrote:
+> Looks like it GPs because CR4.PCID == 0.
+>
+> Looks weird, we need to check PCID support somewhere, it seems.
+>
+> Ok, let's get a common code base - 6.15. Pls boot it, send me full dmesg again
 
-> Is the "WARNING: " needed?  It's pr_warn(), which implies that it's a warning.
-I saw this on L486 (warn_bootconfig), but can remove.
+dmesg with vanilla 6.15.0:
+https://mixaill.net/linux-kernel-lists/bc250_log_invlpgb-2-dmesg.txt
 
-> It would be good to display the errno itself. 
-Yep! I'll add that.
+>   your .config
+https://raw.githubusercontent.com/openSUSE/kernel-source/4552ba89cbebd55482508c4ba4fc290df58f9386/config/x86_64/vanilla
+>   and the output of cpuid -1r
+https://mixaill.net/linux-kernel-lists/bc250_log_invlpgb-2-cpuid.txt
 
-Kindly,
-Lillian
