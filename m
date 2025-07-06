@@ -1,134 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFCF15ADB4;
-	Sun,  6 Jul 2025 04:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8152E36EC;
+	Sun,  6 Jul 2025 04:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751776292; cv=none; b=efZWi4z90YbHihg36o7vsvdkDWCHnJQJrKRrtcCtAEtrgQBYf64RCJBZ86C3thwZo84beiXXIwQ3Pkf2ZXOph+USboGSr8GQQY+oL+dRDyWK3EkEBEVFuMpSfxeAiQXdezY8BMrsNWpq6wiNanc975r83F0LISRV8qJmQqSvAlk=
+	t=1751776629; cv=none; b=IfAIfYPqhVTZHJemZpShDGxKKTTZWR5klXMuC5Sqf0lg6NQik1O+ltp7/6qCTQJXg67lB8p0SjHKUG+YzBxQJYnjZlJnyhxq+AzhA9feuExM4rg6fkKNw2Dn1bno4mK99pp+ImYESowyZRKA5ZElB9H1L2A/m2N9rUT03cgJFrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751776292; c=relaxed/simple;
-	bh=Hq5aQNa3aom6TCoSy+iVuy9sh/cxbUw9rIyDrG1A4iI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X2ibGmE5iE5Cl1KmOJZC7HoFuGoJXbc+1swsdR7EcApSKlInyr7Ad8ls9FrBxtrDr+SfYR7E2clETukFev7N1IbtyO4IAEKnl+GXtaC7/i/pVHCONhikLuXpXifCmwuQ7nJ7z/Y+sSb1oXlaQGf3EYg0cb4nVK81RKhzGjdpRyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq+2YEcP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751776629; c=relaxed/simple;
+	bh=RB96hsETxyFhkCY3Rf/ba9ONKkbVHSSjgVT5eGABabk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vz1QKALa8gfR/BsKF+i56i661VXxtrEgBDqyAFCFJi/kiEpKZ+KPyskpLNLkmMD90AvLYPkbZ3JFwjRr5frQeWwdLXI8BSVAmjN9klGYrx7YzGwCYBS5QSOen9fGBA+MWVR/uNn1c626N9POJY+KXJFhX6h5Q2QlLK4A2teEsE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JVKhuxNe; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq+2YEcP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62568C4CEEF;
-	Sun,  6 Jul 2025 04:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751776291;
-	bh=Hq5aQNa3aom6TCoSy+iVuy9sh/cxbUw9rIyDrG1A4iI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wq+2YEcPd7G1gYvqBSjPaEehRIX2ybqq3vogU8k/KQD0bdw+3478AEfjiystxqsuz
-	 0jtPrrJxX1yzsvCfZG8ZGgHrVPZj4qsiOI6CEdOxaT9hKVb47McfMTfxiB/1mIEt9n
-	 3ZzjM6lapSiMXemeEa6gYBH7FjG8hpJC5SaufnWuR7Q8Iu6WhAACwsRgMmUw+NiN8L
-	 TQuZfMfOhNGyqjB4y6To7jJ3vQgL+ZMhyv+pQqWoDlkMgTQjKSO/PvYlYmx6k49Y3w
-	 /UxdHQujj3I+rsNKhTmpVKrdp1gUTBnLbRMf3HLn8uqLOotcfeGkQhSHWWSH/AAJ4x
-	 ZcSeoVMyEd47g==
-Date: Sat, 5 Jul 2025 21:31:29 -0700
-From: Drew Fustini <fustini@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
-	Yangtao Li <frank.li@vivo.com>, linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: thead: th1520-ap: Correctly refer the parent for
- c910 and osc_12m
-Message-ID: <aGn8IVkWQJjHMfCT@x1>
-References: <20250705052028.24611-1-ziyao@disroot.org>
- <aGm+adSNdTHyN7K1@x1>
- <aGnaZjMoWbW_FZfj@pie>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVKhuxNe"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74b56b1d301so1207909b3a.1;
+        Sat, 05 Jul 2025 21:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751776627; x=1752381427; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eDDm71p/LyQ0DztRLcG3POrUg3Q40Pul2j5qon54l58=;
+        b=JVKhuxNeHYbEB8dQzhyNmujU6sV/VxN+JBRUWExNWxvxOvmGs02aIcLpotdgO6BNSL
+         dRa92yNkWyHYX3vKJs17Wiz4nXB4Dd/a95RdQ5KOSB/pEztBP1276LgXdQOK/tLkJRfv
+         UBzTvKFyHRGOev4460Sbg1ean/BUDA6va5zF01AlnE3K1biEJOYPiYU2XLRz6YVFjb9J
+         aFncmVV6xQmFZoIWDHRtN3e95voA+MLSOwJUt9VverZ3XtopVs0W4wUCMzMvI6t5xTNa
+         veOcnqWC2YvzYAo+lcQr7gUuH6oevUFdsTeyGoG6/0qSmnSnZdgiJS+pmMXbDw0R9GLL
+         2C2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751776627; x=1752381427;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eDDm71p/LyQ0DztRLcG3POrUg3Q40Pul2j5qon54l58=;
+        b=XNA4f/gdNISko2+m72fsHoyw0A2J9EfFEvTmPEFXrrwZ+mU3RKDP3929uwLFMl7XhV
+         y9cw7lqlk3AlC1t+iLuBSveagGS1vTgXiOOqVxcBYe3eckBzTk47RagubBrhZm6nm9WX
+         qSj4YT1bmbgb1gYB1qjWygkkiVqtI5kgH5K/Ob/tq33ycayCPc6AUat2auU0BqxWGtIp
+         xyEZHICKr46pPkP1nh7bPVm8ZoVy8EGhqxM21lSqgXQCtdCQWi+wsWttKC8v/mVZwNxh
+         jBW4b4VcD07C/odRsVRReMK/mrMQh429vfuEWK6pq2yCwWLCbDB+6MmJEeVvgcgSGY1m
+         oEYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDkLydvvZvweRoUURpWMj1k4SduzqazgLRAHXZxMTVXxKh81/DG6UkAfS1QvkSVJ7nhNsbU+a4@vger.kernel.org, AJvYcCXY3N+WGeasydpwRhEUG+B0FQUwL9W02tyYlcKuhCtPyFO+ee9zL80lJ3h6ebd+3DDXhSHLji2Bua0AjB4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeiDbcAnOurFyVb3AlMefLpsJJMg0c+ZMcoKJik/ABJJa6pgiA
+	SY8hYR7Y6Pi4qGkPhdTLc1tqddwgVjlI5e3mgfrmmkn9tRag+GOqcYGb
+X-Gm-Gg: ASbGnct7zjOdG8Cm5Z/z2U+IqJNDTGk7eFVMdtQON5TU+KujYbSpIPCS7UQNiQQecQa
+	AWkNAeh3MmEQrciP/bM0b1dZsQWGqVfikLiEHXIrMVwvnuTmJCvcfWK7AG/mzLS8PceXF8RXpft
+	JB/2GNphPDAjvWEagV7LMlUAYjTMtWHeKEBS38lWdQsIGuK4t3qUyBMcw0awepKVEB1U7FfINHO
+	JBaqiQcyWgwTVZQwKbgs7eXy9+oL/AzssjDq7Zoct55ad42+xiGW/wgJRKCJcgnF9A51/2PoqcO
+	8qtKutMseQvWcvIF9zcAqRaxYQyt+BLbbsgIYbUzb2JlGn7jWJNcBFfuuZSy2ArxPg==
+X-Google-Smtp-Source: AGHT+IFrSnC8xZNgvCqQZwnhSbar6h72ees0YA62Gk1LYF6Q/EVgY/OklZdSIQbVWRaludW1bdB8hA==
+X-Received: by 2002:a05:6a21:6f09:b0:216:6108:788f with SMTP id adf61e73a8af0-2260ba7221emr12156252637.35.1751776626886;
+        Sat, 05 Jul 2025 21:37:06 -0700 (PDT)
+Received: from [127.0.0.1] ([47.89.83.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cc2cesm6105137b3a.59.2025.07.05.21.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jul 2025 21:37:06 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: [PATCH net-next v5 0/4] vsock: Introduce SIOCINQ ioctl support
+Date: Sun, 06 Jul 2025 12:36:28 +0800
+Message-Id: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGnaZjMoWbW_FZfj@pie>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEz9aWgC/x3MMQqAMAxA0atIZguhUrVeRRykRs0StRUpFO9uc
+ Pzw+AUSRaYEQ1Ug0sOJD9FwdQVhn2Ujw4s2WLQOO2yMgsByGU/WY+cb32MLqs9IK+f/NILQbYT
+ yDdP7fmU+x+FjAAAA
+X-Change-ID: 20250703-siocinq-9e2907939806
+To: "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Stefano Garzarella <sgarzare@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Xuewei Niu <niuxuewei.nxw@antgroup.com>, fupan.lfp@antgroup.com
+X-Mailer: b4 0.14.2
 
-On Sun, Jul 06, 2025 at 02:07:51AM +0000, Yao Zi wrote:
-> On Sat, Jul 05, 2025 at 05:08:09PM -0700, Drew Fustini wrote:
-> > On Sat, Jul 05, 2025 at 05:20:28AM +0000, Yao Zi wrote:
-> > > clk_orphan_dump shows two suspicious orphan clocks on TH1520 when
-> > > booting the kernel with mainline U-Boot,
-> > > 
-> > > 	$ cat /sys/kernel/debug/clk/clk_orphan_dump | jq 'keys'
-> > > 	[
-> > > 	  "c910",
-> > > 	  "osc_12m"
-> > > 	]
-> > > 
-> > > where the correct parents should be c910-i0 for c910, and osc_24m for
-> > > osc_12m.
-> > 
-> > Thanks for sending this patch. However, I only see "osc_12m" listed in
-> > clk_orphan_dump. I tried the current next, torvalds master and v6.15 but
-> > I didn't ever see "c910" appear [1]. What branch are you using?
-> 
-> I think it has something to do with the bootloader: as you could see in
-> your clk_orphan_dump, the c910 clock is reparented to cpu-pll1, the
-> second possible parent which could be correctly resolved by the CCF,
-> thus c910 doesn't appear in the clk_orphan_dump.
-> 
-> But with the mainline U-Boot which doesn't reparent or reclock c910 on
-> startup, c910 should remain the reset state and take c910-i0 as parent,
-> and appear in the clk_orphan_dump.
+Introduce SIOCINQ ioctl support for vsock, indicating the length of unread
+bytes.
 
-Ah, thanks for the explanation. I'm on an old build:
+Similar with SIOCOUTQ ioctl, the information is transport-dependent.
 
-U-Boot SPL 2020.01-g55b713fa (Jan 12 2024 - 02:17:34 +0000)
-FM[1] lpddr4x dualrank freq=3733 64bit dbi_off=n sdram init
-U-Boot 2020.01-g55b713fa (Jan 12 2024 - 02:17:34 +0000)
+The first patch adds SIOCINQ ioctl support in AF_VSOCK.
 
-I would like to run mainline but I have the 8GB RAM LPi4a. Does mainline
-only work for the 16GB version right now?
+Thanks to @dexuan, the second patch is to fix the issue where hyper-v
+`hvs_stream_has_data()` doesn't return the readable bytes.
 
-> Another way to confirm the bug is to examine
-> /sys/kernel/debug/clk/c910/clk_possible_parents: without the patch, it
-> should be something like
-> 
-> 	osc_24m cpu-pll1
-> 
-> c910's parents are defined as
-> 
-> 	static const struct clk_parent_data c910_parents[] = {
-> 		{ .hw = &c910_i0_clk.common.hw },
-> 		{ .hw = &cpu_pll1_clk.common.hw }
-> 	};
-> 
-> and the debugfs output looks obviously wrong.
+The third patch wraps the ioctl into `ioctl_int()`, which implements a
+retry mechanism to prevent immediate failure.
 
-Thanks, yeah, without the patch I also see:
+The last one adds two test cases to check the functionality. The changes
+have been tested, and the results are as expected.
 
-==> c910-i0/clk_possible_parents <==
-cpu-pll0 osc_24m
+Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
 
-> 
-> There's another bug in CCF[1] which causes unresolvable parents are
-> shown as the clock-output-names of the clock controller's first parent
-> in debugfs, explaining the output.
+--
 
-Thanks for that fix. I now see '(missing)' for c910 too when I apply
-that patch:
+v1->v2:
+https://lore.kernel.org/lkml/20250519070649.3063874-1-niuxuewei.nxw@antgroup.com/
+- Use net-next tree.
+- Reuse `rx_bytes` to count unread bytes.
+- Wrap ioctl syscall with an int pointer argument to implement a retry
+  mechanism.
 
-root@lpi4amain:/sys/kernel/debug/clk# head c910/clk_possible_parents
-(missing) cpu-pll1
+v2->v3:
+https://lore.kernel.org/netdev/20250613031152.1076725-1-niuxuewei.nxw@antgroup.com/
+- Update commit messages following the guidelines
+- Remove `unread_bytes` callback and reuse `vsock_stream_has_data()`
+- Move the tests to the end of array
+- Split the refactoring patch
+- Include <sys/ioctl.h> in the util.c
 
-> 
-> > I think it would be best for this patch to be split into separate
-> > patches for osc_12m and c910.
-> 
-> Okay, I originally thought these are relatively small fixes targeting
-> a single driver, hence put them together. I'll split it into two patches
-> in v2.
+v3->v4:
+https://lore.kernel.org/netdev/20250617045347.1233128-1-niuxuewei.nxw@antgroup.com/
+- Hyper-v `hvs_stream_has_data()` returns the readable bytes
+- Skip testing the null value for `actual` (int pointer)
+- Rename `ioctl_int()` to `vsock_ioctl_int()`
+- Fix a typo and a format issue in comments
+- Remove the `RECEIVED` barrier.
+- The return type of `vsock_ioctl_int()` has been changed to bool
 
-I think the osc_12m is good as-is but I'm not sure what Stephen will
-think about using the string "c910-i0" in c910_parents[]. I think
-splitting it up will make discussion go faster.
+v4->v5:
+https://lore.kernel.org/netdev/20250630075727.210462-1-niuxuewei.nxw@antgroup.com/
+- Put the hyper-v fix before the SIOCINQ ioctl implementation.
+- Remove my SOB from the hyper-v fix patch.
+- Move the `need_refill` initialization into the `case 1` block.
+- Remove the `actual` argument from `vsock_ioctl_int()`.
+- Replace `TIOCINQ` with `SIOCINQ`.
 
-Thanks,
-Drew
+---
+Xuewei Niu (4):
+      hv_sock: Return the readable bytes in hvs_stream_has_data()
+      vsock: Add support for SIOCINQ ioctl
+      test/vsock: Add retry mechanism to ioctl wrapper
+      test/vsock: Add ioctl SIOCINQ tests
+
+ net/vmw_vsock/af_vsock.c         | 22 +++++++++++
+ net/vmw_vsock/hyperv_transport.c | 17 +++++++--
+ tools/testing/vsock/util.c       | 30 ++++++++++-----
+ tools/testing/vsock/util.h       |  1 +
+ tools/testing/vsock/vsock_test.c | 79 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 137 insertions(+), 12 deletions(-)
+---
+base-commit: 5f712c3877f99d5b5e4d011955c6467ae0e535a6
+change-id: 20250703-siocinq-9e2907939806
+
+Best regards,
+-- 
+Xuewei Niu <niuxuewei.nxw@antgroup.com>
+
