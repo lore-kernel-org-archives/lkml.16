@@ -1,96 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0703A78F36;
-	Sun,  6 Jul 2025 16:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDF678F36;
+	Sun,  6 Jul 2025 16:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751820690; cv=none; b=gFgkg0tSSYqt6QabYRwfuIJCIVqi/tewlauEvkpb4l8YXpliVTQbDS28V2g9WIUqz0s6HAl9B2ULDFYbw35z5/IVlg0UjSlUoclPgByw6tVt29jfOvoYyTdzODMOay945WVsb4KrH7x5TKQ266fXS/3DDLUPJ+kcKudSykM6V4U=
+	t=1751820816; cv=none; b=TMRw4ipMONEsRT0AhSjgLYKrd1LEbaI/LnW5vuG7qBU5RKEocfc4hIk9f5NAYx01KSPQPJNHqzL3zSHm0A0Mdgg8/m//5x5uQ6LJFO2FEAbuPyhKisH8MHOG++1oPDUdorrFTgmlRaxfZ7X12Ohc+cDvdmeSDQdI+kuums1uFCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751820690; c=relaxed/simple;
-	bh=nlEyQhEw16C79uO0evj+Vjv3rpn6lWiDlaXgWwj9gk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bRaGd9loSYWvKcCMfBr2PEs4Kfs6WPqAToIY2HQiBDTLwps06MgPpAhFl6OXuoSXEuLHCKWSnzAO2ZkQQLkZu+25vO3DZJDvGBVC6fcaCcX8dhxZFhvhcNl5w0zrxP2JHtM29VqDYCkpT8fLtLaStNqae67WQ2UMzKzS6BACqT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bVDC+am/; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751820816; c=relaxed/simple;
+	bh=DEB05qdKlmb0vTcXEpUS9nkwAoDUX1PUMixHQmW6YFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a8YeMnJO53qNXLOWK0R8L60KHFOcS0txPAAPQ1iOsHHgbV3S/YwJKEZ50WFF4k7N9aOgoyluZAdVO92J4w5dgGPC0T6734xrNfcePlgj8lu/UppwY+nAUD7Vcir9Kw+8MiL04eaySqZWoNqQObg87y6ZZjtBRkPXe11OLKXyIqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCE64bBB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bVDC+am/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751820688; x=1783356688;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nlEyQhEw16C79uO0evj+Vjv3rpn6lWiDlaXgWwj9gk0=;
-  b=bVDC+am/KoGnhT6HdkEEkfzan3tS0Am9cLq4g4UQ38JMsWWcZF++gcYD
-   frPkVj+jVob4uNRIVeZbqLw+eSd2XRKhS6vuUZHR8MccmtgtA0o8SqTb/
-   S40BDNjWTX51ylpv9xcAel4lw2mRRnSfFyTZNDROzkLfAfrNo88dJBUvO
-   Fw+17l19msbsUrPWsjK+o+zfz9YASa6GAetE4hvMykt+0TqGzAQQfi4cd
-   GRK5sekzWOhIfujz67U522KeJZTYpxll34cuToPXc/H5BkQszGAtampWI
-   J0DLUDE3LIAmzRkr83tiKxrdvQzZfU7obH9YVod8n41TAnl0nWuofb8/O
-   g==;
-X-CSE-ConnectionGUID: CajnHK0qQM+nFdTW7fi0Sw==
-X-CSE-MsgGUID: n9HMrGxsQhukRWe1ZN9Oqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65114753"
-X-IronPort-AV: E=Sophos;i="6.16,292,1744095600"; 
-   d="scan'208";a="65114753"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 09:51:27 -0700
-X-CSE-ConnectionGUID: cJxF1SzoQUyj4GSjmlQnVw==
-X-CSE-MsgGUID: F8wvTVUVSL6IUAGQGoTQbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,292,1744095600"; 
-   d="scan'208";a="192205025"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 09:51:21 -0700
-Message-ID: <88443d81-78ac-45ad-b359-b328b9db5829@intel.com>
-Date: Mon, 7 Jul 2025 00:51:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCE64bBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC3CC4CEED;
+	Sun,  6 Jul 2025 16:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751820816;
+	bh=DEB05qdKlmb0vTcXEpUS9nkwAoDUX1PUMixHQmW6YFo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bCE64bBB1nS6ziC8/mu5uv+jyqO65a0pNVVwCYUwxvo00zvTOst4fpKfYSonOt108
+	 qIDlrFgECAoL0n1SUJVHkFf+K/fD2qZhP5x331S1aKuJa+xph+s0iiTjRmLenAzcMp
+	 qmmDcfikXKKxabLCt2MdDtfhlQVq208OuamZnEjukETnHlTZucg5J33pBFGxsGEsJk
+	 cNB8Sbl+0Vf1fhRPsCTrXNte4cMVMayGWy0NAKeSTE2eUVazOgfzxulXdMvXk0HL8m
+	 Tqs3pDYwtD/OMjBsZRkjY+uP5u+RLI3TL4ZLu4az/91gHdHMDCs2PnUcoyApdQDi1j
+	 2sIr/YaQVjSAw==
+Date: Sun, 6 Jul 2025 17:53:28 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: <Jianping.Shen@de.bosch.com>
+Cc: <lars@metafoo.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <dima.fedrau@gmail.com>,
+ <marcelo.schmitt1@gmail.com>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <Christian.Lorenz3@de.bosch.com>, <Ulrike.Frauendorf@de.bosch.com>,
+ <Kai.Dolde@de.bosch.com>
+Subject: Re: [PATCH v3 2/2] iio: imu: smi330: Add driver
+Message-ID: <20250706175328.7207d847@jic23-huawei>
+In-Reply-To: <20250703153823.806073-3-Jianping.Shen@de.bosch.com>
+References: <20250703153823.806073-1-Jianping.Shen@de.bosch.com>
+	<20250703153823.806073-3-Jianping.Shen@de.bosch.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 00/23] Enable CET Virtualization
-To: Chao Gao <chao.gao@intel.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org, seanjc@google.com,
- pbonzini@redhat.com, dave.hansen@intel.com
-Cc: rick.p.edgecombe@intel.com, mlevitsk@redhat.com, john.allen@amd.com,
- weijiang.yang@intel.com, minipli@grsecurity.net, xin@zytor.com,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20250704085027.182163-1-chao.gao@intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250704085027.182163-1-chao.gao@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Chao,
+On Thu, 3 Jul 2025 17:38:23 +0200
+<Jianping.Shen@de.bosch.com> wrote:
 
-On 7/4/2025 4:49 PM, Chao Gao wrote:
-> Tests:
-> ======================
-> This series passed basic CET user shadow stack test and kernel IBT test in L1
-> and L2 guest.
-> The patch series_has_ impact to existing vmx test cases in KVM-unit-tests,the
-> failures have been fixed here[1].
-> One new selftest app[2] is introduced for testing CET MSRs accessibilities.
+> From: Jianping Shen <Jianping.Shen@de.bosch.com>
 > 
-> Note, this series hasn't been tested on AMD platform yet.
+> Add the iio driver for bosch imu smi330. The smi330 is a combined
+> three axis angular rate and three axis acceleration sensor.
 > 
-> To run user SHSTK test and kernel IBT test in guest, an CET capable platform
-> is required, e.g., Sapphire Rapids server, and follow below steps to build
-> the binaries:
-> 
-> 1. Host kernel: Apply this series to mainline kernel (>= v6.6) and build.
-> 
-> 2. Guest kernel: Pull kernel (>= v6.6), opt-in CONFIG_X86_KERNEL_IBT
-> and CONFIG_X86_USER_SHADOW_STACK options. Build with CET enabled gcc versions
-> (>= 8.5.0).
-> 
-> 3. Apply CET QEMU patches[3] before build mainline QEMU.
+> Signed-off-by: Jianping Shen <Jianping.Shen@de.bosch.com>
+Hi Jianping,
 
-You forgot to provide the links of [1][2][3].
+This is coming together nicely.   A few things inline.
+
+Jonathan
+
+
+> diff --git a/drivers/iio/imu/smi330/smi330.h b/drivers/iio/imu/smi330/smi330.h
+> new file mode 100644
+> index 00000000000..bd896e86977
+> --- /dev/null
+> +++ b/drivers/iio/imu/smi330/smi330.h
+> @@ -0,0 +1,240 @@
+> +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
+> +/*
+> + * Copyright (c) 2025 Robert Bosch GmbH.
+> + */
+> +#ifndef _SMI330_H
+> +#define _SMI330_H
+> +
+> +#include <linux/bits.h>
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/trigger.h>
+
+Where possible use forwards declarations and keep the include
+to where it is needed.  e.g.
+struct iio_trigger;
+should be enough for this one.
+
+> +
+> +#define SMI330_NO_ERROR_MASK (BIT(2) | BIT(0))
+> +#define SMI330_ST_SUCCESS_MASK GENMASK(6, 0)
+> +
+> +#define SMI330_ALL_CHAN_MSK GENMASK(6, 0)
+> +
+> +#define SMI330_CHIP_ID 0x42
+> +
+> +#define SMI330_SPI_WR_MASK GENMASK(6, 0)
+> +#define SMI330_SPI_RD_MASK BIT(7)
+> +
+> +#define SMI330_SOFT_RESET_DELAY 2000
+> +
+> +/* Register map */
+> +#define SMI330_CHIP_ID_REG 0x00
+
+
+I missed this until now, but you have done a good job of keeping all registers
+accesses etc to the core driver, not the i2c and spi parts.  As such
+why do we need all these defines in the header?  Push them down into the
+C file (a the top) and keep only those things needed by both bus drivers
+and the core driver in the header.
+
+> +#define SMI330_ERR_REG 0x01
+> +#define SMI330_STATUS_REG 0x02
+> +#define SMI330_ACCEL_X_REG 0x03
+
+> +
+> +int smi330_core_probe(struct device *dev, struct regmap *regmap);
+> +
+> +#endif /* _SMI330_H */
+> diff --git a/drivers/iio/imu/smi330/smi330_core.c b/drivers/iio/imu/smi330/smi330_core.c
+> new file mode 100644
+> index 00000000000..23e65c1ed64
+> --- /dev/null
+> +++ b/drivers/iio/imu/smi330/smi330_core.c
+
+> +
+> +static irqreturn_t smi330_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct smi330_data *data = iio_priv(indio_dev);
+> +	int ret, chan;
+> +	int i = 0;
+> +
+> +	ret = regmap_bulk_read(data->regmap, SMI330_ACCEL_X_REG, data->buf,
+> +			       ARRAY_SIZE(smi330_channels));
+> +	if (ret)
+> +		goto out;
+> +
+> +	if (*indio_dev->active_scan_mask != SMI330_ALL_CHAN_MSK) {
+> +		iio_for_each_active_channel(indio_dev, chan)
+> +			data->buf[i++] = data->buf[chan];
+
+If I follow this correctly you are reading all the channels and just copying
+out the ones you want.  Just let the IIO core do that for you by setting
+iio_dev->available_scan_masks = {  SMI330_ALL_CHAN_MSK, 0 }; and push the
+whole buffer every time.
+
+The handling the core code is reasonably sophisticated and will use bulk
+copying where appropriate.
+
+If there is a strong reason to not use that, add a comment here so we don't
+have anyone 'fix' this code in future.
+
+> +	}
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data->buf, pf->timestamp);
+> +
+> +out:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+> +static int smi330_dev_init(struct smi330_data *data)
+> +{
+> +	int ret, chip_id, val, mode;
+> +	struct device *dev = regmap_get_device(data->regmap);
+> +
+> +	ret = regmap_read(data->regmap, SMI330_CHIP_ID_REG, &chip_id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	chip_id &= 0x00FF;
+
+Perhaps GENMASK(7, 0) for that - perhaps with a define associated with
+the CHIP_ID_REG define as this is a register field. When you've done
+that apply FIELD_GET() so we don't need to know it's the lowest bits
+in the register.
+
+> +
+> +	if (chip_id != SMI330_CHIP_ID)
+> +		dev_info(dev, "Unknown chip id: 0x%04x\n", chip_id);
+> +
+> +	ret = regmap_read(data->regmap, SMI330_ERR_REG, &val);
+> +	if (ret)
+> +		return ret;
+> +	if (FIELD_GET(SMI330_ERR_FATAL_MASK, val))
+> +		return -ENODEV;
+> +
+> +	ret = regmap_read(data->regmap, SMI330_STATUS_REG, &val);
+> +	if (ret)
+> +		return ret;
+> +	if (FIELD_GET(SMI330_STATUS_POR_MASK, val) == 0)
+> +		return -ENODEV;
+> +
+> +	mode = FIELD_PREP(SMI330_CFG_MODE_MASK, SMI330_MODE_NORMAL);
+> +
+> +	ret = regmap_update_bits(data->regmap, SMI330_ACCEL_CFG_REG,
+> +				 SMI330_CFG_MODE_MASK, mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_update_bits(data->regmap, SMI330_GYRO_CFG_REG,
+> +				  SMI330_CFG_MODE_MASK, mode);
+> +}
+
+
+> diff --git a/drivers/iio/imu/smi330/smi330_i2c.c b/drivers/iio/imu/smi330/smi330_i2c.c
+> new file mode 100644
+> index 00000000000..76b88bbd7d2
+> --- /dev/null
+> +++ b/drivers/iio/imu/smi330/smi330_i2c.c
+> @@ -0,0 +1,136 @@
+> +// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Robert Bosch GmbH.
+> + */
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+As for spi driver below, drop this and include
+mod_devicetable.h instead.
+
+> +#include <linux/regmap.h>
+> +
+> +#include "smi330.h"
+> +
+> +#define SMI330_NUM_DUMMY_BYTES 2
+> +#define SMI330_I2C_MAX_RX_BUFFER_SIZE \
+> +	(SMI330_NUM_DUMMY_BYTES + SMI330_SCAN_LEN * sizeof(s16))
+> +
+> +struct smi330_i2c_priv {
+> +	struct i2c_client *i2c;
+> +	u8 rx_buffer[SMI330_I2C_MAX_RX_BUFFER_SIZE];
+> +};
+> +
+> +static int smi330_regmap_i2c_read(void *context, const void *reg_buf,
+> +				  size_t reg_size, void *val_buf,
+> +				  size_t val_size)
+> +{
+> +	struct smi330_i2c_priv *priv = context;
+> +	int ret, retry;
+> +
+> +	/*
+> +	 * SMI330 I2C read frame:
+> +	 * <Slave address[6:0], RnW> <x, Register address[6:0]>
+> +	 * <Slave address[6:0], RnW> <Dummy[7:0]> <Dummy[7:0]> <Data_0[7:0]> <Data_1[15:8]>...
+> +	 *                                                     <Data_N[7:0]> <Data_N[15:8]>
+> +	 * Remark: Slave address is not considered part of the frame in the following definitions
+> +	 */
+> +	struct i2c_msg msgs[] = {
+> +		{
+> +			.addr = priv->i2c->addr,
+> +			.flags = priv->i2c->flags,
+> +			.len = reg_size,
+> +			.buf = (u8 *)reg_buf,
+> +		},
+> +		{
+> +			.addr = priv->i2c->addr,
+> +			.flags = priv->i2c->flags | I2C_M_RD,
+> +			.len = SMI330_NUM_DUMMY_BYTES + val_size,
+
+It might be worth adding a sanity check in ehre that this is never more
+than SMI330_I2C_MAX_RX_BUFFER_SIZE.
+That is obviously true, but none the less a check may make it 'locally'
+clear that we can rely on that.
+
+> +			.buf = priv->rx_buffer,
+> +		},
+> +	};
+> +
+> +	ret = i2c_transfer(priv->i2c->adapter, msgs, ARRAY_SIZE(msgs));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	memcpy(val_buf, priv->rx_buffer + SMI330_NUM_DUMMY_BYTES, val_size);
+> +
+> +	return 0;
+> +}
+
+> diff --git a/drivers/iio/imu/smi330/smi330_spi.c b/drivers/iio/imu/smi330/smi330_spi.c
+> new file mode 100644
+> index 00000000000..5b5aaaf0c5d
+> --- /dev/null
+> +++ b/drivers/iio/imu/smi330/smi330_spi.c
+> @@ -0,0 +1,91 @@
+> +// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Robert Bosch GmbH.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+
+There aren't any calls that you need of.h for in here. If there had been
+I'd probably be telling you to user property.h but its very simple so
+no problem not including either.
+
+What you probably want is the id tables which are in
+linux/mod_devicetable.h which you should include here.
+
+> +#include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include "smi330.h"
+
+
