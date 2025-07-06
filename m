@@ -1,76 +1,98 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CDB1BF58
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 21:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06ED2E36ED
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 21:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751835924; cv=none; b=laeoZZVLOHKt2j/h+cGAcV36w/QH8GVs/XXlmRt/BDsjg/wknZ/IwDBh+yQweZpb43q1zFs0LLmCQ+KO9GqF5UdHBA2C7IDLD8Srr6WMM8W3Ku/bpyAOF80wKcJKdbaFJNfohl1EHBSyCrbJzPp6517E4cxJHGoGUZ7JtuoQ780=
+	t=1751836195; cv=none; b=Eu6KbPzhqdIiL1XVcd2S4318Q1hsBbVebg+w92jEh2mxF2TODRgKooEm6VHUPh+4QGZsSfNXr1xkdvlc+NCQ4cjUkdRhkAVKRi6jqISBU1VsSwBnMmU0/CEUGQ7UTYJxpoG3q2z+Kq/aqa6mEa+kTwW7/tG+2QyVVUgB7uFn40Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751835924; c=relaxed/simple;
-	bh=DQq8YRm3/ytQV12mFqCC31vcZJM2dVv1ItsuEHy3B0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=e7f5YVd/6GLsakE014e3447UizBYDbT+e5kGzesQDaWJxgI6nIIiUSfjnlUrqmIIgowzBdTTUc+txy/JnOnP+NoHhq6L8CHPQ9S+oGhKaWNTRh7LMtnMPf/N7WUMzJ5JxJQao92HkNlvGiCdGCKE20AJjh5AiOz3ZXPBPYh0kGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m0RbrLaC; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751836195; c=relaxed/simple;
+	bh=14xc/UbRDGdY2Xndq2VfpIaojZKxUhmzvqjdFfnWODw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KmbW1sfv//7YWlnR8u9WAzrSYwx4jQ+GJBDJtDJ7nURzgo3CjGWQ0wxyqgJjvGOD1LmjaRxtwoeIJyB+OIDT6yr1ZpC2/V4QpD22VIBW3Mv4ZdDwch/bREcptIzL764rifs2TRnnD821j9BGj4Ap6BUnP5jjj2AGhw4uyFpmumg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sidnayyar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=stMADxs1; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sidnayyar.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m0RbrLaC"
-Message-ID: <f870e739-bbe7-4260-a847-1035f1c5b801@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751835910;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cV4Rqtm91hjKif3BbwFfQH+ZWTX/llutJehbPJVtTUY=;
-	b=m0RbrLaC9J8wxVcsEOtPnrCxYg7n7xp3elDOgNGnmrulrGJuxlwTIdtyz4dLifXV7RRYyf
-	7++v/Km428YPzyKEWrrkoJyCyHiHgDbCQRVsE75A2y61WpLTU7/Mx6/vicfGxc/YaPYZbV
-	3obKG5C5LLwUz/QoIsRzUnKCK5HY9ws=
-Date: Sun, 6 Jul 2025 14:04:55 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="stMADxs1"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so11735575e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 14:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751836192; x=1752440992; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aWdzYZMD2X+7d8TrDHbqBltR8re7YcGVkWpir2FMrGo=;
+        b=stMADxs1N85DgGt2evLUf4CYzG1i80wi6nFdNcEY30CbFbtatxkl8ekxIwxCyoeii1
+         qeaJgGPp9sLdU5fvxQqQpdmFIDUdjdrQLzf/DMnbt1W0o7ICt+NBDMZOg/cxHwgSHHGB
+         /4jZPUDVcbZSdC+SSrdAoc4RFQJD4e76XFQPbGDZaBy/sOaXzjOSEOnXXZHPWDrqXlug
+         sZZOYpk2lgU1I9S1s12+qJbcuSvw1Eocx5Z18MmjOi7Kd3HjZ5zNiluhnPfe1hoyfLcn
+         on7NsDx9gYa1of88uuAJiigUU3LD9y0eJpbOedsXa7JztsqKRLF/eYklsLfIQ0DYEZd7
+         zd8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751836192; x=1752440992;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aWdzYZMD2X+7d8TrDHbqBltR8re7YcGVkWpir2FMrGo=;
+        b=mhZuVxHNRrVc/BB/FgPGA1LDHlejua+N7LnnBxQFtzTw8Gu6PVQZO5E2q9sewEqhFE
+         7vS+t4EhJELrmkFgw/5TQW2cy/Ri6ndppILN5XlW1o4TNR8LCvlo6wKg7iGc33Ps7QvZ
+         ABYE7+sfJDjGjXcR7oTtTcYS1HTJGjBzrehUa1VsAvobrTY3Am9tyWdiRr6jA7T3rc4J
+         LPE4TK5sInRDBV++NFgb6yIpk6TGYhyrpNexLp7JzQdqcTnhX9jNzsyVFOBgVo9x2s9H
+         NU8SiE7b7wDHjbkijgWV6EWon5iG29SsNXaoZ8egjEwHgjkvkzuFk4Xk3b+GULQIOoEV
+         uJRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZgsXTeCLqUT0weGGzBab3bgkWnHP3N3aRJaHhbqsBG0g+vsTPg3i2oN9N9VwJFtIHhifHqRGTLYYAygY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzlpp47nsE5m/moW5cJR1UXxMKi5Id8oFlyEALQMGGUkTSFV5Pd
+	ayagBoTJiBzfAfv/DcllSk1JzY860BXmLU4AvjaPhouSZKNyPKqawk5segTk+yliciN6c8cfaiF
+	TfkG+WIkeuZyp1J4A1g==
+X-Google-Smtp-Source: AGHT+IFJ8G+CrfYTTfEkdhNdUJz2U26DztZqW9PcSzm3+9oLzYnR+EGgWWEfO94VNvAWvlhdXd3G1XOt8kliwmM=
+X-Received: from wmbdv27.prod.google.com ([2002:a05:600c:621b:b0:450:dca1:cf91])
+ (user=sidnayyar job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:5251:b0:441:d43d:4f68 with SMTP id 5b1f17b1804b1-454bb80aaaamr62156395e9.15.1751836192366;
+ Sun, 06 Jul 2025 14:09:52 -0700 (PDT)
+Date: Sun,  6 Jul 2025 21:09:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
- jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <6865d59b.a70a0220.5d25f.0781.GAE@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <6865d59b.a70a0220.5d25f.0781.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250706210940.1720720-1-sidnayyar@google.com>
+Subject: [PATCH] modpost: check for NULL filename pointer in find_module()
+From: Siddharth Nayyar <sidnayyar@google.com>
+To: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Siddharth Nayyar <sidnayyar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-在 2025/7/2 17:58, syzbot 写道:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Pointer for dump filename can be NULL when a module is not created from
+a dump file in modpost. The find_module() function should therefore
+check whether the dump filename pointers are NULL before comparing them
+using strcmp().
 
-Today I made tests with rdma-core after this patch is applied on the 
-linux upstream. All the test cases in rdma-core can pass successfully.
+Signed-off-by: Siddharth Nayyar <sidnayyar@google.com>
+---
+ scripts/mod/modpost.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-I will send this commit out based on the rdma next repository.
-
-Zhu Yanjun
-
-> 
-> Reported-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
-> Tested-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         6f8d023e RDMA/rxe: Fix rxe_skb_tx_dtor problem
-> git tree:       https://github.com/zhuyj/linux.git v6.16_fix_rxe_skb_tx_dtor
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13973770580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-> compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-> 
-> Note: no patches were applied.
-> Note: testing is done by a robot and is best-effort only.
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 5ca7c268294e..9a64d0a55f89 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -178,8 +178,12 @@ static struct module *find_module(const char *filename, const char *modname)
+ 	struct module *mod;
+ 
+ 	list_for_each_entry(mod, &modules, list) {
+-		if (!strcmp(mod->dump_file, filename) &&
+-		    !strcmp(mod->name, modname))
++		if (strcmp(mod->name, modname) != 0)
++			continue;
++		if (!mod->dump_file && !filename)
++			return mod;
++		if (mod->dump_file && filename &&
++		    !strcmp(mod->dump_file, filename))
+ 			return mod;
+ 	}
+ 	return NULL;
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
