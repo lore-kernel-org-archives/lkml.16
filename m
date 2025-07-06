@@ -1,99 +1,156 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7902954652;
-	Sun,  6 Jul 2025 12:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.142.27])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 612A11D432D;
+	Sun,  6 Jul 2025 12:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.142.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751805156; cv=none; b=Qh4haNGk13O6BGid7QTPVYtTlThU/HFbthgbIzjJeVFO/N/mnGGg9Ov2DcJeGIBNnqiW8pzXkmNlRH6u6rarSNcs4RmHU/nOzo0RNxvo2u/v8nfGrLr+hNIaSSc1Sdnrn/Ij3kih3QIpN5/I8Uy9wiyyT7ic2mOomUl/QblhCwo=
+	t=1751806618; cv=none; b=OhqIrOI4OEa89lQmzFrMq8b7Ss852kPEjVPoUZK7G4w5QcNeT7InsudMYfC5L9hKZ8iB/pGonxK/rcQyB0L2R3sWiXp7I3P1pAcHVj0688iwrJ/eYYLSEntjWPC4bwQSu41ejLlh/FZe6zIuJIsU6g1qSeX8a5WTq+pIdjv/6nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751805156; c=relaxed/simple;
-	bh=nukMN18DhY6oFRff9ULjKE8c1DQ0EfuB5KKmA5eW7lk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gs/DIS0+0AvwgJolV8Mdu+OlCEMs2xG1f4jEsqyJPz0mpMlAMi7EnZsrkn4g5CTuVNL6OF9+CQvG4LvO+232mKfuWD0mVSQTsScyetPNU+FDGCzkfrCKYevGVAQrp98ELhoTK4QKfN+t5w38ysDUbyhZ/U5tz36FtK32TAmFm9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=JhQvPAHL; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="JhQvPAHL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1751805147; bh=nukMN18DhY6oFRff9ULjKE8c1DQ0EfuB5KKmA5eW7lk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=JhQvPAHLRCPrwm36KV3JxO1Ox04pjiO0+lQxpTxCQHuYzgEf3Eulf6YIzkE6njxBh
-	 FUjdsC4pwHLuSeyLfjnGKDxSF8tX191KXv9sCoFQ4IWsuVpPH0iJOMDx2iKGCUsDyM
-	 liCb2gikNmHYY12pBj4Wwomh1V31LkUZPxu1QgYA=
-Message-ID: <6733d2ca-f73b-4332-97c3-ba79377538c2@lucaweiss.eu>
-Date: Sun, 6 Jul 2025 14:32:26 +0200
+	s=arc-20240116; t=1751806618; c=relaxed/simple;
+	bh=yGyfR8pc5R6xxQY2Hclru8EO9YQuivrLTWTlrwbMtjY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Y2BF8dsv8z6Sy3JOdsY5H05wEDjV6HcMroOv6exziKvalzd+21vP9Bmy9DrwVvYjQOC/vG47N1A8Slt6Xom1EKHiCxLRd5ijAcoEeh2gJh3fbhfxwCPwQuNOhVO7d1g2EUOlVsgAVwhms9w81IZPkc8/OseADbvjYi4/+cCvlBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.76.142.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from weishangjuan$eswincomputing.com ( [10.100.72.77] ) by
+ ajax-webmail-app2 (Coremail) ; Sun, 6 Jul 2025 20:56:09 +0800 (GMT+08:00)
+Date: Sun, 6 Jul 2025 20:56:09 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?6Z+m5bCa5aif?= <weishangjuan@eswincomputing.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	rmk+kernel@armlinux.org.uk, yong.liang.choong@linux.intel.com,
+	vladimir.oltean@nxp.com, jszhang@kernel.org, jan.petrous@oss.nxp.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
+	boon.khai.ng@altera.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
+	linmin@eswincomputing.com, lizhi2@eswincomputing.com
+Subject: Re: Re: [PATCH v3 1/2] dt-bindings: ethernet: eswin: Document for
+ EIC7700 SoC
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <9316adcb-4626-4ff8-a308-725c6ab34eba@kernel.org>
+References: <20250703091808.1092-1-weishangjuan@eswincomputing.com>
+ <20250703091947.1148-1-weishangjuan@eswincomputing.com>
+ <9316adcb-4626-4ff8-a308-725c6ab34eba@kernel.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/4] remoteproc: qcom_q6v5_pas: Use resource with CX PD
- for MSM8974
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
- <20250621-msm8974-rpmpd-switch-v1-2-0a2cb303c446@lucaweiss.eu>
- <hwewzj4ygfbb22vxrahjfc3b4oxyagh3nkd26bs3p5k2fcxr6m@mkgtyjkxz3d7>
- <226fd16c-8071-43c7-9ecc-9bd95e319aaf@lucaweiss.eu>
- <znv7ish4ufkgnzfwyxjt2ercdvemxh644zwpqthj7rtf5gb4fe@auvbeemdlbtk>
-From: Luca Weiss <luca@lucaweiss.eu>
-In-Reply-To: <znv7ish4ufkgnzfwyxjt2ercdvemxh644zwpqthj7rtf5gb4fe@auvbeemdlbtk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <3223ba93.2c32.197dfceedc6.Coremail.weishangjuan@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgAXt5Vpcmpov_apAA--.18621W
+X-CM-SenderInfo: pzhl2xxdqjy31dq6v25zlqu0xpsx3x1qjou0bp/1tbiAQEPEGhpU2
+	0HCwAAss
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On 06-07-2025 12:08 p.m., Dmitry Baryshkov wrote:
-> On Sun, Jul 06, 2025 at 10:31:38AM +0200, Luca Weiss wrote:
->> On 05-07-2025 10:57 p.m., Dmitry Baryshkov wrote:
->>> On Sat, Jun 21, 2025 at 03:19:57PM +0200, Luca Weiss wrote:
->>>> MSM8974 requires the CX power domain, so use the msm8996_adsp_resource
->>>> which has cx under proxy_pd_names and is otherwise equivalent.
->>>>
->>>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
->>>> ---
->>>>    drivers/remoteproc/qcom_q6v5_pas.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> Hmm. You are modifying the ADSP configuration in the driver, but at the
->>> same time you've dropped CX supply from the MSS remoteproc.
->>
->> The qcom_q6v5_mss driver has this support for .fallback_proxy_supply, which
->> are used in case the power domain is not specified.
->>
->> So no driver change is necessary in the mss driver for both old and new
->> devicetrees, but the adsp driver does not have this fallback, so that's why
->> the adsp config is updated.
->>
->> Does that make it clear?
-> 
-> Yes. Would it make sense to implement fallback_proxy_supply for ADSP
-> too?
-
-Definitely would be possible, but I don't see the point in doing the 
-work to implement this, to then carry around a bunch of legacy 
-compatibility code that (very likely) won't really be used in practice.
-I don't think any platform apart from msm8974 are going to be affected 
-by this anyways.
-
-Still same argument from my side, I think breaking compatibility here 
-for this one driver outweighs the effort/code of implementing compatibility.
-
-Regards
-Luca
-
-> 
->>
->> Regards
->> Luca
-> 
-
+RGVhciBLcnp5c3p0b2YgS296bG93c2tpLAoKSSBhcG9sb2dpemUgZm9yIHRoZSBpbmNvbnZlbmll
+bmNlIGNhdXNlZCBieSBzZW5kaW5nIHBhdGNoZXMgbXVsdGlwbGUgdGltZXMgZHVlIHRvIG15IGlu
+Y29tcGxldGUgdW5kZXJzdGFuZGluZyBvZiB5b3VyIHByZXZpb3VzIHZlcnNpb24ncyByZXNwb25z
+ZS4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgcmV2aWV3aW5nIG91ciBwYXRjaGVzIG11bHRpcGxl
+IHRpbWVzLiBSZWdhcmRpbmcgeW91ciByZXNwb25zZSBvbiBWMywgSSBoYXZlIHR3byBxdWVzdGlv
+bnMgYWJvdXQgWUFNTCBmaWxlcyB0aGF0IEkgd291bGQgbGlrZSB0byBjb25maXJtIHdpdGggeW91
+LiBDYW4geW91IHRha2Ugc29tZSB0aW1lIG91dCBvZiB5b3VyIGJ1c3kgc2NoZWR1bGUgdG8gcmVw
+bHkgdG8gbWU/CgoxLiBSZWdhcmRpbmcgInJlZzogbWluSXRlbXM6IDEiCkkgaGF2ZSByZXZpZXdl
+ZCB0aGUgd3JpdGluZyBtZXRob2QgZnJvbSBvdGhlciBZQU1MIGZpbGVzIGluIHRoZSBzb3VyY2Ug
+Y29kZSwgYW5kIHRoZXkgYWxsIHVzZSDigJxyZWc6IG1heEl0ZW1zOiAxIOKAnSBpbnN0ZWFkIG9m
+CuKAnHJlZzogbWluSXRlbXM6IDHigJ0uIFNvIHdlIGFsc28gbmVlZCB0byB1c2Ug4oCccmVnOiBt
+YXhJdGVtczogMSDigJ0gaW4gb3VyIFlBTUwgZmlsZS4KSXMgdGhpcyB1bmRlcnN0YW5kaW5nIGNv
+cnJlY3Q/CgoyLiBSZWdhcmRpbmfCoGNsb2NrcyBhbmQgY2xvY2stbmFtZXMKRm9yIGNsb2NrcyBh
+bmQgY2xvY2stbmFtZXMsIGZyb20gb3RoZXIgWUFNTCBmaWxlcyB0aGVyZSBpcyBubyBtaW5JdGVt
+cyBhbmQgbWF4SXRlbXMgbWVudGlvbmVkLgpXZSB3aWxsIHJlbW92ZSBtaW5JdGVtcyBhbmQgbWF4
+SXRlbXMgZnJvbSBjbG9ja3MgYW5kIGNsb2NrLW5hbWVzIGFuZCBhcyB3ZSBoYXZlIGZpeCAyIGNs
+b2NrcywKd2Ugd2lsbCBhbHNvIGFkZCBkZXNjcmlwdGlvbiBpbiBjbG9ja3M6aXRlbXMuClJlZiB5
+YW1sOiBzb3BoZ28sc2cyMDQ0LWR3bWFjLnlhbWwsIHN0YXJmaXZlLGpoNzExMC1kd21hYy55YW1s
+CkxldCBtZSBrbm93IGlmIHRoaXMgaXMgY29ycmVjdD8gV2Ugd2lsbCB1cGRhdGUgaW4gbmV4dCB2
+ZXJzaW9uIGJhc2VkIG9uIHlvdXIgc3VnZ2VzdGlvbnMuCgozLiBEbyB3ZSBuZWVkIHRvIGluY2x1
+ZGUgYWxsIGNoYW5nZXMgYmFzZWQgb24gdGhlIHByZXZpb3VzIHZlcnNpb24gaW4gdGhlIGNvdmVy
+IGxldHRlciBwYXRjaCB3aGVuIHN1Ym1pdHRpbmcgdGhlIHBhdGNoZXM/CklmIHNvLCB3ZSB3aWxs
+IGNvdmVyIGFsbCB0aGUgY2hhbmdlcyBpbiBjb3ZlciBsZXR0ZXIgZnJvbSBuZXh0IHRpbWUuCgpM
+b29rIGZvcndhcmQgdG8geW91ciByZXBsee+8gQoKCgoKPiAtLS0tLeWOn+Wni+mCruS7ti0tLS0t
+Cj4g5Y+R5Lu25Lq6OiAiS3J6eXN6dG9mIEtvemxvd3NraSIgPGtyemtAa2VybmVsLm9yZz4KPiDl
+j5HpgIHml7bpl7Q6MjAyNS0wNy0wMyAxNzo1MTo0NyAo5pif5pyf5ZubKQo+IOaUtuS7tuS6ujog
+d2Vpc2hhbmdqdWFuQGVzd2luY29tcHV0aW5nLmNvbSwgYW5kcmV3K25ldGRldkBsdW5uLmNoLCBk
+YXZlbUBkYXZlbWxvZnQubmV0LCBlZHVtYXpldEBnb29nbGUuY29tLCBrdWJhQGtlcm5lbC5vcmcs
+IHJvYmhAa2VybmVsLm9yZywga3J6aytkdEBrZXJuZWwub3JnLCBjb25vcitkdEBrZXJuZWwub3Jn
+LCBuZXRkZXZAdmdlci5rZXJuZWwub3JnLCBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZywgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgbWNvcXVlbGluLnN0bTMyQGdtYWlsLmNvbSwgYWxl
+eGFuZHJlLnRvcmd1ZUBmb3NzLnN0LmNvbSwgcm1rK2tlcm5lbEBhcm1saW51eC5vcmcudWssIHlv
+bmcubGlhbmcuY2hvb25nQGxpbnV4LmludGVsLmNvbSwgdmxhZGltaXIub2x0ZWFuQG54cC5jb20s
+IGpzemhhbmdAa2VybmVsLm9yZywgamFuLnBldHJvdXNAb3NzLm54cC5jb20sIHByYWJoYWthci5t
+YWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbSwgaW5vY2hpYW1hQGdtYWlsLmNvbSwgYm9vbi5r
+aGFpLm5nQGFsdGVyYS5jb20sIGRmdXN0aW5pQHRlbnN0b3JyZW50LmNvbSwgMHgxMjA3QGdtYWls
+LmNvbSwgbGludXgtc3RtMzJAc3QtbWQtbWFpbG1hbi5zdG9ybXJlcGx5LmNvbSwgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4g5oqE6YCBOiBuaW5neXVAZXN3aW5jb21wdXRp
+bmcuY29tLCBsaW5taW5AZXN3aW5jb21wdXRpbmcuY29tLCBsaXpoaTJAZXN3aW5jb21wdXRpbmcu
+Y29tCj4g5Li76aKYOiBSZTogW1BBVENIIHYzIDEvMl0gZHQtYmluZGluZ3M6IGV0aGVybmV0OiBl
+c3dpbjogRG9jdW1lbnQgZm9yIEVJQzc3MDAgU29DCj4gCj4gT24gMDMvMDcvMjAyNSAxMToxOSwg
+d2Vpc2hhbmdqdWFuQGVzd2luY29tcHV0aW5nLmNvbSB3cm90ZToKPiA+IEZyb206IFNoYW5nanVh
+biBXZWkgPHdlaXNoYW5nanVhbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAKPiA+IEFkZCBFU1dJ
+TiBFSUM3NzAwIEV0aGVybmV0IGNvbnRyb2xsZXIsIHN1cHBvcnRpbmcgY2xvY2sKPiA+IGNvbmZp
+Z3VyYXRpb24sIGRlbGF5IGFkanVzdG1lbnQgYW5kIHNwZWVkIGFkYXB0aXZlIGZ1bmN0aW9ucy4K
+PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogWmhpIExpIDxsaXpoaTJAZXN3aW5jb21wdXRpbmcuY29t
+Pgo+ID4gU2lnbmVkLW9mZi1ieTogU2hhbmdqdWFuIFdlaSA8d2Vpc2hhbmdqdWFuQGVzd2luY29t
+cHV0aW5nLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9uZXQvZXN3aW4sZWljNzcwMC1l
+dGgueWFtbCAgICAgICB8IDE3NSArKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMTc1IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9lc3dpbixlaWM3NzAwLWV0aC55YW1sCj4gPiAKPiA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Vzd2lu
+LGVpYzc3MDAtZXRoLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0
+L2Vzd2luLGVpYzc3MDAtZXRoLnlhbWwKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRl
+eCAwMDAwMDAwMDAwMDAuLjA0YjRjN2JmYmI1Ygo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9lc3dpbixlaWM3NzAwLWV0aC55
+YW1sCj4gPiBAQCAtMCwwICsxLDE3NSBAQAo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
+IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQo+ID4gKyVZQU1MIDEuMgo+ID4gKy0tLQo+
+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbmV0L2Vzd2luLGVpYzc3MDAt
+ZXRoLnlhbWwjCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1h
+cy9jb3JlLnlhbWwjCj4gPiArCj4gPiArdGl0bGU6IEVzd2luIEVJQzc3MDAgU09DIEV0aCBDb250
+cm9sbGVyCj4gPiArCj4gPiArbWFpbnRhaW5lcnM6Cj4gPiArICAtIFNodWFuZyBMaWFuZyA8bGlh
+bmdzaHVhbmdAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gKyAgLSBaaGkgTGkgPGxpemhpMkBlc3dp
+bmNvbXB1dGluZy5jb20+Cj4gPiArICAtIFNoYW5nanVhbiBXZWkgPHdlaXNoYW5nanVhbkBlc3dp
+bmNvbXB1dGluZy5jb20+Cj4gPiArCj4gPiArZGVzY3JpcHRpb246Cj4gPiArICBUaGUgZXRoIGNv
+bnRyb2xsZXIgcmVnaXN0ZXJzIGFyZSBwYXJ0IG9mIHRoZSBzeXNjcmcgYmxvY2sgb24KPiA+ICsg
+IHRoZSBFSUM3NzAwIFNvQy4KPiA+ICsKPiA+ICtzZWxlY3Q6Cj4gPiArICBwcm9wZXJ0aWVzOgo+
+ID4gKyAgICBjb21wYXRpYmxlOgo+ID4gKyAgICAgIGNvbnRhaW5zOgo+ID4gKyAgICAgICAgZW51
+bToKPiA+ICsgICAgICAgICAgLSBlc3dpbixlaWM3NzAwLXFvcy1ldGgKPiA+ICsgIHJlcXVpcmVk
+Ogo+ID4gKyAgICAtIGNvbXBhdGlibGUKPiA+ICsKPiA+ICthbGxPZjoKPiA+ICsgIC0gJHJlZjog
+c25wcyxkd21hYy55YW1sIwo+ID4gKwo+ID4gK3Byb3BlcnRpZXM6Cj4gPiArICBjb21wYXRpYmxl
+Ogo+ID4gKyAgICBpdGVtczoKPiA+ICsgICAgICAtIGNvbnN0OiBlc3dpbixlaWM3NzAwLXFvcy1l
+dGgKPiA+ICsgICAgICAtIGNvbnN0OiBzbnBzLGR3bWFjLTUuMjAKPiA+ICsKPiA+ICsgIHJlZzoK
+PiA+ICsgICAgbWluSXRlbXM6IDEKPiAKPiBOb3BlLiBDaGFuZ2Vsb2cgZG9lcyBub3QgZXhwbGFp
+biB0aGF0LCBpdCBpcyBub3QgY29ycmVjdCBhbmQgbm8gb25lIGV2ZXIKPiByZXF1ZXN0ZWQgc29t
+ZXRoaW5nIGxpa2UgdGhhdC4gU2VlIGFsc28gd3JpdGluZyBiaW5kaW5ncyBhYm91dCBjb25zdHJh
+aW50cy4KPiAKPiA+ICsKPiA+ICsgIGludGVycnVwdC1uYW1lczoKPiA+ICsgICAgY29uc3Q6IG1h
+Y2lycQo+ID4gKwo+ID4gKyAgaW50ZXJydXB0czoKPiA+ICsgICAgbWF4SXRlbXM6IDEKPiA+ICsK
+PiA+ICsgIHBoeS1tb2RlOgo+ID4gKyAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZp
+bml0aW9ucy9zdHJpbmcKPiA+ICsgICAgZW51bToKPiA+ICsgICAgICAtIHJnbWlpCj4gPiArICAg
+ICAgLSByZ21paS1yeGlkCj4gPiArICAgICAgLSByZ21paS10eGlkCj4gPiArICAgICAgLSByZ21p
+aS1pZAo+ID4gKwo+ID4gKyAgcGh5LWhhbmRsZToKPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlw
+ZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRsZQo+ID4gKyAgICBkZXNjcmlwdGlvbjogUmVmZXJl
+bmNlIHRvIHRoZSBQSFkgZGV2aWNlCj4gPiArCj4gPiArICBjbG9ja3M6Cj4gPiArICAgIG1pbkl0
+ZW1zOiAyCj4gPiArICAgIG1heEl0ZW1zOiAyCj4gPiArCj4gPiArICBjbG9jay1uYW1lczoKPiA+
+ICsgICAgbWluSXRlbXM6IDIKPiA+ICsgICAgbWF4SXRlbXM6IDIKPiA+ICsgICAgY29udGFpbnM6
+Cj4gPiArICAgICAgZW51bToKPiA+ICsgICAgICAgIC0gc3RtbWFjZXRoCj4gPiArICAgICAgICAt
+IHR4Cj4gCj4gTm90IG11Y2ggY2hhbmdlZCwgbm90aGluZyBleHBsYWluZWQgaW4gdGhlIGNoYW5n
+ZWxvZyBpbiBjb3ZlciBsZXR0ZXIuCj4gCj4gWW91IGdvdCBhbHJlYWR5IGZlZWRiYWNrIHRoYXQg
+eW91IGtlZXAgcHVzaGluZyBzYW1lIGNvZGUgd2l0aG91dCBmaXhpbmcKPiBhbnl0aGluZy4gWW91
+IGRvbid0IHJlc3BvbmQgdG8gZmVlZGJhY2suIFlvdSBkb24ndCBhZGRyZXNzIGl0Lgo+IAo+IFdo
+YXQgaXMgbGVmdCBmb3IgbWU/IFN0YXJ0IHRyZWF0aW5nIHVzIHNlcmlvdXNseS4gSSBhbSBub3Qg
+Z29pbmcgdG8KPiByZXZpZXcgdGhlIHJlc3QuCj4gCj4gUmVzcG9uZCB0byBwcmV2aW91cyBmZWVk
+YmFjayB3aXRoIGFja25vd2xlZGdpbmcgdGhhdCB5b3UgdW5kZXJzdG9vZCBpdAo+IG9yIGZ1cnRo
+ZXIgcXVlc3Rpb25zIGlmIHlvdSBkaWQgbm90IHVuZGVyc3RhbmQgaXQsIGJ1dCB5b3UgbWFkZSB0
+aG9yb3VnaAo+IHJlc2VhcmNoIG9uIG90aGVyIGJpbmRpbmdzIGFuZCBleGFtcGxlIHNjaGVtYSBo
+b3cgdG8gZG8gaXQuCj4gCj4gTkFLCj4gCj4gQmVzdCByZWdhcmRzLAo+IEtyenlzenRvZgo=
