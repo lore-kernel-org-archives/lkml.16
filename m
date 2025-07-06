@@ -1,125 +1,113 @@
-Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA7A80B;
-	Sun,  6 Jul 2025 09:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12031E834E
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 09:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751792880; cv=none; b=LXLj9eno3JDTSUtx2PYGcOSPNFTo5UQVHYYsKOt0VbXa6+6NrweliBXCDeWVv9aCO/bT8JEOapW1pxH8/puQj7h9T2upDAwADsIyrr6PgMDbIBO4Cij5gKZP/BcnCTYVMgq07fDMlnQcqiQNfgifLpvgRd3I5KB7NJOLs+h5iKM=
+	t=1751792906; cv=none; b=cD6yf3juvFp5WBAkZVrc3mqmbQK8unaHc424Ukf0QdhwgHDm15IW/yT/RxLbscrRC64nl7yvMdpJ/uQ7jtUC6elgP4Seef+/vHDQj1TzLRsrif6RraYXVAFw5gRkJtSpb7oIhpMrDHGfiq6avtpT44qhVCLRPKPwVE+3bS8YmyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751792880; c=relaxed/simple;
-	bh=o90NXVCoL+tGL5VVvy/yB5Xa0doRgIA76TaIzJVBePQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HCYMIX1v3aTL4w86Jel6k2/n+WW2Xfewd1NgxjczBlR5gAWkF1hYGcYfmMu+5zpronG69mM5A4KPF5tHBZ4qLc/I4o2jRzmiWr4Af5D6Ax0o69pVmHHjrTuXk4WJZsofEYnsPKD0MB0DTpDZqIMLRgzPnLLnOEMdT4+3LDeOY38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=kGT+P99n; arc=none smtp.client-ip=173.249.15.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="kGT+P99n"
-dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
-	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:In-Reply-To:References;
-	bh=Ho2vJrnmP0hAKFMj4ugRd5xpUyaSxVYHzOv8nai9HE4=;
-	b=kGT+P99nbmbmlDK5wRcoQe7iTi0tj4rgq8Ja1NThF/Ut/eVDDS6zSOy/cBNeWCpC2WaWEjsDTE9nALznc4eUbYmsFDflpU7Wy67/u3PIg+8N8YG8NlKJU/04n5ytvbG8QSj/DyZPcvrVBo4AODJMy3a1l8NyWoAb1HZ6/bnTz/o=
-Received: from lukas-hpz440workstation.localnet (cm70-231.liwest.at [212.241.70.231])
-	by mail.netcube.li with ESMTPSA
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
-	; Sun, 6 Jul 2025 11:07:39 +0200
-From: Lukas Schmid <lukas.schmid@netcube.li>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Maxime Ripard <mripard@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Subject:
- Re: [PATCH v1 3/7] dt-bindings: arm: sunxi: Add NetCube Systems Nagami Keypad
- Carrier Board
-Date: Sun, 06 Jul 2025 11:07:38 +0200
-Message-ID: <4994705.GXAFRqVoOG@lukas-hpz440workstation>
-In-Reply-To: <21e0785e-b2f6-4b31-8887-0c22bd686dc8@kernel.org>
-References:
- <20250705213900.3614963-1-lukas.schmid@netcube.li>
- <20250705213900.3614963-4-lukas.schmid@netcube.li>
- <21e0785e-b2f6-4b31-8887-0c22bd686dc8@kernel.org>
+	s=arc-20240116; t=1751792906; c=relaxed/simple;
+	bh=YeSqhPGOCSEzC/m1idgMdrl239XEwVQUOkljmT/rhbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hp5ipxLSgiRXKrwfmyY6hzAuLih1Vb3t0q2S65c7yGYWIPcwYsFgJJYP2HQgfRO/pcHiT52+hHnbkEz0Hj0m2Bugn/mKdCb40HlrdnFTQcayuTzo2HH4h6OWLRfxw59b/ZVUAwUAdezuR178uOTInvNeJLufikpbthxjNy6WycY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-87f1b3a3e7bso272141241.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 02:08:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751792903; x=1752397703;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LKNWfzLihse4/vZiPvnOVJrcOayLdn1DUR/G7sfcSvI=;
+        b=BaLuTTfVikBtTuDiSoTaA/aH6ZI5qg5PnnJQInWHjdvXqwm2SMOijCg0Q+c9qxW2WU
+         /XM1gIFRK0KKrknD1txrYR4aK2F+qH++SREpjvbs92QJ5b8iNByusd0sUHfG5W1G01v6
+         REIGtxgaT+XUu2Sws+0y4n/KER6IJREE0G5qaJjxmeJL1Sfe/7kSBHgM9J9AKH0IGOM2
+         Bj8Lpu1fdTNtRKGV60AsM0Mwdr2YysxLG2ksGzmozFDJ7Iw9zjS8X0ya5bY4D0ne0JtQ
+         mN5Gp7mIZjSNVYXKFX3NhDml01Hu2KqqqiSL4wyzVI0foFCrPfApQyp9dnWirWPV9HQ6
+         hwag==
+X-Forwarded-Encrypted: i=1; AJvYcCUONEWuAbiJRc5kAmBVH1jRKq6Lj1ScB/Q6Ebl/FecXSExZlkNiysv0wzGjX/FTK1RVWgmde6QzpLfXvCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBmifIYY8FT3y7rneVguvxcL2bNp8ENFp4e0Y8hBrp8VxYy02O
+	sPJR9Oosfwk799arfwPFC+mHLMIrxjWBBf9htR2Wr7/oiAfzVH0KkMPa3W2UrX5R
+X-Gm-Gg: ASbGncuGQ3VOgrNy5nDHzL14jIVuAUbJug3M8XAUYyB0yrJ2s3dtxQw1418vi8zVAz+
+	HLFzM+5JYLjXo/XgUYExrqUK55D86H7PLQQb9921QCXaLfrdu9fpfXbZ8j5tkeagcf0Ly69AoMO
+	kIqi3TT4qMBbdZRW49nI0SMVt9qSw7Bv6WskFcVQGUMX7hbvsuFIXq8/ZtuiGRzOj/KuNpYDAxc
+	ej9tU4e4GDoUp6EhM6GdmOAXjuHhe4DWirOhe0H303pdzAbHdbwZV0ig3fLVBX30xnXqNEMobmc
+	SneRA063c8ElxF13wknxYe2dHtNw8a3IUQQg/OTz+32qlAYWl/X/F/JjFLZKVWMENf8HrGemZ1m
+	XK02yzlrkM3MQkRpysG3YD365
+X-Google-Smtp-Source: AGHT+IGsm3iNjE4c3o1t31BaSUavriov95zBsbTcrSFtl1SkIPmyD4sukPzlbL761jQYpjn2Xhcy0w==
+X-Received: by 2002:a05:6102:4188:b0:4e7:5f31:7443 with SMTP id ada2fe7eead31-4f2ee08c375mr5044722137.9.1751792903287;
+        Sun, 06 Jul 2025 02:08:23 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-886e922ee7dsm968540241.5.2025.07.06.02.08.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Jul 2025 02:08:22 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-87f1b3a3e7bso272136241.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 02:08:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWo+fUrSLWhfuCCJQ9dmU6A+SQMdRSL1ul7mvgcf+gpyyeMNA+ky4vbXHncJjr69njBKxI2/v8b9zNqlsw=@vger.kernel.org
+X-Received: by 2002:a05:6102:5489:b0:4eb:e04c:f5ed with SMTP id
+ ada2fe7eead31-4f2edff096emr5969957137.2.1751792902713; Sun, 06 Jul 2025
+ 02:08:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1926776.tdWV9SEqCh";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+References: <f7b4c02a1c8ed74ccceb5535d7e1e202deada8ce.1750739568.git.fthain@linux-m68k.org>
+In-Reply-To: <f7b4c02a1c8ed74ccceb5535d7e1e202deada8ce.1750739568.git.fthain@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 6 Jul 2025 11:08:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXmxV03tza_4M3+YJg9TT6yJKuvmNh9=JvdM7r-r-kR7A@mail.gmail.com>
+X-Gm-Features: Ac12FXxXbSZrezpm03lRHY3251vjUFPmaJuue3zNaD3M3TNEGWEHUr-PZeSeB6A
+Message-ID: <CAMuHMdXmxV03tza_4M3+YJg9TT6yJKuvmNh9=JvdM7r-r-kR7A@mail.gmail.com>
+Subject: Re: [PATCH v2] m68k/mac: Improve clocksource driver commentary
+To: Finn Thain <fthain@linux-m68k.org>
+Cc: Joshua Thompson <funaho@jurai.org>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---nextPart1926776.tdWV9SEqCh
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Lukas Schmid <lukas.schmid@netcube.li>
-Date: Sun, 06 Jul 2025 11:07:38 +0200
-Message-ID: <4994705.GXAFRqVoOG@lukas-hpz440workstation>
-In-Reply-To: <21e0785e-b2f6-4b31-8887-0c22bd686dc8@kernel.org>
-MIME-Version: 1.0
+On Tue, 24 Jun 2025 at 06:36, Finn Thain <fthain@linux-m68k.org> wrote:
+> qemu-system-m68k -M q800 has an old bug that causes the kernel to
+> occasionally complain about a soft lockup:
+>
+>     watchdog: BUG: soft lockup - CPU#0 stuck for 5107s!
+>
+> There isn't any actual lockup. The via1 clocksource produced a large
+> jump in jiffies, causing the watchdog to detect a stale timestamp.
+>
+> The 32-bit clocksource counter runs at 783360 Hz and its period is
+> about 5482 seconds. Applying the "nanosecond" approximation used in
+> get_timestamp() in kernel/watchdog.c then yields the duration reported
+> in the log message above (always 5107 or 5108 in my tests):
+>
+> 0xffffffff / VIA_CLOCK_FREQ * 10**9 / 2**30 = 5106.209 seconds
+>
+> It is notoriously difficult to correctly emulate a MOS6522 VIA chip. So
+> it seems wise to document the VIA clocksource driver better, especially
+> those hardware behaviours which the kernel relies upon.
+>
+> Cc: Joshua Thompson <funaho@jurai.org>
+> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+> ---
+> Changed since v1:
+>  - The letters A through E could be mistaken for hex digits so number the
+>    states using roman numerals instead.
 
-On Sonntag, 6. Juli 2025 09:49:58 CEST Krzysztof Kozlowski wrote:
-> On 05/07/2025 23:38, Lukas Schmid wrote:
-> > The NetCube Systems Nagami Keypad Carrier is a custom board intended to
-> > fit a standard Ritto Intercom enclosure and provides a Keypad, NFC-Reader
-> > and Status-LED all controllable over Ethernet with PoE support.
-> > 
-> > Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/arm/sunxi.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > b/Documentation/devicetree/bindings/arm/sunxi.yaml index
-> > 7919b5bf5..a2f16d064 100644
-> > --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-> > 
-> > @@ -610,6 +610,12 @@ properties:
-> >            - const: netcube,nagami
-> >            - const: allwinner,sun8i-t113s
-> > 
-> > +      - description: NetCube Systems Nagami Keypad Carrier Board
-> > +        items:
-> > +          - const: netcube,nagami-keypad-carrier
-> 
-> That's just enum with previous entry. Don't make it over-complicated.
-> 
-> Best regards,
-> Krzysztof
+LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+i.e. will queue in the m68k tree for v6.17.
 
-Just making sure here. The actual bindings are fine, but I should merge them 
-into one patch, correct?
+Gr{oetje,eeting}s,
 
-Best regards,
-Lukas
+                        Geert
 
---nextPart1926776.tdWV9SEqCh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEPv6dcBmn59ssZMkSJnN+drMVRtgFAmhqPNoACgkQJnN+drMV
-Rths8gf/e6eLq4uNu0vJSGM9LYg+wGaYJJBiydq7iEk18FH2Vf60tOp7PGIYhSjW
-hX9iL6iA5xvsycCO01AkcgT3+qV0r9sNoIiRyBPKVIdDltG4WRYzGnzGtGD6maff
-mN8PR9rZ6k9qhlAFvdqCPTagJJ2GOHFu7NMv+uWxtuDedBNR3bMm5Q/EixQ2iqF8
-tYMkXbl+DEGoMMbceDoBAitKJC6cZcWUsqaSFtLn84F9yl2EOM16r/9NTUAusT0T
-nOkfvSD05VWc9iDoukZbIHPlH+63S/+LksJVMKYtJXI+0OUTH+YZwi0qzrK3NVgI
-s9BZgcYcWUtfy5TXpq3lhvVxus+DDQ==
-=jjD0
------END PGP SIGNATURE-----
-
---nextPart1926776.tdWV9SEqCh--
-
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
