@@ -1,102 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEF42E36E0;
-	Sun,  6 Jul 2025 10:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289752E36E0
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751797651; cv=none; b=GYbCOXndz+jHGwri35lXk6KKji2hY8bzHYA4t7Xdgqu04ic3KXwM3EEwelf3vRddDgy3WlEDxq3zHM4IN3/BFQ6E1ZRveIgyiTs0ZUnmTAB0gdnfupFirTtMgKPE36xtgSeodXtxQAMhc5Z5dc4d9L0LW6SKgSH9uPJgrbX5oRg=
+	t=1751797657; cv=none; b=CupWhqxnxubOPZUZ9sgmJ/le3cbv61sKMvOVU48yKEhRqNgBnyTTsn+s0aGPVd4n73uOs6MnTdzbSSgAB0LQEbmhAS+oNwykF1MLtY53e9u+4j5Xv6z2v/AEpJLAXiqiiegfss4wRGfbOaa1nZC7dPHE2Yf2lMq40b15ORRme4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751797651; c=relaxed/simple;
-	bh=44ZnyjYsXfPP0u5itXesAoGZJiqOXFNJTQSwtaVPofE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s/izxCjfk2rBfto+3hrNKbdHdW+HQHS15QWPYwXKvYGZ413bs0U4kNix11tyS6Ue4zNs3g01t912qarvVZxPNRY1BRy60ypY7i3N5zxIQWpLpvi9qRckIS9R5fWvUaVsYqCEtP5dpQicFqREYmWpPI0L/XEJSK8oi0TL7MWkIR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG1z4Ss2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG1z4Ss2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3ECC4CEED;
-	Sun,  6 Jul 2025 10:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751797650;
-	bh=44ZnyjYsXfPP0u5itXesAoGZJiqOXFNJTQSwtaVPofE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MG1z4Ss2G8AK7MokXVKs7xf8Tc4TjbjkFB3dXLejILKx91pWZiLXNpFQYOugYj+NJ
-	 u0gwfY9yo2Kd+Q6Q0yLXnHCWvxjrVUf2up5+PEWHajRGnCUCILMys8hsxKEIOVbGyZ
-	 oRVoIzg5az55dJ+ANPCuA+Fm3ThbO5FSnYDM6NmqUtQlUDfCqgDMRQtTs3HRSY44bH
-	 RAqbyx3ps2N4oOdMVDEg+HTLiHGLRaEmLKvp+aj3OiMUXVwCdKuz7isn/oRWjwaqSn
-	 6wu22MUvNDtdP7OSTHnv4XxX9HDAJ/lrx+fy7OEK1ZuxbPerzjDwmsJMefbIdCav8v
-	 KqcfA1I5hrArg==
-Date: Sun, 6 Jul 2025 11:27:23 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Andreas Klinger
- <ak@it-klinger.de>, Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 37/80] iio: proximity: Remove redundant
- pm_runtime_mark_last_busy() calls
-Message-ID: <20250706112723.268e7bd0@jic23-huawei>
-In-Reply-To: <20250704075427.3219858-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-	<20250704075427.3219858-1-sakari.ailus@linux.intel.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751797657; c=relaxed/simple;
+	bh=6uMSUsF4i7E2EkwCaC9wZQFxdNNM8J8izZHp0INrJIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h6/Qiqsvw8mvWV4SowPLtmGMhC/gERR151DNV66Ks2T2KCO6LYWgQ1JD92mN0EcthqMKh7JAmj62tBJFQ+9xYt5t29h5xe+95NpSMLmqR9jxhamKP0eSjqGIe1ZbFQXDDlxYHX8bNTh53LHJuVr+puW6aQHXHrM6blOjqNL5Iak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52b2290e290so1367496e0c.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 03:27:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751797653; x=1752402453;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o8Wcac1yphsCtx5A+S7DbTVhEWfZCEpLCH1Zp2uzm3M=;
+        b=AschQrn+H15VcUnAhtYvCfCJ3QRjT4oNNOscun/5qH4Ok8dGfN6ktAoe1w88wJMNYZ
+         VlyI/ZRwYTbjOyhGF9hPJLjcZaY2F7eOjKL5RaTMcUZr/Vw8aU1HTRqGtRw5zFbZTIPr
+         4Mj1tivy+5SX5i56MGgReXSNI5xgX0y14PYQK93cF0ZW8NWszM27hFlBy7rzxkP71KXh
+         nOnrgLfiw2eHKP79CIHL9h4301zIzc1hA8YV6XaXQzbfbDNLz1tKkH+KFTSM62WC4hgs
+         dWeuFo+xUgg78yxBnwKKgTg44mvEWT1UIMt8iZEsN4DvwXdbQuBvKkTaarW1uavvt+pr
+         Km9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVXfL6o2iD/wASfWw5N7/xaJy4cRIDkZCZKlOuayjWCUNQLwy4X19wBa6hIOs8lzK7AORzkNib9zTXHOPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyARcoDvlAstzAv920sDR12d2w01QDtv4qz5pfOgA6ux1Pnfuuk
+	ZUsmse6G90UYkmhZ0Veg8+fjL8BMhoEToFq/WGNbJaf2RKdqmfJSSjKIwJ4k81sr
+X-Gm-Gg: ASbGncv/M9tDlpGFeOATM4qAmn5T22M1XdPOSuN+cQXaeHxdmfFMABgSCzI9MxDCKIj
+	OQ26jhUjprXTe+V4kgzyHWTwmjFpMe2xFWiReyOarvg/1ahgZAhZmfNEEuleog7tnuBJsikRH1C
+	u17jGw+SWQ8IEdaoG3JY39OX3YczFycVSvFk0mfIL9zYuAc3rZ1L/2/EoVpg6RMxiSAGI1SOg+G
+	fv/1CFv+SOiClRfTGsPw3qogeM5l7+0JVjGZT8HkqT9nNP1knu99iiyFevgwLF0lNQyCwxZlEjh
+	5zkv7jfOx416UKeR0xHoFLfrF7t2RzJMluKccLKGW6INIFidNzDMxgdNjzQFJgAmkQTGZtQmv76
+	ZgwzMytrNotDzDMaHiM+985DdctrC
+X-Google-Smtp-Source: AGHT+IFNlXjcO0vQFpM6I6BocsbceuUhHkN53t1YNNh7L5vwOZjP4sPn9i5SHlU1fUzvs/5EkhMQGA==
+X-Received: by 2002:a05:6122:2a0a:b0:534:6d9c:d544 with SMTP id 71dfb90a1353d-5347e3e2dc6mr5119718e0c.3.1751797653367;
+        Sun, 06 Jul 2025 03:27:33 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53478dbb08bsm880795e0c.5.2025.07.06.03.27.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Jul 2025 03:27:33 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-52d9a275c27so2304446e0c.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 03:27:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWEv24iHRdDi7k6FrJhlDcAoKq6deKG240YRPu+cMAt5AlVHcxKbNXdC7Bbg/uFcSmWOSUVreJ4634qphg=@vger.kernel.org
+X-Received: by 2002:a05:6102:cca:b0:4e9:c7c8:5e24 with SMTP id
+ ada2fe7eead31-4f2f244f7e2mr4690242137.25.1751797652899; Sun, 06 Jul 2025
+ 03:27:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <d1d4328e5aa9a87bd8352529ce62b767731c0530.1743467205.git.fthain@linux-m68k.org>
+In-Reply-To: <d1d4328e5aa9a87bd8352529ce62b767731c0530.1743467205.git.fthain@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 6 Jul 2025 12:27:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXY5xv+aqZQmMQ0rDnDWjEF=O0dEaun8x8=J0kb1LZWBQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzwvaf9ptBZ91EIzsqZ1yptuiRs-rvpbLE-5KasykM-HyCxgAn1UjEkTKk
+Message-ID: <CAMuHMdXY5xv+aqZQmMQ0rDnDWjEF=O0dEaun8x8=J0kb1LZWBQ@mail.gmail.com>
+Subject: Re: [PATCH v2] m68k/mvme147: Don't unregister boot console needlessly
+To: Finn Thain <fthain@linux-m68k.org>
+Cc: Daniel Palmer <daniel@0x0f.com>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri,  4 Jul 2025 10:54:27 +0300
-Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+Hi Finn,
 
-> pm_runtime_put_autosuspend(), pm_runtime_put_sync_autosuspend(),
-> pm_runtime_autosuspend() and pm_request_autosuspend() now include a call
-> to pm_runtime_mark_last_busy(). Remove the now-reduntant explicit call to
-> pm_runtime_mark_last_busy().
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
-> The cover letter of the set can be found here
-> <URL:https://lore.kernel.org/linux-pm/20250704075225.3212486-1-sakari.ailus@linux.intel.com>.
-> 
-> In brief, this patch depends on PM runtime patches adding marking the last
-> busy timestamp in autosuspend related functions. The patches are here, on
-> rc2:
-> 
->         git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->                 pm-runtime-6.17-rc1
-> 
->  drivers/iio/proximity/pulsedlight-lidar-lite-v2.c | 1 -
->  drivers/iio/proximity/srf04.c                     | 1 -
->  2 files changed, 2 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c b/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c
-> index 1deaf70e92ce..d53a596128f5 100644
-> --- a/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c
-> +++ b/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c
-> @@ -191,7 +191,6 @@ static int lidar_get_measurement(struct lidar_data *data, u16 *reg)
->  		}
->  		ret = -EIO;
->  	}
-> -	pm_runtime_mark_last_busy(&client->dev);
->  	pm_runtime_put_autosuspend(&client->dev);
->  
->  	return ret;
-> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-> index b059bac1078b..f2e2c638a2b6 100644
-> --- a/drivers/iio/proximity/srf04.c
-> +++ b/drivers/iio/proximity/srf04.c
-> @@ -118,7 +118,6 @@ static int srf04_read(struct srf04_data *data)
->  	gpiod_set_value(data->gpiod_trig, 0);
->  
->  	if (data->gpiod_power) {
-> -		pm_runtime_mark_last_busy(data->dev);
->  		pm_runtime_put_autosuspend(data->dev);
->  	}
->  
-Drop {}
+On Tue, 1 Apr 2025 at 02:40, Finn Thain <fthain@linux-m68k.org> wrote:
+> When MACH_IS_MVME147, the boot console calls mvme147_scc_write() to
+> generate console output. That will continue to work even after
+> debug_cons_nputs() becomes unavailable so there's no need to
+> unregister the boot console.
+>
+> Take the opportunity to remove a repeated MACH_IS_* test. Use the
+> actual .write method (instead of a wrapper) and test that pointer
+> instead. This means adding an unused parameter to debug_cons_nputs() for
+> consistency with the struct console API.
+>
+> early_printk.c is only built when CONFIG_EARLY_PRINTK=y. As of late,
+> head.S is only built when CONFIG_MMU_MOTOROLA=y. So let the former symbol
+> depend on the latter, to obviate some ifdef conditionals.
+>
+> Cc: Daniel Palmer <daniel@0x0f.com>
+> Fixes: 077b33b9e283 ("m68k: mvme147: Reinstate early console")
+> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+
+Thanks for your patch!
+
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+i.e. will queue in the m68k tree for v6.17...
+
+> --- a/arch/m68k/kernel/early_printk.c
+> +++ b/arch/m68k/kernel/early_printk.c
+> @@ -55,16 +46,12 @@ early_param("earlyprintk", setup_early_printk);
+>   * debug_cons_nputs() defined in arch/m68k/kernel/head.S cannot be called
+>   * after init sections are discarded (for platforms that use it).
+>   */
+
+... with the above comment moved just before the "if"-test below.
+
+> -#if !(defined(CONFIG_SUN3) || defined(CONFIG_M68000) || \
+> -      defined(CONFIG_COLDFIRE))
+>
+>  static int __init unregister_early_console(void)
+>  {
+> -       if (!early_console || MACH_IS_MVME16x)
+> -               return 0;
+> +       if (early_console && early_console->write == debug_cons_nputs)
+> +               return unregister_console(early_console);
+>
+> -       return unregister_console(early_console);
+> +       return 0;
+>  }
+>  late_initcall(unregister_early_console);
+> -
+> -#endif
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
