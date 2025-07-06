@@ -1,106 +1,96 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2C01B423C;
-	Sun,  6 Jul 2025 13:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE45A205E2F;
+	Sun,  6 Jul 2025 13:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751807846; cv=none; b=KI4d+dn7ri61faaXd6VMoC0e2sOD/JXJbSpjDYTl0MWri+nGSGWeXmCBg7BkbVzLIVOLxokPHfuzvYhBptbLdKiZaTlewYJ8btvq15q73OnD80HdvUifMeTXxPVl7myMnEEEvMMDYpxr4ZHMwZYU4MyTj4DJerhTf5FTLdmblks=
+	t=1751807859; cv=none; b=RHU/ZwneqvJrXXyWYaxX3s2OLc1OSQGY2bN1Ol430bCCKf9AoMsabzYlU/hwvVpWe/C1CIKKLz/m9R4I5r6kp9g6p/HylhZcn00Yy0v2q8zNffrcpjDuN/KbApE3MmIHzF1xnvU4UaSf0B8je9Jn4xLjOgXfg4VR9sIyzknwGHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751807846; c=relaxed/simple;
-	bh=WP4NPqP2klp6cY0JVsOVsse2OV15aZnlzDfglLdC58M=;
+	s=arc-20240116; t=1751807859; c=relaxed/simple;
+	bh=Mv/shLjCKwn0QObl0EoTZZfjn3MUjEkt7hwbMWVsVCU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o8IBY1x5vlsuv2ud5Mq6C48xxQlIbrQoGizXjLwQnfXG9TEiEBuI0wAKB772b0eMk0Nq08krceuxKjssLcCGuhTeHiknVvEXm3I4Po+GOVe7dfAzSapjQA4xi2QheoW+pA2YVRAVMuAHSC+KNQSh35R4b8mZ6mxZ2wshwCW1Ybc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MIk+yaZ7; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=tBe/6xHxa57vSIw3vOe/AhWQnSfDynXnthqIOZv3KTSgc7SdMBLpSPsBVcu2bJmNQ9Yw3YaMiT3eKu3mWXSzCT0Tbyi4BaUN6MFrarFfLmza82TVeulftwUBLCGIgqFJQSSf9BjqFWxdK6pcxWIJAJzDaQ+UZgF3Z2OonJ23P8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIk+yaZ7"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso3327819a12.0;
-        Sun, 06 Jul 2025 06:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751807843; x=1752412643; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NW0rjBXYV+Wrs3/1FDfXItg+5wO+F1Ydy7SjQdilrL4=;
-        b=MIk+yaZ78XedsMLpBcn9X6fR89uJ1BDKi4wGmKD+hBnDQi8fhC6nGu2M7WZUpirQLS
-         QeSs0LTI0HLYggbvIfoxH07G45AMGQFf0XnhTo3YgggDXw91KvhhYNX7nEM2yfB9hzAa
-         tmaaMtHRqF9b0KnppPXvI7FHjfhGNKQhihcGQ9p/rUCnxrdyEdi/foo/26DCSuXKU/Ax
-         EydPQsia7XymQ3fxIFgYHFbvBRk+m6Xy22Aa6OFOCf17H/fbiRvLZ1Y1mUopWlFgW3ld
-         RjmABk/M+5thGZoeq5tMuiCrRfcanWmvxPbcH+cEFE8uf4dZFZlCE/uxiywJ7WOFSvnA
-         sgZA==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553dceb342fso2273105e87.0;
+        Sun, 06 Jul 2025 06:17:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751807843; x=1752412643;
+        d=1e100.net; s=20230601; t=1751807853; x=1752412653;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NW0rjBXYV+Wrs3/1FDfXItg+5wO+F1Ydy7SjQdilrL4=;
-        b=KkaPJKFQz6cgkUuJvKf2DEpXdo7CAaN3zBuUOmRkWjINz4NUlLaXdadwe7CI8+7CJa
-         IHLpWxKBOQeR8hn1uTmNJgKc+FDkbtR4GiJszg7C5xhpBpksbKH5S5Ceq6q+JQXJEU9c
-         9EG9qdXdvihVmCrZ7o1SknbEAGXB1GNSTfBSMeOB5+x7uWeIIdI5DcbuOP211xCQuPoR
-         PvYMD/BsIUxl7raVps1fmUS/37xosRgWllM7V0ONCaFGY9iqf6ssKVDuFaSRvmoKUW9d
-         WCB1XDN/DRSq49sj3aQjGACTe1xkF2jqpVg7NyZyuzR42LxzLzBBjTumzPsw1P8Lb/kT
-         9p0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUUBl0TGHWPEkNDe2/AzdQYn6lBncgSSsZnfcao7Qthc/GWLCCEsPtVP882U1/aGLtM241tmuuv316kQcLU@vger.kernel.org, AJvYcCUk8Qf6jLAfTr0FxChQNd8tOuo1ZcUZuIJHmojq/ht6uV4sUcDHPonMlyIUlE5uaGODk22b5Brtve8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVQhKbBQFuVbVnvcBbpyYSi+c08EdIYio/Tjuoo22BJ+LmBTW/
-	paN/AMyn+9fE4SLh4VPLkFhHO1JeMiIVstK8/9uKePRaWBOjkDzl5mZLD1fZ/SxzqJiIHwE5dTe
-	g44qQtqYXk4+n36eBi4S92Jjxd9H9HME=
-X-Gm-Gg: ASbGnctv3rfQTseEroxZNpqAfJcvuaSNnGzU3x839poZSbQYn9beQd8V8+dZdydD9PK
-	YxKPek0aSmvL2+UyL8sKQPi+bK6PgOhx1R9XM70+/S9t5KKIFSLTfxtukTdhqQIskSPOTlvtw3v
-	OjzKOmeagzXLBk6SbXCRnsj/JK3Un4lucCJH6/JzPNkUo=
-X-Google-Smtp-Source: AGHT+IGHd4LkqOn8RU280jbV15bvWm2aY9k5+RlIQ7lyEkhqNZWv9JDtQK8LMpDyGBzDoXu8q61GXHRH1V7HZrwkEvQ=
-X-Received: by 2002:a05:6402:2793:b0:60c:5268:5587 with SMTP id
- 4fb4d7f45d1cf-60ff3e18872mr3957776a12.29.1751807842840; Sun, 06 Jul 2025
- 06:17:22 -0700 (PDT)
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L0y9e3VsPZwS3i8gc70lCXlWKvcLrZlEitoiyjDH0k0=;
+        b=fkEuLTqckZja5LX7wQJGYnq+R/19hgwMMIjTy5ExS4T42a+1QtWMXjjcBK4kFEX6Hy
+         nKAWKwB7tPPYfuo7sG5VAIJOCzzSXbnmSlSdJVsjJD17XSFECgQd9sw8BGusrn+38lb9
+         +PE26fJhUy1gFIH08F1O67cb/Jj/f4OHXIjpePZMPhMvj0Vk88An8CvWSKXdUmhkafdu
+         dE+xWxkBEKs+jjVzcBQT9ix+kezVwo9tgyRSVXumOOtZvAQF+paOtRAKWC4mkIIb9MBI
+         94spjmjTFbCZldqFamW3IDM0/d0SVuJdtctahaB3zMwcwqJhCrNIyi5VCtQav3oHLaY4
+         1s9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUX7mWVTSeZtwYaXJB32xG0rphPrPI+GJs3i7kF+A8sslx2RFJdupMB5cJ7VaTAoFwrbKxiCrOXfmvOoMyc@vger.kernel.org, AJvYcCWNkzwvsCKPRn4Bj5Z/5NYHAtAbonP5EyVrfzBrrTfVl4Q2KlBo654EhAZnVRhhwQmMGqQDVvCc8o99@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7YBbO5X8mx6zQfbyyRP2zVV9q9rkgjil5/Qw/BAfOQWC6bKU0
+	BNEj7Jh+GqL6v+VP1/5BklJMdJxaZUab/5serSOulwCTsk6LR/xp4rBPLlgRVG2xzNI=
+X-Gm-Gg: ASbGncsFix1uQEoEojW/n0doAVVOaPiP5VodLEKmUZjloYapzkiXFPzDoYAjGgKEmrh
+	pDGuayFdoRa/N2gnxRTxSBNoxojB9ZWn3GXZk1wghzeP1bNI8/B5lxMM3OI4SjPiLP0U4P2aRCQ
+	vv/u/tt5JMLLPzYtuJAYwNGppfENdr1O/L5m/NTXluj/+60wMsgRsSjal/DXyF0Ot+hfnzhaLXV
+	6MrcG+79+1NPt5TiffsWxxgyFgo6ROFpzR/aAQhlr/dHdccUHK9m6CdEp++WScBiNcQiOTEGiXD
+	gTzlsbjLgKVcpHv5mUmVQlsPsJjEgVCMFi6xc6ldVmfIR0Jy8tlEgdjjrVTd7hjnAdlMqPQKlhw
+	2lbeZr3pKxOCcG8KHHdo=
+X-Google-Smtp-Source: AGHT+IG7GWnwLy8cVwbGtYFu+mWQ7KLEnUINmqaOuXi1ChF3zzxD+L4Z74LlaATNvLAoAa8lyF5xnQ==
+X-Received: by 2002:a05:6512:2256:b0:553:3532:5b30 with SMTP id 2adb3069b0e04-557e553f329mr1086873e87.27.1751807852655;
+        Sun, 06 Jul 2025 06:17:32 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556384d16c7sm954153e87.253.2025.07.06.06.17.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Jul 2025 06:17:32 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32f1aaf0d60so11513251fa.1;
+        Sun, 06 Jul 2025 06:17:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/HeNevDKuAw7Qer2nyxpPlfpwkU3Y1/EOyiXnSDuYRtnJzBqSC0XPK69DpZrh3s/9YtaczTAd/0lG@vger.kernel.org, AJvYcCXINOKaB0pUkpierPyTeLRM41mJP8RGad3I6/jbODfLpjmYsLbRsz1SuF3YeEpINJGc1nN2Uu/ShjbPPVDm@vger.kernel.org
+X-Received: by 2002:a05:651c:1104:b0:32b:755e:6cc8 with SMTP id
+ 38308e7fff4ca-32f19af1307mr14177851fa.31.1751807852041; Sun, 06 Jul 2025
+ 06:17:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250705110208457-jq3LiPPAxR6f7WxKIsfO@zte.com.cn>
-In-Reply-To: <20250705110208457-jq3LiPPAxR6f7WxKIsfO@zte.com.cn>
-From: Alex Shi <seakeel@gmail.com>
-Date: Sun, 6 Jul 2025 21:16:46 +0800
-X-Gm-Features: Ac12FXweybnDWGh0iuNyIB0tuX-KyizIMC_zeiIFnX7w3WBK9tO4Ju6GfN0kd1o
-Message-ID: <CAJy-AmmZMttjPRURWhj2TJqMaR=zL1KPzgd=C4f0R+N99EA8_A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3 linux next] Docs/zh_CN: Translate networking docs
- to Simplified Chinese
-To: jiang.kun2@zte.com.cn
-Cc: alexs@kernel.org, si.yanteng@linux.dev, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, xu.xin16@zte.com.cn, 
-	yang.yang29@zte.com.cn, wang.yaxin@zte.com.cn, fan.yu9@zte.com.cn, 
-	he.peilin@zte.com.cn, tu.qiang35@zte.com.cn, qiu.yutan@zte.com.cn, 
-	zhang.yunkai@zte.com.cn, ye.xingchen@zte.com.cn
+References: <20250706095804.50475-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250706095804.50475-2-krzysztof.kozlowski@linaro.org>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Sun, 6 Jul 2025 21:17:18 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65XF=A5Qrm8FrLQaZXLLs5T-0osBLP3Fz3UabrTi5xUXQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzvgRNdcFpttWg_IhO6gnULQzwACTFMlrJqzvSYihRttnVAncFXhqPJE4A
+Message-ID: <CAGb2v65XF=A5Qrm8FrLQaZXLLs5T-0osBLP3Fz3UabrTi5xUXQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm: sunxi: Combine board variants into enums
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, lukas.schmid@netcube.li
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied, Thanks!
+On Sun, Jul 6, 2025 at 5:58=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> The common style in all bindings for enumerating similar variants is to
+> use 'enum', not 'oneOf', so all boards of same variant or using same SoM
+> should be grouped under enum.  It is more readable, more compact and
+> makes easier to find actual devices from the same family/type.  Also
+> there is completely no point to repeat the compatible in the description
+> (incircuit,icnova-a20-adb4006 implies this is "ICnova A20 ADB4006" and
+> pine64,pinephone-1.2 implies "Pine64 PinePhone (1.2)").
+>
+> Combine two easily visible cases: ICnova A20 and Pine64 PinePhone.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-<jiang.kun2@zte.com.cn> =E4=BA=8E2025=E5=B9=B47=E6=9C=885=E6=97=A5=E5=91=A8=
-=E5=85=AD 11:02=E5=86=99=E9=81=93=EF=BC=9A
->
-> From: Wang Yaxin <wang.yaxin@zte.com.cn>
->
-> translate networking docs to Simplified Chinese
->
-> Wang Yaxin (3):
->   Docs/zh_CN: Translate netif-msg.rst to Simplified Chinese
->   Docs/zh_CN: Translate xfrm_proc.rst to Simplified Chinese
->   Docs/zh_CN: Translate netmem.rst to Simplified Chinese
->
->  .../translations/zh_CN/networking/index.rst   |   8 +-
->  .../zh_CN/networking/netif-msg.rst            |  92 +++++++++++++
->  .../translations/zh_CN/networking/netmem.rst  |  92 +++++++++++++
->  .../zh_CN/networking/xfrm_proc.rst            | 126 ++++++++++++++++++
->  4 files changed, 314 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/translations/zh_CN/networking/netif-msg=
-.rst
->  create mode 100644 Documentation/translations/zh_CN/networking/netmem.rs=
-t
->  create mode 100644 Documentation/translations/zh_CN/networking/xfrm_proc=
-.rst
->
-> --
-> 2.25.1
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+
+I can take it through the sunxi tree if you prefer. We do have new
+boards coming in this cycle, but I don't think there is any overlap
+in the board binding file.
