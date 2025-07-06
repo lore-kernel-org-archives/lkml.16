@@ -1,71 +1,71 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F18919E97B;
-	Sun,  6 Jul 2025 13:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA572E371D;
+	Sun,  6 Jul 2025 13:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751809586; cv=none; b=AGpUnntpqWhckEqqfKMnYiGrs8o/IC5GURcXvQKLsahqaXA8y7K2d9pyAcHebuhY072rmKQR+Xy5vU5e5O5awDTFL0WfLmQ5gMs50idfshL0ls0Lkaxamb9IAFMZizn+frz2NSYtMaor8HreiM212MAPUeiZw5gMcDKCG1sO/rk=
+	t=1751809708; cv=none; b=iPB5Uh9ZiPKIvQN097Q6PkBb4iQRLjdNAuHFFSedB3Er9D+aUISLk19dGqs/X0dR29jj94l6bLCL/dZoztEQS1xfJ1yNYcwyVMqWfgAre2vBi6wbsAUOZpU0WmYGgde9puTAH/BL5zSkMa9OLbdnkptaXypDO93lYE0Dbi6uqKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751809586; c=relaxed/simple;
-	bh=/w2nFjT+YR0sA80qFUaP1m1RlE9rFjVm5fVHoTC/nKk=;
+	s=arc-20240116; t=1751809708; c=relaxed/simple;
+	bh=iVnhwwALd3pdgWiLrPqADn+Tw5I/X+tACaU7VxVOuq8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qrm4O2Ty7p7v425t4OnGCXw1gN5AkhF4Qd2WxhFMJq/wFcZtbhUmrNQf3UXxgXGDCjPlQjEdXUQowDviwvzMmz/kBqgd2FtCpi3a4pt5wi4pMOqdreBobkn9mtM+zrn3FjpObyNwSm55+yMI1+aw9vx4W60x1U5MMZLXF8QprTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvJZPTnX; arc=none smtp.client-ip=209.85.216.47
+	 To:Cc:Content-Type; b=gBsk4ffemZ11d6c/1Kylwx0P7gxv2wZSecmZVUPNEWMR2eR7Wo0TDyameCN10alWBqQxqaTQpU8HBzCYoWtafqz5zu/s1yEHSZv/aCAomY90lP47pv9NWzS4606cvNNm6ymmhRKdO+fiBiMcMijBp8bnpgHsVrP4MF9G1ZPuc1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMYR0MeP; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvJZPTnX"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3138e64fc73so589658a91.2;
-        Sun, 06 Jul 2025 06:46:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMYR0MeP"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7426c4e3d57so372983b3a.2;
+        Sun, 06 Jul 2025 06:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751809585; x=1752414385; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751809707; x=1752414507; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gKLTNgJgTfofCTlF/JST0qzlC2FbwxSOsAmEM7FOTgU=;
-        b=XvJZPTnX/EnGRJ9/+75hCUMqA7TLIw3uSacj0W3ZYAAh+70KLQgxVgSNwc+cK/XhNl
-         wxh+vXBegR8CQpbHD1jA0I7HbZDq3poG7w5VmXR0SQqGS4W3ffy2HfxpItBl7YZ5e5+I
-         YAhoar3uBI7mZ1Y07kl3DZ+TpXx0y1Nbt/mZEcAamOd3My+bxov3oSSeKfbf6rhXFS42
-         ZJx+l09+Omv3qhOGNKFovTyeyEH2qN50jEWNfkYL2zNuXELLe4bW+DwQ4hEgKqk9Hiy3
-         gqDxMPAQqLzVyPxvvoMuFm/lVVgpLpDeZn6uBEtmf2nedXPfFRd0lKgMQKpET1IArqjv
-         nZmA==
+        bh=xYKciehQldNCWNbYvySdSPRLgccg1yQ6KwqlWwrggR8=;
+        b=HMYR0MePF4h3RUQZUecQwYt74ctl8y0rQFRVGq+SVzmPtXIZl9wvAWELtqOqVqZI9h
+         NBA9IOS4Vn9752Kf71XNnewNU20PevSalGC+ihvSYoSM6HhEFy4fps+4prn5yi1QsH8V
+         FKjzMzcmodKobxh7AJnc0HdsU7pQ562NBBfAVXSNampUydQ+Ap+/sD9pX5CoIreiAS0p
+         WtIBO8X6eXDC+sjnR/XDjs2RBmAkHJ5X3vzZmfgT6fP4rOrNsHs9JFt09bl/bTvTxkyj
+         6whR6nI9BqqgPviXLekXPBhtBFT+xj7Ezc1vJoYGvmDXzVmRUfDafqDxAoLhM5rByb4e
+         uIcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751809585; x=1752414385;
+        d=1e100.net; s=20230601; t=1751809707; x=1752414507;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gKLTNgJgTfofCTlF/JST0qzlC2FbwxSOsAmEM7FOTgU=;
-        b=dKSwl7YDqBdVgWRe0tbYMaevLfI2T17qUcM4mDpvxRztSj9oXBJbzmXHgTozi+qu81
-         H+pm7ZGjseEabyfu4KePzcsIevMHrIN9+UOFB9EU4XLQcJv0hxQ2uwvQD6vDoQrd8cDT
-         atHb9stpBK1Q24RQx4AacS595NpiwixRlU6MAU6Il9cHXrUPed5zvXq0A3omshbG7qFT
-         kvRo695zVzHxjA/wC2TiP2uC8IzTmBr5bX48sNDW1HpNklbZt/c3qD42VZKAelhJbtq9
-         ZkzJOK0BMJppmHwsqsgr8U5VPp5kMf1bUF6CH5w+LZteh9xi9yitp3CELSH8/MX2KJRo
-         fvlw==
-X-Forwarded-Encrypted: i=1; AJvYcCU53ssgnf8wljMaf+H+DW1kWLKKUEmdzg8j78OrYe6PMqVdqTJT9wsbedGm+Wl3j0w0XoAX+kXo9QQ=@vger.kernel.org, AJvYcCVU0A51fXKuWkceO5Hm6yugRmsDMhnmYOas2MBPSfLFot8Jg9ncAJl8/U8rPlGz1pgYHq0SE/SpFuO1QESo@vger.kernel.org, AJvYcCXunJNwLkBKdLNxAiDM++Z2c3244hKcwv0to+J4Yh/PVnatV4xeVwbBprQS37ln72JqTA8+YE4xeOQXy8p/H9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrghTODC5FQcpWbGRp00Lfv9k3p0rpbajaBUjXmeHUYMApDVmD
-	O337mf+pQFvxYVL3d34SSIQVyZiY3thul1DKhuPZOCvJYA/qJsAZFeaDygyYr+JM6iDOh8Jb6GN
-	w+mFJ/xKA3aLxjBHhuAVe3ZSzCO8SP5E=
-X-Gm-Gg: ASbGncucYFbrhzos8M/FyBu3E+9sJuFHxuxtXkS+DCYUi8g/+LJO+tozKuTpFitM+eH
-	P2zxKcxPEWM7RqrTKn3OJ6T+PqshEehxDsfLnNyFVWBsk9Vn0J7yNjesixciwosHrrWWngA5MTp
-	/P2klJVk2m9e9oR90KBCvKkTh7Ak4T3HGH3xQ5vnyIJOab1YK3cX3L/uA=
-X-Google-Smtp-Source: AGHT+IHOv9GZgJf2WFKprOIy64F5CrgixXl8Scf2KyipOzlw7oCckduzujowyADaYXCyuHIJ4iHyaN1QrOx7fForFnk=
-X-Received: by 2002:a17:902:d4c5:b0:234:ed31:fc9f with SMTP id
- d9443c01a7336-23c873bd881mr55359015ad.11.1751809584805; Sun, 06 Jul 2025
- 06:46:24 -0700 (PDT)
+        bh=xYKciehQldNCWNbYvySdSPRLgccg1yQ6KwqlWwrggR8=;
+        b=j6e+7ApYpM8IK8BoA+1qzm1j1t6mdPfill0rNYx9u+58UuPCCPhE3JrSm/mlqaFzBP
+         bKF9Xk4Iv+bv5Ocu1jpp5vRrfuFq5CJ1b5ygQ0mzcpOAR7GQk4o3KFWJqOeR2Jpqao1U
+         WELM7EL/BbefT2YozljAu0eCe2hMWO+FSnavMczf7pKU0Thuf/ln+mgrpiBsFFL6/9Yf
+         cNkpw8fSJWFZrQkDA+qEh2xdLl5F0TkwQtEEW46iNr+jpdgeDzYCgGV06B+bL0WDhMaj
+         AP7LJqQlLl0sBGHHVZBifaWZhY9JnNOSy1fva5UYhhjgXK2kH7ShqOx8Oprd8MhQ/Xj5
+         mX8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJztQTCcHCSBU3KzheobVCmm+aWie79KE1UMrXMatNts/xAPvocCAZ+q0lKravSvCEsQGj7cjQ8vaTErPOUg=@vger.kernel.org, AJvYcCXDqMgw+XajqyBuzU1+d+dij8Nm2mdM51brWjssynT6z5X451QEPU9MdCUXq4E+ypqbrGOdVPV7KqVDp3jn@vger.kernel.org, AJvYcCXf4538h2OqcERcq7hiaxtlNnwCdaFyiO58TqvDwzexfFLdhRa6CLxFEWKsQY1JSZiF7o5YovFXW/w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkEKiPJScCXMvZJS5WOBzwXUwx6APrNSlRdDHtwAED4nZt/N2i
+	Q0N/l5P1wO8hBauOiit9XJsJG8jhUs2qmwoagmX/4I/4mtg5DJaN0zNhr83hPfqO7PJ+YTaYy1f
+	ZJpBeLPqdbf8+xDKwdKBGqMbZqw+ZTUUL0Nuz
+X-Gm-Gg: ASbGncvcD4f7+uTuvbrDjrJVF6TBRIz6EGSaLirWEr4ftY3t69R5godvccMjMK5Ep3D
+	rfggNSJGyl2qLtO1n2NywHHw+VigrSv2hm6qB+foBMfKzG6x86sQNk05Sf23K25rXzRgsKWbEa/
+	7tXU7qj01fsNnqvSKPhG9t1IUG8zWWP4aC35xZCeq/rh/i
+X-Google-Smtp-Source: AGHT+IFqHFRxQ28XQjLZpfvmhn5YmIh0OO8Ja2iDdNN2ikIwdHYKc1UcSVFvIdbvc4AZLM+3HErNUU0W9hnjgzF5l0E=
+X-Received: by 2002:a17:902:da84:b0:235:1ae7:a9ab with SMTP id
+ d9443c01a7336-23c8723fc2cmr52851595ad.3.1751809706916; Sun, 06 Jul 2025
+ 06:48:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702-nova-docs-v3-0-f362260813e2@nvidia.com> <20250702-nova-docs-v3-2-f362260813e2@nvidia.com>
-In-Reply-To: <20250702-nova-docs-v3-2-f362260813e2@nvidia.com>
+References: <20250702-nova-docs-v3-0-f362260813e2@nvidia.com> <20250702-nova-docs-v3-3-f362260813e2@nvidia.com>
+In-Reply-To: <20250702-nova-docs-v3-3-f362260813e2@nvidia.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 6 Jul 2025 15:46:12 +0200
-X-Gm-Features: Ac12FXwSGwFmNVg0dK0RITOBy2nrTS1QW7QBJAFG70NZ191EM-5_o7Lr9NDvmZQ
-Message-ID: <CANiq72nh71s9to5v1KHJWN79bEFv97zN6jcGJyEQkaJZ5UuJfg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] gpu: nova-core: Clarify sysmembar operations
+Date: Sun, 6 Jul 2025 15:48:14 +0200
+X-Gm-Features: Ac12FXw4cJR6Uk3sqxMz-s6K2lBMkqlUu9xIxjdxhngi407laQ3US_Gq4qFUtwM
+Message-ID: <CANiq72mW-tmqeKjH_5-Xz5jb54m2d4XfXX_Z6V6GpogfJ5TmgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] gpu: nova-core: Clarify falcon code
 To: Alexandre Courbot <acourbot@nvidia.com>
 Cc: Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
@@ -76,26 +76,20 @@ Cc: Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 2, 2025 at 1:05=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.c=
+On Wed, Jul 2, 2025 at 1:32=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.c=
 om> wrote:
 >
-> +/// driver initialization, and before any falcon is reset.
-> +//
->  /// Users are responsible for manually calling [`Self::unregister`] befo=
-re dropping this object,
+> +/// Security mode of the Falcon microprocessor.
+> +/// See falcon.rst for more details.
 
-Missing slash.
+Please add a newline between those -- the first paragraph is a title
+("short description"). A few more instances below, too.
 
-Added the possibility of catching this automatically in e.g. `rustdoc` to:
+`falcon.rst`
 
-    https://github.com/Rust-for-Linux/linux/issues/350
+> +    /// Local Framebuffer (GPU's VRAM memory)
 
-> +// These two registers together hold the physical system memory address =
-that is used by the GPU for
-> +// perform sysmembar operation (see [`crate::fb::SysmemFlush`]).
-
-This is a normal comment, so the intra-doc link will (sadly) not do anythin=
-g.
+Missing period at the end.
 
 Cheers,
 Miguel
