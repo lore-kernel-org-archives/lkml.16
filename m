@@ -1,219 +1,98 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2064.outbound.protection.outlook.com [40.107.95.64])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EAD1B4244;
-	Sun,  6 Jul 2025 20:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751834482; cv=fail; b=Et2ZFSJUfcbfoXp6y5ohKRo6KuDbXG+cmQpKQWSbKXAiVXsIqFlaf1GfYVN8ZvtrXx31CuE/1nloPBmtWOLTQMJiiuk8ebueNUdivuhnzh0XeKGb6MSfmIIRYKzmkdd//iv4QU0QZDwgnT0AcfeKVFffnHzDIaiZUbP53iGtCno=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751834482; c=relaxed/simple;
-	bh=dqwAR1138Ksdy4yrNQUxt/oISv6j6fta0Mhadc+vOuY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GQtYtNxHP/XSFvrTpKVD0Wts/t8szt3faSZBfc0oKrDivLknnDUsy7EadEcIFwQwZDmdkKKf664gwL2dSFwENwClOGPBv1IPAgDFfSBwfMWMYgfh6QvcX0dfbc/o2fxG0v0dJ5cCmUsPDTYhYk7QEdA80H7iuVDl+VH7AX1e9Ig=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=i7luP/wL; arc=fail smtp.client-ip=40.107.95.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C3B29E10F;
+	Sun,  6 Jul 2025 20:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751834634; cv=none; b=pZUtgfvjeRypU/atwxwVTzdoPdLekoIxIS/K54cMIV7rHUkPUcnjODyG2yjGq5puNg+nVLgbpuk3JZ3LnqV/cbrj3s6ilw3+c5orrkpFRemTPusFz0YGBlPLfh/E/FAyGyv9zjIjY/qeeOMMiCvM+Fs9bj/S8KbxQsSNO37iktI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751834634; c=relaxed/simple;
+	bh=usPTwVNy/TYUdvESMy1rw1mD95rKVFtnjKLHy2LTfcg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RjtZwNSiM3Q+h7YKB/Mivshlyg5DCasjDKS3THWPgkVbi/2+ij+FQ2f8FOp6peNjCzDv2Uc+JD4UNoXnWZOEP989mVyjbdqWThM9APK1JYdB/EUTkocY8zI/fYeBmvMtVylYYJXeJxsqWbgXBbx8SKJCURMQZUpLC2EHV80dn2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lOvOH69S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CkG1J0Ej; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="i7luP/wL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Cwiz41Dgr/AtleDzLBKP90fSvxImv2gs23SO8KmcLEq2Q7FCMytg5gvfsYlYIXLUIUTCEDusJ3Cu0qTgLDqI69/tjPNYY2DJz86xeR2CFvb5OdltGoiygIkZJbH8lycAfqqNq3LJl5qIA1fJ6V6MpF5PLJaN3QnsNbviieoQVVYncQ1vYN+nTTBUhjyRWJTTZXjKrrVPLkg7yZHMP8Xg+Yn7S5I/GShrgnz9QZs7wbSmgbOR6XV7XHaeKEDEfIx5Q/sRvc+t3q3kyCB20KX2TiHm6B8oZCUKQw4WldJ8d9HeUit6YitbMuXGrYHy+VAypBBClwXgSA3Tvk012egO8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PTD05hjVUBqiBlArni84Elj2alOONm6RBZ4FPF66zJo=;
- b=D3uq2a6C+WLQIyYTBRj9sSq/ef7JULDMKKk19qGfw6TKrrMy1Xps/wFWQ2TcPGuqaZcUPES2KniYgZX8Kz7YCngsK7YKdsfi6OjoxPvBAQ+U52nVoOYoI3Gy1nMKB1cLofBwi2Bkrb1ueu7hko9ZTt185Tm4PXAwg4ubE8mYVwCJjBJIzB6/7sMc+Ti37XQQbERgUv0aLd4tyMFqNvFYbzWEkcVY9c+mPzHOM/5Mk54vqW2eTirUCeR6aZNhza8/WWWihZTif6plINcPwFHfkhxTCEBZG5g4L7MjCqZsrnjGHSAySqMt8qUz9aPDEpTFqHIM9e+qvqSYj+MIxSxLaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PTD05hjVUBqiBlArni84Elj2alOONm6RBZ4FPF66zJo=;
- b=i7luP/wLEn4xufxpcw5fs8t87l1Lv5rO+X1u9MKZSDpKeHepXSOiRrAUMar4ALT1IjOAqkB/KhMGxPnDEYCzfNwlc2KRwp16BIQ7U5TBkI+0addkkW2BZTF8Wk5qhGGpSiUDff5fqasAvrCJpcu3GzFEwys+sNyBI2gRHo7LnA8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB6877.namprd12.prod.outlook.com (2603:10b6:a03:47f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.25; Sun, 6 Jul
- 2025 20:41:17 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8901.021; Sun, 6 Jul 2025
- 20:41:17 +0000
-Message-ID: <58f142e0-5244-466c-b625-ce1e01f017d1@amd.com>
-Date: Sun, 6 Jul 2025 16:41:14 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] drm/amdgpu: move GTT to shmem after eviction for
- hibernation
-To: Samuel Zhang <guoqing.zhang@amd.com>, alexander.deucher@amd.com,
- christian.koenig@amd.com, rafael@kernel.org, len.brown@intel.com,
- pavel@kernel.org, gregkh@linuxfoundation.org, dakr@kernel.org,
- airlied@gmail.com, simona@ffwll.ch, ray.huang@amd.com,
- matthew.auld@intel.com, matthew.brost@intel.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de
-Cc: lijo.lazar@amd.com, victor.zhao@amd.com, haijun.chang@amd.com,
- Qing.Ma@amd.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <20250704101233.347506-1-guoqing.zhang@amd.com>
- <20250704101233.347506-3-guoqing.zhang@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250704101233.347506-3-guoqing.zhang@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0503.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10c::21) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lOvOH69S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CkG1J0Ej"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751834629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HaMWKZFSACMkJF/x1KbPma+33xBrwS00+hXmnNdOlm4=;
+	b=lOvOH69SMeJW7XSU1i1qeC+GJkPScm498GO4iFaSQnJrYk2vNxV/I7wB1kMmczG+RjC+t1
+	sNTvAh2sma9xtPJtUByMPzUQU7sfALHJohE9wBzet0Vi6NkSa3S9lQLkUpZLgFJZjDVCD6
+	GU3kiEXwCgiNFzdOqgQS371mJOvFfq2pBWdd3XtwXX2avFcBKiZ3CCGPFEcKieZyuFIQf+
+	RGvSp1jXATV3jDDrg1boqA6lqFKQLfbP/ZM1gyO4wLth/d2BMk4vOc2ZuZaM9xIvPRyL08
+	hTT/UrHp57vdURrhLTDmiD+T2zAmuGcaWl26379BmLp1OftfaZuRklq7eaO06g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751834629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HaMWKZFSACMkJF/x1KbPma+33xBrwS00+hXmnNdOlm4=;
+	b=CkG1J0EjBS5wGsQmH1a+QFjhkr4r3k8slMTxfndI7cdIdNcYOoj6TC7QYpZ7wdngy3rrtK
+	f3AzK+33Zy0wMeCw==
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski
+ <luto@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah
+ Khan <shuah@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, John Stultz
+ <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, Richard
+ Cochran <richardcochran@gmail.com>, Christopher Hall
+ <christopher.s.hall@intel.com>, Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Miroslav Lichvar
+ <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, David
+ Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, Kurt
+ Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, Antoine
+ Tenart <atenart@kernel.org>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+ <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH 13/14] Revert "selftests: vDSO: parse_vdso: Use UAPI
+ headers instead of libc headers"
+In-Reply-To: <20250701-vdso-auxclock-v1-13-df7d9f87b9b8@linutronix.de>
+References: <20250701-vdso-auxclock-v1-0-df7d9f87b9b8@linutronix.de>
+ <20250701-vdso-auxclock-v1-13-df7d9f87b9b8@linutronix.de>
+Date: Sun, 06 Jul 2025 22:43:47 +0200
+Message-ID: <87a55hrqws.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ0PR12MB6877:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4fd09962-4992-4b46-996a-08ddbccd74bd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MFdoZHlnTGF0WGtzcFRjZDhYOWIvV0wvQzI2WHNhcTBPQ0VQelI5RGplT0hR?=
- =?utf-8?B?eU1KNEtmcVhCbzdPRUNwNE10a2ZUbXhEdXlENG5vMEp5cmRrZlRIdVowcStZ?=
- =?utf-8?B?djY5VHVqeEM4WU93eFJ3QlNlMktGUE5rTGpJdUM4Mmh4d1FYY25KOU4xTXpG?=
- =?utf-8?B?T2l0a0NuSDNxbklNL05RRlp2UHNYbGRwdTdjY0oyZjF2T1drQ0x4Q08rejJN?=
- =?utf-8?B?Zmx3YlUrbkt6RzRydWtkY3JEb21xUjlrTGpucC9lS1lKNWtHMit5NC96czV4?=
- =?utf-8?B?TmZENU91bThWNXRPNVg0Z2p3OWNWL1Y3TnJEN1M2dWZwU1BYb21taS85ajNs?=
- =?utf-8?B?b2ZZMUh6NTFiN2puN3cwUVBPanRJcnFwMngzRmtnSkorZEJpOUlkaUQ3QjA0?=
- =?utf-8?B?QUtaRnNsT1pBQUo3WG1KQW5mN21YSVQ1KzJ0bjlaelY4aGZuTmJGcVhIV1lV?=
- =?utf-8?B?Z2NldFRSZjlENWVyUktINWc4OTJrK253d2FEOTJNR1lmVEpOVmpDRktVeDRK?=
- =?utf-8?B?cGlxS1NuYkR6SHVFeFJOaHZOSXAxK3NTR0ZuckNFWmJycHdGb2xHalBIM0pr?=
- =?utf-8?B?a0RMUHhQdGl5SFg2MktWbktKTEV1ak5ldjJab0ZnWmVSWEREM0NTZ09CNnp2?=
- =?utf-8?B?ZUR5Nmdxd3RYYkNVMWFVeEcvTGU4c2wzN3ByRlAxVWR5TGhLcVdIMndZRU1N?=
- =?utf-8?B?V3ZwQ1J6S3dhTy9UQWtVOG1ZZTR0bTUvSmV6Zmo3bHE2TVpNOWpDcTVmVVh5?=
- =?utf-8?B?ZHZkcVZ6cXpnUm01YnhObXpnSVF1NWdaU0NsQ3ozdFJreFdFcStrMHd6alFy?=
- =?utf-8?B?QzM4YUFvc041bnJ6OGxaV3NwRzVIRXhFM0JEMGZVK0ZxNC9EYTVWMW5abEhs?=
- =?utf-8?B?cFV1elh3UW9iZUZ5UmlNWmRlMFMveTI2eTZ3eVc1T3E2MGFJdkkvd3hzdUR0?=
- =?utf-8?B?UTNZL0RCMW1nK2x4MGxkdjQwaGJ0UEZIWGsrTzA0Y2dRamxVRzVLZWdVVWpC?=
- =?utf-8?B?MDB5YjdaaDRaL0w2dTNTSmJnN2RSRk8vN3d5S2NhQmo4ODhGc2YvMnlqQ2kz?=
- =?utf-8?B?dmdUSkg1WFA2anlUZE5YNU9OWkV3UGNTVVhLcmZrWVIzN29HWnF5bDZ3bkMz?=
- =?utf-8?B?a2dlMDMxd2pJeGtPdjVvbWJCVUJZaDc1OXppa3BxcG1TY1lkaHJuaEc3NU5L?=
- =?utf-8?B?YTJvVzdveDJrdWZ1MnJvYVhGcUFxM0JJTUlncHlNWmpxcFRrTnkyUythckM4?=
- =?utf-8?B?MlhrRU01UWdtOWJ2dzJkQUVzOTZWejMzUWVvMWFZRkJHdHlQWWFSeVhqMVNz?=
- =?utf-8?B?bFVNbFRXcE1xTWQwWkZqaEN3QzBWV3RmQjBxQ1YxUDQ2WVFhbnoweHp1bU1O?=
- =?utf-8?B?Zi9XK25QRGtMRGN2WGxhbXRJTzBEWFY0NEpnaFpnanJhekNmRi83K052RzNH?=
- =?utf-8?B?UTFESjVxN1VYQWE5YUwyWkxYcHdxWElsNHhiVXRsbFUyaXdSZjZvNmNGOVlB?=
- =?utf-8?B?L1ZNdkZYbHcwVlVrRDRkZ0hzVzZrd0ZrYjZyRVBEVnFkUWpqeWxXUFliUmxr?=
- =?utf-8?B?M2lDblNTeW82R3BURUlOYVFUNndUNW02MnBrSGJ1SnpyNW5xbi9mZ1VvZkZI?=
- =?utf-8?B?VWphQU9CaFQrYzlDaFZKT0NVeVErVEZGWGF3VTdqUFJMRUtFME9ZalNuRzVN?=
- =?utf-8?B?amZxUHZFVDZEOFdGU1FHSi9SNXVEZjRkYWM4dk9MdnNzRFFyZXFSL3JVZG1K?=
- =?utf-8?B?U0RzL1luOE5KQStDdnlHNkVzUVFyQ2xNK09MSVY4K09QNmZHQnFmSHVLU2cv?=
- =?utf-8?B?SE9RZUpScXI4dXpxS3k2MWNtSEExM1ZtQmNrQVRwcHFuQWdPNEx0LzIrWjJT?=
- =?utf-8?B?NXgyWDZBWlVNbVkvbnZTSGdwWG01Q2hWS2RwYlV0VnRTMnB6cVZMZSswNko5?=
- =?utf-8?B?V05VRWZnblRiTzBmc2lLQmQ2S1UvRXVJK3dnaHo4dWRGcnVBZkNOSzZ5b0Fr?=
- =?utf-8?B?QmtXa2pwQVFBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b09wTTZ5MEx1Q2VleWgyc01VMkV6Y0dxWkx0ZXROQmtiZ0J2YllwU1dEaGg0?=
- =?utf-8?B?YnFBVzBCN3BHRE8xbmtRK0EyZWI2YjJ5ZThhTldadWZCS1ZZSkFabXNqNk1T?=
- =?utf-8?B?TnRibGo5R0NicVBpN1hmb083LzZsblQzNHYzUldqeVVkd05vZkJkZ1hWZUx2?=
- =?utf-8?B?NGRsL0Y2SXhpSTZjaDNOZHJqNEhCYkR6bDhQVDR6MmgrOE1xK25qcVpidGxN?=
- =?utf-8?B?clUvOXZQRXlwSkxSRlFTRmhRNVk1QldyZ1NDVFo3Y29pa2JFZ0ZLMVJrMDBi?=
- =?utf-8?B?N1FJR0RqMmhDdXpzMVpZd3daWExMM3Y2dEw4Tk9XQjBZOVFEZlhoRDRtbGVp?=
- =?utf-8?B?TUVmK3lGVS9Pd1o4STBZc210cFBSSnJRRVBrN1hmWHN1OGJQemZxTklTWXg5?=
- =?utf-8?B?VlRkdXZNOFpmb0R0RXBxSFIxN3lFZllnNmFpaFV3SVFoWGEveVN5OWRwNVRo?=
- =?utf-8?B?c090bkN6NzZzL2lhbWUzbFU4K0ZFV09kYzBuMzlvUGw3alYvNjdOVVJhS3BB?=
- =?utf-8?B?eXZhL3RpWklleVlTdndjOXVGOE5ZMlFPZ0orQ1ZRR0RYNUJhdVVidGkydU42?=
- =?utf-8?B?WCtoMUVjWGM2ZElhcmh3UEUzeFhhMm9DMFpGU0pTZFF5ZHE3eEQ5cUk0bEk5?=
- =?utf-8?B?L3F3OTBSd0dWaEE1WFhZczJwYURkTElRWkpZQzNKalllRnU4Q3NELzk2MFZa?=
- =?utf-8?B?MFVNbEl3eWROcU8zVkNzOTNyTko5a0hlYmJvb0wwUjJBTlkzM1NGeUt6QlZT?=
- =?utf-8?B?TktEc1dkMTdncjdaZ3Z4bTVWN0ZYeVBqN0t5QndXanZMelJGS3V1Tk9JUjRo?=
- =?utf-8?B?MHFMaVdBcTZUWG1PWU4rbFBBWjJPWFhHbWd6RjFZWmF5R1ZZaG5kK2N0Nmt6?=
- =?utf-8?B?cCtzNnpabElTKzYvZURnZTR2TEZ3STA2Tnl6TXdrelkvYzYxUzdqWUwxdFo1?=
- =?utf-8?B?S3pBUkRWYUJTRVZnYVdKajdCQVhrZWZZSmZGNTN6anBoSllwNUtYMXJBT1d5?=
- =?utf-8?B?SGRibVFHY1pPVUpsY25kcFN4RG9QdnhGcWpaS1liVThXeXYvSzFhRkZQNERr?=
- =?utf-8?B?MXVNdGZYWjVnY3pzY2kxMTU2UTdnWnIxa0tEVlZPRU9ObEE3TEdBMXBZRXZE?=
- =?utf-8?B?ZlNxb3ViVXo0ZUxHbmVLSG1xSU1wRzFQblo3Um9qU2l0cWkyaFNocmRTLzhv?=
- =?utf-8?B?VEFyQTJiODdkOU9wa0J0RjRDR3ptT05UOURuZGgzbm1YSi9OSEVUNlpHTW1E?=
- =?utf-8?B?VUIwQmYxUXdDaXc1SzdmSEJUUDBrM1BmVWJubmNPbDlLbllPVkNCWHYzcE9W?=
- =?utf-8?B?d3lFTXZtLzdNZERtN0x5R3YwNENZc2QwTnFEaHE3V3ZVaHQ3Umsyc29ncnFL?=
- =?utf-8?B?aGd0Q1JxZTl6Y3VNb0tpMjR1NHZRNjl1aHV2U3lVaGhiTnd2TFloZEgySVh6?=
- =?utf-8?B?QkhiZGM4aytEWS8zTVp5TDNuN2k0Q0ZKUmlmR29qZVlkdEJhLzNtWjQ4Q1Fp?=
- =?utf-8?B?TTJaVnZiRjZ5UzhpbjFhcTRHU3J4WS9CejNjMnpFeC9idDliNWYwUitmRkl3?=
- =?utf-8?B?Qk5BYTA1bVZ6bkZvZXlhOFJmUVgwajBLMzVVYk4rbTMwM2V3RnVaOTNVZXFu?=
- =?utf-8?B?anNEMXJKR0NJWW5vdms4bDFUTGxzejhtSmhUYjBnY2plNVAzUjhpcnI3MXNZ?=
- =?utf-8?B?bGZGZU5jOXR4L0FTZmFMK042WWF1dTdYZ00zaDBOcmd4YzgxOE02cDFKbnFY?=
- =?utf-8?B?dnVvUW9aZE9iQTNXTUtTOVBwc3BIZGxDWHpGTWZtZ3FzbGhhOXZtZ0t3elJr?=
- =?utf-8?B?WWd6M2Z6d0xIRk1LbUNSZFRxN25QZ01TWmxiRllCbXd3NFAwa1NqcWltRjdS?=
- =?utf-8?B?dkNWVDlFalVFTy9FS0tWT0VWNzBBS2k4WVV6OVVzVnZQckNSMHdNUU04NnJY?=
- =?utf-8?B?eDlXTS9KUHJreFdMeVF0dm1PNE9vRG5pK3g2S0FhOXZFdno2T0ZuQkJPdnFZ?=
- =?utf-8?B?aTlGeHpaV3QwQlVRRHBlUGh0a3VISmZ0OWdyQ2tvVzdjTDNqQ0dUUmZPa2U2?=
- =?utf-8?B?cTNlbDlHVWJkcURRZ09VbGVMd2ZtUGllVzNyRlh1VnRKZkxob2xGVmRQdHV1?=
- =?utf-8?Q?GNgR3ysw3T+BooJ4qeDBX3hGU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fd09962-4992-4b46-996a-08ddbccd74bd
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2025 20:41:17.0745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NoLRPj4XOD/hOTaixySPlsibLw8ro08wJzi6pbqn5zAJuhO4QNDHsBJ2QVajOc6oA7M2tR18/BsIGcX42PtSZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6877
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/4/2025 6:12 AM, Samuel Zhang wrote:
-> When hibernate with data center dGPUs, huge number of VRAM BOs evicted
-> to GTT and takes too much system memory. This will cause hibernation
-> fail due to insufficient memory for creating the hibernation image.
-> 
-> Move GTT BOs to shmem in KMD, then shmem to swap disk in kernel
-> hibernation code to make room for hibernation image.
-> 
-> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
-> ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> index 27ab4e754b2a..a0b0682236e3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-> @@ -2414,6 +2414,7 @@ int amdgpu_fill_buffer(struct amdgpu_bo *bo,
->   int amdgpu_ttm_evict_resources(struct amdgpu_device *adev, int mem_type)
->   {
->   	struct ttm_resource_manager *man;
-> +	int r;
->   
->   	switch (mem_type) {
->   	case TTM_PL_VRAM:
-> @@ -2428,7 +2429,17 @@ int amdgpu_ttm_evict_resources(struct amdgpu_device *adev, int mem_type)
->   		return -EINVAL;
->   	}
->   
-> -	return ttm_resource_manager_evict_all(&adev->mman.bdev, man);
-> +	r = ttm_resource_manager_evict_all(&adev->mman.bdev, man);
-> +	if (r) {
-> +		DRM_ERROR("Failed to evict memory type %d\n", mem_type);
+On Tue, Jul 01 2025 at 10:58, Thomas Wei=C3=9Fschuh wrote:
+> This reverts commit c9fbaa879508 ("selftests: vDSO: parse_vdso: Use UAPI =
+headers instead of libc headers")
+>
+> The kernel headers were used to make parse_vdso.c compatible with nolibc.
+> Unfortunately linux/elf.h is incompatible with glibc's sys/auxv.h.
+> When using glibc it is therefore not possible build parse_vdso.c as part =
+of the
+> same compilation unit as its caller as sys/auxv.h is needed for getauxval=
+().
+>
+> In the meantime nolibc gained its own elf.h, providing compatibility with=
+ the
+> documented libc interfaces.
 
-For new code can you please use the drm_err() macro instead.  This will 
-help show which GPU had the problem with eviction.
+I'm kinda surprised to find this here in this series. Isn't that commit
+c9fbaa879508 obsolete since nolibc got it's own elf.h?
 
-> +		return r;
-> +	}
-> +	if (adev->in_s4 && mem_type == TTM_PL_VRAM) {
-> +		r = ttm_device_prepare_hibernation();
-> +		if (r)
-> +			DRM_ERROR("Failed to swap out, %d\n", r);
+So this should just go straight to Linus, no?
 
-For new code can you please use the drm_err() macro instead.
+Thanks,
 
-> +	}
-> +	return r;
->   }
->   
->   #if defined(CONFIG_DEBUG_FS)
-
+        tglx
