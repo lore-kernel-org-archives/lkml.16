@@ -1,157 +1,101 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C39F19E97B;
-	Sun,  6 Jul 2025 13:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F18919E97B;
+	Sun,  6 Jul 2025 13:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751809548; cv=none; b=du9RlBgXBRTLFzo6Scbf45+8FAJFJ00MpgT/pwALRLz7N0W391Y72+52E+hq1Cfmd49JIOHVVS27wKNxwUpKv1YWL0OyRPGn+lEe9NhBt5HFMlJJSGWCCYLiq6Nsm6Skrn1QtsCSzXlk2WEpYOy8N2nwVR0GLxtl7OXvnKVqzo0=
+	t=1751809586; cv=none; b=AGpUnntpqWhckEqqfKMnYiGrs8o/IC5GURcXvQKLsahqaXA8y7K2d9pyAcHebuhY072rmKQR+Xy5vU5e5O5awDTFL0WfLmQ5gMs50idfshL0ls0Lkaxamb9IAFMZizn+frz2NSYtMaor8HreiM212MAPUeiZw5gMcDKCG1sO/rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751809548; c=relaxed/simple;
-	bh=FHEDS0QZAgKXgJbWG2/Cr7Ry8SPFDhRqNV9UGS2n+7s=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=jdYy2ibq7HSREHPL3mWyVk8XddfiJWHUtQMVBL1EA7q3WjME1xRlXznJR8/bE6ruXQVXb1sZGf3JbiZfIpNU9ezZUFFqMJwmeH815Ie6XQPW58DeKVEz8NYo7s/SSzd3QeXPrm9QAkcyckHrTh/EnGsIv6NicYMPmQSjWpSss+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WFWdrkLd; arc=none smtp.client-ip=209.85.219.178
+	s=arc-20240116; t=1751809586; c=relaxed/simple;
+	bh=/w2nFjT+YR0sA80qFUaP1m1RlE9rFjVm5fVHoTC/nKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qrm4O2Ty7p7v425t4OnGCXw1gN5AkhF4Qd2WxhFMJq/wFcZtbhUmrNQf3UXxgXGDCjPlQjEdXUQowDviwvzMmz/kBqgd2FtCpi3a4pt5wi4pMOqdreBobkn9mtM+zrn3FjpObyNwSm55+yMI1+aw9vx4W60x1U5MMZLXF8QprTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvJZPTnX; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFWdrkLd"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e81826d5b72so1865131276.3;
-        Sun, 06 Jul 2025 06:45:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvJZPTnX"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3138e64fc73so589658a91.2;
+        Sun, 06 Jul 2025 06:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751809545; x=1752414345; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751809585; x=1752414385; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cBYZIpHcYxpUb3Jzm70CuMo48gVL792R8BW12Oo0i9Y=;
-        b=WFWdrkLdrs8EvekwcQ7IQWip/jsVCOA/5dgQBWRyAciZwBstR5Qj+WplkdHKk8E6zJ
-         8b8JFq3A4yKg+/8NGr6/gQCSTrNaxznMfxzcbYGXdmzQRqQUjOtwqqZbTUGxbPJBq/NM
-         MZJpH4r3qB5wHJKKeP7x/6gJSjbrAX0HRTSwyqFbDkCf8cfIBWWxnBAu6SPf70sBlR4o
-         Ijc4ZUpX81HATDd6NE/JTIVsyy/4geIMDZONG8LToDyaAUlPpu/rDmlklNYaeoHA8HO7
-         cvoRvfml1iDNGHBaHdZnaODIbGFQYTKnMSccpdliSYgIdame4wz01RUC/Bd/c9aHh9Qn
-         y1HA==
+        bh=gKLTNgJgTfofCTlF/JST0qzlC2FbwxSOsAmEM7FOTgU=;
+        b=XvJZPTnX/EnGRJ9/+75hCUMqA7TLIw3uSacj0W3ZYAAh+70KLQgxVgSNwc+cK/XhNl
+         wxh+vXBegR8CQpbHD1jA0I7HbZDq3poG7w5VmXR0SQqGS4W3ffy2HfxpItBl7YZ5e5+I
+         YAhoar3uBI7mZ1Y07kl3DZ+TpXx0y1Nbt/mZEcAamOd3My+bxov3oSSeKfbf6rhXFS42
+         ZJx+l09+Omv3qhOGNKFovTyeyEH2qN50jEWNfkYL2zNuXELLe4bW+DwQ4hEgKqk9Hiy3
+         gqDxMPAQqLzVyPxvvoMuFm/lVVgpLpDeZn6uBEtmf2nedXPfFRd0lKgMQKpET1IArqjv
+         nZmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751809545; x=1752414345;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cBYZIpHcYxpUb3Jzm70CuMo48gVL792R8BW12Oo0i9Y=;
-        b=XVymhSdp1sL8jb9ZnhIszN9iilXOzlUsWQkNc47+xQN0vE5J6G/PfS9i2wnf+NDx95
-         72aBrhFal+lDpxsws9eFBspyuZUihe1TeKmZVO2NS4SzuSXAh5k2+M/X3AmRTxsEzaPf
-         RrtfcmqnMpZmq2xqcsUxxHMgtYcmdN8JUR0WkqDd4mg9/v/HK2PV6MrweVBkwwduLNgo
-         swoRKwzXq7tClpUkQxi/UEfndbHbzX3R7G69JpJud2rIVE6pV0/ZbAwFIzPIr9l5wTvV
-         0AQQjKnjQKYF55uc9r4ycRHjqBQi6cFc874wMAKuK3twekl11py5zprvH01UWHkoR4QH
-         C2zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvo7MimqPgclKhvidOMTOEtNEafDHtSIdt/gaJgeuahEJDClNsJUwUXx6E07OeKasH4adqF0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCREZXyWDiXxq3uaGBFBOWzJQMz2vAd9z79nmUa7Ds59nolFiJ
-	VzzSAjVEEP9PI/ZAQoC+Ows5cb/5urYkv0+vfgAl/s9Be/iycdKEpgHS
-X-Gm-Gg: ASbGncsOIoa8NBVQl/Q9KDXtKBiStF1OpPPh7JAIRmRXi+rXNYYdI2d4PMMYTCdgNOe
-	3Tj5ytxGd/U4mozzUC/DFMMfSKKkX8HpJEzWp+jueyBgWvSQ0WHRZILW55v90scLeNO+iRQ0D8l
-	J5+hiZ+FvOmm1bjfGgJxvLZ2GmdeVOWSU1RYmQbT/7DqI8x4ICEzGhXy2D+uDLmfZW61Z5TSFSz
-	Xfe/bNsYTkvA7HU7PvyE3Hh5/pQC+uhiihmV7VoiRdqkfg5/GvuM9F2OzvKqNR5fdRhJCtJEu96
-	+G/LDnzjiBByn6x5OgVKwXOjO0xzZZ0cbVUwIQV0+Nny7I6BIXUiF+tychnO6emcUWXdvYG9nsP
-	BeIADj+K7OSp6mnTUBMZwNYJK3uVb2Obp94ZGkGc=
-X-Google-Smtp-Source: AGHT+IHoE4Y7lFX/EVffGHdYuQVe9w5o7wp6SVMXrUW5Wy9ACX5OTR6czeJZPf3AIgR97NU8FcOTiA==
-X-Received: by 2002:a05:6902:a84:b0:e84:4840:7b5 with SMTP id 3f1490d57ef6-e8b3cd04e29mr5537002276.22.1751809545325;
-        Sun, 06 Jul 2025 06:45:45 -0700 (PDT)
-Received: from localhost (234.207.85.34.bc.googleusercontent.com. [34.85.207.234])
-        by smtp.gmail.com with UTF8SMTPSA id 3f1490d57ef6-e899c3401fasm2002251276.19.2025.07.06.06.45.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jul 2025 06:45:43 -0700 (PDT)
-Date: Sun, 06 Jul 2025 09:45:43 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Felix Fietkau <nbd@nbd.name>, 
- netdev@vger.kernel.org, 
- Eric Dumazet <edumazet@google.com>, 
- Neal Cardwell <ncardwell@google.com>, 
- Kuniyuki Iwashima <kuniyu@google.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- David Ahern <dsahern@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Willem de Bruijn <willemb@google.com>, 
- Richard Gobert <richardbgobert@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Message-ID: <686a7e07728fc_3aa654294f9@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250705150622.10699-1-nbd@nbd.name>
-References: <20250705150622.10699-1-nbd@nbd.name>
-Subject: Re: [PATCH net] net: fix segmentation after TCP/UDP fraglist GRO
+        d=1e100.net; s=20230601; t=1751809585; x=1752414385;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gKLTNgJgTfofCTlF/JST0qzlC2FbwxSOsAmEM7FOTgU=;
+        b=dKSwl7YDqBdVgWRe0tbYMaevLfI2T17qUcM4mDpvxRztSj9oXBJbzmXHgTozi+qu81
+         H+pm7ZGjseEabyfu4KePzcsIevMHrIN9+UOFB9EU4XLQcJv0hxQ2uwvQD6vDoQrd8cDT
+         atHb9stpBK1Q24RQx4AacS595NpiwixRlU6MAU6Il9cHXrUPed5zvXq0A3omshbG7qFT
+         kvRo695zVzHxjA/wC2TiP2uC8IzTmBr5bX48sNDW1HpNklbZt/c3qD42VZKAelhJbtq9
+         ZkzJOK0BMJppmHwsqsgr8U5VPp5kMf1bUF6CH5w+LZteh9xi9yitp3CELSH8/MX2KJRo
+         fvlw==
+X-Forwarded-Encrypted: i=1; AJvYcCU53ssgnf8wljMaf+H+DW1kWLKKUEmdzg8j78OrYe6PMqVdqTJT9wsbedGm+Wl3j0w0XoAX+kXo9QQ=@vger.kernel.org, AJvYcCVU0A51fXKuWkceO5Hm6yugRmsDMhnmYOas2MBPSfLFot8Jg9ncAJl8/U8rPlGz1pgYHq0SE/SpFuO1QESo@vger.kernel.org, AJvYcCXunJNwLkBKdLNxAiDM++Z2c3244hKcwv0to+J4Yh/PVnatV4xeVwbBprQS37ln72JqTA8+YE4xeOQXy8p/H9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrghTODC5FQcpWbGRp00Lfv9k3p0rpbajaBUjXmeHUYMApDVmD
+	O337mf+pQFvxYVL3d34SSIQVyZiY3thul1DKhuPZOCvJYA/qJsAZFeaDygyYr+JM6iDOh8Jb6GN
+	w+mFJ/xKA3aLxjBHhuAVe3ZSzCO8SP5E=
+X-Gm-Gg: ASbGncucYFbrhzos8M/FyBu3E+9sJuFHxuxtXkS+DCYUi8g/+LJO+tozKuTpFitM+eH
+	P2zxKcxPEWM7RqrTKn3OJ6T+PqshEehxDsfLnNyFVWBsk9Vn0J7yNjesixciwosHrrWWngA5MTp
+	/P2klJVk2m9e9oR90KBCvKkTh7Ak4T3HGH3xQ5vnyIJOab1YK3cX3L/uA=
+X-Google-Smtp-Source: AGHT+IHOv9GZgJf2WFKprOIy64F5CrgixXl8Scf2KyipOzlw7oCckduzujowyADaYXCyuHIJ4iHyaN1QrOx7fForFnk=
+X-Received: by 2002:a17:902:d4c5:b0:234:ed31:fc9f with SMTP id
+ d9443c01a7336-23c873bd881mr55359015ad.11.1751809584805; Sun, 06 Jul 2025
+ 06:46:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250702-nova-docs-v3-0-f362260813e2@nvidia.com> <20250702-nova-docs-v3-2-f362260813e2@nvidia.com>
+In-Reply-To: <20250702-nova-docs-v3-2-f362260813e2@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 6 Jul 2025 15:46:12 +0200
+X-Gm-Features: Ac12FXwSGwFmNVg0dK0RITOBy2nrTS1QW7QBJAFG70NZ191EM-5_o7Lr9NDvmZQ
+Message-ID: <CANiq72nh71s9to5v1KHJWN79bEFv97zN6jcGJyEQkaJZ5UuJfg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] gpu: nova-core: Clarify sysmembar operations
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Jonathan Corbet <corbet@lwn.net>, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Joel Fernandes <joelagnelf@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Felix Fietkau wrote:
-> Since "net: gro: use cb instead of skb->network_header", the skb network
-> header is no longer set in the GRO path.
-> This breaks fraglist segmentation, which relies on ip_hdr()/tcp_hdr()
+On Wed, Jul 2, 2025 at 1:05=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.c=
+om> wrote:
+>
+> +/// driver initialization, and before any falcon is reset.
+> +//
+>  /// Users are responsible for manually calling [`Self::unregister`] befo=
+re dropping this object,
 
-Only ip_hdr is in scope.
+Missing slash.
 
-Reviewing TCP and UDP GSO, tcp_hdr/transport header is used also
-outside segment list. Non segment list GSO also uses ip_hdr in case
-pseudo checksum needs to be set.
+Added the possibility of catching this automatically in e.g. `rustdoc` to:
 
-The GSO code is called with skb->data at the relevant header, so L4
-helpers are not strictly needed. The main issue is that data will be
-at the L4 header, and some GSO code also needs to see the IP header
-(e.g., for aforementioned pseudo checksum calculation).
+    https://github.com/Rust-for-Linux/linux/issues/350
 
-> to check for address/port changes.
+> +// These two registers together hold the physical system memory address =
+that is used by the GPU for
+> +// perform sysmembar operation (see [`crate::fb::SysmemFlush`]).
 
-If in GSO, then the headers are probably more correctly set at the end
-of GRO, in gro_complete.
+This is a normal comment, so the intra-doc link will (sadly) not do anythin=
+g.
 
-The blamed commit was added to support tunneling. It's not obvious
-that unconditionally setting network header again, instead of inner
-network header, will break that.
-
-Side-note: the number of times this feature has been broken indicates
-we should aim for getting test coverage.
-
-> Fix this regression by selectively setting the network header for merged
-> segment skbs.
-
- 
-> Fixes: 186b1ea73ad8 ("net: gro: use cb instead of skb->network_header")
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> ---
->  net/ipv4/tcp_offload.c | 1 +
->  net/ipv4/udp_offload.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
-> index d293087b426d..be5c2294610e 100644
-> --- a/net/ipv4/tcp_offload.c
-> +++ b/net/ipv4/tcp_offload.c
-> @@ -359,6 +359,7 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb,
->  		flush |= skb->ip_summed != p->ip_summed;
->  		flush |= skb->csum_level != p->csum_level;
->  		flush |= NAPI_GRO_CB(p)->count >= 64;
-> +		skb_set_network_header(skb, skb_gro_receive_network_offset(skb));
->  
->  		if (flush || skb_gro_receive_list(p, skb))
->  			mss = 1;
-> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-> index 85b5aa82d7d7..e0a6bfa95118 100644
-> --- a/net/ipv4/udp_offload.c
-> +++ b/net/ipv4/udp_offload.c
-> @@ -767,6 +767,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
->  					NAPI_GRO_CB(skb)->flush = 1;
->  					return NULL;
->  				}
-> +				skb_set_network_header(skb, skb_gro_receive_network_offset(skb));
->  				ret = skb_gro_receive_list(p, skb);
->  			} else {
->  				skb_gro_postpull_rcsum(skb, uh,
-> -- 
-> 2.49.0
-> 
-
-
+Cheers,
+Miguel
