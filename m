@@ -1,222 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BB115D1;
-	Sun,  6 Jul 2025 16:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E509517A2E3;
+	Sun,  6 Jul 2025 16:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751818388; cv=none; b=kevQVBHy/LBp30pqgZr5NY99ONjVV41Qt/oi4/jNFBj3hZ1ba3jomTDzio5gxL7yev4JSDh92Cmzrz+Q//Is6PQ4Y9JuFFk2enUSVyPcLjWrk3SQJ7FhwlfHE2Q2L2bMnU9X4cU9W1Bk9WCHBwQ5jR4WVERIy/Zlj+CxDlhFr/I=
+	t=1751818437; cv=none; b=g5LRkSiEPyAnFf6Afobm7ZmI7oqXP2MBYt04pbG3HMzsldayzrKdFJyuG2ffGSwzg63d6Ncxz4Q6cMPs9zGPpinfDMYpgbT3uREbeiDZBa0DL/63e7VdZofPET2YszewULK/B+m7v/Z6r97U2TfUGMJDRHNyKZePK5uzaGu5m84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751818388; c=relaxed/simple;
-	bh=zDCLYT9ltxWJE6HZNfeuQPUYSB2SXgBeXCHKX7wTHpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S1YCLZ9X3Unrn4PsgFf8lnKhcR75CT+l2m12tXZZ3UtZFDO6Nz9VhITLjHAnZgcYZMrAJxodch9GJ8UJHnuIDQabnd9ORZuw6QaIEn5MLOWAUmIaItQ58RlouoNNPq47HLUJ2RJ5SHqh0Au266rnCEIbgrY1ZrxdIloMajI+3yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTrvN2uT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751818437; c=relaxed/simple;
+	bh=8+RuurwIe9Sja0ASOtNH6r52L+x+kJQZRVygjelM9vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNuOhcqohcv922y+WnosdynKW4bypmNsjU4OJT0kzElzAQR1fIIGiXlNsGqlkTE6h45WMfDwkHTEM71crsNzwOn2HC63sowPVoVWSh5S6S26vxIs558kiWJh44osL7ZP4xLayYGW7ODtXbk1ndAezsRBmy87mYIQ2YRNod2uXws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Yl3G8I36; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTrvN2uT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B3E3C4CEED;
-	Sun,  6 Jul 2025 16:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751818387;
-	bh=zDCLYT9ltxWJE6HZNfeuQPUYSB2SXgBeXCHKX7wTHpk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DTrvN2uTCtZIL1z52MUhpOaZUXvvP4ffRd37nzXKgrKxZFCTElmU/x7qTdVuss1F5
-	 3JbkjXifZW+4Hjb1LKTYJ8cvFnirVXmWf+VPMLrqJPoAYOPlmz5S9emfbOcd4nkkc0
-	 vMXgcgUDhiQF840CeLFFCI102sDMlK0XsH0hHf8VLcUrXNFWaIah9EzHEqfao5DY+d
-	 Rtwj+GT1ra4Dj/k5JYm7X9o4QBLj5Fh7nbNhL0TtcwhE1v+lrMvJ5oQSu/LVIo55jY
-	 rT4yYuLLzBzu7CJ20Vt+/9uke+xJjbRRuLO7ep4J31N895Nwz8y0eGwZRyeRKDLov9
-	 gcmN+1KxV42rg==
-Message-ID: <d5982c46-6353-4ffd-8a7a-126ac795f751@kernel.org>
-Date: Sun, 6 Jul 2025 18:13:03 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Yl3G8I36"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=dVBOorKuIT7UYPImY9pxxlDpEL+PzMlcki2Z/1f6+vM=; b=Yl3G8I36EZk21kav9ptyI4TfIe
+	A86kSvBJn8nvMAwdSaUeVsanhcB+rF5RN5XTNm/2X9t1i6/oBRvT6I7ynI4trNGAk56tduh2wfU5f
+	Vy2yeQL2p596JKquRzJxFMOyCmTKFEns5sEFDl8WdN+vnkcu+u8y/vOr1x3Oauls7u5g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uYRzj-000akM-7H; Sun, 06 Jul 2025 18:13:35 +0200
+Date: Sun, 6 Jul 2025 18:13:35 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukas Schmid <lukas.schmid@netcube.li>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 5/7] ARM: dts: sunxi: add support for NetCube Systems
+ Nagami SoM
+Message-ID: <279a7a96-2161-4dac-a09f-7bbbe2596538@lunn.ch>
+References: <20250705213900.3614963-1-lukas.schmid@netcube.li>
+ <20250705213900.3614963-6-lukas.schmid@netcube.li>
+ <b2351675-cba2-4d8c-af6c-f341f5c77ee7@lunn.ch>
+ <5023306.31r3eYUQgx@lukas-hpz440workstation>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] staging: media: atomisp: remove debug sysfs attributes
- active_bo and free_bo
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>, andy@kernel.org,
- mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org
-Cc: linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
- skhan@linuxfoundation.com, dan.carpenter@linaro.org
-References: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250627100604.29061-1-abdelrahmanfekry375@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5023306.31r3eYUQgx@lukas-hpz440workstation>
 
-Hi,
+On Sun, Jul 06, 2025 at 11:06:34AM +0200, Lukas Schmid wrote:
+> On Sonntag, 6. Juli 2025 09:38:00 CEST Andrew Lunn wrote:
+> > > +&mdio {
+> > > +	lan8720a: ethernet-phy@1 {
+> > > +			compatible = "ethernet-phy-ieee802.3-c22";
+> > > +			reg = <1>;
+> > > +	};
+> > > +};
+> > 
+> > Just for clarification: The PHY is on the SOM? I've seen systems where
+> > the PHY is on the SOM, and the magnetics and RJ45 on the carrier
+> > board. I've also seen systems where the PHY, magnetics and RJ45 are on
+> > the carrier.
+> 
+> Yes that' the case here. The PHY is located on the SoM and the MDI signals
+> before any magnetics are on the SoM's Card-Edge. The magnetics are required
+> on the Carrier board (e.g. a MagJack or dedicated Transformer)
 
-On 27-Jun-25 12:06 PM, Abdelrahman Fekry wrote:
-> The sysfs attributes active_bo and free_bo expose internal buffer
-> state used only for debugging purposes. These are not part of
-> any standard kernel ABI, and need to be removed before this
-> driver may be moved out of drivers/staging.
-> 
-> - Remove active_bo and free_bo attributes
-> - Remove group registration calls form hmm_init() and hmm_cleanup()
-> 
-> Suggested-by: Hans de Goede <hansg@kernel.org>
-> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+O.K. great. If you need to respin, please extend either the commit
+message including this, or add a comment in the .dtsi file for the
+SOM.
 
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-I have merged this in my media-atomisp branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
-
-And this patch will be included in my next
-pull-request to Mauro (to media subsystem maintainer)
-
-Regards,
-
-Hans
-
-
-
-
-> ---
-> v5:
-> - remove stray change
-> 
-> v4: https://lore.kernel.org/all/20250627072939.21447-1-abdelrahmanfekry375@gmail.com/
-> - fix typos
-> 
-> v3: https://lore.kernel.org/all/20250624170746.47188-1-abdelrahmanfekry375@gmail.com/
-> - remove blank line
-> 
-> v2: https://lore.kernel.org/all/20250624144943.39297-1-abdelrahmanfekry375@gmail.com/
-> - add Suggested-by line
-> - remove unnecessary comments
-> 
-> v1: https://lore.kernel.org/all/20250624130841.34693-1-abdelrahmanfekry375@gmail.com/
-> 
-> ---
->  drivers/staging/media/atomisp/pci/hmm/hmm.c | 91 ---------------------
->  1 file changed, 91 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> index 84102c3aaf97..f998b57f90c4 100644
-> --- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> +++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> @@ -28,88 +28,6 @@ struct hmm_bo_device bo_device;
->  static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
->  static bool hmm_initialized;
-> 
-> -/*
-> - * p: private
-> - * v: vmalloc
-> - */
-> -static const char hmm_bo_type_string[] = "pv";
-> -
-> -static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
-> -		       char *buf, struct list_head *bo_list, bool active)
-> -{
-> -	ssize_t ret = 0;
-> -	struct hmm_buffer_object *bo;
-> -	unsigned long flags;
-> -	int i;
-> -	long total[HMM_BO_LAST] = { 0 };
-> -	long count[HMM_BO_LAST] = { 0 };
-> -	int index1 = 0;
-> -	int index2 = 0;
-> -
-> -	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
-> -	if (ret <= 0)
-> -		return 0;
-> -
-> -	index1 += ret;
-> -
-> -	spin_lock_irqsave(&bo_device.list_lock, flags);
-> -	list_for_each_entry(bo, bo_list, list) {
-> -		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
-> -		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
-> -			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
-> -					"%c %d\n",
-> -					hmm_bo_type_string[bo->type], bo->pgnr);
-> -
-> -			total[bo->type] += bo->pgnr;
-> -			count[bo->type]++;
-> -			if (ret > 0)
-> -				index1 += ret;
-> -		}
-> -	}
-> -	spin_unlock_irqrestore(&bo_device.list_lock, flags);
-> -
-> -	for (i = 0; i < HMM_BO_LAST; i++) {
-> -		if (count[i]) {
-> -			ret = scnprintf(buf + index1 + index2,
-> -					PAGE_SIZE - index1 - index2,
-> -					"%ld %c buffer objects: %ld KB\n",
-> -					count[i], hmm_bo_type_string[i],
-> -					total[i] * 4);
-> -			if (ret > 0)
-> -				index2 += ret;
-> -		}
-> -	}
-> -
-> -	/* Add trailing zero, not included by scnprintf */
-> -	return index1 + index2 + 1;
-> -}
-> -
-> -static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
-> -			      char *buf)
-> -{
-> -	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, true);
-> -}
-> -
-> -static ssize_t free_bo_show(struct device *dev, struct device_attribute *attr,
-> -			    char *buf)
-> -{
-> -	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, false);
-> -}
-> -
-> -
-> -static DEVICE_ATTR_RO(active_bo);
-> -static DEVICE_ATTR_RO(free_bo);
-> -
-> -static struct attribute *sysfs_attrs_ctrl[] = {
-> -	&dev_attr_active_bo.attr,
-> -	&dev_attr_free_bo.attr,
-> -	NULL
-> -};
-> -
-> -static struct attribute_group atomisp_attribute_group[] = {
-> -	{.attrs = sysfs_attrs_ctrl },
-> -};
-> -
->  int hmm_init(void)
->  {
->  	int ret;
-> @@ -130,14 +48,6 @@ int hmm_init(void)
->  	 */
->  	dummy_ptr = hmm_alloc(1);
-> 
-> -	if (!ret) {
-> -		ret = sysfs_create_group(&atomisp_dev->kobj,
-> -					 atomisp_attribute_group);
-> -		if (ret)
-> -			dev_err(atomisp_dev,
-> -				"%s Failed to create sysfs\n", __func__);
-> -	}
-> -
->  	return ret;
->  }
-> 
-> @@ -145,7 +55,6 @@ void hmm_cleanup(void)
->  {
->  	if (dummy_ptr == mmgr_EXCEPTION)
->  		return;
-> -	sysfs_remove_group(&atomisp_dev->kobj, atomisp_attribute_group);
-> 
->  	/* free dummy memory first */
->  	hmm_free(dummy_ptr);
-> --
-> 2.25.1
-> 
-
+	Andrew
