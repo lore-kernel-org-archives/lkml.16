@@ -1,99 +1,213 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887E01E2614;
-	Sun,  6 Jul 2025 10:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94EF19D092
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 10:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751796404; cv=none; b=IntoBrJINQUxwYCk+BGOlfsEYOqUYql0N1vyp/TcyQvPQTz6yv7/olBQek2dIL+ZHilScs4vDMfagRNa5bJ5VGEnuIdfHiro+Pxxwst7JQIccqCGt0D/qdyRVuTEgCTo+N1s9a+Z9NOE/BFZR/iLmVmSlTUCeMz7Ju5zWioNxt0=
+	t=1751796458; cv=none; b=OoAYGNo5DpPzV22pjcugOkA2PZNlD3MQ8IgWtMT3qZtgTyCPsWbUK1yTxDqhtzm9C43Lqu9gxLOIv+CpZXdLdbO9xoA6Tc/6nN7JNvT07X8uQ/hf3fW2ZM2WhbcASVWhaBN9xK1gXPiz3xnIMmJIazxRQs8Ip3LmLwKXR0uQABE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751796404; c=relaxed/simple;
-	bh=MveTvm3RII1ANo0ktu6TZtfY7muEUaXzdRlO3voTPW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PsLC4xVCJ/jj7A0qPHoW4E11xiylMSyb8Jx6Z4nX65OCAJHgtIKZbu+yqcN6ENlSQkrXA22QWZq1mg98hkALToz4SVJPpQDQXklkvFIMfnM4s17C+lD0wmgevHTxoRglsoJg9oKtjNUHIXzN3i8dhSGCefdfJPBHUetYObh7x5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=iU5ZzXcN; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1751796458; c=relaxed/simple;
+	bh=XqIrucQsltQ/dUKIhFeaygB0TAAeHN/6G5y01VMcvqM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rs8GLKUx0CZ2AsMqLI4yUFHGEIQQZ9j5NcK05yh53OUCTslpWnyBjdiZLctGNbgkOR15kKO+1APOhWs6rCR7TBc/TKPW6PFeJaLKGTEh9hEonIeSSUbkVIHP9lL9vELhlceI7iwEUYe95Bgz87qvEqEvkTpV1l+aEVnmixL3Oko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WsC3Bchd; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iU5ZzXcN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=IWfeIfuL/kwNF8nAD5QuTvp840QjR9/bbiTVVW0dfhk=; b=iU5ZzXcNVcNXf4OCCNIVweOmSz
-	hiHERGwNfjqeYzsY1DNxe+aGznYucGnwzjIDO1pnnaDrV70QF49/IGm+Qf9gzrCSwsrC5QxyIkSK9
-	WIAezClT4H61s8UjuL9hOpXEUu4TfEWLY3PyQWm+GqneNTlpm/QrkD+3DfYDouJA5Wi1nahWcvgMD
-	uLNwbwyT98O/RlkjerGR5DK6Jw9YY3FunMqfpKvzRIajDfqE75N2a7q0LmOq9Aahft7hZjzl2Pxd5
-	0wNWmFmQvEZS9C1+pFFsDYWouTGOaIOu3p9EmrJg2TxGb4GMs8WxCfSJ8SAZXKJW7TPBTHBDc9hp2
-	hupzmhwg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47384)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uYMGR-0003xa-2A;
-	Sun, 06 Jul 2025 11:06:27 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uYMGL-0007ya-32;
-	Sun, 06 Jul 2025 11:06:21 +0100
-Date: Sun, 6 Jul 2025 11:06:21 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"biju.das.au" <biju.das.au@gmail.com>
-Subject: Re: [PATCH net-next] net: stmmac: dwmac-renesas-gbeth: Add PM
- suspend/resume callbacks
-Message-ID: <aGpKncEeZTifSlA2@shell.armlinux.org.uk>
-References: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
- <aGl9e9Exvq1fVI0s@shell.armlinux.org.uk>
- <TYCPR01MB11332BCE03B3533784711A5BF864DA@TYCPR01MB11332.jpnprd01.prod.outlook.com>
- <TY3PR01MB113460004F6A57B3AAD77E86E864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WsC3Bchd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751796457; x=1783332457;
+  h=date:from:to:cc:subject:message-id;
+  bh=XqIrucQsltQ/dUKIhFeaygB0TAAeHN/6G5y01VMcvqM=;
+  b=WsC3BchdnNsneX6SNBEOl/lSD91salA0Q1SxD12TwcSVPZUaMUjv942A
+   i/Ke8/BVBkoftjtP3oLit5Y6y5Z19u3GMAOgCYKRKrajiDKl24Ct8d3ho
+   zI97LZ/fJTAxG3solScN/ow+3jfEpSr0hPIoVpDkjn6VzSwH1yAW4lDCd
+   eoSX6fajeIUyTFTZJkwe5l6mTtxWycyxSPTjFelc/72TWZ8USIa/Rh+rd
+   NEaByDz/bMa6z/kx3vWMEIVf1lm3Ee1bdfnWjqHOAyj1DeFijE6mAZxkG
+   qYoSUM/jRw4B6MX9qtSCNx8S4aYLDJQpxCjCgjqMWt3G1xvh0JenQhJF4
+   w==;
+X-CSE-ConnectionGUID: 9zn7WECySoifyAvMUT09uw==
+X-CSE-MsgGUID: 9ZpeLcVBQJysY4uZ5kPy/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="64284599"
+X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
+   d="scan'208";a="64284599"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 03:07:37 -0700
+X-CSE-ConnectionGUID: 81Q5OJk5QqOOQrZEjAw89g==
+X-CSE-MsgGUID: +wTOODjBT7iTsg+9DpnHaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
+   d="scan'208";a="159240068"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 06 Jul 2025 03:07:35 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uYMHV-00050t-0U;
+	Sun, 06 Jul 2025 10:07:33 +0000
+Date: Sun, 06 Jul 2025 18:06:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 14cf20bfadb3f5058350cd1be4856836fcb5afe3
+Message-ID: <202507061822.Dc10OSV2-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY3PR01MB113460004F6A57B3AAD77E86E864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Sun, Jul 06, 2025 at 08:45:14AM +0000, Biju Das wrote:
-> Hi Russell King,
-> 
-> FYI, The above testing is done with rootFS mounted on SD card.
-> 
-> But when I mount rootFS on NFS, after wakeup, I am not able to contact the NFS server.
-> 
-> The below patch makes it to work[1].
-> Not sure, why the original code is failing if the rootFS is mounted on NFS?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 14cf20bfadb3f5058350cd1be4856836fcb5afe3  Merge sched/urgent into tip/urgent
 
-It would be good to understand exactly what is going on there.
+elapsed time: 870m
 
-As stmmac sets mac_managed_pm to true, which is propagated to phylib,
-this means the mdiobus suspend/resume will be no-ops, as the MAC driver
-needs to do everything necessar to resume the PHY.
+configs tested: 136
+configs skipped: 3
 
-Is your PHY losing power over suspend/resume?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Maybe phylink_prepare_resume() needs to call phy_init_hw() as well,
-like mdio_bus_phy_resume() does?
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250706    gcc-8.5.0
+arc                   randconfig-002-20250706    gcc-12.4.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-21
+arm                   randconfig-001-20250706    clang-21
+arm                   randconfig-002-20250706    clang-21
+arm                   randconfig-003-20250706    gcc-8.5.0
+arm                   randconfig-004-20250706    gcc-14.3.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250706    clang-21
+arm64                 randconfig-002-20250706    clang-21
+arm64                 randconfig-003-20250706    clang-17
+arm64                 randconfig-004-20250706    gcc-9.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250706    gcc-9.3.0
+csky                  randconfig-002-20250706    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250706    clang-21
+hexagon               randconfig-002-20250706    clang-18
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250706    gcc-12
+i386        buildonly-randconfig-002-20250706    gcc-12
+i386        buildonly-randconfig-003-20250706    clang-20
+i386        buildonly-randconfig-004-20250706    clang-20
+i386        buildonly-randconfig-005-20250706    gcc-12
+i386        buildonly-randconfig-006-20250706    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250706    clang-18
+loongarch             randconfig-002-20250706    clang-18
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       alldefconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250706    gcc-9.3.0
+nios2                 randconfig-002-20250706    gcc-13.3.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250706    gcc-15.1.0
+parisc                randconfig-002-20250706    gcc-9.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                     mpc5200_defconfig    clang-21
+powerpc               randconfig-001-20250706    gcc-8.5.0
+powerpc               randconfig-002-20250706    clang-21
+powerpc               randconfig-003-20250706    clang-21
+powerpc64             randconfig-001-20250706    gcc-8.5.0
+powerpc64             randconfig-002-20250706    clang-17
+powerpc64             randconfig-003-20250706    gcc-13.4.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv             nommu_k210_sdcard_defconfig    gcc-15.1.0
+riscv                    nommu_virt_defconfig    clang-21
+riscv                 randconfig-001-20250706    gcc-11.5.0
+riscv                 randconfig-002-20250706    clang-19
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250706    gcc-8.5.0
+s390                  randconfig-002-20250706    gcc-9.3.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                          polaris_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250706    gcc-14.3.0
+sh                    randconfig-002-20250706    gcc-15.1.0
+sh                           se7721_defconfig    gcc-15.1.0
+sh                           sh2007_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250706    gcc-8.5.0
+sparc                 randconfig-002-20250706    gcc-15.1.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250706    gcc-10.5.0
+sparc64               randconfig-002-20250706    clang-20
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250706    gcc-12
+um                    randconfig-002-20250706    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250706    gcc-12
+x86_64      buildonly-randconfig-002-20250706    gcc-12
+x86_64      buildonly-randconfig-003-20250706    clang-20
+x86_64      buildonly-randconfig-004-20250706    clang-20
+x86_64      buildonly-randconfig-005-20250706    clang-20
+x86_64      buildonly-randconfig-006-20250706    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  nommu_kc705_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250706    gcc-8.5.0
+xtensa                randconfig-002-20250706    gcc-10.5.0
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
