@@ -1,216 +1,106 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F37135972;
-	Sun,  6 Jul 2025 08:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AEC2E36E0
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 08:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751790936; cv=none; b=hH5WfDeiL/+NdVYN67zwx2VyBedyOOlN4pMtF+ne9JAcZS996fo6GE76cmRv/9Fn5EahAEE+Dv+Y8e7J+PrM68W9x/owR2m8cmMGMFYklbyVeBKI9mod6IgAYCyA58eTaO7RrfM/pCq4eZP18Tvn+BgTVgGFJHj+lOsNqtr26n4=
+	t=1751791030; cv=none; b=uRusCKcs3/hkPg08L4Vu3vO7stkjhUyMrospVM2iOr5eB/LLfNXeAnQ6IKHcQ6q9WRzfTxWt1fjgtwcmmJdAQ/QFyYB0SDw/U+b5ZwUwZ20SZsNel7KNnnmaliFw7sF2ZQrCgbsIK4xsrhIZQt4n8gb0jWTPl8261XJMU/1PIqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751790936; c=relaxed/simple;
-	bh=zZBUK8UI3llPineO/aa9x7oBS9wgghT1PNTWtF3og3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=epuyRKdVZgirVzsuRu17sIDbNQg88/bdrvdZcW/eHphRlRfwnGT9T+gqR3tDLA/a+90EwukbllvcpW6m1NYYLNa327um/jW9/7uMGcFCWkv2yb4JEJqJBUsVjfFVuDLsR2ZesERVLdmCNGh0qlrtmzf+IzTLOBXQ8pQmjkR+M1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Pbhg67sX; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1751791030; c=relaxed/simple;
+	bh=DA9+R+jk2RshE4iiF4a4aj120wAMzlI+4yOBwVlDfak=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=a8hwAO0uhaQxuz5TmCOyIjPWCFXoh38spOigTburFFhk7uAeV5qp9oSTLTTSvbZ699w7N0uJ5uXwLvB9dgfZ2ulgMupX/7BNhc0mZkwYxKelt6PScJs+1X2mRMvjzT/nCd+vr6Paj9Nf96jvXyD+R1Z1WyIZWspJJirbFQjWvjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=bQoU4Wm2; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Pbhg67sX"
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id YKqHuLICcZ4iTYKqHu4AIl; Sun, 06 Jul 2025 10:35:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751790924;
-	bh=MDB5p/WAC2P7Gszd897B3IA9qciUHzVqAJvFbhA+Lk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=Pbhg67sX+6R6NST17kTPvzXRRIuZTve8csYNJfaBBXyUC6DzontwufivbY2GkUXlq
-	 fU607R+bT7Js4Z+hx8oyXDK26yY6M1Yc5pwwInThh8qqCacfvPWJj42J92IJGH/Rkn
-	 2PwQdjmyPF4ku/J1x/bIKiq0bSNgwOY3GzDhZO6tMVa8pv/oeP/LUWRV/MagN8X048
-	 SHVWwK8dbsEyZODw76WHRwQ4Lc3GAr1AEMZcZ5SlYAQ/2DvgV4Mx+yLh9VLsA1PAfa
-	 PW249lU8AK1EtKcAr6kTkIxyOLhJRzRmb+P6GUGXzDF1HFnKa0L2wy4c1xDOLA498d
-	 4ouFGntQlECOw==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sun, 06 Jul 2025 10:35:24 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <225692dd-c41b-4e9d-a20b-551f9bfb5051@wanadoo.fr>
-Date: Sun, 6 Jul 2025 10:35:20 +0200
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="bQoU4Wm2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1751791024; x=1752050224;
+	bh=/Ohrs39hlVJ6gfC/U0noqNa3V3N+ZommgmvaEIkhTAQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=bQoU4Wm2XIOEOoU/Cxdo7xAG4YjGz3rj1xQE4Os+pTuSbwmrdSK1ROnoTkyJGdRlg
+	 2/Ihs/8Wz2jRe4VrpQ7bw0MpmJ9n0DLwJsUoDgHvEPCfyEgCnUwZC1p/Ke8/XrpX9C
+	 FBpsa9oeGlehPDymhHY7i0/Twrja5WhMLJE7T0Cyp2sQlzQ+NLvDDovgw1UoOmO4t8
+	 UdNMvLcN7B7ELq1AgP0nOWYELYnP+OHXV9+LQ/vMwT71xKIQu6UjqoRAkEmPcadNCA
+	 Die+hwEgVRWJa0cBYBEwaxoIpZkDSYVaQwle0IxtriscTD2KhcUSvDCCcrbWSmbzDo
+	 J3tDcLe7viCbQ==
+Date: Sun, 06 Jul 2025 08:36:58 +0000
+To: hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Piotr Zalewski <pZ010001011111@proton.me>
+Cc: Piotr Zalewski <pZ010001011111@proton.me>, Diederik de Haas <didi.debian@cknow.org>
+Subject: [PATCH v2] rockchip/drm: vop2: make vp registers nonvolatile
+Message-ID: <20250706083629.140332-2-pZ010001011111@proton.me>
+Feedback-ID: 53478694:user:proton
+X-Pm-Message-ID: bdc28c03eaa8b0c275fd97f59617d9355f9144d7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] ASoC: codecs: Add Awinic AW8898 amplifier driver
-To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Weidong Wang <wangweidong.a@awinic.com>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250705-aw8898-v2-0-9c3adb1fc1a2@lucaweiss.eu>
- <20250705-aw8898-v2-2-9c3adb1fc1a2@lucaweiss.eu>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250705-aw8898-v2-2-9c3adb1fc1a2@lucaweiss.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Le 05/07/2025 à 14:03, Luca Weiss a écrit :
-> Add a driver for the AW8898 Audio Amplifier.
-> 
-> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+Make video port registers nonvolatile. As DSP_CTRL register is written
+to twice due to gamma LUT enable bit which is set outside of the main
+DSP_CTRL initialization within atomic_enable (for rk356x case it is also
+necesarry to always disable gamma LUT before writing a new LUT) there is
+a chance that DSP_CTRL value read-out in gamma LUT init/update code is
+not the one which was written by the preceding DSP_CTRL initialization
+code within atomic_enable. This might result in misconfigured DSP_CTRL
+which leads to no visual output[1]. Since DSP_CTRL write takes effect
+after VSYNC[1] the issue is not always present. When tested on Pinetab2
+with kernel 6.14 it happenes only when DRM is compiled as a module[1].
+In order to confirm that it is a timing issue I inserted 18ms udelay
+before vop2_crtc_atomic_try_set_gamma in atomic enable and compiled DRM
+as module - this has also fixed the issue.
 
-Hi,
+[1] https://lore.kernel.org/linux-rockchip/562b38e5.a496.1975f09f983.Corema=
+il.andyshrk@163.com/
 
-...
+Reported-by: Diederik de Haas <didi.debian@cknow.org>
+Closes: https://lore.kernel.org/linux-rockchip/DAEVDSTMWI1E.J454VZN0R9MA@ck=
+now.org/
+Suggested-by: Andy Yan <andy.yan@rock-chips.com>
+Signed-off-by: Piotr Zalewski <pZ010001011111@proton.me>
+---
 
-> +#define AW8898_CFG_NAME				"aw8898_cfg.bin"
-> +
-> +#define AW8898_NUM_SUPPLIES	3
+Notes:
+    Changes in v2:
+        - add spaces before and after '+'
+   =20
+    Link to v1: https://lore.kernel.org/linux-rockchip/20250628180914.11771=
+77-2-pZ010001011111@proton.me/
 
-See the probe below, but if simplified, AW8898_NUM_SUPPLIES would be 
-useless and could be removed.
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> +static const char *aw8898_supply_names[AW8898_NUM_SUPPLIES] = {
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm=
+/rockchip/rockchip_drm_vop2.c
+index d0f5fea15e21..0931cb636493 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2589,12 +2589,13 @@ static int vop2_win_init(struct vop2 *vop2)
+ }
+=20
+ /*
+- * The window registers are only updated when config done is written.
+- * Until that they read back the old value. As we read-modify-write
+- * these registers mark them as non-volatile. This makes sure we read
+- * the new values from the regmap register cache.
++ * The window and video port registers are only updated when config
++ * done is written. Until that they read back the old value. As we
++ * read-modify-write these registers mark them as non-volatile. This
++ * makes sure we read the new values from the regmap register cache.
+  */
+ static const struct regmap_range vop2_nonvolatile_range[] =3D {
++=09regmap_reg_range(RK3568_VP0_CTRL_BASE, RK3588_VP3_CTRL_BASE + 255),
+ =09regmap_reg_range(0x1000, 0x23ff),
+ };
+=20
+--=20
+2.50.0
 
-static const char * const ?
 
-> +	"vdd",		/* Battery power */
-> +	"vddio",	/* Digital IO power */
-> +	"dvdd",		/* Digital power */
-> +};
-> +
-> +static const char * const aw8898_dev_mode_text[] = {
-> +	"Speaker",
-> +	"Receiver",
-> +};
-
-...
-
-> +static int aw8898_drv_event(struct snd_soc_dapm_widget *w,
-> +				struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-> +	struct aw8898 *aw8898 = snd_soc_component_get_drvdata(component);
-> +	int ret;
-
-Maybe ret = 0; to simplify the code below?
-
-Or, as done in aw8898_hw_params(), return -EINVAL; in the default case, 
-and a plain return 0; at the end of the function?
-
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		aw8898_set_power(aw8898, true);
-> +
-> +		if (!aw8898->cfg_loaded)
-> +			aw8898_cold_start(aw8898);
-> +
-> +		ret = 0;
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		aw8898_set_power(aw8898, false);
-> +		ret = 0;
-> +		break;
-> +	default:
-> +		dev_err(component->dev, "%s: invalid event %d\n", __func__, event);
-> +		ret = -EINVAL;
-
-Even if useless, having a break is more standard.
-
-> +	}
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static int aw8898_check_chipid(struct aw8898 *aw8898)
-> +{
-> +	unsigned int reg;
-> +	int ret;
-> +
-> +	ret = regmap_read(aw8898->regmap, AW8898_ID, &reg);
-> +	if (ret < 0) {
-> +		dev_err(&aw8898->client->dev,
-> +			"Failed to read register AW8898_ID: %d\n", ret);
-
-aw8898_check_chipid() is only called from the probe, so using return 
-dev_err_probe() should be fine.
-
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(&aw8898->client->dev, "Read chip ID 0x%x\n", reg);
-> +
-> +	if (reg != AW8898_CHIP_ID) {
-> +		dev_err(&aw8898->client->dev, "Unexpected chip ID: 0x%x\n",
-> +			reg);
-
-Same.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int aw8898_probe(struct i2c_client *client)
-> +{
-> +	struct aw8898 *aw8898;
-> +	int ret;
-> +
-> +	aw8898 = devm_kzalloc(&client->dev, sizeof(*aw8898), GFP_KERNEL);
-> +	if (!aw8898)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, aw8898);
-> +	aw8898->client = client;
-> +
-> +	aw8898->regmap = devm_regmap_init_i2c(client, &aw8898_regmap);
-> +	if (IS_ERR(aw8898->regmap))
-> +		return dev_err_probe(&client->dev, PTR_ERR(aw8898->regmap),
-> +				     "Failed to allocate register map\n");
-> +
-> +	for (int i = 0; i < ARRAY_SIZE(aw8898->supplies); i++)
-> +		aw8898->supplies[i].supply = aw8898_supply_names[i];
-> +
-> +	ret = devm_regulator_bulk_get(&client->dev, ARRAY_SIZE(aw8898->supplies),
-> +				      aw8898->supplies);
-
-devm_regulator_bulk_get_enable() would simplify the code and 'struct 
-aw8898'.
-
-> +	if (ret)
-> +		return dev_err_probe(&client->dev, ret,
-> +				     "Failed to get regulators\n");
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(aw8898->supplies),
-> +				    aw8898->supplies);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Failed to enable supplies: %d\n",
-> +			ret);
-
-If dev_err_probe() to be consistent with the code below and above.
-But this would be removed if devm_regulator_bulk_get_enable() is used.
-
-> +		return ret;
-> +	}
-> +
-> +	aw8898->reset = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(aw8898->reset))
-> +		return dev_err_probe(&client->dev, PTR_ERR(aw8898->reset),
-> +				     "Failed to get reset GPIO\n");
->
-
-...
-
-CJ
