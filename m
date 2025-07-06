@@ -1,86 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E5A347D5;
-	Sun,  6 Jul 2025 08:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E963620ED
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Jul 2025 08:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751789988; cv=none; b=QrXT/WJo+jCQo0K1bCYiVoCbuKIG148vsRuJ4imsm5HMyn8hX7wY994ujZzSJLwRY4Q4dvKKas+5gA6JzY0+6mokhqkxqWmtuWbFTywZf7/VG1UCIfSWlEoQ9WKBRnW1Ivp19UR9fVqmIeYbvkyfq47p43EhlJ73+kTI4cWrfEI=
+	t=1751790009; cv=none; b=exOU0PSRDIrw3l7/TxSpGxahSucJi46bMr/QJTw1UaI1+dvPFSn2hSIutAGWuBuJoCvM+AOSD2STKi+K7ewr8zP+MGXKlyxiGmOkhnccNSxJV4OvAzcrBY1lPAbvwPSzxP7Rjuz2/hmTaPZtSxo3FCSvQtiDx2WFofTtncdLwPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751789988; c=relaxed/simple;
-	bh=tZqDqUp3XIjooRMozbHMXVkTOrN103981WeXtlD/b0I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GzIF9UbngqF39a3ohMWlIK6CrTiFp6g+9TSMCgLTc++dt1CDEnsBcjsyGWxmTmxiBkG7VpC5n+ffzpBkGqv9P3sK+EYzLjktrYjtdmKp2hxUwodsP/K2pcbbwH9lePoAwtl1tmfRBl6ou4twR65JX/qn60Cbz5/ULsG/IQlKPPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j17gaSMP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tff7wdFM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751790009; c=relaxed/simple;
+	bh=7mQFa2epO1Lr3t5Kg1jb6YAZhvGSyXfTZjggEtF/25A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oqrU6duWYGMwf4+p8N6KHe6CGflayE7vlb6MY36jM9LzWvMaM+C63Nkco8KkKXAXTPwbgEVgKDS9g+NxeteiM4loszeLkSnkeBzeLKGsJhh58R2Mtgpa6FpYtBc3ghNQTL+d3lQ95pdTEMpryZ6UHo94k9v0NlESE2z0A5rRUA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Nt6Q7cz3; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j17gaSMP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tff7wdFM"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751789985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z5x3AaIZkt8PB2z4OEFY2rJlTgKgwVrKyPWTrYoZU28=;
-	b=j17gaSMPFt/UYXrxDoZLykp1wJ5ItLDYQCp/V1scS/+ADnySA3o7NKE88RbELCqcEwgw8c
-	XYOa/BKNcqOfMjZ6WBtm10PjVyOM9LPVj4vrNztDxdjyKjZu4BknSfokGGBAExUqj37owt
-	V+eeKT9p8CTjrlkKAckg0ASsgcIU5SkI5RsTxdgQAAiK5iCau/pO9BfrU8yb1hFdcc0UoW
-	CBhzvEdG6AVp92Y8TWtkwpy8RzRCsSqEQNWP69p039xS4z86Iv6Xw4s2rnxQoDvNv/zeXz
-	vZpUoBGzQzqg2t8VNmJOyKP3//q3MM3p3Za6tnFKPPBFxO1nzbwyCmT6vsfu/w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751789985;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z5x3AaIZkt8PB2z4OEFY2rJlTgKgwVrKyPWTrYoZU28=;
-	b=Tff7wdFMry/IgwryC0ZzQkVycjF0nTpYPNKVzkuELpEu66qX24qIXwuoQg4UeTRg5Gbxd6
-	Evp1FJicHdgHEIDg==
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
- dave@stgolabs.net, andrealmeid@igalia.com, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- tim609@andestech.com, Ben Zong-You Xie <ben717@andestech.com>, Cynthia
- Huang <cynthia@andestech.com>
-Subject: Re: [PATCH v2] selftests: futex: define SYS_futex on 32-bit
- architectures with 64-bit time_t
-In-Reply-To: <20250627090812.937939-1-ben717@andestech.com>
-References: <20250627090812.937939-1-ben717@andestech.com>
-Date: Sun, 06 Jul 2025 10:19:44 +0200
-Message-ID: <87ldp1spcv.ffs@tglx>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Nt6Q7cz3"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BC0D640E01CF;
+	Sun,  6 Jul 2025 08:19:49 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id De4V83fzgJi0; Sun,  6 Jul 2025 08:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751789986; bh=CPXADirzo2UF4Gk9djv6Ep6uUtSBEmqvpnVj2NW3U/4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Nt6Q7cz3YDFCDAR4SB5aF8qgTLr1YCOaVrgwqSAhnHUK7yCZ7iAqqVyPSluF4VcMs
+	 niyZsDpCbR0rLMSj44BM+VDMqpomHKLQVHZWwHeCzydIgFRCpK2a8XM1flksMnXIL5
+	 vD0ZUctUhmnsSBA+med2DTB7rxGfUD2ELN1UiUxILUO5cch5aQosyMpilw/IenqXcb
+	 KMR3q8bacK8BLHELaRfEBermbbPiSTFTlB+AM/Jbi7AbtYqB9VJiVxVi4S7ar0IWT1
+	 AV3GC/MONeLJ2IXEX+GnN2XUxISZE5xXO14lk8Js0JOMK6x3PrBARSRpCB727vjuPA
+	 mTFIeIcI/m4DAii081381Me01ePVIB3xAralrb0GtL8KFGqpTJnSUCNahUOW0voKcb
+	 cK7p/OE4IxiapAHhpQJPNNyQluGauTHHL+2vtv04b33itvfAH0tKoiSQOWtjNOv/lX
+	 92x21MbxgUpGjaeGiwQECVzWORYGeRYxDQF7rC3TxYNEHAzbP7xjBooi8YbWOUVDek
+	 PUY2qN62vRiQzDLFC3feMTxAFeisuTxHjEhcZCt/HgwZc0n+g4vo6HOogLvcBSb+Fm
+	 hTHM4iH34yd42t4GxUWM6pv9E6P8Gh3uudtnPjmwbsOVpaCuoS3htyWgsa65ZEGqpI
+	 SpcYmQtj7ETvFhnf+f1MNFBE=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4170C40E0184;
+	Sun,  6 Jul 2025 08:19:43 +0000 (UTC)
+Date: Sun, 6 Jul 2025 10:19:41 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] perf/urgent for v6.16-rc5
+Message-ID: <20250706081941.GAaGoxndcnnCKQBCEq@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Fri, Jun 27 2025 at 17:08, Ben Zong-You Xie wrote:
+Hi Linus,
 
-> glibc does not define SYS_futex for 32-bit architectures using 64-bit
+please pull the perf/urgent lineup for v6.16-rc5.
 
-Kinda. The kernel does not provide sys_futex() on 32-bit architectures,
-which do not support 32-bit time representations. As a consequence glibc
-obviously cannot define SYS_futex either.
+Thx.
 
-> time_t e.g. riscv32, therefore this test fails to compile since it does not
-> find SYS_futex in C library headers. Define SYS_futex as SYS_futex_time64
-> in this situation to ensure successful compilation and compatibility.
->
-> Signed-off-by: Cynthia Huang <cynthia@andestech.com>
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
-> Changes since v1:
->   - Fix the SOB chain
+---
 
-Mostly.
+The following changes since commit d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af:
 
-If Cynthia authored the patch, then this still lacks a 'From: Cynthia...'
-at the top of the change log so she can be identified as the
-author. Otherwise tooling will attribute autorship to you.
+  Linux 6.16-rc4 (2025-06-29 13:09:04 -0700)
 
-Thanks,
+are available in the Git repository at:
 
-        tglx
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/perf_urgent_for_v6.16_rc5
+
+for you to fetch changes up to ba677dbe77af5ffe6204e0f3f547f3ba059c6302:
+
+  perf: Revert to requiring CAP_SYS_ADMIN for uprobes (2025-07-03 10:33:55 +0200)
+
+----------------------------------------------------------------
+- Revert uprobes to using CAP_SYS_ADMIN again as currently they can
+  destructively modify kernel code from an unprivileged process
+
+- Move a warning to where it belongs
+
+----------------------------------------------------------------
+Luo Gengkun (1):
+      perf/core: Fix the WARN_ON_ONCE is out of lock protected region
+
+Peter Zijlstra (1):
+      perf: Revert to requiring CAP_SYS_ADMIN for uprobes
+
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
