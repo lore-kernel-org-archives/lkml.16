@@ -1,97 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913D12B9BA;
-	Sun,  6 Jul 2025 10:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887E01E2614;
+	Sun,  6 Jul 2025 10:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751796357; cv=none; b=lrYcUQF0rxdjAPMfUgChUy+kuFtUuOsWJVClbuyAkGJrU46r0QNZCeSahfLs7wggrYn/bfCeOTzR3h/awtloa79UZbj7lThmKulUOsHLtGPnV04g433yB2RkZtpAKGS3HGkXYYG4DiSVTmVnVMzssh/FwtmQGbhJ/nqQYrir7nQ=
+	t=1751796404; cv=none; b=IntoBrJINQUxwYCk+BGOlfsEYOqUYql0N1vyp/TcyQvPQTz6yv7/olBQek2dIL+ZHilScs4vDMfagRNa5bJ5VGEnuIdfHiro+Pxxwst7JQIccqCGt0D/qdyRVuTEgCTo+N1s9a+Z9NOE/BFZR/iLmVmSlTUCeMz7Ju5zWioNxt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751796357; c=relaxed/simple;
-	bh=V2QxA3l1+yabl+QUaYnADnbg1c2TRxhj8dvgt2Yy/4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N9u6MFGoCUohEGyQHH2aMHQlrO8i6w6XwqYi6hbBoD1zz+opKkGRDLQGNrL33jeTA12NWlBe6XgZE0AUDRQb4KVoetMDeg/D5UNzAR2QRlwWcgk8oNmjDLcypEj9sKZzPBx4x9URvJVh6IjMYt8EuywckmKKq8vYNke75udLUZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlkWpt95; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751796404; c=relaxed/simple;
+	bh=MveTvm3RII1ANo0ktu6TZtfY7muEUaXzdRlO3voTPW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PsLC4xVCJ/jj7A0qPHoW4E11xiylMSyb8Jx6Z4nX65OCAJHgtIKZbu+yqcN6ENlSQkrXA22QWZq1mg98hkALToz4SVJPpQDQXklkvFIMfnM4s17C+lD0wmgevHTxoRglsoJg9oKtjNUHIXzN3i8dhSGCefdfJPBHUetYObh7x5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=iU5ZzXcN; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlkWpt95"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE28C4CEED;
-	Sun,  6 Jul 2025 10:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751796357;
-	bh=V2QxA3l1+yabl+QUaYnADnbg1c2TRxhj8dvgt2Yy/4Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RlkWpt955xAY5Ya8e8kynQ2eUWNs+htJV4ThSWpjR7nYenZpUgchA02em0wgXfzlE
-	 lnyDA2u5x3vZTPqcHo5xUs7Y+pRKKcR/3K2Q2N7LXKUMWdfgjMPZEzyQ84R6cJBoKJ
-	 rWhIyMCsxcmLFbqDjLE0kyCcP2ZXWOXdPePCXhYfHCtsrUhN7NvZTj8RhycDMbl/q9
-	 RMX6sfxYASA/eDsGVLgLwftL150cM+J3ijKwGMISoBmtULXbu5YJ1uVA0TD4YEJKjA
-	 8ncDy9t20WMwNR73PeiaHcbiRjNbiIUJMbuVzck/xt3UqILbL5GEBKhPDEszAkawfL
-	 BmPI7TDYIKZXw==
-Date: Sun, 6 Jul 2025 11:05:48 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Lechner <dlechner@baylibre.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Mark
- Brown <broonie@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-spi@vger.kernel.org
-Subject: Re: [PATCH v3 00/12] iio: adc: ad7173: add SPI offload support
-Message-ID: <20250706110548.13605ebf@jic23-huawei>
-In-Reply-To: <20250706110417.5182f679@jic23-huawei>
-References: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
-	<aGToIInJLMHmB4ay@smile.fi.intel.com>
-	<20250706110417.5182f679@jic23-huawei>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iU5ZzXcN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=IWfeIfuL/kwNF8nAD5QuTvp840QjR9/bbiTVVW0dfhk=; b=iU5ZzXcNVcNXf4OCCNIVweOmSz
+	hiHERGwNfjqeYzsY1DNxe+aGznYucGnwzjIDO1pnnaDrV70QF49/IGm+Qf9gzrCSwsrC5QxyIkSK9
+	WIAezClT4H61s8UjuL9hOpXEUu4TfEWLY3PyQWm+GqneNTlpm/QrkD+3DfYDouJA5Wi1nahWcvgMD
+	uLNwbwyT98O/RlkjerGR5DK6Jw9YY3FunMqfpKvzRIajDfqE75N2a7q0LmOq9Aahft7hZjzl2Pxd5
+	0wNWmFmQvEZS9C1+pFFsDYWouTGOaIOu3p9EmrJg2TxGb4GMs8WxCfSJ8SAZXKJW7TPBTHBDc9hp2
+	hupzmhwg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47384)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uYMGR-0003xa-2A;
+	Sun, 06 Jul 2025 11:06:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uYMGL-0007ya-32;
+	Sun, 06 Jul 2025 11:06:21 +0100
+Date: Sun, 6 Jul 2025 11:06:21 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"biju.das.au" <biju.das.au@gmail.com>
+Subject: Re: [PATCH net-next] net: stmmac: dwmac-renesas-gbeth: Add PM
+ suspend/resume callbacks
+Message-ID: <aGpKncEeZTifSlA2@shell.armlinux.org.uk>
+References: <20250705170326.106073-1-biju.das.jz@bp.renesas.com>
+ <aGl9e9Exvq1fVI0s@shell.armlinux.org.uk>
+ <TYCPR01MB11332BCE03B3533784711A5BF864DA@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+ <TY3PR01MB113460004F6A57B3AAD77E86E864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY3PR01MB113460004F6A57B3AAD77E86E864CA@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Sun, 6 Jul 2025 11:04:17 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Sun, Jul 06, 2025 at 08:45:14AM +0000, Biju Das wrote:
+> Hi Russell King,
+> 
+> FYI, The above testing is done with rootFS mounted on SD card.
+> 
+> But when I mount rootFS on NFS, after wakeup, I am not able to contact the NFS server.
+> 
+> The below patch makes it to work[1].
+> Not sure, why the original code is failing if the rootFS is mounted on NFS?
 
-> On Wed, 2 Jul 2025 11:04:48 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > On Tue, Jul 01, 2025 at 04:37:48PM -0500, David Lechner wrote:
-> > > Here comes another series for adding SPI offload support to an ADC.
-> > > 
-> > > The primary target is AD411x, but since this uses the ad_sigma_delta
-> > > shared module, a lot of this series is focused on that.
-> > > 
-> > > To start with, we have some cleanups to the ad_sigma_delta code, so feel
-> > > free to pick these up as they are ready as they generally stand on their
-> > > own.
-> > > 
-> > > Then before adding proper SPI offload support, we make use of
-> > > spi_optimize_message() to reduce CPU usage of all users of this driver
-> > > during buffered reads.
-> > > 
-> > > Also there is a new dt-binding and driver for a special SPI offload
-> > > trigger FPGA IP core that is used in this particular setup.
-> > > 
-> > > Then finally actual SPI offload support is added to the ad_sigma_delta
-> > > module and the ad7173 driver.
-> > > 
-> > > This was tested using EVAL-AD4112ARDZ on a DE10-Nano.  
-> > 
-> > This version LGTM,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> 
-> Applied 1-7 and 11-12.  Mark picked up 8 and 9 from v2.
-1-8 and 11-12. 9 and 10 are now the ones that match with 8 and 9 that
-Mark picked up. Oops.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> 
+It would be good to understand exactly what is going on there.
 
+As stmmac sets mac_managed_pm to true, which is propagated to phylib,
+this means the mdiobus suspend/resume will be no-ops, as the MAC driver
+needs to do everything necessar to resume the PHY.
+
+Is your PHY losing power over suspend/resume?
+
+Maybe phylink_prepare_resume() needs to call phy_init_hw() as well,
+like mdio_bus_phy_resume() does?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
