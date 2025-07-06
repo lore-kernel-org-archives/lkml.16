@@ -1,141 +1,342 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E687B3E1;
-	Sun,  6 Jul 2025 19:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BA828F5;
+	Sun,  6 Jul 2025 19:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751831063; cv=none; b=hmTZ1Hof0BHBZqD0XoIdWVJEnGtwGcfsmvM9qbSKTL2cbCuE1Za+QcQLzFMRnw3YtNjAvx9x7YnEwYSW456QfO1tC7fyBpfZp8Eytte8Ep85SDHiZ+CSERW0/spi+tp9aL9F/kEm3vlpydhCKI0rwFIUFlcj2FbbT698qN6TmX4=
+	t=1751831169; cv=none; b=Dz28TmudCKJTCBGodZAHbBx3jwLT46948mzV75O1od3oYMUPMthj+DV3yrOllA07Ln4qF4mzi1G5hU8+zhrYos5Om1ZOP50OiVTmZE/2RvX/5qUA4fB05uhlmGcyiwvEUnmlc8DUnEyFf3ZaLv3S720/coYEKYnzNpAz/ekvB14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751831063; c=relaxed/simple;
-	bh=TSgDwVxqyTCCtOVNGZAXW3H2A9hsP3zJNy5SDirqyg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ir7umcfgL5ox1Mk0zFvtSV77Yd4k26mq5ZMrKGU6WhSNYnAkwZhYICFDcFXF7cbhZsZUr45T+oQ32G+aqSUo0mXVJAgZ7rC+kQ6sUNepSUfyMRv5omb8ky81rzap6sHqi9q8LGIHyFIFLc7nF+IlRuBaV0Fn5H7Wg45H6dK5yf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gIbM0PWf; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1751831169; c=relaxed/simple;
+	bh=muok25vvzi3aapzULz2DmAYuvuxd/xWUME7SzpyvA78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kd/lwHfU81U0tMObgMIWDtRlXSfjjLqZi1V3ocPmdofWBEEQWDuOjYSXopzBqAE8PC7PCncST7IKXq4EaIWRf15vOl2E632AKzTtkZQQTP0hijJ5NviBB6TPd2706LKr3z8MrRSw+9Q14H3T6K6Rko4jWay4/R4+mIahXRQofas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tpu8IClv; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gIbM0PWf"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566702s7017602;
-	Sun, 6 Jul 2025 19:44:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=DyWUe8d1haw6m8Oy1cI30UgcAmbCj
-	yeCPJKwX4Tb+kM=; b=gIbM0PWfjM/yE0F3sOODWqKbRZ/XqzQBvHcJcuOrtTL37
-	1hj5WU5pikqp4Q26+zt/0+pTCHBgEr9xZF5C6DdrgwxfYaeSloQApuemVKqLFLo+
-	Eb+mAqEAkMeb0g90+HZThSECyBL+9nXaQpgv3ZZBNumy5PPoCd4rT8x8I8WB1Onh
-	Z0vwzShmmQ2MzX56GtnAp+xkndKkjoh62rqD1bOKyJzu6f2N3lKK/32a4ohUHnmE
-	nLcU1AfPyRsgbyBRKM6+wT6YAQ1JAwiK8K+xnK2EpENEN1lh2/Ossz3z7TKlOutv
-	Mif/W3lznQMx4Tz3diWt8GUTsA0B0Klm4SO/VpD1g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47pvkxsfx0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 06 Jul 2025 19:44:00 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 566GBoh2014173;
-	Sun, 6 Jul 2025 19:43:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ptg7ggas-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 06 Jul 2025 19:43:58 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 566Jhwv8007692;
-	Sun, 6 Jul 2025 19:43:58 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47ptg7ggah-1;
-	Sun, 06 Jul 2025 19:43:58 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: sgoutham@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        horms@kernel.org, netdev@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-arm-kernel@lists.infradead.org,
-        darren.kenny@oracle.com, linux-kernel@vger.kernel.org
-Subject: [PATCH net v3] net: thunderx: avoid direct MTU assignment after WRITE_ONCE()
-Date: Sun,  6 Jul 2025 12:43:21 -0700
-Message-ID: <20250706194327.1369390-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tpu8IClv"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 6333EC78;
+	Sun,  6 Jul 2025 21:45:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751831130;
+	bh=muok25vvzi3aapzULz2DmAYuvuxd/xWUME7SzpyvA78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tpu8IClvp7iVfzfr7SDICHcfa0T4TQJtBwrwblpqeMCDKgjduIDf8zR9YERFlJbgJ
+	 s4rLbVOCf590PwdVQlfAezffsrbHq3Xp7NLdW+7gDZFnQd/ukq6kJ6KKBnozGddxIy
+	 O/mA1hrMt8SCR9BP24MaMr6tnRA+ujghrxsTRFYE=
+Date: Sun, 6 Jul 2025 22:45:28 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Will Whang <will@willwhang.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:SONY IMX585 SENSOR DRIVER" <linux-media@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v1 1/4] dt-bindings: media: Add Sony IMX585 CMOS image
+ sensor
+Message-ID: <20250706194528.GA1821@pendragon.ideasonboard.com>
+References: <20250702063836.3984-1-will@willwhang.com>
+ <20250702063836.3984-2-will@willwhang.com>
+ <20250702092858.GA15241@pendragon.ideasonboard.com>
+ <CAFoNnrxquDp_yx_HSOe00cVDMcw2G+rTZs8x8RgOD3RO=tq-XA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-04_07,2025-07-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- suspectscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2507060126
-X-Proofpoint-GUID: vPShqCo2W3JHl8gIwplnonW7g9JumuOR
-X-Authority-Analysis: v=2.4 cv=a5Uw9VSF c=1 sm=1 tr=0 ts=686ad200 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=Heg8zcIur3sJgoQ754cA:9 cc=ntf awl=host:12058
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA2MDEyNiBTYWx0ZWRfX7762+z18io8I YHRqK58bq3ToBBffQqK0EroeY63XNgOsjdex53ntMFemr2FuNxoQIwnl3NmhO0VD9AhCrK5+m8y YOmYc+rMgUy1wgvAsF2Ou2af2PiDVx30rdnKm9Z8ICUyz8PwJUlUVqt2k7Hcpj12X12fReDj+oz
- fXnHlXhp94bG94Sn3SEXKqsTeBAGBXUKQmC+R3rEosmlbEA08qMVyIATkeV3n7WH3mzKIAB7qL2 zf2TvuSVXdiJ5expgj0xgTGXFhFRI2Dv+1HWVH6VtUGcMT2qK/mw/s9G4pE+ck02lYgt52lROEV nxux0ZNxaahOd76o82muTa2DhKl05ONrKJDuSCw/HaEu7RUGEd7UBsUyAVdi7PIFpoe4SMoONaE
- c7+1carHuUTcOjkNYn5OxF3LGVStgJVihm7z1pNvRNlYeTDGa2ZJmD3CMDRRK4dpHWWn5in3
-X-Proofpoint-ORIG-GUID: vPShqCo2W3JHl8gIwplnonW7g9JumuOR
+In-Reply-To: <CAFoNnrxquDp_yx_HSOe00cVDMcw2G+rTZs8x8RgOD3RO=tq-XA@mail.gmail.com>
 
-The current logic in nicvf_change_mtu() writes the new MTU to
-netdev->mtu using WRITE_ONCE() before verifying if the hardware
-update succeeds. However on hardware update failure, it attempts
-to revert to the original MTU using a direct assignment
-(netdev->mtu = orig_mtu)
-which violates the intended of WRITE_ONCE protection introduced in
-commit 1eb2cded45b3 ("net: annotate writes on dev->mtu from
-ndo_change_mtu()")
+Hi will,
 
-Additionally, WRITE_ONCE(netdev->mtu, new_mtu) is unnecessarily
-performed even when the device is not running.
+On Sat, Jul 05, 2025 at 11:55:04PM -0700, Will Whang wrote:
+> Hi Laurent,
+> 
+> Thank you for the feedback, very much appreciated!
+> Reply inline.
+> (Resend this email for reply all)
 
-Fix this by:
-  Only writing netdev->mtu after successfully updating the hardware.
-  Skipping hardware update when the device is down, and setting MTU
-  directly. Remove unused variable orig_mtu.
+Please reply in plain-text only, as HTML e-mails get filtered out by
+kernel mailing lists.
 
-This ensures that all writes to netdev->mtu are consistent with
-WRITE_ONCE expectations and avoids unintended state corruption
-on failure paths.
+> On Wed, Jul 2, 2025 at 2:37 AM Laurent Pinchart wrote:
+> > On Wed, Jul 02, 2025 at 07:38:33AM +0100, Will Whang wrote:
+> > > Document the devicetree binding for the Sony IMX585.  The schema
+> > > covers the CSI-2 data-lanes, the optional 'mono-mode' flag,
+> > > and the internal-sync properties used by the driver.
+> > >
+> > > Signed-off-by: Will Whang <will@willwhang.com>
+> > > ---
+> > >  .../bindings/media/i2c/sony,imx585.yaml       | 120 ++++++++++++++++++
+> > >  MAINTAINERS                                   |   8 ++
+> > >  2 files changed, 128 insertions(+)
+> > >  create mode 100644
+> > Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
+> > >
+> > > diff --git
+> > a/Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
+> > b/Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
+> > > new file mode 100644
+> > > index 000000000..d050d1642
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
+> > > @@ -0,0 +1,120 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +# Copyright (C) 2024 Ideas on Board Oy
+> >
+> > Unless there's something I'm not aware of, I don't think Ideas on Board
+> > wrote this. You can use your own copyright.
+> 
+> Yeah sorry about this, I've updated this one.
+> 
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/sony,imx585.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Sony IMX585 Sensor
+> > > +
+> > > +maintainers:
+> > > +  - Will Whang <will@willwhang.com>
+> > > +
+> > > +description:
+> > > +  IMX585 sensor is a Sony CMOS sensor with 4K and FHD outputs.
+> > > +
+> >
+> > You should add
+> >
+> > allOf:
+> >   - $ref: /schemas/media/video-interface-devices.yaml#
+> >
+> > here to support generic sensor properties. You will need to replace
+> >
+> > additionalProperties: false
+> >
+> > with
+> >
+> > unevaluatedProperties: false
+> >
+> > below.
+> 
+> Updated.
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
-v2 -> v3
-https://lore.kernel.org/all/20250630111836.GE41770@horms.kernel.org/
-Simplify code as suggested by Simon
----
- drivers/net/ethernet/cavium/thunder/nicvf_main.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+You don't need to reply to individual review comments if you agree with
+them and update the code. By only replying to the points that require
+discussions, the conversation is easier to read.
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index aebb9fef3f6eb..1be2dc40a1a63 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -1578,7 +1578,6 @@ int nicvf_open(struct net_device *netdev)
- static int nicvf_change_mtu(struct net_device *netdev, int new_mtu)
- {
- 	struct nicvf *nic = netdev_priv(netdev);
--	int orig_mtu = netdev->mtu;
- 
- 	/* For now just support only the usual MTU sized frames,
- 	 * plus some headroom for VLAN, QinQ.
-@@ -1589,15 +1588,10 @@ static int nicvf_change_mtu(struct net_device *netdev, int new_mtu)
- 		return -EINVAL;
- 	}
- 
--	WRITE_ONCE(netdev->mtu, new_mtu);
--
--	if (!netif_running(netdev))
--		return 0;
--
--	if (nicvf_update_hw_max_frs(nic, new_mtu)) {
--		netdev->mtu = orig_mtu;
-+	if (netif_running(netdev) && nicvf_update_hw_max_frs(nic, new_mtu))
- 		return -EINVAL;
--	}
-+
-+	WRITE_ONCE(netdev->mtu, new_mtu);
- 
- 	return 0;
- }
+> > > +properties:
+> > > +  compatible:
+> > > +    const: sony,imx585
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    const: xclk
+> >
+> > When there's a single clock you can drop clock-names.
+> >
+> Updated.
+> 
+> > > +
+> > > +  clock-frequency:
+> > > +    enum: [ 74250000, 37125000, 72000000, 27000000, 24000000 ]
+> >
+> > The clock-frequency property is frowned upon for sensors in DT. If the
+> > aim is to set the frequency of the clock, it should be done through
+> > assigned-clocks and assigned-clock-rates. If the aim is to convey the
+> > clock frequency to the driver, it should be done by calling
+> > clk_get_rate() in the driver.
+> 
+> The aim is to set the frequency for the driver to handle different clock frequencies,
+> currently the driver is using clk_get_rate() but because it only supports
+> these frequencies I thought I need to list the valid options here.
+
+There's no need to. DT writers are expected to know about the hardware,
+you don't need to document here what frequencies the sensor supports. DT
+properties are meant to convey information to drivers, and drivers don't
+need the clock-frequency property as they can get the clock rate (set
+from assigned-clock-rates) from the system.
+
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +    description: I2C Address for IMX585
+> >
+> > You can drop the description, it's always the same for I2C devices.
+> 
+> Updated.
+> 
+> > > +
+> > > +  VANA-supply:
+> > > +    description: Analog power supply (3.3V)
+> > > +
+> > > +  VDDL-supply:
+> > > +    description: Interface power supply (1.8V)
+> > > +
+> > > +  VDIG-supply:
+> > > +    description: Digital power supply (1.1V)
+> > > +
+> > > +  reset-gpios:
+> > > +    description: Sensor reset (XCLR) GPIO
+> > > +    maxItems: 1
+> > > +
+> > > +  port:
+> > > +    $ref: /schemas/graph.yaml#/$defs/port-base
+> > > +    additionalProperties: false
+> > > +
+> > > +    properties:
+> > > +      endpoint:
+> > > +        $ref: /schemas/media/video-interfaces.yaml#
+> > > +        unevaluatedProperties: false
+> > > +
+> > > +        properties:
+> > > +          data-lanes:
+> > > +            anyOf:
+> > > +              - items:
+> > > +                  - const: 1
+> > > +                  - const: 2
+> > > +                  - const: 3
+> > > +                  - const: 4
+> >
+> > Does that mean that the sensor supports data lane remapping ? I don't
+> > see it implemented by the driver. If it's not supported by the hardware,
+> > you should use
+> >
+> >         properties:
+> >           data-lanes:
+> >             minItems: 1
+> >             items:
+> >               - const: 1
+> >               - const: 2
+> >               - const: 3
+> >               - const: 4
+> >
+> > To guarantee the order.
+> 
+> The driver can only support either 2-lane or 4-lane mode. Updated.
+> 
+> > > +
+> > > +          sync-mode:
+> > > +            description: |
+> > > +              Select the synchronisation mode of the sensor
+> > > +                0 – internal sync, leader (default)
+> > > +                1 – internal sync, follower
+> > > +                2 – external sync
+> > > +            $ref: /schemas/types.yaml#/definitions/uint8
+> > > +            enum: [ 0, 1, 2 ]
+> >
+> > This seems to be a sensor-level property, not an endpoint property. As
+> > it's not standard, it should also have a vendor prefix, i.e.
+> > sony,sync-mode. I'm wondering, though, if we shouldn't try to
+> > standardize it in video-interface-devices.yaml.
+>
+> Updated, along with the feedback from Krzysztof, I've make the following
+> modifications:
+>   sony,sync-mode:
+>     description:
+>       Select the global synchronisation mode of the sensor.
+>     $ref: /schemas/types.yaml#/definitions/string
+>     enum:
+>       - internal-leader
+>       - internal-follower
+>       - external
+>     default: internal-leader
+
+I'll comment on that in v2, when reading how the driver handles external
+triggers and synchronization.
+
+> > +
+> > > +          link-frequencies:
+> > > +            description: Select the MIPI-CSI2 link speed in Mhz
+> >
+> > You can drop the description, it's already described in
+> > video-interfaces.yaml.
+> 
+> Updated.
+> 
+> > > +            items:
+> > > +              enum: [ 297000000, 360000000, 445500000, 594000000,
+> > > +                      720000000, 891000000, 1039500000 ]
+> >
+> > Are those frequencies the only ones the hardware can support, or do they
+> > come from the driver only supporting a fixed set of sensor PLL
+> > configurations ? In the latter case I would drop the enumeration.
+> 
+> Yes, these are the ones that it supports.
+> 
+> > > +
+> > > +        required:
+> > > +          - data-lanes
+> > > +          - link-frequencies
+> > > +
+> > > +    required:
+> > > +      - endpoint
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-frequency
+> > > +  - port
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    i2c {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        imx585@1a {
+> > > +            compatible = "sony,imx585";
+> > > +            reg = <0x1a>;
+> > > +            clocks = <&imx585_clk>;
+> > > +            clock-frequency = <24000000>;
+> > > +
+> > > +            VANA-supply = <&camera_vadd_3v3>;
+> > > +            VDDL-supply = <&camera_vdd1_1v8>;
+> > > +            VDIG-supply = <&camera_vdd2_1v1>;
+> > > +
+> > > +            port {
+> > > +                imx585: endpoint {
+> > > +                    remote-endpoint = <&cam>;
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    link-frequencies = /bits/ 64 <720000000>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index da34c7227..9cc404790 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -23150,6 +23150,14 @@ T:   git git://linuxtv.org/media.git
+> > >  F:   Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml
+> > >  F:   drivers/media/i2c/imx415.c
+> > >
+> > > +SONY IMX585 SENSOR DRIVER
+> > > +M:   Will Whang <will@willwhang.com>
+> > > +L:   linux-media@vger.kernel.org
+> > > +S:   Maintained
+> > > +T:   git git://linuxtv.org/media.git
+> > > +F:   Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
+> > > +F:   drivers/media/i2c/imx585.c
+> > > +
+> > >  SONY MEMORYSTICK SUBSYSTEM
+> > >  M:   Maxim Levitsky <maximlevitsky@gmail.com>
+> > >  M:   Alex Dubov <oakad@yahoo.com>
+
 -- 
-2.46.0
+Regards,
 
+Laurent Pinchart
