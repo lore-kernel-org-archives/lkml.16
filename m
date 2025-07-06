@@ -1,112 +1,157 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82E74430;
-	Sun,  6 Jul 2025 13:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C39F19E97B;
+	Sun,  6 Jul 2025 13:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751809348; cv=none; b=lFHap2Ff6RdjUh05+wgDMZ6JtjEpL33vSH9j60jNhUt0aUHIEmPweQn8pTZA4kfU0qGKIiSwfdXKmFEyUyNAU6OuNo8JjpeC0zwkQG3dSlbRm8Iw1H2L7t6t+U0lTuVhFw+4A29A0KJzBcZgcegbrU4mxDBa01FibivURIgSxGg=
+	t=1751809548; cv=none; b=du9RlBgXBRTLFzo6Scbf45+8FAJFJ00MpgT/pwALRLz7N0W391Y72+52E+hq1Cfmd49JIOHVVS27wKNxwUpKv1YWL0OyRPGn+lEe9NhBt5HFMlJJSGWCCYLiq6Nsm6Skrn1QtsCSzXlk2WEpYOy8N2nwVR0GLxtl7OXvnKVqzo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751809348; c=relaxed/simple;
-	bh=Cy4aTnm0PK/yKFsyGAYaEAZDr6+UCRqKUiOSIDFcSU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cRl6kcI9QFYxm5DgFFHvOZYXjzVVgrjciQmMDg/3mb9AXd4b+kLoWxlhuGlq2u9x/RkNmnQRTFmvC6O8uAGnmnjKN0LF/Cf5TjelDCsNv1wZj99yTTRSubesvmW9xIf82DNglv2fRYTueEbKHz/WWmXL1938HgVDTNVUpPodN8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijpd0ays; arc=none smtp.client-ip=209.85.210.174
+	s=arc-20240116; t=1751809548; c=relaxed/simple;
+	bh=FHEDS0QZAgKXgJbWG2/Cr7Ry8SPFDhRqNV9UGS2n+7s=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=jdYy2ibq7HSREHPL3mWyVk8XddfiJWHUtQMVBL1EA7q3WjME1xRlXznJR8/bE6ruXQVXb1sZGf3JbiZfIpNU9ezZUFFqMJwmeH815Ie6XQPW58DeKVEz8NYo7s/SSzd3QeXPrm9QAkcyckHrTh/EnGsIv6NicYMPmQSjWpSss+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WFWdrkLd; arc=none smtp.client-ip=209.85.219.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijpd0ays"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7481adb0b90so404185b3a.1;
-        Sun, 06 Jul 2025 06:42:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFWdrkLd"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e81826d5b72so1865131276.3;
+        Sun, 06 Jul 2025 06:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751809346; x=1752414146; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751809545; x=1752414345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x9p/OUC5tbbC2lQw5VTLyJND4KlM7wvMWqPSiwnuyFw=;
-        b=ijpd0aysuCKfeJjUVGU/e3t/GEAbTdARAKTngx1LF5PUix0bdbZnNeIrJEXCYsW1Sj
-         NbFUBftXT+thXS8PuE+bwWGAzyVrWu3IqAaNFdZLWuYn8TXiWYrTRRi9MOwgSQVDQ5z9
-         ZrnyaOrTRZLUI0fboBNBEfLH/GducV0t/ne0/mZ7fI+wCNSmH9+bG4nJK+fDEffG59nM
-         TFcp8EvrfTeeH9/TJk+sn26s8rOLT2wJDLLPbQi822nUrUEKfxP4XJw82SV/UyM+gETo
-         wFnCPn+qtSDHROlkJZuvI5V+jWXubeF7a7HWijYuOrssxx3X9Gmv/5x7WsxXFNUhHlBF
-         ziOA==
+        bh=cBYZIpHcYxpUb3Jzm70CuMo48gVL792R8BW12Oo0i9Y=;
+        b=WFWdrkLdrs8EvekwcQ7IQWip/jsVCOA/5dgQBWRyAciZwBstR5Qj+WplkdHKk8E6zJ
+         8b8JFq3A4yKg+/8NGr6/gQCSTrNaxznMfxzcbYGXdmzQRqQUjOtwqqZbTUGxbPJBq/NM
+         MZJpH4r3qB5wHJKKeP7x/6gJSjbrAX0HRTSwyqFbDkCf8cfIBWWxnBAu6SPf70sBlR4o
+         Ijc4ZUpX81HATDd6NE/JTIVsyy/4geIMDZONG8LToDyaAUlPpu/rDmlklNYaeoHA8HO7
+         cvoRvfml1iDNGHBaHdZnaODIbGFQYTKnMSccpdliSYgIdame4wz01RUC/Bd/c9aHh9Qn
+         y1HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751809346; x=1752414146;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x9p/OUC5tbbC2lQw5VTLyJND4KlM7wvMWqPSiwnuyFw=;
-        b=eNW/d7BYVyfqKOAI9bwMh1iXLbJVjIN1yR7ELOjZ9uJM3e10mwg7I9GEgtIzqW9Sfi
-         MOwES1Lx962Sua1Y1mqg6zpvwB4pZHA6KgYAE1XIN03ODSZ23AgzKq/kxF+fNMagXrxm
-         PlcqeIyOAJjjfUO5eCUi+qLPZZBy8dcrOJwRgRQ2ZybHXPC3XrNRlXS87hptQ2a5Btjd
-         SvThDvcOeVkfKSQLP1Middb1q6APbQryjWELjnn4p/WuCjtEe4gGTVYGC6KWv36e7N76
-         R2PxJdOYAo37zH8x9ywFGy+lCpHK/gu8Fm+S2GjbvFj+zQ8eWqhxzA+rJyyFT8Du0sxM
-         6+TA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYWMfiqEV3s2N6mJuDVp9w5ogdjPbVg9CjzniiYkSwTHB6GyJwGeZYjDEPYzgBIhLBxcxp0jBJUXz79D2E@vger.kernel.org, AJvYcCWe4pxLqekgK5v6D06JPrYuJ372PkMYScmMF5JHdfpnoDjdlaS1OFdsZX9dbBeqWiWFmuZkQw+gFbg=@vger.kernel.org, AJvYcCXpKc/vB3yOxI08OcOJe+fXa0zXMY/fNEhfxv37YzrKr4m9a9O9sDR/cU7+EBIjokzynGTclNjQ7iq+5se9lUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5BVMI0BLkKRyWalJNUcRQyTmVm2nT7kNxWsreskRG09GSjJfa
-	uwaqGEtG4Yoqz3AKWi1b24zHO9IfFYhguxXAYzSWp0RNBfynZ4LHvqB7PX0gOC+Qr/AyZzm6iay
-	tteUv+xqu8tt1UYPXRG9fwQWDEMKZkJE=
-X-Gm-Gg: ASbGncuJS1YeIMtbMZFX+XnW7qrxMNL6Aq1XV32XdQAP3auS3Zp2+pPN5ZcXEwvdPD0
-	GaK0weIgGIbejsGEO8IHbn3xI9VoIi4BAvx8K/XwtzGH7cby9DvRHtbsMmoFwHxAKLCQ7Bm6+aM
-	95DyELlHckJ6NHwIAsWOIkbQjohye292gC422oT/9874+H
-X-Google-Smtp-Source: AGHT+IEUJFZL2JU8xJSFulzsZPwp7Y5KKKb4k5Vl4oukDhrgiu5ve9lkLrK/mtQ4PMRZ7/XS+4qg94PJ9RHtwPTgAOs=
-X-Received: by 2002:a17:90b:258c:b0:312:1ae9:1537 with SMTP id
- 98e67ed59e1d1-31aaca78f48mr5496701a91.0.1751809346077; Sun, 06 Jul 2025
- 06:42:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751809545; x=1752414345;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cBYZIpHcYxpUb3Jzm70CuMo48gVL792R8BW12Oo0i9Y=;
+        b=XVymhSdp1sL8jb9ZnhIszN9iilXOzlUsWQkNc47+xQN0vE5J6G/PfS9i2wnf+NDx95
+         72aBrhFal+lDpxsws9eFBspyuZUihe1TeKmZVO2NS4SzuSXAh5k2+M/X3AmRTxsEzaPf
+         RrtfcmqnMpZmq2xqcsUxxHMgtYcmdN8JUR0WkqDd4mg9/v/HK2PV6MrweVBkwwduLNgo
+         swoRKwzXq7tClpUkQxi/UEfndbHbzX3R7G69JpJud2rIVE6pV0/ZbAwFIzPIr9l5wTvV
+         0AQQjKnjQKYF55uc9r4ycRHjqBQi6cFc874wMAKuK3twekl11py5zprvH01UWHkoR4QH
+         C2zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvo7MimqPgclKhvidOMTOEtNEafDHtSIdt/gaJgeuahEJDClNsJUwUXx6E07OeKasH4adqF0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCREZXyWDiXxq3uaGBFBOWzJQMz2vAd9z79nmUa7Ds59nolFiJ
+	VzzSAjVEEP9PI/ZAQoC+Ows5cb/5urYkv0+vfgAl/s9Be/iycdKEpgHS
+X-Gm-Gg: ASbGncsOIoa8NBVQl/Q9KDXtKBiStF1OpPPh7JAIRmRXi+rXNYYdI2d4PMMYTCdgNOe
+	3Tj5ytxGd/U4mozzUC/DFMMfSKKkX8HpJEzWp+jueyBgWvSQ0WHRZILW55v90scLeNO+iRQ0D8l
+	J5+hiZ+FvOmm1bjfGgJxvLZ2GmdeVOWSU1RYmQbT/7DqI8x4ICEzGhXy2D+uDLmfZW61Z5TSFSz
+	Xfe/bNsYTkvA7HU7PvyE3Hh5/pQC+uhiihmV7VoiRdqkfg5/GvuM9F2OzvKqNR5fdRhJCtJEu96
+	+G/LDnzjiBByn6x5OgVKwXOjO0xzZZ0cbVUwIQV0+Nny7I6BIXUiF+tychnO6emcUWXdvYG9nsP
+	BeIADj+K7OSp6mnTUBMZwNYJK3uVb2Obp94ZGkGc=
+X-Google-Smtp-Source: AGHT+IHoE4Y7lFX/EVffGHdYuQVe9w5o7wp6SVMXrUW5Wy9ACX5OTR6czeJZPf3AIgR97NU8FcOTiA==
+X-Received: by 2002:a05:6902:a84:b0:e84:4840:7b5 with SMTP id 3f1490d57ef6-e8b3cd04e29mr5537002276.22.1751809545325;
+        Sun, 06 Jul 2025 06:45:45 -0700 (PDT)
+Received: from localhost (234.207.85.34.bc.googleusercontent.com. [34.85.207.234])
+        by smtp.gmail.com with UTF8SMTPSA id 3f1490d57ef6-e899c3401fasm2002251276.19.2025.07.06.06.45.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 06:45:43 -0700 (PDT)
+Date: Sun, 06 Jul 2025 09:45:43 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Felix Fietkau <nbd@nbd.name>, 
+ netdev@vger.kernel.org, 
+ Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Richard Gobert <richardbgobert@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Message-ID: <686a7e07728fc_3aa654294f9@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250705150622.10699-1-nbd@nbd.name>
+References: <20250705150622.10699-1-nbd@nbd.name>
+Subject: Re: [PATCH net] net: fix segmentation after TCP/UDP fraglist GRO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250702-nova-docs-v3-0-f362260813e2@nvidia.com> <20250702-nova-docs-v3-1-f362260813e2@nvidia.com>
-In-Reply-To: <20250702-nova-docs-v3-1-f362260813e2@nvidia.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 6 Jul 2025 15:42:13 +0200
-X-Gm-Features: Ac12FXy1CaP3o3WtkbtVOog3-QiqhLt2Ifo86odUyVkUt2_fgezqFSeaSXeO-AY
-Message-ID: <CANiq72kUoyhbwiTeB3Bwv3X0iGLbiVWeQCBvKshOaNMqkEsUPw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] gpu: nova-core: Add code comments related to devinit
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Jonathan Corbet <corbet@lwn.net>, nouveau@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Joel Fernandes <joelagnelf@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 2, 2025 at 1:04=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.c=
-om> wrote:
->
-> +        // Check that FWSEC has lowered its protection level before read=
-ing the GFW_BOOT status.
+Felix Fietkau wrote:
+> Since "net: gro: use cb instead of skb->network_header", the skb network
+> header is no longer set in the GRO path.
+> This breaks fraglist segmentation, which relies on ip_hdr()/tcp_hdr()
 
-`GFW_BOOT` (another one below), since it is written like that above.
+Only ip_hdr is in scope.
 
-> -/* PGC6 */
-> +/*
-> + * PGC6 register space.
-> + *
-> + * `GC6` is a GPU low-power state where VRAM is in self-refresh and the =
-GPU is powered down (except
-> + * for power rails needed to keep self-refresh working and important reg=
-isters and hardware
-> + * blocks).
-> + *
-> + * These scratch registers remain powered on even in a low-power state a=
-nd have a designated group
-> + * number.
-> + */
+Reviewing TCP and UDP GSO, tcp_hdr/transport header is used also
+outside segment list. Non segment list GSO also uses ip_hdr in case
+pseudo checksum needs to be set.
 
-I noticed the file uses `/*` in a couple files -- could `//` be used
-or there is a reason for it?
+The GSO code is called with skb->data at the relevant header, so L4
+helpers are not strictly needed. The main issue is that data will be
+at the L4 header, and some GSO code also needs to see the IP header
+(e.g., for aforementioned pseudo checksum calculation).
 
-(I guess maybe in a different series, since it is already there for
-PMC in mainline. It could be a good first issue.)
+> to check for address/port changes.
 
-The idea is to only use `/*` when `//` cannot be used, e.g. within
-code, so that they have a different purpose.
+If in GSO, then the headers are probably more correctly set at the end
+of GRO, in gro_complete.
 
-Cheers,
-Miguel
+The blamed commit was added to support tunneling. It's not obvious
+that unconditionally setting network header again, instead of inner
+network header, will break that.
+
+Side-note: the number of times this feature has been broken indicates
+we should aim for getting test coverage.
+
+> Fix this regression by selectively setting the network header for merged
+> segment skbs.
+
+ 
+> Fixes: 186b1ea73ad8 ("net: gro: use cb instead of skb->network_header")
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> ---
+>  net/ipv4/tcp_offload.c | 1 +
+>  net/ipv4/udp_offload.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+> index d293087b426d..be5c2294610e 100644
+> --- a/net/ipv4/tcp_offload.c
+> +++ b/net/ipv4/tcp_offload.c
+> @@ -359,6 +359,7 @@ struct sk_buff *tcp_gro_receive(struct list_head *head, struct sk_buff *skb,
+>  		flush |= skb->ip_summed != p->ip_summed;
+>  		flush |= skb->csum_level != p->csum_level;
+>  		flush |= NAPI_GRO_CB(p)->count >= 64;
+> +		skb_set_network_header(skb, skb_gro_receive_network_offset(skb));
+>  
+>  		if (flush || skb_gro_receive_list(p, skb))
+>  			mss = 1;
+> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+> index 85b5aa82d7d7..e0a6bfa95118 100644
+> --- a/net/ipv4/udp_offload.c
+> +++ b/net/ipv4/udp_offload.c
+> @@ -767,6 +767,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+>  					NAPI_GRO_CB(skb)->flush = 1;
+>  					return NULL;
+>  				}
+> +				skb_set_network_header(skb, skb_gro_receive_network_offset(skb));
+>  				ret = skb_gro_receive_list(p, skb);
+>  			} else {
+>  				skb_gro_postpull_rcsum(skb, uh,
+> -- 
+> 2.49.0
+> 
+
+
