@@ -1,115 +1,122 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CED28A1F2
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C0428C01A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874816; cv=none; b=XRfzV1hkAZkUL1e4vpZW+EBQ8DppaOVUE9LF24SYxpHrjM+3UMKh6DFzbfk6OYeeWPDT3G+bgl1ZhuKLGgjnAzdU6ptptQwSIUkdCu6er2xDGqS2x+EUy6qse8OyP0O3jslzd5Z/knnevjK3KzvpiV2XamvmP+ZwE0IXhcyRIcE=
+	t=1751874824; cv=none; b=tXq45YZqXCbpyAcJDYmrrjjxO5hhUGIq6z4SZhcAA5tiCGFtQP1jnD4Rl4s7/IT0SIP1bzbdYhjOQ2CN5EyMrTv3Q/yhqmCHTCSn2p9b4rqj+10AtdGAWOWu+g7tFTaNIJtufuPGlwQohoccXqNq2VBIwn4S6cGbCjRASPaP29k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874816; c=relaxed/simple;
-	bh=KwFR9xyVnnLfuylQlG7sb+XE3e7Bc38FxKjn5fUYmCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABE68118AtR6oWIZKjSLbscq9xVKjDLYrcy5uAE04GDpp07BpieUgkhforCXHEog4Au2sKbvijIIgUJh6RTSNKycF28k+1DX1b/Q3jOamzcRp02ui8sPNCxb1J+ieQ4nBWZCFGXpEV49lLpuGxyzpmlFZFdWcltTUPRaIllky5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Str6ZMwB; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751874824; c=relaxed/simple;
+	bh=yW4lt3+nco7XStImQp1R9yncTsqNbuy0qQCxkxKGhdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EJSyr5DAN6MVJ+TGQTFkGbOEr8+2lyytbpPgmlDYt4p8eJVeZysfFKOmV0+bk13lMSjljf6YCjdp3ZScvlNriaFBtKICe7QoDFtbJv6bFAs+hZI4ROJ4q3sNxjhxPPLkB8KfN+B/wursqpneVdEz3ThWcINMjJT0A3mOU02vvZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Lp5+v987; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Str6ZMwB"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4537edf2c3cso29885325e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751874813; x=1752479613; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1Okpmh1buK1WgbPFPnBrSgpONpB/cKbKxghn+7iu8A=;
-        b=Str6ZMwBYLLsXgHYWj6VBHs1eeN4rg8pSH8GkSnNslHdJIUhZEMi5CZddfc6Pky+Px
-         pZWH2RNr7V49o520I4Z0qWMwp7iU+D3PJDZ/zapzoE7tB2x62+PIXVoBaJjnUAzhWnA6
-         +blMoGhNqqyIeCyjR2OSnaClbh2jTw6FfxpHweq1wWvlbkp9/cymMBXvzAYbX0BH+iPT
-         MtoxAw2nDgyEM8D5x4X04IhHcT1yr52AAtUR5PLWA2KnfzFo8f/vXTP0ET8dDX6l4yGm
-         DY7wSVaUyP+87Un99dQeY/C7UbE80N0Fm7li62I8u5zLBVeuMbybmg+Os8UmSxkbrrXo
-         q2JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874813; x=1752479613;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t1Okpmh1buK1WgbPFPnBrSgpONpB/cKbKxghn+7iu8A=;
-        b=CjLFwuYiJoGxjG6RdffxZoTysP2gmcRVYqVcuQypjCoS9XgegyrFYvPiBPuOlNiqeV
-         /QsLEWFvBdvAPe3C9GuDJ5cHEIO2HwHLuVHoKQ3FYebbMb5M6XpVZiBQtxqe7GdKBeOQ
-         8g/iT1qO+mLK2ZMb5WgS2BY+d10AGACREyXLlOLeEriqImeZ+HH0DsSlGxBFDiEZ8eMY
-         SpjH95ztaVd/4scxQyCerWo24Lce/2Qr3uEOnp6Y8ZNnOet0bM+VSCpaSqbeGWCaA/xN
-         4j06d0u+zetnJYPccE2ptzhV/8KHUJ0/PlSdlFGQBg6lVgtBFMBdfOtamRaepvIjX/ot
-         Wj8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVOYaLRDroxm1gpqlthcK2Lzn+3QCKKWZm1u3ZDP8DqneuHXjcHNtgFMPYKOk3IXKwheMFFXDxi1vfl2sY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4LC7lAU39CY4uoisyDfWpq92nr6b+aNGI2iH1UT97aNyWRK7J
-	bUA18dtmV4ZfT4ZySAziP1A+2dhmKh3HKGd12hxNWrzzwS8UzWbf0h44SA6v5XaQSs4=
-X-Gm-Gg: ASbGncv05v6CrFKrDDRwA3ht8YyHNaPBz2P2jbgKZQIEmF5+Hau0Jo27Un/6FXj56av
-	QZMDmsluWzq1DNsjOdr8BXGm2sV2e9wbqQ12MYkc6qHsHyOWVqGBSHjk2JzdCYNJi/yOEvOgO7x
-	dx+Y6EXvRe2qKb/2+8nyJhmJBpS/9wd3mABKjedK76Nz7BkEyYQmHIF6Q0hA4d6Z2YtdqSr2PdQ
-	W+4P6HkxeFb0gn66sdLRpaXJ/40GyIPPU9bjekuSZkCgVcGwprQgBGxxsAk0ttgYxaUjt9xIRg3
-	5EV0mfVkf0loU1FhGRZX0qMj/Q0fZbkomSKxFLRWPMHZwP6WKFPrGNfQN6fK/MbB46jDGIgBlhM
-	=
-X-Google-Smtp-Source: AGHT+IGnqvSWm29YP7wX6hjXcVJcaB1x2eCdgQxRsL5WTn87IEOjwAQMdjmDOMI6vGlwr40PeKJzWg==
-X-Received: by 2002:a05:600c:5251:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-454bb88a2f8mr64405185e9.27.1751874812666;
-        Mon, 07 Jul 2025 00:53:32 -0700 (PDT)
-Received: from localhost (109-81-17-167.rct.o2.cz. [109.81.17.167])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454a998a731sm131477575e9.17.2025.07.07.00.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 00:53:32 -0700 (PDT)
-Date: Mon, 7 Jul 2025 09:53:31 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Marco Elver <elver@google.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Christopher Bazley <chris.bazley.wg14@gmail.com>,
-	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>,
-	Alexander Potapenko <glider@google.com>,
-	Christoph Lameter <cl@linux.com>,
-	David Rientjes <rientjes@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Andrew Clayton <andrew@digital-domain.net>,
-	Jann Horn <jannh@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC v3 5/7] mm: Fix benign off-by-one bugs
-Message-ID: <aGt8-4Dbgb-XmreV@tiehlicka>
-References: <cover.1751862634.git.alx@kernel.org>
- <740755c1a888ae27de3f127c27bf925a91e9b264.1751862634.git.alx@kernel.org>
- <CANpmjNNQaAExO-E3-Z83MKfgavX4kb2C5GmefRZ0pXc5FPBazw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Lp5+v987"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751874813; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=YZOzuZhRDmIXxtNY1Xnrb4GtMpbKizrBm60btrY1XIY=;
+	b=Lp5+v987Xjj3xXnLBljMSBFGDnymS4LhAv7UIFvi86FEFNyervbdyiZ0bQ1J0C3pToRBT4fptikUVVe/6LE/3XcPtjRAtLTMOFQ0jqEwzBHltMuRfEf0+F9YQ6RkvZXSk8MC5QTQKOdzeJj+Di26xgZxwKFeY6JxbxfCdask9fk=
+Received: from 30.74.144.127(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wi33KdW_1751874811 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 07 Jul 2025 15:53:31 +0800
+Message-ID: <17d23ed0-3b12-42a5-a5de-994f570b1bca@linux.alibaba.com>
+Date: Mon, 7 Jul 2025 15:53:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNNQaAExO-E3-Z83MKfgavX4kb2C5GmefRZ0pXc5FPBazw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/9] mm/shmem, swap: avoid false positive swap cache
+ lookup
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250704181748.63181-1-ryncsn@gmail.com>
+ <20250704181748.63181-6-ryncsn@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250704181748.63181-6-ryncsn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon 07-07-25 09:46:12, Marco Elver wrote:
-> On Mon, 7 Jul 2025 at 07:06, Alejandro Colomar <alx@kernel.org> wrote:
-> >
-> > We were wasting a byte due to an off-by-one bug.  s[c]nprintf()
-> > doesn't write more than $2 bytes including the null byte, so trying to
-> > pass 'size-1' there is wasting one byte.  Now that we use seprintf(),
-> > the situation isn't different: seprintf() will stop writing *before*
-> > 'end' --that is, at most the terminating null byte will be written at
-> > 'end-1'--.
-> >
-> > Fixes: bc8fbc5f305a (2021-02-26; "kfence: add test suite")
-> > Fixes: 8ed691b02ade (2022-10-03; "kmsan: add tests for KMSAN")
+Hi Kairui,
+
+On 2025/7/5 02:17, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
 > 
-> Not sure about the Fixes - this means it's likely going to be
-> backported to stable kernels, which is not appropriate. There's no
-> functional problem, and these are tests only, so not worth the churn.
+> If a shmem read request's index points to the middle of a large swap
+> entry, shmem swap in will try the swap cache lookup using the large
+> swap entry's starting value (which is the first sub swap entry of this
+> large entry).  This will lead to false positive lookup results, if only
+> the first few swap entries are cached but the actual requested swap
+> entry pointed by index is uncached. This is not a rare event as swap
+> readahead always try to cache order 0 folios when possible.
+> 
+> Currently, shmem will do a large entry split when it occurs, aborts
+> due to a mismatching folio swap value, then retry the swapin from
+> the beginning, which is a waste of CPU and adds wrong info to
+> the readahead statistics.
+> 
+> This can be optimized easily by doing the lookup using the right
+> swap entry value.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>   mm/shmem.c | 31 +++++++++++++++----------------
+>   1 file changed, 15 insertions(+), 16 deletions(-)
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 217264315842..2ab214e2771c 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2274,14 +2274,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   	pgoff_t offset;
+>   
+>   	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+> -	swap = index_entry = radix_to_swp_entry(*foliop);
+> +	index_entry = radix_to_swp_entry(*foliop);
+> +	swap = index_entry;
+>   	*foliop = NULL;
+>   
+> -	if (is_poisoned_swp_entry(swap))
+> +	if (is_poisoned_swp_entry(index_entry))
+>   		return -EIO;
+>   
+> -	si = get_swap_device(swap);
+> -	order = shmem_confirm_swap(mapping, index, swap);
+> +	si = get_swap_device(index_entry);
+> +	order = shmem_confirm_swap(mapping, index, index_entry);
+>   	if (unlikely(!si)) {
+>   		if (order < 0)
+>   			return -EEXIST;
+> @@ -2293,6 +2294,12 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   		return -EEXIST;
+>   	}
+>   
+> +	/* index may point to the middle of a large entry, get the sub entry */
+> +	if (order) {
+> +		offset = index - round_down(index, 1 << order);
+> +		swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+> +	}
+> +
+>   	/* Look it up and read it in.. */
+>   	folio = swap_cache_get_folio(swap, NULL, 0);
 
-As long as there is no actual bug fixed then I believe those Fixes tags
-are more confusing than actually helpful. And that applies to other
-patches in this series as well.
--- 
-Michal Hocko
-SUSE Labs
+Please drop this patch, which will cause a swapin fault dead loop.
+
+Assume an order-4 shmem folio has been swapped out, and the swap cache 
+holds this order-4 folio (assuming index == 0, swap.val == 0x4000).
+
+During swapin, if the index is 1, and the recalculation of the swap 
+value here will result in 'swap.val == 0x4001'. This will cause the 
+subsequent 'folio->swap.val != swap.val' check to fail, continuously 
+triggering a dead-loop swapin fault, ultimately causing the CPU to hang.
