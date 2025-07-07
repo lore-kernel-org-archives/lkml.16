@@ -1,90 +1,146 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBA029ACD4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898560; cv=pass; b=b9Dx9Ew+TTymIVjrouRZFMLQECE4BNnKokRj1X0qGLEViNYcq7OpUXac7+GuTwgzyuw83euVozAlPvfb6Ux0Ce6R02ascX/pDs21O+xSkTOgTX/dTtp7TNIl9xuESS1oOIu0Uu+6SRYi6Of81oMJjScUyWWZYd8LLaerraE1VYw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898560; c=relaxed/simple;
-	bh=4v/fYvtvrh7LwUOO2aT+NJgqFI1YoZRIb2P70sz0hvM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L0juOnkaW7bqZezXKcHfcQeVwVFJ2eb7JY39j3YJnwtHyWIiQfzeMEHsjyT+H+PtGGfQqx0Qnl8HmxDSUoeHNxU0jI0w4lbvSZ0OU/VqWT6HJhHeghDBqkFFqsP6sQbTfo9NKnTZzRx0aMcvlbcokmPM0xjEs2H7XIxqgXq1LdI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=LeXiScxb; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="LeXiScxb"
-ARC-Seal: i=1; a=rsa-sha256; t=1751898537; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RC3DxRxRmZ3iIL08vvhDve/tPUJD4Hx68N+0o1lTBpKz598zGm/bLkyVQW3FC+nCWhl0x+HKVQDRLQ95isIuZ7RTI00Cm3qKdSqJR3UgPwyVNER+goXJL+J1JIGZm896zDoKEeK0pgDl17lH+JGIar3MYFACLAJqIAsyWMoBNTU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751898537; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tGZEF81c1hS/9Au4dc4XwLiGg9LAJ62Kn+70ovHwBgs=; 
-	b=HDGfWWlErtvEmMg6sP/g26Z2yVhJAMYjNfGKmw5iT5LD8L6u93dXFN6lGY9e6noCNdRLoeLFl8KQ2KXlOAwJ71FgIaGY5V9wN7mCd4qbsTN6nDgk0RemXqMoaQiOl/Ly6bHRMAaOf39Kl7N/+nTh/7f9iXzs8+jUiizAhndJG1k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751898537;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=tGZEF81c1hS/9Au4dc4XwLiGg9LAJ62Kn+70ovHwBgs=;
-	b=LeXiScxbRlnVG3YYxOCm2vxpt5Oy4iA4P9XGT6Tw5+hVcT0AugVIpxPdX0wITOWC
-	w3RmaByW3eKznC5eF3UY9XfKYtipJTd+v/qjYoGizdCSTnBT6o1kPZKUeJ1KbF+y+Yt
-	h12Nrs5o3LrYoZZFOcX+nVipDIyfWhxRIcRU4CYo=
-Received: by mx.zohomail.com with SMTPS id 1751898534893882.0472378471675;
-	Mon, 7 Jul 2025 07:28:54 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 07 Jul 2025 16:28:40 +0200
-Subject: [PATCH] arm64: defconfig: enable XSPHY driver
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41F692D978D;
+	Mon,  7 Jul 2025 14:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751898614; cv=none; b=PQlBibqt8ejeKA3jZdiKmOlewGgWiTS3Jub3FinQ2keN96fsaGtL3FdhQ6ou9+kAy09zwEGwkwQ0L+BHJjZjjxWfCFJLbWle0KJ89nKQDFhrEh6f0JBEouohWrfaCKLwR0mIImXFmrXPg7GGg/b4LeCAPBXcyHXuqyGgTJkyNrY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751898614; c=relaxed/simple;
+	bh=Qz0DFO0VSKhEu1+cvI/4COfERFTiMUB+Vg+TOZ23il0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rRseYE/Lo2Fu9dv5URRgKUjVkn8YDEpdDObE2jaPK88m1hXftYiQYD0ZLxSN7h6yRdn944Fpxn7Axrr8R8uH4nj7B3j64Nl82KVJisK7TIMH7zU1QgSZnfACmX6nZXFGMD7fuq5dJHeoLHHGKmf1tqbBgN8rkisp6PAIH3Xtslk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: GahDgNtlQdq2xb0Kp7Nrrg==
+X-CSE-MsgGUID: /eiXqvwKTC2eUsjobiA7QA==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 07 Jul 2025 23:30:03 +0900
+Received: from localhost.localdomain (unknown [10.226.92.69])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id B8D2B4257A78;
+	Mon,  7 Jul 2025 23:29:59 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH net-next] net: phy: micrel: Add callback for restoring context
+Date: Mon,  7 Jul 2025 15:29:51 +0100
+Message-ID: <20250707142957.118966-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250707-mtk-defconfig-usb-phy-v1-1-4a5dd0d26402@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAJfZa2gC/y2NQQqDMBBFrxJm3YGY2hq8SnGRmFGHkmiTWCzi3
- Rtql+/Bf3+HRJEpQSt2iPTmxHMoUF0E9JMJIyG7wqCkuslGNujzEx0N/RwGHnFNFpfpg9JZfde
- 6VuZaQdkukQbeft1Hd3Kk11ry+ZRgTSLsZ+85tyLQlvF/UUN3HF+eC29xmAAAAA==
-X-Change-ID: 20250707-mtk-defconfig-usb-phy-0db868842a31
-To: Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-mediatek@lists.infradead.org, kernel@collabora.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-The mediatek XSPHY driver is required on mt8196 for working USB support.
-Enable it in the defconfig.
+The Renesas RZ/G3E SMARC EVK uses KSZ9131RNXC phy. On deep power state,
+PHY loses the power and on wakeup the rgmii delays are not reconfigured
+causing it to fail.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Add a generic resume callback for restoring the context on exit from
+the PM suspend state. KSZ9131 is the first user of this callback and
+reconfigure the rgmii_delay when it exit from PM suspend state.
+
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 739b19302865fe8edc54911213321d6f1278aae4..a3cd62f360a16bb9d63152ffc2e20d5df8158efa 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1607,6 +1607,7 @@ CONFIG_PHY_HISI_INNO_USB2=y
- CONFIG_PHY_MVEBU_CP110_COMPHY=y
- CONFIG_PHY_MTK_PCIE=m
- CONFIG_PHY_MTK_TPHY=y
-+CONFIG_PHY_MTK_XSPHY=m
- CONFIG_PHY_MTK_HDMI=m
- CONFIG_PHY_MTK_MIPI_DSI=m
- CONFIG_PHY_MTK_DP=m
-
+Ref:
+ https://patchwork.kernel.org/project/linux-renesas-soc/patch/20250705170326.106073-1-biju.das.jz@bp.renesas.com/#26459627
 ---
-base-commit: a89d580927679464582adf00ed40c8096fc434fb
-change-id: 20250707-mtk-defconfig-usb-phy-0db868842a31
+ drivers/net/phy/micrel.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Best regards,
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 74fd6ff32c6c..cea6082ac45c 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -362,6 +362,8 @@
+ /* Delay used to get the second part from the LTC */
+ #define LAN8841_GET_SEC_LTC_DELAY		(500 * NSEC_PER_MSEC)
+ 
++static void ksz9131_restore_rgmii_delay(struct phy_device *phydev);
++
+ struct kszphy_hw_stat {
+ 	const char *string;
+ 	u8 reg;
+@@ -374,6 +376,7 @@ static struct kszphy_hw_stat kszphy_hw_stats[] = {
+ };
+ 
+ struct kszphy_type {
++	void (*resume)(struct phy_device *phydev);
+ 	u32 led_mode_reg;
+ 	u16 interrupt_level_mask;
+ 	u16 cable_diag_reg;
+@@ -444,6 +447,7 @@ struct kszphy_priv {
+ 	bool rmii_ref_clk_sel;
+ 	bool rmii_ref_clk_sel_val;
+ 	bool clk_enable;
++	bool is_suspended;
+ 	u64 stats[ARRAY_SIZE(kszphy_hw_stats)];
+ 	struct kszphy_phy_stats phy_stats;
+ };
+@@ -491,6 +495,7 @@ static const struct kszphy_type ksz9021_type = {
+ };
+ 
+ static const struct kszphy_type ksz9131_type = {
++	.resume = ksz9131_restore_rgmii_delay,
+ 	.interrupt_level_mask	= BIT(14),
+ 	.disable_dll_tx_bit	= BIT(12),
+ 	.disable_dll_rx_bit	= BIT(12),
+@@ -1387,6 +1392,12 @@ static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
+ 			      txcdll_val);
+ }
+ 
++static void ksz9131_restore_rgmii_delay(struct phy_device *phydev)
++{
++	if (phy_interface_is_rgmii(phydev))
++		ksz9131_config_rgmii_delay(phydev);
++}
++
+ /* Silicon Errata DS80000693B
+  *
+  * When LEDs are configured in Individual Mode, LED1 is ON in a no-link
+@@ -2345,6 +2356,11 @@ static int kszphy_generic_suspend(struct phy_device *phydev)
+ 
+ static int kszphy_suspend(struct phy_device *phydev)
+ {
++	struct kszphy_priv *priv = phydev->priv;
++
++	if (priv)
++		priv->is_suspended = true;
++
+ 	/* Disable PHY Interrupts */
+ 	if (phy_interrupt_is_valid(phydev)) {
+ 		phydev->interrupts = PHY_INTERRUPT_DISABLED;
+@@ -2381,8 +2397,17 @@ static void kszphy_parse_led_mode(struct phy_device *phydev)
+ 
+ static int kszphy_resume(struct phy_device *phydev)
+ {
++	struct kszphy_priv *priv = phydev->priv;
+ 	int ret;
+ 
++	if (priv && priv->is_suspended) {
++		const struct kszphy_type *type = priv->type;
++
++		priv->is_suspended = false;
++		if (type->resume)
++			type->resume(phydev);
++	}
++
+ 	ret = kszphy_generic_resume(phydev);
+ 	if (ret)
+ 		return ret;
 -- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+2.43.0
 
