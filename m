@@ -1,136 +1,637 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253C91D416E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1352290DAC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889453; cv=none; b=HqMS339iRbtfxiVaGG5jo1JjoRIjJoQaBHG4vUnY84lBtOUsLgav3d/k6+TsMKbqsRzGtB0l88cQqYq3jQWIRNDPdLfof0JbbKNJmypBFzWilQhDidXL0HzqgQGP715GUHQ+xWqXr+ImRgqVr2hGNAUCuFB8mms69dZ7/fwso2M=
+	t=1751889502; cv=none; b=P2S+/elOiJVBmlaO9f3sRRTc3KFTxdzA3i88VqoGSmo20hte2KLXtFzFlwFRujBBzH9g4vBNtlkkoAuVLbm6Y7wISR0aB72Dx9Hp4PT3uYxd9guPfpINIRIcwDLCaAUHQCN/kAt/bxqNovOXRp7FZ5H96AIW3/9wOjUJnnU9IUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889453; c=relaxed/simple;
-	bh=lBatdydMr1UbrD6ITIl1XJhYoHkZ1L7B7CzZEV88NwU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=S4YOnkj3tQ2Azna612C+gr8yw/htDlwuQMh2objh4L6oG6AFt4M60aHf71htolHpc9s9PnUwQyK2cGMvrSFJen1kZLwPBnozdBt8jF2/AVcnFo9DcehtLxbbi2wx+utP9qKA6JJoCNhmOOZutItt6GN3pgXS1y5m00oWzckvFqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3e059add15eso33439285ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 04:57:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751889451; x=1752494251;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5TRauz+CW9RrwFgg/EnD6rf4LP2K7mvnWRyp76QyUoY=;
-        b=vqqRxckeLk2VT9RPVuTOJOe6spOwiyK+l5TVovZaNS206DKPR0NW53R34tW722yaX0
-         5HW2EmQCC+MiAr8Ujm3l0EdwSgPjkn+oAyxP6RhephOMR0AxpmVZU8Re/ZwjQwSf2ESK
-         NTplq1UfSF430R92GLTBZcNnWchfAYl5RReJZMGA5fVQU3/uBYyANwHRifSYpxmYRgc0
-         YlGKU1tCdmRbohhHMPscYuT82QMQNv2A8pJ48r5fXkuzg/uLTQOhkKFRw5zeJg9CD/b2
-         nnhrZpFt492WZnb6mRK+bCMaiIXCISG+2MjsJHchMcXVplCyhkjOH1k30kbpz1f9qlHb
-         8f3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXEjLuvSqWgBZP0kiulxR6/c0MGgPiuSjNC1yI0nb2xUSh8sWx1Dobc/ws1sSAjiSjneflml0dVcOcyMZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqey1LVX3uStadMpaK9osSygIoGp/NF7pgQAlV+67g/lYKR0G+
-	iQlpFsxbPrzYWms7rX4LGD2qUE/uBPlS6AEjYLBtokZP9hAtqPqApnwNedY2rXhDn1VznEwlk85
-	+JFnRL5s88QvkKxsMeOwKiZLZo01hTHraGlL6JChXJtm2oH5RWbMb4EgxMzk=
-X-Google-Smtp-Source: AGHT+IH0zbsaedvYiTcoa5SpT+03pinfOsDYpE1rs6o13TrhrLa7Dsrb8o1tjvsxD8Z90QIYgE2PQ3emY+x8B8PDJLaC3ZiGAtJj
+	s=arc-20240116; t=1751889502; c=relaxed/simple;
+	bh=vcp6zSyV6G/RzogJ1pcDOvm/lbLDnV2RrkT0gRhyfeA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Q5g4Gku2lyA177Zyrr9UAbfGSTeWztDaG7cGmm/ELC/ZkBBiCLjDFE9QYivwAswnoxpiG4BEDkCh173m2pA3MbHhXrghKM0fThwwzde4rfzkRMfg77j6TVUZZv+AOVuVJ8Ckn7q9cFp+cYfHi6G7B9o8kQjdMbq4zAWMbIgcma8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xs4all.nl; spf=pass smtp.mailfrom=xs4all.nl; dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b=kxJNcpAF; arc=none smtp.client-ip=195.121.94.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="kxJNcpAF"
+X-KPN-MessageId: a8fb6d95-5b29-11f0-a9bf-00505699b430
+Received: from smtp.kpnmail.nl (unknown [10.31.155.8])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id a8fb6d95-5b29-11f0-a9bf-00505699b430;
+	Mon, 07 Jul 2025 13:58:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xs4all.nl; s=xs4all01;
+	h=content-type:to:subject:from:mime-version:date:message-id;
+	bh=um4I1GJikpiGEQUnp35E5VAORx7n60m6jp5hRzM2nxY=;
+	b=kxJNcpAFKXHdLWTKRkj+HQwXF6l5JOC6/h/f2j+Y1pyovYl/9Awq6rfePTy+K9GEf3VY98JWzCFih
+	 nKKmjoP7TqHqxtq02VcI43a0rHPVLZEAcKZomwnSpfd5cTNR7+3YKBSIlzrbl05TkVjsRkgHOM4OMF
+	 QEpT4Jr/qujiDtn4MrvMquZdQmcftuluYCeVz6VAV0pVOax/pmHU1AHJYfL33jHhIcKA/4y6ih5tmL
+	 5VutMvGTLbNMAiJGwFULa7f27z/XFk8V/cpHxIgmU3N3FfjWW5kR8GD5zEvw9NtJ8rPa94S5MbpQmC
+	 bq4jtX5zh3IjWIJ20J4rWTarbHSb5cQ==
+X-KPN-MID: 33|o9ged19lRR0Dkth+5gfhgcmmVRfNykONenkV97dCveCRRWlmyzTFeLaFrqTdFMp
+ SD5MqhY04UulbU5q4YJzYtZzpAdSu1pF6kPo/9DTXYhs=
+X-KPN-VerifiedSender: Yes
+X-CMASSUN: 33|ZWikZXPzGTccUAGEf95HV299fw1B5XAo2DB3TLh7jh9AoRGNCrWk4ib52HGc+mk
+ HnABodGUbWUBw2u5Ntrk1ew==
+Received: from [192.168.2.10] (unknown [178.74.16.2])
+	by smtp.xs4all.nl (Halon) with ESMTPSA
+	id a96bd0e2-5b29-11f0-9820-00505699d6e5;
+	Mon, 07 Jul 2025 13:58:14 +0200 (CEST)
+Message-ID: <e82eced3-0585-436d-af22-8c6b8515d62c@xs4all.nl>
+Date: Mon, 7 Jul 2025 13:58:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cd8b:0:b0:3d9:6cb6:fa52 with SMTP id
- e9e14a558f8ab-3e13eefa3c0mr77137375ab.12.1751889451289; Mon, 07 Jul 2025
- 04:57:31 -0700 (PDT)
-Date: Mon, 07 Jul 2025 04:57:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686bb62b.a00a0220.c7b3.0083.GAE@google.com>
-Subject: [syzbot] [cgroups?] KCSAN: data-race in cgroup_migrate_execute / memcpy_and_pad
-From: syzbot <syzbot+f3188428a0ed36870056@syzkaller.appspotmail.com>
-To: cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
-	mkoutny@suse.com, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: drivers/media/test-drivers/vivid/vivid-ctrls.c:1799:22: warning:
+ ' Is Connected To' directive output may be truncated writing 16 bytes into a
+ region of size between 10 and 19
+To: kernel test robot <lkp@intel.com>,
+ Dorcas Anono Litunya <anonolitunya@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <202507071251.j08Oluox-lkp@intel.com>
+Content-Language: en-US, nl
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <202507071251.j08Oluox-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 07/07/2025 12:26, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   d7b8f8e20813f0179d8ef519541a3527e7661d3a
+> commit: d7c969f37515d78dc1a026d12b94b90e319a5a61 media: vivid: Add 'Is Connected To' menu controls
+> date:   1 year ago
+> config: microblaze-randconfig-2006-20250701 (https://download.01.org/0day-ci/archive/20250707/202507071251.j08Oluox-lkp@intel.com/config)
+> compiler: microblaze-linux-gcc (GCC) 8.5.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250707/202507071251.j08Oluox-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202507071251.j08Oluox-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/media/test-drivers/vivid/vivid-ctrls.c: In function 'vivid_create_controls':
+>>> drivers/media/test-drivers/vivid/vivid-ctrls.c:1799:22: warning: ' Is Connected To' directive output may be truncated writing 16 bytes into a region of size between 10 and 19 [-Wformat-truncation=]
+>          "S-Video %03u-%u Is Connected To", dev->inst, i);
+>                          ^~~~~~~~~~~~~~~~
+>    drivers/media/test-drivers/vivid/vivid-ctrls.c:1797:4: note: 'snprintf' output between 30 and 39 bytes into a destination of size 32
+>        snprintf(dev->ctrl_svid_to_output_names[i],
+>        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>          sizeof(dev->ctrl_svid_to_output_names[i]),
+>          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>          "S-Video %03u-%u Is Connected To", dev->inst, i);
+>          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    drivers/media/test-drivers/vivid/vivid-ctrls.c:1780:19: warning: ' Is Connected To' directive output may be truncated writing 16 bytes into a region of size between 13 and 22 [-Wformat-truncation=]
+>          "HDMI %03u-%u Is Connected To", dev->inst, i);
+>                       ^~~~~~~~~~~~~~~~
+>    drivers/media/test-drivers/vivid/vivid-ctrls.c:1778:4: note: 'snprintf' output between 27 and 36 bytes into a destination of size 32
+>        snprintf(dev->ctrl_hdmi_to_output_names[i],
+>        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>          sizeof(dev->ctrl_hdmi_to_output_names[i]),
+>          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>          "HDMI %03u-%u Is Connected To", dev->inst, i);
+>          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-syzbot found the following issue on:
+Just for the record:
 
-HEAD commit:    d7b8f8e20813 Linux 6.16-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=176e828c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ce48b74bcedce10f
-dashboard link: https://syzkaller.appspot.com/bug?extid=f3188428a0ed36870056
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+This old compiler isn't smart enough to see that dev->inst and i are both u8, and so
+the value can't be more than 3 characters worst case.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Regards,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6a4c012a3b93/disk-d7b8f8e2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e3a6050563a6/vmlinux-d7b8f8e2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2bdc7eedebcd/bzImage-d7b8f8e2.xz
+	Hans
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f3188428a0ed36870056@syzkaller.appspotmail.com
+> 
+> 
+> vim +1799 drivers/media/test-drivers/vivid/vivid-ctrls.c
+> 
+>   1635	
+>   1636	int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
+>   1637			bool show_ccs_out, bool no_error_inj,
+>   1638			bool has_sdtv, bool has_hdmi)
+>   1639	{
+>   1640		struct v4l2_ctrl_handler *hdl_user_gen = &dev->ctrl_hdl_user_gen;
+>   1641		struct v4l2_ctrl_handler *hdl_user_vid = &dev->ctrl_hdl_user_vid;
+>   1642		struct v4l2_ctrl_handler *hdl_user_aud = &dev->ctrl_hdl_user_aud;
+>   1643		struct v4l2_ctrl_handler *hdl_streaming = &dev->ctrl_hdl_streaming;
+>   1644		struct v4l2_ctrl_handler *hdl_sdtv_cap = &dev->ctrl_hdl_sdtv_cap;
+>   1645		struct v4l2_ctrl_handler *hdl_loop_cap = &dev->ctrl_hdl_loop_cap;
+>   1646		struct v4l2_ctrl_handler *hdl_fb = &dev->ctrl_hdl_fb;
+>   1647		struct v4l2_ctrl_handler *hdl_vid_cap = &dev->ctrl_hdl_vid_cap;
+>   1648		struct v4l2_ctrl_handler *hdl_vid_out = &dev->ctrl_hdl_vid_out;
+>   1649		struct v4l2_ctrl_handler *hdl_vbi_cap = &dev->ctrl_hdl_vbi_cap;
+>   1650		struct v4l2_ctrl_handler *hdl_vbi_out = &dev->ctrl_hdl_vbi_out;
+>   1651		struct v4l2_ctrl_handler *hdl_radio_rx = &dev->ctrl_hdl_radio_rx;
+>   1652		struct v4l2_ctrl_handler *hdl_radio_tx = &dev->ctrl_hdl_radio_tx;
+>   1653		struct v4l2_ctrl_handler *hdl_sdr_cap = &dev->ctrl_hdl_sdr_cap;
+>   1654		struct v4l2_ctrl_handler *hdl_meta_cap = &dev->ctrl_hdl_meta_cap;
+>   1655		struct v4l2_ctrl_handler *hdl_meta_out = &dev->ctrl_hdl_meta_out;
+>   1656		struct v4l2_ctrl_handler *hdl_tch_cap = &dev->ctrl_hdl_touch_cap;
+>   1657	
+>   1658		struct v4l2_ctrl_config vivid_ctrl_dv_timings = {
+>   1659			.ops = &vivid_vid_cap_ctrl_ops,
+>   1660			.id = VIVID_CID_DV_TIMINGS,
+>   1661			.name = "DV Timings",
+>   1662			.type = V4L2_CTRL_TYPE_MENU,
+>   1663		};
+>   1664		int i;
+>   1665	
+>   1666		v4l2_ctrl_handler_init(hdl_user_gen, 10);
+>   1667		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_class, NULL);
+>   1668		v4l2_ctrl_handler_init(hdl_user_vid, 9);
+>   1669		v4l2_ctrl_new_custom(hdl_user_vid, &vivid_ctrl_class, NULL);
+>   1670		v4l2_ctrl_handler_init(hdl_user_aud, 2);
+>   1671		v4l2_ctrl_new_custom(hdl_user_aud, &vivid_ctrl_class, NULL);
+>   1672		v4l2_ctrl_handler_init(hdl_streaming, 8);
+>   1673		v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_class, NULL);
+>   1674		v4l2_ctrl_handler_init(hdl_sdtv_cap, 2);
+>   1675		v4l2_ctrl_new_custom(hdl_sdtv_cap, &vivid_ctrl_class, NULL);
+>   1676		v4l2_ctrl_handler_init(hdl_loop_cap, 1);
+>   1677		v4l2_ctrl_new_custom(hdl_loop_cap, &vivid_ctrl_class, NULL);
+>   1678		v4l2_ctrl_handler_init(hdl_fb, 1);
+>   1679		v4l2_ctrl_new_custom(hdl_fb, &vivid_ctrl_class, NULL);
+>   1680		v4l2_ctrl_handler_init(hdl_vid_cap, 55);
+>   1681		v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_class, NULL);
+>   1682		v4l2_ctrl_handler_init(hdl_vid_out, 26);
+>   1683		if (!no_error_inj || dev->has_fb || dev->num_hdmi_outputs)
+>   1684			v4l2_ctrl_new_custom(hdl_vid_out, &vivid_ctrl_class, NULL);
+>   1685		v4l2_ctrl_handler_init(hdl_vbi_cap, 21);
+>   1686		v4l2_ctrl_new_custom(hdl_vbi_cap, &vivid_ctrl_class, NULL);
+>   1687		v4l2_ctrl_handler_init(hdl_vbi_out, 19);
+>   1688		if (!no_error_inj)
+>   1689			v4l2_ctrl_new_custom(hdl_vbi_out, &vivid_ctrl_class, NULL);
+>   1690		v4l2_ctrl_handler_init(hdl_radio_rx, 17);
+>   1691		v4l2_ctrl_new_custom(hdl_radio_rx, &vivid_ctrl_class, NULL);
+>   1692		v4l2_ctrl_handler_init(hdl_radio_tx, 17);
+>   1693		v4l2_ctrl_new_custom(hdl_radio_tx, &vivid_ctrl_class, NULL);
+>   1694		v4l2_ctrl_handler_init(hdl_sdr_cap, 19);
+>   1695		v4l2_ctrl_new_custom(hdl_sdr_cap, &vivid_ctrl_class, NULL);
+>   1696		v4l2_ctrl_handler_init(hdl_meta_cap, 2);
+>   1697		v4l2_ctrl_new_custom(hdl_meta_cap, &vivid_ctrl_class, NULL);
+>   1698		v4l2_ctrl_handler_init(hdl_meta_out, 2);
+>   1699		v4l2_ctrl_new_custom(hdl_meta_out, &vivid_ctrl_class, NULL);
+>   1700		v4l2_ctrl_handler_init(hdl_tch_cap, 2);
+>   1701		v4l2_ctrl_new_custom(hdl_tch_cap, &vivid_ctrl_class, NULL);
+>   1702	
+>   1703		/* User Controls */
+>   1704		dev->volume = v4l2_ctrl_new_std(hdl_user_aud, NULL,
+>   1705			V4L2_CID_AUDIO_VOLUME, 0, 255, 1, 200);
+>   1706		dev->mute = v4l2_ctrl_new_std(hdl_user_aud, NULL,
+>   1707			V4L2_CID_AUDIO_MUTE, 0, 1, 1, 0);
+>   1708		if (dev->has_vid_cap) {
+>   1709			dev->brightness = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1710				V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
+>   1711			for (i = 0; i < MAX_INPUTS; i++)
+>   1712				dev->input_brightness[i] = 128;
+>   1713			dev->contrast = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1714				V4L2_CID_CONTRAST, 0, 255, 1, 128);
+>   1715			dev->saturation = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1716				V4L2_CID_SATURATION, 0, 255, 1, 128);
+>   1717			dev->hue = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1718				V4L2_CID_HUE, -128, 128, 1, 0);
+>   1719			v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1720				V4L2_CID_HFLIP, 0, 1, 1, 0);
+>   1721			v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1722				V4L2_CID_VFLIP, 0, 1, 1, 0);
+>   1723			dev->autogain = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1724				V4L2_CID_AUTOGAIN, 0, 1, 1, 1);
+>   1725			dev->gain = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1726				V4L2_CID_GAIN, 0, 255, 1, 100);
+>   1727			dev->alpha = v4l2_ctrl_new_std(hdl_user_vid, &vivid_user_vid_ctrl_ops,
+>   1728				V4L2_CID_ALPHA_COMPONENT, 0, 255, 1, 0);
+>   1729		}
+>   1730		dev->button = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_button, NULL);
+>   1731		dev->int32 = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_int32, NULL);
+>   1732		dev->int64 = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_int64, NULL);
+>   1733		dev->boolean = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_boolean, NULL);
+>   1734		dev->menu = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_menu, NULL);
+>   1735		dev->string = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_string, NULL);
+>   1736		dev->bitmask = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_bitmask, NULL);
+>   1737		dev->int_menu = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_int_menu, NULL);
+>   1738		dev->ro_int32 = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_ro_int32, NULL);
+>   1739		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_area, NULL);
+>   1740		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u32_array, NULL);
+>   1741		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u32_dyn_array, NULL);
+>   1742		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u16_matrix, NULL);
+>   1743		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u8_4d_array, NULL);
+>   1744		dev->pixel_array = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u8_pixel_array, NULL);
+>   1745		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_s32_array, NULL);
+>   1746		v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_s64_array, NULL);
+>   1747	
+>   1748		if (dev->has_vid_cap) {
+>   1749			/* Image Processing Controls */
+>   1750			struct v4l2_ctrl_config vivid_ctrl_test_pattern = {
+>   1751				.ops = &vivid_vid_cap_ctrl_ops,
+>   1752				.id = VIVID_CID_TEST_PATTERN,
+>   1753				.name = "Test Pattern",
+>   1754				.type = V4L2_CTRL_TYPE_MENU,
+>   1755				.max = TPG_PAT_NOISE,
+>   1756				.qmenu = tpg_pattern_strings,
+>   1757			};
+>   1758	
+>   1759			dev->test_pattern = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1760					&vivid_ctrl_test_pattern, NULL);
+>   1761			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_perc_fill, NULL);
+>   1762			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_hor_movement, NULL);
+>   1763			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_vert_movement, NULL);
+>   1764			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_osd_mode, NULL);
+>   1765			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_show_border, NULL);
+>   1766			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_show_square, NULL);
+>   1767			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_hflip, NULL);
+>   1768			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_vflip, NULL);
+>   1769			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_insert_sav, NULL);
+>   1770			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_insert_eav, NULL);
+>   1771			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_insert_hdmi_video_guard_band, NULL);
+>   1772			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_reduced_fps, NULL);
+>   1773	
+>   1774			WARN_ON(dev->num_hdmi_inputs > MAX_HDMI_INPUTS);
+>   1775			WARN_ON(dev->num_svid_inputs > MAX_SVID_INPUTS);
+>   1776	
+>   1777			for (u8 i = 0; i < dev->num_hdmi_inputs; i++) {
+>   1778				snprintf(dev->ctrl_hdmi_to_output_names[i],
+>   1779					 sizeof(dev->ctrl_hdmi_to_output_names[i]),
+>   1780					 "HDMI %03u-%u Is Connected To", dev->inst, i);
+>   1781			}
+>   1782	
+>   1783			for (u8 i = 0; i < dev->num_hdmi_inputs; i++) {
+>   1784				struct v4l2_ctrl_config ctrl_config = {
+>   1785					.ops = &vivid_vid_cap_ctrl_ops,
+>   1786					.id = VIVID_CID_HDMI_IS_CONNECTED_TO_OUTPUT(i),
+>   1787					.name = dev->ctrl_hdmi_to_output_names[i],
+>   1788					.type = V4L2_CTRL_TYPE_MENU,
+>   1789					.max = 1,
+>   1790					.qmenu = (const char * const *)vivid_ctrl_hdmi_to_output_strings,
+>   1791				};
+>   1792				dev->ctrl_hdmi_to_output[i] = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1793										   &ctrl_config, NULL);
+>   1794			}
+>   1795	
+>   1796			for (u8 i = 0; i < dev->num_svid_inputs; i++) {
+>   1797				snprintf(dev->ctrl_svid_to_output_names[i],
+>   1798					 sizeof(dev->ctrl_svid_to_output_names[i]),
+>> 1799					 "S-Video %03u-%u Is Connected To", dev->inst, i);
+>   1800			}
+>   1801	
+>   1802			for (u8 i = 0; i < dev->num_svid_inputs; i++) {
+>   1803				struct v4l2_ctrl_config ctrl_config = {
+>   1804					.ops = &vivid_vid_cap_ctrl_ops,
+>   1805					.id = VIVID_CID_SVID_IS_CONNECTED_TO_OUTPUT(i),
+>   1806					.name = dev->ctrl_svid_to_output_names[i],
+>   1807					.type = V4L2_CTRL_TYPE_MENU,
+>   1808					.max = 1,
+>   1809					.qmenu = (const char * const *)vivid_ctrl_svid_to_output_strings,
+>   1810				};
+>   1811				dev->ctrl_svid_to_output[i] = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1812										   &ctrl_config, NULL);
+>   1813			}
+>   1814	
+>   1815			if (show_ccs_cap) {
+>   1816				dev->ctrl_has_crop_cap = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1817					&vivid_ctrl_has_crop_cap, NULL);
+>   1818				dev->ctrl_has_compose_cap = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1819					&vivid_ctrl_has_compose_cap, NULL);
+>   1820				dev->ctrl_has_scaler_cap = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1821					&vivid_ctrl_has_scaler_cap, NULL);
+>   1822			}
+>   1823	
+>   1824			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_tstamp_src, NULL);
+>   1825			dev->colorspace = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1826				&vivid_ctrl_colorspace, NULL);
+>   1827			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_xfer_func, NULL);
+>   1828			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_ycbcr_enc, NULL);
+>   1829			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_hsv_enc, NULL);
+>   1830			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_quantization, NULL);
+>   1831			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_alpha_mode, NULL);
+>   1832		}
+>   1833	
+>   1834		if (dev->has_vid_out && show_ccs_out) {
+>   1835			dev->ctrl_has_crop_out = v4l2_ctrl_new_custom(hdl_vid_out,
+>   1836				&vivid_ctrl_has_crop_out, NULL);
+>   1837			dev->ctrl_has_compose_out = v4l2_ctrl_new_custom(hdl_vid_out,
+>   1838				&vivid_ctrl_has_compose_out, NULL);
+>   1839			dev->ctrl_has_scaler_out = v4l2_ctrl_new_custom(hdl_vid_out,
+>   1840				&vivid_ctrl_has_scaler_out, NULL);
+>   1841		}
+>   1842	
+>   1843		/*
+>   1844		 * Testing this driver with v4l2-compliance will trigger the error
+>   1845		 * injection controls, and after that nothing will work as expected.
+>   1846		 * So we have a module option to drop these error injecting controls
+>   1847		 * allowing us to run v4l2_compliance again.
+>   1848		 */
+>   1849		if (!no_error_inj) {
+>   1850			v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_disconnect, NULL);
+>   1851			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_dqbuf_error, NULL);
+>   1852			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_perc_dropped, NULL);
+>   1853			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_queue_setup_error, NULL);
+>   1854			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_buf_prepare_error, NULL);
+>   1855			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_start_streaming_error, NULL);
+>   1856			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_queue_error, NULL);
+>   1857	#ifdef CONFIG_MEDIA_CONTROLLER
+>   1858			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_req_validate_error, NULL);
+>   1859	#endif
+>   1860			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_seq_wrap, NULL);
+>   1861			v4l2_ctrl_new_custom(hdl_streaming, &vivid_ctrl_time_wrap, NULL);
+>   1862		}
+>   1863	
+>   1864		if (has_sdtv && (dev->has_vid_cap || dev->has_vbi_cap)) {
+>   1865			if (dev->has_vid_cap)
+>   1866				v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_std_aspect_ratio, NULL);
+>   1867			dev->ctrl_std_signal_mode = v4l2_ctrl_new_custom(hdl_sdtv_cap,
+>   1868				&vivid_ctrl_std_signal_mode, NULL);
+>   1869			dev->ctrl_standard = v4l2_ctrl_new_custom(hdl_sdtv_cap,
+>   1870				&vivid_ctrl_standard, NULL);
+>   1871			if (dev->ctrl_std_signal_mode)
+>   1872				v4l2_ctrl_cluster(2, &dev->ctrl_std_signal_mode);
+>   1873			if (dev->has_raw_vbi_cap)
+>   1874				v4l2_ctrl_new_custom(hdl_vbi_cap, &vivid_ctrl_vbi_cap_interlaced, NULL);
+>   1875		}
+>   1876	
+>   1877		if (dev->num_hdmi_inputs) {
+>   1878			s64 hdmi_input_mask = GENMASK(dev->num_hdmi_inputs - 1, 0);
+>   1879	
+>   1880			dev->ctrl_dv_timings_signal_mode = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1881						&vivid_ctrl_dv_timings_signal_mode, NULL);
+>   1882	
+>   1883			vivid_ctrl_dv_timings.max = dev->query_dv_timings_size - 1;
+>   1884			vivid_ctrl_dv_timings.qmenu =
+>   1885				(const char * const *)dev->query_dv_timings_qmenu;
+>   1886			dev->ctrl_dv_timings = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1887				&vivid_ctrl_dv_timings, NULL);
+>   1888			if (dev->ctrl_dv_timings_signal_mode)
+>   1889				v4l2_ctrl_cluster(2, &dev->ctrl_dv_timings_signal_mode);
+>   1890	
+>   1891			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_dv_timings_aspect_ratio, NULL);
+>   1892			v4l2_ctrl_new_custom(hdl_vid_cap, &vivid_ctrl_max_edid_blocks, NULL);
+>   1893			dev->real_rgb_range_cap = v4l2_ctrl_new_custom(hdl_vid_cap,
+>   1894				&vivid_ctrl_limited_rgb_range, NULL);
+>   1895			dev->rgb_range_cap = v4l2_ctrl_new_std_menu(hdl_vid_cap,
+>   1896				&vivid_vid_cap_ctrl_ops,
+>   1897				V4L2_CID_DV_RX_RGB_RANGE, V4L2_DV_RGB_RANGE_FULL,
+>   1898				0, V4L2_DV_RGB_RANGE_AUTO);
+>   1899			dev->ctrl_rx_power_present = v4l2_ctrl_new_std(hdl_vid_cap,
+>   1900				NULL, V4L2_CID_DV_RX_POWER_PRESENT, 0, hdmi_input_mask,
+>   1901				0, hdmi_input_mask);
+>   1902	
+>   1903		}
+>   1904		if (dev->num_hdmi_outputs) {
+>   1905			s64 hdmi_output_mask = GENMASK(dev->num_hdmi_outputs - 1, 0);
+>   1906	
+>   1907			/*
+>   1908			 * We aren't doing anything with this at the moment, but
+>   1909			 * HDMI outputs typically have this controls.
+>   1910			 */
+>   1911			dev->ctrl_tx_rgb_range = v4l2_ctrl_new_std_menu(hdl_vid_out, NULL,
+>   1912				V4L2_CID_DV_TX_RGB_RANGE, V4L2_DV_RGB_RANGE_FULL,
+>   1913				0, V4L2_DV_RGB_RANGE_AUTO);
+>   1914			dev->ctrl_tx_mode = v4l2_ctrl_new_std_menu(hdl_vid_out, NULL,
+>   1915				V4L2_CID_DV_TX_MODE, V4L2_DV_TX_MODE_HDMI,
+>   1916				0, V4L2_DV_TX_MODE_HDMI);
+>   1917			dev->ctrl_display_present = v4l2_ctrl_new_custom(hdl_vid_out,
+>   1918				&vivid_ctrl_display_present, NULL);
+>   1919			dev->ctrl_tx_hotplug = v4l2_ctrl_new_std(hdl_vid_out,
+>   1920				NULL, V4L2_CID_DV_TX_HOTPLUG, 0, hdmi_output_mask,
+>   1921				0, hdmi_output_mask);
+>   1922			dev->ctrl_tx_rxsense = v4l2_ctrl_new_std(hdl_vid_out,
+>   1923				NULL, V4L2_CID_DV_TX_RXSENSE, 0, hdmi_output_mask,
+>   1924				0, hdmi_output_mask);
+>   1925			dev->ctrl_tx_edid_present = v4l2_ctrl_new_std(hdl_vid_out,
+>   1926				NULL, V4L2_CID_DV_TX_EDID_PRESENT, 0, hdmi_output_mask,
+>   1927				0, hdmi_output_mask);
+>   1928		}
+>   1929		if ((dev->has_vid_cap && dev->has_vid_out) ||
+>   1930		    (dev->has_vbi_cap && dev->has_vbi_out))
+>   1931			v4l2_ctrl_new_custom(hdl_loop_cap, &vivid_ctrl_loop_video, NULL);
+>   1932	
+>   1933		if (dev->has_fb)
+>   1934			v4l2_ctrl_new_custom(hdl_fb, &vivid_ctrl_clear_fb, NULL);
+>   1935	
+>   1936		if (dev->has_radio_rx) {
+>   1937			v4l2_ctrl_new_custom(hdl_radio_rx, &vivid_ctrl_radio_hw_seek_mode, NULL);
+>   1938			v4l2_ctrl_new_custom(hdl_radio_rx, &vivid_ctrl_radio_hw_seek_prog_lim, NULL);
+>   1939			v4l2_ctrl_new_custom(hdl_radio_rx, &vivid_ctrl_radio_rx_rds_blockio, NULL);
+>   1940			v4l2_ctrl_new_custom(hdl_radio_rx, &vivid_ctrl_radio_rx_rds_rbds, NULL);
+>   1941			v4l2_ctrl_new_std(hdl_radio_rx, &vivid_radio_rx_ctrl_ops,
+>   1942				V4L2_CID_RDS_RECEPTION, 0, 1, 1, 1);
+>   1943			dev->radio_rx_rds_pty = v4l2_ctrl_new_std(hdl_radio_rx,
+>   1944				&vivid_radio_rx_ctrl_ops,
+>   1945				V4L2_CID_RDS_RX_PTY, 0, 31, 1, 0);
+>   1946			dev->radio_rx_rds_psname = v4l2_ctrl_new_std(hdl_radio_rx,
+>   1947				&vivid_radio_rx_ctrl_ops,
+>   1948				V4L2_CID_RDS_RX_PS_NAME, 0, 8, 8, 0);
+>   1949			dev->radio_rx_rds_radiotext = v4l2_ctrl_new_std(hdl_radio_rx,
+>   1950				&vivid_radio_rx_ctrl_ops,
+>   1951				V4L2_CID_RDS_RX_RADIO_TEXT, 0, 64, 64, 0);
+>   1952			dev->radio_rx_rds_ta = v4l2_ctrl_new_std(hdl_radio_rx,
+>   1953				&vivid_radio_rx_ctrl_ops,
+>   1954				V4L2_CID_RDS_RX_TRAFFIC_ANNOUNCEMENT, 0, 1, 1, 0);
+>   1955			dev->radio_rx_rds_tp = v4l2_ctrl_new_std(hdl_radio_rx,
+>   1956				&vivid_radio_rx_ctrl_ops,
+>   1957				V4L2_CID_RDS_RX_TRAFFIC_PROGRAM, 0, 1, 1, 0);
+>   1958			dev->radio_rx_rds_ms = v4l2_ctrl_new_std(hdl_radio_rx,
+>   1959				&vivid_radio_rx_ctrl_ops,
+>   1960				V4L2_CID_RDS_RX_MUSIC_SPEECH, 0, 1, 1, 1);
+>   1961		}
+>   1962		if (dev->has_radio_tx) {
+>   1963			v4l2_ctrl_new_custom(hdl_radio_tx,
+>   1964				&vivid_ctrl_radio_tx_rds_blockio, NULL);
+>   1965			dev->radio_tx_rds_pi = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1966				&vivid_radio_tx_ctrl_ops,
+>   1967				V4L2_CID_RDS_TX_PI, 0, 0xffff, 1, 0x8088);
+>   1968			dev->radio_tx_rds_pty = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1969				&vivid_radio_tx_ctrl_ops,
+>   1970				V4L2_CID_RDS_TX_PTY, 0, 31, 1, 3);
+>   1971			dev->radio_tx_rds_psname = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1972				&vivid_radio_tx_ctrl_ops,
+>   1973				V4L2_CID_RDS_TX_PS_NAME, 0, 8, 8, 0);
+>   1974			if (dev->radio_tx_rds_psname)
+>   1975				v4l2_ctrl_s_ctrl_string(dev->radio_tx_rds_psname, "VIVID-TX");
+>   1976			dev->radio_tx_rds_radiotext = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1977				&vivid_radio_tx_ctrl_ops,
+>   1978				V4L2_CID_RDS_TX_RADIO_TEXT, 0, 64 * 2, 64, 0);
+>   1979			if (dev->radio_tx_rds_radiotext)
+>   1980				v4l2_ctrl_s_ctrl_string(dev->radio_tx_rds_radiotext,
+>   1981				       "This is a VIVID default Radio Text template text, change at will");
+>   1982			dev->radio_tx_rds_mono_stereo = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1983				&vivid_radio_tx_ctrl_ops,
+>   1984				V4L2_CID_RDS_TX_MONO_STEREO, 0, 1, 1, 1);
+>   1985			dev->radio_tx_rds_art_head = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1986				&vivid_radio_tx_ctrl_ops,
+>   1987				V4L2_CID_RDS_TX_ARTIFICIAL_HEAD, 0, 1, 1, 0);
+>   1988			dev->radio_tx_rds_compressed = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1989				&vivid_radio_tx_ctrl_ops,
+>   1990				V4L2_CID_RDS_TX_COMPRESSED, 0, 1, 1, 0);
+>   1991			dev->radio_tx_rds_dyn_pty = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1992				&vivid_radio_tx_ctrl_ops,
+>   1993				V4L2_CID_RDS_TX_DYNAMIC_PTY, 0, 1, 1, 0);
+>   1994			dev->radio_tx_rds_ta = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1995				&vivid_radio_tx_ctrl_ops,
+>   1996				V4L2_CID_RDS_TX_TRAFFIC_ANNOUNCEMENT, 0, 1, 1, 0);
+>   1997			dev->radio_tx_rds_tp = v4l2_ctrl_new_std(hdl_radio_tx,
+>   1998				&vivid_radio_tx_ctrl_ops,
+>   1999				V4L2_CID_RDS_TX_TRAFFIC_PROGRAM, 0, 1, 1, 1);
+>   2000			dev->radio_tx_rds_ms = v4l2_ctrl_new_std(hdl_radio_tx,
+>   2001				&vivid_radio_tx_ctrl_ops,
+>   2002				V4L2_CID_RDS_TX_MUSIC_SPEECH, 0, 1, 1, 1);
+>   2003		}
+>   2004		if (dev->has_sdr_cap) {
+>   2005			v4l2_ctrl_new_custom(hdl_sdr_cap,
+>   2006				&vivid_ctrl_sdr_cap_fm_deviation, NULL);
+>   2007		}
+>   2008		if (dev->has_meta_cap) {
+>   2009			v4l2_ctrl_new_custom(hdl_meta_cap,
+>   2010					     &vivid_ctrl_meta_has_pts, NULL);
+>   2011			v4l2_ctrl_new_custom(hdl_meta_cap,
+>   2012					     &vivid_ctrl_meta_has_src_clk, NULL);
+>   2013		}
+>   2014	
+>   2015		if (hdl_user_gen->error)
+>   2016			return hdl_user_gen->error;
+>   2017		if (hdl_user_vid->error)
+>   2018			return hdl_user_vid->error;
+>   2019		if (hdl_user_aud->error)
+>   2020			return hdl_user_aud->error;
+>   2021		if (hdl_streaming->error)
+>   2022			return hdl_streaming->error;
+>   2023		if (hdl_sdr_cap->error)
+>   2024			return hdl_sdr_cap->error;
+>   2025		if (hdl_loop_cap->error)
+>   2026			return hdl_loop_cap->error;
+>   2027	
+>   2028		if (dev->autogain)
+>   2029			v4l2_ctrl_auto_cluster(2, &dev->autogain, 0, true);
+>   2030	
+>   2031		if (dev->has_vid_cap) {
+>   2032			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_user_gen, NULL, false);
+>   2033			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_user_vid, NULL, false);
+>   2034			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_user_aud, NULL, false);
+>   2035			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_streaming, NULL, false);
+>   2036			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_sdtv_cap, NULL, false);
+>   2037			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_loop_cap, NULL, false);
+>   2038			v4l2_ctrl_add_handler(hdl_vid_cap, hdl_fb, NULL, false);
+>   2039			if (hdl_vid_cap->error)
+>   2040				return hdl_vid_cap->error;
+>   2041			dev->vid_cap_dev.ctrl_handler = hdl_vid_cap;
+>   2042		}
+>   2043		if (dev->has_vid_out) {
+>   2044			v4l2_ctrl_add_handler(hdl_vid_out, hdl_user_gen, NULL, false);
+>   2045			v4l2_ctrl_add_handler(hdl_vid_out, hdl_user_aud, NULL, false);
+>   2046			v4l2_ctrl_add_handler(hdl_vid_out, hdl_streaming, NULL, false);
+>   2047			v4l2_ctrl_add_handler(hdl_vid_out, hdl_fb, NULL, false);
+>   2048			if (hdl_vid_out->error)
+>   2049				return hdl_vid_out->error;
+>   2050			dev->vid_out_dev.ctrl_handler = hdl_vid_out;
+>   2051		}
+>   2052		if (dev->has_vbi_cap) {
+>   2053			v4l2_ctrl_add_handler(hdl_vbi_cap, hdl_user_gen, NULL, false);
+>   2054			v4l2_ctrl_add_handler(hdl_vbi_cap, hdl_streaming, NULL, false);
+>   2055			v4l2_ctrl_add_handler(hdl_vbi_cap, hdl_sdtv_cap, NULL, false);
+>   2056			v4l2_ctrl_add_handler(hdl_vbi_cap, hdl_loop_cap, NULL, false);
+>   2057			if (hdl_vbi_cap->error)
+>   2058				return hdl_vbi_cap->error;
+>   2059			dev->vbi_cap_dev.ctrl_handler = hdl_vbi_cap;
+>   2060		}
+>   2061		if (dev->has_vbi_out) {
+>   2062			v4l2_ctrl_add_handler(hdl_vbi_out, hdl_user_gen, NULL, false);
+>   2063			v4l2_ctrl_add_handler(hdl_vbi_out, hdl_streaming, NULL, false);
+>   2064			if (hdl_vbi_out->error)
+>   2065				return hdl_vbi_out->error;
+>   2066			dev->vbi_out_dev.ctrl_handler = hdl_vbi_out;
+>   2067		}
+>   2068		if (dev->has_radio_rx) {
+>   2069			v4l2_ctrl_add_handler(hdl_radio_rx, hdl_user_gen, NULL, false);
+>   2070			v4l2_ctrl_add_handler(hdl_radio_rx, hdl_user_aud, NULL, false);
+>   2071			if (hdl_radio_rx->error)
+>   2072				return hdl_radio_rx->error;
+>   2073			dev->radio_rx_dev.ctrl_handler = hdl_radio_rx;
+>   2074		}
+>   2075		if (dev->has_radio_tx) {
+>   2076			v4l2_ctrl_add_handler(hdl_radio_tx, hdl_user_gen, NULL, false);
+>   2077			v4l2_ctrl_add_handler(hdl_radio_tx, hdl_user_aud, NULL, false);
+>   2078			if (hdl_radio_tx->error)
+>   2079				return hdl_radio_tx->error;
+>   2080			dev->radio_tx_dev.ctrl_handler = hdl_radio_tx;
+>   2081		}
+>   2082		if (dev->has_sdr_cap) {
+>   2083			v4l2_ctrl_add_handler(hdl_sdr_cap, hdl_user_gen, NULL, false);
+>   2084			v4l2_ctrl_add_handler(hdl_sdr_cap, hdl_streaming, NULL, false);
+>   2085			if (hdl_sdr_cap->error)
+>   2086				return hdl_sdr_cap->error;
+>   2087			dev->sdr_cap_dev.ctrl_handler = hdl_sdr_cap;
+>   2088		}
+>   2089		if (dev->has_meta_cap) {
+>   2090			v4l2_ctrl_add_handler(hdl_meta_cap, hdl_user_gen, NULL, false);
+>   2091			v4l2_ctrl_add_handler(hdl_meta_cap, hdl_streaming, NULL, false);
+>   2092			if (hdl_meta_cap->error)
+>   2093				return hdl_meta_cap->error;
+>   2094			dev->meta_cap_dev.ctrl_handler = hdl_meta_cap;
+>   2095		}
+>   2096		if (dev->has_meta_out) {
+>   2097			v4l2_ctrl_add_handler(hdl_meta_out, hdl_user_gen, NULL, false);
+>   2098			v4l2_ctrl_add_handler(hdl_meta_out, hdl_streaming, NULL, false);
+>   2099			if (hdl_meta_out->error)
+>   2100				return hdl_meta_out->error;
+>   2101			dev->meta_out_dev.ctrl_handler = hdl_meta_out;
+>   2102		}
+>   2103		if (dev->has_touch_cap) {
+>   2104			v4l2_ctrl_add_handler(hdl_tch_cap, hdl_user_gen, NULL, false);
+>   2105			v4l2_ctrl_add_handler(hdl_tch_cap, hdl_streaming, NULL, false);
+>   2106			if (hdl_tch_cap->error)
+>   2107				return hdl_tch_cap->error;
+>   2108			dev->touch_cap_dev.ctrl_handler = hdl_tch_cap;
+>   2109		}
+>   2110		return 0;
+>   2111	}
+>   2112	
+> 
 
-==================================================================
-BUG: KCSAN: data-race in cgroup_migrate_execute / memcpy_and_pad
-
-write to 0xffff888133646ad0 of 8 bytes by task 4554 on cpu 1:
- __list_splice include/linux/list.h:533 [inline]
- list_splice_tail_init include/linux/list.h:589 [inline]
- cgroup_migrate_execute+0x6b5/0x7f0 kernel/cgroup/cgroup.c:2689
- cgroup_update_dfl_csses kernel/cgroup/cgroup.c:3135 [inline]
- cgroup_apply_control+0x3ab/0x410 kernel/cgroup/cgroup.c:3375
- cgroup_subtree_control_write+0x7d5/0xb80 kernel/cgroup/cgroup.c:3520
- cgroup_file_write+0x194/0x350 kernel/cgroup/cgroup.c:4183
- kernfs_fop_write_iter+0x1be/0x2d0 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x49d/0x8e0 fs/read_write.c:686
- ksys_write+0xda/0x1a0 fs/read_write.c:738
- __do_sys_write fs/read_write.c:749 [inline]
- __se_sys_write fs/read_write.c:746 [inline]
- __x64_sys_write+0x40/0x50 fs/read_write.c:746
- x64_sys_call+0x2cdd/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:2
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd2/0x200 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff888133646180 of 3200 bytes by task 4561 on cpu 0:
- memcpy_and_pad+0x48/0x80 lib/string_helpers.c:1007
- arch_dup_task_struct+0x2c/0x40 arch/x86/kernel/process.c:98
- dup_task_struct+0x83/0x6a0 kernel/fork.c:873
- copy_process+0x399/0x1f90 kernel/fork.c:1999
- kernel_clone+0x16c/0x5b0 kernel/fork.c:2599
- __do_sys_clone3 kernel/fork.c:2903 [inline]
- __se_sys_clone3+0x1c2/0x200 kernel/fork.c:2882
- __x64_sys_clone3+0x31/0x40 kernel/fork.c:2882
- x64_sys_call+0x10c9/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:436
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd2/0x200 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 4561 Comm: syz.2.316 Not tainted 6.16.0-rc5-syzkaller #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
