@@ -1,107 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BF627F019;
-	Mon,  7 Jul 2025 07:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482482C18A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872901; cv=none; b=Ez4tstii6c17HkEb9B8I7CNfNTSX2EgylOg8VnvrBVazoZByHS1bCJhFlDkpGhta92H17nVyqd4P7Gp00EKD67El55Xz1P7cNJkPtd6if77J2/xXGfHXyBshRKrpiqLAjRZu5driodw+sGmE3OfKm3hZbPWqJ984dAAW1w/c3XU=
+	t=1751873013; cv=none; b=vGQS4Z1BamRhGoXUJECT+W3NDwvaiJrx9qYJsqzsyOSiEj3cCnEd6u09fxDH8a7/QNY2aiMxyTst0dWFyxyYYJqQ/AXPReiAPksX8F7Ve5WSh1d2nTko8ZA3218jSClF/XMtmTWq96v0Hlmau2zvgZ79mt6xSw9SMqJkOEYOALc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751872901; c=relaxed/simple;
-	bh=Tqrxaf8t756E8EVWDsGNzCk1d4o7iofq8FADaSeASks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c6eKDJ2L2KptYj4tvrsWJbb23kVGnT7w3Ly+hrHAYTZreLEdrlGctjAq7tfj1qwEtdROkElzvh1HTnbru+bo0+XmU0iXJV46zDDtnZT1aMnDK1uMV8LUXXjpnn11DMBgjr9or8nivLoMQ//N1eRVdMveJ6H1lyseJkzLEHmSXqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJitShrA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751873013; c=relaxed/simple;
+	bh=ZQ7FGvyNi674pAYjL4ReUOP3C6SVJoAIRH3247HGKWw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Wc415J1JZOs9CERni0zP71iaBwY2IrOnYjI60mH64RzbLr0yXdLNhXutuTviFm7A8Rs3omwRjy6L2eIyVQcddrbVjfL3t8t/f7ZNTf5owG+BcOKfn4MnALtEL+Ycb0E+axrv2Fe7EolsmFcif69jnpSIE21VDhbE9Ro8juEdDnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mbm+HAm7; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJitShrA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89757C4CEE3;
-	Mon,  7 Jul 2025 07:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751872901;
-	bh=Tqrxaf8t756E8EVWDsGNzCk1d4o7iofq8FADaSeASks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJitShrAZtSYAU7TL0LPjb6yKeGuWJS8qyRPiD5ntRiocMfbqualW+a8wp0KJ8Y50
-	 zju/7VfmkBXOMXu3LugmJonPg8ya+dmLeYZ6UFVfWKN/mnrdWpMlggQvJRYMHi7+2V
-	 EB/93l6iQTmYEfjalcvIwi+gA0tn+VoBpfXqe1A5odSoaExTVzJ5MLrdSqVChZhZDf
-	 P1Igz8hz+dy5q8/GrR1WLRmkfd0Ljtk9Mr35cg/jOrrjNRqPv1jCG0XVim/ktvfXc+
-	 1+Z5TgYjEBT9tncovWuWW1V8aO0EnfRkWx8zX2X1pWydAxhMjl9urGnjkE21Ixg1fz
-	 UhLE++1rh0QNg==
-Date: Mon, 7 Jul 2025 10:21:37 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Abhijit Gangurde <abhijit.gangurde@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, shannon.nelson@amd.com,
-	brett.creeley@amd.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
-	andrew+netdev@lunn.ch, allen.hubbe@amd.com, nikhil.agarwal@amd.com,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Boyer <andrew.boyer@amd.com>
-Subject: Re: [PATCH v3 10/14] RDMA/ionic: Register device ops for control path
-Message-ID: <20250707072137.GU6278@unreal>
-References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
- <20250624121315.739049-11-abhijit.gangurde@amd.com>
- <20250701103844.GB118736@unreal>
- <20250702131803.GB904431@ziepe.ca>
- <20250702180007.GK6278@unreal>
- <bb0ac425-2f01-b8c7-2fd7-4ecf9e9ef8b1@amd.com>
- <20250704170807.GO6278@unreal>
- <15b773a4-424b-4aa9-2aa4-457fbbee8ec7@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mbm+HAm7"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4536962204aso11068805e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751873011; x=1752477811; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgKz4iiUGDuolubNPTok/KwMVlCqv/dhLafyDJaDX88=;
+        b=Mbm+HAm7Lu14VYc9rBNeDdQIS+CZFfoehGGl+q1nkKn71D1+otkOS/LDuHX0cssKiA
+         uVzwD9IKgi6Ny8kxBxr/E6t5d7WoyhAYzBFh4i83FT2zqJete0OEdHuhDyqQdBnExonD
+         mK2yDX4X2V481IxXBWgc/kAMxJdYYYMih9YlMu0G+hTR2XbwsIcS8TSq8dcPmiEzOIXQ
+         N3ZjpTagLojyH5q/oqZHuiPTWHHA0Uds24FeEopR97bE1J0gYxJGE6uAYo8FbK0ic80G
+         zzhahzT0FJlj/YWIHTelQc9CoLBtdkXF56BJ7Q1IuR4H7YROlX2aYiVwi+5bSa9UbSg/
+         zEgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751873011; x=1752477811;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgKz4iiUGDuolubNPTok/KwMVlCqv/dhLafyDJaDX88=;
+        b=Jg4h5xFf3lghiOJWzATu5+t17F04QI235uGyFSRAaaLBTffGPqKbOdRghNtV3EwjXo
+         V/EOcd3Hwpc1Zxw5o+OphgFr6yKXne9EsWbxUbvD6K5FtXKLYQFcguRMTiLLlifUsjq9
+         YOxhTLC4Q/mL2iuMcVM37DvOEz4pDRYw2cJXv546R+IHPA8A9RwPGzrb0FL4Hn+hoquz
+         v7vLMB8hR5kpIjiz18bzOzfETZG++lKU59AJLL2zqXLvf5hPJUqOvsVUAZmxuomJ0/E5
+         CUTszwPFKVABHEIzmrw7ujhcVwf123HteF/N9FA7eMmfVUNWBkXL/Y/1D4rJNcUxofWd
+         4vYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfjqHR81m2/0gtbmC8yBc25hav3NXAvrIroOxbh3W850viNGptMCXlm3S/LQhxmy7PBxmq3zMb4vZc2WA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDrTi8hRxoMJEI5whRzepGS8ewmjstYaE6JCebtqcgN9o1Y3xO
+	TZBzuSj5yVPQPgVmGS9nnlw4zKY4InfknPNMQGE4u3a2L+mtTyIRYOYx10aW7hZHzub4IKc5iXv
+	CYFIMqiugWDMm495CPw==
+X-Google-Smtp-Source: AGHT+IE23hKiWkk2sz/wg+10wBKjGUvS93mpq9trAuCpJUs9QkWeqbOXsATTXcUUvzRYDfGsXneFK0cUD05KQQI=
+X-Received: from wmbdv27.prod.google.com ([2002:a05:600c:621b:b0:450:dca1:cf91])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:5247:b0:453:b1c:442a with SMTP id 5b1f17b1804b1-454c0fc516bmr37449705e9.27.1751873010725;
+ Mon, 07 Jul 2025 00:23:30 -0700 (PDT)
+Date: Mon, 7 Jul 2025 07:23:29 +0000
+In-Reply-To: <20250704-cstr-include-miscdevice-v1-1-bb9e9b17c892@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15b773a4-424b-4aa9-2aa4-457fbbee8ec7@amd.com>
+Mime-Version: 1.0
+References: <20250704-cstr-include-miscdevice-v1-1-bb9e9b17c892@gmail.com>
+Message-ID: <aGt18amK4FKhQLp0@google.com>
+Subject: Re: [PATCH] rust: miscdevice: remove unnecessary import
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Jul 07, 2025 at 10:57:13AM +0530, Abhijit Gangurde wrote:
+On Fri, Jul 04, 2025 at 03:50:11PM -0400, Tamir Duberstein wrote:
+> `kernel::str::CStr` is included in the prelude.
 > 
-> On 7/4/25 22:38, Leon Romanovsky wrote:
-> > On Thu, Jul 03, 2025 at 12:49:30PM +0530, Abhijit Gangurde wrote:
-> > > On 7/2/25 23:30, Leon Romanovsky wrote:
-> > > > On Wed, Jul 02, 2025 at 10:18:03AM -0300, Jason Gunthorpe wrote:
-> > > > > On Tue, Jul 01, 2025 at 01:38:44PM +0300, Leon Romanovsky wrote:
-> > > > > > > +static void ionic_flush_qs(struct ionic_ibdev *dev)
-> > > > > > > +{
-> > > > > > > +	struct ionic_qp *qp, *qp_tmp;
-> > > > > > > +	struct ionic_cq *cq, *cq_tmp;
-> > > > > > > +	LIST_HEAD(flush_list);
-> > > > > > > +	unsigned long index;
-> > > > > > > +
-> > > > > > > +	/* Flush qp send and recv */
-> > > > > > > +	rcu_read_lock();
-> > > > > > > +	xa_for_each(&dev->qp_tbl, index, qp) {
-> > > > > > > +		kref_get(&qp->qp_kref);
-> > > > > > > +		list_add_tail(&qp->ibkill_flush_ent, &flush_list);
-> > > > > > > +	}
-> > > > > > > +	rcu_read_unlock();
-> > > > > > Same question as for CQ. What does RCU lock protect here?
-> > > > > It should protect the kref_get against free of qp. The qp memory must
-> > > > > be RCU freed.
-> > > > I'm not sure that this was intension here. Let's wait for an answer from the author.
-> > > As Jason mentioned, It was intended to protect the kref_get against free of
-> > > cq and qp
-> > > in the destroy path.
-> > How is it possible? IB/core is supposed to protect from accessing verbs
-> > resources post their release/destroy.
-> > 
-> > After you answered what RCU is protecting, I don't see why you would
-> > have custom kref over QP/CQ/e.t.c objects.
-> > 
-> > Thanks
-> The RCU protected kref here is making sure that all the hw events are
-> processed before destroy callback returns. Similarly, when driver is
-> going for ib_unregister_device, it is draining the pending WRs and events.
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-I asked why do you have kref in first place? When ib_unregister_device
-is called all "pending MR" already supposed to be destroyed.
-
-Thansk
-
-> 
-> Thanks,
-> Abhijit
-> 
-> 
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
