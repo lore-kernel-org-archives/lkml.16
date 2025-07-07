@@ -1,86 +1,97 @@
-Received: from smtp72.iad3b.emailsrvr.com (smtp72.iad3b.emailsrvr.com [146.20.161.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D329C346
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D633E28750E;
+	Mon,  7 Jul 2025 13:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751895702; cv=none; b=VacjoCkTnmd5fRjXA+C7joIMQIX3d1VS2BQz4w9dlH2qti+XZqxq3XpbUC9sUjnyiURMrCgcAjFUXdmIXuiTzEY+ekP0uVoaBV1izhaA8cKMWymJTiq7N7nHWaBW/ngZqLFkEb6IdKgi1t5nmY13xB826ZmezlYQ0u0g6u7f2b0=
+	t=1751895750; cv=none; b=USiOxctkCVuNX6y39AlSt3YKKG0W0MX4xzLSuOMQ6/F0lH13BMWjhpztfQ3rQDPbBbtPcgyhuEyqPR5ylM39+AgHy5HOJJrqvke0YGoHhG1xZIrNrPskm8gNusYxl7BOdATkmXAh39kBe4XubqMzv/cxcUXQettLroQk0QViGDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751895702; c=relaxed/simple;
-	bh=F6TLP7RxSLc86v4OJcnDbSakXy8hmn4QJph5g43BHPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZbB3NBU7khZU/Cul0aMHEBnr/gsrfo0OmO/Xw13IobWYZiaueDtJOA6cTjBOSdyWsUxSxrFcYRLT/xFS9RFCcFevP7K3HoqxfFU1Otg1xGUUW+3roFDOVL/MTVMSZiMHeFF+zZo5ObjEW661dn23MEGB5duEd+MIyF0MAyFzVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=HeYnO4Dm; arc=none smtp.client-ip=146.20.161.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1751895750; c=relaxed/simple;
+	bh=VIeOoT9ZnXv6E2NaHqTSzrn3b9DbwMxUShiN0VuJpJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KX6MJ4xGjM8M0jLNoG7vO/+CaCtUHtAxGsx/S1mxNz7YS4B2R1W20zlkOQ0xmssODvZ/LM+PSmRbmEDFtmyZwHro8mVyb0BxpxBbJqlRu99ia+yjLtFRXB5veiiOPbDWPKecqk5BIfALzFlgaw4U5e/Q8i2FFIVYSMMaQaIM7O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lcHylehk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="HeYnO4Dm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1751895279;
-	bh=F6TLP7RxSLc86v4OJcnDbSakXy8hmn4QJph5g43BHPY=;
-	h=From:To:Subject:Date:From;
-	b=HeYnO4Dm8Xhd+Bbh2iV34+oBhCqFY7iPzGPb0/ucHQoNVAAaXyxYYOJVmeAzXS/ih
-	 vTT4TX2T5gElT0fbOouzTBgKv2xCMEcSkSv2e289FFQh6PiqtlTE/nRumK+WX/nNu2
-	 xcwusHP1gmY1YCAoYvE3vvtHU9cxeNnvyb1kL75I=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp18.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 11B5AE021F;
-	Mon,  7 Jul 2025 09:34:38 -0400 (EDT)
-From: Ian Abbott <abbotti@mev.co.uk>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH] comedi: pcl812: Fix bit shift out of bounds
-Date: Mon,  7 Jul 2025 14:34:29 +0100
-Message-ID: <20250707133429.73202-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lcHylehk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B102C4CEE3;
+	Mon,  7 Jul 2025 13:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751895750;
+	bh=VIeOoT9ZnXv6E2NaHqTSzrn3b9DbwMxUShiN0VuJpJE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lcHylehkHJjr5c1vgbo3YTN4xBnKvAGa4BBMPUVQ4fKap0/8mD8B33OsKaOnkjBCN
+	 ESGJsNcY5MR3zS/xbQCaGchtsFkGNJ5wip62OS29+yWkaAehGt+dGOqJUreqVIFahv
+	 8T0FeFSvJxUYR66mdPC45kqUA2+EA8GwMCICd/uWVL8/qbdU9p4YoIQ/Ill/gjL8rF
+	 gqxUrcwtMIFanLeRibaGKPW5OflTTQWDE7hx8YUhm2x7BUG4PcV7GdN9+w0/aVk0Pl
+	 m/l9/uD16HM9TrDfff+RXNz68TZuPX5FWiqIA44DnncYOJ12GuW0nKy10Epd02YQQ5
+	 DJM5FNEnhnBOQ==
+From: Philipp Stanner <phasta@kernel.org>
+To: Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH v2 0/7] drm/sched: Fix memory leaks with cancel_job() callback
+Date: Mon,  7 Jul 2025 15:42:13 +0200
+Message-ID: <20250707134221.34291-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Classification-ID: 1e8ffcc9-0a2f-41b8-877b-4512870c96d1-1-1
 
-When checking for a supported IRQ number, the following test is used:
+Changes in v2:
+  - Add new unit test to test cancel_job()'s behavior. (Tvrtko)
+  - Add RB from Maíra
 
-	if ((1 << it->options[1]) & board->irq_bits) {
+Changes since the RFC:
+  - Rename helper function for drm_sched_fini(). (Tvrtko)
+  - Add Link to Tvrtko's RFC patch to patch 1.
 
-However, `it->options[i]` is an unchecked `int` value from userspace, so
-the shift amount could be negative or out of bounds.  Fix the test by
-requiring `it->options[1]` to be within bounds before proceeding with
-the original test.  Valid `it->options[1]` values that select the IRQ
-will be in the range [1,15]. The value 0 explicitly disables the use of
-interrupts.
 
-Reported-by: syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=32de323b0addb9e114ff
-Fixes: fcdb427bc7cf ("Staging: comedi: add pcl821 driver")
-Cc: <stable@vger.kernel.org> # 5.13+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
-Patch does not apply cleanly to longterm kernels 5.4.x and 5.10.x.
----
- drivers/comedi/drivers/pcl812.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Since a long time, drm_sched_fini() can leak jobs that are still in
+drm_sched.pending_list.
 
-diff --git a/drivers/comedi/drivers/pcl812.c b/drivers/comedi/drivers/pcl812.c
-index 0df639c6a595..abca61a72cf7 100644
---- a/drivers/comedi/drivers/pcl812.c
-+++ b/drivers/comedi/drivers/pcl812.c
-@@ -1149,7 +1149,8 @@ static int pcl812_attach(struct comedi_device *dev, struct comedi_devconfig *it)
- 		if (IS_ERR(dev->pacer))
- 			return PTR_ERR(dev->pacer);
- 
--		if ((1 << it->options[1]) & board->irq_bits) {
-+		if (it->options[1] > 0 && it->options[1] < 16 &&
-+		    (1 << it->options[1]) & board->irq_bits) {
- 			ret = request_irq(it->options[1], pcl812_interrupt, 0,
- 					  dev->board_name, dev);
- 			if (ret == 0)
+This series solves the leaks in a backwards-compatible manner by adding
+a new, optional callback. If that callback is implemented, the scheduler
+uses it to cancel all jobs from pending_list and then frees them.
+
+Philipp Stanner (7):
+  drm/sched: Avoid memory leaks with cancel_job() callback
+  drm/sched/tests: Implement cancel_job() callback
+  drm/sched/tests: Add unit test for cancel_job()
+  drm/sched: Warn if pending list is not empty
+  drm/nouveau: Make fence container helper usable driver-wide
+  drm/nouveau: Add new callback for scheduler teardown
+  drm/nouveau: Remove waitque for sched teardown
+
+ drivers/gpu/drm/nouveau/nouveau_fence.c       | 35 ++++++----
+ drivers/gpu/drm/nouveau/nouveau_fence.h       |  7 ++
+ drivers/gpu/drm/nouveau/nouveau_sched.c       | 35 ++++++----
+ drivers/gpu/drm/nouveau/nouveau_sched.h       |  9 +--
+ drivers/gpu/drm/nouveau/nouveau_uvmm.c        |  8 +--
+ drivers/gpu/drm/scheduler/sched_main.c        | 37 +++++++----
+ .../gpu/drm/scheduler/tests/mock_scheduler.c  | 66 +++++++------------
+ drivers/gpu/drm/scheduler/tests/tests_basic.c | 43 ++++++++++++
+ include/drm/gpu_scheduler.h                   | 18 +++++
+ 9 files changed, 165 insertions(+), 93 deletions(-)
+
 -- 
-2.47.2
+2.49.0
 
