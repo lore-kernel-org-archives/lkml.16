@@ -1,111 +1,67 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69450218E99
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7200019F421;
+	Mon,  7 Jul 2025 09:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751878604; cv=none; b=gzH6CE4aYX7V3db0j8Kd46/uQLES9oFf0asw03RM9GGYwPby67w36xAX6CZBAWAqoc/mVa5BtALc6OlydAfy43BxgVTuGGrfqyN9QfCVvIM9dH43EVCBs/QmTFzat6eMMgXyvu6rDX6GwUD0Y3E7CKLxq5cr73COdLKrw+VjpDU=
+	t=1751878830; cv=none; b=ZlIgaGLUcqMcM4a35503WfIUBTY8EW62DK+9aUstEPfvKzU4cW3G/r6Pqy+cXCpVkatWSclb6DvPnZpFqbxiM3HYS63HeexjmqQjhnJNjyCFX/lYWOiMVgttZ5uk+wbjGP9+ezZVM7DYIXzcojNlQLorQFB3W/Lq8Od0L3BT0rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751878604; c=relaxed/simple;
-	bh=iEBG2BEB+4++NdmPSsljo6ZDbAMgpxt5MNGltsMo79o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bpju99K1OcBtRQWhwfPfHUZUWmRgEINQDg2YiK7e5paQbQeh39ZB9Gngi9WN/JoM7N13v0whFUwH24ezio8tAYF3HjYUOFtA6M0JtFru1TJcdxaLvhhwEGKlSzGtpVo/B1oeLzf6iQASVl4c05s3DdDxoR6Mq2sF0uAXGqXovD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OvnvMYX9; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751878830; c=relaxed/simple;
+	bh=MTKpsIgeW6LKhzv/n15vzUl20MWMaQ5G9qNXsAqBv9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eaZJgYEBV0ZFvXmXRHSx1+JiKu0R6V3LUbVzrPcsFsPTK/pJdNy90LknNCpiCZ2l7Jn8SDzWTlauOCyjmJGenXp0BfswKI4Nrqs/ZhqjlevS/ErAJmyexCGWXp5/LaiqaiSX0Cqj4jstNeGG0OrZeOqqOQnASZtgH02QGCnVQsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=j+zmUsHV; arc=none smtp.client-ip=1.95.21.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OvnvMYX9"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a43afb04a7so19973941cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 01:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751878601; x=1752483401; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iEBG2BEB+4++NdmPSsljo6ZDbAMgpxt5MNGltsMo79o=;
-        b=OvnvMYX9NI7F4jdOw+2cR48Jgf66vLOXC2kRva5KAC7BoItetnhd0F70+EukMx3VxC
-         w9iS0YjUUEbvXwg/zt1+/2S+4e093BwaIbJvxDjhWwwOGeHuRHRLPBlP0RJUX8a3dNhH
-         Fk05O6I3jsae5b2c806xJWz8e4QhVh8VF8n1/bjtWyfpOPuqYFKWDiApf90EY2vcYHXA
-         MbJ9eQxv0ML1qzhQav2qN7/PMqoCyWbr/zIr3aIl32xK4LOM7Ncg21iMBJXSu/hNTxfh
-         IN3HwvRmpL8UB3eNl/LbTWxUbW2CooTS3tRqNvgkyZitT3Cms7N0azrEpPT52pyWWn1w
-         py5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751878601; x=1752483401;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iEBG2BEB+4++NdmPSsljo6ZDbAMgpxt5MNGltsMo79o=;
-        b=eUdfMW/ryqEoO7MhsMVnrAelAMnr2weQbnHSsnT7dvlnP5KOwV3woVqHeW7UfQMPCx
-         62EC4ESAA5qcDCRjp99xpcFEa/fC6XN/RSeNJG/tGmAV+xOmdCCrfrzDs2ZVTFfgTTLU
-         OY1HSajvsU1JPnx+NjiNv5nVvsCK8zKFTZ0ddgsCFaSVB6NIlBE9qh1sv1ypFe+v5jDe
-         4px323RVGPSQyPtKrlHG01/Td9ODvQ4fyHgFbxUs06dBvjOtXelfaeQanfYI6bJJpTRn
-         Jl31sg7PUIjrp+Um8uyS/frpHo8ilCXVym47tF951k8uLfU5f6WeTy5Gw/Ig0WY4gc5X
-         njNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbotrjzSureSBT03C3NO8kr8r/9yN5WM1+xoNEsbkg+69sYQ72xf3mMJUnS09Q9C/3kpzbI0T6p2pRdBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLSpOT5Y4fX8WsjRs1z5gmwupIOt5rfedbhwzeH32JM7XZUD1P
-	Hj0J0AxZ7sxI6C+dEcOGCRYQI2ZpbNHleiG6wub6OJP9UpP6ZgEYz4bYvlmpJQof4+DQULXEeo8
-	H5BbvnaF2mbQvAvctkKy5c+uCL+t/D+ij/rrrSpDs
-X-Gm-Gg: ASbGncsQgGeB6HOvhwzcx7B+p6MXw6/2HBtQvpGxduMoejo+TT2HbhPqwMTUs4hPFuQ
-	IrramjzNC+IhYQ6txY/kIREsLaUete6ZFgq1y1QXM6QeRNDdO/Th0i8zyaM7iJLwYm2ip7gdr7q
-	FHEKG1WS3COXrYQmooT7+QrAn98qcsdSvW9HNj5b4nOg==
-X-Google-Smtp-Source: AGHT+IFbzUAR3AySOZHQnI850gnAOGSVbPTznUZQO+5GoyFC+wzpGVkSnFFUye/b0rqpA9VjDDYLKPqKJM/0yjpIgMQ=
-X-Received: by 2002:a05:622a:5a8d:b0:4a8:182f:3514 with SMTP id
- d75a77b69052e-4a998887abemr208128351cf.49.1751878601008; Mon, 07 Jul 2025
- 01:56:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="j+zmUsHV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=NlfspyJjbSk5hoUC2w/Rc3ZtDhkI9SmVzdkEY6k5DMg=;
+	b=j+zmUsHVSPFrZdUoR2WWjvIiHwwkKBdwCqCPC+3NmBplpzl+/IgDHia0T1yfBL
+	ni5LiRmgaBonuMSXa8K5DIhxTCrLNTaDNop8Uxyy0aEXVt31RqqSoXmlkgpVsW4Y
+	aLTSjXURy0k3RWhBb9ruUNAUsVVgYYNr6cYzqy3/No8hQ=
+Received: from dragon (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id Ms8vCgCXluN_jGtoVAF6AA--.63095S3;
+	Mon, 07 Jul 2025 16:59:45 +0800 (CST)
+Date: Mon, 7 Jul 2025 16:59:43 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] arm64: dts: imx8mm: Configure DMA on UART2
+Message-ID: <aGuMf9A0gONkaOmr@dragon>
+References: <20250703113810.73023-1-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250707081629.10344-1-luyun_611@163.com>
-In-Reply-To: <20250707081629.10344-1-luyun_611@163.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 7 Jul 2025 01:56:30 -0700
-X-Gm-Features: Ac12FXxsVtFZYPSQQ8yOqY-Y4CGMr7OVeyACAvTT4OXgLrXgDJmzFwLGe1Exgfo
-Message-ID: <CANn89iKZRpJVduH0WZ57pqRaEma-HB2ymi9P9Q7aK-f7Q8r5XA@mail.gmail.com>
-Subject: Re: [PATCH] af_packet: fix soft lockup issue caused by tpacket_snd()
-To: Yun Lu <luyun_611@163.com>
-Cc: willemdebruijn.kernel@gmail.com, davem@davemloft.net, kuba@kernel.org, 
-	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703113810.73023-1-aford173@gmail.com>
+X-CM-TRANSID:Ms8vCgCXluN_jGtoVAF6AA--.63095S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUwYLvDUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCQWDZWhrVpnALQAAsL
 
-On Mon, Jul 7, 2025 at 1:16=E2=80=AFAM Yun Lu <luyun_611@163.com> wrote:
->
-> From: Yun Lu <luyun@kylinos.cn>
->
-> When MSG_DONTWAIT is not set, the tpacket_snd operation will wait for
-> pending_refcnt to decrement to zero before returning. The pending_refcnt
-> is decremented by 1 when the skb->destructor function is called,
-> indicating that the skb has been successfully sent and needs to be
-> destroyed.
->
-> If an error occurs during this process, the tpacket_snd() function will
-> exit and return error, but pending_refcnt may not yet have decremented to
-> zero. Assuming the next send operation is executed immediately, but there
-> are no available frames to be sent in tx_ring (i.e., packet_current_frame
-> returns NULL), and skb is also NULL, the function will not execute
-> wait_for_completion_interruptible_timeout() to yield the CPU. Instead, it
-> will enter a do-while loop, waiting for pending_refcnt to be zero. Even
-> if the previous skb has completed transmission, the skb->destructor
-> function can only be invoked in the ksoftirqd thread (assuming NAPI
-> threading is enabled). When both the ksoftirqd thread and the tpacket_snd
-> operation happen to run on the same CPU, and the CPU trapped in the
-> do-while loop without yielding, the ksoftirqd thread will not get
-> scheduled to run. As a result, pending_refcnt will never be reduced to
-> zero, and the do-while loop cannot exit, eventually leading to a CPU soft
-> lockup issue.
->
-> In fact, as long as pending_refcnt is not zero, even if skb is NULL,
-> wait_for_completion_interruptible_timeout() should be executed to yield
-> the CPU, allowing the ksoftirqd thread to be scheduled. Therefore, the
-> execution condition of this function should be modified to check if
-> pending_refcnt is not zero.
->
-> Signed-off-by: Yun Lu <luyun@kylinos.cn>
+On Thu, Jul 03, 2025 at 06:38:09AM -0500, Adam Ford wrote:
+> UART2 is often used as the console, so the DMA was likely left
+> off on purpose, since it's recommended to not use the DMA on the
+> console. Because, the driver checks to see if the UART is used for
+> the console when determining if it should initialize DMA, it
+> should be safe to enable DMA on UART2 for all users.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-I think you forgot a Fixes: tag.
+Applied both, thanks!
 
-Also it seems the soft lockup could happen if MSG_DONTWAIT is set ?
