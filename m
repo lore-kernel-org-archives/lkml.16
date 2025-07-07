@@ -1,76 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5FE46B5;
-	Mon,  7 Jul 2025 01:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859281BC3F;
+	Mon,  7 Jul 2025 01:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751850194; cv=none; b=cpmCK5IcRoBRCu5Ie3oAskl71VVbK1DnU0fJvkdIrGXJBAFDNmi61S56KDJsdLXpB8cMNs/PHtmeqGhr4UOIlxIoII/hGh6cFb553PuFxIY1DqMSjZ295iv5M9u7nLP4nso7149uOAQuhCLd3dbjW0Mduk8kqsfsxCKcmmEq1pc=
+	t=1751850334; cv=none; b=aaSCf3XVbWKXwiexetOJBeSk99tB12rr5kVQwLzrsy+WVLOJmUcYLzXwT3NsXNRJ18shs/uPZ7/DdROJW0dOdkTtfGXYBkfbvrDBcvAa4/1Ae9NloIsT+PlEmimXQFQgxOusMVAqUWmu+MaxNYVrCpfCDXjnA1YO2aMxbGEE9AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751850194; c=relaxed/simple;
-	bh=QVFqW/TfONCpjwIkUorfwVAtHHbqbJQu95j9iM0y1bA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CWpk3HVusrsT33SJHH7/9MguXlKcoT/pZ7ooPyzEKgdIf2isthB3a1AlxZrWwiCdpQ0QZP8Ra8R1H5D3veshfoSxXAGHUOrpnMh6dhKgRCobUE7Ag7gH7jG4O0w32IXTECi4mUS66LzEChhBlzEhusTmyoZOxSzS1t4+ADRkd6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DCEC4CEED;
-	Mon,  7 Jul 2025 01:02:36 +0000 (UTC)
-Date: Sun, 6 Jul 2025 20:02:35 -0500
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: ankita@nvidia.com
-Cc: jgg@nvidia.com, maz@kernel.org, oliver.upton@linux.dev,
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	will@kernel.org, ryan.roberts@arm.com, shahuang@redhat.com,
-	lpieralisi@kernel.org, david@redhat.com, ddutile@redhat.com,
-	seanjc@google.com, aniketa@nvidia.com, cjia@nvidia.com,
-	kwankhede@nvidia.com, kjaju@nvidia.com, targupta@nvidia.com,
-	vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com,
-	jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com,
-	mochs@nvidia.com, udhoke@nvidia.com, dnigam@nvidia.com,
-	alex.williamson@redhat.com, sebastianene@google.com,
-	coltonlewis@google.com, kevin.tian@intel.com, yi.l.liu@intel.com,
-	ardb@kernel.org, akpm@linux-foundation.org, gshan@redhat.com,
-	linux-mm@kvack.org, tabba@google.com, qperret@google.com,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, maobibo@loongson.cn
-Subject: Re: [PATCH v10 6/6] KVM: arm64: Expose new KVM cap for cacheable
- PFNMAP
-Message-ID: <aGscq_R69UpMXpGX@arm.com>
-References: <20250705071717.5062-1-ankita@nvidia.com>
- <20250705071717.5062-7-ankita@nvidia.com>
+	s=arc-20240116; t=1751850334; c=relaxed/simple;
+	bh=lFtl0/KhCyGQtSvdjpdRV3oo3TI3vyWSr89jtNIGjYM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TX0Wy23Za2DOjiGOVqYpuIdH5uaGscpeJc+e0JvkKGX4p+frSzpX3QC/8oGrEInuZLqBCDUojYjvWeFLPSkXdzIdM7iRFz4RxKFwE4kg5+rRDieA83lVQebN8KpYHMGU0UDdFjD/7XhItEClTLf9iplJ19RUOkpnUHg/tOqL3Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: bd5d76905acd11f0b29709d653e92f7d-20250707
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:b540f768-9daa-4551-9621-e99882fbf9a8,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6493067,CLOUDID:721bd41f0dd6331f36630ea02494de61,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|83|102,TC:nil,Content:0|52,EDM:-3,
+	IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-UUID: bd5d76905acd11f0b29709d653e92f7d-20250707
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 80701485; Mon, 07 Jul 2025 09:00:14 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id CCCECE008FA2;
+	Mon,  7 Jul 2025 09:00:13 +0800 (CST)
+X-ns-mid: postfix-686B1C1D-73792946
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id AF560E008FAA;
+	Mon,  7 Jul 2025 09:00:12 +0800 (CST)
+Message-ID: <de7e327a-202c-4b28-b372-2d648c680dbe@kylinos.cn>
+Date: Mon, 7 Jul 2025 09:00:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250705071717.5062-7-ankita@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, pavel@kernel.org,
+ len.brown@intel.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Oleg Nesterov <oleg@redhat.com>
+References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
+ <20250611101247.15522-2-zhangzihuan@kylinos.cn>
+ <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
+ <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
+ <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
+ <20250704081941.GC2001818@noisy.programming.kicks-ass.net>
+ <67997bdd-d00a-413a-a565-188c4b06f385@kylinos.cn>
+ <20250704092144.GH2001818@noisy.programming.kicks-ass.net>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <20250704092144.GH2001818@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 05, 2025 at 07:17:17AM +0000, ankita@nvidia.com wrote:
-> From: Ankit Agrawal <ankita@nvidia.com>
-> 
-> Introduce a new KVM capability to expose to the userspace whether
-> cacheable mapping of PFNMAP is supported.
-> 
-> The ability to safely do the cacheable mapping of PFNMAP is contingent
-> on S2FWB and ARM64_HAS_CACHE_DIC. S2FWB allows KVM to avoid flushing
-> the D cache, ARM64_HAS_CACHE_DIC allows KVM to avoid flushing the icache
-> and turns icache_inval_pou() into a NOP. The cap would be false if
-> those requirements are missing and is checked by making use of
-> kvm_arch_supports_cacheable_pfnmap.
-> 
-> This capability would allow userspace to discover the support.
-> It could for instance be used by userspace to prevent live-migration
-> across FWB and non-FWB hosts.
-> 
-> CC: Catalin Marinas <catalin.marinas@arm.com>
-> CC: Jason Gunthorpe <jgg@nvidia.com>
-> CC: Oliver Upton <oliver.upton@linux.dev>
-> CC: David Hildenbrand <david@redhat.com>
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Tested-by: Donald Dutile <ddutile@redhat.com>
-> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+=E5=9C=A8 2025/7/4 17:21, Peter Zijlstra =E5=86=99=E9=81=93:
+> You're missing the obvious. How about we 'fix' the PF_NOFREEZE handling
+> and help all cases that set that and not only zombies?=E3=80=80=E3=80=80=
+=E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=E3=80=80 =E3=80=80 =E3=80=80 =E3=80=
+=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=
+=E3=80=80
+
+It sounds like a good idea, but there=E2=80=99s a potential risk in relyi=
+ng=20
+solely on PF_NOFREEZE: it=E2=80=99s a mutable flag that can be set or cle=
+ared=20
+dynamically during runtime, even within the freeze window.
+If a task changes its PF_NOFREEZE state after passing the early check in=20
+try_to_freeze_task(), we might skip freezing it incorrectly, leading to=20
+inconsistent behavior or unexpected task escapes. This is particularly=20
+tricky for some kernel threads or exit paths where PF_NOFREEZE is=20
+manipulated as part of cleanup or teardown.
+In contrast, checking exit_state for EXIT_ZOMBIE or EXIT_DEAD is fully=20
+stable and irreversible =E2=80=94 once a task becomes a zombie, it's no l=
+onger=20
+schedulable and doesn=E2=80=99t require freezing. That makes the conditio=
+n both=20
+safe and predictable, without risk of races or missed transitions.
+Currently, the safest way to skip tasks based on PF_NOFREEZE would be:
+*if (!(p->flags & PF_KTHREAD) && (p->flags & PF_NOFREEZE))*
+to avoid skipping kernel threads that may dynamically toggle this flag.=20
+But this increases code complexity compared to simply checking
+*if (p->exit_state)*
+
+which is more straightforward.
+Importantly, exit_state is set earlier and more reliably than PF_NOFREEZE=
+,
+So while improving PF_NOFREEZE handling is a worthwhile direction (and=20
+I=E2=80=99d be happy to explore that in a separate patch RFC=20
+[1]<https://lore.kernel.org/all/20250624115244.19260-1-zhangzihuan@kylino=
+s.cn/>),=20
+this small patch keeps the logic minimal and avoids subtle corner cases.=20
+It also reduces unnecessary locking for zombie tasks, which can help=20
+when there are lots of them around.
+[1]:=20
+https://lore.kernel.org/all/20250624115244.19260-1-zhangzihuan@kylinos.cn=
+/
+Thanks again for your insightful feedback =E2=80=94 much appreciated.
+
+Best regards,
+Zihuan Zhang
+
