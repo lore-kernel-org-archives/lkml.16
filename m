@@ -1,107 +1,223 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFECB28ECF2;
-	Mon,  7 Jul 2025 13:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F1929CB57
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894343; cv=none; b=MSbV47qppsYWQqTnqpwRMTzRrHNzT7w8ee10grCrL144iJU/YkS5YjOR35c0QYBzuGKvz6z24FcRhYJB4vFSeWw6Tb3uYuLDhh2505kZr3mP8icm27OPjbUgLNfwUsHFv8WVtsc4wCeCwaFbUGp33771/8bX969ca9hQWcyP9fI=
+	t=1751894387; cv=none; b=MWiWfmoWqCAhGrzEBWGiv9G3Vw3fyrUnVnL7y1nOC0Q7dMp/GUeMDW5ktFbGD8zkYD97FcRPQ/dokt4dNSuukVEoOMLbIJ4grK1iqXQcudF5l87EOcW012K8RtjSA0qZ2PdfQj2KDv2+mBXHUKQmI8fc4xZGOMCOnTT7+OvYBVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894343; c=relaxed/simple;
-	bh=unpSKTFzLaDlkd0/9ndQM6FmFBUbqbcfpFb1tp2+T00=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QYYJ8UOcemWL6HyJrbxib4TnB4oUDtcxtn0980FwKNQycplDW2hdZBOLLs6UDbmoW5I3ixiUkry6/+5Gc93SmKXzMPKMihHl3U8pqWnb1Y7YugKcnxW1fhDoyQw/OXsL3ZoFVYAMjix0gCq55F7YpBnoG/pFl7KI9AHcepJ5Qb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g4dKB5W1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qzxWP6gL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751894387; c=relaxed/simple;
+	bh=rtct0nDU+j5TyrJZ+m4PVNBMC7iyuPfgezwKp+Qwn8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m5rsFGSb/hlMUc8tqHoU1SRd/J94hWc+FLrm2hdhDM2m30Y/GZqXIE1vseDMoTxFul3q8ELlqxC/Gn6uSH2jmS08vsBEbgSEtevFgtqSatuxyhYMVLQ3mmZ72TIUHU8zXo2yiUXwifW0c1YVUSdmk39ItQl0fmLifRQJusNdxl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c9C4FE3H; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g4dKB5W1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qzxWP6gL"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751894339;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c9C4FE3H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751894384;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GhF2JcPNoR0FO9hi7SfPGNigJ/u6PP1goT7e88VaZuU=;
-	b=g4dKB5W1tyUW+YFRe2KJ1+HB6LwWDjm/QZ2/L9NDFe4rdlRCHuLkJBv4HloYruslJQf5Az
-	ieZU4/v9UxbqEzoGcBqanZ0k21K8cvkEwMvuf8UGcms97EyaGRM40+9zi93ja1sX5hUNKN
-	zkqpWZNTFAbGzjaSLkmswwkf2wQfJEQaaH9OY9hsqO5bDaLNrt7TVdiMgskqAUDsdmVz5f
-	LK1pzRL76mNB2cZEb4LxSfZFMUaFYuG7bElIf+lnM1/95IE0fP2PydPccW0QYz0NL4Xs1+
-	+bY8n791+LJ9r3V6A0nzKBlEpOxgj0MjLjBKxfjPd7t/amoUxczOmVi2+9gJpQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751894339;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GhF2JcPNoR0FO9hi7SfPGNigJ/u6PP1goT7e88VaZuU=;
-	b=qzxWP6gLU7cYzA2dZHMLb/Y4QyVyqAL0s3+PqLn+lmwdq52+JB3dp/vkPtESBH93QhFzqr
-	mzn8dCRoEljMkKAQ==
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, Shuah Khan <shuah@kernel.org>, Anna-Maria
- Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd
- <sboyd@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, Richard
- Cochran <richardcochran@gmail.com>, Christopher Hall
- <christopher.s.hall@intel.com>, Miroslav Lichvar <mlichvar@redhat.com>,
- Werner Abt <werner.abt@meinberg-usa.com>, David Woodhouse
- <dwmw2@infradead.org>, Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao
- <namcao@linutronix.de>, Antoine Tenart <atenart@kernel.org>
-Subject: Re: [PATCH 14/14] selftests/timers/auxclock: Test vDSO functionality
-In-Reply-To: <20250707082144-159cd778-47f3-428f-878c-8c22d4f297fc@linutronix.de>
-References: <20250701-vdso-auxclock-v1-0-df7d9f87b9b8@linutronix.de>
- <20250701-vdso-auxclock-v1-14-df7d9f87b9b8@linutronix.de>
- <87cyadrrpk.ffs@tglx>
- <20250707082144-159cd778-47f3-428f-878c-8c22d4f297fc@linutronix.de>
-Date: Mon, 07 Jul 2025 15:18:58 +0200
-Message-ID: <871pqsrvel.ffs@tglx>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=nXmXDjuLCVo5wU4ylvvDNkZan/QGMn2o2rEiwIbCGFU=;
+	b=c9C4FE3H9pgTNEchH9pm4btVJEsIm9T6YaTqbeu0cDbtBFXPuktx8wyRbnTPvj5yh8OOLi
+	X3v9u9OVmHncu21+aSf2ssnN6EHY0Cp3OjuEn8gSmDYUwK44r+JrYOUzTfB9XfmvFSluNV
+	RiR7OnXm1E+ldF2qPmeKv3I73ALmous=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-346-2MGbBGiQOnuTmbCYLRAqXw-1; Mon, 07 Jul 2025 09:19:41 -0400
+X-MC-Unique: 2MGbBGiQOnuTmbCYLRAqXw-1
+X-Mimecast-MFC-AGG-ID: 2MGbBGiQOnuTmbCYLRAqXw_1751894380
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45359bfe631so16116595e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 06:19:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751894380; x=1752499180;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nXmXDjuLCVo5wU4ylvvDNkZan/QGMn2o2rEiwIbCGFU=;
+        b=KQlzbqIunyJI6FHyTJtLehEvLF/tR7+hJzDjRb1GcD2Dpep7CkhH6Cohi+NhUBUMN1
+         XkfbU6iN01UII/k6LLgcE8z7B/iMl8a6EZvAsz9kHkpkQ8CWoPFBtGo/IVd1KkZybORl
+         wR4v7Nv1IqAQL55SlBXISH5TeRMxY0+3XNFJUhXshs83Ug8slKdQa047GPOENXkcfXIB
+         g9HFZYeLNslzE4/BSdjXkf8JgNMi6/MiYFYpEuhuLSvA3X7tl3yWb8J0BPOBRlyzTkVt
+         ofPawMPvi+x9tdgHG44HmtgGhPMK5JwrZ7pAroXwrp5Br27sSZ7YQKKlWNOzSbQkIq5L
+         9G0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUcgXqV6O2vIy/eWuK6OxUvr83+zeXFZBpo8Nd8AY9oVuzpxA+3XjMB4Qa4PeGIP922uW8wHyD5Z735HEg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysaxyGljds6pHD4VZuI347fK99d+ZBckdEl5m+AB7YKTv+4zbt
+	kmQPDJDw6lx3Y7//60tDaALIamcJGP3VqOrpbpLCZ3t42mo/d8s+JOnhVxm8dB5kh6syMe4SZCo
+	Pi470/m8B3hWKk2zOFNvZWyjHrxOvSnPa3/C/FGYMYkpPGSgAS+G4h6g8qCeTgPmSnQ==
+X-Gm-Gg: ASbGnctWQfZQg0GQ12uqYh9YSARV/wKv5TYHVSJpqzM7rGRNKdXN9iTiDSC+YLI7Fdw
+	2bb9otjVaYq2UFWrhQKlnLq34DayV1/3IwPW6C2ZTfTCKsFeMNFH8IeIQY0tHxO2hDfFCmjBwkT
+	455OWD2EHh7+SDurmvLFJg7tuHeqvs/ZMM1Zx7Fyynu3XgMaBFOcvPQ561V95ulL5Vt756D5pUz
+	EBpn3zMXHok7l7VxgCrqfwZH/JOfln+TwXXpmmZ6yrcL3KgzafaYYmKp0grpTtTWhZZjZ8fRbyn
+	4rhtSZsQS5hqvse1U6v26brxZuHFELvSQ/inxHPD12NYLcZwHU3IsnFhbb1+2rQ6pbZ5x2ZLs1v
+	f2pMpzznDAv36xqO0Syo0OkCsbbEbmhEpDF6KSZummneuxrhbdw==
+X-Received: by 2002:a05:600c:3e86:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-454c476aea4mr40553235e9.7.1751894380098;
+        Mon, 07 Jul 2025 06:19:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBfyFuBcaLgbZfGzjnsuMh9lvvAvuC5DlcIKIEAKGMTIqV5yEm9tkEm1VZ5eMoCw4nja+MJw==
+X-Received: by 2002:a05:600c:3e86:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-454c476aea4mr40552695e9.7.1751894379602;
+        Mon, 07 Jul 2025 06:19:39 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f38:1d00:657c:2aac:ecf5:5df8? (p200300d82f381d00657c2aacecf55df8.dip0.t-ipconnect.de. [2003:d8:2f38:1d00:657c:2aac:ecf5:5df8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9beb22asm141802825e9.36.2025.07.07.06.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 06:19:39 -0700 (PDT)
+Message-ID: <36dd6b12-f683-48a2-8b9c-c8cd0949dfdc@redhat.com>
+Date: Mon, 7 Jul 2025 15:19:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check
+ in vm_normal_page()
+To: Hugh Dickins <hughd@google.com>
+Cc: Lance Yang <lance.yang@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Lance Yang <ioworker0@gmail.com>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-2-david@redhat.com>
+ <aFVZCvOpIpBGAf9w@localhost.localdomain>
+ <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
+ <CABzRoyZtxBgJUZK4p0V1sPAqbNr=6S-aE1S68u8tKo=cZ2ELSw@mail.gmail.com>
+ <5e5e8d79-61b1-465d-ab5a-4fa82d401215@redhat.com>
+ <aa977869-f93f-4c2b-a189-f90e2d3bc7da@linux.dev>
+ <b6d79033-b887-4ce7-b8f2-564cad7ec535@redhat.com>
+ <b0984e6e-eabd-ed71-63c3-4c4d362553e8@google.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <b0984e6e-eabd-ed71-63c3-4c4d362553e8@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 07 2025 at 09:17, Thomas Wei=C3=9Fschuh wrote:
-> On Sun, Jul 06, 2025 at 10:26:31PM +0200, Thomas Gleixner wrote:
->> On Tue, Jul 01 2025 at 10:58, Thomas Wei=C3=9Fschuh wrote:
->>=20
->> > Extend the auxclock test to also cover the vDSO.
->>=20
->> I'm not really convinved, that this is the right thing to do. Why can't
->> this just extend selftests/vDSO instead of creating these
->>=20
->> > +#include "../vDSO/parse_vdso.c"
->> > +#include "../vDSO/vdso_config.h"
->> > +#include "../vDSO/vdso_call.h"
->>=20
->> cross directory oddities? Confused.
->
-> Then we'd have to duplicate the auxclock management into the vDSO selftes=
-ts.
+On 07.07.25 08:31, Hugh Dickins wrote:
+> On Fri, 4 Jul 2025, David Hildenbrand wrote:
+>> On 03.07.25 16:44, Lance Yang wrote:
+>>> On 2025/7/3 20:39, David Hildenbrand wrote:
+>>>> On 03.07.25 14:34, Lance Yang wrote:
+>>>>> On Mon, Jun 23, 2025 at 10:04 PM David Hildenbrand <david@redhat.com>
+>>>>> wrote:
+>>>>>>
+>>>>>> On 20.06.25 14:50, Oscar Salvador wrote:
+>>>>>>> On Tue, Jun 17, 2025 at 05:43:32PM +0200, David Hildenbrand wrote:
+>>>>>>>> In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
+>>>>>>>> highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
+>>>>>>>> vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
+>>>>>>>> readily available.
+>>>>>>>>
+>>>>>>>> Nowadays, this is the last remaining highest_memmap_pfn user, and this
+>>>>>>>> sanity check is not really triggering ... frequently.
+>>>>>>>>
+>>>>>>>> Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
+>>>>>>>> simplify and get rid of highest_memmap_pfn. Checking for
+>>>>>>>> pfn_to_online_page() might be even better, but it would not handle
+>>>>>>>> ZONE_DEVICE properly.
+>>>>>>>>
+>>>>>>>> Do the same in vm_normal_page_pmd(), where we don't even report a
+>>>>>>>> problem at all ...
+>>>>>>>>
+>>>>>>>> What might be better in the future is having a runtime option like
+>>>>>>>> page-table-check to enable such checks dynamically on-demand.
+>>>>>>>> Something
+>>>>>>>> for the future.
+>>>>>>>>
+>>>>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> The author of 22b31eec63e5 thinks this is not at all an improvement.
+> Of course the condition is not triggering frequently, of course it
+> should not happen: but it does happen, and it still seems worthwhile
+> to catch it in production with a "Bad page map" than to let it run on
+> to whatever kind of crash it hits instead.
 
-Fair enough.
+Well, obviously I don't agree and was waiting for having this discussion :)
 
-> I intend to introduce some vDSO accessors which force the usage of the vD=
-SO
-> fastpath by using parse_vdso.c to directly call into the vDSO and seccomp=
- to
-> inhibit the fallback syscalls.
->
-> Or, to avoid a dependency we could move the vDSO parsing one step up to
-> tools/testing/selftests/vdso_support.h, and clean up the interfaces.
+We catch corruption in a handful of PTE bits, and that's about it. You 
+neither detect corruption of flags nor of PFN bits that result in 
+another valid PFN.
 
-Maybe that's not the worst thing as there are VDSO tests in several
-places by now.
+Corruption of the "special" bit might be fun.
 
-Thanks,
+When I was able to trigger this during development once, the whole 
+machine went down shortly after -- mostly because of use-after-free of 
+something that is now a page table, which is just bad for both users of 
+such a page!
 
-        tglx
+E.g., quit that process and we will happily clear the PTE, corrupting 
+data of the other user. Fun.
+
+I'm sure I could find a way to unify the code while printing some 
+comparable message, but this check as it stands is just not worth it 
+IMHO: trying to handle something gracefully that shouldn't happen, when 
+really we cannot handle it gracefully.
+
+-- 
+Cheers,
+
+David / dhildenb
+
