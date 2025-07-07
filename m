@@ -1,100 +1,170 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD6E2D94B6;
-	Mon,  7 Jul 2025 14:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1008C2D8DA7;
+	Mon,  7 Jul 2025 14:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898229; cv=none; b=erLtrvOzwucBt8kJ6ufrvOPIR55zew8bt3HB/xK+hlRLA0jsBZnlZOAQE+uj0rLZvaTqYfxevCvbjIWRup7eBunANq/8uuH1oOAKyv6nzCd16eD2L8izEkGFjnHQrjKlMs02uWCFuDDO9kNX5MlFWKyzM85VR9jdvIO/Cepdfbw=
+	t=1751898229; cv=none; b=TZ7WKOn0RNtqPvsuMWS7CsnmqP5WNmDUyid74e7sbLzYN6SNzk9HJ4qwQCA2FPCqv+xaZVfZmMaFXGQ7ZJ0YNTsViTPiJn9vqwGAL5yl1FEsbRHBncq9tUvtFXULXECuGfKrUlTDDRbR4XInPeKPCJEC/C3DP5tno+I+riV7qmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751898229; c=relaxed/simple;
-	bh=202eE0zeDU7+HUUBg0x+87B7hcMlBCKZldbKn5GARlY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CcVggpTWFqBLxhGpobisVIuNga64RM9Or01JtOdNc/+szlhmYaGTJSYkaNAiOKKJrHyVt+vonqFv/Nji2RLfFBgLuel//QQW9mtK9B4ecWbNOvrqMyRhFKqj1NZTKJdPL/UZVSJSNX+VXmagSF8vxdha82rfLYBdLc55ctravWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MBMtFoy/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9SoTZlgV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=Ivb4sEJ315yPpA6w6gGkLWI94DbQvOmt61KT3beBg94=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CpXdLlGIMGUcnOe3jl6NfSLDwgaFkMhfq0Q9wt9XIruhOCduRcZqQXVT+WRD2CYUwG8crl54Pgo5iLth7DevA/I5tQ5D0B7Z4tdygRZrzhPzU9Yd/WnbVgsRtQviGYiH6a+JYbD33RzO5iw4AxK6w3CDOeW03twUAdvWVnE7e+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ffR+SWki; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MBMtFoy/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9SoTZlgV"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751898226;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ffR+SWki"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bbRLQ4bdWz9t1B;
+	Mon,  7 Jul 2025 16:23:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751898222;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9gA6/FzdcDZ1OiNdUSIXGLqRE2/eOLi8nixIKqmz03I=;
-	b=MBMtFoy/EwJyHePKacClzU/1GzV9Rr5KKyVaYj4LGATkt0AHBY+/pmGj3JFr38lAzXBX72
-	XsblNG8Qv39PK/jjdKcQQ3OihUmlKPJvW40ju7uAn1w+X65Y6/e7IJTiZWrMOA/EUT45jD
-	KUA3p/0EN4uqjo9nDW1M1MPpzz+lOj5Idd/TZMFRmTXdAlC+Rlc6WCeflsqfkPk/9H71Kp
-	zciG3zEYsogsOG+3uwKJuNrvhh15SZz256xlIvVdwuXkhkgRYRwZmlFXS72kRfoeGMiKvu
-	e7nKNpOOdP7KE4ryLB39hsm64+GfCEaa02kAuwn/euCCVZNixO3U8yCvBhWDFw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751898226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9gA6/FzdcDZ1OiNdUSIXGLqRE2/eOLi8nixIKqmz03I=;
-	b=9SoTZlgV7KocbRPCexI9NTkFyzUlqGFo6KDuk4IfrNU2woHDwUk0ywGpcyh8aPCGzV1IJA
-	8ySF/DTKIBjZccDg==
-Date: Mon, 07 Jul 2025 16:23:42 +0200
-Subject: [PATCH 4/5] selftests: vDSO: vdso_test_abi: Test CPUTIME clocks
+	bh=+6e+PcGOhziaHPv2fooE3Mhq4C1IPp18icg31JFqEy0=;
+	b=ffR+SWkiKB9WbWaNGhqMuxqsE52z254tpTUQZe5jFt8NBzuujnqJZw9d1+45vg6y7eMN92
+	OB9P13fXqYVzkwN4t1wJF0vB4a9wJRhy7WQ0Iiava1lotvj/tQNQE/PFq3GzAxu07Ly+z3
+	6nD8y9sDqHk2IeKXs8KJZUEz5/vvhQnKHAnbGgvVmZLwLaCWFsqYghnAjaf5cTKjxwSDlI
+	ZQegm5oxr43vVDNZYEUtm7TZOiur6dkgIUuvQIpUhha6IrFcBbetxUWEOPY6vOHMfG4vVE
+	YqL61VItf9ZnU9IXw8EcUiwV6XOEjBhjyl3ewfpjOKpQLUHJLAiLTuYmy+fHyQ==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Suren Baghdasaryan <surenb@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nico Pache <npache@redhat.com>,
+	Dev Jain <dev.jain@arm.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	mcgrof@kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v2 2/5] huge_memory: add huge_zero_page_shrinker_(init|exit) function
+Date: Mon,  7 Jul 2025 16:23:16 +0200
+Message-ID: <20250707142319.319642-3-kernel@pankajraghav.com>
+In-Reply-To: <20250707142319.319642-1-kernel@pankajraghav.com>
+References: <20250707142319.319642-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250707-vdso-tests-fixes-v1-4-545be9781b0c@linutronix.de>
-References: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
-In-Reply-To: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751898221; l=1087;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=202eE0zeDU7+HUUBg0x+87B7hcMlBCKZldbKn5GARlY=;
- b=VS2tHHgjAUSlFaq2psunhleNFpzY8tOCh9hZoryfhN8/UsqGCAv0qWZvatQQu6mWbArNNGGT/
- y7jUKaetyBlDI9SaMFWW9OvIrvhlGq7ZxH/7cgTVAza9/gVi6leTRiV
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-As the framework is already there anyways also test the CPUTIME clocks.
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Add huge_zero_page_shrinker_init() and huge_zero_page_shrinker_exit().
+As shrinker will not be needed when static PMD zero page is enabled,
+these two functions can be a no-op.
+
+This is a preparation patch for static PMD zero page. No functional
+changes.
+
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
- tools/testing/selftests/vDSO/vdso_test_abi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/huge_memory.c | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-diff --git a/tools/testing/selftests/vDSO/vdso_test_abi.c b/tools/testing/selftests/vDSO/vdso_test_abi.c
-index 96d0dd3677b357876e92f6d2d962d43d642e9bee..08ed8ddd18edcd5a9f5d8239124833882a0b5dec 100644
---- a/tools/testing/selftests/vDSO/vdso_test_abi.c
-+++ b/tools/testing/selftests/vDSO/vdso_test_abi.c
-@@ -175,7 +175,7 @@ static inline void vdso_test_clock(clockid_t clock_id)
- 	vdso_test_clock_getres(clock_id);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index d3e66136e41a..101b67ab2eb6 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -289,6 +289,24 @@ static unsigned long shrink_huge_zero_page_scan(struct shrinker *shrink,
  }
  
--#define VDSO_TEST_PLAN	16
-+#define VDSO_TEST_PLAN	20
+ static struct shrinker *huge_zero_page_shrinker;
++static int huge_zero_page_shrinker_init(void)
++{
++	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
++	if (!huge_zero_page_shrinker)
++		return -ENOMEM;
++
++	huge_zero_page_shrinker->count_objects = shrink_huge_zero_page_count;
++	huge_zero_page_shrinker->scan_objects = shrink_huge_zero_page_scan;
++	shrinker_register(huge_zero_page_shrinker);
++	return 0;
++}
++
++static void huge_zero_page_shrinker_exit(void)
++{
++	shrinker_free(huge_zero_page_shrinker);
++	return;
++}
++
  
- int main(int argc, char **argv)
+ #ifdef CONFIG_SYSFS
+ static ssize_t enabled_show(struct kobject *kobj,
+@@ -850,33 +868,31 @@ static inline void hugepage_exit_sysfs(struct kobject *hugepage_kobj)
+ 
+ static int __init thp_shrinker_init(void)
  {
-@@ -205,6 +205,8 @@ int main(int argc, char **argv)
- 	vdso_test_clock(CLOCK_MONOTONIC);
- 	vdso_test_clock(CLOCK_MONOTONIC_RAW);
- 	vdso_test_clock(CLOCK_MONOTONIC_COARSE);
-+	vdso_test_clock(CLOCK_PROCESS_CPUTIME_ID);
-+	vdso_test_clock(CLOCK_THREAD_CPUTIME_ID);
+-	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
+-	if (!huge_zero_page_shrinker)
+-		return -ENOMEM;
++	int ret = 0;
  
- 	vdso_test_time();
+ 	deferred_split_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE |
+ 						 SHRINKER_MEMCG_AWARE |
+ 						 SHRINKER_NONSLAB,
+ 						 "thp-deferred_split");
+-	if (!deferred_split_shrinker) {
+-		shrinker_free(huge_zero_page_shrinker);
++	if (!deferred_split_shrinker)
+ 		return -ENOMEM;
+-	}
+-
+-	huge_zero_page_shrinker->count_objects = shrink_huge_zero_page_count;
+-	huge_zero_page_shrinker->scan_objects = shrink_huge_zero_page_scan;
+-	shrinker_register(huge_zero_page_shrinker);
  
-
+ 	deferred_split_shrinker->count_objects = deferred_split_count;
+ 	deferred_split_shrinker->scan_objects = deferred_split_scan;
+ 	shrinker_register(deferred_split_shrinker);
+ 
++	ret = huge_zero_page_shrinker_init();
++	if (ret) {
++		shrinker_free(deferred_split_shrinker);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+ static void __init thp_shrinker_exit(void)
+ {
+-	shrinker_free(huge_zero_page_shrinker);
++	huge_zero_page_shrinker_exit();
+ 	shrinker_free(deferred_split_shrinker);
+ }
+ 
 -- 
-2.50.0
+2.49.0
 
