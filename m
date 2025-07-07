@@ -1,129 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769AD1C1F2F;
-	Mon,  7 Jul 2025 10:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDBD288CB2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.254.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751885208; cv=none; b=PD+3kwb2maIsqwogjUmpiJGABvGPTegKxqDHlC16AJbnCPTzl2nT5L8FXvDhNqqpezOsNK1HPWqKVHHoxQQQGQM24hVQtKAkaWX6qn8UvelnOG0O28XaDUHY/bRtGvRtruNFOE67vJ36Hxd+PZ0tdwHWm9kasQDfVLQRRFg7yHg=
+	t=1751885223; cv=none; b=VNR2nAtsaFEX0jf20y8jtMCcg4CLFzBNe+EEYQQab0nIX8UWVd2wW6pL/UxvXlSTu2FjqFlPaBnMLYLrF4TzCumEZ7UY42mYz1ChU15XqLdFBhscullOF+24MMRTwBI4ea94ag8RYqoh4ylzDB/drIzA9Witqz3qlzf3rLdu3Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751885208; c=relaxed/simple;
-	bh=YMr6Z21DwvHqAbXD7j969et+sd26hv6REsI5k+LxlXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gYSjQVpx+XtvcKUNkOym5FYCmVJjGBtZ1EGVJGqXIZQwbPzVX091RXolBDjxbiBKqAuSWuKaFJki849n1Kjl0vnySQOqxGNIl1sf357jPVaAx32Fz6Ro6SWFDUC2r/Cdd6IGyAlkBoNBANKHirRci4GWYBQrsrtgeQar6rWfFmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r16dEH0n; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r16dEH0n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69D7C4CEE3;
-	Mon,  7 Jul 2025 10:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751885208;
-	bh=YMr6Z21DwvHqAbXD7j969et+sd26hv6REsI5k+LxlXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r16dEH0n0lgbxKKqj+wN7R6jbMpglYDMjZRtK00Q+IwTJrx86muZ25yzTocxosifc
-	 YyCiO4wpToze5QyHh8mc6cBwfGUbqxIuxUcVfw2YQEEP5p46ULlOYbebRdw6qEXZVg
-	 pTGeY89oTIIMp2clFo3qSUYawyFQ4f4uH5g+kjvZmGDGbLAy1kvBcRBazmmbxzeapH
-	 ZXWwUSi/3XTb1g9rpo8TAi3yIwmMcXxldLW0MKZJ0BFxhmciDZvbRg1DJnGi0QRvQE
-	 pg87bMf8GRUCx7GaEHg38QiK+H3oJYVnzBRlffanjJcw2rXRty3sQJTjF5U4PtsyAB
-	 IMY7iqwjsN6AQ==
-Date: Mon, 7 Jul 2025 12:46:41 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Song Liu <songliubraving@meta.com>, Tingmao Wang <m@maowtm.org>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, Song Liu <song@kernel.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
-	"martin.lau@linux.dev" <martin.lau@linux.dev>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
-	"jack@suse.cz" <jack@suse.cz>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"mattbobrowski@google.com" <mattbobrowski@google.com>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
-Message-ID: <20250707-kneifen-zielvereinbarungen-62c1ccdbb9c6@brauner>
-References: <>
- <127D7BC6-1643-403B-B019-D442A89BADAB@meta.com>
- <175097828167.2280845.5635569182786599451@noble.neil.brown.name>
+	s=arc-20240116; t=1751885223; c=relaxed/simple;
+	bh=onI8DNifBfVyYsk55fegglgH7VCmiYY4qe/rdEmuQl0=;
+	h=To:From:Subject:Date:Message-ID:References:Mime-Version:
+	 Content-Type:In-Reply-To:Cc; b=jcVbG10v6Ip58jDQTDILolN1gdXHDQcSXVgqj+KTtYnbLNzMN2rL1+JhsXTqAO/sdelLJCqhuIVsrJ3V94eZo2p0Ppq8RDPuT8yhygKFJvu974IeVBhLkYd/kSZ1gfyl8+DmStoqNY8AQHYa/u1Skbs3775Rpte4i368QYWskSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=m.gmane-mx.org; arc=none smtp.client-ip=116.202.254.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.gmane-mx.org
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+	(envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
+	id 1uYjIG-0003RT-JM
+	for linux-kernel@vger.kernel.org; Mon, 07 Jul 2025 12:41:52 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?J=C3=B6rg-Volker_Peetz?= <jvpeetz@web.de>
+Subject: Re: Linux 6.15.5
+Date: Mon, 7 Jul 2025 12:41:47 +0200
+Message-ID: <d7527ee9-fba1-49ad-9a71-6d955eeddc3e@web.de>
+References: <2025070646-unopposed-nutrient-8e1c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <175097828167.2280845.5635569182786599451@noble.neil.brown.name>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+In-Reply-To: <2025070646-unopposed-nutrient-8e1c@gregkh>
+Cc: stable@vger.kernel.org
+Message-ID: <20250707104147.EJ_M4LBZ3cVDn3fvuEkz_rc2i0f0ElUuYZtjriwGRr4@z>
 
-On Fri, Jun 27, 2025 at 08:51:21AM +1000, NeilBrown wrote:
-> On Fri, 27 Jun 2025, Song Liu wrote:
-> > 
-> > 
-> > > On Jun 26, 2025, at 3:22 AM, NeilBrown <neil@brown.name> wrote:
-> > 
-> > [...]
-> > 
-> > >> I guess I misunderstood the proposal of vfs_walk_ancestors() 
-> > >> initially, so some clarification:
-> > >> 
-> > >> I think vfs_walk_ancestors() is good for the rcu-walk, and some 
-> > >> rcu-then-ref-walk. However, I don’t think it fits all use cases. 
-> > >> A reliable step-by-step ref-walk, like this set, works well with 
-> > >> BPF, and we want to keep it.
-> > > 
-> > > The distinction between rcu-walk and ref-walk is an internal
-> > > implementation detail.  You as a caller shouldn't need to think about
-> > > the difference.  You just want to walk.  Note that LOOKUP_RCU is
-> > > documented in namei.h as "semi-internal".  The only uses outside of
-> > > core-VFS code is in individual filesystem's d_revalidate handler - they
-> > > are checking if they are allowed to sleep or not.  You should never
-> > > expect to pass LOOKUP_RCU to an VFS API - no other code does.
-> > > 
-> > > It might be reasonable for you as a caller to have some control over
-> > > whether the call can sleep or not.  LOOKUP_CACHED is a bit like that.
-> > > But for dotdot lookup the code will never sleep - so that is not
-> > > relevant.
-> > 
-> > Unfortunately, the BPF use case is more complicated. In some cases, 
-> > the callback function cannot be call in rcu critical sections. For 
-> > example, the callback may need to read xatter. For these cases, we
-> > we cannot use RCU walk at all. 
-> 
-> I really think you should stop using the terms RCU walk and ref-walk.  I
-> think they might be focusing your thinking in an unhelpful direction.
+Hi,
 
-Thank you! I really appreciate you helping to shape this API and it
-aligns a lot with my thinking.
+upgrading from linux kernel 6.14.9 to 6.15.2 and also now with 6.15.5 I noticed 
+that on my system with cpufreq scaling driver amd-pstate the frequencies 
+cpuinfo_min_freq and cpuinfo_max_freq increased, the min from 400 to 422.334 
+MHz, the max from 4,673 to 4,673.823 MHz. The CPU is an AMD Ryzen 7 5700G.
+This in turn increases other values (scaling_min_freq, scaling_max_freq, 
+amd_pstate_lowest_nonlinear_freq, etc.).
 
-> The key issue about reading xattrs is that it might need to sleep.
-> Focusing on what might need to sleep and what will never need to sleep
-> is a useful approach - the distinction is wide spread in the kernel and
-> several function take a flag indicating if they are permitted to sleep,
-> or if failure when sleeping would be required.
-> 
-> So your above observation is better described as 
-> 
->    The vfs_walk_ancestors() API has an (implicit) requirement that the
->    callback mustn't sleep.  This is a problem for some use-cases
->    where the call back might need to sleep - e.g. for accessing xattrs.
-> 
-> That is a good and useful observation.  I can see three possibly
-> responses:
-> 
-> 1/ Add a vfs_walk_ancestors_maysleep() API for which the callback is
->    always allowed to sleep.  I don't particularly like this approach.
+Bisecting this leads to
 
-Agreed.
+commit a9b9b4c2a4cdd00428d14914e3c18be3856aba71
+From: Mario Limonciello <mario.limonciello@amd.com>
+Date: Thu, 23 Jan 2025 16:16:01 -0600
+Subject: [PATCH] cpufreq/amd-pstate: Drop min and max cached frequencies
 
-> 
-> 2/ Use repeated calls to vfs_walk_parent() when the handling of each
->    ancestor might need to sleep.  I see no problem with supporting both
->    vfs_walk_ancestors() and vfs_walk_parent().  There is plenty of
->    precedent for having different  interfaces for different use cases.
+Did you notice the increase at AMD? Is it intended?
 
-Meh.
+Thanks,
+Jörg.
 
-> 
-> 3/ Extend vfs_walk_ancestors() to pass a "may sleep" flag to the callback.
-
-I think that's fine.
