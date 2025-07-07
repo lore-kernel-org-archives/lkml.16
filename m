@@ -1,105 +1,76 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389DA288CB2;
-	Mon,  7 Jul 2025 10:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB34F33993;
+	Mon,  7 Jul 2025 10:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751885233; cv=none; b=Lj7Kml36Hp5VgxPhAyr/i0V5AyCIGPY7YBHxmqmSwOejpEYIyEpnU+X0QKHEQkqLahpCLyMXr9VvnrqbC5OzzD+zvF3uOCjFlcMM3bnRdbLVbVz6ijqCIQOBcyktHn8x5Pu3ZDr04TCFay06kEh+iZHOZjwubxPVJSfEoWo42po=
+	t=1751885277; cv=none; b=p9/c9gH1d97KnmpllDE2owQoDwiTC+pGg2WtTyFoSMReosSnzfQLy+rt3VFPgq3nzGiRg1E21kqoliGO5j484EJ/RSvOPOapRrupZLNGLQ8iGHECqZpblWS3YJnzAXnsj9x2KgS74su9mCMTAdiFg/nkFfgynhJReP3A1++T8bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751885233; c=relaxed/simple;
-	bh=AHW8Pu974MQbEtBUk7tWFfLCPbD4JU1hydUTWObK6Hk=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=CRWMdOGXinThGMvm5Qc9tqIuDDIcDzjSMQRBr0G3gEkqLcow/ERiUiAHo2+5sDxSMaQ2GWb/kIrbKcQxZQi/w8ShM0ZxVFSUF/2fGUjq6eDqlVhrmIrE8Q+Ru1SK07g8r7bas8d/1pTe7Bc9Mvyr0aomnBqe8uhgclL5GQasuDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	s=arc-20240116; t=1751885277; c=relaxed/simple;
+	bh=AFyFDMaB9QNNosU1yyH1LUR5Emd2nUyKYRSxZ5Z3TTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8YO6ndtVpSALpT/9+Cd6zS/rzsuvVWPxNNsM5BtQXfIAvjr67XTxFyeAHjUlGSkzyYWKi33KQfIQbwOxPChFW2TScsM14ezjToKxk8u1Wk+WO9FgfoK/UU0hh0IyLP+AFgOwTlbCJwsl4v+GzyMIOBpUWv4zqupOz3qD5vxvIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.48.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bbLXJ1d95z4xPSj;
-	Mon,  7 Jul 2025 18:46:56 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 567AkhB1004402;
-	Mon, 7 Jul 2025 18:46:43 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 7 Jul 2025 18:46:45 +0800 (CST)
-Date: Mon, 7 Jul 2025 18:46:45 +0800 (CST)
-X-Zmail-TransId: 2afa686ba59535f-afcd3
-X-Mailer: Zmail v1.0
-Message-ID: <202507071846455418y7RHD-cnstxL3SlD6hBH@zte.com.cn>
-In-Reply-To: <CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com>
-References: 20250701174051880riwWtq_0siCJ5Yfsa6ZOQ@zte.com.cn,CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id E02023413F2;
+	Mon, 07 Jul 2025 10:47:54 +0000 (UTC)
+Date: Mon, 7 Jul 2025 10:47:50 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
+	guodong@riscstar.com, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 5/6] reset: spacemit: add support for SpacemiT CCU
+ resets
+Message-ID: <20250707104750-GYA474251@gentoo>
+References: <20250702113709.291748-1-elder@riscstar.com>
+ <20250702113709.291748-6-elder@riscstar.com>
+ <33a20f6abac7400c8b4842b99c14ea118def2780.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <edumazet@google.com>
-Cc: <kuba@kernel.org>, <kuniyu@amazon.com>, <ncardwell@google.com>,
-        <davem@davemloft.net>, <horms@kernel.org>, <dsahern@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <fan.yu9@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dCB2Ml0gdGNwOiBleHRlbmQgdGNwX3JldHJhbnNtaXRfc2tiIHRyYWNlcG9pbnQgd2l0aCBmYWlsdXJlIHJlYXNvbnM=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 567AkhB1004402
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 686BA5A0.000/4bbLXJ1d95z4xPSj
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33a20f6abac7400c8b4842b99c14ea118def2780.camel@pengutronix.de>
 
-> >
-> > -/*
-> > - * tcp event with arguments sk and skb
-> > - *
-> > - * Note: this class requires a valid sk pointer; while skb pointer could
-> > - *       be NULL.
-> > - */
-> > -DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-> > +#define TCP_RETRANSMIT_QUIT_REASON             \
-> > +               ENUM(TCP_RETRANS_ERR_DEFAULT,           "retransmit terminate unexpectedly")    \
-> > +               ENUM(TCP_RETRANS_SUCCESS,               "retransmit successfully")              \
-> > +               ENUM(TCP_RETRANS_IN_HOST_QUEUE,         "packet still queued in driver")        \
-> > +               ENUM(TCP_RETRANS_END_SEQ_ERROR,         "invalid end sequence")                 \
-> > +               ENUM(TCP_RETRANS_TRIM_HEAD_NOMEM,       "trim head no memory")                  \
-> > +               ENUM(TCP_RETRANS_UNCLONE_NOMEM,         "skb unclone keeptruesize no memory")   \
-> > +               ENUM(TCP_RETRANS_FRAG_NOMEM,            "fragment no memory")                   \
-> 
-> Do we really need 3 + 1 different 'NOMEMORY' status ? 
+Hi Philipp, Stephen, Mike
 
-Yes, different "NOMEM" status pinpoint exact failure stages in packet retransmission,
-which helps distinguish which process triggered it. Beneficial for troubleshooting.
+On 11:46 Mon 07 Jul     , Philipp Zabel wrote:
+> Hi Stephen, Mike
+> 
+> On Mi, 2025-07-02 at 06:37 -0500, Alex Elder wrote:
+> > Implement reset support for SpacemiT CCUs.  A SpacemiT reset controller
+> > device is an auxiliary device associated with a clock controller (CCU).
+> > 
+> > This patch defines the reset controllers for the MPMU, APBC, and MPMU
+> > CCUs, which already define clock controllers.  It also adds RCPU, RCPU2,
+> > and ACPB2 CCUs, which only define resets.
+> > 
+> > Signed-off-by: Alex Elder <elder@riscstar.com>
+> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Yixun Lan <dlan@gentoo.org>
+> 
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> To be merged via the clk tree, if Stephen is ok with that.
+> 
+ok, I'll just go ahead and prepare a PR for this,
+and leave Stephen to take care of the rest..
 
-> > +               ENUM(TCP_RETRANS_ROUTE_FAIL,            "routing failure")                      \
-> > +               ENUM(TCP_RETRANS_RCV_ZERO_WINDOW,       "closed recevier window")               \
-> 
-> receiver
-> 
-
-Thanks, will fix it in V3.
-
-> > +               ENUMe(TCP_RETRANS_PSKB_COPY_NOBUFS,     "no buffer for skb copy")               \
-> 
-> -> another NOMEM...
-> 
-> > +
-> > +
-> 
-> 
-> > +               __entry->quit_reason = quit_reason;
-> >         ),
-> >
-> > -       TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
-> > +       TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s quit_reason=%s",
-> 
-> quit_reason is really weird, since most retransmits are a success.
-> 
-> What about using : status or result ?
-> 
-> Also, for scripts parsing the output, I would try to keep  key=val
-> format (no space in @val), and concise 'vals'
-
-Good idea. Will fix it in V3.
+thanks all!
+-- 
+Yixun Lan (dlan)
