@@ -1,159 +1,98 @@
-Received: from r3-21.sinamail.sina.com.cn (r3-21.sinamail.sina.com.cn [202.108.3.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A477D29A9D2
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E106329A9CD;
+	Mon,  7 Jul 2025 11:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889247; cv=none; b=anMSxQC+j99l952M+M3wsOG+CFHekN9jqh5pEmOXKviVzlfK+duGVrnot5LyrCMuPuYDOyyPITV8mTF+xUojlEMNiA6xcnWGnA0dd4woubvd5HfmVRL8Cgi4wAsDjlABYLfd/tp7kyzntobZOQPvOu5f9WO2siTIlVqkWbaCrxs=
+	t=1751889259; cv=none; b=IPBtCoosZOGsJa8Y3+evAlNm/K3B42Inrtq3MFJk+uecciypoZLaSG7G+aCoPaBFvgm69wWL4Y0fRS4z0NRmJg1t/dB3oRYLHxT4C16diC/sgSO28V5UNk+5qgnbJKCNFrEzbU4qLJflNaHG0uWkDPTkxVUkpfwgTpuEe9+7yDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889247; c=relaxed/simple;
-	bh=/+o64qtRr/puKxhLukrHwjbyUKS6IS+j190RFYFv8qE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KnXL25p/Wj9qwA2M/FKOMkifcjNPzDJS7Zm+Qr463jfsOduDtTBaYmk2WGF7wld9iDsMxFlvil4XQt4uitsXAZ7/G0+fVjYep5Hz64QmgXNhbwYcly6JWQAtcusbQ/5QTbxt7l2WVwkI6yb6QSZBnh1eYk3nsNExy6+pbU1b3Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=X3QmN0Rx; arc=none smtp.client-ip=202.108.3.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="X3QmN0Rx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751889243;
-	bh=o1dq5Hb9Cv60vUUsdSQmeRd7DsdHTcthm1XraCMT9gY=;
-	h=From:Subject:Date:Message-ID;
-	b=X3QmN0Rx4LVobkDnLzxZ41XXQgItLjuWk5hwrupJR5+cSah+9hwZu+5lt+1WbgjrV
-	 AnnphpnTRttbC51Po8V2LwquyhqtA9WmiCZGtLb/Hu3NEQBMBBol4dIokf+BHvLzTD
-	 p288PsiviUujGIerBA2cgE2BRhCiVYzS/avRrOd0=
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.33) with ESMTP
-	id 686BB55000000582; Mon, 7 Jul 2025 19:53:54 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 5300836685137
-X-SMAIL-UIID: 110272A30E804528B59A9E6791B2C466-20250707-195354-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com>
-Cc: brauner@kernel.org,
-	jack@suse.cz,
-	kees@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	syzkaller-bugs@googlegroups.com,
-	viro@zeniv.linux.org.uk
-Subject: Re: [syzbot] [mm?] [fs?] WARNING in path_noexec
-Date: Mon,  7 Jul 2025 19:53:41 +0800
-Message-ID: <20250707115343.2750-1-hdanton@sina.com>
-In-Reply-To: <686ba948.a00a0220.c7b3.0080.GAE@google.com>
-References: 
+	s=arc-20240116; t=1751889259; c=relaxed/simple;
+	bh=39LPr17ACdwb6Fx3Y2TKqi/hC45TY5NRU9P5grwB8oU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C4Ohd6kVI7e5bVVM3bNy3LVwymrcEK4YdHICuSBCmO5Y8aX+1QCyv+wgC0hjeR9hqx07T9/sUE2/mJo8jJR31+PVu8CO6K1IZcAfB76kg/fwpyc/bM1OZBhsRT0rxI2FJlb8txXk1SG9H6ZcFEbmIcfQv5bEoEPCTltcbxOr6Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-528ce9731dbso877036e0c.0;
+        Mon, 07 Jul 2025 04:54:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751889255; x=1752494055;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6bj8LVd3iBj6tYM9itj7dth7Drbx2NZZmmY2Uq/QUDk=;
+        b=h8UqsmSD+PiJAILzjXyBdFm6rSlgk8hn0pf0/EW4YmbuHTNElD0zEDjB34osjUHHWv
+         N4Sk9tjHTIDUwNIZKzTO2X6ZPC/Ut6WjRaaDkwJGBf/a9LJJRxZHK21ZFxaSc4+2bH/8
+         xoN5fynY5uyXq9AEHxZKdbayYs61wjYQq4uIRqVh6VSQ3A+HkD+41lK9Ktz12D0cpBzC
+         ucSksYmHfrfvZMqbgWDyFXcK5/jax9GquBxiwIDOiimWIaBHFGMigBZPC57U3F+OgeXV
+         XVFOEapAx6BIzv/x67hXfPyX9fokrwesfAcrpG9+PgH/tgrg2QIEm+KUxzA1+TwOpfQI
+         B90A==
+X-Forwarded-Encrypted: i=1; AJvYcCU4pQZ3aYF5zitn4rdMtO9maBrC6jS5N9lbUaUqNJ+JGJ+lGsEaAvu5hROCtgmH9D8ZGLtzsDWVOzCHBNS4@vger.kernel.org, AJvYcCUJcFlik5KJj2gpl6JcP/FK18XmdUpSQqzyM931pvVpk20uwd/4pBVbZnAyF+t5xSAxGvrO1uvJn/KyskdIQqxmfe4=@vger.kernel.org, AJvYcCW2ZMrKnp7pfXyEumWf3JWTEZ46Ztl7fvLnLrTjrgrGR3DHppaD9g5WF3LOyd90gzJJwU6Vppj7gTo6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyhy22C8FNwGeEZqJ/fG0cFVh0AgPpdIrAcGs0SmDA2aPXB5lWV
+	tUqyJccE2w39OQNlmdbhQDMiTvrzH+Fm6tvY+ueBV+QCNUSOdHSiEb29aHgb+hpq
+X-Gm-Gg: ASbGncsECFxVUuQb+sw0neqI/pvf1oB7h2SeC70L0kTYJ5mHu7CvYn0emnB0O0ztpF3
+	vRE/W0h3GOnIQUsklSgpD5SaLdqoxwokC/bDxucvcf3D1izHPDgMbzWcMs2UVxLgBXCJoVMy/1U
+	ff4H/IqNvFeV7IYvJ8KSzGRnZILwl+oENj1KZTBCe6r+32WnGTMJQ31Je0/fLDTaWL2DAmVFS8C
+	tBvLGyVcgPaa2MifJLVzpWZXNxA1SpvsZIem/16nSf/+HMVcvqlzO4kmk+uQRWcN7AM57XRr6/1
+	bsh4F2GDB6VsF3BxHf1pYWlX4lrO4lf+HzGYhNod5W73Gnv5f5S2cQVK0qOK3V9X51d/+qTwBdA
+	kSESGHK66l2k3ZrgoswUiwK8d
+X-Google-Smtp-Source: AGHT+IF0HuV3PO1U7Kz3uINWqCpkPthljRJ0u7e5FSuLiurgVOnVndBbC5EcSmtv6rujSxyeHJ01eQ==
+X-Received: by 2002:a05:6122:8c4:b0:530:72da:d13d with SMTP id 71dfb90a1353d-5347e3c228emr5901688e0c.1.1751889255439;
+        Mon, 07 Jul 2025 04:54:15 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-534889ac18fsm930091e0c.27.2025.07.07.04.54.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 04:54:15 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-8815049d0a8so958235241.2;
+        Mon, 07 Jul 2025 04:54:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKBaadtt8AzlaavUD6GQHYNNKx9eNyWLoaY80aYRfQR/vdZ7dfuSbRbxLvhzXs6XNqz35hUYbQ8bNR0n8t@vger.kernel.org, AJvYcCVlgeU04ftXXPI71koI5fGSbxB22jzzfd2mSKaDw0kWbwE8KeSKJ/RkOwAW8YmpXQrGpSold7cfNH8VGPCwUwfHlAU=@vger.kernel.org, AJvYcCWQWtu1z0f6V4HzLCxLu7TUYhtSm2C6pi+G/U+EtV0IIRvz+gHRLxjYGxNH31JgfFoM9A+wHmkv4giD@vger.kernel.org
+X-Received: by 2002:a05:6102:41a5:b0:4e2:df8d:dfeb with SMTP id
+ ada2fe7eead31-4f2f1df683fmr6581192137.6.1751889254860; Mon, 07 Jul 2025
+ 04:54:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250703235544.715433-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250703235544.715433-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250703235544.715433-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 7 Jul 2025 13:54:01 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVqmD71zvTedO8r1v=gcLf2QQhQiy3KZ6pixM+7j1GLWg@mail.gmail.com>
+X-Gm-Features: Ac12FXx0WFuBdOBxsv57dnaFzBp3glsE_LVd5RaXXGHg3gLnq4Slk6zkIRwEGC0
+Message-ID: <CAMuHMdVqmD71zvTedO8r1v=gcLf2QQhQiy3KZ6pixM+7j1GLWg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Fix
+ pinctrl node name for GBETH1
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> Date: Mon, 07 Jul 2025 04:02:32 -0700
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    8d6c58332c7a Add linux-next specific files for 20250703
-> git tree:       linux-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=15788582580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d7dc16394230c170
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3de83a9efcca3f0412ee
-> compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ecb3d4580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153af770580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/ff731adf5dfa/disk-8d6c5833.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/5c7a3c57e0a1/vmlinux-8d6c5833.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/2f90e7c18574/bzImage-8d6c5833.xz
-> 
-> The issue was bisected to:
-> 
-> commit df43ee1b368c791b7042504d2aa90893569b9034
-> Author: Christian Brauner <brauner@kernel.org>
-> Date:   Wed Jul 2 09:23:55 2025 +0000
-> 
->     anon_inode: rework assertions
-> 
-Given EPERM [1], this rework looks like a case of overdose.
+On Fri, 4 Jul 2025 at 01:55, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Rename the GBETH1 pinctrl node from "eth0" to "eth1" to avoid duplicate
+> node names in the DT and correctly reflect the label "eth1_pins".
+>
+> Fixes: f111192baa80 ("arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable GBETH")
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/mm/mmap.c?id=df43ee1b368c#n474
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17.
 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14b373d4580000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=16b373d4580000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12b373d4580000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com
-> Fixes: df43ee1b368c ("anon_inode: rework assertions")
-> 
-> ------------[ cut here ]------------
-> WARNING: fs/exec.c:119 at path_noexec+0x1af/0x200 fs/exec.c:118, CPU#1: syz-executor260/5835
-> Modules linked in:
-> CPU: 1 UID: 0 PID: 5835 Comm: syz-executor260 Not tainted 6.16.0-rc4-next-20250703-syzkaller #0 PREEMPT(full) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-> RIP: 0010:path_noexec+0x1af/0x200 fs/exec.c:118
-> Code: 02 31 ff 48 89 de e8 f0 b1 89 ff d1 eb eb 07 e8 07 ad 89 ff b3 01 89 d8 5b 41 5e 41 5f 5d c3 cc cc cc cc cc e8 f2 ac 89 ff 90 <0f> 0b 90 e9 48 ff ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c a6
-> RSP: 0018:ffffc90003eefbd8 EFLAGS: 00010293
-> RAX: ffffffff8235f22e RBX: ffff888072be0940 RCX: ffff88807763bc00
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000080000 R08: ffff88807763bc00 R09: 0000000000000003
-> R10: 0000000000000003 R11: 0000000000000000 R12: 0000000000000011
-> R13: 1ffff920007ddf90 R14: 0000000000000000 R15: dffffc0000000000
-> FS:  000055556832d380(0000) GS:ffff888125d1e000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f21e34810d0 CR3: 00000000718a8000 CR4: 00000000003526f0
-> Call Trace:
->  <TASK>
->  do_mmap+0xa43/0x10d0 mm/mmap.c:472
->  vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
->  ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f21e340a9f9
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffd23ca3468 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f21e340a9f9
-> RDX: 0000000000000000 RSI: 0000000000004000 RDI: 0000200000ff9000
-> RBP: 00007f21e347d5f0 R08: 0000000000000003 R09: 0000000000000000
-> R10: 0000000000000011 R11: 0000000000000246 R12: 0000000000000001
-> R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
->  </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
