@@ -1,127 +1,70 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D291D259CBD;
-	Mon,  7 Jul 2025 03:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C971CAA62;
+	Mon,  7 Jul 2025 03:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751859032; cv=none; b=Cs6iWPnjdPzxDirqK1ELGmXe1OFrHWUQkpCSPfbGheLe5nnwn2G/PYy3m/7ipq5ObKrlL5g6+VDa+hBvw0DPeACMvg4VEv6qqe7GkslJle/f1G/Zo8kSzgvNh64IpG4JqE/Q0H3EZXpjitcuJDC7ZkNetEOqht6CHqbLY04J/Kc=
+	t=1751859045; cv=none; b=NlzqeItinNPfMhE+Q/gI9p0lU5isrZPqRddgjgHepHIMc7TqmSUhJip3pLl18OnR9OleatgESjB3kpInqrBb/q3THWZBjQQp8ugaBjgFJFwz+sUtKLUTllSn6TDOZbQfM9UIO0tz0Vw9nLzrvOmIut9g4lLqnJZ9psd3MHQb1Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751859032; c=relaxed/simple;
-	bh=jcllR5P8q4bLzpLytl+VWfbXYNskCJm/L07jIzv8ark=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=tdrAXXFbsSr3zktGmT5DC/IrSjeJOajEWDymQWP8+KfZeW1ZWMnmm4sIi/yRCpAVqN4Xe9bIJ4NalSneBCWH8gPZscwgr5TrcRNF/NtHAu3o+EnC9WYti+ubDpjVdpdvOBXj5Apw/rzPHk8cjXDNI4oSZW9x+ObbxlYeT9CFhyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxjaxMP2toQUcjAQ--.42680S3;
-	Mon, 07 Jul 2025 11:30:20 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+RJP2toGVYMAA--.6511S3;
-	Mon, 07 Jul 2025 11:30:19 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Add tracepoints for CPUCFG and CSR
- emulation exits
-To: Yulong Han <wheatfox17@icloud.com>, chenhuacai@kernel.org
-Cc: kernel@xen0n.name, zhaotianrui@loongson.cn, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250702105922.1035771-1-wheatfox17@icloud.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <9e9b54fe-4762-f128-a53f-1a92d160a5b7@loongson.cn>
-Date: Mon, 7 Jul 2025 11:28:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1751859045; c=relaxed/simple;
+	bh=p9jCjh3WFEk6XNNuNq5seuEgeXxwJkbt+GV4E7VM2CI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mVDRqixuBgprbN08xl1YHK2WjSbapDTEnyTswFVOQs11EPCy/EwAXriso3aWzeYvKc/SJWZG2mQz7/DHP8k8W7fVE2JZbs4I3koQr85p2NHiwCtLCAHb6CHXyuTr9wRxNg+5yimZ0atYCivmJuKVH8x79XQz0gQmTy3u54H54m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=oRMlceRb; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="oRMlceRb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=rFOorbQqXKdEiu+hNgh3SVZ7h5TX7HKgtsg8mnfh8mY=; b=oRMlceRbNzD2mC9oYrHsjQiK6h
+	eNbWym+GO8rnCDlxkhsOjrP3Br5vJ5cqtxcLk70aZ+Pn4mAKpqyrqnYNeaVgCSjYKBCCPoTZKsis4
+	6Mx+Zs4p0B8uvyFTcoIzjwmp61RtiPObfL904o5VSr/Xp9UZaKV156Xrop8iQSDjyz6lOUt/YMJV/
+	Yd+WZHroGpldLY9jQu0Fjsd0Ay42JsxvOCWKbm6d8E5kgSwvzO68ReNGsewIlFjvyzvE+U0mjw1aD
+	pb4tcARwlzgV2bq+F/esb/DC5IugTxuWqX+I3b2KNL0CcAAvh4jmwYO+gA/yiv5hneoPbcnKveYQF
+	n0j0EECA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uYcJW-004Van-2k;
+	Mon, 07 Jul 2025 11:30:40 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 07 Jul 2025 15:30:39 +1200
+Date: Mon, 7 Jul 2025 15:30:39 +1200
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Markus Theil <theil.markus@gmail.com>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	davem@davemloft.net, Stephan Mueller <smueller@chronox.de>
+Subject: Re: [PATCH] crypto: jitter - fix intermediary handling
+Message-ID: <aGs_X1RvsvbB01al@gondor.apana.org.au>
+References: <20250621113643.107745-1-theil.markus@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250702105922.1035771-1-wheatfox17@icloud.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxQ+RJP2toGVYMAA--.6511S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AF47ZF15uw4DJw13Kw17urX_yoW5JFWfpr
-	1vvws0gw4rKrySvwsFqws5WrsxAwsagry7XF9xCFWYvr4IqryrJFy8KrWDuF18KwnY9a4I
-	qF95u3WqkF4qq3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
-	Z7UUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621113643.107745-1-theil.markus@gmail.com>
 
-On 2025/7/2 下午6:59, Yulong Han wrote:
-> This patch adds tracepoints to track KVM exits caused by CPUCFG
-> and CSR emulation. Note that IOCSR emulation tracing is already
-> covered by the generic trace_kvm_iocsr().
+On Sat, Jun 21, 2025 at 01:36:43PM +0200, Markus Theil wrote:
+> The intermediary value was included in the wrong
+> hash state. While there, adapt to user-space by
+> setting the timestamp to 0 if stuck and inserting
+> the values nevertheless.
 > 
-> Signed-off-by: Yulong Han <wheatfox17@icloud.com>
+> Acked-by: Stephan Mueller <smueller@chronox.de>
+> Signed-off-by: Markus Theil <theil.markus@gmail.com>
 > ---
->   arch/loongarch/kvm/exit.c  |  2 ++
->   arch/loongarch/kvm/trace.h | 14 +++++++++++++-
->   2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index fa52251b3bf1c..6a47a23ae9cd6 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -289,9 +289,11 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
->   	er = EMULATE_FAIL;
->   	switch (((inst.word >> 24) & 0xff)) {
->   	case 0x0: /* CPUCFG GSPR */
-> +		trace_kvm_exit_cpucfg(vcpu, KVM_TRACE_EXIT_CPUCFG);
->   		er = kvm_emu_cpucfg(vcpu, inst);
->   		break;
->   	case 0x4: /* CSR{RD,WR,XCHG} GSPR */
-> +		trace_kvm_exit_csr(vcpu, KVM_TRACE_EXIT_CSR);
->   		er = kvm_handle_csr(vcpu, inst);
->   		break;
->   	case 0x6: /* Cache, Idle and IOCSR GSPR */
-> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
-> index 1783397b1bc88..145514dab6d5b 100644
-> --- a/arch/loongarch/kvm/trace.h
-> +++ b/arch/loongarch/kvm/trace.h
-> @@ -46,11 +46,15 @@ DEFINE_EVENT(kvm_transition, kvm_out,
->   /* Further exit reasons */
->   #define KVM_TRACE_EXIT_IDLE		64
->   #define KVM_TRACE_EXIT_CACHE		65
-> +#define KVM_TRACE_EXIT_CPUCFG		66
-> +#define KVM_TRACE_EXIT_CSR		67
->   
->   /* Tracepoints for VM exits */
->   #define kvm_trace_symbol_exit_types			\
->   	{ KVM_TRACE_EXIT_IDLE,		"IDLE" },	\
-> -	{ KVM_TRACE_EXIT_CACHE,		"CACHE" }
-> +	{ KVM_TRACE_EXIT_CACHE,		"CACHE" },	\
-> +	{ KVM_TRACE_EXIT_CPUCFG,	"CPUCFG" },	\
-> +	{ KVM_TRACE_EXIT_CSR,		"CSR" }
->   
->   DECLARE_EVENT_CLASS(kvm_exit,
->   	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
-> @@ -82,6 +86,14 @@ DEFINE_EVENT(kvm_exit, kvm_exit_cache,
->   	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
->   	     TP_ARGS(vcpu, reason));
->   
-> +DEFINE_EVENT(kvm_exit, kvm_exit_cpucfg,
-> +	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
-> +	     TP_ARGS(vcpu, reason));
-> +
-> +DEFINE_EVENT(kvm_exit, kvm_exit_csr,
-> +	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
-> +	     TP_ARGS(vcpu, reason));
-> +
->   DEFINE_EVENT(kvm_exit, kvm_exit,
->   	     TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
->   	     TP_ARGS(vcpu, reason));
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>  crypto/jitterentropy-kcapi.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
