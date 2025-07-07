@@ -1,154 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F921E5B88
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B004A06
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873277; cv=none; b=rPkeIoa+u69usvUmbMWGZ49Z4FWhQCvJlCxlsNJVQf6tyKab/2K8HQGs3kmN+80g+EIxu96T+RE5EQWULvNoT9OuJmob+gIQlftcSyxtfqFUZR0Li93JeRRd6mjkicRf0+odPaHW6heJj6yAyrtTFWRYy/cLFfKoycuZ0hS/1ic=
+	t=1751873365; cv=none; b=if+oyRg9ACRwUR+3OHeWDtZujDQmiEP174MzY11krZJls8OQIcokS535zaxDh9hr1spu87oD/Eeun+zNtmWJdguR7RyVuPIkzzQIlV+XJFrU9hMmZXmOf0PkRHH2si8eIw5QnI815n1TT5wFVPp9RiMi9gZl1WmdZUUKELfn6/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873277; c=relaxed/simple;
-	bh=6ZRMdpT+McJqu/mEN/9KZP27oWN1kuSvVMzgxrAD0ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SbWWhILWIRYaoFDKCZNN4FC3wa0fjI4VzM1+iqVl3vWoTWNmRKz6+6L10mbQIJ5UU/a2V1p5dQmOrr1iWa4PbjBBe7yzu2FZCr8srXlr9YQwH/0YwHnXWBw4D1l9i/i444n29WQIG9aOL+ZWsfn8gVMURcQWn2rSLm9SiaEFhrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LsUlOnEO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751873365; c=relaxed/simple;
+	bh=a0jwSxd8Taiyadtysu1pNvv5ign0mV2IiSRRuAPBis0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TQkEHlgQL0tG30Cf3dJVtmpnQEpP6V06D641sDBmIxqslIujz/yV+Ct5QPzy4qqKHpGNk97Dbb/CStGMvbkgWSKMcj6+LkO3cY0ZaaUsj+UO0Udqpf4MFlF85NH8YGPNgBYRs7qtGU1n+Jltwr5OE9LYakhFpa+P2M9qXmp3hz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwlGSQSs; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LsUlOnEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751873274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HC7yKf+9w9opVa105dzrjvxrKrrw0BuNCFrxLSAoT7U=;
-	b=LsUlOnEOu5u480m5hwqwv9QtcBzd7pndEONn69KMTm8wvycUPx0BTnwa/Xc+ag6Woyj5Vg
-	RafpFkFBnC8z7eb8l8mbNCHf01MDDwpWI0KyQ2w1/3niLtck4QHhB9uEQk+rpd+Ur3K3tY
-	F55kbUaEe31h8QTVT4zlSrpmP36k090=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-6keMi3QxNhuttV1jy2D3ZA-1; Mon, 07 Jul 2025 03:27:53 -0400
-X-MC-Unique: 6keMi3QxNhuttV1jy2D3ZA-1
-X-Mimecast-MFC-AGG-ID: 6keMi3QxNhuttV1jy2D3ZA_1751873272
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3b20f50da27so1710411f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:27:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwlGSQSs"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3b20fcbaf3aso497547f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751873362; x=1752478162; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7BZqFkfOFsbvgNq/dMOXUdgZS94yQFfuDJDCmTrvc8=;
+        b=RwlGSQSspA5R1kc5p//pKHdEa3wIH+1cXDzRoto1F1RMzqTcgvVXlj+REr+1OHZIFT
+         xpRG9JMxujcfeNeXpVrlaTckU/FON27u8tqJfU6H+UjKjGhSY35WZ2uE1f3gpTsDBhTZ
+         gqPUZn2OGwSNbgKBTpEd/gEjLoxpyxoKRFuUcNMgdho8TS+rsmG+9t0SgqREvim4blgL
+         MU6NGiVl+W6QOfRnHnMuBEXIdy47WprnrUy4yWTDUUBcJN+OXexzJ+hXHrb0BIDhUfG9
+         fM8T0DszcZZSJAmhC+gydCz8Oh76Pty5xrenpxtxaGAOXsLInWJq7u/SNOQdoPyFPdz8
+         ++iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751873272; x=1752478072;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HC7yKf+9w9opVa105dzrjvxrKrrw0BuNCFrxLSAoT7U=;
-        b=YeBqoeRdLYgJ4beHYnmWJ3vPLwGRFnH3piKzbzlv3+sreQ2LojLN5/0ha62cEqUdXZ
-         JuIhnGnAgfj8lojP6CQUtybSpXROrvV0SFpls70VU0D2JTaNmEFUpuh4A2jpBegGKqTm
-         xF3NdtdCy0bMXB2qGmsh32HyDCXi1Kv5BtHZu3Ta62Uwk5XgKLlz2uN1eBOyYbNBhyaf
-         CGB66erRIUh3JV3ITRQvZ1onPLWiR6vMnarXig1dDRbvn/NmeltMAV7i9n9iZeA9VnCO
-         C0ZvgCj6quZbkI215caD3WNTwsgHI5VNrnoUV8+iwoBgOlkj5KwBNyMfrveGhC4HBoXx
-         UMqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfTG9GZjFM4e4C1U5K2d2Yw/pYRlrFPrjsYfpa1Z1Uk2CcqA8Ny6CNf+XuFuWNU3TLkhU4OGqkQTs+6VA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG19nCNVT3DT3sCaWC7CjkZD/bnIYq5PZz/d1CtGZyewVwkBLk
-	l+klpgeYFli65lxjdp6eCvml6D1ZRLlqNCSXsm8r8rxDoBgfOr0Q3xZYEV9x4d+Mg53gl8CXOaN
-	ZDB0uc47uAgt23RPUz5QQXSBmtvoI/qBKqesFTLP1Y+/waqnNhK1cDunKBhkyOBQqlAcNHYgZMA
-	==
-X-Gm-Gg: ASbGncs+xaa+Gdh4bCv6fgXdBtikGjYu+msJzmzeBzv/e1seAehR7YxFZyHJ2WAnbIo
-	cUK5vnWSeNy+ypl1w26lNOiBk852Gnz4a0qD+jbfwJ0pkDjR0BR47jnfdHHyD1f4bzM38c71U4M
-	TNDenfj5GZq+T27UV1F5WXfYbt5qgE2irXoDeS8+19n2v/dwuR/gC53h8448RTToX1K3Q1YJEbq
-	1u466n1eoqIIhaA9L8x1QazUI+aLHrxG636sgMbEXH3J2grkzNARN+ejWO86WSEcj9Kb5J6ZwMC
-	GGvqirj8s5DILk1gxI+kP4jkc+ZQqGbilrNbqWQiPZe3GiLPj5+TTE5vtxNoFJZh+fafu7pmLIF
-	WvVCr5UIZKBydN+xKQI5fCGrX54YwbavKA1Xh66ERmkdS9cCQXw==
-X-Received: by 2002:a05:6000:3108:b0:3a5:8991:64b7 with SMTP id ffacd0b85a97d-3b49559284fmr10684630f8f.26.1751873271644;
-        Mon, 07 Jul 2025 00:27:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IELafVMBSMdrh2Gu2ElEmXQqBxgX9Y+0teI+QOSPrL3jecJYWz1a5N7Wo6fScbLaQp7+HuJXw==
-X-Received: by 2002:a05:6000:3108:b0:3a5:8991:64b7 with SMTP id ffacd0b85a97d-3b49559284fmr10684601f8f.26.1751873271155;
-        Mon, 07 Jul 2025 00:27:51 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f38:1d00:657c:2aac:ecf5:5df8? (p200300d82f381d00657c2aacecf55df8.dip0.t-ipconnect.de. [2003:d8:2f38:1d00:657c:2aac:ecf5:5df8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0ae0sm9483726f8f.33.2025.07.07.00.27.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 00:27:50 -0700 (PDT)
-Message-ID: <9ee49c32-0cc5-4cb0-a7d5-979af9f8d5f1@redhat.com>
-Date: Mon, 7 Jul 2025 09:27:49 +0200
+        d=1e100.net; s=20230601; t=1751873362; x=1752478162;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f7BZqFkfOFsbvgNq/dMOXUdgZS94yQFfuDJDCmTrvc8=;
+        b=RvvTemC/s5aZFHSbWfLZRUMSC0D/D9ZxXXS1CSpRbfF5Y0+Oyo4De4dxZUX+7VeusP
+         HB0GmfIlzBl1DJNBwdxLzevrPZueEob1cmK1nWAOAhSDuaAb48b+WSYDvMYrCGuhHE2p
+         EKqVfKf128dgXNodAMvaQPUqYCAEJ0jXkJdWUtAK2aZdhQv8s3FvZFcYvif2mbzsc3sD
+         Y7015qCm8u1U5p5YR+deOrqdJO+Kc7kHUV5/j8nSra+lrqBepPai8e4qyd+G3D2m7bc1
+         en7J/+Tsdj3lwnYyrfHG4X6lIb+ameyoOrFdTFhjr3e1q+SgVv/poIlnIiZ1lq4JKTKM
+         4Ggg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvLt6g0tunq6qq/wYvRtjIBHkD0hWRQRXDSz9ldvH+j2ID7RV97leA8Jr36gOBCXjvA03aIH2R5UYpVdg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWG/j2dYt09GfHLFuXOFMuGudcSBIMJAq+NEb6qdDJOjBHH07j
+	Yrjq04suDYDa+e4qGh9tmG2+1R1X47fwGFy7HgN+OQ4iZLPGaI2lrOrY
+X-Gm-Gg: ASbGncszAW3FFGRGTe4J96NsIAL9wJ0jNRtVRaEWgZWJg6p/JI+EW+cnuHRC45B693e
+	1JUU0NFEaIaRdBNiG8i/AQvDrWJO29t3MR6620uXKsS6y5qud4c3pFICzwHxom4ZjBSQwfH3c2M
+	acfZNKvZ+tD1Idfu0QNu2yy9M/KUUhxqgDM03mlVWirC9viYJb+YvlEYhGXYdzHgkFXW3SC8RA4
+	NJY15NmhcPODnLJCCU0yHz/UgrVgXzPUuEQi0Er5c/F3iW1rwXOe64LnoPX9rj6hQX6rOtaprhI
+	WdEqQeqzMZ5jxKFgzA2epra4iZvC59m5QkK+V/z2UymiCqYAsdJ738Q2H8AFxTEeOlxqaJxOI7X
+	LclVbIykFQbN3gs4=
+X-Google-Smtp-Source: AGHT+IHji7PN/GJFmbMU9res4F6B0DmJU3BUQZ93VGwv1mxSzlZuoVKlPVnXhlUOtz7ZsOT9N7jXRA==
+X-Received: by 2002:a05:6000:4007:b0:3a3:6a3d:163a with SMTP id ffacd0b85a97d-3b496604c59mr3115795f8f.12.1751873362269;
+        Mon, 07 Jul 2025 00:29:22 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:ef01:c9dd:1349:ddcf])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3b471b97f10sm9478350f8f.57.2025.07.07.00.29.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 00:29:21 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Yifeng Zhao <yifeng.zhao@rock-chips.com>,
+	linux-mtd@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: rockchip:  Add missing check after DMA map
+Date: Mon,  7 Jul 2025 09:15:50 +0200
+Message-ID: <20250707071555.17704-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] mm: introduce num_pages_contiguous()
-To: lizhe.67@bytedance.com, alex.williamson@redhat.com,
- akpm@linux-foundation.org, jgg@ziepe.ca, peterx@redhat.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250707064950.72048-1-lizhe.67@bytedance.com>
- <20250707064950.72048-2-lizhe.67@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250707064950.72048-2-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07.07.25 08:49, lizhe.67@bytedance.com wrote:
-> From: Li Zhe <lizhe.67@bytedance.com>
-> 
-> Function num_pages_contiguous() determine the number of contiguous
-> pages starting from the first page in the given array of page pointers.
-> VFIO will utilize this interface to accelerate the VFIO DMA map process.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> ---
+The DMA map functions can fail and should be tested for errors.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Fixes: 058e0e847d54 ("mtd: rawnand: rockchip: NFC driver for RK3308, RK2928 and others")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/mtd/nand/raw/rockchip-nand-controller.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
+diff --git a/drivers/mtd/nand/raw/rockchip-nand-controller.c b/drivers/mtd/nand/raw/rockchip-nand-controller.c
+index 63e7b9e39a5a..c5d7cd8a6cab 100644
+--- a/drivers/mtd/nand/raw/rockchip-nand-controller.c
++++ b/drivers/mtd/nand/raw/rockchip-nand-controller.c
+@@ -656,9 +656,16 @@ static int rk_nfc_write_page_hwecc(struct nand_chip *chip, const u8 *buf,
+ 
+ 	dma_data = dma_map_single(nfc->dev, (void *)nfc->page_buf,
+ 				  mtd->writesize, DMA_TO_DEVICE);
++	if (dma_mapping_error(nfc->dev, dma_data))
++		return -ENOMEM;
++
+ 	dma_oob = dma_map_single(nfc->dev, nfc->oob_buf,
+ 				 ecc->steps * oob_step,
+ 				 DMA_TO_DEVICE);
++	if (dma_mapping_error(nfc->dev, dma_oob)) {
++		dma_unmap_single(nfc->dev, dma_data, mtd->writesize, DMA_TO_DEVICE);
++		return -ENOMEM;
++	}
+ 
+ 	reinit_completion(&nfc->done);
+ 	writel(INT_DMA, nfc->regs + nfc->cfg->int_en_off);
+@@ -772,9 +779,17 @@ static int rk_nfc_read_page_hwecc(struct nand_chip *chip, u8 *buf, int oob_on,
+ 	dma_data = dma_map_single(nfc->dev, nfc->page_buf,
+ 				  mtd->writesize,
+ 				  DMA_FROM_DEVICE);
++	if (dma_mapping_error(nfc->dev, dma_data))
++		return -ENOMEM;
++
+ 	dma_oob = dma_map_single(nfc->dev, nfc->oob_buf,
+ 				 ecc->steps * oob_step,
+ 				 DMA_FROM_DEVICE);
++	if (dma_mapping_error(nfc->dev, dma_oob)) {
++		dma_unmap_single(nfc->dev, dma_data, mtd->writesize,
++				 DMA_FROM_DEVICE);
++		return -ENOMEM;
++	}
+ 
+ 	/*
+ 	 * The first blocks (4, 8 or 16 depending on the device)
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
