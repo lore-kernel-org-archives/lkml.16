@@ -1,52 +1,56 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A7A19F41C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB7C1FCF41;
+	Mon,  7 Jul 2025 12:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889671; cv=none; b=JVCmcFQP7LxcyaC2Wrgg0uwL5z9D8DyZD9SQxEg4SHi2C0HgrRSyyx1mo3jTZFGaKhQfAOtRrQExWpEcw5jz8UOl/gCzVxoPDz3yhbwGztLOtStXkIeSQiGQRp5n6bwtpr58nVCmQN/Q2EeVQsLSTxXghIdXKjSx7z6vSkK+58o=
+	t=1751889730; cv=none; b=KLWq6xUFzOTh17hKwE97K2y3YQ/H3v5SevUXbgXm4tXyFkhSqlLiBF+Kf9cgNRz8cCu/GxGIrKU5sO01qZBiFTNsu9N2Eb0WHzAcqgfX+jBrZl0m/W6VRdrQapfz4blJfcqW8mndguaQc+YmROvA7L0xFsPS/llP6VkyvmlAV8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889671; c=relaxed/simple;
-	bh=NYE1/zwxWHmOulQ+HuKvBZEAn3rmUhfmFV+pVMZCm9M=;
+	s=arc-20240116; t=1751889730; c=relaxed/simple;
+	bh=kVFoEUGp2UNblRLb6XHbJyewGsxkZT1YXp1RdETPjgA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOoz/jjsyWJpofBCjUxZswNY3jZ8QDTIMdhFE2hLbQULPabU/2m2RrOEe7pbvBhcFMWw/7ZzLXvWTyfChEF82tKQ85f80RG/zBm/dzTaBL1Pov4clvrxUlHZZpOsdnxmMjWAQyqrldK0BZuupPYD64GFKKNbjdkOfr0LM5WorTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=J/CH2BNN; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaGLz6/eu34iuabuAWJFb2N2p4ukNDEvsVsEMcqAIPn32zIyMFX4uaZ/kDL2tLWr5tONGyF6dzmiTmPVws61xrF6njzAh55psMJa+X8yCgqyEn2HJAC8Fz/1s8BwWHmB+8NuM776z+SlaIe3XQpFaq3ZR9h8A/2tspcjWdsZHzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDKAXIhz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="J/CH2BNN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=v6Qu
-	fareNLNn3UFYbV8ntusgGG8AMzvapPp5xVg2a8Q=; b=J/CH2BNNwBz/INtXzqUi
-	JzXmw4WYqaSpUAAl5/1nQT8ew9Vcj/uHeuDY4/TlaHIbmUr9vu3C9v4iGTMpG77P
-	5GzWM/Aa2pn3kjxwcRSglh8NniQese4kdaoTP/O6J1V8y2kIFx2uo/NN5MgDvycW
-	mX1ZNLG7AQUH1NisBz+5EdQVI5YmboE4V6rOALT7OaECyDBRR9Ywe99FCWm5jdbQ
-	mSlt21SJ9K+ib9+P2+HsOAe8oyJywIL6IREQsxZ5wXBH2dcRbmbUT73lnc2ltXlg
-	5h5l9EVJBJdbSP4R4ga7P5iTqAna5b89jaFCM2o1gF4bzyqI0BxWwNewC1eIQkTv
-	8Q==
-Received: (qmail 1234705 invoked from network); 7 Jul 2025 14:01:05 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jul 2025 14:01:05 +0200
-X-UD-Smtp-Session: l3s3148p1@ksEpmVU5CsIgAwDPXxVOAFK6vZd9m4LR
-Date: Mon, 7 Jul 2025 14:01:04 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
-	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v3 0/9] PCI: rzg3s-host: Add PCIe driver for Renesas
- RZ/G3S SoC
-Message-ID: <aGu3AJHIEYgHVRQQ@shikoro>
-References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
- <aGtsM22QYqekuiQA@shikoro>
- <96af5f63-dbaf-4177-95e2-a6cc24019dc0@tuxon.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDKAXIhz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C767C4CEE3;
+	Mon,  7 Jul 2025 12:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751889730;
+	bh=kVFoEUGp2UNblRLb6XHbJyewGsxkZT1YXp1RdETPjgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KDKAXIhzKK8nhyJsT1ghan+q23bZK33/gYBQZL9JnKbtsq8KKMS+FrxY1bLcWYHD/
+	 z80rAiXnLR53tqaCiw/W2KhnhQY8bB7nnstEZr1P6Ve5i6oYF4I4OTTK/6Q3grAVsC
+	 E/Mm1Sbintz3rLtIO7ZOmG5edqv4KkUrASMdIZEbiJNbx3d+iF3v5GeTegBeiFJRGs
+	 Jtu1ucNnrHR4t1eETXsFnRY6dc121wka+ovWmiU4x/BGpKM65+0aSJS53ARECgDD61
+	 I83/3HkMrradwCjf9AwlMhMonNPswOpgLuLevANe+LCWLrjB/olbCdMQLiWNMeulIG
+	 PxNotJYXYv4uw==
+Date: Mon, 7 Jul 2025 14:02:03 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Asahi Lina <lina+kernel@asahilina.net>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] rust: i2c: add manual I2C device creation
+ abstractions
+Message-ID: <aGu3O8QzboCQiKSL@pollux>
+References: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
+ <20250704153912.1197034-1-igor.korotin.linux@gmail.com>
+ <aGgxfNh-sgkJls_h@cassiopeiae>
+ <954a40a4-2f5a-4ef8-84ea-3d2ba2c85cfe@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,21 +59,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <96af5f63-dbaf-4177-95e2-a6cc24019dc0@tuxon.dev>
+In-Reply-To: <954a40a4-2f5a-4ef8-84ea-3d2ba2c85cfe@gmail.com>
 
-On Mon, Jul 07, 2025 at 11:05:30AM +0300, Claudiu Beznea wrote:
-> Hi, Wolfram,
+On Mon, Jul 07, 2025 at 12:20:15PM +0100, Igor Korotin wrote:
 > 
-> On 07.07.2025 09:41, Wolfram Sang wrote:
-> > 
-> >> Please provide your feedback.
-> > 
-> > What is this based on? I tried v6.16-rc4 and renesas-driver/master. Or
-> > is there a branch I could pull?
-> > 
 > 
-> This is based on next-20250703. I pushed it here, as well:
-> https://github.com/claudiubeznea/linux/commits/claudiu/rzg3s/pcie-v3/
+> On 7/4/25 20:54, Danilo Krummrich wrote:
+> > On Fri, Jul 04, 2025 at 04:39:12PM +0100, Igor Korotin wrote:
+> >> -pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+> >> +pub struct Device<Ctx: device::DeviceContext = device::Normal, State: DeviceState = state::Borrowed>(
+> >>      Opaque<bindings::i2c_client>,
+> >>      PhantomData<Ctx>,
+> >> +    PhantomData<State>,
+> >>  );
+> > 
+> > I see what you're doing here, but I think you're thinking this way too
+> > complicated.
+> > 
+> > I recommend not to reuse the Device type to register a new I2C client device,
+> > it's adding too much complexity without any real value.
+> > 
+> > You also don't want the DeviceContext types for a device registration, since the
+> > registration will never have any other DeviceContext than device::Normal (see
+> > also my comment on the sample module).
+> > 
+> > DeviceContext types are only useful for &Device (i.e. references) given out for
+> > a specific scope, such as probe(), remove(), etc.
+> > 
+> > The only thing you really want to do is to register a new I2C client device, get
+> > a i2c::Registration instance and call i2c_unregister_device() when the
+> > i2c::Registration is dropped.
+> > 
+> > This is exactly the same use-case as we have in the auxiliary bus. I highly
+> > recommend looking at what auxiliary::Registration does [1].
+> > 
+> > Also note that if you want a reference to the device in the i2c::Registration,
+> > you can also add a i2c::Registration::device() method that returns an
+> > &i2c::Device, which through into() you can obtain an ARef<i2c::Device> from.
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/auxiliary.rs?h=v6.16-rc4#n299
+> 
+> I took a quick look at the auxiliary Registration abstraction and I see
+> that it is not applicable for I2C subsystem. The issue here is that I2C
+> C code doesn't provide with an API that can registers an I2C client from
+> already existing `struct i2c_client`.
 
-Thank you, I doubled checked and tested again. Still works, great!
+I don't see why the following wouldn't work:
 
+	struct Registration(NonNull<bindings::i2c_client>);
+
+	impl Registration {
+	   pub fn new(adp: &I2cAdapterRef, info: &I2cBoardInfo) -> Result<Self> {
+	      // SAFETY: [...]
+	      let cli = unsafe { bindings::i2c_new_client_device(adp.as_raw(), info.as_raw()) };
+	
+	      // Handle ERR_PTR()
+	
+	      Self(NonNull::new(cli))
+	   }
+	}
+	
+	impl Drop for Registration {
+	   fn drop(&mut self) {
+	      // SAFETY: [...]
+	      unsafe { bindings::i2c_unregister_device(self.as_ptr()) };
+	   }
+	}
+
+And in you sample driver you can still the exactly the same as you did before:
+
+	struct SampleDriver {
+	   _reg: i2c::Registration,
+	}
+	
+	impl kernel::Module for SampleDriver {
+	    fn init(_module: &'static ThisModule) -> Result<Self> {
+	        let adapter = i2c::I2cAdapterRef::get(0).ok_or(EINVAL)?;
+	
+	        let reg = i2c::Registration::new(&adapter, &BOARD_INFO)?;
+	
+	        Ok(Self { _reg: reg })
+	    }
+	}
+
+Note that you can also combine you two sample drivers into one by doing the
+above *and* register a and I2C driver that probes against your device
+registration. :)
