@@ -1,162 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC85293C75;
-	Mon,  7 Jul 2025 08:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D65428A71D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875428; cv=none; b=gwXtkQXfONaNLBr+ZIcrHg5zFT69EpzsVEFGvta2Nt7B3d3n4qIknZqmPCKnEYhJsCG7StqPXSQuxYfdJYsRzyhvHCrxF5V8VI/iFM+JlAX6c9ggz2oSFqv5LVrO8m1dc3316mbe3s62/pLu6qBzwwu3XnB047lsnRfAt85hHf0=
+	t=1751875461; cv=none; b=PUzAdWy/hpCPai4l0e2NFvAdoVbprr8eV2znoJV+ewDEsO8N/nfKvxAR/4O0tc65UhOGY0yQY8/Ed+H4dqmo9jTtxWbJ6YWguqxL8gbw+6ydsFJVBwVkrDpTiZNHWUuSUTONQpy64e+EtOYPa6acuaS5fhUGGt27mtIUfVHEABE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875428; c=relaxed/simple;
-	bh=NHjNJyeyoaHBgyvq1fO7NjPZypX9iUv0DN8fJhLnDZg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r0z7sa2bAP8+KJe7tQ12h9asGFKZCLOxqtwAw4IuklsPJqveQ4DzAWFxWEJllBDDp857z8gRr7EAHJEwxGMH5+dr11W1t3Ga/bGd4lLBV4M7R7nkwzx3W99/vEX2MtBMpKCE2gaA8fp1HygHMqY5kTgEo2KxBt7EAPuXp8q4EMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mUaC3QJ+; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1751875461; c=relaxed/simple;
+	bh=IEoYgZVPqV6REtyvNEYkqmdU4AlOYV3bBv9n+zrtW+0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D13vrE5k2oc+u5txE3GZSSuH6k8jKGUtORmxpAALWRS9jYrCIatbwniUe9vLGmNwvfJtUH5X/BgFbrl/zc9SG+ay0Nt4M6slzza+R/7UF2xjKVLmtTQ5aOFCcTK5gJe5czALEnW3P0WXWi24JVfXztHCjEz80Y5nHVQIdSjRY8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OrAeMbWM; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mUaC3QJ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751875427; x=1783411427;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NHjNJyeyoaHBgyvq1fO7NjPZypX9iUv0DN8fJhLnDZg=;
-  b=mUaC3QJ+4MgGQldZdsEirfwPEuqPdr5UEGG6sx112kUoPVZjr0wUnNnT
-   83xyF4XtrLiTxCEImyw3w4wIdXCmj1RGMX/TjID2oZb1r2Jgc2y4ilTNa
-   QSjqg8mAVJBk+lZ+PXP6TJekzqr59Mg8BC7CMZASOvMM7+PdzvWJWI1W6
-   mO8jF7c3qBjMIWK8vqAMJh2tmgrIW76NuG3Wfd/3CmcSDd+14A/CNgQwF
-   JDLcmRKBGcQ7AJv2DznR5sgAaLzw6wfalwpdwstv9Dg0VE5mSCcWhCeXF
-   A6sVDv8OLbTaSsfoQYGvAEx+9Wpz/rI4+VQ5yixbFoAgRnYzpASE0+OYd
-   w==;
-X-CSE-ConnectionGUID: NCq42qcLSOOPjPSO3aovQA==
-X-CSE-MsgGUID: eWddtOK7RDWKkS9NBjXJfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65151974"
-X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="65151974"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 01:03:42 -0700
-X-CSE-ConnectionGUID: QbZyERTwQveB+rAHFYbJYQ==
-X-CSE-MsgGUID: 4cfO9IaSQTuu9vH6M/pBbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="154573904"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 07 Jul 2025 01:03:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 55183A84; Mon, 07 Jul 2025 11:03:18 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-mm@kvack.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv9 14/16] x86/cpu: Enable LASS during CPU initialization
-Date: Mon,  7 Jul 2025 11:03:14 +0300
-Message-ID: <20250707080317.3791624-15-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250707080317.3791624-1-kirill.shutemov@linux.intel.com>
-References: <20250707080317.3791624-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OrAeMbWM"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a51481a598so1488055f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 01:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751875457; x=1752480257; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IEoYgZVPqV6REtyvNEYkqmdU4AlOYV3bBv9n+zrtW+0=;
+        b=OrAeMbWMGSqIdFhUjy2qNfv5YBKOfuqvgNPSGBqk9aclu0IZgqRwttTG3akD7TAlst
+         Dr5vjqlBcG8iOK4ZN9kQdgO4ShCmi2l1UBC4Tq9UWqGgHsu0p5ysxA+9Rlov7EXp1QdR
+         4CYbcr+MD9/bdV6BagNrbqx7CTKPA0V8mlIT6FmTTMaJjJ9jSxSMH0plhbJH+rfDxIg2
+         2Ze63+yXKmr991n7Z6jHYBientUxswE8D0AYyPNPpbZ37lPiOCYFzIWmMPVQKhw+ojAM
+         kJzuyeSna28MRFSTRuIEnSR22BtxHG7bH9mx1pi7qckY50/UzjDA7bhQcpwAWLonaBOb
+         0ikQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751875457; x=1752480257;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IEoYgZVPqV6REtyvNEYkqmdU4AlOYV3bBv9n+zrtW+0=;
+        b=c8aC6ujT/VTWZiRvv8A+XrwvK6uA54BaTHKWz3yblbh9oe5EJ5paG1wdvsplnNZ5pu
+         AzU8x7atC7oxaJwk4vZKHptjn4VVnXcjk9c582mHaj+rAjbf8rgMy6UKFq+NF1JAzKsz
+         Sa2Nbnl1O5XfAvQlRN1BS2XZhoNyYTkQj3RfYn+Bmx/uAoKk7+XG3OL/WjVLf0tE9bIA
+         ySIobaaQkFnv45AJ3VMNqQQLrHgYHH68qxyusnb7gUpo1kzRRLxpAI4o9jhPZfS2pIel
+         sibvlr/nm+NUATpt6KJQz/0aoRW9YdVAvhz1/Sj+oXSUIizvpDYBlB9kL0K0jBF1Jlpe
+         gqEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR4P+GSkXHk4YilAiEZXq3zv3ysHyTKwzFfPvftjhvvBXSJXGnALibx60JNr1cqc7YlCTEG0iP6rIdloc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziA2uHy/naFO7k3yW+lS1lHMyZ+jjTWUu1naqw6xSNn6QL6Zod
+	kL8ssoHTTCvLS6Ya/GmLhCMMt9IZ/4YfNVnSYPKhoDxGCv8gGojljwjPynvl0sGK6zc=
+X-Gm-Gg: ASbGncuBu4rBhoeewTgqB0EDqIj7ZjerzHRPqASmfxz5mFDnij3Fd+RNmfRvRXBKF2q
+	DeY7Hcsh5/dHdjTbb6FdLpR+g3z1GjkJBpjlQxVLeaSYRhGfdULyOWHi4EEdd9ZHe9x10qEmHaN
+	Yqxl7E8K/PHMfhS5vDo2Ch3ORrJhIdFt24yYQLIlT9pn3Wi1t8M0vEACIa2+UkuzgYZ7rgcQRmX
+	q3/FLxTxWQp1R3I2V8Cs2JwCvPy4H9V/Vs3sjY2ffBBTqF06qUKugdhQAZT5LmbfSnomB/INWc9
+	oPFrchiD6ixfeB8gYGY3gWxEmRdcEctXYbbLlif/JDgzDImt87MkX1pYhkaG+aHFzg==
+X-Google-Smtp-Source: AGHT+IHEIeX1O24CgOzuWsNBfkxeH6TOmmWEVLZJcsdlbgvxYrZII56COdsRCTeJJ4eyH1AmqDGCWg==
+X-Received: by 2002:a5d:64e5:0:b0:3a4:e609:dc63 with SMTP id ffacd0b85a97d-3b49701fd14mr7926081f8f.20.1751875456566;
+        Mon, 07 Jul 2025 01:04:16 -0700 (PDT)
+Received: from [10.1.1.59] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1698f54sm103519225e9.33.2025.07.07.01.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 01:04:16 -0700 (PDT)
+Message-ID: <2e26f8f534284b280e9d5e8d4ae556a452e93ff5.camel@linaro.org>
+Subject: Re: [PATCH v4 2/5] power: supply: add support for max77759 fuel
+ gauge
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, Thomas Antoine
+	 <t.antoine@uclouvain.be>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Dimitri Fedrau	 <dima.fedrau@gmail.com>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon	 <will@kernel.org>, Tudor
+ Ambarus <tudor.ambarus@linaro.org>, Alim Akhtar	 <alim.akhtar@samsung.com>,
+ linux-pm@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org
+Date: Mon, 07 Jul 2025 09:04:14 +0100
+In-Reply-To: <CADrjBPo2=FajKA0t7TTMdH6iK_qbWCSJK-hEqh+UWEuzC7wyGQ@mail.gmail.com>
+References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
+	 <20250523-b4-gs101_max77759_fg-v4-2-b49904e35a34@uclouvain.be>
+	 <CADrjBPqOMOyHP=aQ1+fg2X58NWRp-=MJBRZfpbEhQsTzaZ9LHw@mail.gmail.com>
+	 <bc40326f-db40-4657-84a7-152def2ca9e3@uclouvain.be>
+	 <CADrjBPo2=FajKA0t7TTMdH6iK_qbWCSJK-hEqh+UWEuzC7wyGQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1+build1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Sohil Mehta <sohil.mehta@intel.com>
+Hi,
 
-Being a security feature, enable LASS by default if the platform
-supports it.
+On Mon, 2025-07-07 at 08:16 +0100, Peter Griffin wrote:
+> Hi Thomas,
+>=20
+> On Tue, 24 Jun 2025 at 16:45, Thomas Antoine <t.antoine@uclouvain.be> wro=
+te:
+>=20
+> > I am unsure about what to do about this initalization, especially for v=
+alues
+> > which slightly differ from the devicetree. I think for next version, I
+> > will have the same parameters be passed in the devicetree like android.
+>=20
+> We don't really pass register values like the downstream driver is
+> doing in the device tree. I think you will likely need to add a
+> max77759-gs101-oriole compatible to the driver and then have the
+> application specific values, and m5 gauge model algorithm as static
+> info in the driver applied from the dedicated compatible. It would
+> also be worth checking whether any more of those register values can
+> be represented by the standard power-supply binding properties that
+> already exist.
 
-While at it, get rid of the comment above the SMAP/SMEP/UMIP/LASS setup
-instead of updating it to mention LASS as well, as the whole sequence is
-quite self-explanatory.
+I believe these are likely battery specific values, and were obtained durin=
+g
+battery characterization by the vendor (or Maxim). They can change (with a
+different battery supplier etc, hence I don't think basing this on a
+max77759-gs101-oriole would be correct here.
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/cpu/common.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+As we learned from the Pixel 6a battery updates, the same phone may use
+batteries (e.g. from different suppliers).
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index f10f9f618805..382b687ce7e2 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -401,6 +401,12 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
- 	cr4_clear_bits(X86_CR4_UMIP);
- }
- 
-+static __always_inline void setup_lass(struct cpuinfo_x86 *c)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_LASS))
-+		cr4_set_bits(X86_CR4_LASS);
-+}
-+
- /* These bits should not change their value after CPU init is finished. */
- static const unsigned long cr4_pinned_mask = X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP |
- 					     X86_CR4_FSGSBASE | X86_CR4_CET | X86_CR4_FRED |
-@@ -1978,10 +1984,10 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	/* Disable the PN if appropriate */
- 	squash_the_stupid_serial_number(c);
- 
--	/* Set up SMEP/SMAP/UMIP */
- 	setup_smep(c);
- 	setup_smap(c);
- 	setup_umip(c);
-+	setup_lass(c);
- 
- 	/* Enable FSGSBASE instructions if available. */
- 	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
--- 
-2.47.2
+Either it needs to know about the specific battery model, or the values
+should be passed from DT in some way.
 
+Cheers,
+Andre'
