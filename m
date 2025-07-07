@@ -1,62 +1,96 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B2129C326;
-	Mon,  7 Jul 2025 13:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0397629CB5A;
+	Mon,  7 Jul 2025 13:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751893210; cv=none; b=skJW/lpa6R/6NsnvX/rEdHbSIpzBsX+Pw1O+unm0YjRIbsRT+ADIFvO7x6zaoA4SgmZ+KEUpU91HdWWYh2x25TObuXYCubVQxiAPkiiqa2Tyf9hD7fHs1cSn17Ceea/WwUi3BysJEBwt5A7bDZOvH13eg1rycev6fNbOsWbZqiQ=
+	t=1751893213; cv=none; b=FjsOr6gCuRy+frUqyQHALppAF08uXqET3YKM9ncMp28IFrzPBS5XQPkNaudrYeIi4C0KzfqE8+2sXWa47WqRCXs/j+NFlgdhj8fos1PZxKDd2WuiwNMLcmxj7RjS+FejNGC7dmiLoggEIvTsHF0w1pbTMPFAteOoaMccMlsoBBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751893210; c=relaxed/simple;
-	bh=vzpqH7cwAvt5EfB3DXmRzC/6/YWTutXwvmvDN5nphew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZI3Ky4QYKxsoiyveMV+k/ELw6iEdledTVnYwDHf4ZLtJbqPOQGFyVTwMUXainkJaTapxT806MIdyXS1Qe4BZATYqeBKj5qext7FS7hVwxIwlkdOqgAR/Lb0JGO3+tl/llKz6vxLnaCf5LS72zYnXGBHpS6FuZmSpYBqmdv4FEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=40eDqH1T; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1751893213; c=relaxed/simple;
+	bh=J3DjD0salwf2bBWotRPZRsxToyGSYa/Dj6wJBZqh9D4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=n3Oi+hEdtx2RevGpQJb6wVAyIEN0c2fTBAazQYMUqR7I3jVUezs9nywJJ7RWBFr9RdzC7Q0ftchiaOA3uP3qMEytzg0/8jd9NyKB07HDeLHVPZmsaYSl/i7eW1mNd6uAzBIYWOFkrb0LrpStSN/Ii5H1goIT4NSS2fJ3g1kQyJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XXzT9kpo; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="40eDqH1T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=l9BqN9JWYSkSCj4ALm0oMo2ahkDITzuK7PJIB/RwV+Y=; b=40eDqH1Tpt6pqjoWJoqMb+ZDZ8
-	Eix80QnvxzoKWTucgItsK2bvEHjme85duJ1+kEmPHlqgjO84oY/2HqYd7IgOMciEjhJqvnxIpWTpR
-	rZjW/suaXWN7HijOpVBHlONAUpd91WWK4Mn+6nQ92h7Tnks181om8Jk6o1Jm6AMvrzJ2C74DazQT4
-	9B5LTdFzE1q/kBjA7KSPuS3yX6AAbvVhyQ8NTBqI7lk4NdxcoXWQdWLhFh1/f/Ezk3dP3YMtqzchH
-	ITqXuQeuhtiC6lM0myVIN28zZ+JedOWRLK3XaL9yNaqNBmkLQ5yxLytFzICC620Lnl03PhrGMsHiA
-	u+Txu/ZA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYlS3-00000002Tjh-2VBZ;
-	Mon, 07 Jul 2025 13:00:07 +0000
-Date: Mon, 7 Jul 2025 06:00:07 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc: ntfs3@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	syzbot+a5d1c9dfa91705cd2f6d@syzkaller.appspotmail.com,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Subject: Re: [PATCH] Revert "fs/ntfs3: Replace inode_trylock with inode_lock"
-Message-ID: <aGvE1_yre9ayskxu@infradead.org>
-References: <20250707124738.6764-1-almaz.alexandrovich@paragon-software.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XXzT9kpo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751893212; x=1783429212;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=J3DjD0salwf2bBWotRPZRsxToyGSYa/Dj6wJBZqh9D4=;
+  b=XXzT9kpordaFF1haLad/aod3M5Srx4g7mGQ8wnTVrPVm9QIczVxNs/fM
+   1BhRowAgsjuEAY7C8I9JQE7W4gdkJXNEopcfm6EWrn/Rqiiyss2g0Hvcq
+   YOWfBaaweBL4+37WFGPnxwdWBWfzmCSwPUagS739FRoDUB0eWGenQFfM8
+   euK+dayoFYMUA754AfadZJ9SxsS4REWqBtM9964SZ3vuxQ/0Gtg/UB6ay
+   etgs2Hs9eYFE7EEvqe7EBzAUSmvpCWU7jSgyFI/RGjzrmItuIGcwxSeZ7
+   XoleJ22GNm8wdF6byFZzYG0Pt93niXY8RyDQYQbNE9V3LhtToj+tIuXwO
+   Q==;
+X-CSE-ConnectionGUID: 5lnmwUg3QPGeB5Dj9z2wCA==
+X-CSE-MsgGUID: Dsey4dQkTkmT/pCzOqsmSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="54079782"
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="54079782"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 06:00:11 -0700
+X-CSE-ConnectionGUID: mNeIJhdfRjqijpugQR9ARg==
+X-CSE-MsgGUID: C+3EcmpIR92v/zVMOmM/ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="159481007"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.104])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 06:00:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: sre@kernel.org, Hans de Goede <hansg@kernel.org>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250627205124.250433-1-W_Armin@gmx.de>
+References: <20250627205124.250433-1-W_Armin@gmx.de>
+Subject: Re: [PATCH 1/3] power: supply: core: Add
+ power_supply_get/set_property_direct()
+Message-Id: <175189320409.2280.2456749792554779164.b4-ty@linux.intel.com>
+Date: Mon, 07 Jul 2025 16:00:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250707124738.6764-1-almaz.alexandrovich@paragon-software.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Mon, Jul 07, 2025 at 02:47:38PM +0200, Konstantin Komarov wrote:
-> This reverts commit 69505fe98f198ee813898cbcaf6770949636430b.
+On Fri, 27 Jun 2025 22:51:22 +0200, Armin Wolf wrote:
+
+> Power supply extensions might want to interact with the underlying
+> power supply to retrieve data like serial numbers, charging status
+> and more. However doing so causes psy->extensions_sem to be locked
+> twice, possibly causing a deadlock.
 > 
-> Make lock acquiring conditional to avoid the deadlock.
+> Provide special variants of power_supply_get/set_property() that
+> ignore any power supply extensions and thus do not touch the
+> associated psy->extensions_sem lock.
+> 
+> [...]
 
-This is not a very useful commit message for a locking change.
-Please explain the problem this solves, and why the original reason
-for the locking change isn't valid any more, or less important than
-the newly arising issue.
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/3] power: supply: core: Add power_supply_get/set_property_direct()
+      commit: 3ebed2fddf6fac5729ffc8c471c87d111b641678
+[2/3] power: supply: test-power: Test access to extended power supply
+      commit: a5f354232118751fe43be6ac896f8d6e7d7418b5
+[3/3] platform/x86: dell-ddv: Fix taking the psy->extensions_sem lock twice
+      commit: d4e83784b2a9be58b938d55efb232d2751c4cab4
+
+--
+ i.
 
