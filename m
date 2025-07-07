@@ -1,157 +1,141 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411B2261595
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0B328CF7C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751879980; cv=none; b=fDzlSePqNwUEG2yHmnYBdBibi/b67e+xVi53+ungAurz/aUkHHtZhBeL35FYh5mwxsqQU6yFkdP9l4Vhhsuqf8rwmMKbOpFluBqj8qH4N+WgTqAEjHB29hS0sueTQLWrpkcKr4VOAXFfC33cEWl7eN5d/KcW/XL3QT/ucx25mlA=
+	t=1751880131; cv=none; b=cOyktw89BpVNcSup/zf9dzijzgSD0jTEl+i+TyXnYvu/60bo2n+TGNHRcug9J4RDzeQt1wS8VB5CxexMWxRAqsgb0SEBWzrGU+ZohmXgL3fh7mGs/JwMrAlZindLQoyvmmO9TqDT+9UhbpEgmcrHE7hNSgeDnSJauILFl/2ZGIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751879980; c=relaxed/simple;
-	bh=ljuEX21Jibul/BV1/uZPiIOWGalCwwuUymdQtWRaO2I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GRiKmoBnT9mzKKqXWkua9jvSElbBJLrCPPiELKrSO4ACsL71h1+EC20Cv2sVQSRtlDsuNFDWs8P6MmymLM8aNf1zj6BOqhhH6DRlrYQq2HYg2IW0CrNDP+NH8y0OYAKEqNBRbzDg/f5YgR7d34CrTVNzypxbQRqLE06h2G4Zlys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Rm45DgSY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751880131; c=relaxed/simple;
+	bh=9CBiR9TOWCnKgNQi8KK+PKvJFP1JysS8i8mIWb+NpbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i5x0QhMbdW24K/oeZCMrvba9FjPFHKp3d9q14sp18cQu2Nyc2yMPJ43f3SB3kJBab2GYofO0mDuybUETT0Vzu1qv9S60niiWgU30tyVQP/5W/pN9NfvaVkikRnFXfBi4upvFOwUAhvnUFEb77yL94NnFn+lplCBJS7JEdih2pDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y0i7U9zH; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Rm45DgSY"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566Mu8fJ032006
-	for <linux-kernel@vger.kernel.org>; Mon, 7 Jul 2025 09:19:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7VOMNRIdPe5++kYgsqfJ8vCXc2F2M2dCa0BteZPuPU8=; b=Rm45DgSYnQerxl79
-	0X4MW1I5IcYlbWtSLDtYyuPlwVTtgHL5NatR8gmftZ74YKU1wrFJGB/AgbAL73fg
-	LH8X8QB1r2y8CU8p2qljLvPqq4VZ8zogAmc1kAKY9I91ZACh5+fEkKJl8uRC5J26
-	cRlyaH3JkD+9w9IP/vzsWUX+bUS29tmhF/MCnVzrA8UYkl/+26BQsvINbnipSTdp
-	Mf9XBAkKAdRmQq4ChTSekzYsjaEjUFk/dwheyG9tQz1dliewkqm/75ARaQwjo3BK
-	pR1+c4mwjwzwSGQ28sWTQKJvMKlwbDu/JU7gDr8BK69j0sLf4/NtvLgkLfY2+kDZ
-	GqzQcA==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pvef3s8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 09:19:37 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a78573c357so2092981cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:19:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y0i7U9zH"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso470065f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751880128; x=1752484928; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/RGT5HGBF+8VjhFRui57jjPUPIu0aezjJFq6MnGr2Q=;
+        b=Y0i7U9zHjV3m9cOBRDDBSijrVlffvSqGB9Em/ZPdOhU4XpFVWKPV8ohOWFiG2cOVKG
+         F7jeMDh+gW23wy4r/pVVZ7OKWQku79w9DG9OjROr1oD+WpfB1CGGJK2PlQvWxO/1f9FN
+         HrN3sNOKcMjPkftjbiFpOJ+XfYJ+uwAjU1kdmKtsUDJiNqo/Q1gwhVbDSFL1i7mPl7gS
+         90cIGxj5rRcNVo/wa9WnKCLSnibsSSOtAxW9VKP875uqzcqtxjFjgC62XScQWUuMqdDJ
+         m6DR9tW2W4h0de4j2y97RpV98BmS1hV5PgAaAHWr1xxz9EfRJGOraa8ZxeVFvzrZo2/O
+         vqrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751879977; x=1752484777;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VOMNRIdPe5++kYgsqfJ8vCXc2F2M2dCa0BteZPuPU8=;
-        b=QD9nxTsiaRsS0mAsUvZvJy0m8iepftV6UgB7pKGYsOTdDhV/TSMJ+TUAer/qtXIKW5
-         0Qrr77Ko25+zu0HQrsUvCd8marft5ZC1F7J5fCwrawQgOOCmN0UIwoGWilHb3QWpLE+P
-         vY6HjkVyWk1oPc/q+kp4/UjOHHhCQedUCB0gpQxMvVntOGnVZTat2wBYv94IJPY9lNZm
-         5e20Y95Bsh8MYl+aigmDx/7Kml3VOcAseE3SkhDOQ1ob8z1KMkUsr6btm52yiSmL4fys
-         z3qrH+K93ZejjyBn/XHgDVSm4I0T6EEZWUPwoNQS6481IW6aV4MBc0f1i1SmjiJxpB0G
-         /vkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWuAi/yXoK/40oLQ1RPorqkPU6nmYFvq+fgK8j4tJnv9uuIfBH6hvSee2eP2GAdtcrUQ+NyZW3vQG1mJdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXlimBcAr+y1bwWM0+QGDKi+pySZ6P0as9xm2U28kXKWOd5uvk
-	/3MGUoNsqvgiiO6OFKCCUlxjKfxSAjBE0P6QjnzjhQYZyUnktLoO1RKreHCB8H99xeYlb3zeKXk
-	QnvIUcpyaaim/FgJHFxYgpcWsWZnPd21TsTrvVyQyWtCxC1zBHqK6AMS7IeNgGicKJt4=
-X-Gm-Gg: ASbGnctZ4K4yZ4t8ny6Z258u3KKXIPO7zerRqgjptibyVDUjFc+hcYH3QhGhBUwW1m/
-	rewX6d2shYcv1n5j9LELaAZ9j9DusH4Q5VQKZ85LnMc6x6fRY16cH8zR8OY7M9b8jrgEkTbPBty
-	wTpOpbdLySijA7cVQgc9jy1zliZuUmEvSw+GTJDU5bUnwDPRKBIVcoeGiucXDgOKm7yx7Lm8arW
-	JiFgPGAEH288J2F7sJJO2ueVt6Jx1IEkm0s1C259gCIrl1yV7JdL5vF1fUNyFvWtH8YWZclsvhS
-	JAT4A9taXxEhSlUTugYbCZ2Uv6iIDVrlrJpnVRBKwLEuavHlPXComMuG1AMREUk1RF6A7e6e6qy
-	i0eA=
-X-Received: by 2002:a05:622a:a90b:b0:472:4c8:64c6 with SMTP id d75a77b69052e-4a9a01330c0mr49003791cf.9.1751879977083;
-        Mon, 07 Jul 2025 02:19:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH8zQl/VV82jUJ16IKGzuIQK2MD0Ay6nJSmgRfvnHnWiCJMb9E44wM/hVre6rQPyF4QKYG6bg==
-X-Received: by 2002:a05:622a:a90b:b0:472:4c8:64c6 with SMTP id d75a77b69052e-4a9a01330c0mr49003631cf.9.1751879976627;
-        Mon, 07 Jul 2025 02:19:36 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6bb1418sm663547866b.183.2025.07.07.02.19.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 02:19:36 -0700 (PDT)
-Message-ID: <30cf5c9f-6c9c-4cae-adec-81fa090a3eb5@oss.qualcomm.com>
-Date: Mon, 7 Jul 2025 11:19:33 +0200
+        d=1e100.net; s=20230601; t=1751880128; x=1752484928;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X/RGT5HGBF+8VjhFRui57jjPUPIu0aezjJFq6MnGr2Q=;
+        b=TEotap7FZGR8H1AxRUt6SYUd8NkXA3W41kD51SSO6fIuNnYXbemzOkvzTWDIhQkVdZ
+         yEejU4ZjwYegs+i6CWPfYesVpKAl/WJ5a6+3KwXF5WsUUDWu2J+jEFb1OEl1bhCuC7JO
+         qeKFsnRUh/yLrP+jdRIrVsHZcOE7WQ2Pdi/roDhpViVouaIzAJ+La7acFoqNN6JNB6W7
+         klM2YFYMONS5iCb7b4+umgVVQE648aSPONzy+WscgnM7DSpXKWftX9zOOahDcNa+lqVH
+         21NBaeNuQnYeeRhATkBjpiV4DdK8XvQL2cyCUZEzhXxgAb2Nem0FQupeJHEwJo0RHPAj
+         qokQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyy7b7F+G+wTBx5K6sMYSC/k4x+tOmusdi84gmpIOTNy57efxhrnWh84hXFHHNmJgXUy01e3FLGQa2aqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC89L2+htuYpDa4K4u8c72f8JvkABmMOUOKUJfkuh8RxdSuOMc
+	BfuW2eHpvsiqg2I08BMeIlWB+EbgLu+rkOf7mvX0OIkRYIFX2gT6W74xByjYo3j6GeAlGeVfwCl
+	+c0M0
+X-Gm-Gg: ASbGncuseIOD2VBPGfL35tY5E9PIxdjEwezgjleEubom1f4eBdi4cpCyIOX4oxWDjVU
+	7qPbYwLr/DnQwfWvMNcmNwkhJqWC0dspwgaMC02ES9nXB6Yifm2+FIKoATCfVbMSCDehQ70D+OL
+	F0y/CetL+CPek6ahjiPfqtaJrwhc1qvSWmZ4Y9tKcGjczqWPLqeOWmdIfkHC+CG6r9kzlQavbWC
+	QSjKQNk1xYGcT2w4Qb2qEc2veh5VDqUtK0o7LRTgdZ0Wk91areUbsRjoKGqI/Sr7b5TWK9r8G+R
+	0qkTwLN6SdoV9GvRNI/hVIvgyG3rk20feshj977nPP3t+XUFbh0lNZD83RYIaH3MP9xiHjFRryU
+	=
+X-Google-Smtp-Source: AGHT+IEmtBu6YeZKoKQoiegI8X/Gknyma+eZ6JqiTsHUQ2DPjssPW5sDnI5kUumTkTjFeRMOXlB7pA==
+X-Received: by 2002:a05:6000:2582:b0:3a3:5c97:70c with SMTP id ffacd0b85a97d-3b49660cf7fmr3536908f8f.14.1751880127510;
+        Mon, 07 Jul 2025 02:22:07 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.222.89])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470caa1b3sm9453446f8f.43.2025.07.07.02.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:22:06 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	dev.tailor@samsung.com
+Subject: [PATCH] rtc: s3c: Put 'const' just after 'static' keyword for data
+Date: Mon,  7 Jul 2025 11:22:01 +0200
+Message-ID: <20250707092200.48862-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] media: venus: core: Add qcm2290 DT compatible and
- resource data
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-Cc: krzk+dt@kernel.org, bryan.odonoghue@linaro.org, quic_vgarodia@quicinc.com,
-        mchehab@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-        konradybcio@kernel.org, andersson@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
- <20250626135931.700937-5-jorge.ramirez@oss.qualcomm.com>
- <ded874b1-715d-a7a7-fd0d-3b98fd5fd029@quicinc.com> <aGuOzdCu5UmKDF94@trex>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <aGuOzdCu5UmKDF94@trex>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA1MiBTYWx0ZWRfXyH/GNHZQ0iTV
- WETOGsJmKqPQoha6ChBq7q6Ny9CEU1KHZm0jBiaXfDf3LF52vyw5kcDB2xdsngsdlFk7KM1iaPZ
- 7mVn3RwdRXhKpgPHHCu8zse4/hmT3hI7qAlJ36/lt/uiXCkE9s9pAB0jwLDimfNewg5j965YKux
- 01JBDbsPz3iTMnznl65NfxVSYRjIf3e9sBgyEaRJARXZcSWEpdoQKAZot0BOAVc2gSbWYoGsYPU
- cIWhSzAiDdkbC+tUMmFG+5nm7NR4C8w3BTx4oxmVk7BU55YUEDx36veTV3xgJvEhfOn1/7vryDQ
- hhxajCFSyi6SaKFnkKG4VIUntf/S8NwyqzQeOXViZCW7/JK5Gjf5TNYxyTYrBjPr9nLHBFVSrHh
- 58tSmt1q/MRLtMyye39JEy7/iQ37RdpBgAoj/ij8VNra4C8imrHMhjInOalJMddp/PKreHVW
-X-Authority-Analysis: v=2.4 cv=dciA3WXe c=1 sm=1 tr=0 ts=686b9129 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=xq3W2uTSAAAA:8 a=EUspDBNiAAAA:8
- a=iOyF40SCRJJOIr8PYD4A:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
- a=P5L7wpMTXyg1GfFA3Gwx:22
-X-Proofpoint-GUID: 83sQpEEyLV9gXx3KwXC-mpW5qqpQeEKE
-X-Proofpoint-ORIG-GUID: 83sQpEEyLV9gXx3KwXC-mpW5qqpQeEKE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_01,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 suspectscore=0 impostorscore=0 phishscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0 adultscore=0
- spamscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070052
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1548; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=9CBiR9TOWCnKgNQi8KK+PKvJFP1JysS8i8mIWb+NpbM=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoa5G5aTFUfeFtggW4NUSSXknQqlLnRJGeXM5E4
+ 0cN6JK6DeaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaGuRuQAKCRDBN2bmhouD
+ 1znpD/9Duh8C60/047e8drJ3MdCrHRGwxIIHp5ZZi1uwZ5cb7XVJoHylKxZso4Oey3EH2Xxw9/O
+ jtQlJ1VgP386O73+AUMMUs40Y9tnZtpAZFzjpKHALNSeDeCgjnZyLKt1vZjsi6V8c+45Z9UcBVt
+ 1IpulK7zTzW8ZZj4HuK737DgEQdDsRe9APMxSvB2gXaq9iQ9CkB+f8DOYcNf/rqR2XMoAcl5K9M
+ FWTfnFW4VrJv98M+a/P+kU6EtbZw7IbMDdZF4sI4FgOSWvY0hp9X5Cad/64JPUfZ9VaXD0qONkD
+ k/I0mfQiBUstgIO8PVmqtbwgFQn7bzU5eutyvNat3KaJWtH3kH8KKMwte84BCmg9NGI6L7EfqBZ
+ aLgb6UFyIJf/gleef5gsbL/vJSEg1VutSNenIiY6OfVA4LqDlG4rRD3LV10ivWa/mqjD6x6gpkV
+ v+D2RHivRiMGoZSxzDb3GUmkc9xt+0MlVameleYkEea6o3J8vosHNZrYQYZ8CirZ9a0y7k2v6CX
+ jDHmbR7Dkyu4V6fSRaJ2BYIKWAMigPL+E5Vo4UfFPGqp2hT/jREW4e3XNVkFJ0F5haXjsby7GgT
+ lttMLV9FBlG5HduFM52TGHCwpF6jwF10OoimHMKInqhf8nv9ChDCdt3TEjIptFOaoUbxTyGfmMm Pv6dcfhYyLtyAHQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On 7/7/25 11:09 AM, Jorge Ramirez wrote:
-> On 27/06/25 18:46:10, Dikshita Agarwal wrote:
->>
->>
->> On 6/26/2025 7:29 PM, Jorge Ramirez-Ortiz wrote:
->>> Add a qcm2290 compatible binding to the venus core.
->>>
->>> Video encoding support is not exposed until the relevant hardware
->>> capabilities are enabled.
->>>
->>> Co-developed-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
->>> Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
->>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
->>> ---
->>>  drivers/media/platform/qcom/venus/core.c | 39 ++++++++++++++++++++++++
->>>  1 file changed, 39 insertions(+)
->>>
->>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->>> index 736ef53d988d..f1f211ca1ce2 100644
->>> --- a/drivers/media/platform/qcom/venus/core.c
->>> +++ b/drivers/media/platform/qcom/venus/core.c
->>> @@ -1062,6 +1062,44 @@ static const struct venus_resources sc7280_res = {
->>>  	.enc_nodename = "video-encoder",
->>>  };
->>>  
->>> +static const struct freq_tbl qcm2290_freq_table[] = {
->>> +	{ 352800, 240000000 },	/* 1920x1088 @ 30 + 1280x720 @ 30 */
->>> +	{ 244800, 133000000 },	/* 1920x1088 @ 30 */
->>> +};
->>> +
->> fix this corner.
-> 
-> ok, will wait for Vikash to confirm the other ones.
+Convention is to define static data as 'static const ...', not 'static
+... const' because of readability, even if the code is functionally
+equal.
 
-Actually you can get rid of it now, I think:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-https://git.linuxtv.org/media.git/commit/?id=b179234b5e59013f8772da17b273f463f9720bdd
+---
 
-Konrad
+Cc: dev.tailor@samsung.com
+---
+ drivers/rtc/rtc-s3c.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/rtc/rtc-s3c.c b/drivers/rtc/rtc-s3c.c
+index 5dd575865adf..79b2a16f15ad 100644
+--- a/drivers/rtc/rtc-s3c.c
++++ b/drivers/rtc/rtc-s3c.c
+@@ -549,25 +549,25 @@ static void s3c6410_rtc_irq(struct s3c_rtc *info, int mask)
+ 	writeb(mask, info->base + S3C2410_INTP);
+ }
+ 
+-static struct s3c_rtc_data const s3c2410_rtc_data = {
++static const struct s3c_rtc_data s3c2410_rtc_data = {
+ 	.irq_handler		= s3c24xx_rtc_irq,
+ 	.enable			= s3c24xx_rtc_enable,
+ 	.disable		= s3c24xx_rtc_disable,
+ };
+ 
+-static struct s3c_rtc_data const s3c2416_rtc_data = {
++static const struct s3c_rtc_data s3c2416_rtc_data = {
+ 	.irq_handler		= s3c24xx_rtc_irq,
+ 	.enable			= s3c24xx_rtc_enable,
+ 	.disable		= s3c24xx_rtc_disable,
+ };
+ 
+-static struct s3c_rtc_data const s3c2443_rtc_data = {
++static const struct s3c_rtc_data s3c2443_rtc_data = {
+ 	.irq_handler		= s3c24xx_rtc_irq,
+ 	.enable			= s3c24xx_rtc_enable,
+ 	.disable		= s3c24xx_rtc_disable,
+ };
+ 
+-static struct s3c_rtc_data const s3c6410_rtc_data = {
++static const struct s3c_rtc_data s3c6410_rtc_data = {
+ 	.needs_src_clk		= true,
+ 	.irq_handler		= s3c6410_rtc_irq,
+ 	.enable			= s3c24xx_rtc_enable,
+-- 
+2.43.0
+
