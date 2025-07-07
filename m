@@ -1,144 +1,170 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5842B9B7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 02:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C108E17D7
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 02:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751855505; cv=none; b=lUjV7kTll9gB4q0V6apMt9GYr6A9pcsc0DVACmo9uTJM6M+Nt/yxDZMH5gYfiCMrcJHO+24yUed1rrhU+O04DT8iYETf5XgTZUfd2cQI3zeeDqNfVI8RzCqlSCkSUB5kBh41MJpcrebv13GoOStVvze/mzux5N5GYeu+EI8SXxI=
+	t=1751855659; cv=none; b=m1orXM7inu8/PFSt7EMncGTzEN7ktkJO9/+MusVswwpCxEfu+XBmoSYzcl6oK2nIThWL7iKIwxmm1WRQo++FP1AjQLbAlEWQm6upggrXomCyiIL/VztW7hl5Avh701jJwkqlypAkegxOktEC0r6ZVqY3JZfVzsFPzHsCcNkENQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751855505; c=relaxed/simple;
-	bh=zXh13fdB5Fd4WLT2qjKZLj19PnPLt/hMNKXcdkmwZSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h6culGpq8BZ0wMSitzsvTyJgvmi081xmQuKXdpxBXbLdnONNLdPrRSsAN77G7vLzJ4m5yf3CW1AwnijoXWZJpvd/I/5jsmBVH73eVxL9cxL4BiULFdN0khcj/ssUKej3euyp1Zj+ApH9fH1Ksg0gG9CB3+a1zVXzjg3haMOarfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-74-686b3189c4f4
-From: Yunjeong Mun <yunjeong.mun@sk.com>
-To: sj@kernel.org
-Cc: akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com
-Subject: [PATCH v3] samples/damon: support automatic node address detection
-Date: Mon,  7 Jul 2025 11:31:34 +0900
-Message-ID: <20250707023135.453-1-yunjeong.mun@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
+	s=arc-20240116; t=1751855659; c=relaxed/simple;
+	bh=nVWtJ2pwpgHwfEVgi3VsH5d4JHY4Z3H2osyztStCp4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B+jjW7iHyOjCeaqB9s8oSOrkPdHOOgES34Yw8NVKQaCq8CZoSA40Ckm9QXW2Uvs+/1qIj3rPQV608YsVdqOs3vgwRwCdv3x5i1wJMeXNDYMcLu371ltquoFMQ7jsmARNEzor0XiGuGsQLoHBwZr2kKRitl/YOM6XeZMxu6CNudc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KC3qIZyb; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KC3qIZyb"
+Message-ID: <ac47ba40-0b5e-4273-af7a-a34086ae4a80@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751855644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nVWtJ2pwpgHwfEVgi3VsH5d4JHY4Z3H2osyztStCp4Y=;
+	b=KC3qIZybjr7t2gHu6+oHYKLSbVc0J/VxAjWOmRMPaYQXYpxqRy04NDl0FWLGWM5ZkDm++D
+	OPAt0sBnrl7xKZXGcC2cmXgX0Nt6ZoWeRuaZPIWhWcLlTAaAu8DyynrwOOmnmfhtjqY6kj
+	2HwGvemc75GIWp6LPQKpIv4QnmUjF/U=
+Date: Mon, 7 Jul 2025 10:33:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
+To: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
+ Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
+ Guo Weikang <guoweikang.kernel@gmail.com>,
+ Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
+ <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
+References: <20250701090449.2426151-1-wangming01@loongson.cn>
+ <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
+ <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPLMWRmVeSWpSXmKPExsXC9ZZnoW6XYXaGwc42RYs569ewWTz5/5vV
-	4vKuOWwW99b8Z7U4/PUNkwOrx6ZVnWwemz5NYvc4MeM3i8eLzTMZPT5vkgtgjeKySUnNySxL
-	LdK3S+DKuP/pNGvBKrGK77v3MTYwnhDqYuTkkBAwkejYsIcRxt7wsYcVxGYT0JA4eOgkM4gt
-	IiAo0f94BlCci4NZYC6jxJEz78EahAW8Je7MvAhmswioSrx+fx6sgVfATOLO3sdMEEM1JRou
-	3WOCiAtKnJz5hAXEZhaQl2jeOpsZZKiEwF9WiXXL/jNDNEhKHFxxg2UCI+8sJD2zkPQsYGRa
-	xSiUmVeWm5iZY6KXUZmXWaGXnJ+7iREYbMtq/0TvYPx0IfgQowAHoxIPr0F4VoYQa2JZcWXu
-	IUYJDmYlEd42tuwMId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJM
-	HJxSDYzRb3VrqxikY051/rJPd2etsV4p8ube0XfpZ+xP7ueJu7XPTjB0ZW37xkWOrLP0z1Q/
-	8g/OlFEsMoq6FpVf1/bhvP35dQ8ELlrvk1G5m3mOZ4fywhMSTBJynHJffAOW7e8xq58mVDHh
-	vOCkrhWbX8yR1Kr+G+9/X5vfb+871jnfHSo6nSdcVVNiKc5INNRiLipOBAAdubppMgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LhmiGro9tpmJ1hMH2nssWc9WvYLJ78/81q
-	8fnZa2aLw3NPslpc3jWHzeLemv+sFoe/vmFyYPfYtKqTzWPTp0nsHidm/GbxeLF5JqPHt9se
-	HotffGDy+LxJLoA9issmJTUnsyy1SN8ugSvj/qfTrAWrxCq+797H2MB4QqiLkZNDQsBEYsPH
-	HlYQm01AQ+LgoZPMILaIgKBE/+MZQHEuDmaBuYwSR868ZwRJCAt4S9yZeRHMZhFQlXj9/jxY
-	A6+AmcSdvY+ZIIZqSjRcuscEEReUODnzCQuIzSwgL9G8dTbzBEauWUhSs5CkFjAyrWIUycwr
-	y03MzDHVK87OqMzLrNBLzs/dxAgMpmW1fybuYPxy2f0QowAHoxIPr0F4VoYQa2JZcWXuIUYJ
-	DmYlEd42tuwMId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxe4akJQgLpiSWp2ampBalFMFkmDk6p
-	BsbM5/t3yTtdOB+oIHqmv0Bnmzy30MNDryMaP37kfzGh/YtAvdL+KRmHdqtuKbjzk/Pfqa3V
-	krM3twav+GEcGtm5hH+GSuExzq39p9x9J29lZM6bsfGN3bGku+1Zv5vX1Wsdco/l69HrKWuO
-	ENv36OruaW3tkTvTk3fPdg0tTS4PZ2M+ciiZa7USS3FGoqEWc1FxIgASYitCIgIAAA==
-X-CFilter-Loop: Reflected
+X-Migadu-Flow: FLOW_OUT
 
-This patch adds a new knob `detect_node_addresses`, which determines
-whether the physical address range is set manually using the existing
-knobs or automatically by the mtier module. When `detect_node_addresses`
-set to 'Y', mtier automatically converts node0 and node1 to their
-physical addresses. If set to 'N', it uses the existing
-'node#_start_addr' and 'node#_end_addr' to define regions as before.
 
-Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
-Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
----
-V2 -> V3: Removed an unusable comment
-V1 -> V2: Removed second patch, added a new knob, and cleand up code
----
- samples/damon/mtier.c | 41 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 38 insertions(+), 3 deletions(-)
+在 7/3/25 9:36 AM, Ming Wang 写道:
+> Hi Yanteng,
+>
+> Thanks for reviewing the patch and for your insightful question.
+>
+> On 7/2/25 10:11, Yanteng Si wrote:
+>> 在 7/1/25 5:04 PM, Ming Wang 写道:
+>>> The LoongArch mem= parameter parser was previously limited to the
+>>> mem=SIZE@START format. This was inconvenient for the common use case
+>>> of simply capping the total system memory, as it forced users to
+>>> manually specify a start address. It was also inconsistent with the
+>>> behavior on other architectures.
+>>>
+>>> This patch enhances the parser in early_parse_mem() to also support the
+>>> more user-friendly mem=SIZE format. The implementation now checks for
+>>> the presence of the '@' symbol to determine the user's intent:
+>>>
+>>> - If mem=SIZE is provided (no '@'), the kernel now calls
+>>>    memblock_enforce_memory_limit(). This trims memory from the top down
+>>>    to the specified size.
+>>> - If mem=SIZE@START is used, the original behavior is retained for
+>>>    backward compatibility. This allows for defining specific memory
+>>>    banks.
+>>>
+>>> This change introduces an important usage rule reflected in the code's
+>>> comments: the mem=SIZE format should only be specified once on the
+>>> kernel command line. It acts as a single, global cap on total memory. In
+>>> contrast, the mem=SIZE@START format can be used multiple times to
+>>> define several distinct memory regions.
+>>>
+>>> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+>>> ---
+>>>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
+>>>   1 file changed, 10 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/ setup.c
+>>> index b99fbb388fe0..af59ba180dc2 100644
+>>> --- a/arch/loongarch/kernel/setup.c
+>>> +++ b/arch/loongarch/kernel/setup.c
+>>> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
+>>>           return -EINVAL;
+>>>       }
+>>> +    start = 0;
+>>> +    size = memparse(p, &p);
+>>> +    if (*p == '@')    /* Every mem=... should contain '@' */
+>>> +        start = memparse(p + 1, &p);
+>>> +    else {            /* Only one mem=... is allowed if no '@' */
+>>> +        usermem = 1;
+>>> +        memblock_enforce_memory_limit(size);
+>>> +        return 0;
+>>> +    }
+>>> +
+>>>       /*
+>>>        * If a user specifies memory size, we
+>>>        * blow away any automatically generated
+>>> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
+>>>           memblock_remove(memblock_start_of_DRAM(),
+>>>               memblock_end_of_DRAM() - memblock_start_of_DRAM());
+>>>       }
+>>> -    start = 0;
+>>> -    size = memparse(p, &p);
+>>> -    if (*p == '@')
+>>> -        start = memparse(p + 1, &p);
+>>> -    else {
+>>> -        pr_err("Invalid format!\n");
+>>> -        return -EINVAL;
+>>> -    }
+>> I don't understand. Isn't it better to modify the else{} directly here?
+>>
+> You've raised a very good point. The reason for moving the parsing logic to the top, rather than just modifying the original else block, is to handle the fundamentally different behaviors required for mem=SIZE versus mem=SIZE@START. The key lies in thisexisting block of code which handles the mem=SIZE@START case:
+>
+> ```
+> /*
+> * If a user specifies memory size, we
+> * blow away any automatically generated
+> * size.
+> */
+> if (usermem == 0) {
+>     usermem = 1;
+>     memblock_remove(memblock_start_of_DRAM(),
+>             memblock_end_of_DRAM() - memblock_start_of_DRAM());
+> }
+> ```
+>
+> This code is destructive. As the comment says, it "blows away" the entire memory map discovered from the firmware (UEFI/ACPI). After this call, memblock is essentially empty, waiting for new regions to be added via memblock_add(). This is the correct behavior for mem=SIZE@START.
+>
+> However, the new mem=SIZE functionality is meant to be non-destructive. It should take the existing firmware-provided memory map and simply trim it down to the desired size. The function memblock_enforce_memory_limit() is designed for this purpose—it operates on the current state of memblock.
+>
+> If we were to keep the parsing logic at the end and only modify the else block, the destructive memblock_remove() call would have already executed for both cases. By that point, calling memblock_enforce_memory_limit() would be meaningless, as there would be no memory regions left in memblock to limit.
+>
+> Therefore, the patch moves the parsing logic to the very beginning to create a clean separation:
+> 1. It first checks if the format is mem=SIZE (no '@').
+> 2. If it is, it performs the non-destructive limit on the intact memory map and returns immediately, completely bypassing the destructive memblock_remove() logic.
+> 3. If the format is mem=SIZE@START, it falls through to the original destructive path as before.
 
-diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
-index f3220d6e6739..3a6ae78efafe 100644
---- a/samples/damon/mtier.c
-+++ b/samples/damon/mtier.c
-@@ -42,8 +42,33 @@ static bool enable __read_mostly;
- module_param_cb(enable, &enable_param_ops, &enable, 0600);
- MODULE_PARM_DESC(enable, "Enable of disable DAMON_SAMPLE_MTIER");
- 
-+static bool detect_node_addresses __read_mostly;
-+module_param(detect_node_addresses, bool, 0600);
-+
- static struct damon_ctx *ctxs[2];
- 
-+struct region_range {
-+	phys_addr_t start;
-+	phys_addr_t end;
-+};
-+
-+static int nid_to_phys(int target_node, struct region_range *range)
-+{
-+
-+	if (!node_online(target_node)) {
-+		pr_err("NUMA node %d is not online\n", target_node);
-+		return -EINVAL;
-+	}
-+
-+	unsigned long start_pfn = node_start_pfn(target_node);
-+	unsigned long end_pfn   = node_end_pfn(target_node);
-+
-+	range->start = PFN_PHYS(start_pfn);
-+	range->end  = PFN_PHYS(end_pfn);
-+
-+	return 0;
-+}
-+
- static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
- {
- 	struct damon_ctx *ctx;
-@@ -53,6 +78,8 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
- 	struct damos *scheme;
- 	struct damos_quota_goal *quota_goal;
- 	struct damos_filter *filter;
-+	struct region_range addr;
-+	int ret;
- 
- 	ctx = damon_new_ctx();
- 	if (!ctx)
-@@ -82,9 +109,17 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
- 	if (!target)
- 		goto free_out;
- 	damon_add_target(ctx, target);
--	region = damon_new_region(
--			promote ? node1_start_addr : node0_start_addr,
--			promote ? node1_end_addr : node0_end_addr);
-+
-+	if (detect_node_addresses) {
-+		ret = promote ? nid_to_phys(1, &addr) : nid_to_phys(0, &addr);
-+		if (ret)
-+			goto free_out;
-+	} else {
-+		addr.start = promote ? node1_start_addr : node0_start_addr;
-+		addr.end = promote ? node1_end_addr : node0_end_addr;
-+	}
-+
-+	region = damon_new_region(addr.start, addr.end);
- 	if (!region)
- 		goto free_out;
- 	damon_add_region(region, target);
+I have an idea: what if we move the destructive code into the if block?
 
-base-commit: db16fe88cdf83a1e7fdf75de282025b6ad61d08f
--- 
-2.34.1
 
+Thanks,
+
+Yanteng
+
+>
+> I hope this explanation clarifies why the code structure was changed this way. It's crucial to ensure the non-destructive path is handled before any memory map information is lost.
+>
+> Best regards,
+> Ming
+>
+>
+>> Thanks,
+>> Yanteng
+>>
+>
