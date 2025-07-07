@@ -1,67 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2F9288C32
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E639015B135;
+	Mon,  7 Jul 2025 11:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751887719; cv=none; b=Wr4SoNBA6zkbHM4F6/fIbMsArarYhxpVA/ocCe6KIa+jszRjNK2XV86oHdtRprie1bJnLdk24v/WLCakCiUahNBGPKOzragSrZyLG4qZlJRlfx2iTMeURU/Ml53e1lCkEzbDFVDQp0a3xT0ObzcsU/BgVpTAYgi6mlJOMCIaCbw=
+	t=1751887770; cv=none; b=jB+YNOgUTKlhImPc7RP08DPpxoN537KI4s2QEYowOv3ER1AIUZSNs+Ux/RHFdkvNgozxpCEabmgo1SIEFrVA4+2fT8UgzKXcWWzKwrA6qKBF4LxOLAzKOEM/rAmZFmbJkxI8PLV/f3nttDOK1bPcw4bW7tP60RhzH+PqUrs2F4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751887719; c=relaxed/simple;
-	bh=EA0hpz1UbcidrfIudaAkghUylB3IlkSpgXf2f5joHZk=;
+	s=arc-20240116; t=1751887770; c=relaxed/simple;
+	bh=pvrgPbujdZyNCnqS0MoPZy4z92NtoD/434IVrBGaRNc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFT4EMK9Mb/lTdRC75XGD9GSgv9Qd/kwXSAuJPhmIdZpA8tzIZWktC5euzUO5hO/gvDYR7OFZBDtPcgV0C2uhvwzF5fFCgbLu6lapMMCdgc8o2dl//FDQOrUP88XuIDKoO5dz8kez4QcdWvteIEhRFS/or0ymKDpn1jflfbJPV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJxlFdSS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mUF5K6KXvEZoSnO8lZOWkHwwu66LQN9adKQYSaxDB1ljMcNS6qIvgz4KlAZt0PmQMySB/WXAVoFQchYXbCjcNm6/SggggnNbDLRr0wCJ+QKXSOzSmBPplj9bXLcN+QWvSDys8+wDtdaAzAxCjTfiQkNZ57TA4ycsix01KLHZGlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzQ9mSTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJxlFdSS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17403C4CEE3;
-	Mon,  7 Jul 2025 11:28:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzQ9mSTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4ADBC4CEE3;
+	Mon,  7 Jul 2025 11:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751887717;
-	bh=EA0hpz1UbcidrfIudaAkghUylB3IlkSpgXf2f5joHZk=;
+	s=k20201202; t=1751887769;
+	bh=pvrgPbujdZyNCnqS0MoPZy4z92NtoD/434IVrBGaRNc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bJxlFdSS3WDgLvMAFDVDS0opoBzXxi8jYos6Doi52ULQNW7f0osIGoNdmEuhHnVqo
-	 5FIKWuE7i0VbshYfV2dfOj4qcMV+MiDMY2fv5eFHnTwLlTpH4juiQPg5bKkXlhu0DT
-	 iYiYNodZcciD15TFILEIUdtPRNWc+Ft1jRMjtquFpmlBOLylA+5wit7WLm3/QYJYfH
-	 EdLAiFK6iVGEiyZ1jkpgG95CTflqWfNTf26iVz4bUzLDSrblIKJQnonHi1NwCfhbov
-	 /UYTUxvcwAN0nMGYybRdaO/h9LWStBgWnePYeCEC4HCXUJiw96SIVy1R1mnovbknJX
-	 6fGlz8nYa+fgw==
-Date: Mon, 7 Jul 2025 13:28:34 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v7 5/7] sched/isolation: Force housekeeping if isolcpus
- and nohz_full don't leave any
-Message-ID: <aGuvYlexf7wZxUG3@localhost.localdomain>
-References: <20250626114900.106061-1-gmonaco@redhat.com>
- <20250626114900.106061-6-gmonaco@redhat.com>
+	b=nzQ9mSTlqbjPryIzU8C3XJ2bHMoEKQ4PGiXh5kPvsK61snx3Ko7sg4bDQvAmsjNyn
+	 VjBlyc7OVsGY2nwbPevisTcnOZK72lB3PDlNakMUad5FcfmPBbVvdvDypLIGh5uRc9
+	 Q0bIaDP6yBFVAoBnE5RPw0SrJ4O16orY4aRAURr38XAqFX3GWO0SokyG/y9LHLARxi
+	 hG7GbGWrC4zCJmvhUjqO8RheFBQ9GYnPogZwKq6XTG1kRXJ0oXeWcwj/OUXhvcw5+i
+	 eI4LdHoFj/fSjCgPFR2upUo2YoxS57r/w2/C75umpqC6zf9X7F5LaM4bg7gRmYrh9F
+	 /minS3KOUu35Q==
+Date: Mon, 7 Jul 2025 13:29:22 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <aGuvkkeVkezGJWXn@ryzen>
+References: <fr6orvqq62hozn5g3svpyyazdshv4kh4xszchxbmpdcpgp5pg6@mlehmlasbvrm>
+ <20250530113404.GA138859@bhelgaas>
+ <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
+ <aGuqA92VDLK8eRY1@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250626114900.106061-6-gmonaco@redhat.com>
+In-Reply-To: <aGuqA92VDLK8eRY1@ryzen>
 
-Le Thu, Jun 26, 2025 at 01:48:58PM +0200, Gabriele Monaco a écrit :
-> Currently the user can set up isolcpus and nohz_full in such a way that
-> leaves no housekeeping CPU (i.e. no CPU that is neither domain isolated
-> nor nohz full). This can be a problem for other subsystems (e.g. the
-> timer wheel imgration).
++ Mani's kernel.org email.
+
+On Mon, Jul 07, 2025 at 01:05:39PM +0200, Niklas Cassel wrote:
+> Hello Mani,
 > 
-> Prevent this configuration by invalidating the last setting in case the
-> union of isolcpus and nohz_full covers all CPUs.
+> On Fri, May 30, 2025 at 09:39:28PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
+> > 
+> > > I think pci_host_handle_link_down() should take a Root Port, not a
+> > > host bridge, and the controller driver should figure out which port
+> > > needs to be recovered, or the controller driver can have its own loop
+> > > to recover all of them if it can't figure out which one needs it.
+> > > 
+> > 
+> > This should also work. Feel free to drop the relevant commits for v6.16, I can
+> > resubmit them (including dw-rockchip after -rc1).
 > 
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
--- 
-Frederic Weisbecker
-SUSE Labs
+> What is the current status of this?
+> 
+> I assume that there is not much time left before 6.17 cut-off.
+> 
+> 
+> Kind regards,
+> Niklas
