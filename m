@@ -1,115 +1,114 @@
-Received: from sg-1-22.ptr.blmpb.com (sg-1-22.ptr.blmpb.com [118.26.132.22])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A192E36F7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 04:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE82ACA6F;
+	Mon,  7 Jul 2025 04:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751861220; cv=none; b=GoTwt8fnFabRlXLgcks/JR1mA3+pOw+Loc/mt0zutQZ4h2FGpZTVlAWNn8Y4v785pKFXHDOs06jVWLvUBGMRDHfoBiwgu4JFaCm7uOlGhtlneU9ctFZQJKpJiWeRkyxCF75eN4gOvViO3nyxNWC8f8h1ByrvLSAa3ogOSDpzvh0=
+	t=1751861301; cv=none; b=IHz2ce81WiODiWndCA4BBwR7OYR5AnpzH1M+SK/5DHJ8wQFJ7rcC6RoCTJKMSQh3tsICBd9A8BOH+2LO6obNUIe37MPFTIHvVMSe1c7/r6Kfl2Y1f2B3RGlbqrJYAtvH4j3g9jNA/VBhQ7EyxUWs+kLMJA8I7Tx2jnxLd15hdXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751861220; c=relaxed/simple;
-	bh=4cUryX0p6wHpXmFh925BLJoApuUpUVuNMRUjnwPvYVI=;
-	h=References:Content-Type:Cc:Date:Mime-Version:To:Subject:
-	 In-Reply-To:From:Message-Id; b=Zp2T0FJxeiicGZ9vOhNJrXab9NXBZdOKrCYx8BTSbcWPPT59pHJjpKwpjlNUKMGArtZ7gkrO3cp0X87kxoK/4rdITYI58LIOBMMoUXOJ+MeGh416Uvh38c0Yx09UI3HNyDhPm83GQlKTURB6rdxoOwjNGthIdvR/lpO5Tpqwu4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=KEyFCThk; arc=none smtp.client-ip=118.26.132.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1751861301; c=relaxed/simple;
+	bh=7kljyLasa4RCWBu+oXf+zibRVKJHm1v8BYaX7xW6azg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lhDGk5PJQbFRBUck2BcX16OjLQwutufmyE24C+VgPBOsYTGolm8KSJ+Rgrc2UEQEcjnLkQE/D5EfubuG/nUKYpwYRtESo1mAFGM9eERRag0E0vvANXYpu9yDWC90Z6/0+kvO6Ra9wNVQVzSBibwY6URwIrtV7xPum4BTnVWXJYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=caFnALio; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="KEyFCThk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1751861207;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=iWMiLtGM2M9N3Qy5qdoVvMFI8rSYaoOq+MdfZfHPcnI=;
- b=KEyFCThkMV6lpQ0WPgt6TLuoWowshPzUU+KBPLF1rqHqOgntfMqgd1U4AemCDB7cJqC8re
- c3sq4Aekc1Vs9HVjLkPBxkOKwYpegjhjngZzopsA9n018Fb8oj9foA9ZwhixrY2Q+lXWc5
- vBgKV7491bE/4ND6MQwGcYjY7Y+a71hsE/HFPFlaRLprYdb0CPUSRhcvHKiIlN77/jqaMm
- LMe8QGcLMKPwXlsi7XFzcGT4Utg4OiQKOJv3wHCLzjObrd6unGT/kkzpS5JplQSdZaVusj
- TTiXITfKlOJtybgXFdEGjbPUSe9j0xnv6HAjUNSbotzSK9X14WrZVp0VuYjbtQ==
-Content-Transfer-Encoding: 7bit
-User-Agent: Mozilla Thunderbird
-References: <20250707035345.17494-1-apatel@ventanamicro.com> <20250707035345.17494-2-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@rivosinc.com>, 
-	"Heinrich Schuchardt" <heinrich.schuchardt@canonical.com>
-Date: Mon, 7 Jul 2025 12:06:41 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caFnALio"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747c2cc3419so2104056b3a.2;
+        Sun, 06 Jul 2025 21:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751861299; x=1752466099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=myoakGvr/PnaCBbS7GuiApsE0/VILHenuI5anvIitlo=;
+        b=caFnALioJpnnseww5z7kMJag6/9cpLry/RduR36Inoj4Zgs3tEO3sIp4rw4QnlXVxp
+         nnJ8nPlhIeYdVynuzr1cv1FTYAkLMClWB0bdHWo4BuXl4TV5jx5gxZ6h3b7hZCQ2GMJy
+         NRZArXklIQjfpBMtJx3r3d8HcPG7PkBxNoj5LI7kni7sWu3Z8mPZKMQYoyG/yiR6OoTe
+         ZhT02uRpBMN/u9XlRWB/rmiwe9TgIxlG4CsGGJBeFNlUj6c6kCMyVV/8OK5GjQvjZPD1
+         r7mS4fQ6yrfnA7xiHKQsO3OZaRPkYNxRP4aMeBqXwBermpB/UjcK01MccbBz+zKV4nMz
+         LPLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751861299; x=1752466099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=myoakGvr/PnaCBbS7GuiApsE0/VILHenuI5anvIitlo=;
+        b=a0k63iTLtMDLszOTGEcTCJze1zm/lX2AgHE+WHoBlKleuOuG93f/l+DDKuDJmSye/c
+         zFJygeQqVJpfOrGv041XRUD2AwSzFVN4vGSuaXeIRtO+rgIMrLh1nnZV920KU3oHKQQW
+         YgQN4L6ZhW1FQGz9UdshITieaQZEWctmY1zzHABqu4Vpz3HEfl9eDtGL2RRnnV9s7Cng
+         Iv4E+U7tYf5+ZnP9TciipiffTiPPH02TuJ3seUeT5/84xloSa3MiNu6lilM9gGvbvTTG
+         L+5JDFX8L23Dm2pl4FAj6cCXkCdTvkWW2Nod9l6FzRqmgi7WJFWaMC86+wa1w1nwu518
+         wfXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+eLzsjOIXYAjO+AC5KtvXikIQBH1djjOZ6i2TVHQVOXXGX7uqCmSSa2ZXfj8FWxGZEGdSDIaKv8e/@vger.kernel.org, AJvYcCVW1o7Q3+sjqt3pZeGddhBuJOzGQtG3pzgZGKf8MJc+iHdH6dDnlaFU19XL6DgBnePzvBQ1fMPxGxRQg5YZ@vger.kernel.org, AJvYcCWNqG0fHyM8QO9FWZErxMXZ1EbwwyccxGfOz5yAdYYwtSVVBiR2ggiioxOmMsaRVNDGFWFqxUDJRKZHEjcp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKR0XptFrLnneAiIAmizg0A32PJRsdC0dia4YwujQ+tMRXTM6R
+	+L5R7b2+atEXFf+M1zcUM2zhiijmAEgUEAfxhfqqAlCu7vMS5iOQNu9C
+X-Gm-Gg: ASbGncumL38DSO69abFe4opx2YZDAIiwfSTeVWGMMi2UngrYw0Wtp4HD66ehvm9CoBR
+	7upqPV5e25TqxZBLlo8uLj9vRpJsxULFwZ+ELhiz0EwaaqY/6N/RXx3zwsKMIXy9IFl3gci/4/K
+	Ct8gqmr2S2NUFyrxuzaaikBOZDPx/HXOnpziU61kM3e0Jrb7u7YGDK+kTCahnqB2hZIRSZGPXrb
+	I1SqCCAfImWIxC4vRSkLoTqe/G5LOmRHK6j9fXA3b+ySpeIQtn7t+XYCTW+5aItfLOaKHxmHsqu
+	85ppBzbxMKzNqtSahR3NExJsqZZnnbUhEfX/M2pPsKNMGi4VKDOet0SxABEtekqcyzca+nqEVPY
+	=
+X-Google-Smtp-Source: AGHT+IHjcKlgZP5rEIcH8q8oD+vqdyt/ATNmp47t3M4RZoOFNboIAWwmALMF+gViP+z0CkL3f+aLbw==
+X-Received: by 2002:a05:6a20:7f99:b0:21c:fa68:c33a with SMTP id adf61e73a8af0-227213b11c9mr11528432637.23.1751861298943;
+        Sun, 06 Jul 2025 21:08:18 -0700 (PDT)
+Received: from VM-16-24-fedora.. ([43.153.32.141])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce4180970sm7892801b3a.93.2025.07.06.21.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 21:08:18 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: willy@infradead.org
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	brauner@kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] iomap: avoid unnecessary ifs_set_range_uptodate() with locks
+Date: Mon,  7 Jul 2025 12:08:16 +0800
+Message-ID: <20250707040816.3062776-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <aGa_HFAupmxO_iri@casper.infradead.org>
+References: <aGa_HFAupmxO_iri@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Lms-Return-Path: <lba+2686b47d5+3f79f5+vger.kernel.org+liujingqi@lanxincomputing.com>
-Received: from [127.0.0.1] ([116.237.111.137]) by smtp.feishu.cn with ESMTPS; Mon, 07 Jul 2025 12:06:43 +0800
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-Subject: Re: [PATCH v2 1/2] RISC-V: KVM: Disable vstimecmp before exiting to user-space
-In-Reply-To: <20250707035345.17494-2-apatel@ventanamicro.com>
-Content-Language: en-US
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
-Message-Id: <87e96caa-9df6-482c-a0f4-74a97e7ccb5c@lanxincomputing.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 7/7/2025 11:53 AM, Anup Patel wrote:
-> If VS-timer expires when no VCPU running on a host CPU then WFI
-> executed by such host CPU will be effective NOP resulting in no
-> power savings. This is as-per RISC-V Privileged specificaiton
-> which says: "WFI is also required to resume execution for locally
-> enabled interrupts pending at any privilege level, regardless of
-> the global interrupt enable at each privilege level."
->
-> To address the above issue, vstimecmp CSR must be set to -1UL over
-> here when VCPU is scheduled-out or exits to user space.
->
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> Tested-by: Atish Patra <atishp@rivosinc.com>
-> Tested-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-> Fixes: 8f5cb44b1bae ("RISC-V: KVM: Support sstc extension")
-> Fixes: cea8896bd936 ("RISC-V: KVM: Fix kvm_riscv_vcpu_timer_pending() for Sstc")
-> Reported-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-> Closes: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2112578
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/kvm/vcpu_timer.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
->
-> diff --git a/arch/riscv/kvm/vcpu_timer.c b/arch/riscv/kvm/vcpu_timer.c
-> index ff672fa71fcc..85a7262115e1 100644
-> --- a/arch/riscv/kvm/vcpu_timer.c
-> +++ b/arch/riscv/kvm/vcpu_timer.c
-> @@ -345,8 +345,24 @@ void kvm_riscv_vcpu_timer_save(struct kvm_vcpu *vcpu)
->   	/*
->   	 * The vstimecmp CSRs are saved by kvm_riscv_vcpu_timer_sync()
->   	 * upon every VM exit so no need to save here.
-> +	 *
-> +	 * If VS-timer expires when no VCPU running on a host CPU then
-> +	 * WFI executed by such host CPU will be effective NOP resulting
-> +	 * in no power savings. This is because as-per RISC-V Privileged
-> +	 * specificaiton: "WFI is also required to resume execution for
-> +	 * locally enabled interrupts pending at any privilege level,
-> +	 * regardless of the global interrupt enable at each privilege
-> +	 * level."
-> +	 *
-> +	 * To address the above issue, vstimecmp CSR must be set to -1UL
-> +	 * over here when VCPU is scheduled-out or exits to user space.
->   	 */
->   
-> +	csr_write(CSR_VSTIMECMP, -1UL);
-> +#if defined(CONFIG_32BIT)
-> +	csr_write(CSR_VSTIMECMPH, -1UL);
-> +#endif
-> +
->   	/* timer should be enabled for the remaining operations */
->   	if (unlikely(!t->init_done))
->   		return;
+On Thu, 3 Jul 2025 18:34:20 +0100, Matthew Wilcox wrote:
+> On Thu, Jul 03, 2025 at 06:52:44AM -0700, Christoph Hellwig wrote:
+> > On Tue, Jul 01, 2025 at 10:48:47PM +0800, alexjlzheng@gmail.com wrote:
+> > > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > > 
+> > > In the buffer write path, iomap_set_range_uptodate() is called every
+> > > time iomap_end_write() is called. But if folio_test_uptodate() holds, we
+> > > know that all blocks in this folio are already in the uptodate state, so
+> > > there is no need to go deep into the critical section of state_lock to
+> > > execute bitmap_set().
+> > > 
+> > > Although state_lock may not have significant lock contention due to
+> > > folio lock, this patch at least reduces the number of instructions.
+> > 
+> > That means the uptodate bitmap is stale in that case.  That would
+> > only matter if we could clear the folio uptodate bit and still
+> > expect the page content to survive.  Which sounds dubious and I could
+> > not find anything relevant grepping the tree, but I'm adding the
+> > linux-mm list just in case.
+> 
+> Once a folio is uptodate, there is no route back to !uptodate without
+> going through the removal of the folio from the page cache.  The read()
+> path relies on this for example; once it has a refcount on the folio,
+> and has checked the uptodate bit, it will copy the contents to userspace.
 
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+I agree, and this aligns with my perspective. Thank you for confirming this.
 
-Thanks,
-Nutty
+Jinliang Zheng. :)
