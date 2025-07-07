@@ -1,170 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7FF2BE022;
-	Mon,  7 Jul 2025 14:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7BB2BE7C8
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897691; cv=none; b=r7nZJ21pKfiNPN6YrpGAJUQP45EZQRjUj9QdpQ0fvToIKZNDfYUI4xAoNr3l732+GwyN2XguG8fgaND6Q3tnHfprLE0TZhrMwKGwcs53lmC/sG1isH+5/3gUZpdKnlnJwU0xFuf5NZzEtj4jIg4KYj+3XUlH8qBYmTf0ouZfvvk=
+	t=1751897696; cv=none; b=gjqiNOeaHlm4FXbbXpku8kzRtSanH+iUYubOZFyxcyxvSCufIX5RRcP7hRtLsL1fDJSdIwJqO72dyqf27P+5/IxkipVysQCZYYkfRYlpMUGwiJR4/FR9UIUkvfJTSW++dXs/62NZzV083fKAEgTPuCLw4jU+ABv8usbfWQqlES4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897691; c=relaxed/simple;
-	bh=paKdTQVSLgww6rtrLny/d+gU3M/Xfeh/Wq28MOMUzW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LvAGiP//QYEKRSFZeerXIz2x/Z595HAEGi0DzRRhLU3RI2yLIIjFMXLLL7HCp3NULv86J4ho5VLLZsirbAP2AiXxHvTQkIyhH5/P8fNYQkfcqLBynXZeX/TjRDTLJ+7+z/sdx1WzuHaGtCO9uzvKIV5FQBWsYsysrvLZvsLDALs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNbEY+CT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751897696; c=relaxed/simple;
+	bh=f3vDGUfr/K0NLAPPU4VKw2rDAEi3+ik8Sta91v9w8N8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FW0q0000FVm2RB/dOwzKO4P/BKVxSxn7iqqyqhXN438E6PGdYOHfTEK4VKoXPMLmUWYKeOaYpjco2wdpI9Pkl5NPmJF5ihP1jiifWCMnCLZHLMn2kDip2cM7mOHR5l/Kh5u97MGNTuvZAAtweXBf4+pf+MM89EACBFJF2hZuq14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xr88XP5t; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNbEY+CT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6A5C4CEE3;
-	Mon,  7 Jul 2025 14:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751897690;
-	bh=paKdTQVSLgww6rtrLny/d+gU3M/Xfeh/Wq28MOMUzW0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FNbEY+CTReGb0P8T+OPfEcXoJqYki85sozGKjJMinqmv+OBGSS7RvofOY7Eh5VSeQ
-	 RLKczXOsa8CDgw+jijBbfhlQ8PT7NTTpkxFmBF8Yf9HHLJYan4csiN9l2iOx5PUXkY
-	 BMn8ymU+3vqKmjXFhgUAI070VacH1WknMxqGSwKh5uxerjCOEFBfDAnKQwJ0eUxFfY
-	 EuiN4u4/WjP93pDBePAR3zcdujosFvcXeeqwq/uWjyro+iiFHyanbWolc7mTRqhgrT
-	 wPJBVK+EmaFaRc1h/nfdT4jGu2U3+BDYMv2oFMlnlMwEpX20XiDIYyxrn+rqy7QXWn
-	 QZqOq2NUBt10A==
-Message-ID: <d063964c-5ca9-4602-8338-05c46c2d2775@kernel.org>
-Date: Mon, 7 Jul 2025 16:14:46 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xr88XP5t"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PzRBiyK/Tja7fxyCyCvByclVfaFZRVub5SyjZCkEFu8=; b=Xr88XP5t/iax+NIJ49j8OCX0w4
+	sCNUgwDE3qB3i88Jl4UwNJn32bZvMiJlPFJ8mrH+QoflDXbnkSTTnEku4sr1z8c0jd0y5mENMnZL2
+	D2gkOvU65YfGheMFi2ByFzGmoj+095Q/EHLV3hyvatD6CXEr+dZgwcCuzkO6KcEZqLB+ds2uyqIme
+	qDPryBmNS8rU+sFl7LeEE6wfCc4yulsIbaZmw78v+PWPdUMopGQwzyd1iHlDG3hoR3kfbFNX/Q8Ws
+	Vz8VOCACwIbahf5MQFfBqiyBETrP3fBt1Q03+o7JtsJZHLSts4roZCSy4HoElr6vAfswCZ57SSSJ8
+	e9kOvAdw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uYmcF-0000000DN0k-01S6;
+	Mon, 07 Jul 2025 14:14:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C7449300399; Mon, 07 Jul 2025 16:14:41 +0200 (CEST)
+Date: Mon, 7 Jul 2025 16:14:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, dhaval@gianis.ca, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] sched/fair: Manage lag and run to parity with
+ different slices
+Message-ID: <20250707141441.GG1613200@noisy.programming.kicks-ass.net>
+References: <20250704143612.998419-1-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] staging: media: atomisp: unify initialization flag
- usage in HMM
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>, mchehab@kernel.org,
- sakari.ailus@linux.intel.org, andy@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, linux-kernel-mentees@lists.linux.dev,
- skhan@linuxfoundation.org, dan.carpenter@linaro.org
-References: <20250707140923.58935-1-abdelrahmanfekry375@gmail.com>
- <20250707140923.58935-3-abdelrahmanfekry375@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250707140923.58935-3-abdelrahmanfekry375@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704143612.998419-1-vincent.guittot@linaro.org>
 
-Hi Abdelrahman,
-
-On 7-Jul-25 16:09, Abdelrahman Fekry wrote:
-> Previously, the initialization state of the `hmm_bo_device` was tracked
-> in two places: a global `hmm_initialized` boolean in `hmm.c`, and a local
-> integer `flag` in the `hmm_bo_device` struct. This was redundant and could
-> lead to inconsistent state checks.
+On Fri, Jul 04, 2025 at 04:36:06PM +0200, Vincent Guittot wrote:
+> This follows the attempt to better track maximum lag of tasks in presence
+> of different slices duration:
+> [1]  https://lore.kernel.org/all/20250418151225.3006867-1-vincent.guittot@linaro.org/
 > 
-> - Removes the global `hmm_initialized` variable and all checks against it.
-> - Replaces the `int flag` in `struct hmm_bo_device` with a strongly-typed 
->  `enum hmm_bo_device_init_flag flag` (values: UNINITED = 0, INITED = 1).
-> - Initializes `flag` to `HMM_BO_DEVICE_UNINITED` at declaration to 
->   ensure a well-defined starting state.
-> - Removes a redundant `hmm_init()` call inside `__hmm_alloc()` since its
->   always called after hmm_init()
+> Since v1, tracking of the max slice has been removed from the patchset
+> because we now ensure that the lag of an entity remains in the range of:
+>    
+>   [-(slice + tick) : (slice + tick)] with run_to_parity
+> and
+>   [max(-slice, -(0.7+tick) : max(slice , (0.7+tick)] without run to parity
+>   
+> As a result, there is no need the max slice of enqueued entities anymore.
 > 
-> This change improves type safety, consistency, and readability when
-> handling the HMM initialization state.
+> Patch 1 is a simple cleanup to ease following changes.
 > 
-> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-> ---
->  .../staging/media/atomisp/include/hmm/hmm_bo.h   |  9 +++++++--
->  drivers/staging/media/atomisp/pci/hmm/hmm.c      | 16 ++++------------
->  2 files changed, 11 insertions(+), 14 deletions(-)
+> Patch 2 fixes the lag for NO_RUN_TO_PARITY. It has been put 1st because of
+> its simplicity. The running task has a minimum protection of 0.7ms before
+> eevdf looks for another task.
+
+The usage of min() on vruntimes is broken; it doesn't work right in the
+face of wrapping; use min_vruntime().
+
+Also, perhaps it is time to better document this vlag abuse.
+
+> Patch 3 ensures that the protection is canceled only if the waking task
+> will be selected by pick_task_fair. This case has been mentionned by Peter
+> will reviewing v1.
 > 
-> diff --git a/drivers/staging/media/atomisp/include/hmm/hmm_bo.h b/drivers/staging/media/atomisp/include/hmm/hmm_bo.h
-> index e09ac29ac43d..155f9d89b365 100644
-> --- a/drivers/staging/media/atomisp/include/hmm/hmm_bo.h
-> +++ b/drivers/staging/media/atomisp/include/hmm/hmm_bo.h
-> @@ -58,7 +58,10 @@
->  #define	ISP_VM_SIZE	(0x7FFFFFFF)	/* 2G address space */
->  #define	ISP_PTR_NULL	NULL
->  
-> -#define	HMM_BO_DEVICE_INITED	0x1
-> +enum hmm_bo_device_init_flag {
-> +	HMM_BO_DEVICE_INITED	= 0x1,
-> +	HMM_BO_DEVICE_UNINITED	= 0x2,
-> +};
->  
->  enum hmm_bo_type {
->  	HMM_BO_PRIVATE,
-> @@ -86,7 +89,9 @@ struct hmm_bo_device {
->  
->  	/* list lock is used to protect the entire_bo_list */
->  	spinlock_t	list_lock;
-> -	int flag;
-> +
-> +	/* flag to indicate whether the bo device is inited or not */
-> +	enum hmm_bo_device_init_flag flag;
+> Patch 4 modifes the duration of the protection to take into account the
+> shortest slice of enqueued tasks instead of the slice of the running task.
+> 
+> Patch 5 fixes the case of tasks not being eligible at wakeup or after
+> migrating  but with a shorter slice. We need to update the duration of the
+> protection to not exceed the lag.
 
-Please just replace this with a "bool initialized"; data
-member taking `true` and `false as values instead of
-introducing a new type for this.
+This has issues with non-determinism; specifically,
+update_protected_slice() will use the current ->vruntime, and as such
+can unduly push forward the protection window.
 
->  
->  	/* linked list for entire buffer object */
->  	struct list_head entire_bo_list;
-> diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> index c2ee9d2ec0d5..767a3a24f8e5 100644
-> --- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> +++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-> @@ -24,9 +24,10 @@
->  #include "mmu/isp_mmu.h"
->  #include "mmu/sh_mmu_mrfld.h"
->  
-> -struct hmm_bo_device bo_device;
-> +struct hmm_bo_device bo_device = {
-> +	.flag = HMM_BO_DEVICE_UNINITED,
-> +};
->  static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
-> -static bool hmm_initialized;
->  
->  int hmm_init(void)
->  {
-> @@ -38,8 +39,6 @@ int hmm_init(void)
->  		dev_err(atomisp_dev, "hmm_bo_device_init failed.\n");
->  		return ret;
->  
-> -	hmm_initialized = true;
-> -
->  	/*
->  	 * As hmm use NULL to indicate invalid ISP virtual address,
->  	 * and ISP_VM_START is defined to 0 too, so we allocate
-> @@ -62,7 +61,7 @@ void hmm_cleanup(void)
->  	dummy_ptr = 0;
->  
->  	hmm_bo_device_exit(&bo_device);
-> -	hmm_initialized = false;
-> +	bo_device.flag = HMM_BO_DEVICE_UNINITED;
+> Patch 6 fixes the case of tasks still being eligible after the protected
+> period but others must run to no exceed lag limit. This has been
+> highlighted in a test with delayed entities being dequeued with a positive
+> lag larger than their slice but it can happen for delayed dequeue entity
+> too.
 
-This clearing of the flag / setting `initialized = false` belongs inside bo_exit()
-not here.
+At this point resched_next_quantum() becomes !protec_slice() and can be
+removed.
 
+How about something like so? I've probably wrecked the whole
+!RUN_TO_PARITY thing -- so that needs to be put back in.
 
->  }
->  
->  static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
-> @@ -72,13 +71,6 @@ static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
->  	struct hmm_buffer_object *bo;
->  	int ret;
->  
-> -	/*
-> -	 * Check if we are initialized. In the ideal world we wouldn't need
-> -	 * this but we can tackle it once the driver is a lot cleaner
-> -	 */
-> -
-> -	if (!hmm_initialized)
-> -		hmm_init();
->  	/* Get page number from size */
->  	pgnr = size_to_pgnr_ceil(bytes);
->  
-
-
-Regards,
-
-Hans
-
-
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -579,7 +579,15 @@ struct sched_entity {
+ 	u64				sum_exec_runtime;
+ 	u64				prev_sum_exec_runtime;
+ 	u64				vruntime;
+-	s64				vlag;
++	union {
++		/*
++		 * When !@on_rq this field is vlag.
++		 * When cfs_rq->curr == se (which implies @on_rq)
++		 * this field is vprot. See protect_slice().
++		 */
++		s64			vlag;
++		u64			vprot;
++	};
+ 	u64				slice;
+ 
+ 	u64				nr_migrations;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -882,45 +882,36 @@ struct sched_entity *__pick_first_entity
+ }
+ 
+ /*
+- * HACK, Set the vruntime up to which an entity can run before picking another
+- * one, in vlag, which isn't used until dequeue.
+- * In case of run to parity, we use the shortest slice of the enqueued entities
+- * to define the longest runtime.
+- * When run to parity is disabled, we give a minimum quantum to the running
+- * entity to ensure progress.
++ * Take a snapshot of the vruntime at the point the task gets scheduled.
+  */
+ static inline void set_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+-	u64 quantum;
+-
+-	if (sched_feat(RUN_TO_PARITY))
+-		quantum = cfs_rq_min_slice(cfs_rq);
+-	else
+-		quantum = normalized_sysctl_sched_base_slice;
+-	quantum = min(quantum, se->slice);
+-
+-	if (quantum != se->slice)
+-		se->vlag = min(se->deadline, se->vruntime + calc_delta_fair(quantum, se));
+-	else
+-		se->vlag = se->deadline;
++	se->vprot = se->vruntime;
+ }
+ 
+-static inline void update_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
++/*
++ * Should we still run @se? It is allowed to run until either se->deadline or
++ * until se->vprot + min_vslice, whichever comes first.
++ */
++static inline bool protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+-	u64 quantum = cfs_rq_min_slice(cfs_rq);
++	u64 min_vslice, deadline = se->deadline;
++	u64 min_slice = cfs_rq_min_slice(cfs_rq);
+ 
+-	se->vlag = min(se->vlag, (s64)(se->vruntime + calc_delta_fair(quantum, se)));
+-}
++	if (min_slice != se->slice) {
++		min_vslice = calc_delta_fair(min_slice, se);
++		deadline = min_vruntime(se->deadline, se->vprot + min_vslice);
++	}
+ 
+-static inline bool protect_slice(struct sched_entity *se)
+-{
+-	return ((s64)(se->vlag - se->vruntime) > 0);
++	WARN_ON_ONCE(!se->on_rq);
++
++	return ((s64)(deadline - se->vruntime) > 0);
+ }
+ 
+-static inline void cancel_protect_slice(struct sched_entity *se)
++static inline void cancel_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+-	if (protect_slice(se))
+-		se->vlag = se->vruntime;
++	if (protect_slice(cfs_rq, se))
++		se->vprot = se->vruntime - calc_delta_fair(NSEC_PER_SEC, se);
+ }
+ 
+ /*
+@@ -959,7 +950,7 @@ static struct sched_entity *__pick_eevdf
+ 	if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
+ 		curr = NULL;
+ 
+-	if (curr && protect && protect_slice(curr))
++	if (curr && protect && protect_slice(cfs_rq, curr))
+ 		return curr;
+ 
+ 	/* Pick the leftmost entity if it's eligible */
+@@ -1183,14 +1174,6 @@ static inline void update_curr_task(stru
+ 	cgroup_account_cputime(p, delta_exec);
+ }
+ 
+-static inline bool resched_next_quantum(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+-{
+-	if (protect_slice(curr))
+-		return false;
+-
+-	return true;
+-}
+-
+ /*
+  * Used by other classes to account runtime.
+  */
+@@ -1251,7 +1234,7 @@ static void update_curr(struct cfs_rq *c
+ 	if (cfs_rq->nr_queued == 1)
+ 		return;
+ 
+-	if (resched || resched_next_quantum(cfs_rq, curr)) {
++	if (resched || !protect_slice(cfs_rq, curr)) {
+ 		resched_curr_lazy(rq);
+ 		clear_buddies(cfs_rq, curr);
+ 	}
+@@ -8729,7 +8712,7 @@ static void check_preempt_wakeup_fair(st
+ 	 * If @p has a shorter slice than current and @p is eligible, override
+ 	 * current's slice protection in order to allow preemption.
+ 	 */
+-	 do_preempt_short = sched_feat(PREEMPT_SHORT) && (pse->slice < se->slice);
++	do_preempt_short = sched_feat(PREEMPT_SHORT) && (pse->slice < se->slice);
+ 
+ 	/*
+ 	 * If @p has become the most eligible task, force preemption.
+@@ -8737,14 +8720,11 @@ static void check_preempt_wakeup_fair(st
+ 	if (__pick_eevdf(cfs_rq, !do_preempt_short) == pse)
+ 		goto preempt;
+ 
+-	if (sched_feat(RUN_TO_PARITY) && do_preempt_short)
+-		update_protect_slice(cfs_rq, se);
+-
+ 	return;
+ 
+ preempt:
+ 	if (do_preempt_short)
+-		cancel_protect_slice(se);
++		cancel_protect_slice(cfs_rq, se);
+ 
+ 	resched_curr_lazy(rq);
+ }
