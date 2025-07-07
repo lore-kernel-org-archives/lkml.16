@@ -1,102 +1,121 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3116D28A3E1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1039D2BDC27;
+	Mon,  7 Jul 2025 14:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897417; cv=none; b=WQZ9wg+vlsWVgotWg4dp0RZL7MJC3E3pB7sLt98be7ZwVDeYwGQh7jBPdAlFFLk5neep086RumcybIQYoOlPKAFJqRjt2BpyYfxd2fqOsAk1Cw4N77cJzSXkkrn3Fm/gNn7dyISI5PQudHTUrxbOUH5NDpr++LjlEA8w/ncMaFA=
+	t=1751897417; cv=none; b=TLYpXfrzJjAR7yrYxZIMIJ/XX7j57gogVgSjakUZKghWJXwJGpxxgdRA8EUjN7N6npKE8KrnOrCHWfzl4fahrVZi1EX/Cyusomf5Ens6OuGDfruOpBt3nSvhilYDt1K521LLl9PQ48XRl4unn8tmMV8W3xTxlax0sqLyQm1fJ2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751897417; c=relaxed/simple;
-	bh=1EKy8OWDu/kk+IOdCEHz6JvP1bsl9DXmz3k8KmwtSUM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MxB73KFyRROGE9o0Nlfx1BQxIp3uan5psXsDfDb28FIWkJA70HFAzibHnrYi9tMJ3qYXTrDMNYm16BMCvS24s8CeBf07h/IaWs573gYszyz5X+7F3L+5TOnxskT+bHvrLF02I99rDXdPc7FvQe6sncjsaP2xxXSN+Q+ncfD/jXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CcVHe1eB; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=Ym1eaiaVRia3tu27Gd2iINJBWKHQtzx9zAsS8xqQYcc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GyUtpXBEHDGdG7x7bOD8Nb4VV+b7TIq6GxLkgPJeazu1lQa6Mtlldnl483wDAgE9LuDQxqVcVLVHvHwnQTkiXZ+hU1ODUk6V+ZckjshQGws0aUdHEmfHB/GsARyFhq53N29Rmr61dZRuvD7O5MU25S23NGX7WSYE/ntmeU5YoyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yxh0fZDU; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CcVHe1eB"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b9eb2299so3439967e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 07:10:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yxh0fZDU"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-60fdd24613fso346687a12.1;
+        Mon, 07 Jul 2025 07:10:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751897413; x=1752502213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751897414; x=1752502214; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1EKy8OWDu/kk+IOdCEHz6JvP1bsl9DXmz3k8KmwtSUM=;
-        b=CcVHe1eBW5Il8shyKuCnU53TYwm6HDy6ZCTzRUEqtqPm8/twsFfpMHOyq1zJkghian
-         IfmVkwShz4vXJIzw5qc0ApSdTJ7mfAK3Om+00d5/l+vFGUDcoEeERXOFfvUjSUMU/Wje
-         8ubSCeM4YYOI+VtBUG2eN6o9BKWhq7C7hpkjLAyABbbIqG3EL5SR88fJg4d+IStNCjtL
-         s03o9TZIpZkMgXlM+Vc7H697uPvP7X4GNXoL1klbPW6uydL3hEbEsP2AW51/F3anNgrg
-         ms7dFUjHu6fvjkEsMOdzLFvqI3r/Rv6zfVJfvqcU58mLTBKL0I//5wpLGcWD1Gf9ilW+
-         Qg+w==
+        bh=zfoXr039Mj+Ko7iKVd/LqK9c7pPjVthdjnKyL8+H+oc=;
+        b=Yxh0fZDU21aGKLXozCDotpb/micivIORtk8Q7MtX6VmjfB+Q0DAgeDPhYQV8BwtPKq
+         Z+tEfZoEmhDxAjlhItPFuySQQBsghQij2YkdBBVEAIbKBnPK1s5f5WcArOnka39NOBzo
+         Y3ttQ8AOeqTjT9LZz7BhQpml97nlUANMbgbLmnqfjlR1jJBLXjUAEytBg7gzh91U8HPg
+         Gq//8KgFzxx4E5cvc6OqXthHCeEDHDdZK3ZkqTJTU4HnstjhcwrSNEzU/gvic2vid+b4
+         Bs3EN8zNMd2wSF8qbIQ5YmwTfHEPdlkdymUCvsXbug+HK+GsT68F8xW93A7ktgBDxV3y
+         lxyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751897413; x=1752502213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751897414; x=1752502214;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1EKy8OWDu/kk+IOdCEHz6JvP1bsl9DXmz3k8KmwtSUM=;
-        b=GvUtDwFYnLnUDye8AAX5e2eo+q16WXTzqmdmkuBDS93qlRe9LOlCBQHHiSSfyZKpLl
-         GQj8lUipBx3va3UeEd7d1M5MxZcKZHGbb1K4BK40VbQt6uA9DrkCS6VtMYOJFQRTqr+0
-         jNu9qg0tfe48ufoV3etoIKaHW/rMeEPlSB4+GIXcs4Fxj9UZMVt2fJe36TyMY5YOS/QY
-         K6BhRmCdbtJ0TW2BDDJc+P1IcGACVBJmp+oSzjan3DBK9zCRd1qTHwG69fj6QI2wQAZ3
-         Fhj74o48A09iPQ2EzSb5Rq67QkGiD9h6N4XKyCuxCR51iKH5HJFKx1pJ3Qd9ATysMK6+
-         sHOg==
-X-Gm-Message-State: AOJu0YzheZvsWrvn56ufNRnM1IBVO+vSyvyh6Cigg36FBwQ/a1T/nZ3p
-	AHqIZjoJ1/ITqgVefvsnb8dpO6IkOHNTJBpsp/bx2q0smlqstBcfbkgYdfj4m4S6hFwz85Htmsv
-	gsrpz/w3QrY0Na2EwmHygHCGiVSzp9vlS7Bm1k50vbw==
-X-Gm-Gg: ASbGncvUPGPY7d2+imvh0JQ/E2kImkTr1CIjTiRCgF0XSKI6yyB3KB8TNWPjCDd1OjR
-	UgP8rreu2z8Wu/sgcUGEGpFJ4gANOF0Qt0WLHbF65yFhFbp4Q+IoM6AKfL+IZT1Z3lqd5hvkWHd
-	E1umzbv9VpU4zO6B6dgLx8V4v5tbMhbbfJjzc+h4IDNjycm/fk2MzwGpVkDx9Wc9VHt5m9aRYzN
-	9g=
-X-Google-Smtp-Source: AGHT+IEudkGxYOWe2+f4vh68RbqDeQkBlljYbLjupYNIzGdcIQYbR/jo96k/DRi2F+evajGdeiOeNW2un8mzxkixgxE=
-X-Received: by 2002:a05:6512:2528:b0:552:20e1:5b97 with SMTP id
- 2adb3069b0e04-5565baa766bmr4193592e87.18.1751897411791; Mon, 07 Jul 2025
- 07:10:11 -0700 (PDT)
+        bh=zfoXr039Mj+Ko7iKVd/LqK9c7pPjVthdjnKyL8+H+oc=;
+        b=WyeO01gf6AMKzMYJaPFIri6qG1RAs4tLjczh4Ro2qZjEqrI8W1mlFYjASDSR+dvzjJ
+         /gXBC3JFVNTFIMl/lO6mzl/YsY5l+WMOTflFRHOTxCuX6x/HySSV08x2KmffbPnb31if
+         XELkqKtdD1A1efwJDi5yeRZvbJItkb8FpHFglEyaz6//UKf+cFJ5zUmFmlQMaPvJ67aR
+         LP6WMso0uESSmYrjLgJ3OAZ8fdwp7Sr1QtovroWn/q53fMQG5abnSmMy0anpP6tutoGa
+         GVzvrVhgbNbdmAs0cW/zGl8xhtr3yGm96uhwNx3jMj7QfBRAzU3Ajgxg599v4yv41rSI
+         L3bw==
+X-Forwarded-Encrypted: i=1; AJvYcCWs86znmGDI0XydcR3YsHp8FRLFAJmeW//CFvES3UXxG+sStp3L/1WpWgIVr9VNAyhByYFXtpuNgAfBKSM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxAQg7R3UratI4BETXuIfVJ20vPm8HiI1C8q5L9mGwq8DGgJ+H
+	0gc6FKhCcLpeijFMBDlxrOxBtW2Ynacv/1aFgaNznCuZuAWCsBzSYfWo
+X-Gm-Gg: ASbGncu+xC/46rZMxNEoONKhVFrRuK8A55m2i0GXcZYIo24n6VQfLwtrDN+/pM66YN9
+	c7Ra4Yq142M4C6BROXVNufPCo67vCe08FJpoPeorUV6G6GDJB8fdtGPTWOPh/IhaQRUfxxqg/iu
+	IDeUEHC0bbGY6geKXcnws0BaWH0tqbq/ShVOjg/ZZH4Qb7kTvuAyZIBElmUpSUTAAsmPLmETNCs
+	6jVGbr6w2lSl2nFH31QJZNdCjRADNaVI7BpFWRgYhjXw7QKVOcg1RZlkPeFvR6XRpncf9bH7GA6
+	kiNXuvfc/P29vmMDtcIhIx4QBBlYUwv8LY34RccDSk03JXI2RSVgP2l6GleR78otfynGlmamFif
+	CbTY3JxzqjGkKPTNsHHqkc/WZwqe5vJ76sBej9F0eSAYXWp7ODHg12aCdSRtc
+X-Google-Smtp-Source: AGHT+IEKnVBWadATSlejdndh1B5AdduKqoWoYdl+TXtUEryj64Oa+knTxIvJk4uK+Ngcdhrr6ocq9Q==
+X-Received: by 2002:a17:907:8688:b0:ae4:1eb:c461 with SMTP id a640c23a62f3a-ae401ebc908mr384594066b.14.1751897413716;
+        Mon, 07 Jul 2025 07:10:13 -0700 (PDT)
+Received: from yousrii-VirtualBox.hotspot.internet-for-guests.com ([82.129.154.18])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d1ae3sm710370466b.7.2025.07.07.07.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 07:10:13 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.org,
+	andy@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	dan.carpenter@linaro.org,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH 1/2] staging: media: atomisp: return early on hmm_bo_device_init() failure
+Date: Mon,  7 Jul 2025 17:09:22 +0300
+Message-Id: <20250707140923.58935-2-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250707140923.58935-1-abdelrahmanfekry375@gmail.com>
+References: <20250707140923.58935-1-abdelrahmanfekry375@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250707132154.771758-1-marcos@orca.pet>
-In-Reply-To: <20250707132154.771758-1-marcos@orca.pet>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 7 Jul 2025 16:10:00 +0200
-X-Gm-Features: Ac12FXzeP8dFecAIWuU6N_w7j5kVAxaP-9W4N40Z12Ew1XkhPS-e-xEDK7nwJhE
-Message-ID: <CAMRc=Me5dfNFLS1qF0AWgg8sb_vk9J=d-JV3-C5xWv7pZM+sFg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: vortex86: add new GPIO device driver
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 7, 2025 at 3:22=E2=80=AFPM Marcos Del Sol Vives <marcos@orca.pe=
-t> wrote:
->
-> Add a new simple GPIO device driver for Vortex86 lines of SoCs,
-> implemented according to their programming reference manual [1].
->
-> This is required for detecting the status of the poweroff button and
-> performing the poweroff sequence on ICOP eBox computers.
->
-> IRQs are not implemented as they are available for less than half the
-> GPIO pins, and they are not the ones required for the poweroff stuff, so
-> polling will be required anyway.
->
-> [1]: http://www.dmp.com.tw/tech/DMP_Vortex86_Series_Software_Programming_=
-Reference_091216.pdf
->
-> Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
-> ---
+hmm_init() would continue execution even if hmm_bo_device_init() failed,
+potentially leading to bad behaviour when calling hmm_alloc().
 
-Hi!
+- returns the error immediately if hmm_bo_device_init() fails.
 
-This patch immediately rings alarm bells in my head because the chip
-is not registered with the driver model. It's not 2005 anymore so I'd
-need some more explanation. IMO there's nothing that makes it
-impossible to implement this as a platform device. Could you elaborate
-more on why you chose to implement it this way?
+Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+---
+ drivers/staging/media/atomisp/pci/hmm/hmm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Bart
+diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+index f998b57f90c4..c2ee9d2ec0d5 100644
+--- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
++++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+@@ -36,6 +36,7 @@ int hmm_init(void)
+ 				 ISP_VM_START, ISP_VM_SIZE);
+ 	if (ret)
+ 		dev_err(atomisp_dev, "hmm_bo_device_init failed.\n");
++		return ret;
+ 
+ 	hmm_initialized = true;
+ 
+@@ -48,7 +49,7 @@ int hmm_init(void)
+ 	 */
+ 	dummy_ptr = hmm_alloc(1);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ void hmm_cleanup(void)
+-- 
+2.25.1
+
