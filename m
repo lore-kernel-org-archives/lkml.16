@@ -1,142 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D8B2951B5
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB032980D0
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894612; cv=none; b=OtnCGOiOpzc+V86AR6TAiXrm2B99cdCIjevDNwT7ZFU5uaOPOIgSTaLIlMfvjQFA4zeUT9alFJSM3OI/hm7BHx461fx3tBwEfNNxn0u4ylAXwv3Nwl5rsXqFRqXLKYPe5RcMQjA7gT2avLZYUxjQzBphCzjZklvfzqIMOr3YPk4=
+	t=1751894614; cv=none; b=hZuhUbZJekdC1l8e+d8O9lC2AslDE7d96OwSe8BZITYo+BLoHUSb0WmVirZ7aRuimQ5H+slx+Bind3L0RUIDuLnSSlZFf+FpEDXv2K+E/eOHQEyddzdc2PID88B17OBfhoO04Lc1hrc3sC8iJNY7nw/dPPSwjSeDqruUK3J2hx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894612; c=relaxed/simple;
-	bh=H0FeNN+P6Fwz9Kj2TemKg9xFvCUgymIvY3fuJdKM4sA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jKLKMd4F2C2y698/AJhG3yN362SfLhXhcHltn7Ss7h+C7+M10IytsaHHFHkXAt5dqBfWcD163847WR8bLzMynchy977cZXe279JKB3orQxbCs+RYT1kEQnyANBsPfXPuxX+w3kIixXAzIv+e+4KgjBiwf7YAOIPEgTGm4bHkri0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I02UeTy+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751894614; c=relaxed/simple;
+	bh=9XfDpieyU8b2140bQho6t1DhMkVdpW1ldUV4ZihuTTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RoRHtht3tx145kJyegIJrrIqCIzuSOe/RAGpxAvDobrMxCitoYu8qyUR7mUvFHzj98xH/O8xLIeJXwSTX6F98EpDUAza/nt/KRlNWbz4elvhGgcOM1oojk8fgC0fgxxeSiNDeA2vIjD3ppQv0bCyhU5XCN0zylSvEBeP8lVVtHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gevcj9V9; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I02UeTy+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751894610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RHuO5AsaFT5+p2FY+QJGOYcUuUvgKM52ns+6Pc/fS2s=;
-	b=I02UeTy+NyzCxEeLSNULzHbILM5+1fnnu/W1uJ7iRUmzdQQFWKx+8CMajIvGnM8y9b2kNK
-	tfiQmWPfzgRXberYOoXeD849rvzzXLPhvQMxw4zwpqEAo5DrHst11R3CwxTamsW6+iRMDz
-	wm/3n1lGQ8mrrllv3jpYl+ViLtfD+qs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-583-m2JorT6FMPm9joGRjbf9sA-1; Mon,
- 07 Jul 2025 09:23:26 -0400
-X-MC-Unique: m2JorT6FMPm9joGRjbf9sA-1
-X-Mimecast-MFC-AGG-ID: m2JorT6FMPm9joGRjbf9sA_1751894605
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 46956195FCC6;
-	Mon,  7 Jul 2025 13:23:25 +0000 (UTC)
-Received: from RHTRH0061144 (unknown [10.22.81.154])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7212C195608F;
-	Mon,  7 Jul 2025 13:23:23 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org,  dev@openvswitch.org,
-  linux-kernel@vger.kernel.org,  Eric Dumazet <edumazet@google.com>,  Simon
- Horman <horms@kernel.org>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  "David S. Miller" <davem@davemloft.net>
-Subject: Re: [ovs-dev] [PATCH net-next v2] net: openvswitch: allow providing
- upcall pid for the 'execute' command
-In-Reply-To: <20250702155043.2331772-1-i.maximets@ovn.org> (Ilya Maximets's
-	message of "Wed, 2 Jul 2025 17:50:34 +0200")
-References: <20250702155043.2331772-1-i.maximets@ovn.org>
-Date: Mon, 07 Jul 2025 09:23:21 -0400
-Message-ID: <f7ttt3oqgmu.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gevcj9V9"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so2922610f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 06:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751894610; x=1752499410; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A1JkCspwJaFqJzSejsi2dTXNLAQ9s3FaAdM20lcOhVo=;
+        b=Gevcj9V9EMw7bXaPKvYUKkie88kBByVNXW+lKU1EXPEP7LZnEfQUV3cn8x58bQVVwi
+         DgvPnSK4Ricdtz+otQKqZyLyJ5TkD/C1qTC3MpneMBtyg2nhIg07TkqqxsG8eOLi9h/D
+         nTQf2/HI/huOU+tN1ZB3FXviCoSl//+xlUS+96oCVHelxXpJE76qCWXJP7zxmA1Mzp2f
+         dPjFXQJAWLFBcoWMt0XFh3iXIC+jYPUmceClcCnKCf79zK6AL36Sb8fUFUVQowvTuKu1
+         akNZ5I/q+bfK3Vl+ju0teTttgLIrwM5838oQPUPhCAIxx8Y8ej81BimX9aQPl8nS8fnc
+         Cf2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751894610; x=1752499410;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A1JkCspwJaFqJzSejsi2dTXNLAQ9s3FaAdM20lcOhVo=;
+        b=F+qiX9E3LYUY2BO5WJedQ3fpFYa3IN/+hHrGiXFkPVYHdzU6TVfRDuf9+cJy/Y53ol
+         HC8WhPVWs3AqFjTz2289oR+DMB4P8rdRcb3yeKilF7/vCJfhyaTD7kONS88FNQ2+oPO3
+         Uc/0SHflUe2N/c8aMey9hhZLYJgZM1kYeDUCmHA8HovtBz9KLvr6VCHadtP4ae3yKJ8b
+         15Svme3A4Y7/BUdZr+uCoCVpnraNw5Bw3plt1EIksroYDVAecurTlqy8BdrepjcqEazX
+         ntJOoUWzJiBAjkV/As5tuMC24o/p/ShhExu6E/zEOt7ZmRxpFr53dGQoZIqcQHkZhxF/
+         NZQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBdPI55MBiCe6NNz9P7gQMka9IkJWUE7EcKHIo4j2N60NBF71AXqG2D0MVqDwWpfNBxarUQXM3frtzVco=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/+LHyBEdXMh+HIPqMX+gGi+jmyWO6DdPScEiW/d/o8z9ZLbTL
+	w9EUiXbP3n21OgIPzXpnTmiTvdznlORA7U7RMYCD3xka0r/ZpLkE2eMRM6cYUJ2lDBs=
+X-Gm-Gg: ASbGncv9s7LDAcAK/81xn3JUr/BASbBfI3TcWsJsg4iDgubLamWoLZ8rh/p9XSYFhPm
+	IDaE1qcjtIvvav0tFDL/9boy/xfVOb6bUxCxmCQQELrQ1aXnTfIgtfkycAR2JNbmuMr/SSkpb1s
+	r9JCoF0ZOZLM737j20z2GXGTMUF35lPJ4AhzbCuWrCHSGtoY7upiYS+BvLEzHE75pdd/Q/dEv+L
+	O5mMp6UNkG90i13DwjKNnIIZUYxUQkR4E9izVAZQ+NwH1a0FBsHYEWaNN6Q+TSAynfTYyvfTofV
+	az5cvJaehTWMG9ygdnbCeTpSu0lmCcDem7b0DoEPIgyNYhRQHlTNrrqPKQyNKJkPyvixDX9b3pa
+	cYwX3ebF+OWNlaFb2IKsIzcS/qCzgyOM=
+X-Google-Smtp-Source: AGHT+IHqvfoZlxqkZhFZeUbrhKra+ACvfYiFm+JNhrK5L5id15gKmlIVnrRthZyMexYFNceXyA6Kmg==
+X-Received: by 2002:a5d:59c4:0:b0:3a3:6595:9209 with SMTP id ffacd0b85a97d-3b4970294afmr9707717f8f.36.1751894610045;
+        Mon, 07 Jul 2025 06:23:30 -0700 (PDT)
+Received: from [192.168.1.159] (p4fc3d4fa.dip0.t-ipconnect.de. [79.195.212.250])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9be0bacsm138744515e9.32.2025.07.07.06.23.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 06:23:29 -0700 (PDT)
+Message-ID: <06760125-4800-4068-8936-dddf27c28d17@linaro.org>
+Date: Mon, 7 Jul 2025 15:23:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] pmdomain: qcom: rpmhpd: Add Milos power domains
+To: Luca Weiss <luca.weiss@fairphone.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20250707-sm7635-rpmhpd-v2-0-b4aa37acb065@fairphone.com>
+ <20250707-sm7635-rpmhpd-v2-2-b4aa37acb065@fairphone.com>
+Content-Language: en-US
+From: Casey Connolly <casey.connolly@linaro.org>
+In-Reply-To: <20250707-sm7635-rpmhpd-v2-2-b4aa37acb065@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Ilya Maximets <i.maximets@ovn.org> writes:
 
-> When a packet enters OVS datapath and there is no flow to handle it,
-> packet goes to userspace through a MISS upcall.  With per-CPU upcall
-> dispatch mechanism, we're using the current CPU id to select the
-> Netlink PID on which to send this packet.  This allows us to send
-> packets from the same traffic flow through the same handler.
->
-> The handler will process the packet, install required flow into the
-> kernel and re-inject the original packet via OVS_PACKET_CMD_EXECUTE.
->
-> While handling OVS_PACKET_CMD_EXECUTE, however, we may hit a
-> recirculation action that will pass the (likely modified) packet
-> through the flow lookup again.  And if the flow is not found, the
-> packet will be sent to userspace again through another MISS upcall.
->
-> However, the handler thread in userspace is likely running on a
-> different CPU core, and the OVS_PACKET_CMD_EXECUTE request is handled
-> in the syscall context of that thread.  So, when the time comes to
-> send the packet through another upcall, the per-CPU dispatch will
-> choose a different Netlink PID, and this packet will end up processed
-> by a different handler thread on a different CPU.
->
-> The process continues as long as there are new recirculations, each
-> time the packet goes to a different handler thread before it is sent
-> out of the OVS datapath to the destination port.  In real setups the
-> number of recirculations can go up to 4 or 5, sometimes more.
->
-> There is always a chance to re-order packets while processing upcalls,
-> because userspace will first install the flow and then re-inject the
-> original packet.  So, there is a race window when the flow is already
-> installed and the second packet can match it and be forwarded to the
-> destination before the first packet is re-injected.  But the fact that
-> packets are going through multiple upcalls handled by different
-> userspace threads makes the reordering noticeably more likely, because
-> we not only have a race between the kernel and a userspace handler
-> (which is hard to avoid), but also between multiple userspace handlers.
->
-> For example, let's assume that 10 packets got enqueued through a MISS
-> upcall for handler-1, it will start processing them, will install the
-> flow into the kernel and start re-injecting packets back, from where
-> they will go through another MISS to handler-2.  Handler-2 will install
-> the flow into the kernel and start re-injecting the packets, while
-> handler-1 continues to re-inject the last of the 10 packets, they will
-> hit the flow installed by handler-2 and be forwarded without going to
-> the handler-2, while handler-2 still re-injects the first of these 10
-> packets.  Given multiple recirculations and misses, these 10 packets
-> may end up completely mixed up on the output from the datapath.
->
-> Let's allow userspace to specify on which Netlink PID the packets
-> should be upcalled while processing OVS_PACKET_CMD_EXECUTE.
-> This makes it possible to ensure that all the packets are processed
-> by the same handler thread in the userspace even with them being
-> upcalled multiple times in the process.  Packets will remain in order
-> since they will be enqueued to the same socket and re-injected in the
-> same order.  This doesn't eliminate re-ordering as stated above, since
-> we still have a race between kernel and the userspace thread, but it
-> allows to eliminate races between multiple userspace threads.
->
-> Userspace knows the PID of the socket on which the original upcall is
-> received, so there is no need to send it up from the kernel.
->
-> Solution requires storing the value somewhere for the duration of the
-> packet processing.  There are two potential places for this: our skb
-> extension or the per-CPU storage.  It's not clear which is better,
-> so just following currently used scheme of storing this kind of things
-> along the skb.  We still have a decent amount of space in the cb.
->
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
+
+On 7/7/25 12:18, Luca Weiss wrote:
+> Add the power domains exposed by RPMH in the Qualcomm Milos platform.
+
+\o/ codenames!
+
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 > ---
->
+>   drivers/pmdomain/qcom/rpmhpd.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
+> index 078323b85b5648e33dd89e08cf31bdc5ab76d553..e09552a469264f28952fc46c3ab8c125e87310da 100644
+> --- a/drivers/pmdomain/qcom/rpmhpd.c
+> +++ b/drivers/pmdomain/qcom/rpmhpd.c
+> @@ -217,6 +217,24 @@ static struct rpmhpd gmxc = {
+>   	.res_name = "gmxc.lvl",
+>   };
+>   
+> +/* Milos RPMH powerdomains */
 
-Thanks Ilya - explanation is very clear.
+I can't find any public docs telling us which SoC is Milos (the only 
+relevant result is Bjorn's email asking you to use that name instead of 
+SM7635). So for the sake of future generations could you reference both 
+names in a comment somewhere? Or even the commit message would be enough 
+tbh.
 
-Acked-by: Aaron Conole <aconole@redhat.com>
+Off-topic here, but maybe it would be a good idea to add some Qualcomm 
+platform docs to the kernel with a table of all the publicly known names 
+for each SoC? This would also be really helpful even ignoring codenames 
+just to know that SM8550 is Snapdragon 8 Gen 2 for example.
 
+Kind regards,
+Casey (she/they)
+
+> +static struct rpmhpd *milos_rpmhpds[] = {
+> +	[RPMHPD_CX] = &cx,
+> +	[RPMHPD_CX_AO] = &cx_ao,
+> +	[RPMHPD_EBI] = &ebi,
+> +	[RPMHPD_GFX] = &gfx,
+> +	[RPMHPD_LCX] = &lcx,
+> +	[RPMHPD_LMX] = &lmx,
+> +	[RPMHPD_MSS] = &mss,
+> +	[RPMHPD_MX] = &mx,
+> +	[RPMHPD_MX_AO] = &mx_ao,
+> +};
+> +
+> +static const struct rpmhpd_desc milos_desc = {
+> +	.rpmhpds = milos_rpmhpds,
+> +	.num_pds = ARRAY_SIZE(milos_rpmhpds),
+> +};
+> +
+>   /* SA8540P RPMH powerdomains */
+>   static struct rpmhpd *sa8540p_rpmhpds[] = {
+>   	[SC8280XP_CX] = &cx,
+> @@ -723,6 +741,7 @@ static const struct rpmhpd_desc qcs615_desc = {
+>   };
+>   
+>   static const struct of_device_id rpmhpd_match_table[] = {
+> +	{ .compatible = "qcom,milos-rpmhpd", .data = &milos_desc },
+>   	{ .compatible = "qcom,qcs615-rpmhpd", .data = &qcs615_desc },
+>   	{ .compatible = "qcom,qcs8300-rpmhpd", .data = &qcs8300_desc },
+>   	{ .compatible = "qcom,qdu1000-rpmhpd", .data = &qdu1000_desc },
+> 
