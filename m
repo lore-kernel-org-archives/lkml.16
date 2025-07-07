@@ -1,43 +1,57 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75172CCC8;
-	Mon,  7 Jul 2025 08:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B0A1D5CD1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751876158; cv=none; b=Kuxtvx6HSYBDvF8EwwKHE9npNQp42TCdvCoqUzxF4NTTPX7rm21u72SwXylsAkaR4ZLkSJus0hDGYmtZEbibOTP9GE4t6RXztJNh6Ec+UkLQ2iiHVUncbUH/XzCldVllQ8JUAXGvPXsQwoGnsdZQm3TMttoNazEdCBDQKbTgdSY=
+	t=1751876182; cv=none; b=C9OXK3iIWp/BYH3+Sxl2PTBXceKblR4+F8gzsMtA3QIvr2HBFmT7NwTh3mrYQiBUjlGuQ1aNVv546A9VS/Viu6CNrZon+IHLnIa8h243Tlnx7tHCfuP08vX0vpg4zdlRrfxf+7qe7BBKTK2lLoOklri8HCIOXMsyyhH6zrfczRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751876158; c=relaxed/simple;
-	bh=Dd9Xk6xGGd0ME7zXV2jEaLbAC4FI8QKMO0ycCC1LHgU=;
+	s=arc-20240116; t=1751876182; c=relaxed/simple;
+	bh=XUSiHXeAqft3KWjBwWsENIyb3v/gq+2wG2azJgaM9vU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pGxGEE4W24Ex4WyRj2ec7FuNE/N++cEW3lhcgNj2nPPQ6L1DDLGzUvUMsTLV37Oj8n4795CFhijuamSY76Ct+fAROHXgcFpDThoxzolsd3LchwzyI+DKjpWruRuuSCWl3r2iJH6yyp3cF456SgJx7tRaS1S6SOTGnCWr0gBaYyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=114.132.77.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpsz21t1751876057t3b8668fe
-X-QQ-Originating-IP: vPFkWzDcFDHcvaKiIAy0Ih4IzObjBkvW/Dpqgv0ZlPo=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Jul 2025 16:14:15 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13134278031464448130
-Date: Mon, 7 Jul 2025 16:14:14 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/15] net: rnpgbe: Add download firmware for n210 chip
-Message-ID: <0FA3F272A6C59EFF+20250707081414.GA166175@nic-Precision-5820-Tower>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-6-dong100@mucse.com>
- <37ede55f-613b-481f-a8d9-43ee1414849a@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j9ehg4NY9IEE5U6CJgbuJS1B7rPMVPdmg1wOhJUK+SuN96zPk0KzhU8K/tB4FjUcq9zUDuBzXXU3TXlYjCfqomfa/t0VGY/hPdY+KskDbSLO5Vp8MEpzwgo0qCDtBez/C++ZQjlhFSxMJeqDoBG7ek5LAZKL3AST+FxsoqbRgbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E26D2116B;
+	Mon,  7 Jul 2025 08:16:19 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C96613757;
+	Mon,  7 Jul 2025 08:16:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DG/2BlOCa2jaLwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 07 Jul 2025 08:16:19 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B292EA0992; Mon,  7 Jul 2025 10:16:18 +0200 (CEST)
+Date: Mon, 7 Jul 2025 10:16:18 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Theodore Ts'o <tytso@mit.edu>, linux-ext4 <linux-ext4@vger.kernel.org>, 
+	linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	LTP List <ltp@lists.linux.it>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
+ with ARM64_64K_PAGES
+Message-ID: <mfx57o5lsxdkjpd3kq2y7ozkfu4rgr6zugdsnyqlhktwuh4dmw@7ldfhzgozaoo>
+References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+ <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+ <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+ <1c7ae5cb-61ad-404c-950a-ba1b5895e6c3@huaweicloud.com>
+ <c2dvcablaximwjnwg67spegwkntxjgezu6prvyyto4vjnx6rvh@w3xgx4jjq4bb>
+ <021aad1d-61ba-484f-88d1-9a482707ff94@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,129 +60,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <37ede55f-613b-481f-a8d9-43ee1414849a@lunn.ch>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Nj/O81qLKo2gDJk6/WQnhlZCV2blhLEjBNLp90yvs9tYHea82L5evEyl
-	qlLsenyPYn22vmYk6t6xCVLxNqZO+5HpvtvYhl//TpWfAf9B9/7KWBw8JACJV4uRlsZo1QU
-	r6ul2OC8j0dY7hDzEx+pePRHGAn9lO5uoRljzH5+k/w7h1MkFudqVgo2T0e9l6s3N1CuM6f
-	BT098Ch0tps+pPP4whjXT8shMKeBAkQu2t7/A+26d8N1HaELeJzU2gew8P/p3D+re5moDf/
-	KbDhNoRaN5E2R7+OxTvC7/gY+jarvUodKF5a7jLyDBO6SJejYiphNZdbaHFkX9yRuHxWUZ9
-	nhDomtUAaYQneV46721gMqatKoI617lmlyWesPl2s0CRZL9pCdgjOKEVUUpULTU7/oiUEVa
-	ihHpTxgOTzNEJ+HLuw2md1okRSaQs9nf3q0b6ehPD9uf3l9kEbLcHb68/lyDOzlPjJVHkS0
-	pMIGMDfQeFCGvK/6XwxPwdW9Ssha+ZXp4aoao8q9RMufno73Mw8Bbup3vJCpzGNILiDkq9p
-	BgGR81hdqSk9AV34+kNULpPHwoaKvmtEovzglMhI8PXgDMrWX4ouXY+jryBy3AruUzXqrNE
-	IQb3vX4edI6lKCcQ8ZePVLTXSyTqifmAZ9JCFKxXRH/ci6KYFi6FJx9l9DVJEcUBwyayXIf
-	ecwb6/i0G1F0igp2GW4jclrL0KgS7yP1dzcbO2XTGeIKijnBX/ir4AYJodsyyt7rrR/B1c7
-	u8LON5/0COcr7aapkj3vidhfxHYmJa7eRvprfVzyZXA2sKHwc897Z8cIsdqOUWRf36fjju4
-	jHPUzppgtuUHXKL3K9gByNZvePKvkAvGp4oTxgdEJYwQBUUcwcRHLEXSE4JdqDrdyI3HeyS
-	aVCn6SAYKSi7lrpPUAaeHwWGvSsMD0AAYK9Xm3cHAnHLE9C3S7gRnvNYMkCFr+1KFOspbiN
-	N8ux6UN12ZG1Hlw+dapiwTd3g9ek8glnNRpC+sQRmpY59HN05KzB5VnRhnIiOyDNwSHDUZM
-	xCkxdqPA==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <021aad1d-61ba-484f-88d1-9a482707ff94@huaweicloud.com>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Queue-Id: 2E26D2116B
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
 
-On Fri, Jul 04, 2025 at 08:33:14PM +0200, Andrew Lunn wrote:
-> >  static int init_firmware_for_n210(struct mucse_hw *hw)
-> >  {
-> > -	return 0;
-> > +	char *filename = "n210_driver_update.bin";
-> > +	const struct firmware *fw;
-> > +	struct pci_dev *pdev = hw->pdev;
-> > +	int rc = 0;
-> > +	int err = 0;
-> > +	struct mucse *mucse = (struct mucse *)hw->back;
-> > +
-> > +	rc = request_firmware(&fw, filename, &pdev->dev);
-> > +
-> > +	if (rc != 0) {
-> > +		dev_err(&pdev->dev, "requesting firmware file failed\n");
-> > +		return rc;
-> > +	}
-> > +
-> > +	if (rnpgbe_check_fw_from_flash(hw, fw->data)) {
-> > +		dev_info(&pdev->dev, "firmware type error\n");
+On Mon 07-07-25 12:54:56, Zhang Yi wrote:
+> On 2025/7/4 19:17, Jan Kara wrote:
+> > I wouldn't really disable it for 64K page size. I'd rather limit max folio
+> > order to 1024 blocks. That actually makes sense as a general limitation of
+> > our current implementation (linked lists of bhs in each folio don't really
+> > scale). We can use mapping_set_folio_order_range() for that instead of
+> > mapping_set_large_folios().
+> > 
 > 
-> Why dev_info()? If this is an error then you should use dev_err().
+> Indeed, after noticing that Btrfs also calls mapping_set_folio_order_range()
+> to set the maximum size of a folio, I thought this solution should work. So
+> I changed my mind and was going to try this solution. However, I guess limit
+> max folio order to 1024 blocks is somewhat too small. I'd like to limit the
+> order to 2048 blocks, because this this allows a file system with a 1KB
+> block size to achieve a maximum folio size to PMD size in x86 with a 4KB
+> page size, this is useful for increase the TLB efficiency and reduce page
+> fault handling overhead.
+
+OK. In my opinion whoever runs with 1k blocksize doesn't really care about
+performance too much and thus is unlikely to care about getting 2M pages
+:). But whatever, the limit of 2048 blocks is fine by me.
+
+> I defined a new macro, something like this:
 > 
-Yes, it should be dev_err().
-> > +	dev_info(&pdev->dev, "init firmware successfully.");
-> > +	dev_info(&pdev->dev, "Please reboot.");
-> 
-> Don't spam the lock with status messages.
-> 
-> Reboot? Humm, maybe this should be devlink flash command.
-> 
-> request_firmware() is normally used for download into SRAM which is
-> then used immediately. If you need to reboot the machine, devlink is
-> more appropriate.
-> 
-Yes, this is used to download flash to the chip, and then reboot to run.
-I will change it to devlink.
-> > +static inline void mucse_sfc_command(u8 __iomem *hw_addr, u32 cmd)
-> > +{
-> > +	iowrite32(cmd, (hw_addr + 0x8));
-> > +	iowrite32(1, (hw_addr + 0x0));
-> > +	while (ioread32(hw_addr) != 0)
-> > +		;
-> 
-> 
-> Never do endless loops waiting for hardware. It might never give what
-> you want, and there is no escape.
-> 
-Got it, I will update this.
-> > +static int32_t mucse_sfc_flash_wait_idle(u8 __iomem *hw_addr)
-> > +{
-> > +	int time = 0;
-> > +	int ret = HAL_OK;
-> > +
-> > +	iowrite32(CMD_CYCLE(8), (hw_addr + 0x10));
-> > +	iowrite32(RD_DATA_CYCLE(8), (hw_addr + 0x14));
-> > +
-> > +	while (1) {
-> > +		mucse_sfc_command(hw_addr, CMD_READ_STATUS);
-> > +		if ((ioread32(hw_addr + 0x4) & 0x1) == 0)
-> > +			break;
-> > +		time++;
-> > +		if (time > 1000)
-> > +			ret = HAL_FAIL;
-> > +	}
-> 
-> iopoll.h 
-> 
-Got it, I will use method in iopoll.h.
-> > +static int mucse_sfc_flash_erase_sector(u8 __iomem *hw_addr,
-> > +					u32 address)
-> > +{
-> > +	int ret = HAL_OK;
-> > +
-> > +	if (address >= RSP_FLASH_HIGH_16M_OFFSET)
-> > +		return HAL_EINVAL;
-> 
-> Use linux error codes, EINVAL.
-> 
-Got it.
-> > +
-> > +	if (address % 4096)
-> > +		return HAL_EINVAL;
-> 
-> EINVAL
-> 
-Got it.
-> > +
-> > +	mucse_sfc_flash_write_enable(hw_addr);
-> > +
-> > +	iowrite32((CMD_CYCLE(8) | ADDR_CYCLE(24)), (hw_addr + 0x10));
-> > +	iowrite32((RD_DATA_CYCLE(0) | WR_DATA_CYCLE(0)), (hw_addr + 0x14));
-> > +	iowrite32(SFCADDR(address), (hw_addr + 0xc));
-> > +	mucse_sfc_command(hw_addr, CMD_SECTOR_ERASE);
-> > +	if (mucse_sfc_flash_wait_idle(hw_addr)) {
-> > +		ret = HAL_FAIL;
-> > +		goto failed;
-> 
-> mucse_sfc_flash_wait_idle() should return -ETIMEDOUT, so return that.
-> 
-> 	Andrew
-> 
-Got it, I will return -ETIMEDOUT.
-Thanks for your feedback.
+> /*
+>  * Limit the maximum folio order to 2048 blocks to prevent overestimation
+>  * of reserve handle credits during the folio writeback in environments
+>  * where the PAGE_SIZE exceeds 4KB.
+>  */
+> #define EXT4_MAX_PAGECACHE_ORDER(i)             \
+>                 min(MAX_PAGECACHE_ORDER, (11 + (i)->i_blkbits - PAGE_SIZE))
+								  ^^^ PAGE_SHIFT
+
+Otherwise looks good to me.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
