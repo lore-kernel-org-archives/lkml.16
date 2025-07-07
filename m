@@ -1,162 +1,145 @@
-Received: from mail-8141.vip.163.com (mail-8141.vip.126.com [60.191.81.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7B3256C71;
-	Mon,  7 Jul 2025 03:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.81.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DAC258CC8
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751859453; cv=none; b=jRu0GBgVP9myOdmHh6CMj6l1AdCorh+y12gQiaakWROWb5wMy0h/WshYwNPJrZ+s1rTjwmJ1tZ0+BtVBxxbybk7V0p28iLlEVSyAxTdkboVKEjEXKRUXDUOTcdFkwIh4IrlTwNJeNkGThxt1HxxmE3XvC+COzAc1go9AQrGnbxs=
+	t=1751859522; cv=none; b=cvBLxE+bzQqbUphn9yJ/m5jLdPKbK1PiSFg3+uHjpR9OPGNi1PTPd+7VG82+YESYmo45oSg5C81hovD7cWYSmyuJt5MtDqxkluVDev7eLY1gBaZYcHefKW5OiNqqWuGESZ/sIYnsGrbzcgHA5cLgIgpv6vyUj6ap/16kadMKh6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751859453; c=relaxed/simple;
-	bh=k2TdzviJqSo4LBmcVaK4SGuAEg6ja1WQlCxUn6+mvbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=riQHVfYbwX1NDQ9tQogr4zX/muvm3So4V6GGUUDIEb3LR/SY0E4p+jCwHHttcBJUDaWAF/1M/6jv6mIvZew5rxh3963e8fI6tApZVM7FxdR8+6g4V9FEDVp1sCiQMn8FkBBaPrFxsUaqFb9o8koU9vSUxOc8ZXQxSNY0NTWA+YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=WQQQ3KmE; arc=none smtp.client-ip=60.191.81.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1751859522; c=relaxed/simple;
+	bh=xP2bREtdvnGbOLwW7B3gpwqiB0qIwzFyIIj2JKt5GFc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Wt7QMxteIsUOp3Hw4qHnFXpOOcGIZRkZz9FW+RYSZJbHbQvrT+xfSwKIlrv5vIjg/JTgEsgHZYVMvIp8k1Tq28eZ5nf+cMyiAqmwqUGQq26P9sJUJk3kZUsXcOLpkRbfphYVo6+gJe+s4DaID4TOaDw1yfZOlBntOc43yekNA+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=deDSSNVO; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="WQQQ3KmE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=oesmI5ePY0ossKfajmISjSZfcDhggP0bYnh+lj+buoU=;
-	b=WQQQ3KmEPp5jU24e7Wc/uAmsDbH3yhApgLc+2F73BuqLtNc1F81JKBaS1t9AYL
-	EMZO/hRhaD4y4BU4oiGN0kXBUJ5JWOER0NVuIOwWBTp+BEBaMe9FMf2SFK7gGRxO
-	k05ARgRcGFX16oDqyWIoPV47YgrPs3HM7EG+x1D9F5CAs=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgCXluOqQGtoLdp1AA--.56829S3;
-	Mon, 07 Jul 2025 11:36:12 +0800 (CST)
-Date: Mon, 7 Jul 2025 11:36:10 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Primoz Fiser <primoz.fiser@norik.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] arm64: dts: imx93-phycore-som: Add RPMsg overlay
-Message-ID: <aGtAqi7JWbF5F-31@dragon>
-References: <20250619063954.1730231-1-primoz.fiser@norik.com>
- <20250619063954.1730231-2-primoz.fiser@norik.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="deDSSNVO"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso2052972b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751859520; x=1752464320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gYLAUdUJTR9rpX/RucDx6r9U6vpMoU3BznYDYTgd2Is=;
+        b=deDSSNVO6EHM27EEpN5zgDVNe5cIYmIQsGgECnAysp1VJ2/Yu2+bsR6IK5GaCH7zyl
+         fGJArFnmt74msAx+nmfNg/lunwta7LtPFFzr78d8v6g1TdgEjddnky+E1y2iUr2i3z0J
+         30BuBXByTmYssYjdTLRSYUMxXM9KeRZth9qH9vdDYp60wA6BvIemGbmi9dguJDfFgRSn
+         aws4ikGoTOzQmmkivWC8BN6yIYW+PG+mdSMGtefeip7QwGBSvPxM0BXJDFs1oiCEfVRB
+         PT5i76wXrosq+nsrmwJvXEhQA1Ts82ecr9j7GACfKxGUAVJ6ako5rl5baVmvJYKalAU3
+         dvNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751859520; x=1752464320;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYLAUdUJTR9rpX/RucDx6r9U6vpMoU3BznYDYTgd2Is=;
+        b=B5bfarHfdU4wrmw5GgSktclXR7NfgnPj0m1MCN4Flj04yW15OHkdgIs84MvmOblxU+
+         /T448buTjJqjiyYjRLeTtE+OvVHylSx2lLH6sICWFWzkXikLRmiGyD4W9xiAYGdsY7Sa
+         e+72tgWE9/AV/0wrQkxmDYwW/e8RPnr6OyohTbP0w7sEOn3FtTN//BEwV+7YSsxIeOJt
+         hQsN3kq0OBJUCdo8r3NfigAnkw38F7CouFBBoB++NY1xyLTBl2xDP8zvjqODqP3WTAWA
+         oFGfJWHPf60OeNxar1q0eW10UhGnliNasMvv0EbSmvywJYOSz5MqBDCFV0Cy2RS6gxRZ
+         V4JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVz9t2rD7aqz2pxY4fwd27i8T0xVhrdx1hoX7hHAovYiDFqUi1uiLLsdoTZ8TUdwPh21nsaFYqEHwI6rIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAAlKGUcs2ME0itQg6zakFMem7QxhtnBQapnl4OVi46Uqc+nMr
+	P9sesyqrtFnM3HUQGv9OVhrp5g3bJwGLQu+pAZi94nodnYmvdFR8EmK6OCHji3PsDXI=
+X-Gm-Gg: ASbGncvVBkdisiBaBEEo95v5ba700B1Srr7shIsibWjGIEUWUYlc22ek5KfOvbMU91E
+	acOQM2BFB8SeHuketO0CVK/WD97VNhvaDKje6fSfTMQwxI4NOqhx+rjznFKE3KPMjQIF64f11Nt
+	hiJAstnFsOUrCtwv2YnkU6636jdN9PhboA1oibnhsWqcKeHHaSL6lPYxv8jQJn6ZbtzR1RLzDhi
+	e7+3uTdYLnlfJC1KuVA5e/lD0IDyR0HenHu6/UTxdNwIEaXBwtEpkINnJq66KIj4/Zh8c7ncnOW
+	hfx7cIzaSJzTH9bboDWG/33ICdK2ugZuh/lkmxkHPnjNu7mGfHXu+RhQDnVkvGDtyOOQomlnxUd
+	tTWByXhHkiNdC9Q==
+X-Google-Smtp-Source: AGHT+IHQ+vMn4AUfTUfzbidm8jT0R/lnwjN3Q065ykEjKC8AayhHkU7jvtK+lcztQOyY68HYaP5uQQ==
+X-Received: by 2002:a05:6a00:4f8b:b0:746:2a0b:3dc8 with SMTP id d2e1a72fcca58-74ce8aca411mr12735141b3a.17.1751859520171;
+        Sun, 06 Jul 2025 20:38:40 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce4299c3dsm7789475b3a.116.2025.07.06.20.38.36
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 06 Jul 2025 20:38:39 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: jgg@ziepe.ca
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	david@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v2 1/5] mm: introduce num_pages_contiguous()
+Date: Mon,  7 Jul 2025 11:38:33 +0800
+Message-ID: <20250707033833.59970-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250704171015.GJ904431@ziepe.ca>
+References: <20250704171015.GJ904431@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619063954.1730231-2-primoz.fiser@norik.com>
-X-CM-TRANSID:Ms8vCgCXluOqQGtoLdp1AA--.56829S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXF4UXw48tr13Jw48KrWfXwb_yoW5CF43pa
-	92yFW5WFWIgF1xCr9xXrs2qa4DAws5Aayj9w1UWryUKrWUAry2krsxtrW3Wr4xZw4UAw40
-	vFs3WFnFkFnxX3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U4WlgUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNAwwlWhrQKx8tgAA34
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 19, 2025 at 08:39:51AM +0200, Primoz Fiser wrote:
-> Add an overlay used for remote processor inter-core communication
-> between A55 and M33 cores on the phyCORE-i.MX93 SoM based boards.
+On Fri, 4 Jul 2025 14:10:15 -0300, jgg@ziepe.ca wrote:
+
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0ef2ba0c667a..1d26203d1ced 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -205,6 +205,26 @@ extern unsigned long sysctl_admin_reserve_kbytes;
+> >  #define folio_page_idx(folio, p)	((p) - &(folio)->page)
+> >  #endif
+> >  
+> > +/*
+> > + * num_pages_contiguous() - determine the number of contiguous pages
+> > + * starting from the first page.
+> > + *
+> > + * @pages: an array of page pointers
+> > + * @nr_pages: length of the array
+> > + */
+> > +static inline unsigned long num_pages_contiguous(struct page **pages,
+> > +						 unsigned long nr_pages)
 > 
-> Overlay adds the required reserved memory regions and enables the
-> mailbox unit and the M33 core for RPMsg (Remote Processor Messaging
-> Framework).
+> Both longs should be size_t I think
+
+Yes, size_t is a better choice.
+
+> > +{
+> > +	struct page *first_page = pages[0];
+> > +	unsigned long i;
 > 
-> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |  4 ++
->  .../dts/freescale/imx93-phycore-rpmsg.dtso    | 60 +++++++++++++++++++
->  2 files changed, 64 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx93-phycore-rpmsg.dtso
+> Size_t
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 0b473a23d120..08a1de299538 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -324,6 +324,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx93-14x14-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-kontron-bl-osm-s.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-nash.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
-> +
-> +imx93-phycore-rpmsg-dtbs += imx93-phyboard-nash.dtb imx93-phyboard-segin.dtb imx93-phycore-rpmsg.dtbo
-> +dtb-$(CONFIG_ARCH_MXC) += imx93-phycore-rpmsg.dtb
-> +
->  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba91xxca.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-rpmsg.dtso b/arch/arm64/boot/dts/freescale/imx93-phycore-rpmsg.dtso
-> new file mode 100644
-> index 000000000000..9200113c9ec3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-rpmsg.dtso
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 PHYTEC Messtechnik GmbH
-> + * Author: Primoz Fiser <primoz.fiser@norik.com>
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +&{/} {
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +
-> +		vdev0vring0: vdev0vring0@a4000000 {
-> +			reg = <0 0xa4000000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0vring1: vdev0vring1@a4008000 {
-> +			reg = <0 0xa4008000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev1vring0: vdev1vring0@a4010000 {
-> +			reg = <0 0xa4010000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev1vring1: vdev1vring1@a4018000 {
-> +			reg = <0 0xa4018000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		rsc_table: rsc-table@2021e000 {
-
-Can we sort the node in order of unit-address?
-
-Shawn
-
-> +			reg = <0 0x2021e000 0 0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		vdevbuffer: vdevbuffer@a4020000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0 0xa4020000 0 0x100000>;
-> +			no-map;
-> +		};
-> +	};
-> +};
-> +
-> +&cm33 {
-> +	mbox-names = "tx", "rx", "rxdb";
-> +	mboxes = <&mu1 0 1>,
-> +		 <&mu1 1 1>,
-> +		 <&mu1 3 1>;
-> +	memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-> +		 <&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-> +	status = "okay";
-> +};
-> +
-> +&mu1 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.34.1
+> > +
+> > +	for (i = 1; i < nr_pages; i++)
+> > +		if (pages[i] != nth_page(first_page, i))
+> > +			break;
 > 
+> It seems OK. So the reasoning here is this is faster on
+> CONFIG_SPARSEMEM_VMEMMAP/nonsparse
 
+Yes.
+
+> and about the same on sparse mem?
+> (or we don't care?)
+
+Regarding sparse memory, I'm not entirely certain. From my
+understanding, VFIO is predominantly utilized in virtualization
+scenarios, which typically have sufficient kernel resources. This
+implies that CONFIG_SPARSEMEM_VMEMMAP is generally set to "y" in
+such cases. Therefore, we need not overly concern ourselves with
+this particular scenario. Of course, David has also proposed
+optimization solutions for sparse memory scenarios[1]. If anyone
+later complains about performance in this context, I would be happy
+to assist with further optimization efforts. Currently, I only have
+a x86_64 machine, on which CONFIG_SPARSEMEM_VMEMMAP is forcibly
+enabled. Attempting to compile with CONFIG_SPARSEMEM &&
+!CONFIG_SPARSEMEM_VMEMMAP results in compilation errors, preventing
+me from conducting the relevant performance tests.
+
+Thanks,
+Zhe
+
+[1]: https://lore.kernel.org/all/c1144447-6b67-48d3-b37c-5f1ca6a9b4a7@redhat.com/#t
