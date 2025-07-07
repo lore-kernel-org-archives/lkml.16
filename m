@@ -1,287 +1,118 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53401E22FC
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D467E9;
+	Mon,  7 Jul 2025 13:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894823; cv=none; b=PbLWiOhaNExHyXOVp/BYLZ5xWRl+TIn3vOf+/TeLFPF3pHQhNYy9vsDihhK1AUrV1keRnDAJC3jIca8LDyzHLjN1CpTLGvZI6BJgbVINVgy3rb3WzC9bPVogk+ZAvI4qKTzRHdXqGh9zoPEG7FBCRUMEhHeZJ/UkdTfiViuD82E=
+	t=1751895112; cv=none; b=azJoY+04A8X6siEdH13flZA3+V7lrv7uG5+dgFOZxYOr4cxIQG+D2rxyNFIJ96aIi/fO+ZJVThd6k8CLzhme4Nzd4LYoa/rDvPQxxthLyQi+hyy6zw8Nz2kCvMKL8GxtyNxxxA8J9flxu7QmZnq39f3oDgdGz23thY8FdgH6gIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894823; c=relaxed/simple;
-	bh=3ietx0ofqi6mn1rjSW7Z6012jGl4TXWv2+pakZQ6JGs=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=u9stvpOrHpg6brMCgmdi+PWqEmgzDZgdVv6kRCctHy0FPMhCnKqp9CrvxlSLKrjS1wYGiedxKFrjTGN45m1TnVky3Fba18m0f+K5gIiJT+8gZE6u9GIWBRsWU1JTeqvz6Cu2iamKBeHHptc1ftgWkI3+QrFwxj3nnLO9HxCLcR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gzlsbwFh; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751895112; c=relaxed/simple;
+	bh=4Rj9VzFcMjV2b2FKGGXgH+pSxDEnRIoZbc9nYVS6Nl0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BXoAbdQfNijCvlcYwPkELvpt06KkCbTu60/xM9AL4vCLBuNshw87zw0H23DsZvYrXTSZxiej8/kJXvHBBfgGXNHskvoRLf5jSM63O/bJx8t+BGj/ylRRUVlLuZQfUY7dGAaycjTCh/av4E4UShrP8mEYBNa7sCpVwK6l+rb2Q78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBTiuLAL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gzlsbwFh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBTiuLAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1683C4CEE3;
+	Mon,  7 Jul 2025 13:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751895110;
+	bh=4Rj9VzFcMjV2b2FKGGXgH+pSxDEnRIoZbc9nYVS6Nl0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=vBTiuLALarVF0Dt1NF2pO9KbF2zrU1dKcEeY7MLjPwarJS7TpzSVEvJBOcssY60m1
+	 MaAoF5M0Pjcu1or+17Uho/JG7lKFgAdpdnK0uWXh0dvzw0yPzQ1vBd/zsCXedIyvYq
+	 TlEjJnaIWEpvFG+sY7puPE2h3r5yGPwlg3BJVA+WLdtH98pj7dM2TDfBUt59T1K/s+
+	 F4d4efCocsPrK2Gcsz7ms0GghVvys1GjidWhDJY+TjgcB5od9ipizCYT1WSWKK3jl+
+	 DLzLiUrAdJFivBtIxTu0IOxoqdGqbVzN+PvwwD+BnlUhXfefNuCt/aAHf1CqGzgOU9
+	 R6yJ65dWDUzZg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Mon, 07 Jul 2025 15:29:10 +0200
+Subject: [PATCH v15 6/7] rust: samples: add a module parameter to the
+ rust_minimal sample
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751894819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E+sLFlb61uxhm84r2R5IWZpx5sgQHLlxHf5gjLWdiro=;
-	b=gzlsbwFhc8xYSQzw4WtIhG0I68RN6NgMJv+398SBvQJMJtZPaCS/qHJA6wPWCUeSq4zMy4
-	hn4pGPWliTtg5Qvpgmvmn1jqKWztAsTdileWZx56WYFXhbuPB6ud9CmP7Z4NfrEa7mbsfV
-	tLJ1zb4xj4U0IBTnH9Sw3oq1ptrwuiQ=
-Date: Mon, 07 Jul 2025 13:26:56 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: qiang.zhang@linux.dev
-Message-ID: <527a257218a02fe85571746d339a4c24f5564d68@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH RFC 1/3] rcu: Fix rcu_read_unlock() deadloop due to IRQ
- work
-To: "Joel Fernandes" <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
- "Paul E. McKenney" <paulmck@kernel.org>, "Frederic Weisbecker"
- <frederic@kernel.org>, "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
- "Josh Triplett" <josh@joshtriplett.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Uladzislau Rezki" <urezki@gmail.com>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Mathieu Desnoyers"
- <mathieu.desnoyers@efficios.com>, "Lai Jiangshan"
- <jiangshanlai@gmail.com>
-Cc: rcu@vger.kernel.org
-In-Reply-To: <20250705203918.4149863-1-joelagnelf@nvidia.com>
-References: <20250705203918.4149863-1-joelagnelf@nvidia.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250707-module-params-v3-v15-6-c1f4269a57b9@kernel.org>
+References: <20250707-module-params-v3-v15-0-c1f4269a57b9@kernel.org>
+In-Reply-To: <20250707-module-params-v3-v15-0-c1f4269a57b9@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+ Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Trevor Gross <tmgross@umich.edu>, 
+ Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+ Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+ Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1268; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=4Rj9VzFcMjV2b2FKGGXgH+pSxDEnRIoZbc9nYVS6Nl0=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoa8u4LFemyRPjAmVKu3zSjovuiQLeEyy8Yu++T
+ kDM3pzk4AeJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaGvLuAAKCRDhuBo+eShj
+ d2gVEACuKT0KcPyN2Jwv1F3/qNbhhCQ9WHRJqZcOa50EQzdxQ5VyYAAPlAiJIPNBAPP3Ksmjfwn
+ 4cGn0X9PVIosA95n8rkqrOJQdnbqBmfQdTQugVuOLRs0huNINSa/HTFw1b28ncXRhWR1eJ4McMN
+ YxIut2wR6FoIxnvkgI1Zyd2OLXYsgBPmpD0ccKZAwGlTQa9BF+TIX+baKoB5FeYc32ZsOErrLTB
+ SJbLbrq8nKPR0POCN4Sl3YKdVmZA+RGCWM8agn/VbFFSaU3+Gaphq0/VM+/tgYaK9fZARQpivK6
+ rv28Nd3danlAx2f2xLJQ/m3za0GboZVlLltUhlU2l/HNrJTpZYHxEo1oAT1NrGEEGv6V6E2lFbM
+ r5vaBYbNK9yzJMbX0Lv6/IQllxNJD8M6O2/RklhYKHZ1J4CPQd59dX4gObAKkNglaxGKOA3TlL2
+ jlDGQru09k+38Djr4x75axmGPVxlCQHEyVsjitwWeIenp9SYW5nZdu6MLQrBsUp2UnGmw04pXsP
+ f7wlpyEYdTjFm7Pa2g7fWpvxgrLzbj+X5oRDC4BXzsea9Kx+YnB7tIAGzcd2X6S32OM5VIV9lzW
+ eaYRN9UEIBnKdTHhypS2ZaUTkf4rZz8I78Oai/wrkOcUnMDpfkK+mikU+fSzcGeUbTubljilHHF
+ nqNavY1zff/ri1A==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
->=20
->=20Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
->=20
->=20---
->=20
->=20 kernel/rcu/tree.h | 11 ++++++++++-
->=20
->=20 kernel/rcu/tree_plugin.h | 29 ++++++++++++++++++++++-------
->=20
->=20 2 files changed, 32 insertions(+), 8 deletions(-)
->=20
->=20diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
->=20
->=20index 3830c19cf2f6..f8f612269e6e 100644
->=20
->=20--- a/kernel/rcu/tree.h
->=20
->=20+++ b/kernel/rcu/tree.h
->=20
->=20@@ -174,6 +174,15 @@ struct rcu_snap_record {
->=20
->=20 unsigned long jiffies; /* Track jiffies value */
->=20
->=20 };
->=20
->=20=20
->=20
-> +/*
->=20
->=20+ * The IRQ work (deferred_qs_iw) is used by RCU to get scheduler's a=
-ttention.
->=20
->=20+ * It can be in one of the following states:
->=20
->=20+ * - DEFER_QS_IDLE: An IRQ work was never scheduled.
->=20
->=20+ * - DEFER_QS_PENDING: An IRQ work was scheduler but never run.
->=20
->=20+ */
->=20
->=20+#define DEFER_QS_IDLE 0
->=20
->=20+#define DEFER_QS_PENDING 1
->=20
->=20+
->=20
->=20 /* Per-CPU data for read-copy update. */
->=20
->=20 struct rcu_data {
->=20
->=20 /* 1) quiescent-state and grace-period handling : */
->=20
->=20@@ -192,7 +201,7 @@ struct rcu_data {
->=20
->=20 /* during and after the last grace */
->=20
->=20 /* period it is aware of. */
->=20
->=20 struct irq_work defer_qs_iw; /* Obtain later scheduler attention. */
->=20
->=20- bool defer_qs_iw_pending; /* Scheduler attention pending? */
->=20
->=20+ int defer_qs_iw_pending; /* Scheduler attention pending? */
->=20
->=20 struct work_struct strict_work; /* Schedule readers for strict GPs. =
-*/
->=20
->=20=20
->=20
->  /* 2) batch handling */
->=20
->=20diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
->=20
->=20index dd1c156c1759..baf57745b42f 100644
->=20
->=20--- a/kernel/rcu/tree_plugin.h
->=20
->=20+++ b/kernel/rcu/tree_plugin.h
->=20
->=20@@ -486,13 +486,16 @@ rcu_preempt_deferred_qs_irqrestore(struct task_=
-struct *t, unsigned long flags)
->=20
->=20 struct rcu_node *rnp;
->=20
->=20 union rcu_special special;
->=20
->=20=20
->=20
-> + rdp =3D this_cpu_ptr(&rcu_data);
->=20
->=20+ if (rdp->defer_qs_iw_pending =3D=3D DEFER_QS_PENDING)
->=20
->=20+ rdp->defer_qs_iw_pending =3D DEFER_QS_IDLE;
->=20
->=20+
->=20
->=20 /*
->=20
->=20 * If RCU core is waiting for this CPU to exit its critical section,
->=20
->=20 * report the fact that it has exited. Because irqs are disabled,
->=20
->=20 * t->rcu_read_unlock_special cannot change.
->=20
->=20 */
->=20
->=20 special =3D t->rcu_read_unlock_special;
->=20
->=20- rdp =3D this_cpu_ptr(&rcu_data);
->=20
->=20 if (!special.s && !rdp->cpu_no_qs.b.exp) {
->=20
->=20 local_irq_restore(flags);
->=20
->=20 return;
->=20
->=20@@ -623,12 +626,24 @@ notrace void rcu_preempt_deferred_qs(struct tas=
-k_struct *t)
->=20
->=20 */
->=20
->=20 static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
->=20
->=20 {
->=20
->=20- unsigned long flags;
->=20
->=20- struct rcu_data *rdp;
->=20
->=20+ volatile unsigned long flags;
->=20
->=20+ struct rcu_data *rdp =3D this_cpu_ptr(&rcu_data);
->=20
->=20=20
->=20
-> - rdp =3D container_of(iwp, struct rcu_data, defer_qs_iw);
->=20
->=20 local_irq_save(flags);
->=20
->=20- rdp->defer_qs_iw_pending =3D false;
->=20
->=20+
->=20
->=20+ /*
->=20
->=20+ * Requeue the IRQ work on next unlock in following situation:
->=20
->=20+ * 1. rcu_read_unlock() queues IRQ work (state -> DEFER_QS_PENDING)
->=20
->=20+ * 2. CPU enters new rcu_read_lock()
->=20
->=20+ * 3. IRQ work runs but cannot report QS due to rcu_preempt_depth() =
-> 0
->=20
->=20+ * 4. rcu_read_unlock() does not re-queue work (state still PENDING)
->=20
->=20+ * 5. Deferred QS reporting does not happen.
->=20
->=20+ */
->=20
->=20+ if (rcu_preempt_depth() > 0) {
+Showcase the rust module parameter support by adding a module parameter to
+the `rust_minimal` sample.
+
+Reviewed-by: Benno Lossin <lossin@kernel.org>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ samples/rust/rust_minimal.rs | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/samples/rust/rust_minimal.rs b/samples/rust/rust_minimal.rs
+index 1fc7a1be6b6d7..8eb9583571d72 100644
+--- a/samples/rust/rust_minimal.rs
++++ b/samples/rust/rust_minimal.rs
+@@ -10,6 +10,12 @@
+     authors: ["Rust for Linux Contributors"],
+     description: "Rust minimal sample",
+     license: "GPL",
++    params: {
++        test_parameter: i64 {
++            default: 1,
++            description: "This parameter has a default of 1",
++        },
++    },
+ }
+ 
+ struct RustMinimal {
+@@ -20,6 +26,10 @@ impl kernel::Module for RustMinimal {
+     fn init(_module: &'static ThisModule) -> Result<Self> {
+         pr_info!("Rust minimal sample (init)\n");
+         pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
++        pr_info!(
++            "test_parameter: {}\n",
++            *module_parameters::test_parameter.value()
++        );
+ 
+         let mut numbers = KVec::new();
+         numbers.push(72, GFP_KERNEL)?;
+
+-- 
+2.47.2
 
 
-For Preempt-RT kernels, the rcu_preempt_deferred_qs_handler() be invoked
-in per-cpu irq_work kthreads, the return value of rcu_preempt_depth()
-may always be 0, should we use IRQ_WORK_INIT_HARD() to initialize defer_q=
-s_iw?
-
-Thanks
-Zqiang
-
-
-
->=20
->=20+ WRITE_ONCE(rdp->defer_qs_iw_pending, DEFER_QS_IDLE);
->=20
->=20+ local_irq_restore(flags);
->=20
->=20+ return;
->=20
->=20+ }
->=20
->=20 local_irq_restore(flags);
->=20
->=20 }
->=20
->=20=20
->=20
-> @@ -675,7 +690,7 @@ static void rcu_read_unlock_special(struct task_str=
-uct *t)
->=20
->=20 set_tsk_need_resched(current);
->=20
->=20 set_preempt_need_resched();
->=20
->=20 if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
->=20
->=20- expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
->=20
->=20+ expboost && rdp->defer_qs_iw_pending !=3D DEFER_QS_PENDING && cpu_o=
-nline(rdp->cpu)) {
->=20
->=20 // Get scheduler to re-evaluate and call hooks.
->=20
->=20 // If !IRQ_WORK, FQS scan will eventually IPI.
->=20
->=20 if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
->=20
->=20@@ -685,7 +700,7 @@ static void rcu_read_unlock_special(struct task_s=
-truct *t)
->=20
->=20 else
->=20
->=20 init_irq_work(&rdp->defer_qs_iw,
->=20
->=20 rcu_preempt_deferred_qs_handler);
->=20
->=20- rdp->defer_qs_iw_pending =3D true;
->=20
->=20+ rdp->defer_qs_iw_pending =3D DEFER_QS_PENDING;
->=20
->=20 irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
->=20
->=20 }
->=20
->=20 }
->=20
->=20--=20
->=20
-> 2.43.0
->
