@@ -1,155 +1,175 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840428A1D3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7A728A1D8
 	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874412; cv=none; b=Rd9kqm+QSn6As+QC4DGNDYjhoH1ZgA3HWBP05gnnBWZujJnbD2RzL6KIf2u6ZVZGIZoIZsJ6RIQ7ZuY+5fc/Dhqup9LcSRHwSXjvPywaTAum5O8/nuJp8R/ytaXQhlES4CgVV648GGQGADManhp9BZv6N3GLpJNt6+hsAVLFjQQ=
+	t=1751874412; cv=none; b=itADQ78rhgTK0rDWlyRQoL+/SGcK7bJGIT3f+1/qlmOnYddv0YTnZIDQ1A+xmhVpQAdITp1jA2cXQhLvs4tlScjkwPR7Az6ymJBnVc33JJ2MHI7Prw9HV+A83uSKJ5vO8jV8HXaYO+2oR8XDxxRAcpjcLSzienJHqWWNlOJp2dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751874412; c=relaxed/simple;
-	bh=wgirFmFyQOVRX7pwQ81LfLbwnMDKABb03D/FH3MjlU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uCAjvfcICVBQqZSwBHt6Hv142KE1+4o+vkX1NUqR0qK4xxnn8fY/sQCD2dCkDz8i1f77Ss08XVkgjlzGA/iCyIPJxoHse4N0XWTjL99ZLljBgI84ze3ZVw/WCPkyHo+RqktSmw0AqmBj/LhB++yIDIB69KVWrZWODvlhaqkxiho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x+r1gjNG; arc=none smtp.client-ip=209.85.215.174
+	bh=Ox8F8kx9gL9CRav3hh4fjm7hYU6h8nlzlsxIyBzYyF0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WmAbIuyQcEdPcL+A/DxJ24sv7JRgDvDeILTYPNtnaAVo6QHKwH6r87O81CSQNq246UUYDoeQE828SZ3GVcojpNwcF8qh5JP6rdgrSHm1ZGg+7LY9X/KABDUWM1KuMiJO7GZyxqsgqoRL6Y9/exYagSHZTnVHSJOq5OoYM7CnhSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T3L52Qsz; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x+r1gjNG"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2c2c762a89so2046179a12.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3L52Qsz"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4536962204aso11183585e9.3
         for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751874410; x=1752479210; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9fNW/ipNPp9E7WVydECVXrddec24Up9r1hPRynNq8M0=;
-        b=x+r1gjNGxw5g6G4kRYli/oyr4WXcCKQlzS3l8Q/oGyj1ZNPUWinqAJwheRFDZw+nOG
-         Bmob8DrWWS/E1T5zbiKh3t+eJkhaeAfRu4cIrUrHF6WWAyLXZhD787eoMQ0EojqGDoob
-         SzGiRxvA5YnxvufcLIEn011zKa3rg/WNdJq9fxylJCBn5OzrZ1hirNeTUZ1FdoyMAGlK
-         QIwHTwDw1wGm0qE8YB/UAf7yU25Wh61ytuJGRV6CpYT3GsOi1lZMZc9jxZDgchablKJc
-         QwNjSM2YVwjiFbZMeUB3xFirh34yGfkAJtvkjLmd7CSqGaLWaUSUjvlhb2aiL/Zzjplu
-         mUlA==
+        d=google.com; s=20230601; t=1751874409; x=1752479209; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=85Flp7b4ljo/UWljC390TJTCn2w0mqmX1hjOf0gOSUA=;
+        b=T3L52QszILlpY4ETQ782l3y56+cxCLcws11sXDFeMji80y9QbUbmj9b2zslO2P0Dzm
+         2uk/7bRhvkDxXT8k3aPt32fjx71VQ7DW2zlFwtG1CJegQ/sfClAB/qyo08HoJDEKWhPe
+         Gx+m23Ld2QDb8yzem5mx6bO3AgZM0aepY7XIPKGPjgOTm4POxU8iZ2/L158RAot0r4+l
+         9Iw6C82Xq5YuEJNMvfq4Q+D7aOobZLNWrgDWBFTcULDWulW1iA0tWbrfpqn5MvUWnAeT
+         kTIs1U1uHnmOfSzLGG6puml62qWEKNAtdLKxgcKDbFI8VZNmyQZAGz58TxDyPM6dAOjg
+         fRhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874410; x=1752479210;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9fNW/ipNPp9E7WVydECVXrddec24Up9r1hPRynNq8M0=;
-        b=tuX6w+5kyLkdt1o6Lr51MZtUcdtuxF6ED2qk67H1YjJwRbjIqjYOO+VnPi5Js6b8AV
-         MbmOnomfL9tMvvXcKmvblwz34eSVcSexiBGBGHKYAl1pybdOcxpfB+ZxzqJrz2qBXuvq
-         epRZPp6itzZKMsmrzunSxCZHa7iaKGQo+Y20/Qadyl2Tbnb1wGv9daT+Xo5ubSV3AE0/
-         LkzNtezj4duOlVGr05o+sIa+nUCDyI3/WrjW8hbWIF5gaSPl3pfjQfuL+5Xs6CQcrqWm
-         2bJ6CMpfgIWBhZhll+9BAST4zGmTNY+5TRlF2gAOWiWm5mGOSO7EpmoPq0XzpZPWO0Go
-         uLBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5kOxwUODr2XeUf4XiONVM8pf4DeKtXqFYiGUQzYPmbDodgIARi7nx8ZGXMgn0kyWMzbNf26RTmB84muc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywyh+mrc7Yb/hBAV2jkMrMabI0RnUSIljrsk/1A//EofSu0oNgZ
-	Q80AAtA6WmxwamQ484B3XmcbWgRDC3qk+RhiESPtUyGfvQ9vvFPhUti9l1+tlhQwFS18gV3r7Xc
-	nT/4OGyb6TaQDoGsKrTIQz9VQTh5LRM22TDl2h63s
-X-Gm-Gg: ASbGncsoqAl4gsDVLlMYTGLoJarcq/ZNWvHs715IYIYB0k0liuzjHRbw01Dc6l5mIDP
-	RN5h1HRZKe7lWaFtzSpbqIUlZCAY74+H0fB0pZ3d+Ah2zSeoibG10XtqA1aiAFIa+gqBEI2zOq9
-	UJYOcqrNTsM5msOyC/cZ32bI/RDe9V/gSFhXYQHBvtgJJEXWQzD4ZS4CD7VsgcLZX8kyH+YRE2A
-	g==
-X-Google-Smtp-Source: AGHT+IGqO9oM46vaRZElMnGr6n15joXe3K7RM5q8sFYWV7Px+OQQzqoIe4GGrFaVhxXnxZxDnFNqlZsOgY72zLirvzc=
-X-Received: by 2002:a17:90b:57d0:b0:30e:5c7f:5d26 with SMTP id
- 98e67ed59e1d1-31aba8d28a3mr10983089a91.24.1751874409534; Mon, 07 Jul 2025
- 00:46:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751874409; x=1752479209;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=85Flp7b4ljo/UWljC390TJTCn2w0mqmX1hjOf0gOSUA=;
+        b=vEq/cASFsnlH+IKHa9Z+6gSH9jyH78RASujBZoSunjDWAse5IlJ1dQKdTRx5gqC5Om
+         kcnYiUD1CIXB05huto7suTd/pgRjoP63S0ZydjQTEdD0p+DZPrHOcOXV021kt3jEeeyJ
+         1JUEQ/Dqfg5pRh6GqZNjYa9E6mzlySQQ7FOHK13WfaRYSz+fGVLCm9mNxBBu6vSFgc2w
+         yUtryOx1orrhFIYc7JHcQryAtGoVQ2OpzfkKx7lE55/XX8i8VgusmO4gY2UjeErMUyWr
+         /2R/4VSkaPxu4shXMyRPzLYfjK4MuSM3yrqEThsxvkfzPTJYYP5U4H0E0WWxIz3kzDDd
+         T5LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxwmao6mioozDFr7TC2vG1hhaoFBqwnS5020m7jifwQEHo2XFErCmnXOuLvjXU9zshRNPIUf1Ix08OZd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuzqJPcRFSdHOe2QVTvMekGFObz+gHYbWnYcy+tl5BcnXoGfX1
+	afMnt1HPFgXc15LxLGZ4aSTrlC2j3z73RHC70fgBXdXFU1CSVut5FQ0bdcR2Zelx308vuDGcjZ6
+	7AGwB05KF8O4jXKlSCA==
+X-Google-Smtp-Source: AGHT+IF+X8nAaKNYaHvrOgUqLHjfkAfLscUr2qXaXIh/HgVu4ENFQdNOPCbYD+y33jPp+gAp7CgdOLLsDbEDjaY=
+X-Received: from wmqe3.prod.google.com ([2002:a05:600c:4e43:b0:442:ea0c:c453])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b8e:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-454c3326920mr35345165e9.30.1751874409526;
+ Mon, 07 Jul 2025 00:46:49 -0700 (PDT)
+Date: Mon, 7 Jul 2025 07:46:48 +0000
+In-Reply-To: <20250704-topics-tyr-platform_iomem-v12-2-1d3d4bd8207d@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1751862634.git.alx@kernel.org> <740755c1a888ae27de3f127c27bf925a91e9b264.1751862634.git.alx@kernel.org>
-In-Reply-To: <740755c1a888ae27de3f127c27bf925a91e9b264.1751862634.git.alx@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Mon, 7 Jul 2025 09:46:12 +0200
-X-Gm-Features: Ac12FXwJB9HCD4i8JLB6RoA7PkR95ZBhaAJktuICujVit91FZfsr8G443fGUagE
-Message-ID: <CANpmjNNQaAExO-E3-Z83MKfgavX4kb2C5GmefRZ0pXc5FPBazw@mail.gmail.com>
-Subject: Re: [RFC v3 5/7] mm: Fix benign off-by-one bugs
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
-	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, 
-	Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
-	Andrew Clayton <andrew@digital-domain.net>, Jann Horn <jannh@google.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com>
+ <20250704-topics-tyr-platform_iomem-v12-2-1d3d4bd8207d@collabora.com>
+Message-ID: <aGt7aItuSINDzj2O@google.com>
+Subject: Re: [PATCH v12 2/3] rust: io: mem: add a generic iomem abstraction
+From: Alice Ryhl <aliceryhl@google.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Ying Huang <huang.ying.caritas@gmail.com>, 
+	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, 7 Jul 2025 at 07:06, Alejandro Colomar <alx@kernel.org> wrote:
->
-> We were wasting a byte due to an off-by-one bug.  s[c]nprintf()
-> doesn't write more than $2 bytes including the null byte, so trying to
-> pass 'size-1' there is wasting one byte.  Now that we use seprintf(),
-> the situation isn't different: seprintf() will stop writing *before*
-> 'end' --that is, at most the terminating null byte will be written at
-> 'end-1'--.
->
-> Fixes: bc8fbc5f305a (2021-02-26; "kfence: add test suite")
-> Fixes: 8ed691b02ade (2022-10-03; "kmsan: add tests for KMSAN")
+On Fri, Jul 04, 2025 at 01:25:27PM -0300, Daniel Almeida wrote:
+> Add a generic iomem abstraction to safely read and write ioremapped
+> regions. This abstraction requires a previously acquired IoRequest
+> instance. This makes it so that both the resource and the device match,
+> or, in other words, that the resource is indeed a valid resource for a
+> given bound device.
+> 
+> A subsequent patch will add the ability to retrieve IoRequest instances
+> from platform devices.
+> 
+> The reads and writes are done through IoRaw, and are thus checked either
+> at compile-time, if the size of the region is known at that point, or at
+> runtime otherwise.
+> 
+> Non-exclusive access to the underlying memory region is made possible to
+> cater to cases where overlapped regions are unavoidable.
+> 
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-Not sure about the Fixes - this means it's likely going to be
-backported to stable kernels, which is not appropriate. There's no
-functional problem, and these are tests only, so not worth the churn.
+> +    /// ```no_run
+> +    /// # use kernel::{bindings, c_str, platform, of, device::Core};
+> +    /// # struct SampleDriver;
+> +    ///
+> +    /// impl platform::Driver for SampleDriver {
+> +    ///    # type IdInfo = ();
+> +    ///    # const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+> +    ///
+> +    ///    fn probe(
 
-Did you run the tests?
+When using # to hide lines from the example, it's useful to think about
+what's left. The rendered docs will have a weird empty newline at the
+beginning and before `fn probe`.
 
-Otherwise:
+So I would either remove those newlines or just not hide those lines.
 
-Acked-by: Marco Elver <elver@google.com>
+> +    /// Same as [`Self::iomap_sized`] but with exclusive access to the
+> +    /// underlying region.
+> +    ///
+> +    /// This uses the
+> +    /// [`ioremap()`](https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device)
+> +    /// C API.
 
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Alejandro Colomar <alx@kernel.org>
-> ---
->  mm/kfence/kfence_test.c | 4 ++--
->  mm/kmsan/kmsan_test.c   | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-> index ff734c514c03..f02c3e23638a 100644
-> --- a/mm/kfence/kfence_test.c
-> +++ b/mm/kfence/kfence_test.c
-> @@ -110,7 +110,7 @@ static bool report_matches(const struct expect_report *r)
->
->         /* Title */
->         cur = expect[0];
-> -       end = &expect[0][sizeof(expect[0]) - 1];
-> +       end = ENDOF(expect[0]);
->         switch (r->type) {
->         case KFENCE_ERROR_OOB:
->                 cur = seprintf(cur, end, "BUG: KFENCE: out-of-bounds %s",
-> @@ -140,7 +140,7 @@ static bool report_matches(const struct expect_report *r)
->
->         /* Access information */
->         cur = expect[1];
-> -       end = &expect[1][sizeof(expect[1]) - 1];
-> +       end = ENDOF(expect[1]);
->
->         switch (r->type) {
->         case KFENCE_ERROR_OOB:
-> diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
-> index a062a46b2d24..882500807db8 100644
-> --- a/mm/kmsan/kmsan_test.c
-> +++ b/mm/kmsan/kmsan_test.c
-> @@ -105,7 +105,7 @@ static bool report_matches(const struct expect_report *r)
->
->         /* Title */
->         cur = expected_header;
-> -       end = &expected_header[sizeof(expected_header) - 1];
-> +       end = ENDOF(expected_header);
->
->         cur = seprintf(cur, end, "BUG: KMSAN: %s", r->error_type);
->
-> --
-> 2.50.0
->
+I would probably format this like this:
+
+/// This uses the [`ioremap()`] C API.
+///
+/// [`ioremap()`]: https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device
+
+> +/// An exclusive memory-mapped IO region.
+> +///
+> +/// # Invariants
+> +///
+> +/// - [`ExclusiveIoMem`] has exclusive access to the underlying [`IoMem`].
+> +#[pin_data]
+> +pub struct ExclusiveIoMem<const SIZE: usize> {
+
+You don't need #[pin_data] if there aren't any pinned fields.
+
+> +    /// The underlying `IoMem` instance.
+> +    iomem: IoMem<SIZE>,
+> +
+> +    /// The region abstraction. This represents exclusive access to the
+> +    /// range represented by the underlying `iomem`.
+> +    ///
+> +    /// This field is needed for ownership of the region.
+> +    _region: Region,
+> +}
+> [..]
+> +impl<const SIZE: usize> IoMem<SIZE> {
+> +    fn ioremap(resource: &Resource) -> Result<Self> {
+> +        let size = resource.size();
+> +        if size == 0 {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let res_start = resource.start();
+> +
+> +        let addr = if resource
+> +            .flags()
+> +            .contains(io::resource::flags::IORESOURCE_MEM_NONPOSTED)
+> +        {
+> +            // SAFETY:
+> +            // - `res_start` and `size` are read from a presumably valid `struct resource`.
+> +            // - `size` is known not to be zero at this point.
+> +            unsafe { bindings::ioremap_np(res_start, size as usize) }
+
+Here you cast from ResourceSize to usize. Are you sure that is correct?
+I thought those types could be different.
+
+> +impl<const SIZE: usize> Drop for IoMem<SIZE> {
+> +    fn drop(&mut self) {
+> +        // SAFETY: Safe as by the invariant of `Io`.
+> +        unsafe { bindings::iounmap(self.io.addr() as *mut core::ffi::c_void) }
+
+Just c_void.
+
+Alice
