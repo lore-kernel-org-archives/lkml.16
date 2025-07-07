@@ -1,145 +1,97 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DAC258CC8
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2E025A2AB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751859522; cv=none; b=cvBLxE+bzQqbUphn9yJ/m5jLdPKbK1PiSFg3+uHjpR9OPGNi1PTPd+7VG82+YESYmo45oSg5C81hovD7cWYSmyuJt5MtDqxkluVDev7eLY1gBaZYcHefKW5OiNqqWuGESZ/sIYnsGrbzcgHA5cLgIgpv6vyUj6ap/16kadMKh6Q=
+	t=1751859545; cv=none; b=hFt6v9VcMcj6j8mHLNiA4gmUx9s4fZMeQjE0l2Q6R+pbUcyCHfE9Qqa7I7KDzsY0mjKCrvgYOXHegtJUsmIGFc9eXbmXOzG3mHrARxEz55dRibS7zV137cluDJhyrMmyqiYBGj/IfD+XYzn2PLS1V2h4/ww0XAp9i3vYPx0CtIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751859522; c=relaxed/simple;
-	bh=xP2bREtdvnGbOLwW7B3gpwqiB0qIwzFyIIj2JKt5GFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wt7QMxteIsUOp3Hw4qHnFXpOOcGIZRkZz9FW+RYSZJbHbQvrT+xfSwKIlrv5vIjg/JTgEsgHZYVMvIp8k1Tq28eZ5nf+cMyiAqmwqUGQq26P9sJUJk3kZUsXcOLpkRbfphYVo6+gJe+s4DaID4TOaDw1yfZOlBntOc43yekNA+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=deDSSNVO; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1751859545; c=relaxed/simple;
+	bh=cToKybjXtrPshKXsvriTLIFQT34mAn7DrvDWsf8sYmc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aTo9wqUm/ahLvGljUhTmPNwa3l9RGY5V3geL/4w2zZWscwYaDcmQ/TZ6AY7Gp9uPpF7JOZVWu0BStmN+9bHETMvMj6vwjF3034NHIz3qnW90jcYNWd1qgaD6GBdRRqRByMGZbHdwnzwV3jfp3zCERYMc4rjn2lpixsNBQY4Fscg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wq34deWO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="deDSSNVO"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso2052972b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751859520; x=1752464320; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gYLAUdUJTR9rpX/RucDx6r9U6vpMoU3BznYDYTgd2Is=;
-        b=deDSSNVO6EHM27EEpN5zgDVNe5cIYmIQsGgECnAysp1VJ2/Yu2+bsR6IK5GaCH7zyl
-         fGJArFnmt74msAx+nmfNg/lunwta7LtPFFzr78d8v6g1TdgEjddnky+E1y2iUr2i3z0J
-         30BuBXByTmYssYjdTLRSYUMxXM9KeRZth9qH9vdDYp60wA6BvIemGbmi9dguJDfFgRSn
-         aws4ikGoTOzQmmkivWC8BN6yIYW+PG+mdSMGtefeip7QwGBSvPxM0BXJDFs1oiCEfVRB
-         PT5i76wXrosq+nsrmwJvXEhQA1Ts82ecr9j7GACfKxGUAVJ6ako5rl5baVmvJYKalAU3
-         dvNg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wq34deWO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751859542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cToKybjXtrPshKXsvriTLIFQT34mAn7DrvDWsf8sYmc=;
+	b=Wq34deWOQQnk2ADZbXONJ98XWMfuNtblbE2a64RMdADsnpuCozK8we+Y10b/B0Z5x+H325
+	RMZRCH9znH4j3PSZa7aZx9DzUxpo9GBlF+KczPuEUPXmbEv9PC1f5DyqLuAgPHNQ4GTDp9
+	NA1PtoOtYcUJdBWIKlCam5ogPSC+/Qo=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-492-4ksmKNH2NF2FWcoq_oqQDw-1; Sun, 06 Jul 2025 23:38:59 -0400
+X-MC-Unique: 4ksmKNH2NF2FWcoq_oqQDw-1
+X-Mimecast-MFC-AGG-ID: 4ksmKNH2NF2FWcoq_oqQDw_1751859539
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b38fdc93c22so501476a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:38:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751859520; x=1752464320;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751859539; x=1752464339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gYLAUdUJTR9rpX/RucDx6r9U6vpMoU3BznYDYTgd2Is=;
-        b=B5bfarHfdU4wrmw5GgSktclXR7NfgnPj0m1MCN4Flj04yW15OHkdgIs84MvmOblxU+
-         /T448buTjJqjiyYjRLeTtE+OvVHylSx2lLH6sICWFWzkXikLRmiGyD4W9xiAYGdsY7Sa
-         e+72tgWE9/AV/0wrQkxmDYwW/e8RPnr6OyohTbP0w7sEOn3FtTN//BEwV+7YSsxIeOJt
-         hQsN3kq0OBJUCdo8r3NfigAnkw38F7CouFBBoB++NY1xyLTBl2xDP8zvjqODqP3WTAWA
-         oFGfJWHPf60OeNxar1q0eW10UhGnliNasMvv0EbSmvywJYOSz5MqBDCFV0Cy2RS6gxRZ
-         V4JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVz9t2rD7aqz2pxY4fwd27i8T0xVhrdx1hoX7hHAovYiDFqUi1uiLLsdoTZ8TUdwPh21nsaFYqEHwI6rIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAAlKGUcs2ME0itQg6zakFMem7QxhtnBQapnl4OVi46Uqc+nMr
-	P9sesyqrtFnM3HUQGv9OVhrp5g3bJwGLQu+pAZi94nodnYmvdFR8EmK6OCHji3PsDXI=
-X-Gm-Gg: ASbGncvVBkdisiBaBEEo95v5ba700B1Srr7shIsibWjGIEUWUYlc22ek5KfOvbMU91E
-	acOQM2BFB8SeHuketO0CVK/WD97VNhvaDKje6fSfTMQwxI4NOqhx+rjznFKE3KPMjQIF64f11Nt
-	hiJAstnFsOUrCtwv2YnkU6636jdN9PhboA1oibnhsWqcKeHHaSL6lPYxv8jQJn6ZbtzR1RLzDhi
-	e7+3uTdYLnlfJC1KuVA5e/lD0IDyR0HenHu6/UTxdNwIEaXBwtEpkINnJq66KIj4/Zh8c7ncnOW
-	hfx7cIzaSJzTH9bboDWG/33ICdK2ugZuh/lkmxkHPnjNu7mGfHXu+RhQDnVkvGDtyOOQomlnxUd
-	tTWByXhHkiNdC9Q==
-X-Google-Smtp-Source: AGHT+IHQ+vMn4AUfTUfzbidm8jT0R/lnwjN3Q065ykEjKC8AayhHkU7jvtK+lcztQOyY68HYaP5uQQ==
-X-Received: by 2002:a05:6a00:4f8b:b0:746:2a0b:3dc8 with SMTP id d2e1a72fcca58-74ce8aca411mr12735141b3a.17.1751859520171;
-        Sun, 06 Jul 2025 20:38:40 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce4299c3dsm7789475b3a.116.2025.07.06.20.38.36
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 06 Jul 2025 20:38:39 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: jgg@ziepe.ca
-Cc: akpm@linux-foundation.org,
-	alex.williamson@redhat.com,
-	david@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lizhe.67@bytedance.com,
-	peterx@redhat.com
-Subject: Re: [PATCH v2 1/5] mm: introduce num_pages_contiguous()
-Date: Mon,  7 Jul 2025 11:38:33 +0800
-Message-ID: <20250707033833.59970-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250704171015.GJ904431@ziepe.ca>
-References: <20250704171015.GJ904431@ziepe.ca>
+        bh=cToKybjXtrPshKXsvriTLIFQT34mAn7DrvDWsf8sYmc=;
+        b=TCM8l1WkpQC9vKrU0wKS3FH1Bwz+srlgQj7G8cqnFKGGVF2CWkYBRAFktDhG9wNq6i
+         CQ0JOJ0o7Mjj84SSj7A+5f/7eyjKIzwiHkl7w9gIHphogBbujZH5nwycPr/9kbjS6XzK
+         x0/yQ+Wf0+c84mL5m0qN+xxKYJWm2z005xrqb+9w0DlUkmwBcCuR4ZZFoKuMqdKJ2xBU
+         UokoUwEcBLCWF+NnNhBXMI7FcSfEfTUB5G+ZHVHjMR8CKsnOTRv7IRM6JT3FxF3HYfFg
+         QTo+Nyv5pSnrG9Qx4OwzI2SkyyhiAEGtagSm+yTo5w5Jk+Dw/1O1mnkObu+4KM0rMMDs
+         Rscg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXtTJEoX3CgUNZLGVMMlH9cvaek9MvYDJDH0T8c+gRPFmLhFqpWd1YErMxqcfZcN2zOI9h8m2GLGkkZ8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2rl+heKamONcmqNrscMrAV0n/jLJ1m9F/SCjfRYIN3x+4Z5+q
+	7xo3AcnIb3aVrvNqEZJiSHQ0JiLoEHolBoHYIWaECjm6Y6g31CTV2+4DrCVyAMUwwrltubl3til
+	sDxfk5jbOYi4FfHp+DLE/lK676+tdFS5NQpw3o9eB9mHwKf7uMwJVaOw2fegf9MoD7YteZX6S8G
+	4LhqcSNlWchDyTy1ylThEE0g4z7C4BO3sZZ4rZtVxN
+X-Gm-Gg: ASbGnctfkPp53QBHb4r/hQQzAiK+XUmwem8f5O5TxQH03G2jQpn74xAXNMbW9vya7Lg
+	l2quJSjjlteNDCIyvGZyhxWz4e0sVGJxlNNIoD8xOIET5fftXUx8uwwmUx1vhsGVLbeouHt2yyH
+	ZeTH8R
+X-Received: by 2002:a17:90b:55cb:b0:31c:15da:2175 with SMTP id 98e67ed59e1d1-31c15da23cemr1276679a91.9.1751859538657;
+        Sun, 06 Jul 2025 20:38:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE/OScOfzxvN6ffL+e+JM/H+J3/JdD4csUZUpOcHgC06UuyYVCjZh3kPiyRl4cX84Tq+BwKAeQqS9ePIWOt/tw=
+X-Received: by 2002:a17:90b:55cb:b0:31c:15da:2175 with SMTP id
+ 98e67ed59e1d1-31c15da23cemr1276643a91.9.1751859538244; Sun, 06 Jul 2025
+ 20:38:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250702014139.721-1-liming.wu@jaguarmicro.com>
+In-Reply-To: <20250702014139.721-1-liming.wu@jaguarmicro.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 7 Jul 2025 11:38:46 +0800
+X-Gm-Features: Ac12FXzRSQJDauDNVYKvCZUnjp7a1__tIs86dizLjOKq_h5WbWMweaIbaRJmiis
+Message-ID: <CACGkMEuxSsJVkvNnGGZtrK=MOyzc1ajW+SNR-xP_XzO5=R25jA@mail.gmail.com>
+Subject: Re: [PATCH] virtio_net: simplify tx queue wake condition check
+To: liming.wu@jaguarmicro.com
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, angus.chen@jaguarmicro.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 4 Jul 2025 14:10:15 -0300, jgg@ziepe.ca wrote:
+On Wed, Jul 2, 2025 at 9:41=E2=80=AFAM <liming.wu@jaguarmicro.com> wrote:
+>
+> From: Liming Wu <liming.wu@jaguarmicro.com>
+>
+> Consolidate the two nested if conditions for checking tx queue wake
+> conditions into a single combined condition. This improves code
+> readability without changing functionality. And move netif_tx_wake_queue
+> into if condition to reduce unnecessary checks for queue stops.
+>
+> Signed-off-by: Liming Wu <liming.wu@jaguarmicro.com>
 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 0ef2ba0c667a..1d26203d1ced 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -205,6 +205,26 @@ extern unsigned long sysctl_admin_reserve_kbytes;
-> >  #define folio_page_idx(folio, p)	((p) - &(folio)->page)
-> >  #endif
-> >  
-> > +/*
-> > + * num_pages_contiguous() - determine the number of contiguous pages
-> > + * starting from the first page.
-> > + *
-> > + * @pages: an array of page pointers
-> > + * @nr_pages: length of the array
-> > + */
-> > +static inline unsigned long num_pages_contiguous(struct page **pages,
-> > +						 unsigned long nr_pages)
-> 
-> Both longs should be size_t I think
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-Yes, size_t is a better choice.
+Thanks
 
-> > +{
-> > +	struct page *first_page = pages[0];
-> > +	unsigned long i;
-> 
-> Size_t
-> 
-> > +
-> > +	for (i = 1; i < nr_pages; i++)
-> > +		if (pages[i] != nth_page(first_page, i))
-> > +			break;
-> 
-> It seems OK. So the reasoning here is this is faster on
-> CONFIG_SPARSEMEM_VMEMMAP/nonsparse
-
-Yes.
-
-> and about the same on sparse mem?
-> (or we don't care?)
-
-Regarding sparse memory, I'm not entirely certain. From my
-understanding, VFIO is predominantly utilized in virtualization
-scenarios, which typically have sufficient kernel resources. This
-implies that CONFIG_SPARSEMEM_VMEMMAP is generally set to "y" in
-such cases. Therefore, we need not overly concern ourselves with
-this particular scenario. Of course, David has also proposed
-optimization solutions for sparse memory scenarios[1]. If anyone
-later complains about performance in this context, I would be happy
-to assist with further optimization efforts. Currently, I only have
-a x86_64 machine, on which CONFIG_SPARSEMEM_VMEMMAP is forcibly
-enabled. Attempting to compile with CONFIG_SPARSEMEM &&
-!CONFIG_SPARSEMEM_VMEMMAP results in compilation errors, preventing
-me from conducting the relevant performance tests.
-
-Thanks,
-Zhe
-
-[1]: https://lore.kernel.org/all/c1144447-6b67-48d3-b37c-5f1ca6a9b4a7@redhat.com/#t
