@@ -1,119 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F271E4AB;
-	Mon,  7 Jul 2025 14:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897220; cv=pass; b=dqiZNXl/c3uKwxzHOKSAhp5KE7TnPdhzhZFjvY56Zw6fcRjL5ohe3EB3x/95KQ8y+V2MYbJOlFJHRHhO/z1LZ7Zv488E6HIxf8cRu0wYMt3WuO8GXNju2s4K6Y4NU2do0DezZl6VBQ7YMzrp+Uu2bQeTpWatGdoM0PQJ2dMV7BM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897220; c=relaxed/simple;
-	bh=nVL8RzbfQUbV3cWEN5HyzMj2JgPrLDM8C/LUWwir5pc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=QtxbJ0kxjGdEypMvPITufngXDeif1RTlOO7X87uPZPm35tD3GvhC7iwdexZoJHp7S2GFsRgnQSIgLQ65MGQ61Hhf/iM9Ip0JrBw2+nILmCW5FTeZ/TWWi4vWVMg5PMobPIUpUTtJrMJFFBURLUdm5X7cAcau7c+6coVPZDAcFmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=F6zJHbYC; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3939429A333;
+	Mon,  7 Jul 2025 14:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751897405; cv=none; b=h9Rrf4WSrI+WPRWevJ10lKJ4dpV7hv14kl6Ok6+I/MVNsDR4e0YVY8F8UcWQ0gWxSi5tmx/ld2fw+HUhBo6SxDLIG9cx073ujnrg1eGG0LVsM8HP2vRvJggDIYNiKkac0+ACqB6gY+BMP+49Tsl4M2SmanCCCFWGudPlNifg1Mo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751897405; c=relaxed/simple;
+	bh=AHdaYOSI3SgombZBC8dmiHualEDlfjhpn8V0V/DgMuk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TIA17NjaYAK+tfwR2bWWmVxFJ0vEzvnKau0XoBQAfKzn6K/9XhKJpo8CY0j0w9ojh7vvvLnRl2/rbLkEuL6ii1QWIyrO2ZQVp2dS4wkNycOpZMlg5gzyzFAaSTlD3juRmPgB9U5dOfa0Me4eSNaVS8Y0F5Z56y2Xy/aXHO45uBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NeIcxo4T; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="F6zJHbYC"
-ARC-Seal: i=1; a=rsa-sha256; t=1751897194; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LLNCR/NHkkh4BtqPJ/pCtseK5Ws83oNmpJh/GforqVFlguYwvIBNA98X+3RH/2aLRQvuOVpumum5U1cNiKzSGdz8m/zIMaeaMFiSjHOM4M3FxDPdfFTLbskUt6ruJo2Gmmbpj3nA8IvBseDeD8iCi+qj55JDKRJCTIkfmcexHsk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751897194; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=p6r215HORtQkgpJubgFcQt2s0rODNo5ViU4EIRgi/3s=; 
-	b=hy8A1BZXYujB1ebEPIQDioLRmyBnLGIrBarFzbw3hOijaYeqvdA0E71iI9KGWkusngIY0f6E3aJyhD74/anu5qqiMeqjwvUBL/FoJ/0+bK/U6SvlarU1v8OjLN9L8CHJU01Zb9KFNH6LsMBBjaHRURCdV5PKGsNSyV2+tJ12qlw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gus@collabora.com;
-	dmarc=pass header.from=<gus@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751897194;
-	s=zohomail; d=collabora.com; i=gus@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=p6r215HORtQkgpJubgFcQt2s0rODNo5ViU4EIRgi/3s=;
-	b=F6zJHbYCHlzWqNy+5ogEzSuVhclGr3HMknP58crLG6vbFkXT75CKz23/eSB4LNtZ
-	3cRN08qWfSR3+GKwhk8319Ht3f+/l+ylPJcnkVrEzn4cYUcoNaMPFdxyvLlcs8GJ9jO
-	OiAtk66JaIHW8pvXJEcS70nHSfXrsZkhrmFPqugg=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1751897191262513.0769904210841; Mon, 7 Jul 2025 07:06:31 -0700 (PDT)
-Date: Mon, 07 Jul 2025 11:06:31 -0300
-From: Gustavo Padovan <gus@collabora.com>
-To: "Randy Dunlap" <rdunlap@infradead.org>
-Cc: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "bot" <bot@kernelci.org>,
-	"kernelci" <kernelci@lists.linux.dev>,
-	"Stephen Rothwell" <sfr@canb.auug.org.au>,
-	"Linux Next Mailing List" <linux-next@vger.kernel.org>,
-	"Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-	"bpf" <bpf@vger.kernel.org>
-Message-ID: <197e535b307.1104f59621371677.7964423033912786920@collabora.com>
-In-Reply-To: <d5136da0-51f9-4359-a283-9075b4992bfb@infradead.org>
-References: <20250704205116.551577e4@canb.auug.org.au>
- <5496b723-440f-451b-b101-f0c7c971fc9b@infradead.org>
- <f06082bf-27b5-488d-b484-fecc100014a1@infradead.org>
- <CAP01T77AWoBqDgOPpmmcL5tQFqNa8W3rxBDB+Er0J5rxogCrVA@mail.gmail.com> <d5136da0-51f9-4359-a283-9075b4992bfb@infradead.org>
-Subject: Re: linux-next: Tree for Jul 4 (kernel/bpf/stream.c)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NeIcxo4T"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607fbf8acb6so558614a12.3;
+        Mon, 07 Jul 2025 07:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751897402; x=1752502202; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uyCqESTaPkXyHbkcmpNd2gMmLJmq6htwbjOFYD33r8M=;
+        b=NeIcxo4TNkTSDXN+5m5PqEjmpBbfJjlJaW9RqPENnTc8Ab1C+VxVOXScK2qX1u4Npv
+         CzI8jfBrPH7SKK7YyXDBuEEKr1AxQgo4Juh6GOYMAht8fcghP8yeHICCPJE98G0gmt5M
+         FzNozQQeqjOoykFvdaxXEI/RUDYCqLkNP23lJFnNssFuHLcGzBJaS7Drp2hppcbvbKP0
+         jQL1ZVEXXxkdlcXons8PGiha165zaA434J1B+QDLJi6Rds3I1VSd2Hu2bJUOL16JCwNZ
+         C7Ms3duvi76pZQTDAygf7DRk6exWL9QfPjKp8nEa77phGeXRlLfkkruQ8QUWMfJcB5uR
+         tmrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751897402; x=1752502202;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uyCqESTaPkXyHbkcmpNd2gMmLJmq6htwbjOFYD33r8M=;
+        b=eEbZ0bbKyJPSL+0XIsnOUQey7BxU0axAuwcOQ4TLaid1VBA/zr6xMCzOSVzHHP5cxc
+         ulDJ572cFLrv5uNofQrM6mX6LCwmWlOw2X0gW0rjI3Ypuc5qWsqk3RLTsLq8/vZz2adC
+         UlbezjzX2HjjQZ9aP50HsZit1Xojcl/IkPGNF3pBO90q9tFBRv7+Opr34r1qpOjN1Jsf
+         9f/qgfFPlJ/hlUNo8AtjBiOoH+j8K+9T1aH2uSKE+YzIrqjXDdj3KwztmFufAKTvx2W8
+         rWPzsmvkjA8YIcFr5c81lSdXE9Fws5xQj8b8hsl5fQy6DMMoRgopZfZRUIRm0PKZTk+n
+         8H3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWv7PfRd13z8T30fmSehKw5mJSxYGtmOreekwEK5ovqUJLCaMPjcCFz6y3wYwhNI+B+hemBAtCiB7i+a20=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww8bRrQO7pUXje9UUa2Lm6V7NJPrejz4boWHvEZYeAlJQFZofa
+	m77x0NgXzM1OtrcwbvBiErt2IXohL+E68MNoUDVST2oQKHd85ine1yeB
+X-Gm-Gg: ASbGncuMQqUUoOrXN0HTFHB6CTNwNajMAugr/e7lmE/ADc8ML3cfDtKsalaRj5pu9Wq
+	jPpSBQJPn1DtBsIfafCS8unA1BlNCzJfWYLxDvimR73cWMZjH2tU0ASzUQRRE6rBUMNJpOvdK/r
+	IhDA6GC0cmdY5nnMtOlJ1sny5lpENerp2xm3YFC8eoE0NGp7JzRU8oEPkpSqTEni1kT+zBcRCB1
+	vc7icyI9SCPls7/YvKaDLzeuaQsHKMlkuQNM6goCCwYhntOHJ7M0HkJYojbxVQykG97Sd8udIyV
+	VK4ulBkcxO+R4uY0URKPYQXsasmzXD/FqmDjQMjeHCWpv+c6wLR/EcLgdFW4pk3ep8m2EvSxi4B
+	fvYjK4/GQ7A3IEOoSww8/vesXM+Y2/U+dJI4+/yBpqxnI3ownrmv60GREYvpZ
+X-Google-Smtp-Source: AGHT+IFoyq3U+1/o3AJhEJGB7FOf5qPE24zYohu/ZNZ7tgwRy0GsIfZj+9LrwSnh8D5/P/Tiid5//A==
+X-Received: by 2002:a17:907:9443:b0:ae0:dcd5:ea6d with SMTP id a640c23a62f3a-ae3fbd57f27mr434916066b.11.1751897401998;
+        Mon, 07 Jul 2025 07:10:01 -0700 (PDT)
+Received: from yousrii-VirtualBox.hotspot.internet-for-guests.com ([82.129.154.18])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d1ae3sm710370466b.7.2025.07.07.07.10.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 07:10:01 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+To: hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.org,
+	andy@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	dan.carpenter@linaro.org,
+	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Subject: [PATCH 0/2] staging: media: atomisp: clean up and unify HMM initialization logic
+Date: Mon,  7 Jul 2025 17:09:21 +0300
+Message-Id: <20250707140923.58935-1-abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Transfer-Encoding: 8bit
 
+Continuing the series of cleaning up the atomisp driver as discussed in
+[1], This patch series improves the consistency and reliability of the
+initialization logic in the AtomISP driver's Hybrid Memory Manager (HMM)
+subsystem.
 
+These modifications were tested by building the AtomISP driver
 
----- On Sat, 05 Jul 2025 01:52:58 -0300 Randy Dunlap <rdunlap@infradead.org> wrote ---
+Link: https://lore.kernel.org/all/fbfbd0e5-2c27-4f32-a3d7-9cf57fde5098@kernel.org/ [1]
+Abdelrahman Fekry (2):
+  staging: media: atomisp: return early on hmm_bo_device_init() failure
+  staging: media: atomisp: unify initialization flag usage in HMM
 
- > 
- > 
- > On 7/4/25 9:44 PM, Kumar Kartikeya Dwivedi wrote: 
- > > On Sat, 5 Jul 2025 at 01:38, Randy Dunlap <rdunlap@infradead.org> wrote: 
- > >> 
- > >> 
- > >> 
- > >> On 7/4/25 4:35 PM, Randy Dunlap wrote: 
- > >>> 
- > >>> 
- > >>> On 7/4/25 3:51 AM, Stephen Rothwell wrote: 
- > >>>> Hi all, 
- > >>>> 
- > >>>> Changes since 20250703: 
- > >>>> 
- > >>> 
- > >>> on i386: 
- > >>> 
- > >>> kernel/bpf/stream.c: In function 'dump_stack_cb': 
- > >>> kernel/bpf/stream.c:501:53: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast] 
- > >>>   501 |                                                     (void *)ip, line, file, num); 
- > >>>       |                                                     ^ 
- > >>> ../kernel/bpf/stream.c:505:64: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast] 
- > >>>   505 |         ctxp->err = bpf_stream_stage_printk(ctxp->ss, "%pS\n", (void *)ip); 
- > >>>       | 
- > >>> 
- > >>> 
- > >> 
- > >> Also reported (earlier) here: 
- > >> 
- > >> https://lore.kernel.org/linux-next/CACo-S-16Ry4Gn33k4zygRKwjE116h1t--DSqJpQfodeVb0ssGA@mail.gmail.com/T/#u 
- > >> 
- > > 
- > > Thanks, I will share a fix soon. Could the bot also Cc the author of 
- > > the commit using git blame? 
- >  
- > I added the email address for the bot. We'll see if it can read email. 
+ .../media/atomisp/include/hmm/hmm_bo.h        |  9 +++++++--
+ drivers/staging/media/atomisp/pci/hmm/hmm.c   | 19 ++++++-------------
+ 2 files changed, 13 insertions(+), 15 deletions(-)
 
-The bot doesn't know how to read email yet. :)
-
-The challenge with Cc the author today is that we don't build every commit or bisect,
-so we are not able to indentify the culprit commit. It is definitely on our roadmap to
-do that, but we don't know when such a feature would be available.
-
-Best,
-
-- Gus
-
+-- 
+2.25.1
 
