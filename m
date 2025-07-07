@@ -1,186 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D992BEFF5;
-	Mon,  7 Jul 2025 13:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7D429CB3E;
+	Mon,  7 Jul 2025 13:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751895781; cv=none; b=cZldyAckqF5XH05tyT++X3kqBCcN0so+Bg+nBpVSzJdJ7PNUoys9Lq3HidySp4mK2HPUTj6cSSCnRVgU0ZvQvZkgGINKJ1UgwJx/V9hXT70iXPtPe9aAvWEXozjjLPidpQ9OEehjLUjpuwi7y+y+JerMuwI8NDEqLY0yXt1l5Jo=
+	t=1751895827; cv=none; b=hvOvKwt3ESXSDkjIAedYBvDqiTVlcBbb6PUu93v2hyzSbkVf7eqddlwRC224h1s/QBmADZg9uDv00GbuNuwl9bUo0Ke3dh9xqdRIGUQU2jS4g2qyxLUB9FuwkiQJmpb9SPZfJVZL393oyItPX0GT1YC2cJSpGkNepYMq+k9MAKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751895781; c=relaxed/simple;
-	bh=kFeQuslhr/3hnNLg6rE8C4RDktELrENqA7ibJjiDglQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hB45jdSGRLNrWR9g0Rvi6Zn7NREc93eIynS1EdmQeSaIAtrTJy6pQSY0V7G0rYqZvM3v+HV+tnuBVCVHae1PTVzW+aeHmfPqWM0RV9oO+nru3BwyBEzD4NZlEfLIFsAJrtGsGCi8BWZVr4/lsqQLvNpNis+vvg7SNjn/cHuxJbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCiDJQO3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751895827; c=relaxed/simple;
+	bh=J4AEHDJIG2VhVpwkNrZvA/v+izbZKmF1qdr2u2Chf3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jUm6gOaT7Qdzn0URyWUyutllVkYuD8N2YAy6iIeJbVIcbj+ySm/WxT5WBhTaXJ+UwBs9Ujbh0m9jnMP/d1E6SehkMV56WqnOGK7TAq9PyU/RA4j70FUOHpvXTPxfW3naz/dGP4gzdIZrpQu2D0MBlfZChwxNi95jT/Eb2WyEBCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFi4qhaA; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCiDJQO3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22655C4CEE3;
-	Mon,  7 Jul 2025 13:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751895781;
-	bh=kFeQuslhr/3hnNLg6rE8C4RDktELrENqA7ibJjiDglQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FCiDJQO3TLWkMR1UB2l25UOB7Cnz92eRbGlBhrORo4bms4FxKzSIPOETrajXSVj8c
-	 dOOE+6vir6JSjXFB4L0reTiS8Q0A46QNGBRwmXCTdfo22CNxvcStmgWrmR/JE1e+AL
-	 PvwZvBp3RQakfGrCjlCQurC3T5yNmZAQv5TopTIi4d3Je62azAUwaQlLa6p3RwLhH2
-	 hEts6+sqxHSEHdJFY1GaSKVGtJggmzf4WXClcEMuUqHHHiGyAjGdQrMXi9KAq7UMtb
-	 Ve41v+KGrkbfmxxm5G+500uSA7y/8KO9tqRGHz/BBX46KJ40nP7fGRPVfeqiQaTPR7
-	 D7U86KksH/Mww==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
-	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH v2 7/7] drm/nouveau: Remove waitque for sched teardown
-Date: Mon,  7 Jul 2025 15:42:20 +0200
-Message-ID: <20250707134221.34291-9-phasta@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250707134221.34291-2-phasta@kernel.org>
-References: <20250707134221.34291-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFi4qhaA"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b34a71d9208so2034535a12.3;
+        Mon, 07 Jul 2025 06:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751895824; x=1752500624; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZGsbuxfJDD7WPNaohkU8W6/CVJp+eMGr8CZHm95Rw+w=;
+        b=UFi4qhaA41EGY+NGjxGN2xWCALDw+SQBOL9TM72tTZEiIQK++v8016v0yeFzCnk07g
+         AKeYlX1w84pw5TlI3gmz3ynS9tgPxR2MB+efhVYE3voR5u2K1O323g16by3vwha45ls7
+         nAH1SObj06afQYf4AwbuTS6awxptSn+VDafsdWORaK1Em0eJGUxnDkPqG2xOQl7fr4pk
+         loabxVG4vIDVJIM4tIT6urfRrXH0nUuFMk+slzg0o7AsH9NWaIGG58CdBORSpadjHZTZ
+         MLH6zNtOtqNTc+mPK92xJYyjewxscqp0vj78dwNgzNkuIvER04TpjMw/XORW0mHGjLpH
+         B2/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751895824; x=1752500624;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZGsbuxfJDD7WPNaohkU8W6/CVJp+eMGr8CZHm95Rw+w=;
+        b=c6AO5mArvKflGJwz9a4MYh44SucAmqd5ycB5mT67ZA61S82SEtP/XGFNoEVxP12Up1
+         XG203W27SIsN3ekh4rODORh2PrxCLaK4w3O5XISwxq2Xqvww9MjIRmyFJLIFVOgOYFgA
+         xSUt/zCs7vNewkEQMleQoKTEl83RLokgYXWjTuZKOHlDpfZ8Lir6zwa4afJt2TNrb+ed
+         48PglSGtKhggikPlTHs7vmZ/blOp+TQKsE7mV0wVZ2GUwDLHmtUVtH6yS/rJmh2garYI
+         fzbxzvQ9CFzB0tTHXXnA353JOjUTI+TJk3h1x3MQEFASu9Wv2m/eMMyPpeGnvfKO0Iao
+         585A==
+X-Forwarded-Encrypted: i=1; AJvYcCWahpzwh5Zv0qNOtjGVKHvU8I89J4zJpKWM3Me3fYrrJDM/hnRGahEqxTVbJyctxMq2Yb3Heb7P99djWzOj@vger.kernel.org, AJvYcCWsZQ7MRLtd6EpbK8D2pnHNnIuLvDusjL6SwWYYUdXhzOZqMALHD8DLTXn9I+RYB26GvZ34/oRPSNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKbbHppOR8IjAefxXcs/5ZOByqJ+OBC7NhooR/GVAlBoaVZoPG
+	+hUnJW8IjJHbJHGRE9guAiW6+TK6CTh56B4PCee/uMW/cNQzrFsys3JddH9FTl3WUxxDNNWCZao
+	zlUjIdls8KiN7oLXIf8Mz38vnnUDZHcI=
+X-Gm-Gg: ASbGncvHPyFLv8vmJ3qt2/MKKrc0U+NNHPMXuHXqoBR1c0oClviLJZkAzEJoYWuqBGl
+	npTM5wdLtCMXbKRmX57HGJOsFMi6tcUwxpSS9czUyhQgbhX8JcKCnDDRpCNdqd2EXfWdkvpYq+h
+	hPqUPvYp9pQUpTeOQq4dYI47y/vb8vTUP0Ive/t7PPAkfju7znMMnMTw==
+X-Google-Smtp-Source: AGHT+IFj37WtbRywUM+KTsqj6uNTP0kkxFDkEMr3fRtNfVMHXma+9TwwjeKy6w27RY/k8Aks5aR4Y5bN0iDKpZtxKyU=
+X-Received: by 2002:a17:90b:3fcd:b0:311:df4b:4b82 with SMTP id
+ 98e67ed59e1d1-31aadcf7c3amr17247922a91.4.1751895824268; Mon, 07 Jul 2025
+ 06:43:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250703023511.82768-1-luis.hernandez093@gmail.com>
+ <202507052123.55236.pisa@fel.cvut.cz> <b56b9602-d715-4de8-903e-7c97423bf5bb@infradead.org>
+ <aGsW36iFMyp4ojdf@archie.me>
+In-Reply-To: <aGsW36iFMyp4ojdf@archie.me>
+From: Felipe Hernandez <luis.hernandez093@gmail.com>
+Date: Mon, 7 Jul 2025 09:43:07 -0400
+X-Gm-Features: Ac12FXwtMSLY6-nWpzeOChev97JyLYP55obhTyZdz3c_gEa5zPeHfCEZGF25PW8
+Message-ID: <CAGRSKZgTwHRvjZaA-HzHHiA3qhN6i-v=tLR8OsBgiJMe=F6aig@mail.gmail.com>
+Subject: Re: [PATCH] docs: Fix kernel-doc indentation errors in multiple drivers
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Pavel Pisa <pisa@fel.cvut.cz>, corbet@lwn.net, 
+	alexandre.belloni@bootlin.com, ondrej.ille@gmail.com, mkl@pengutronix.de, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?B?TWFydGluIEplxZnDoWJlaw==?= <martin.jerabek01@gmail.com>, 
+	=?UTF-8?B?SmnFmcOtIE5vdsOhaw==?= <jnovak@fel.cvut.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-struct nouveau_sched contains a waitque needed to prevent
-drm_sched_fini() from being called while there are still jobs pending.
-Doing so so far would have caused memory leaks.
+On Sun, Jul 6, 2025 at 8:37=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com>=
+ wrote:
+>
+> On Sat, Jul 05, 2025 at 02:36:45PM -0700, Randy Dunlap wrote:
+> > It needs something to turn True and False into a bullet list
+> > (non-numbered), as documented in Documentation/doc-guide/kernel-doc.rst=
+:
+> >
+> >      So, in order to produce the desired line breaks, you need to use a
+> >      ReST list, e. g.::
+> >
+> >       * Return:
+> >       * * %0          - OK to runtime suspend the device
+> >       * * %-EBUSY     - Device should not be runtime suspended
+> >
+> >
+> >
+> > I don't see any of these kernel-doc warnings. I would guess that
+> > either Pavel or I am using some older/newer version of whatever
+> > software is causing this.
+> >
+>
+> I think Sphinx reported these warnings on docs-next tree.
+>
+> Thanks.
+>
+> --
+> An old man doll... just what I always wanted! - Clara
 
-With the new memleak-free mode of operation switched on in
-drm_sched_fini() by providing the callback
-nouveau_sched_fence_context_kill() the waitque is not necessary anymore.
+Hi,
 
-Remove the waitque.
+I just wanted to follow up with the thread. I had inadvertently done a
+reply not reply all after the first series of feedback from Pavel and
+Randy. I agree with Randy in that the nested lists be updated to use
+ReST list syntax. I'm working on a v2 and spot checking the output.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_sched.c | 20 +++++++-------------
- drivers/gpu/drm/nouveau/nouveau_sched.h |  9 +++------
- drivers/gpu/drm/nouveau/nouveau_uvmm.c  |  8 ++++----
- 3 files changed, 14 insertions(+), 23 deletions(-)
+For reference:
+I am running docutils (Docutils 0.21.2, Python 3.13.5, on linux)
+My branch was based on commit 50c8770a42faf8b1c7abe93e7c114337f580a97d
+(linux-next/master).
+The specific error(s):
+/home/linux/Documentation/networking/device_drivers/can/ctu/ctucanfd-driver=
+:526:
+./drivers/net/can/ctucanfd/ctucanfd_base.c:511: ERROR: Unexpected
+indentation. [docutils]
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
-index 2ec62059c351..7d9c3418e76b 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
-@@ -122,11 +122,9 @@ nouveau_job_done(struct nouveau_job *job)
- {
- 	struct nouveau_sched *sched = job->sched;
- 
--	spin_lock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
- 	list_del(&job->entry);
--	spin_unlock(&sched->job.list.lock);
--
--	wake_up(&sched->job.wq);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- void
-@@ -307,9 +305,9 @@ nouveau_job_submit(struct nouveau_job *job)
- 	}
- 
- 	/* Submit was successful; add the job to the schedulers job list. */
--	spin_lock(&sched->job.list.lock);
--	list_add(&job->entry, &sched->job.list.head);
--	spin_unlock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
-+	list_add(&job->entry, &sched->job_list.head);
-+	spin_unlock(&sched->job_list.lock);
- 
- 	drm_sched_job_arm(&job->base);
- 	job->done_fence = dma_fence_get(&job->base.s_fence->finished);
-@@ -460,9 +458,8 @@ nouveau_sched_init(struct nouveau_sched *sched, struct nouveau_drm *drm,
- 		goto fail_sched;
- 
- 	mutex_init(&sched->mutex);
--	spin_lock_init(&sched->job.list.lock);
--	INIT_LIST_HEAD(&sched->job.list.head);
--	init_waitqueue_head(&sched->job.wq);
-+	spin_lock_init(&sched->job_list.lock);
-+	INIT_LIST_HEAD(&sched->job_list.head);
- 
- 	return 0;
- 
-@@ -502,9 +499,6 @@ nouveau_sched_fini(struct nouveau_sched *sched)
- 	struct drm_gpu_scheduler *drm_sched = &sched->base;
- 	struct drm_sched_entity *entity = &sched->entity;
- 
--	rmb(); /* for list_empty to work without lock */
--	wait_event(sched->job.wq, list_empty(&sched->job.list.head));
--
- 	drm_sched_entity_fini(entity);
- 	drm_sched_fini(drm_sched);
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
-index 20cd1da8db73..b98c3f0bef30 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
-@@ -103,12 +103,9 @@ struct nouveau_sched {
- 	struct mutex mutex;
- 
- 	struct {
--		struct {
--			struct list_head head;
--			spinlock_t lock;
--		} list;
--		struct wait_queue_head wq;
--	} job;
-+		struct list_head head;
-+		spinlock_t lock;
-+	} job_list;
- };
- 
- int nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
-diff --git a/drivers/gpu/drm/nouveau/nouveau_uvmm.c b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-index 48f105239f42..ddfc46bc1b3e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-@@ -1019,8 +1019,8 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 	u64 end = addr + range;
- 
- again:
--	spin_lock(&sched->job.list.lock);
--	list_for_each_entry(__job, &sched->job.list.head, entry) {
-+	spin_lock(&sched->job_list.lock);
-+	list_for_each_entry(__job, &sched->job_list.head, entry) {
- 		struct nouveau_uvmm_bind_job *bind_job = to_uvmm_bind_job(__job);
- 
- 		list_for_each_op(op, &bind_job->ops) {
-@@ -1030,7 +1030,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 
- 				if (!(end <= op_addr || addr >= op_end)) {
- 					nouveau_uvmm_bind_job_get(bind_job);
--					spin_unlock(&sched->job.list.lock);
-+					spin_unlock(&sched->job_list.lock);
- 					wait_for_completion(&bind_job->complete);
- 					nouveau_uvmm_bind_job_put(bind_job);
- 					goto again;
-@@ -1038,7 +1038,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 			}
- 		}
- 	}
--	spin_unlock(&sched->job.list.lock);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- static int
--- 
-2.49.0
+I apologize if I should've started this work using the docs-next tree.
+I wasn't aware of it at the moment and was utilizing linux-next.
 
+Best,
+
+Felipe
