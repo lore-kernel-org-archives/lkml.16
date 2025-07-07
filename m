@@ -1,128 +1,86 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E091A238F;
-	Mon,  7 Jul 2025 11:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA301F8BCB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751886216; cv=none; b=lbP9AEc2WTOoIqeHjdsJoQOwS89YGpYMRE92T2u+O1Hz/eCQ+OuK4AYw6F29cOYjB80ispzbQU4aFNtonGrBGS4OD4AGeq+4bGHbhu/Gn9A1YPyPysBY2rDSzh/hOciy3rhphEAw/edZG6Rpb7KvuRtam+F+NRzvCPN8IK3+PSs=
+	t=1751886297; cv=none; b=qNFt4EDGXgq7Q+AbwNvfX9ag6+hyGeYjfW4i2tz3zt0lR2qUiLU0w6jxz2GwD64H/alBX0exVEjFfbV4gU0P5uzXEYIyGwapes1aYE5vGXOhb6bjqNDImKdZX6MBrpRZVwQ/t9rzOOIOSZMSJjbVZJIAr8mbBplpBjqzeSEAyV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751886216; c=relaxed/simple;
-	bh=xCmkd4Zjm7mVsUjBd9uINjW6Ko67WGaG8Bjqp/KixJQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b+BX1bPi5YM9bv0TVdj2wBeVVLvElyt9T68Lhrl/5yu1c7VSFR6o0iL+KrFrfGjPMUsWFJI3eM3vdQjdNzF64B8MWGnxlRhaSK2Ruk7eXIe+lUz7vVEhURsTG+7wgDeXql1UE/pBl3QD9y7xKThSAWjqaH9SDASN+Yj1Xe4ouhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DFiSm9ld; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=UUa3d3yY reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DFiSm9ld";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="UUa3d3yY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751886212; x=1783422212;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Ug4nJXmIqp8sQ35I/seriKRiXJkMk1I4o9Igs4X0jZ0=;
-  b=DFiSm9ldHepWzp4JatOuq6ognwm5A8UuqofZX+zjoOiTXksI2gkq6qKK
-   WNuGUuFG1BW+tBwHHNtdx8WKb6lRy+6olutRVjhyTtdYyZsPbAiTask2J
-   u+Bo4ScWVrIcUxFCMfBtQu/M3R0/sJD8b/px9m2Lg6iBYNiKIkb0e9yTP
-   BbekFeWOKraOXEdmW+BCrKO6pgL9lyoz2bsJYwwLjjJj3k393nkgYVO1Y
-   IGKbJ3uLRLmJC+sftoLvIiiVSJUg/kVUrrxKIH/XZouohQmQzuy50jJj+
-   jaOFyn/Hv2y8BsJ/LgSReHCl9M2ecWkl1FwYo4TsHTOYqFrC4PTNFYqvl
-   w==;
-X-CSE-ConnectionGUID: 4odISi9TQW65FYIAN4Ajbw==
-X-CSE-MsgGUID: IoiK02W8RAiajKvG+JKgaA==
-X-IronPort-AV: E=Sophos;i="6.16,294,1744063200"; 
-   d="scan'208";a="45060375"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Jul 2025 13:03:29 +0200
-X-CheckPoint: {686BA980-51-A38CADE4-FD2ABC4A}
-X-MAIL-CPID: AFDB9082BABAEE7E59D36B5735A04F59_3
-X-Control-Analysis: str=0001.0A00639A.686BA995.000D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0C486164A48;
-	Mon,  7 Jul 2025 13:03:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751886204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ug4nJXmIqp8sQ35I/seriKRiXJkMk1I4o9Igs4X0jZ0=;
-	b=UUa3d3yYr/TkQMnRR0wmo/RXjVxl9ZzUFopgaJlxwHFPAeGg4yOBBtvRSV38nuztvyx5GA
-	EeXVqxUE5KrPyfvpK5reYVcMq5A2sSKbjBCHFfyu8gV/ekIZLn8mGYf6R3H7HtDSd0MMPQ
-	QcLpA6d0r22nZyg38hU7c7YJrN4WNBDBYFhQc6YkwZbIFacBVRd+o9KnpRTqIsXdGIg9sm
-	qrwfpFXay8BXo56oqMSUVILO9I07L+QmbSOFpLHk48K/Nuf3PupjxJbv9f1yqXGYaqzp/J
-	TOj0VxeoUsBUMx1aqW0jj7Mx/gi/U/sNf1zwDjkQtKMSBDcMYjbfP7MDGD+W+g==
-Message-ID: <cad132c167e61c595add4cc43dfc0f1bc3d569d2.camel@ew.tq-group.com>
-Subject: Re: [PATCH] pmdomain: ti: Select PM_GENERIC_DOMAINS
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, vishalm@ti.com, 
-	vigneshr@ti.com, nm@ti.com, Ulf Hansson <ulf.hansson@linaro.org>, 
-	linux@ew.tq-group.com
-Date: Mon, 07 Jul 2025 13:03:23 +0200
-In-Reply-To: <20250704-depspmdomain-v1-1-ef2710556e62@baylibre.com>
-References: <20250704-depspmdomain-v1-1-ef2710556e62@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1751886297; c=relaxed/simple;
+	bh=9p8xTo8+z1wX9jIntt/DEWR+55R0l9UvlDWk3HYd5TI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F1kU5NCIynNIl74vJshaS4ljvRGOlndfsCiFH29yOJI9LvsHTclWkEes6JQ4J1HY/JFRvAiHqdx+0Q51ZCexsDIQtYdDbEQyFFqS1jxRnoPCZPi3qtkDrywUMH8vKlSy1oyHTtfQ7ENSKA+mVmy8fClIPaqMbONsZBMHaWrJ5yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bbLtp4FfNz2SSwY;
+	Mon,  7 Jul 2025 19:02:58 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6150B1A016C;
+	Mon,  7 Jul 2025 19:04:51 +0800 (CST)
+Received: from huawei.com (10.67.174.76) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 7 Jul
+ 2025 19:04:50 +0800
+From: Yuntao Liu <liuyuntao12@huawei.com>
+To: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC: <mhocko@suse.com>, <surenb@google.com>, <rppt@kernel.org>,
+	<vbabka@suse.cz>, <Liam.Howlett@oracle.com>, <lorenzo.stoakes@oracle.com>,
+	<liuyuntao12@huawei.com>, <david@redhat.com>, <akpm@linux-foundation.org>
+Subject: [PATCH -next] mm/memory: fix null pointer dereference in fault_dirty_shared_page
+Date: Mon, 7 Jul 2025 10:51:18 +0000
+Message-ID: <20250707105118.413056-1-liuyuntao12@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Fri, 2025-07-04 at 11:08 +0200, Guillaume La Roque wrote:
-> Select PM_GENERIC_DOMAINS instead of depending on it to ensure
-> it is always enabled when TI_SCI_PM_DOMAINS is selected. This
-> simplifies the configuration process and prevents build errors
-> if PM_GENERIC_DOMAINS is not explicitly enabled.
->=20
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Page mapping with "VM_READ|VM_WRITE|VM_MAYREAD|VM_MAYWRITE|VM_SHARED",
+the first time accessing this address through a write operation will
+trigger a do_shared_fault, if mapping is anonymous, it can lead to a
+null pointer dereference.
 
-Tested-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+[   23.232336][  T195] Call trace:
+[   23.232542][  T195]  file_update_time+0x2c/0xd8
+[   23.232801][  T195]  fault_dirty_shared_page+0x1a0/0x220
+[   23.233099][  T195]  do_shared_fault+0xe8/0x240
+[   23.233374][  T195]  do_fault+0x78/0x240
+[   23.233629][  T195]  handle_pte_fault+0x1f0/0x3f0
+[   23.233905][  T195]  __handle_mm_fault+0x2b0/0x548
+[   23.234186][  T195]  handle_mm_fault+0xd4/0x2f8
+[   23.234462][  T195]  do_page_fault+0x2f0/0x5f8
+[   23.234727][  T195]  do_translation_fault+0x8c/0xc8
+[   23.235021][  T195]  do_mem_abort+0x68/0x100
+[   23.235283][  T195]  el0_da+0x4c/0x1a8
+[   23.235551][  T195]  el0t_64_sync_handler+0xe4/0x158
+[   23.235861][  T195]  el0t_64_sync+0x37c/0x380
 
-The commit message is a bit off - as PM_GENERIC_DOMAINS is an implicit symb=
-ol,
-it can only be enabled by 'select', enabling it explicitly is not possible.
+Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+---
+ mm/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-A Fixes tag may also be a good idea.
+diff --git a/mm/memory.c b/mm/memory.c
+index eaf98d518289..8106ef8a5036 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3412,7 +3412,7 @@ static vm_fault_t fault_dirty_shared_page(struct vm_fault *vmf)
+ 	mapping = folio_raw_mapping(folio);
+ 	folio_unlock(folio);
+ 
+-	if (!page_mkwrite)
++	if (!page_mkwrite && vma->vm_file)
+ 		file_update_time(vma->vm_file);
+ 
+ 	/*
+-- 
+2.34.1
 
-Best,
-Matthias
-
-
-
-> ---
->  drivers/pmdomain/ti/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pmdomain/ti/Kconfig b/drivers/pmdomain/ti/Kconfig
-> index 67c608bf7ed0..35a4c73da17a 100644
-> --- a/drivers/pmdomain/ti/Kconfig
-> +++ b/drivers/pmdomain/ti/Kconfig
-> @@ -10,7 +10,7 @@ if SOC_TI
->  config TI_SCI_PM_DOMAINS
->  	tristate "TI SCI PM Domains Driver"
->  	depends on TI_SCI_PROTOCOL
-> -	depends on PM_GENERIC_DOMAINS
-> +	select PM_GENERIC_DOMAINS
->  	help
->  	  Generic power domain implementation for TI device implementing
->  	  the TI SCI protocol.
->=20
-> ---
-> base-commit: 8d6c58332c7a8ba025fcfa76888b6c37dbce9633
-> change-id: 20250704-depspmdomain-2c584745dca8
->=20
-> Best regards,
-
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
