@@ -1,158 +1,148 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC76F9CB;
-	Mon,  7 Jul 2025 04:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F17155A25
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 04:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751860974; cv=none; b=d++dmArx5izlaveQ6Wvz7RzFY2jFvp4R5Encko2Qc3JdW/Klf/HWAHsST3pfkQKqs+YCqBGANB2a/VUhIDYowOG7acN7VirQD5+wAvZQqAv4fex4H7kI9E4dlS39TdTQEqpmAQrtzXd2cHF/Gb/4vwqc17vh0z5offUWfE9fcwI=
+	t=1751861130; cv=none; b=Zt9C6mozEgAuVMzn6rutfdujpxGsbcP/W4y7npnuO48wDmExnAFMOSE9tHK7zPTbDSXbVIKXDZgPluQ0wMZXyIOI4W18sCPmiAftZDjAFQ3VU8He7WcmEFWPFYeRXGSBv88IYpX8Qguv+a0zq+RuZbw0HDW3m7SANixLBDIqxVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751860974; c=relaxed/simple;
-	bh=XqeXht5H88ggNIkEZWgWOp9EnyfQkP+PDOU8tlnxtko=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=F7c/G+ewikc5sLZ7Y3Am6w2EgSQ89EKvHZj9LpCBj4wVNNbUN1vIDhAHtjKIiOc1/pMjT6cCzEdJSODR6cwOK3OU8FHPn555nwMiLEbuua1Cc6dyHBmQSHUzVuKk/CCplOiU0DYMnyDlRmA9DSQA3KaUVIDvVo6aQc1xcIFsFPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bb9Z255NwzKHMw1;
-	Mon,  7 Jul 2025 12:02:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 2EB961A121C;
-	Mon,  7 Jul 2025 12:02:49 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP3 (Coremail) with SMTP id _Ch0CgDXOCbnRmtoudKcAw--.32718S2;
-	Mon, 07 Jul 2025 12:02:49 +0800 (CST)
-Message-ID: <bdc5a4d3-6942-4ba2-a13d-35f2e13c0b37@huaweicloud.com>
-Date: Mon, 7 Jul 2025 12:02:47 +0800
+	s=arc-20240116; t=1751861130; c=relaxed/simple;
+	bh=rjveDWq8KK4qBmmxeeVFa/DZwtPwsbJHz/rfwsr2Czc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Wa1kuR3PvE1mUs5UniI7wTvnVyfoOVT75wNsTrMmyu4t+VFSGUECOfEvtnAkC9tQfGR1YZ/Kpj2I4K5FyI7cYf6p5Pj2K7XD1BNmDHDHp9pqDM35F0p8KnzolqqccWcCaJPwL7eDQKESn2gd+EPL7l/6qqXe69chPOF6v7q9n3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddbfe1fc8fso78942465ab.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 21:05:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751861128; x=1752465928;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9b8S7StRcDEyA/i2VOLC6sUORM9/5D6WMK6E3dsUzFI=;
+        b=MT5k7mY4J5vd9uOt2Kv4egAZ0oJ28ArkFqqkkK3qUR89V2cRevkC6sCieC6B33uq9I
+         HDYD0pthAv2U3VKHBmX70oSJ2RM/9RDIiHRuPXoF2C6/uxNFTyuCNJ92Ec9zkd2+y5Lx
+         ZawHU1OUacAUH9QgeKsJsj4wzG2QL54NAzmyfU+L2JQDiJ9589V9GNe/kQ3yW9elyyeO
+         8ypQ1i4ohF120zUws3kPQKvp7aYmhdczbkQcu6s5PSM5Crt8qwpHW0JoBl+xjLOMXEse
+         eTzL66xIzGYY6ggj9weH3HX3WwAIMOldrY+RjmJDnaze2kLly+dqhuPBsz4QN4AGEfHh
+         Mm3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXzaV8FWfrXm4jlAq61tx90qBWo+FJTLJfBSwrvGsOHQgmyT1td7n8rbCcF2IAfCQMGVApjWBWaWplkl1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxccYlV49r+K31vq7eFeAhaCpeh33ZsbI2bq7hQsfTM0EQ0DvXr
+	bh11i6UnsRJDyUH7I2XpVR15L2VF72FqbxOQ/i9pMzbvwb/3BE31ixG+akicEUY/ClPRYHrYHLH
+	x1u5Mm/X7WGiBqE9AXtKdGbhf/9wLRWq9XwINXEiEscV6XIBFO2BC+XFJpZE=
+X-Google-Smtp-Source: AGHT+IG/n50KMMd7az6lAoy7v0ro9etKvox8cULsC7KPL4nLbBKmaieAK/iV2hmGn1xFGJLotJ0po1+l5bZuJYEmxxAuysonM2H6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
- frozen
-From: Chen Ridong <chenridong@huaweicloud.com>
-To: Peter Zijlstra <peterz@infradead.org>, timvp@google.com
-Cc: Michal Koutn?? <mkoutny@suse.com>, rafael@kernel.org, pavel@kernel.org,
- timvp@google.com, tj@kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
-References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
- <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
- <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
- <8dae8006-e63d-467f-bb7c-e8470878e534@huaweicloud.com>
- <20250704075718.GA2001818@noisy.programming.kicks-ass.net>
- <85fc85e8-af92-4d58-8271-9bf4aeb0a63d@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <85fc85e8-af92-4d58-8271-9bf4aeb0a63d@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgDXOCbnRmtoudKcAw--.32718S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw4rtFyktF17XF43Gry5twb_yoW5Xw1kp3
-	95XF4UJ3WFqr17urnFvw4qqrZ5Ka9F9r4UGrykW3WxJF4YqasxXr17ArW5KF4jvry8Kry7
-	XayjgrZ3A3yUAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+X-Received: by 2002:a05:6e02:318c:b0:3dd:f3e1:2899 with SMTP id
+ e9e14a558f8ab-3e13ee85590mr79215175ab.2.1751861127927; Sun, 06 Jul 2025
+ 21:05:27 -0700 (PDT)
+Date: Sun, 06 Jul 2025 21:05:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686b4787.a00a0220.c7b3.0073.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list
+From: syzbot <syzbot+c6fca020ebd279c7412a@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    8b98f34ce1d8 net: ipv6: Fix spelling mistake
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17d2b770580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=efe4e8ed5014b310
+dashboard link: https://syzkaller.appspot.com/bug?extid=c6fca020ebd279c7412a
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ad0c8f9a1a48/disk-8b98f34c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3a8aacec88f6/vmlinux-8b98f34c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0a86c0c1690c/bzImage-8b98f34c.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c6fca020ebd279c7412a@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7141 at net/mptcp/pm.c:353 mptcp_pm_alloc_anno_list+0x329/0x390 net/mptcp/pm.c:353
+Modules linked in:
+CPU: 0 UID: 0 PID: 7141 Comm: syz.3.339 Not tainted 6.16.0-rc3-syzkaller-00985-g8b98f34ce1d8 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:mptcp_pm_alloc_anno_list+0x329/0x390 net/mptcp/pm.c:353
+Code: b0 01 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d e9 8c 26 15 00 cc e8 56 b2 6a f6 90 0f 0b 90 e9 8b fd ff ff e8 48 b2 6a f6 90 <0f> 0b 90 31 c0 eb d1 48 c7 c1 30 69 a1 8f 80 e1 07 80 c1 03 38 c1
+RSP: 0018:ffffc9000b5a6db8 EFLAGS: 00010287
+RAX: ffffffff8b559c28 RBX: ffff88807a3f9700 RCX: 0000000000080000
+RDX: ffffc9000cbdd000 RSI: 000000000000318f RDI: 0000000000003190
+RBP: 0000000000000000 R08: 00000000000a0002 R09: 0000000000000000
+R10: 0000000000000000 R11: aa1414acffff0000 R12: ffff88814632f000
+R13: ffff88807d852040 R14: dffffc0000000000 R15: ffff88807a3fa181
+FS:  00007fb6c8df66c0(0000) GS:ffff888125c48000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb6c8df4fb8 CR3: 00000000339a2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mptcp_pm_create_subflow_or_signal_addr+0x1448/0x1c30 net/mptcp/pm_kernel.c:318
+ mptcp_nl_add_subflow_or_signal_addr net/mptcp/pm_kernel.c:760 [inline]
+ mptcp_pm_nl_add_addr_doit+0xe66/0x1460 net/mptcp/pm_kernel.c:840
+ genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:714 [inline]
+ __sock_sendmsg+0x21c/0x270 net/socket.c:729
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2614
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2668
+ __sys_sendmsg net/socket.c:2700 [inline]
+ __do_sys_sendmsg net/socket.c:2705 [inline]
+ __se_sys_sendmsg net/socket.c:2703 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2703
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb6caf8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb6c8df6038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fb6cb1b5fa0 RCX: 00007fb6caf8e929
+RDX: 0000000002000000 RSI: 0000200000000400 RDI: 000000000000000d
+RBP: 00007fb6cb010b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fb6cb1b5fa0 R15: 00007ffe35e566e8
+ </TASK>
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On 2025/7/4 18:25, Chen Ridong wrote:
-> 
-> 
-> On 2025/7/4 15:57, Peter Zijlstra wrote:
->> On Fri, Jul 04, 2025 at 11:11:52AM +0800, Chen Ridong wrote:
->>
->> Your patches are mangled; please educate your MUA.
->>
-> Hi Peter,
-> 
-> Thank you for your review and feedback
-> Apologies for the formatting issues in the patch.
-> 
->>> --- a/kernel/freezer.c
->>> +++ b/kernel/freezer.c
->>> @@ -71,19 +71,20 @@ bool __refrigerator(bool check_kthr_stop)
->>>         for (;;) {
->>>                 bool freeze;
->>>
->>> -               raw_spin_lock_irq(&current->pi_lock);
->>> -               WRITE_ONCE(current->__state, TASK_FROZEN);
->>> -               /* unstale saved_state so that __thaw_task() will wake
->>> us up */
->>> -               current->saved_state = TASK_RUNNING;
->>> -               raw_spin_unlock_irq(&current->pi_lock);
->>> -
->>>                 spin_lock_irq(&freezer_lock);
->>> -               freeze = freezing(current) && !(check_kthr_stop &&
->>> kthread_should_stop());
->>> +               freeze = (freezing(current) || !cgroup_thawed(current))
->>> +                        && !(check_kthr_stop && kthread_should_stop());
->>
->> This makes no sense to me; why can't this stay in cgroup_freezing()?
->>
->> Also, can someone please fix that broken comment style there.
->>
-> The change relates to commit cff5f49d433f ("cgroup_freezer: cgroup_freezing: Check if not frozen"),
-> which modified cgroup_freezing() to verify the FROZEN flag isn't set. The freezing(p) will return
-> false if the cgroup is frozen.
-> 
->>>                 spin_unlock_irq(&freezer_lock);
->>>
->>>                 if (!freeze)
->>>                         break;
->>>
->>> +               raw_spin_lock_irq(&current->pi_lock);
->>> +               WRITE_ONCE(current->__state, TASK_FROZEN);
->>> +               /* unstale saved_state so that __thaw_task() will wake
->>> us up */
->>> +               current->saved_state = TASK_RUNNING;
->>> +               raw_spin_unlock_irq(&current->pi_lock);
->>> +
->>
->> And I'm not quite sure I understand this hunk either. If we bail out,
->> current->__state is reset to TASK_RUNNING, so what's the problem?
-> 
-> The issue occurs in this race scenario:
-> 
-> echo FROZEN > freezer.state
->   freeze_cgroup()
->     freeze_task()
->       fake_signal_wake_up() // wakes task to freeze it
-> 
-> In task context:
-> get_signal
->   try_to_freeze
->     __refrigerator
->       WRITE_ONCE(current->__state, TASK_FROZEN); // set TASK_FROZEN
->       // race: cgroup state updates to frozen
->       freezing(current) now return false
->       // We bail out, the task is not frozen but it should be frozen.
-> 
-> I hope this explanation clarifies the issue I encountered.
-> 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Hi, Peter, Tim
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-I was looking at the WARN_ON_ONCE(freezing(p)) check in __thaw_task and started wondering: since we
-already have !frozen(p) check, is this warning still needed? If we can remove it, maybe reverting
-commit cff5f49d433f ("cgroup_freezer: cgroup_freezing: Check if not frozen") would be a better approach.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-What do you think?
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Best regards,
-Ridong
-
+If you want to undo deduplication, reply with:
+#syz undup
