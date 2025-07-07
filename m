@@ -1,79 +1,75 @@
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9877F2620FC;
-	Mon,  7 Jul 2025 05:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0181B442C;
+	Mon,  7 Jul 2025 05:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751865113; cv=none; b=ATvbvNzT+Cxj4uEHNInsURYUBFibZUHoZO1/awXwFA+enlnALM4kWtbclESRQOfbVKY/JufpXu9x2IKdYLueEMeUVLf424+NqRgqryHVa8fzEUA0cs2928cSQzD2yX/zlPOUlnjguqeqsITHgOnd8rwDlIaPsfPUeowm/7oxukI=
+	t=1751865172; cv=none; b=ne0YEO9b3GjUogwjQSzGiWynLMsmRUWRU1Ml4kxI0ehqxXH1z67YlAGVW6uraspRXSO/eyIJJTy56A7ATUYXIs2w3DBL5lWgloG67cDAgRzhOsBHCUPaWy7ZWC2sJfIIpRXE1PDdKPn0ZPvRUGIqP5WaNjYRzU8KQGVdV2b8pJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751865113; c=relaxed/simple;
-	bh=OdRh8/576wHjaSuIhGUDAO/d8lBtbvnSHmhlO2AG8/8=;
+	s=arc-20240116; t=1751865172; c=relaxed/simple;
+	bh=brjNfnegOGAX0qXp7j2ojb4YstGXgVTSohtW8jpSOrQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A7VMU2Nn/ltKm7Vn5g6wGH5Eg5qYRrQviaA9l2Ae72U/pucV/fWA5Txf98wAJuFxeHvBwWtE0oy8vTGkNDeud8YDuMcFr8Qk/jKZk26ysW3xyOg7Bfg6mfFdFz5D5/wflaRYMpLwdKN+LNfrfUqn//7Jf9FnB/PJJOSLTFipOVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=oJgdjrJE; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Sv/Tj0oC reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version:Content-Type; b=azyXtb3zn2jTscndqyXb6cVxeCCHft/N1hif6/WHaxcx36EgaG/SP3JQYWuNuZlPndsDacyJgtlnwoUQFC8PnNYmpHw59j3sffNYjIHeJ7PFnWfuTD7UNcYhu4xHG24RxngBzvz0TgWiGm4V0EdYRWvf5SlDtozdNJNc4pGBUnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DNT/jjJp; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=WSVX+csF reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="oJgdjrJE";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Sv/Tj0oC"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DNT/jjJp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="WSVX+csF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751865110; x=1783401110;
+  t=1751865169; x=1783401169;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MS9l5V7rnppikpjmqzYLq+jQty7Y2WLmP6gMpwdm78Y=;
-  b=oJgdjrJEQNmOdUS0QRfWoYgAamMTLEbe9PkagYP2Na3RRnoY7tAYXHhY
-   b9ZQhE9d1qupiWyQrKTsSPycHYKC+mJ7He81t5qpdxK7K0X4uxtlGs1jx
-   R0fxZ7pg2ChrE+FXhgqHsqfcrsqdXiWqWVEVrRSLw0ld2SVW9D9cPxfCk
-   QTGy15J1SVA3EAGNkQsUqmWPog4fkEM6ijNMWvoNEH2OrmwPzdphrfY5C
-   UCrHfmHQ/+9wb4zjXjcF3lS3jHKlcgEOmK42Wgz0M79XTRHdmLi5IsUW+
-   OvXqpt6Xl4PYxt6/jee55FQrSEnxtYfY6rZ4XSf74RqvnDwFomyGpSr3S
-   A==;
-X-CSE-ConnectionGUID: cdaaUOoYQXi065uLnbbgdw==
-X-CSE-MsgGUID: 0JndVCJeRv+mZnXHP+VpkA==
+  bh=3qmvtsFXy8GXUm5ySVjZhDV2Qyo3x2/7ps/KKt+4zLU=;
+  b=DNT/jjJpFQPxu9zSG2GqxKiT/0bRFzSGeb0nYlwgU61fZwdj8Vptg+yO
+   HnRHeN7vsMziKe+03fUHLnPITyyVelMiJ4lkvCf5yHC4dxVY6h0+FjAOM
+   /Gj3hNalgNpC+A7nIPZg79S2N5fyt2vEhy673ps8Kb5L7KEuh4Nertujm
+   o0WVTA3mL7JTgS5GzQCmADv61qu0ik1bddoAkyPH286zJEVsuu+Z0ClK6
+   NglALXb9xc1NpOrVcc1/4SwSU4Sd7pDNGqgN3UyI6yXXrv4zAykPVgHKg
+   PB8q8nXsnGrLI8QKGtdnY33Gdmn7r4ACIQRdfSHK0iESLxeerKAFCRpb5
+   Q==;
+X-CSE-ConnectionGUID: 1uP/5fIuSu+29hjxQ59HvA==
+X-CSE-MsgGUID: ZDoxFLSfSHi+K+Vai2haVA==
 X-IronPort-AV: E=Sophos;i="6.16,293,1744063200"; 
-   d="scan'208";a="45049649"
+   d="scan'208";a="45049662"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Jul 2025 07:11:41 +0200
-X-CheckPoint: {686B570C-37-4FC15ADB-CD71293B}
-X-MAIL-CPID: CDEB1C0A765BD2ADCEED811366CB8CCC_0
-X-Control-Analysis: str=0001.0A00639C.686B573B.0052,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8D13916397D;
-	Mon,  7 Jul 2025 07:11:34 +0200 (CEST)
+  by mx1.tq-group.com with ESMTP; 07 Jul 2025 07:12:46 +0200
+X-CheckPoint: {686B574E-10-BB1FFBB0-EB2CC75E}
+X-MAIL-CPID: 81232A621B7B84834251B541EF21C99E_2
+X-Control-Analysis: str=0001.0A006377.686B575D.0009,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 69C4F164002;
+	Mon,  7 Jul 2025 07:12:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751865096;
+	s=dkim; t=1751865162;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MS9l5V7rnppikpjmqzYLq+jQty7Y2WLmP6gMpwdm78Y=;
-	b=Sv/Tj0oC82xoMR1uXwWA8qfioW3rO7wpmNR/uZgCiQmeZzZrSn2E63+UVAUlk9V0l4qJuy
-	AJRxZV7EIx62zzv4zAzBSENpA1wsUn9oDEEZsXaiKPg7Io9D+oq60Smn8aUreMEuTeGxE8
-	rji8rJ0gCULqQlmk2/jXlw0m7MYYPpcYXVv2/oVUm4izNYU/H6W84teDFCSAZb4BHQLJrS
-	4+ZPa9rFp0rBvky/PyI9jO6eMErzxoh7QPF8/OZ/EySD/SSDhuLeDGQPDU2ouLGblBG49k
-	v3AkMrqkRNWlloyKomXI2+jSQ0GnDJPMwH2CbW13e8UA9FIBK7F7l/T3ViLtlQ==
+	bh=3qmvtsFXy8GXUm5ySVjZhDV2Qyo3x2/7ps/KKt+4zLU=;
+	b=WSVX+csFu3ge71/40KRMwOXMzV4Hx5FTCveZ1j2VTPfcOcUKLuBTCZ7yD5gIY2PtXEY5vy
+	7aU91A/hf9GAk+aShMUewnQNvUjfFjzyyJ+ebm3EwhobkEwLY7rRPPGvdXTWW1am6CzbuJ
+	ROdkdEzYr865OAOUwgat4FtqvS7oS7UJHf5TN7AbpfI41G159Oi4DDaHrylC0nCNWPaRxf
+	0Nl6QPnL/QohyM4KxCzp3OJkag+GkHfja2mI8B8rrz+gl5bXmprTjCfI3wnhUvn67a4eAc
+	1zIvwwBP6ooRVxK9al9dPOCk4o1CuG6OTKRbmg3bHGESdONwQCePHh7nfdO7Iw==
 From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang <shengjiu.wang@nxp.com>,
- Frank Li <Frank.Li@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Subject: Re: [PATCH v7 4/6] arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
-Date: Mon, 07 Jul 2025 07:11:33 +0200
-Message-ID: <5029548.31r3eYUQgx@steina-w>
+To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+ Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+ Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Subject: Re: [PATCH 1/2] ASoC: codec: tlv320aic32x4: Drop aic32x4_pdata usage
+Date: Mon, 07 Jul 2025 07:12:40 +0200
+Message-ID: <5000946.GXAFRqVoOG@steina-w>
 Organization: TQ-Systems GmbH
-In-Reply-To: <c3deef24-fed7-4405-9953-804bff118c11@gmail.com>
+In-Reply-To: <20250706-asoc-gpio-1-v1-1-f0912095e923@nxp.com>
 References:
- <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
- <ac1daf6b-ee06-4076-b86f-b436ca0acd6d@sirena.org.uk>
- <c3deef24-fed7-4405-9953-804bff118c11@gmail.com>
+ <20250706-asoc-gpio-1-v1-0-f0912095e923@nxp.com>
+ <20250706-asoc-gpio-1-v1-1-f0912095e923@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,62 +82,74 @@ X-Last-TLS-Session-Version: TLSv1.3
 
 Hi,
 
-Am Mittwoch, 2. Juli 2025, 21:54:09 CEST schrieb Laurentiu Mihalcea:
-> On 7/2/2025 9:49 PM, Mark Brown wrote:
-> > On Tue, Jun 10, 2025 at 12:01:50PM -0400, Laurentiu Mihalcea wrote:
-> >> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-> >>
-> >> AIPS5 is actually AIPSTZ5 as it offers some security-related
-> >> configurations. Since these configurations need to be applied before
-> >> accessing any of the peripherals on the bus, it's better to make AIPST=
-Z5
-> >> be their parent instead of keeping AIPS5 and adding a child node for
-> >> AIPSTZ5. Also, because of the security configurations, the address spa=
-ce
-> >> of the bus has to be changed to that of the configuration registers.
-> >>
-> >> Finally, since AIPSTZ5 belongs to the AUDIOMIX power domain, add the
-> >> missing 'power-domains' property. The domain needs to be powered on be=
-fore
-> >> attempting to configure the security-related registers.
-> > I'm seeing failures to probe the audio devices on the i.MX8MP Verdin
-> > system in -next which seem to bisect down to this commit,  I'm seeing
-> > separate boot failures on the EVK so haven't been able to confirm the
-> > status there.  There's no obvious logging, the dt selftest shows:
-> >
-> > # not ok 141 /sound
-> > # not ok 142 /sound-hdmi
-> >
-> > Full log at:
-> >
-> >   https://lava.sirena.org.uk/scheduler/job/1530197#L5119
+Am Sonntag, 6. Juli 2025, 03:04:23 CEST schrieb Peng Fan:
+> There is no machine is using aic32x4_pdata as platform_data, so
+> remove the dead code.
 >=20
-> Hi Mark,
->=20
-> Thanks for catching this!
->=20
-> After browsing through the provided logs it would seem like no device und=
-er the
-> AIPSTZ bus gets probed. Right now, my guess is that the AIPSTZ driver is =
-not being
-> compiled since CONFIG_IMX_AIPSTZ might be set to 'n'.
->=20
-> Which defconfig is the CI using? Is it arch/arm64/configs/defconfig?
+> Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-I'm also seeing audio problems starting with this commit. In my case I get
-the following error:
-fsl-asoc-card sound: failed to find CPU DAI device
-fsl-asoc-card sound: probe with driver fsl-asoc-card failed with error -22
+Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  include/sound/tlv320aic32x4.h    | 9 ---------
+>  sound/soc/codecs/tlv320aic32x4.c | 9 +--------
+>  2 files changed, 1 insertion(+), 17 deletions(-)
+>=20
+> diff --git a/include/sound/tlv320aic32x4.h b/include/sound/tlv320aic32x4.h
+> index 0abf74d7edbd69484c45ad6a1c39b3f67d61bd63..b779d671a99576deadc6e647e=
+dff9b1b3a5d33c2 100644
+> --- a/include/sound/tlv320aic32x4.h
+> +++ b/include/sound/tlv320aic32x4.h
+> @@ -40,13 +40,4 @@
+>  struct aic32x4_setup_data {
+>  	unsigned int gpio_func[5];
+>  };
+> -
+> -struct aic32x4_pdata {
+> -	struct aic32x4_setup_data *setup;
+> -	u32 power_cfg;
+> -	u32 micpga_routing;
+> -	bool swapdacs;
+> -	int rstn_gpio;
+> -};
+> -
+>  #endif
+> diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320ai=
+c32x4.c
+> index 54ea4bc58c276d9ab39a15d312287dfb300dbab9..7dbcf7f7130b04a27f58f20be=
+b83eb3676c79c3d 100644
+> --- a/sound/soc/codecs/tlv320aic32x4.c
+> +++ b/sound/soc/codecs/tlv320aic32x4.c
+> @@ -1346,7 +1346,6 @@ int aic32x4_probe(struct device *dev, struct regmap=
+ *regmap,
+>  		  enum aic32x4_type type)
+>  {
+>  	struct aic32x4_priv *aic32x4;
+> -	struct aic32x4_pdata *pdata =3D dev->platform_data;
+>  	struct device_node *np =3D dev->of_node;
+>  	int ret;
+> =20
+> @@ -1363,13 +1362,7 @@ int aic32x4_probe(struct device *dev, struct regma=
+p *regmap,
+> =20
+>  	dev_set_drvdata(dev, aic32x4);
+> =20
+> -	if (pdata) {
+> -		aic32x4->power_cfg =3D pdata->power_cfg;
+> -		aic32x4->swapdacs =3D pdata->swapdacs;
+> -		aic32x4->micpga_routing =3D pdata->micpga_routing;
+> -		aic32x4->rstn_gpio =3D pdata->rstn_gpio;
+> -		aic32x4->mclk_name =3D "mclk";
+> -	} else if (np) {
+> +	if (np) {
+>  		ret =3D aic32x4_parse_dt(aic32x4, np);
+>  		if (ret) {
+>  			dev_err(dev, "Failed to parse DT node\n");
+>=20
+>=20
 
-DAI device is sai5 aka /soc@0/bus@30df0000/spba-bus@30c00000/sai@30c50000.
-It turns out that the module snd_soc_fsl_sai is not even autoloaded. Loading
-manually doesn't have any effect. So I assume starting from this commit
-the subnodes (at least sai5) are not even populated.
-Reverting this commit fixes my setup.
-I've set CONFIG_IMX_AIPSTZ to both  'y' or 'm' and doesn't change anything.
 
-Best regards,
-Alexander
 =2D-=20
 TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
 Amtsgericht M=FCnchen, HRB 105018
