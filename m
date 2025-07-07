@@ -1,79 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F5A19F40A;
-	Mon,  7 Jul 2025 06:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F31189919;
+	Mon,  7 Jul 2025 06:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751869022; cv=none; b=r0kUAUvNTcNCB2+CF5W9iBBCIbrRyrKJg1qnWfBqpWvMC6uhAR1QbJhO3pk09N4iYBudAdwwgsv0ch851Hbf7xxm5ZX2JsD+70+U/95YLObCCFoa0WKK3u1TTh6Ydv0iI5SEFBcqtrGV5Uvb+qKBm3Iw1bBzCB3N1993Lz/C2zI=
+	t=1751869080; cv=none; b=olGDL2/sXa3Csum7KWVwSQkAMZ4BW0PP2x3KWPEFzuqYaFdtsFjwUUFlsDJL2Z9jsf2rhvIE5jvO1YCmuzkPrFahfYiUgIMNpQWc2UYXEiaUFOR+sRRTBfWvriRBT4xuEofwxAsKhTbNPzIm+xPGW1hvXDXAh3Soq27+0LZ7MsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751869022; c=relaxed/simple;
-	bh=lhxzKPvMbvLCdIvBc3l1/2og+QLpTeNSU1qnRGsO/28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jr0u8CHlrLy5hg+py33qBSX1UYJOqhgH7W7duVpIPkTtwxsmcgUFdgXQbSh5BzoANgRslzbK/FexpNsvL7QHHPfC2yzI17aN2vo5czxfNGOtTrXtZeVqCsjxjcSF3nbNm7BuR5BvE9+smu5Y8XOsMFKVuKUp7QDw1vm22xg9UGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1CXJdEF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751869080; c=relaxed/simple;
+	bh=IWt85/zAdAgAUcn5iduO4+Zv6u2Kp0nMvo4Z4VnG2NE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=p34Ayz0AXKcJ0NdUuTrOSLF6pd69xU1q5S0vh95SF5x4mFumZQz3MZTt20C3erl2PgfrXnHaAiZqWycB5I3BIoKJLzZulxfzzsH/SBUrfUpkDmyVclJbv78M47y2l3l8MoKKhvG2lVkQRxfCrZTZNVX5yCx/HUYz5OSo4pwtPtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iQ/Dzo15; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1CXJdEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05F3C4CEE3;
-	Mon,  7 Jul 2025 06:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751869022;
-	bh=lhxzKPvMbvLCdIvBc3l1/2og+QLpTeNSU1qnRGsO/28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q1CXJdEF4a9dZcgWl/ng2pagMHreJKakjs7JulyaC9OKRFjLhJlQTHKdFQ+dtZhvb
-	 ubNvVWBvatb6Fz99PyHlhciLgozjrH+DjsUkNM21pMjkjFqIm88gNb5o9i0uQDGVFE
-	 f5ZuRCnOgOe927KPZDm1ShrrvM/xTVJ2JN+Cis+FDA9VFzGIOWZmR5rj6FwtOfbW9Q
-	 m0BBE5A5z4VPTQc6Pft28zjU7qy1sqyISET0lsM47ayIhSstowBWQZ8lQEjcG5RsU1
-	 HnZpYYs2C2v148MY9FKiwe6CH9n2ckxLboYfDyNfGWKZvHoHycB+a4tmi0krOxgKpt
-	 GhAlI3htgkS+w==
-Date: Mon, 7 Jul 2025 08:16:59 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ryan Chen <ryan_chen@aspeedtech.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mo Elbadry <elbadrym@google.com>, Rom Lemarchand <romlem@google.com>, 
-	William Kennington <wak@google.com>, Yuxiao Zhang <yuxiaozhang@google.com>, wthai@nvidia.com, 
-	leohu@nvidia.com, dkodihalli@nvidia.com, spuranik@nvidia.com
-Subject: Re: [PATCH v11 1/3] dt-bindings: clock: ast2700: modify soc0/1 clock
- define
-Message-ID: <20250707-spectacular-platinum-hippo-9ab32e@krzk-bin>
-References: <20250707011826.3719229-1-ryan_chen@aspeedtech.com>
- <20250707011826.3719229-2-ryan_chen@aspeedtech.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iQ/Dzo15"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=VZ
+	srLx97tWye6NiKsgqCtHfdvcsi1VEsnd1hn95P6g8=; b=iQ/Dzo15PLGeNQQHJk
+	TBb+15iDmp5QKk6YjfDkyqN5rK62SJ3agPAvQyoL0s92f5dNCsPVfZ5eL4rduxdZ
+	r/uLOUqCaTYWGT5AiKnpFd4inJKLoslv4QkUqDVNWmtzzc9aZyMDGye8rVBuvE/i
+	QDgIH3aX3ChLy+hVqF4dn1zkg=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBHQKtjZmtoL8xmDA--.4702S2;
+	Mon, 07 Jul 2025 14:17:09 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: pabeni@redhat.com
+Cc: aleksander.lobakin@intel.com,
+	almasrymina@google.com,
+	asml.silence@gmail.com,
+	davem@davemloft.net,
+	david.laight.linux@gmail.com,
+	ebiggers@google.com,
+	edumazet@google.com,
+	horms@kernel.org,
+	kerneljasonxing@gmail.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	stfomichev@gmail.com,
+	willemb@google.com,
+	yangfeng59949@163.com,
+	yangfeng@kylinos.cn
+Subject: Re: [PATCH v3] skbuff: Add MSG_MORE flag to optimize large packet transmission
+Date: Mon,  7 Jul 2025 14:17:07 +0800
+Message-Id: <20250707061707.74848-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
+References: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250707011826.3719229-2-ryan_chen@aspeedtech.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBHQKtjZmtoL8xmDA--.4702S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXFykWr4DXry3GF1fGr4xCrg_yoW5Gry8pa
+	yUJasFyrs8JF4UCrnrtw48uw4ay3yfKr15X3s8X34F9rn0gw1DWrW3trWj9FykGrnrK34Y
+	vr4qgasrCa45ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR75rwUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiYw2DeGhrY+hd3wAAsf
 
-On Mon, Jul 07, 2025 at 09:18:24AM +0800, Ryan Chen wrote:
-> -add SOC0_CLK_AHBMUX:
-> add SOC0_CLK_AHBMUX for ahb clock source divide.
-> mpll->
->       ahb_mux -> div_table -> clk_ahb
-> hpll->
+On Sat, 5 Jul 2025 08:16:40 +0100 David Laight <david.laight.linux@gmail.com> wrote:
+
+> On Fri, 4 Jul 2025 17:50:42 +0200
+> Paolo Abeni <pabeni@redhat.com> wrote:
 > 
-> -new add clock:
->  SOC0_CLK_MPHYSRC: UFS MPHY clock source.
->  SOC0_CLK_U2PHY_REFCLKSRC: USB2.0 phy clock reference source.
->  SOC1_CLK_I3C: I3C clock source.
+> > On 7/4/25 11:26 AM, Feng Yang wrote:
+> > > Thu, 3 Jul 2025 12:44:53 +0100 david.laight.linux@gmail.com wrote:
+> > >   
+> > >> On Thu, 3 Jul 2025 10:48:40 +0200
+> > >> Paolo Abeni <pabeni@redhat.com> wrote:
+> > >>  
+> > >>> On 6/30/25 9:10 AM, Feng Yang wrote:  
+> > >>>> From: Feng Yang <yangfeng@kylinos.cn>
+> > >>>>
+> > >>>> The "MSG_MORE" flag is added to improve the transmission performance of large packets.
+> > >>>> The improvement is more significant for TCP, while there is a slight enhancement for UDP.    
+> > >>>
+> > >>> I'm sorry for the conflicting input, but i fear we can't do this for
+> > >>> UDP: unconditionally changing the wire packet layout may break the
+> > >>> application, and or at very least incur in unexpected fragmentation issues.  
+> > >>
+> > >> Does the code currently work for UDP?
+> > >>
+> > >> I'd have thought the skb being sent was an entire datagram.
+> > >> But each semdmsg() is going to send a separate datagram.
+> > >> IIRC for UDP MSG_MORE indicates that the next send() will be
+> > >> part of the same datagram - so the actual send can't be done
+> > >> until the final fragment (without MSG_MORE) is sent.  
+> > > 
+> > > If we add MSG_MORE, won't the entire skb be sent out all at once? Why doesn't this work for UDP?  
+> > 
+> > Without MSG_MORE N sendmsg() calls will emit on the wire N (small) packets.
+> > 
+> > With MSG_MORE on the first N-1 calls, the stack will emit a single
+> > packet with larger size.
+> > 
+> > UDP application may relay on packet size for protocol semantic. i.e. the
+> > application level message size could be expected to be equal to the
+> > (wire) packet size itself.
 > 
-> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
-> Acked-by:Krzysztof Kozlowski <krzysztof.kozloski@linaro.org>
+> Correct, but the function is __skb_send_sock() - so you'd expect it to
+> send the 'message' held in the skb to the socket.
+> I don't think that the fact that the skb has fragments should make any
+> difference to what is sent.
+> In other words it ought to be valid for any code to 'linearize' the skb.
+> 
+> 	David
 
-Don't edit or fake the tags. You must paste it exactly how you received
-it.
+Okay, thank you for your explanations.
 
-This needs fixes. I suggest using b4 in your workflow, so you will not
-make such mistakes.
+> > 
+> > Unexpectedly aggregating the packets may break the application. Also it
+> > can lead to IP fragmentation, which in turn could kill performances.
+> > 
+> > > If that's not feasible, would the v2 version of the code work for UDP?  
+> > 
+> > My ask is to explicitly avoid MSG_MORE when the transport is UDP.
+> > 
+> > /P
+> > 
 
-Best regards,
-Krzysztof
+So do I need to resend the v2 version again (https://lore.kernel.org/all/20250627094406.100919-1-yangfeng59949@163.com/), 
+or is this version also inapplicable in some cases?
 
