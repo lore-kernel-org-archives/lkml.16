@@ -1,147 +1,73 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0ED1D6188
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765AC1A238F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751886155; cv=none; b=bgXhdqYvYU/X3FPaxrlMMalMB1ShCcZf9x0aC3IiQjVsVObM0muNp/EV0yNs2+7zlF7A6KoOZdaPXkuTk460WbyJXXZy/Y4aK+cbAibgT2Jp9hN7s0AFluIR+/DZJXry6N63mpC2LgdwXjq9lXAcaJlLMcgNF/LQU03IBByPOWQ=
+	t=1751886203; cv=none; b=N0jTZkGtV2N+rqxy0/iCEq5s1fMSSR7eTGsz7ENNKAeg+BurqHt90c7GGscFV/JExUCeE6HpC5NkR3PtWSMs9Vx6Niz1giWdYlHexFyLEIkA7sqot5hhSdmhH8DT648w6ieMMuog0Hbwy9TlYF2UZTAsH/6R96ucH7lBMgSujYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751886155; c=relaxed/simple;
-	bh=8Ii0Jsu/3WB5HeTUfMGI7aKY6Fo6vjrGoI+l3hmCV2o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KUAnx+WygahgCRvzr+7K35YV+5pMzzvL8zUYqAWSF1xrUUpd3xa5GGrH/IbyCYNmN0NzVzVBqSSFdnCTtYnMKKU9h9Bwfe2tE279OezzzVgqeDtbzC4Cj1uENTQHJ3CjYz/o9seU3SGQI4954mTaU+R88SyE8hsyfUh7yKm9BhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df4189cd09so60303735ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 04:02:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751886153; x=1752490953;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DoO4p3o3Z4edfCGbyaeuxegF703mrzNk7A5ybw22csE=;
-        b=ZxymI7Qx0LceYh6ITcR24xw9TOEruSoW9MlT8dFxaN+FdqQPAAUO9ymMROfXbvCNXr
-         g8rBlsqhVQbs/Y28eTREz73LdX34Z4SoLVMxcqqDxWYGEAJCrw0ocO0Z7nzMGZkdkiuP
-         s3IyUVGFMq5u9eS36OPyY8BRWvvFP/ue1JEZs4JEie1Dhp8W/2yoBLauF2vsRVn1lSCR
-         ul2d1fx6PuPeh0SJ02gr2Lws/FOBFoSJBmfNsQnriURQ3keqSxgE4RPlf1acVZWucuE7
-         sMScVtzxy1wrE54EhbGM8TLVYi+KlREZO3FbhcDeziSAq4R0YksNP6EdQGKEZRUfRv6x
-         cxxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUsNeLbjb1ABMHOFx/e5JiyYXCmNKD13hA582NKIhYnLKsTW1z7FCznATuunK2et5Z4OMUej07HpMBIh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze12kCg9aQFeY41FRiNEToPLBYlQue8wRW7nMKW8lXQ90m6W2W
-	YGtIM0Jc6x4Hfgkx/mgborpV1HM6xjYTP3m41H3/1fuW1suI1ILC2tP/d7/ijpACh7SAUZdPykw
-	eSZusYfVWG6ROWrIINI3igJdCHVfsHvh2QqrzACzBS4QlCRDHZPiZi9JSZZQ=
-X-Google-Smtp-Source: AGHT+IHa1fNMrSF8on5m8kh4qD1nJ4gwYlamzj3MyZiKLaKlENDFo7wQaWbYExFLEF03QVkikDcNmonnG6fV4FSRT9AWByon68Iz
+	s=arc-20240116; t=1751886203; c=relaxed/simple;
+	bh=k6s1HMycW/2+Q0ckiJFixRxi79LsTRokwcJ4Iiit0B4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBgjtYgg1zs56aoRN8rw8DJ6J0FQrQ0sdCsAe/EI/9i2hU+gX29SewRBcRiXQcY4o0Tj1dBNvKBAhvVe9DsggJrp2mp4NVvx0CpoDveKl2JRcgQyP0ooFxfzFKCISmaBZ1foiOesVCMcGV6zQ0qguhhPL8svnI8Ew1yETt4mdmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3963F15A1;
+	Mon,  7 Jul 2025 04:03:08 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 062E13F694;
+	Mon,  7 Jul 2025 04:03:19 -0700 (PDT)
+Date: Mon, 7 Jul 2025 12:03:17 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: Re: [PATCH 23/23] binfmt_elf: Warn on missing or suspicious regset
+ note names
+Message-ID: <aGupdb+eEwnoto4/@e133380.arm.com>
+References: <20250701135616.29630-1-Dave.Martin@arm.com>
+ <20250701135616.29630-24-Dave.Martin@arm.com>
+ <D620FCC4-4A72-45CB-AF16-456E2B49B5C8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1545:b0:3df:3d4c:be27 with SMTP id
- e9e14a558f8ab-3e136ee41admr94651665ab.5.1751886152803; Mon, 07 Jul 2025
- 04:02:32 -0700 (PDT)
-Date: Mon, 07 Jul 2025 04:02:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686ba948.a00a0220.c7b3.0080.GAE@google.com>
-Subject: [syzbot] [mm?] [fs?] WARNING in path_noexec
-From: syzbot <syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com>
-To: brauner@kernel.org, jack@suse.cz, kees@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D620FCC4-4A72-45CB-AF16-456E2B49B5C8@kernel.org>
 
-Hello,
+On Sat, Jul 05, 2025 at 08:14:33AM -0700, Kees Cook wrote:
+> 
+> 
+> On July 1, 2025 6:56:16 AM PDT, Dave Martin <Dave.Martin@arm.com> wrote:
+> >Un-migrated arches will trigger WARNs with this patch applied, and
+> >arches that don't specify codedump note names will always get
+> >"LINUX" -- since the whole point is to stop guessing the note name in
+> >the core code.
+> >
+> >On _unpatched_ arches (only) this is a potential ABI break for the
+> >NT_PRFPREG note (which, for historical reasons, is a "CORE" note even
+> >though it is OS-specific on most or all arches).
+> 
+> After all your arch patches, aren't all the archs using the correct
+> values? Is the WARN for new or out-of-tree archs?
+> 
+> -Kees
 
-syzbot found the following issue on:
+[...]
 
-HEAD commit:    8d6c58332c7a Add linux-next specific files for 20250703
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15788582580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d7dc16394230c170
-dashboard link: https://syzkaller.appspot.com/bug?extid=3de83a9efcca3f0412ee
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ecb3d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153af770580000
+If there are in-flight series where someone adds a new arch (?) or more
+likely adds a new regset to an existing arch, then we might hit this.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ff731adf5dfa/disk-8d6c5833.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5c7a3c57e0a1/vmlinux-8d6c5833.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2f90e7c18574/bzImage-8d6c5833.xz
+In practice, all per-arch regsets apart from NT_PRFPREG use the name
+"LINUX", so defaulting to this if the name is not specified will hardly
+ever be a problem -- unless there really is a new arch out of tree that
+is going to merge imminently.
 
-The issue was bisected to:
+I'm happy to simplify the check here if people prefer.
 
-commit df43ee1b368c791b7042504d2aa90893569b9034
-Author: Christian Brauner <brauner@kernel.org>
-Date:   Wed Jul 2 09:23:55 2025 +0000
-
-    anon_inode: rework assertions
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14b373d4580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16b373d4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b373d4580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com
-Fixes: df43ee1b368c ("anon_inode: rework assertions")
-
-------------[ cut here ]------------
-WARNING: fs/exec.c:119 at path_noexec+0x1af/0x200 fs/exec.c:118, CPU#1: syz-executor260/5835
-Modules linked in:
-CPU: 1 UID: 0 PID: 5835 Comm: syz-executor260 Not tainted 6.16.0-rc4-next-20250703-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:path_noexec+0x1af/0x200 fs/exec.c:118
-Code: 02 31 ff 48 89 de e8 f0 b1 89 ff d1 eb eb 07 e8 07 ad 89 ff b3 01 89 d8 5b 41 5e 41 5f 5d c3 cc cc cc cc cc e8 f2 ac 89 ff 90 <0f> 0b 90 e9 48 ff ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c a6
-RSP: 0018:ffffc90003eefbd8 EFLAGS: 00010293
-RAX: ffffffff8235f22e RBX: ffff888072be0940 RCX: ffff88807763bc00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000080000 R08: ffff88807763bc00 R09: 0000000000000003
-R10: 0000000000000003 R11: 0000000000000000 R12: 0000000000000011
-R13: 1ffff920007ddf90 R14: 0000000000000000 R15: dffffc0000000000
-FS:  000055556832d380(0000) GS:ffff888125d1e000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f21e34810d0 CR3: 00000000718a8000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- do_mmap+0xa43/0x10d0 mm/mmap.c:472
- vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
- ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f21e340a9f9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd23ca3468 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f21e340a9f9
-RDX: 0000000000000000 RSI: 0000000000004000 RDI: 0000200000ff9000
-RBP: 00007f21e347d5f0 R08: 0000000000000003 R09: 0000000000000000
-R10: 0000000000000011 R11: 0000000000000246 R12: 0000000000000001
-R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers
+---Dave
