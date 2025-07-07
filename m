@@ -1,64 +1,33 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780E428D849
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F747B3E1;
+	Mon,  7 Jul 2025 09:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751879777; cv=none; b=stjpHunfFETT/GSEswEnL9FwFzlbqMliPkQ8F1NHAzpGQyKDw+d+R/tdsGABGxsJp/N/qKPiMWQv57DEufnPN2SOIEV/9epTFVbWAYkI8yHTry7xvSYMOVL29BQLmztwqAVyjQdiovoVz63ts4TlPavudbmvjHyIyx1gZDmiyhg=
+	t=1751879788; cv=none; b=RxkUD0sS80ox+2Yk58dQz4IlKl5SAZk01vEkBLHRbcj+TZtcVqNul8201IFqrP0lrjX4vaoCceYpgUdLxd3JsiNHAEQ52ZX9uqI1dJjbvjiRnksy4iFH1x635G1kFsX8yy7+8cXIthglt+WN6x0RRIdOdcvzjxR8+seOaygSy8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751879777; c=relaxed/simple;
-	bh=2N0U1EDqI/jQKzqP2h1Jsj1CKcBZm2BCirQSwgH6hIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NzwDH8X9YK6uCgvGZDpg03brxQ54xkX5ZklFjIBdPHzKOxv2SyVoRZMgVdSqm778oyKGKXersY+sZTMbVExhq1QcyWu9y5CP/of6wtQ8GQAK/V6OpG+HdPa7ltUmVOjBJKdO22VJXIus7dkiCdUAHSiS+JlwRLquVJm+rmv16Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wKz4l6Bi; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751879788; c=relaxed/simple;
+	bh=S+ERr6u3aNq9RU4g8j9HXu8p3MOcQKERi/Lynnvtfp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=quVCSr2d769gSluxZIN+XbuiZji4b1kPv1zeCIKW0AXyvB/Q3iCGh/MDjeIckv/EcEPEkz8x//3sNkAdvtDvta4Gs0MqDY5lBZoQIxaYKDq00w5WTRWNxDpz68cNAH+bWQe/knu1yAkzuJJrITuSevzaxUqB3Egtk0Dx/YndSVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFfkXcHS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wKz4l6Bi"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso2806835f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751879773; x=1752484573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PSMRH5QDvCqW5KnIuvKRJN2G/mVFdVuXbgUbVefRVkM=;
-        b=wKz4l6BicRPAH8Tcx9JEwTsy7t2f2Dhfub5lrK+q6mJmzwinjf3PHwigni2zfviSpk
-         oBoQ1QQfgHHzmSZDazPEHpvWSQ5dDsmfez9xFDfoPQDdjMffkhncJGiXVRml3qjUR24M
-         NFucxuvIhmqKYR/lmz69dvvyakmi0xlr6WI6WguFKAW5/EO2RN9264c7ZwMvejQCeG0r
-         4mswesWiNMnU2U6D2Qddfpc9Zie07tNFZhFzCOte3xaK6xkOWEl0FV0OgaNSOIQED3VQ
-         1AzBmMaNq0APaXUc+TBz1B0MLCRwwC6MrCTypZ1+ZMehIY0pr6iiMdAIJ2kDhYtOrRkz
-         K43g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751879773; x=1752484573;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PSMRH5QDvCqW5KnIuvKRJN2G/mVFdVuXbgUbVefRVkM=;
-        b=Bm6F3/JjIR0ukD4kNR25f8UyH7Uh/8UbdbW6DZVBBUBPuJeUXmCunLQjbOMpB3Weq0
-         VV4Kc5FHPGdojGBgZyHkCuZHgDXU+g/cXAzXpAV8jLMVVNffn1tqU0JS/bTBaQICgZj/
-         lP4YpoXF5i7CYMmTyCLoIM9srscspphYxxoQB92QsFMhyMSLPem4Nokz0x/ETOprYfx1
-         xyGD2+hK79fO1j1ZrKzhiWIRYY8YNnRZejDMHH34YtPk4gzX9gjBTg+1rd9Oz4VD6hil
-         rRvcMOBRMCZ3m55B5mUAfoC4/BO0XmxmHXnD1gxx5nM683qjcUoyZT9T2Oz/axKIR/vV
-         1Wmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUha/ADNhZWxHxoubrcHeYY6laext/d5CEIyDxoS+NxnpSF8rmQqRUVEgv/Ps0CLglesZqM7eG1UR5A5xY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWGnBcrcIJ/e62H6Dvw4+dDETixT44EiPQnrUHTtALlWoO3sX5
-	4vH6l74aJtivm/Rt41nApdrbOLTRZjUS6LadLl7vQlgIaFtblvxH/lDRKAdqxgAqkR4=
-X-Gm-Gg: ASbGncsGg0thmQlsEFRWMu9YN1w9HA1lwbyBLctHRnlPaNBQuS1B11cPM3BI1CC+sOw
-	k/l5T2LlNOcq/oZp5rst86Yc7Ni0BlBxSS7CK1EVipNA8i/gZYqPPXXPptU4mz4+hPqIVCn756f
-	96VMn4Jqqw43XREL9yY95TOY7vtNCuWj/lmgl/YZj+LhV2HdoWrBhB7pqveGT8vJBhVxQJ11Sh7
-	YsbbTsTPTKxtK4dyRfYR+7Y/J0KCnrXR+OUVAh8f2//VMO15T8GPWD8EAp+GCBGi/zg3V2/voud
-	BSWyaUfU9Dw5eiUg5XtDtFT1IbA67TZgj8pNH8kcDmHLOqH3YkYQHYzTDTHlmrI1J+E=
-X-Google-Smtp-Source: AGHT+IGGCWZfAUj4VNzkhRD8HfhSu3KCxQFzzdO1XpeV+D2rkMvRTzngh9EBKomoGoCaM7fN+nIbCA==
-X-Received: by 2002:a5d:6f1c:0:b0:3a5:527b:64c6 with SMTP id ffacd0b85a97d-3b49aa0e8e8mr6353994f8f.1.1751879772702;
-        Mon, 07 Jul 2025 02:16:12 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b9671asm9687980f8f.53.2025.07.07.02.16.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 02:16:12 -0700 (PDT)
-Message-ID: <207d1f3a-60f6-4a8d-8adc-e03e95f198e7@linaro.org>
-Date: Mon, 7 Jul 2025 10:16:10 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFfkXcHS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11355C4CEE3;
+	Mon,  7 Jul 2025 09:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751879787;
+	bh=S+ERr6u3aNq9RU4g8j9HXu8p3MOcQKERi/Lynnvtfp0=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=TFfkXcHSonqw5qmGanS5rIltPbpecXINcniIKPTWwJrrjWmhcIN4ELgXMiC019IEG
+	 SD11bRN8XQv32cau+ovLfoHLk1WFFTIqfMvX+LFN7v5OibZ7NHO9JBo3dSByr/Vbbz
+	 k+IcNS1HvBuEMlhaeFRS8TloFeZV6MwSvKr/RfQ2PzyRwbmlz0QajYzvvguUT+FN8G
+	 XB+7sDhwL8MFSCCJZZPy+xORL9g2Rm7of3cOs2IcpMNBHplW1Jq7q7swBGDrwdiYDh
+	 QfgfdoKOx5ibNCu1RjeWBYgEhJCUShGdcDsJ3t62uIZ8fn5pSu62W8nBazmhnKzo/V
+	 5V0ag9bmn5iXg==
+Message-ID: <d4c85825-5979-43f4-8136-5b15c1691b52@kernel.org>
+Date: Mon, 7 Jul 2025 11:16:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,61 +35,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
-To: Leo Yan <leo.yan@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
- patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Yeoreum Yun <yeoreum.yun@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Anders Roxell <anders.roxell@linaro.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-References: <20250703143941.182414597@linuxfoundation.org>
- <CA+G9fYu=JdHJdZo0aO+kK-TBNMv3dy-cLyO7KF4RMB20KyDuAg@mail.gmail.com>
- <CA+G9fYv4UUmNpoJ77q7F5K20XGiNcO+ZfOzYNLQ=h7S3uTEc8g@mail.gmail.com>
- <2025070605-stuffy-pointy-fd64@gregkh>
- <20250707090308.GA2182465@e132581.arm.com>
+Subject: Re: [PATCH 1/3] dt-bindings: rtc: s3c-rtc: add compatible for
+ exynosautov9
+To: Devang Tailor <dev.tailor@samsung.com>, alexandre.belloni@bootlin.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ alim.akhtar@samsung.com, linux-rtc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ inux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ faraz.ata@samsung.com
+References: <20250702052426.2404256-1-dev.tailor@samsung.com>
+ <CGME20250702051530epcas5p12b8c62aba9cc11dc8d13c65fb12b6c3c@epcas5p1.samsung.com>
+ <20250702052426.2404256-2-dev.tailor@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250707090308.GA2182465@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250702052426.2404256-2-dev.tailor@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 07/07/2025 10:03 am, Leo Yan wrote:
-> On Sun, Jul 06, 2025 at 08:55:32AM +0200, Greg Kroah-Hartman wrote:
+On 02/07/2025 07:24, Devang Tailor wrote:
+> Add "samsung,exynosautov9-rtc" dedicated compatible for
+> on-chip RTC found in ExynosAutov9 SoC.
 > 
-> [...]
-> 
->>> Bisection results pointing to,
->>>
->>>      coresight: Only check bottom two claim bits
->>>       [ Upstream commit a4e65842e1142aa18ef36113fbd81d614eaefe5a ]
->>>
->>> The following patch needs to be back ported ?
->>>     b36e78b216e6 ("ARM: 9354/1: ptrace: Use bitfield helpers")
->>
->> Thanks, that makes sense, and is easier than me fixing this up by hand
->> like I had tried to in one of the branches :)
->>
->> Now queued up.
-> 
-> I built for the Arm target in my local environment and confirmed that
-> the build failure has been fixed on the linux-6.6.y branch.
-> 
-> Thanks for reporting and resolving the issue.
-> 
-> Leo
+> Signed-off-by: Devang Tailor <dev.tailor@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/s3c-rtc.yaml | 1 +
 
-That commit only fixes it by transitively including the header though. 
-I'll send a proper fix to include it in coresight-core.c so it doesn't 
-break again in the future.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks
-James
-
-
+Best regards,
+Krzysztof
