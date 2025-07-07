@@ -1,207 +1,222 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012022.outbound.protection.outlook.com [52.101.66.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005C7283FEA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875675; cv=none; b=j3hzSmJEl+Phxn4ud8iOpZsD2cqb/xzfB0E5OKm6M8ikhdBeJ4mn6u0WQUUEiaCVx2/O9plVHsGukGVNdi/ryTW4eS4t70OQ4QEjbAOPfYRxhiHCPktboSGY4CAA/f4PZuwC6L2FhOvjM27+UTQcx/gnYP8hdldAlO5tHhmdixs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875675; c=relaxed/simple;
-	bh=BreYJuDfZoFdRiabZxtNWF9SABVBZKncFsrha+MOSMw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bpLNoa4wel2pA1IT8VNuCyE97FvuYPPMkWUwIE9UEIlxxgeirWhVysltp2QrPOoubs3qUmU/hv6CTwxXTSsTnllgUeg2tPYb2elGIlvrn9L7OMiTQyjObAZcabBl7W2jGEr6M5tpWsjbmY6P3iZChB9WBRGqXFqSH2lmqpx4AmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=GSgjWZWa; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF6028A1F3
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.22
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751875736; cv=fail; b=giiORpTQ4oxbcckyTrCIMAmQLuAPx1zLs+V4J7BSfzNibQXE88l/exaSPXgEAm+g2F1RFSxRwZSWjheXks+iJmLmWI4EZyOylMMdyPJUsN3ANdaySdCei+/FucJOjvb2MlFKNABzL/TWPIMDQF90NmIVSgKmeGszInIiulViaUo=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751875736; c=relaxed/simple;
+	bh=cDspw3YZpgCNzqlprhugvwDAaV69H++EqRpao5b6Dd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=d6qn2hgFmarzHRKRIN5PW5LU4lxSYwEF6xhXbS//FCPw9744LYDNoxs6dHdXSiJiHFrXI2aeHiAS1FoQpnpjYCceAzx3r3V6EzFMO1mbO4YOgCGuoNiuhfwnTF8K8EZr4BYbpSs9Rd4NOCYRGbaGov0/sknOtTAs4NJxAQADLrU=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DoEUPHnp; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DoEUPHnp; arc=fail smtp.client-ip=52.101.66.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="GSgjWZWa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1751875666; x=1752134866;
-	bh=eTGqtzCvOXwTu3qziUAcUbBhhfKcqKOqyU9syJBnr6M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=GSgjWZWavYTnlP1AW4PKEQag9P5elGs/5VhwUpQAnf1Hii942CYuSJEvTfRyO28XS
-	 9dQywgyfGftoz07t+Na6ebjSbH+ln2RtD6k/UIJ6UChsSTqe19vkUdV2GomHbXPb2o
-	 kv014ypTHGbjerukjjFBjP5brP5BdBCegDT3woKf6+BBnLccspuIF3bn1TP0VmyCtI
-	 RZbfkz5oMWpJmIDasGEhvFWEdZ/g0aroEETv3vhnFe59yKVo0/ehsu03Sh4J+cDas6
-	 vFQeDXgtwp/spPXJQCHDfWq5hmhtmFKtLc9PVVyPSvyy/dO9Z0Or5HriU5KUfEJFb+
-	 QgRYZr55oN/EA==
-Date: Mon, 07 Jul 2025 08:07:40 +0000
-To: Benno Lossin <lossin@kernel.org>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina+kernel@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 4/4] rust: Add `OwnableRefCounted`
-Message-ID: <aGuAR7JCrlmzQrx4@mango>
-In-Reply-To: <DB1LPFAX66WG.1QL5JDCWI7RN4@kernel.org>
-References: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me> <20250618-unique-ref-v11-4-49eadcdc0aa6@pm.me> <DB1LPFAX66WG.1QL5JDCWI7RN4@kernel.org>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: 84a19212b4ee4925539886f811bb5b09e24fb104
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DoEUPHnp";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DoEUPHnp"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=BcJt8AXrrGtxsKMHv7jq5JLO2ggw+mp5ICzXcJbwieqfYrGb4NTtD+zMojnHlsPpiKUtlXIhIOJO7VaDJVjnpr88Ef8MiBOz6d5zy8pEpJhH1C+x9b7PedaUbUhrsCGsZtOZfH6L4B0AeF5qyegEycWBl+bnSu9yPYbfQDxDOB4DVnfPq5R2RshR63ehKK21ebLTwEpUxIPXtYjFzR/V9xovbaBGRlmh3amxsEI/NegzrK3lgwiYXkkU3mjG4nX8HWD8uAyhB8r2Bi+bSpRcciCgdYbXp8VEvNE2irxGSczq9lF/WNeQdcl20GkcpY/TugMiRMfLrwMRB5Vy6QvpIQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HQm/vMkOh3SiXontS9l4CPD/mrT2/oQ9/GBHmQvIx4w=;
+ b=APi4vp/ir2P531Gdnd2Vqrrw28nFZ5DVyF1c/Pup/aL9pSBlGIF6iQtm1EJ2qbMnYjfQl//7+5dRn4nrBXVUY9rH1tWyqwzQ608mmg1b0uFBkk5aedu6SFjJmlRknpX7SxOOIxYGFWxqzFlxPvuqGIoMFc4/D9CCeC1EIaJEIUIZ6RcItJvpBry4ciBi+fTN5vTvXlkXp6hdPq584qB82cpBLvrDgBQWuqFjotuRZ7cLEffD8vmZkPWu6+pV60QEmuvpHM+0OyCcmbSdsS4VAtlEcwHxDV+dgjKIFqOGB9Wxm8MT3VezZnbdC6eLiJHGsUQznIyZh/sTM8cSZ6FaEw==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linutronix.de smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQm/vMkOh3SiXontS9l4CPD/mrT2/oQ9/GBHmQvIx4w=;
+ b=DoEUPHnpuPjs5LOciWvShAm3g4OMAzoActtoQ54ea+tTx9lDstUPKG7+GgzZTGyQxDRiQyVyITQFowz/gNvfsXmgheGyROfvOmUXCHuvVYPGGutyBdhQwtbaz3TrpzNcos4mDVD7gFTMZ3pkTNH+ZHYNQQQ5JkqvIayG+neeK6s=
+Received: from AS9PR06CA0574.eurprd06.prod.outlook.com (2603:10a6:20b:486::12)
+ by GVXPR08MB10812.eurprd08.prod.outlook.com (2603:10a6:150:153::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.25; Mon, 7 Jul
+ 2025 08:08:45 +0000
+Received: from AM4PEPF00027A61.eurprd04.prod.outlook.com
+ (2603:10a6:20b:486:cafe::6) by AS9PR06CA0574.outlook.office365.com
+ (2603:10a6:20b:486::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.27 via Frontend Transport; Mon,
+ 7 Jul 2025 08:08:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AM4PEPF00027A61.mail.protection.outlook.com (10.167.16.70) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.15
+ via Frontend Transport; Mon, 7 Jul 2025 08:08:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u/fMn/RTZqOL0PbOgSjCrSXGJGglXHKFmu3nzh5CeeAkMc2pghMVFq4RSOfxbmzq4jv4l9NmiXry7K/ES9Hv3sN6Y334lmXazFSvtV9vPUW/Ffzl9YGk5a3Y47COCRnok8gGxEivM2ei0owtxwb4uMsCgb8jylyjHfsbvl/jf5TFIU3ZgK/vHVmizukTjS1JOtuH4PiJMeNtCMYsh3oYl0hwqKYcWd3G9sCedxtoUVl4IFBwwZJOWrpmN5N1cQ5I35+H36HCepdpUHmv/hKmKdhS1jrCzILNmCbDrnX1czTYhKo2pgXjz/TckowFW9vfcDjizHNiTm4RX3xeKqCaQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HQm/vMkOh3SiXontS9l4CPD/mrT2/oQ9/GBHmQvIx4w=;
+ b=pvxSc8lCmxrC4pSZlmQ4wrmNWh1HtfNacZ/FwEGrbNzl/n+b6E4QfkqxckGW0L3Fl+XeRHBwcgESj6Rg/mp0QWlpLNR2TkUUorv6XtQtpQm9SmraIiUgzWXd37tuF+eAcIDyImz03fUruBa5JA2g+uyqbX5fmFRDMnE1wsLIEqRVBjBbSowqC8at8vafIVvXZok+Pn/JUIgonpO+BIDCSx5v7rL/27txY7wKRTeSVIoof0V6Bbjj2ctJ9NlYfjMBaNfcZ2GoKYgR21ygPtljhha53pxy3E7MKkmaOWQbqXsFgdJKALZ+0khwNcXhGR+yeFWlsp3c1K0nGktc92BOkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQm/vMkOh3SiXontS9l4CPD/mrT2/oQ9/GBHmQvIx4w=;
+ b=DoEUPHnpuPjs5LOciWvShAm3g4OMAzoActtoQ54ea+tTx9lDstUPKG7+GgzZTGyQxDRiQyVyITQFowz/gNvfsXmgheGyROfvOmUXCHuvVYPGGutyBdhQwtbaz3TrpzNcos4mDVD7gFTMZ3pkTNH+ZHYNQQQ5JkqvIayG+neeK6s=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20) by VI1PR08MB9958.eurprd08.prod.outlook.com
+ (2603:10a6:800:1c0::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Mon, 7 Jul
+ 2025 08:08:03 +0000
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739%5]) with mapi id 15.20.8901.024; Mon, 7 Jul 2025
+ 08:08:01 +0000
+Date: Mon, 7 Jul 2025 09:07:58 +0100
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
+	dvyukov@google.com, vincenzo.frascino@arm.com,
+	kpm@linux-foundation.org, clrkwllms@kernel.org, rostedt@goodmis.org,
+	byungchul@sk.com, max.byungchul.park@gmail.com,
+	kasan-dev@googlegroups.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	nd@arm.com, Yunseong Kim <ysk@kzalloc.com>
+Subject: Re: [PATCH] kasan: don't call find_vm_area() in in_interrupt() for
+ possible deadlock
+Message-ID: <aGuAXup8Zap5pvMB@e129823.arm.com>
+References: <20250701203545.216719-1-yeoreum.yun@arm.com>
+ <20250707075946.2lAwc0OR@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250707075946.2lAwc0OR@linutronix.de>
+X-ClientProxiedBy: LO4P123CA0630.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:294::13) To GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-TrafficTypeDiagnostic:
+	GV1PR08MB10521:EE_|VI1PR08MB9958:EE_|AM4PEPF00027A61:EE_|GVXPR08MB10812:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36aa721d-fa0c-4aba-8345-08ddbd2d7eb5
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?xz/10+fPXUts04dBRGNek/OvfgK8KhEHIoGFkbskaN/O7+wewempmyhE2pMN?=
+ =?us-ascii?Q?WqN7r9AT/F4mVB+XNqupGLiUPHT7Yb97rcwBtpT+/IdRiJ7F0+rUB6qRngEE?=
+ =?us-ascii?Q?tbtdYmFKDjF1KYCqim4bqHLMXv0MqjkuLzavU4ph5LmHUau6Gk7tg6o1o8vM?=
+ =?us-ascii?Q?+tmtvlR9wiQmOeBSukXwLN+53pGGZr1a3EKnfwNB/iLA6IxbbYYPfCpuyqL4?=
+ =?us-ascii?Q?aQZejbDkB+DgUxMA0bV51IGmS7Sgho/E4Sl7hPQvvLElvYEmRFXUHP7iQ5zO?=
+ =?us-ascii?Q?X7RoQaM/YR85g4gos38bIOd2cABRAQCeQYrM5sUzy3alP07vGh8IRNvk4MGh?=
+ =?us-ascii?Q?AhfHrEct7DjCYF7FuMFdKQFI2vTFefreUvjuiD7q71w0GjBVCCFJJjjkrfaU?=
+ =?us-ascii?Q?jhmQUoLKH9SAzHuvLUjy0MLTADaf+jobQjMk1GBsZTkvKfVsi0iLEdOXqgmp?=
+ =?us-ascii?Q?iPDL1iikTkMiX8CQ7YI3Zgyt8F8yLtAwtWacRY8pa049Pq2yqKUU6I8KFIOP?=
+ =?us-ascii?Q?rbreHPda6BnayZ+RheJ5+OM402kHSmZz3ct6xmI3/xZb3UHMCsrGzWVEMuQV?=
+ =?us-ascii?Q?d1jFk551hMW6TZ7qxu1dd3hjQYZlbHpwv2v/YQ0NAx4gAT2Z+h/VKS9WJwBl?=
+ =?us-ascii?Q?GPyt6vyQJpKs/ZYofEH0MI4rZHZ6RPEK+FqCZn4grtwuFrP5G2noEpQuikbP?=
+ =?us-ascii?Q?tbPpWSDzHIFzRjVn7Xd3ji7ERjk5DiUTemLYAXflnloj82HGSL+AnPYT5Wu+?=
+ =?us-ascii?Q?+ak7jyvpwiPPP5KGo2tKCiJkL9EDIoUuwyUpYNrKp/Tq2luNFW6Ij8kiIFia?=
+ =?us-ascii?Q?9VkfvNR0VMdoOybuKCKGD8Ifv9akrEYSgdyRQstGvqsKuGIoT35siiq+vU45?=
+ =?us-ascii?Q?eD7yQZmosQ4QwypQAN08l+o9Pbbs3IYLyvFCNNSoSZ0ebpakVV+D9LVQLfaH?=
+ =?us-ascii?Q?o8uX2SgTs/PdYdltZgf3JBxMfJwhO6XKUcphinDpPt59L1Z3Gbe51hRZA8xm?=
+ =?us-ascii?Q?ee6Vuiafdztuy/wR8mMG0F5/n9Hi+a3UIyqBHwjtgnLgCFrpgkOAN8BgyCD3?=
+ =?us-ascii?Q?u4a14mIunCie8AZJfXWoT74AT1VSiiQkYfWfjAPl78p2jAagGh+EwV84NvMM?=
+ =?us-ascii?Q?1RlU1eGJWuYRU41tD+8S8nUFokgqq0WxFp59+G9qcX6gx5Re9ULnd0Q+nJ3i?=
+ =?us-ascii?Q?5vMvHlHdfrrMGdRsyDQw0VD+4Y6Lvd33+GeQuBYgyORd/1WcqA0sNtaXrpOL?=
+ =?us-ascii?Q?oMIhZMn4HmObQEsui+wC0o7GjhkYviPNU5T76bvTPeo3lF97oBE2SpuAqKAN?=
+ =?us-ascii?Q?oDtgFEphz3XQeF7Q9Adk9RW50NCL4tZ/7WUzd8A4D8D1C7M+eek/55hzJp8R?=
+ =?us-ascii?Q?kCPm0t4wivKcuobwgPJjmyyY0XEXx7MqyJKSJvkW5RMoj+1KrvzSoBtioo7N?=
+ =?us-ascii?Q?Z1IlUBRrlpw=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB9958
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AM4PEPF00027A61.eurprd04.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	46fe3ece-29f2-4120-e7c3-08ddbd2d645f
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35042699022|36860700013|1800799024|7416014|376014|14060799003|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rO1BgD1kIsBYD/7XvsoeN7ibC2arsWV3ekJS5v49ibdtZzDo0t8CmQmD+Di0?=
+ =?us-ascii?Q?PbkJG5K1+epYAVlnQq8NKTIQAz1B73kDLxLtPs38aMzdU71J+XLFd1GzUn8A?=
+ =?us-ascii?Q?67iB8yTAIHfC3H3fONQpRVP+PLef9QMpScLWfNiGDKun25mawB0l+iebEGT7?=
+ =?us-ascii?Q?QrATBbTkXPQ+z1SUG2nt39EQHcUIvjKk67OzE10VkixXCNp4DHc3+NS8RL3l?=
+ =?us-ascii?Q?YQ7qgBsR/qDYEWe3ywC4o76z4LBLEVO6GrcF9BgBjkJYaZWFtMAdHlas7nKM?=
+ =?us-ascii?Q?1celD3iY6YsH7aiCIKs4IekFTl6iP442zKbkOi5xxSH4JK02o0NmwkAYzA69?=
+ =?us-ascii?Q?ayeoVVO1q6xLBXKnrdqDCU7DdoCp268IWW9+BEqMPbvj0lX4iE9/Q99jyxVi?=
+ =?us-ascii?Q?+FNizfhsnzssDnko0T+R3v7K59dBWzl/ENhFF0EZze1kNOeMwWUh7FWBh0ew?=
+ =?us-ascii?Q?wdvd/CWQ/QuaIpmqPJKPtRKYpWxg/eNi92RCsTorI5y0G5F9IN77wgQ/CJj8?=
+ =?us-ascii?Q?TcVp8rG6SKtooN85sZEZMxDASTIZ3XeS3i19POwIlDA4iXbV8uaNMMNOcMFR?=
+ =?us-ascii?Q?FatQAELsrv9+Utxdi/YWhwxHE1M2y2hJy/WoinEqUDFe4hrWDI/nZl59864l?=
+ =?us-ascii?Q?IdG/UBXBQb9+X6X42Dz2OjCv542dJkXhUwipXWY6AxBSIEkFF01QKt6je+v7?=
+ =?us-ascii?Q?+B0d5TCg8WWt3DMG/FWT8/gSSzPyqtWPR0yOELkKkvuo8SW1CEhqmkg26sQN?=
+ =?us-ascii?Q?BcgVWFTAR2MyRt5+kU04Lq5muTCuCOQmzboteu3UstVb5d/gU4IeNHJ992k5?=
+ =?us-ascii?Q?PUQTjUMzheaNNLBd0VlH+dL1ViVkVUjNDc0rrPmlIfC6UE06UP5//5hOPskw?=
+ =?us-ascii?Q?WmzvnFeu2OteYPLsnQe2ufGlVvgQA7YjABcLWt3P1acPgtj0fHhTfI12atrS?=
+ =?us-ascii?Q?UAl6gCDxYTQ67bDib2Rb4ACnkLl6bh8GlProtidzVwCDULwHLv0x1kxzA/VR?=
+ =?us-ascii?Q?NnYFJLhPexVfY4MIoiFPW35Njfq8/ABn3nD11aUEHAX/smFfrucrmgKtOdlM?=
+ =?us-ascii?Q?m7K3TMKrpjHZbv41FXa/MlphcaDK37R9EcrP2Ubex0CUdGP6Ww+ViBAZTNup?=
+ =?us-ascii?Q?floriaayjGJLV9uYl726xZF8nanSpc+w5QaOn72mRAFM8D0OPPk0/4m0raX0?=
+ =?us-ascii?Q?NvQcrk8+wQwCzn3jh0hXYP++dAwYDFX2ceOlxWFv+JaHKSUycG8/fgaGKK1m?=
+ =?us-ascii?Q?foKOB59ur5k9B8amHAxVTeJUgKwc1Syix5O0k5yVLL0lPubQm8pxgNyJy+zR?=
+ =?us-ascii?Q?sdWEuXheLJE43CebXpn2bz7D2j/38R7AOILsJEcf4wPzVQxgqxH7DYkb0Qxr?=
+ =?us-ascii?Q?sJ+Vqn4Yj8+hjtFOKNOkqAfFZ86tkHEOINq5eD5NxOfnxZ1CyuJmMORG01ql?=
+ =?us-ascii?Q?CxhVy0TfJIXC1CJElU4BydjnG/+VoLQRD/jSl7J9HzQmRYZsbVKnuhR2I/pg?=
+ =?us-ascii?Q?XQ4cwEVPnYFVkf+7+rye2nOBfLYLzt9sNv1T?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(36860700013)(1800799024)(7416014)(376014)(14060799003)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 08:08:45.2497
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36aa721d-fa0c-4aba-8345-08ddbd2d7eb5
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00027A61.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB10812
 
-On 250702 1524, Benno Lossin wrote:
-> On Wed Jun 18, 2025 at 2:27 PM CEST, Oliver Mangold wrote:
-> > diff --git a/rust/kernel/types/ownable.rs b/rust/kernel/types/ownable.r=
-s
-> > index 80cd990f6601767aa5a742a6c0997f4f67d06453..b5626dead6bb25ea76a0ae5=
-77db1b130308d98b1 100644
-> > --- a/rust/kernel/types/ownable.rs
-> > +++ b/rust/kernel/types/ownable.rs
-> > @@ -2,6 +2,7 @@
+Hi Sebastian,
+
+> On 2025-07-01 21:35:45 [+0100], Yeoreum Yun wrote:
+> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> > index 8357e1a33699..61c590e8005e 100644
+> > --- a/mm/kasan/report.c
+> > +++ b/mm/kasan/report.c
+> > @@ -387,7 +387,7 @@ static inline struct vm_struct *kasan_find_vm_area(void *addr)
+> >  	static DEFINE_WAIT_OVERRIDE_MAP(vmalloc_map, LD_WAIT_SLEEP);
+> >  	struct vm_struct *va;
 > >
-> >  //! Owned reference types.
-> >
-> > +use crate::types::{ARef, RefCounted};
-> >  use core::{
-> >      marker::PhantomData,
-> >      mem::ManuallyDrop,
-> > @@ -18,8 +19,9 @@
-> >  ///
-> >  /// Note: Implementing this trait allows types to be wrapped in an [`O=
-wned<Self>`]. This does not
-> >  /// provide reference counting but represents a unique, owned referenc=
-e. If reference counting is
-> > -/// required [`RefCounted`](crate::types::RefCounted) should be implem=
-ented which allows types to be
-> > -/// wrapped in an [`ARef<Self>`](crate::types::ARef).
-> > +/// required [`RefCounted`] should be implemented which allows types t=
-o be wrapped in an
-> > +/// [`ARef<Self>`]. Implementing the trait [`OwnableRefCounted`] allow=
-s to convert between unique
-> > +/// and shared references (i.e. [`Owned<Self>`] and [`ARef<Self>`]).
->=20
-> This change should probably be in the earlier patch.
+> > -	if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> > +	if (IS_ENABLED(CONFIG_PREEMPT_RT) || in_interrupt())
+>
+> Could we stick to irq_count() ?
 
-Ah, yes. Must have happened while splitting the patches.
+I determine to remove kasan_find_vm_area() since there's some case
+couldn't be avoid with irq_count()
 
-> >  ///
-> >  /// # Safety
-> >  ///
-> > @@ -132,3 +134,124 @@ fn drop(&mut self) {
-> >          unsafe { T::release(self.ptr) };
-> >      }
-> >  }
-> > +
-> > +/// A trait for objects that can be wrapped in either one of the refer=
-ence types [`Owned`] and
-> > +/// [`ARef`].
-> > +///
-> > +/// # Safety
-> > +///
-> > +/// Implementers must ensure that:
-> > +///
-> > +/// - [`try_from_shared()`](OwnableRefCounted::into_shared) only retur=
-ns an [`Owned<Self>`] if
-> > +///   exactly one [`ARef<Self>`] exists.
->=20
-> This shouldn't be required?
+Please see the latest discussion:
+ https://lore.kernel.org/all/20250703181018.580833-1-yeoreum.yun@arm.com/
 
-Ehm, why not? `Owned<T>` is supposed to be unique.
+Thanks ;)
 
-> > +/// - [`into_shared()`](OwnableRefCounted::into_shared) set the refere=
-nce count to the value which
-> > +///   the returned [`ARef<Self>`] expects for an object with a single =
-reference in existence. This
-> > +///   implies that if [`into_shared()`](OwnableRefCounted::into_shared=
-) is left on the default
-> > +///   implementation, which just rewraps the underlying object, the re=
-ference count needs not to be
-> > +///   modified when converting an [`Owned<Self>`] to an [`ARef<Self>`]=
-.
->=20
-> This also seems pretty weird...
->=20
-> I feel like `OwnableRefCounted` is essentially just a compatibility
-> condition between `Ownable` and `RefCounted`. It ensures that the
-> ownership declared in `Ownable` corresponds to exactly one refcount
-> declared in `RefCounted`.
->=20
-> That being said, I think a `RefCounted` *always* canonically is
-> `Ownable` by the following impl:
->=20
->     unsafe impl<T: RefCounted> Ownable for T {
->         unsafe fn release(this: NonNull<Self>) {
->             T::dec_ref(this)
->         }
->     }
->=20
-> So I don't think that we need this trait at all?
-
-No. For an `ARef<T>` to be converted to an `Owned<T>` it requires a
-`try_from_shared()` implementation. It is not even a given that the
-function can implemented, if all the kernel exposes are some kind of
-`inc_ref()` and `dec_ref()`.
-
-Also there are more complicated cases like with `Mq::Request`, where the
-existence of an `Owned<T>` cannot be represented by the same refcount value
-as the existence of exactly one `ARef<T>`.
-
-> > +///
-> > +/// # Examples
->=20
-> If we're having an example here, then we should also have on on `Owned`.
-
-Yes, maybe. I mostly felt the need to create one for `OwnableRefCounted`
-because it is a more complex idea than `Ownable`.
-
-If I remember correctly, I didn't create one for `Owned`, as it should
-probably more or less the same as for `ARef` and the one there has even
-more problems of the kind you are pointing out. So maybe it would be best
-to wait until someone fixes that and have the fixed version copied over to
-`Owned` in the process?
-
-> > +///
-> > +/// A minimal example implementation of [`OwnableRefCounted`], [`Ownab=
-le`] and its usage with
-> > +/// [`ARef`] and [`Owned`] looks like this:
-> > +///
-> > +/// ```
-> > +/// # #![expect(clippy::disallowed_names)]
-> > +/// use core::cell::Cell;
-> > +/// use core::ptr::NonNull;
-> > +/// use kernel::alloc::{flags, kbox::KBox, AllocError};
-> > +/// use kernel::types::{
-> > +///     ARef, RefCounted, Owned, Ownable, OwnableRefCounted,
-> > +/// };
-> > +///
-> > +/// struct Foo {
-> > +///     refcount: Cell<usize>,
-> > +/// }
-> > +///
-> > +/// impl Foo {
-> > +///     fn new() -> Result<Owned<Self>, AllocError> {
-> > +///         // Use a `KBox` to handle the actual allocation.
-> > +///         let result =3D KBox::new(
-> > +///             Foo {
-> > +///                 refcount: Cell::new(1),
-> > +///             },
-> > +///             flags::GFP_KERNEL,
-> > +///         )?;
-> > +///         let result =3D NonNull::new(KBox::into_raw(result))
-> > +///             .expect("Raw pointer to newly allocation KBox is null,=
- this should never happen.");
->=20
-> I'm not really convinced that an example using `KBox` is a good one...
-> Maybe we should just have a local invisible `bindings` module that
-> exposes a `-> *mut foo`. (internally it can just create a KBox`)
-
-The example would become quite a bit more complicated then, no?
-
-> > +///         // SAFETY: We just allocated the `Foo`, thus it is valid.
->=20
-> This isn't going through all the requirements on `from_raw`...
-
-Yes, this comment should probably be detailed.
-
-Best,
-
-Oliver
-
+--
+Sincerely,
+Yeoreum Yun
