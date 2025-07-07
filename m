@@ -1,47 +1,46 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FFD27FB2F
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C55262FCC;
+	Mon,  7 Jul 2025 07:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872193; cv=none; b=Zqk0PFFDqqEDLEJOubLt1JWXAZXF3kgGn7eSwqx6LpErU/Hjpu8wlYOfHizUHcvmr5ogqnFD64KIW0daoKlXMB+HG7GNh6JIF/r3zm0ZeHhHJwS8z7Qw3u4/zIAq37g4zHL4GBF1uKtNweif08KWIkmjbciIKFuDVZnk1/kYS0o=
+	t=1751872193; cv=none; b=noqVEkYPfJe47XCZ5pJ+UvCA+/bPJ6g4HUp3+idYPmK7zaxSR1vceGSiRgBGned6Hc9E8JLpEp4OUXwk9MpsdjNgoa0TdG8hG9LGk5oY1Vn1bz2S8lv7CSczD6lqnwQLE1uSebilEjFnr29dqoJLtrP7O4DtktK4GdcLd09oE7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751872193; c=relaxed/simple;
-	bh=yyxiVpTfZw3Fe/y9AhHGBqO9dJPXCajS1YdbCe03G4g=;
+	bh=AFV+TeABv8Zk5XboOQaVyDGMa4C8DLIZ32be/SwRorc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hLDxbw01Spp7MFYi1V9j2ay+p970vETYSMwqAf+ZV1VE+wrTph7Obfvi9gk56R5OFl2TSjPRBrUHYG0pojaDTFTAJLSQqruZ0T3ZD1E1Una/vjgb8cXSYbsN89IQtBlKfEa9YxRsscNfB+ZiNddjSwawVZd3yECbp2fVFQBrl1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uYfyR-0001vP-B3; Mon, 07 Jul 2025 09:09:11 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uYfyP-007D3A-0u;
-	Mon, 07 Jul 2025 09:09:09 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uYfyP-005oRo-0Z;
-	Mon, 07 Jul 2025 09:09:09 +0200
-Date: Mon, 7 Jul 2025 09:09:09 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: qiang.zhang@linux.dev
-Cc: Jun Miao <jun.miao@intel.com>, sbhatta@marvell.com, kuba@kernel.org,
-	oneukum@suse.com, netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [bug report] [PATCH v6] net: usb: Convert tasklet API to new
- bottom half workqueue mechanism
-Message-ID: <aGtylalCTaWwqhQk@pengutronix.de>
-References: <20250618173923.950510-1-jun.miao@intel.com>
- <aGgD_Lp0i-ZU2xkt@pengutronix.de>
- <74395e33b2175fdb2745211c4ca41e5b2358d80d@linux.dev>
- <c2e597d2101b588d19a5028b8ae73a33c5240e32@linux.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXzM9i2PUAbkxCp/YX4d2UTIdYf4C/kkeC0zrTKqrjHDA4a4zk0AFGYafnwTpmNlfUMglvg/t79c0D7MWD2iWF9Qpd0BI0KIb7Cc0FZy7Njtb8lzGUujUdl/G23+CO/K8edf/k2tumsEINa6+MgSmuBbc6eYeFtDx1oP3g6i3s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URk79ekV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URk79ekV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F0DC4CEE3;
+	Mon,  7 Jul 2025 07:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751872192;
+	bh=AFV+TeABv8Zk5XboOQaVyDGMa4C8DLIZ32be/SwRorc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=URk79ekVOVynmozM4nJAdmxw+sXeyVljNAqmn12VBB7z3qV30kBwHYnlTvasx7zXs
+	 oGe/SaYzqePdVFBZGEsGH7Zviy+qrvKiOMiMNYQWmSKcDsMl7ANFmYa2b01ZBv9lQI
+	 WSyPfoZ2Kl1dEGs1J61hQ/OMm9qdL9izv/2phoxSIdDMbu45ouWIW/HlSCN9dw5H+s
+	 pWAOccOx0kqbLEg6ATcC0MMZnrFN2f8mC6GKKo5hDWqu07iBkzfaNnZ7+5JKM/KYlE
+	 nrMorvOeYSowD3+s3ZgzBaE/JrUHaH+DvCxmy0tZ49LX23Q7yNxPHEylixzOVUjRML
+	 PLr28mGM6+AQg==
+Date: Mon, 7 Jul 2025 09:09:50 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Lukas Schmid <lukas.schmid@netcube.li>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: arm: sunxi: Add NetCube Systems
+ Nagami SoM and carrier board bindings
+Message-ID: <20250707-vehement-daffy-worm-0cc8ee@krzk-bin>
+References: <20250706183601.157523-1-lukas.schmid@netcube.li>
+ <20250706183601.157523-2-lukas.schmid@netcube.li>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,58 +49,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c2e597d2101b588d19a5028b8ae73a33c5240e32@linux.dev>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250706183601.157523-2-lukas.schmid@netcube.li>
 
-Hello, Zqiang
-
-On Sat, Jul 05, 2025 at 06:41:20AM +0000, qiang.zhang@linux.dev wrote:
-> > Hello, Oleksij
-> > 
-> > Please try follow patch base on Jun Miao's patchs:
-> > 
+On Sun, Jul 06, 2025 at 08:35:54PM +0200, Lukas Schmid wrote:
+> The NetCube Systems Nagami is an System on Module base on the Allwinner
+> T113s SoC. It is intended to be used in low cost devices which require
+> simple layouts and low BOM cost.
 > 
-> Sorry, please ignore previous, try it:
+> The NetCube Systems Nagami Basic Carrier Board is a simple carrier for the
+> Nagami SoM. It is intended to serve as a simple reference design for a
+> custom implementation or just evaluating the module with other peripherals
 > 
-> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-> index 9564478a79cc..6a3cca104af9 100644
-> --- a/drivers/net/usb/usbnet.c
-> +++ b/drivers/net/usb/usbnet.c
-> @@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
->         /* deferred work (timer, softirq, task) must also stop */
->         dev->flags = 0;
->         timer_delete_sync(&dev->delay);
-> -       disable_work_sync(&dev->bh_work);
-> +       cancel_work_sync(&dev->bh_work);
->         cancel_work_sync(&dev->kevent);
->  
->         /* We have cyclic dependencies. Those calls are needed
->          * to break a cycle. We cannot fall into the gaps because
->          * we have a flag
->          */
-> -       disable_work_sync(&dev->bh_work);
-> +       cancel_work_sync(&dev->bh_work);
->         timer_delete_sync(&dev->delay);
->         cancel_work_sync(&dev->kevent);
+> The NetCube Systems Nagami Keypad Carrier is a custom board intended to
+> fit a standard Ritto Intercom enclosure and provides a Keypad, NFC-Reader
+> and Status-LED all controllable over Ethernet with PoE support.
+> 
+> Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
+> ---
+>  Documentation/devicetree/bindings/arm/sunxi.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-It seems to work now, thank you!
-Tested on LAN9512 and ASIX AX88772B.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-You can add my:
-Reported-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Tested-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Best regards,
+Krzysztof
 
-Best Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
