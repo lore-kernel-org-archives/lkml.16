@@ -1,224 +1,329 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012006.outbound.protection.outlook.com [52.101.71.6])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2043.outbound.protection.outlook.com [40.107.101.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A4D12B94;
-	Mon,  7 Jul 2025 03:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE78125A320;
+	Mon,  7 Jul 2025 03:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751859139; cv=fail; b=aMFsH1+zrqWgFVoB1LxFCqDiwkFOuXfrqLsvP7tr6iesotxcLjKrH0Y89YY88os4Lfk6yk5c85lcrQumvi79CkkRLoxagmi/a4bpSv+yx35Bw7qv0zL52EUmAZ74xpgTVTAT8wuYzl9x0m/EH6+/c1LgV3A1od7RxDO7KXEAyhg=
+	t=1751859145; cv=fail; b=mhSCGmRlYam70p9zMTDTle2BRdsWv0XF3+sP2ufUPKjBkZVpCMapqzCEbtxxmmLdFlzSDi62UC9x61LBlYMhARLsV/r6HQLwdxK443xziKdzpjSFqp7isyQo8x+sZIGsyEvV6W71v5F2xpRUI4++jWP9vs6M13ruTxA64Wzkjho=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751859139; c=relaxed/simple;
-	bh=eWnQ7snTFEOz+FWcKu8n4Q7cfo2BhzCqAzGWzOYCuBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lDKmtgwTZipbXYuxXV+3o5P4S50FhPBkBxPiDL8Fh4FPWlWz2wGkgopahFLSzYr/SiBbQaPvGSSHtjdu1vJUzWrEEIIgWjPY/fsiDk58CsjoxYv9MRQX2aO4Vz+dWRrGvYT/1WKbVqs0tSnseJu5Qsn7MpYm4LptwSX0RkbfNAw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=AVq/ugjq; arc=fail smtp.client-ip=52.101.71.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1751859145; c=relaxed/simple;
+	bh=wFA+XOHhgtzakfEEKl4JHqEeggj4SHLmk15vczvT8bI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=SMfQzqYC6fX99rfT88g+C9kwd7XIUCuhcKvrO+SXHtdvDKqtNt9/tbonGsj99W4+sT+hzmjwVo5VdwIyoW0y6bwsPLrMQ0RRjxoZZR6PcbI4UzdT0wXcCL+Qx/l5GIZc434C48RFrZ4Y1GOuQVhqkmnnhfKZ/weDopuX6g+YD9M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tH1g2WQF; arc=fail smtp.client-ip=40.107.101.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="AVq/ugjq"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tH1g2WQF"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eNbq+2bCqk3Jou+SGt/DeTU7Di9sf30Ia/6vxFm0inS8/PrCd0oT71swGyprlwrV9mUTagSCRVBzykLHd07OexCkCq5fegtGCFE5GfITvl0wkfNwmzcZEbexbpFJYDMv0hcOyevBdQKrV+ha5CkLz3zphlnxY9crwOb8MS6b9FKzYMwHDOa9NBBlL0VWOAwEso8wdIbhX6mHCtbA5Gjl1vb1mSXy1H5tHHlpPZmp6iMhzlz19+EAfQCmMA05ThJdqIqrikwoVvG0LdZPVMS8rcmltTh0et6Jow8Uht24TNOefIwa4NiGghoBJl2Fcfsz84XlZPO8SXWvABX98udM7g==
+ b=bznK9T0ZytO7qGkMfq3iE9vOdn1Df8D66qRCyGHkWf1tkr4KIrGaq6yJkevv/ek7jL1KW3emRJxRUR3mcDIT0DRsdnkpoMahZ28/4cTjGGgUCWswPVWIsoJ4IR/3IKvOhxFIr2WVbxgjGApboJJgrzNcD9/xzPIfZNvm9u1uFJd+8+lld5hrqrJdh0NUyQg2JdWUBkblRDzsXZiOG/w6l6VJ/ge0HV9OuQNHeSfT1ZrpFbNwW6hl0qpLepNGAGiQlTEwGEuGAYVmfedtvYRG8JjyWpKMlGgCtZDJK8zaEDHrxscjDdkPxEvXV6mzp1hhcekOs2YjPYOWv3b2iTBsDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=efHZOJ/vJvsgwTxnrVX0HwJLNbMtQrYZGx3bCC/tYIA=;
- b=t/DnkQiZekWlfSWMcq8T8GOtL+4fXwLLPZMsLGGBrwg3r1DFcVVJah+HL/r0qlCK7MbgNNdKzumZY7lQVpWJ33WI1N4a1SDcB0SlYmUmbYlWbOPyG4m/7NiPQvsjn8DDQT+UAQBtey46/Bgc1VBIcfM3JO589lsfn27k6e5lh19hhTZ4FT1DYbepirfqCu/1Ek8gz3asLA/dg2FqnnVCbSRVysg0WKumeIT1Guspwrmj785rrjmoizr53T22YO5M7e56SoTE8uPFUXvCtXvTq7g9AKAiXL8OEoVHG4zHGHuhWkgYfykT5U3KafoK8R64858jXfyadqQ7dG+Ikc5UEw==
+ bh=Oyg8jT2P/NtwHIzfsrE6WxHXdaD5fpWLttuKG9M2tuQ=;
+ b=exAvWNVYQnZTBqrobWsuPJMnsj90xdOnyzzSZbrlWBs9yDVOX0SQzaVtJO594kmNE/wnad0Z4EXI8OYADlRK1AxASmrF/+augA+ZJcZcy+FRt92abJqY9YU3jhNcQzeHI07XhSW9vKSCDgd2cUtWaVRS0xAvRVLmkEhiofhXF4IjtuyR3WD7jvg9aguOJoQ3mUKg6ndrcM8lXOogZ+NlI8SAi+6SZMh3yBUYY6In8OG9CuPUIl5R1lOH1w3GEle/tv+Hk7IkpqaWFeKHjhtpJKDXEbyoT3kZdHUE93ZMsKTIlNu0AvEjq5hV8SDK8/ytartRoGXp/P4rrM6JSHSKZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=efHZOJ/vJvsgwTxnrVX0HwJLNbMtQrYZGx3bCC/tYIA=;
- b=AVq/ugjqktbWDJivm9n/uZ6Ua4mAuN2W0bAgHR3VczjTEFSk5os4j+f121/+O96/qbeoEynWguewhCx6+wIC9Sou9q98hfNvmpVFbG1sbdrryPaNtfttb8kxniet2yKgPiGmtZJDwFljXQkxR0s2kpffKIpbT9XAjY5Eq7BOilhpcBi+bODme2AyAWTBk3KFuAo0yuGx89UARZlrlZkI16pE4cFZzF+Aof+cV56qt9Zj0GRK79VyootPp5AB1FAhe91yuS5N2cy9VZnZZPX15hwDLKNL8CVbjkPppGPL5h8bgrLPXCS5xSYoWzvFrDHNTyi/V1DZkLbgpDQDNVSkiw==
+ bh=Oyg8jT2P/NtwHIzfsrE6WxHXdaD5fpWLttuKG9M2tuQ=;
+ b=tH1g2WQFgybWPrpegsuNDEJKjd9kSWiNKyWZpaOYStkHtjCqxKgPsKfqjVkPTahhbyRbfehDIzoE1dCSKUeuUgLyiByUaqfmK/RteMxfVBoL9ZWDAyESi7039BNJf0G7jAPpa7kcebbxlLpYfpI1GcydJAY4Ez87TnUKsHjVN8Yv1CmHPbYea7aD1N1KSWH+08LPM+XIXN9ZdRhFyrtru8VRuUATq9FgBdWW/FwD90g3bofrwlV7fGmZEvSB3D0erwpCKYC4l361wrzyyEUTDbfaxjqDRvgap2FvKUCzNTtD3CRRpTO9VJMCHMRafog/E3WP/C/YEkEQkP2GCrrn0g==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DBAPR04MB7256.eurprd04.prod.outlook.com (2603:10a6:10:1a3::13) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by BN7PPF2E18BD747.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6ca) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.24; Mon, 7 Jul
- 2025 03:32:13 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%7]) with mapi id 15.20.8901.021; Mon, 7 Jul 2025
- 03:32:12 +0000
-Date: Mon, 7 Jul 2025 12:42:19 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, peter.griffin@linaro.org,
-	andre.draszik@linaro.org, willmcvicker@google.com,
-	cristian.marussi@arm.com, sudeep.holla@arm.com,
-	kernel-team@android.com, arm-scmi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mailbox: stop the release and reacquire of the chan lock
-Message-ID: <20250707044219.GA11488@nxa18884-linux>
-References: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
- <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
- <fac9a5fb-7a39-4c12-9dca-d2338b6dad8c@linaro.org>
- <CABb+yY1pn3+dFd=e80PaqEP2saF84f3buPt=ZYnTjDbSv3RN6g@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1pn3+dFd=e80PaqEP2saF84f3buPt=ZYnTjDbSv3RN6g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: MA0PR01CA0034.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:81::8) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Mon, 7 Jul
+ 2025 03:32:20 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%7]) with mapi id 15.20.8901.018; Mon, 7 Jul 2025
+ 03:32:20 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: rcu@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH] rcu: Document concurrent quiescent state reporting for offline CPUs
+Date: Sun,  6 Jul 2025 23:32:08 -0400
+Message-ID: <20250707033208.361677-1-joelagnelf@nvidia.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL6PEPF00013DFA.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1001:0:d) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DBAPR04MB7256:EE_
-X-MS-Office365-Filtering-Correlation-Id: 399bd110-8bea-4494-6267-08ddbd06dcaa
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|BN7PPF2E18BD747:EE_
+X-MS-Office365-Filtering-Correlation-Id: d506775c-fd12-4c68-2030-08ddbd06e155
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|1800799024|19092799006|376014|7416014|52116014|38350700014;
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?yGuBhp/kN5IA+wDk/ytaKVEDeSdZ6v87gSrJIcfz4BfKpl1b94ILvxYc/5/G?=
- =?us-ascii?Q?5QcFC6af+XvN+BCL0/uVW/XRpEXHR1G3PwTDEapafnrYsNPio4vpv5ichafA?=
- =?us-ascii?Q?nx464Bpxee1FrgHUTuqMWRbElkP8WAfJIxmXyLaj2Bh77HHp2oZvz57EDnhj?=
- =?us-ascii?Q?+hhIedSbv5j0iWyO2SOBGbwtlj7bnVz7aqNqr++BuDBb6PMrpjqtbOqobG8t?=
- =?us-ascii?Q?5ne1HyhC2j6w1c/yXjGMdZZ7JLr9IsZqjv+O8v/tYGtMyTTge6H2X9JjvXjD?=
- =?us-ascii?Q?zAgILOVwX+A6ITHD5sHDm2mS3CBMsHBmYyqoBYycvm/4faOYUJTdODjTcRx5?=
- =?us-ascii?Q?aBu3XH28OL/Fbz1coIUADZl5jCxZOJFi0K7kKxbIlyNYIQThY4/Q8cAN89Ch?=
- =?us-ascii?Q?PQmpMjv0bYT5lytP1zb4TGvbgKnkOIrFr+bR2SoV19ND+QjS89p9FziaUMd8?=
- =?us-ascii?Q?xjMiBzlYeoqjTNrEQGgegkYW6xlH0TiiP3tXO67xVYWsbiiJXIqe4BVLpjdM?=
- =?us-ascii?Q?RxFZMzfwPUJxWnWhsZ7tVd5VXtx/N1djsK6edHR4N4oeFIHQmpM+MiM7o8Ly?=
- =?us-ascii?Q?r2CdbAF/A+nmg4KJqnsUsxqsSRhUpjuIjJXh64iVY0x32Wv0+CGccD1Fp1Px?=
- =?us-ascii?Q?myuju7tC2AdE6MQe7ZgRokal3i972Rd9GS0fzaQnVqAVqpagb9MQOZsdvHa2?=
- =?us-ascii?Q?xmBYetlU1VSm7Ar7qOvCmBn0ifIbmLoks2bBnCM+kgerbFL/pqz75mngec4Z?=
- =?us-ascii?Q?7Ut6eppfLXUgBi0NQSc0mfZ1U0R7O3UArUxJUQmRaJ4ZJ1MUBkCe9m9OiCGG?=
- =?us-ascii?Q?ADIdcledBCrHYFN1hYyZO6lwmYS6CtpGxleOaCayjw9o1/VTEdbIG4BBVfCM?=
- =?us-ascii?Q?4hG7AzT2dHXmrMp5AKjPknYgIfrPZyKispBrtdmfSRsaAvsLE2hoINXQ6VKk?=
- =?us-ascii?Q?Jw/qN/m1dcbiU3oVgT5vEXKSM1N/S/oECFBNQFPUh8u1zEbpBqmc4yCuB90x?=
- =?us-ascii?Q?Z1B6u9wBhZkmbzEx6LMeNozUbRSPs0oyacBu6Uiuqrj0+4ejqXO2q42Xw3WG?=
- =?us-ascii?Q?wmIvlFAgLGuNcUbqRM9cciThILlafP5Im9aLa8XKbdF4fKFJFFv2opR+LYFS?=
- =?us-ascii?Q?CI2TbxuoxVcxqG5ECDw8Ie7WrQGPECbD4tWrsnFS5C3beqb6pKjh7Wqxfdb/?=
- =?us-ascii?Q?zxbU+ilqlbrTuV2pg6X7Y0fPS8QLEbMVB2qLgOyPj5W/znk24Ic6i+rbTsBa?=
- =?us-ascii?Q?vwuWue9XFLL6hKL+Wb047NcLvD+yru6ur6EuZVapcmQS90qYKVTneVFOM1oa?=
- =?us-ascii?Q?qu3TRasPjVssfYRpIyHZjbf8jEpxaLtTA3kPQcnLFgQniHLeGL116uCQ3IfW?=
- =?us-ascii?Q?D7PqDxtPmV66K1mzODsLGEYa+66nvNC2C2EwQa6WNxXu1IZFxcL7xK0/+SrA?=
- =?us-ascii?Q?DrMtY2R8UL6TSISMjqTd0YGpTUrHKhPytodCML9bz/7hs0v4nnpqkQ=3D=3D?=
+	=?us-ascii?Q?Txhay95Seqi/uD6kwzd6l4jxSDIie9NwCFX6cY2G4kZnjFA0ZMeaDbCIsIHh?=
+ =?us-ascii?Q?GRHWSApDn69EjJ46/txnauvx2bYwDX6jynD9mcT2JxoToraQ7y4KVSZKjNkg?=
+ =?us-ascii?Q?Z82M+5laG8zLJF544VkyWx4cU32b92jk9rKl11iCi5tT8uTFG022XNYIjdvd?=
+ =?us-ascii?Q?ubKX8vF+RFN4EvTMkMr7fxI0/6V8pUu/Xh8ThGVFKvOjmGE58MyrtorPTHil?=
+ =?us-ascii?Q?XvLHiN5xSFiIVkfDpHfBPS+8N1vgXZm8uhDvLCnYMbQH/88GHYmpIIQU1CkI?=
+ =?us-ascii?Q?Cf+ebruFp3jB1dlG7STPXuAYUPD7wvEuTi9IzQRJw9igJSORMBYJu9XoGOlh?=
+ =?us-ascii?Q?zC3+85FFdOZ52I+ZELf03p75vUyGdqqtoKtCGSWS7OKbZmyH4q2RO28cicO1?=
+ =?us-ascii?Q?LSiJNJrZu89lZLvpX6V9+a9IcKg68WfQm8aUeAz1Y97dwumGNi4Pd2Nk8LIl?=
+ =?us-ascii?Q?9ezgleZJUvXGrJfXzIFg15EcAw6RAhcFA1yPwOElAMQN6kutTHRc0GymE94s?=
+ =?us-ascii?Q?ZJCPSGzS7p7cTO/K1CEluYQz0XbqZyCofPFsudKIcBV4kHrnApB7db4PW555?=
+ =?us-ascii?Q?azzTJsJGa0a+uShHTEUDFahpEYNblQJQ1oEBDc9WVmm1xHQBWZGCrK/20yGf?=
+ =?us-ascii?Q?hFsq/Z937I6Me4PmalzTXB9rf4bch2oRTBzOHe0w8mkYEj9z7fjOFC+qdID/?=
+ =?us-ascii?Q?2H0Mzl7mr2n1DnflbrC96C+/XaecHz5SpLWKp3eW8xnboAs+ULSJ8AUXN2lZ?=
+ =?us-ascii?Q?2Ky8j3FTmMkOjOew18t7CptCd0zzcQEDtZTT8DRZYLK6b41sYgVMi0nvmGK2?=
+ =?us-ascii?Q?vOdJ2x5Xj3uuka4MHsRjwly/w08q8gi7gWQtU5hl/eYWwhfXF/9Tj607Qeyn?=
+ =?us-ascii?Q?3mhs/wMLKVFboZHzfOvrl2AhmXCVrnbfBtqPQSpQddzAnZg9X80jtgK0paoX?=
+ =?us-ascii?Q?mXelrcBqTNmKBjFRLW0bAJ+E36BgmMuXdQau30AVVXF7p133HXuNy+RX4kjb?=
+ =?us-ascii?Q?3tifridhmJkrSHysLWottTikpr4j5g6U/Q9QPefgmgAAddb/Web2eaLVrJ6+?=
+ =?us-ascii?Q?JAi19i7X5SkImJ6sP14UijFVJj00eBloR71q/yLBqOrPtqbv2LKuKY21a5hd?=
+ =?us-ascii?Q?toV+IDfmwVTzzk7YqjkrRmODrAjVvebRFVqls/3Gl+o9agN+D2CoHmZ8/0Pz?=
+ =?us-ascii?Q?K6uwrF7sF2/4Gj4u66PSdXaJotkMDMN8W2HEmWhal1Z0CPpC1GPNmykC5sWl?=
+ =?us-ascii?Q?fpfi4UnC4hBQtHxyI4Ys+nVXEhpVGWi1IiuCq0TonpUt9kXWu5/Dce7hq30N?=
+ =?us-ascii?Q?xnOadiusF9Sc5hkGJ01P+GR/QmV9cyprNQw0rzsUlQKibna9lWtTlljyAYVR?=
+ =?us-ascii?Q?lD7XZIQoDATU/gDEzLy2aYskRa0hHA8zrOoAR52lKAGiak+VerfHKSzL66pF?=
+ =?us-ascii?Q?tDH1cvMEJvccqmmz20X6D5J5w1GvBmw44wl7AjmHvAZU+w4rbBNHLQ=3D=3D?=
 X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(19092799006)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?BF3Mw4s5rJHKS9cbcZ4Anl7AVwz4vT1o8zgLG7KH872QUcCJK6JL4KruccPZ?=
- =?us-ascii?Q?jnnz+34jsI+WsUn/3oZ2IcI5XDOfytJbqcMzaz4GI7rAI3LZvyORCth15nK+?=
- =?us-ascii?Q?QRXNv7x3v9CM1z61LyK7+AjoDgfZQgYoCz1Xvgh2qM4RoGbxEMLDw2BGQDH6?=
- =?us-ascii?Q?3lG/5R1qHu3L+qIu2zGOb4WxoydKQbc84vYSRYJyK3ljMJelQ6uvOB0Uryu1?=
- =?us-ascii?Q?N4j0/77e2Vlg19atFS31IqtqAT5zwtSaEN6FsVJpRfB43zxk/WSJu0NtMhJP?=
- =?us-ascii?Q?LWlCOgUKPVxXLEzTlnnmLrnQq3kavS8HlHoLrQiauuqI+uKauVP/DAS8jq8a?=
- =?us-ascii?Q?LP5rLyct+xoMQptXz/hV00OwI+GQsRQHy+FEXLSgR8lYNVSu5zXzQ/VrZEJ/?=
- =?us-ascii?Q?FgwwS9/XBZ0+mZgdkrO+HWfZ5wgcQvXOXkP/jVNGavEYHnpm30ju/tMSV+OO?=
- =?us-ascii?Q?NnDf6pDrvqWzgxsi3S9jqybjDBXIDP37iwjSkABIDtI0RNzMiGlH9iRxPJZ0?=
- =?us-ascii?Q?pe4neAFZt3Ele0Y52iAe0eTH+S+glr8Ht+heUFcN18IGHScavG86Uk1rq/mF?=
- =?us-ascii?Q?YPLvSY633oMpdXM3Li2efWJi6YQ5ez8JQs8+TkJZ/OD6Yk/2JDr7gj9h782W?=
- =?us-ascii?Q?hz4eno0PQNPhI7dJOOIho+y4vx7TGklHjLKSnh767QHDEww5B2RCMzUVjsB5?=
- =?us-ascii?Q?xrtNM5cL7piK9g2pVqycdrOasLBgUt/ITkOj32BdLGs+GyHY4ayHNxwDNQ+t?=
- =?us-ascii?Q?CBLUoLPyyc6VcG0HBb+4e/FkNU5p7nKU2kd8sGUIBFOsxK3JSL3nkvTDH65w?=
- =?us-ascii?Q?fFgJJXbXtQh3xlqtn8r0Gcran+9D6hSUTmfpFsibvWkGR8O1dZGvnpljg3+A?=
- =?us-ascii?Q?baEgwwdrXcgn4fVa3Uw++tsUBD8KmJ+lKYWLda6CPc+hnn3r0+W7mcCGjN3R?=
- =?us-ascii?Q?98p8sjNp2n220P3wajZZNBUiEYMlygAyvHJg92xPlW2hdDbotwXNLTpkxm9E?=
- =?us-ascii?Q?Sbh+QRnt8VWzIbtPSGNo04BmHB91fwrpzWBTT8ch5kOzQbDuieNqlh4WIN2y?=
- =?us-ascii?Q?hlvdHx7Vki7LYoojWsWdvdWoV/utwpLxBDpvosOH5Lvl+OnCvi7jsSy6YPsm?=
- =?us-ascii?Q?MlSnnksRJX7pGiqM4PhgcbXltlhkxnj69XOysrFU9F3VEpcFxpp59/Hnk8Uv?=
- =?us-ascii?Q?oMzqwm6nmG5I/RFa5pEyRPX6E3CDLFrBn+tN/Y438aRakSZG3Drs+ok0eEix?=
- =?us-ascii?Q?6JVtAbOYFLKyAFr2SNWXDwFWcA8YPSb4nvYen+2pXDEHRLBRMR89ahNcK+rA?=
- =?us-ascii?Q?cZyJj91CuCRIpUqFSHnLSar5ocSra1TexYQLyNhKWS0/WKGVFUt7UEOT7O/4?=
- =?us-ascii?Q?FPDJjo3OsRXoysGr2EyFe4vgui7Gs8kZ73eBMBUx9GAt6oiEk+mCwE3C+3o6?=
- =?us-ascii?Q?GWVKE2lX8w25fMAsHj9Qm6j8/a6Yv8BbkH9CxhMmTkg6YRvRvJ9kMA3uVc19?=
- =?us-ascii?Q?unITE4p2Zr+rXNIgqtaH7vzVQfhGVQ3+YYK8uVbS8JlBZhnCahMsRlQ9s1z/?=
- =?us-ascii?Q?qnIha0sqP/OQXffFfdFAI3e6rSOdYM46yaXbGvhz?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 399bd110-8bea-4494-6267-08ddbd06dcaa
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+	=?us-ascii?Q?srB/8lqPLECCk+lGoWh533EvCAlzcbn5J5Ttce6Ded4E4irZ6R10EoKylg3k?=
+ =?us-ascii?Q?jwxRKANDtsfDS3f0rrdO0GoG6i2QDn2XA5246P+vn/bFWFy1IaPWnnyGGEM2?=
+ =?us-ascii?Q?/XNl5I6O9Yp4iZC6jR8pbDh6Z//a1Nh+7OJuNn12SZWcS85qQ2IIX5VdMGaK?=
+ =?us-ascii?Q?+XsyqRXHh1RrrwAJft9G4Qd5LV37/CPEZEU1ueK3RU7VfsXonKIabc2jIuVA?=
+ =?us-ascii?Q?Ul4yhXnA1cqt/BYIFsvcAzSUy1Xq3VIhsysaqd1Dd9yeEMx6FqE3cLbCc2BJ?=
+ =?us-ascii?Q?Dei5XG7LxT9dj6DGCuSG8Nnu98b9aJJMpPXtcppwtexKr9fY2ElFepBI+IZU?=
+ =?us-ascii?Q?O2wEFftiX5vKS44Ft6RpIr2cnO8VhjN+/GMkTHVM22V1SrhbIzS8qoRxbrqO?=
+ =?us-ascii?Q?MDORHvOPEVnTV0oKLgFCnG8Mq7YlgljBQs5RWR+dkxzO8lw02h78NXH3pZX5?=
+ =?us-ascii?Q?SXOVRs0n3aCqKNCz8g3+v40dqChxpE0cWVn9GtQW5Sdre/JQk1SpxfOZ2vz6?=
+ =?us-ascii?Q?TMrbrL5qhi32AbRRq9gFsuQXplcBAYAW/tJZIfRhPAGEY0Gqhkzytnk8V9GI?=
+ =?us-ascii?Q?wfgtSMCScAC6nV6cRSFgcIH4Iy0CdUTSoHzM6JYfiRSRcj6yA5hOaPn8hOfs?=
+ =?us-ascii?Q?Z3ERuVJLlyjkBDuLwnk429yKJEgCsrxO09nj1HCbZS5NjRd2GW1k4mpsfv2o?=
+ =?us-ascii?Q?9jVEJYe4NExFm0MgXrU2SA8Co974vwOrkEcXXPXCVZiDFNKWH3sCx3rEb2AW?=
+ =?us-ascii?Q?n2yNp/YrkjImMJoi4PN57oLM3FJeE4CD8JzILH7Nm3xiunp1hI/GRjkwTcWr?=
+ =?us-ascii?Q?uPPVfWn5aYh5iH1rhPcMI0YLwM2Jra8ghB9Nk6Z8Hzfpr7nzn/kHzllXGyJu?=
+ =?us-ascii?Q?diX73M4QrHGPQVtKC8FzdPuamIOP7a/8riIWqKSpI70IVrca4wfYsjrzG35j?=
+ =?us-ascii?Q?XdjWUDavH6yuV2YWK23wRneNf5xaEkm2Vrp9+evXR5zNzTPAkjuK+lW1AUg+?=
+ =?us-ascii?Q?RLcE+TetXS/5C4yKlj3HyrL/m0EV114yBDuHPLCXS/sIm2BIk2xlQ8cJXK/7?=
+ =?us-ascii?Q?o9jW/QM5I5gyj+Goa0orvyHTgmPWCHb/1c1s3LfeGns7IYK1kEazwafOJJpU?=
+ =?us-ascii?Q?bEdfFTSnOwNzua5+VjBae6nx8r9bQUTa+hF8+1ffFLpTkoSIkFY59MNHJ0fR?=
+ =?us-ascii?Q?XPIRUMpBvxCMjzytA25PDNc4k4TAX2/5SZmtIXgXNkz+6PXqbs9rxdU7wRYy?=
+ =?us-ascii?Q?VQrYUjr/38qxc/WUHOQCjF9JEDD9fm9XkgHbml7imcYYjYeDqSjoblFSlXQG?=
+ =?us-ascii?Q?b9WegJwY4DX+HGTIn4KaMvUBRQmQwlOlsg7A4+8+dIe1OTlSfyQHQUfsddFd?=
+ =?us-ascii?Q?lKOjvepto8bEQYgu/wp1a1hmw9+P+S858jJv9tigrawakhuEvkVlKpdY3DlK?=
+ =?us-ascii?Q?GQtKsU4U1swUiZRmR4/W4ykY9P0uZmLLOc5+pOPE/tcMes6QCCBg1QJIJ/h4?=
+ =?us-ascii?Q?UH3RkyCzLuETszlFsdir79kM2oCn4IWWZ0XLT+aHSMLF3Y/LCjaOcfxjUz1w?=
+ =?us-ascii?Q?YsQt2G2WFdTFlpax1yeRomKaMoGdDkiJ4N92G2Xc?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d506775c-fd12-4c68-2030-08ddbd06e155
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 03:32:12.8670
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 03:32:20.5619
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W6iZwR8acO/NpQGnAum3/JQ0x+O+Znkzx30AmBF02e61AHf+CTHEP3TlUlJCTGmFtxNKyX3TDZlz8pPm9atFPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7256
+X-MS-Exchange-CrossTenant-UserPrincipalName: gRv0r/lShsDu6z+w9OGKWYYt3lXb09u9OTP8o8HC0FK5t8Vx12yuzSMDwPLXJMclc8+Jc7wxCJVN1WWoPGdSxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF2E18BD747
 
-Hi Jassi, Tudor
-On Sat, Jul 05, 2025 at 09:19:08PM -0500, Jassi Brar wrote:
->On Fri, Jul 4, 2025 at 7:30???AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->>
->> Hi, Jassi,
->>
->> Sorry for the delay, I was out for a while.
->>
->> On 6/23/25 12:41 AM, Jassi Brar wrote:
->> > On Fri, Jun 6, 2025 at 8:41???AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->> >>
->> >> There are two cases where the chan lock is released and reacquired
->> >> were it shouldn't really be:
->> >>
->> >> 1/ released at the end of add_to_rbuf() and reacquired at the beginning
->> >> of msg_submit(). After the lock is released at the end of add_to_rbuf(),
->> >> if the mailbox core is under heavy load, the mailbox software queue may
->> >> fill up without any of the threads getting the chance to drain the
->> >> software queue.
->> >>         T#0 acquires chan lock, fills rbuf, releases the lock, then
->> >>         T#1 acquires chan lock, fills rbuf, releases the lock, then
->> >>         ...
->> >>         T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
->> >> We shall drain the software queue as fast as we can, while still holding
->> >> the channel lock.
->> >>
->> > I don't see any issue to fix to begin with.
->> > T#0 does drain the queue by moving on to submit the message after
->> > adding it to the rbuf.
->>
->> The problem is that the code releases the chan->lock after adding the
->> message to rbuf and then reacquires it on submit. A thread can be
->> preempted after add_to_rbuf(), without getting the chance to get to
->> msg_submit().
->>
->> Let's assume that
->> T#0 adds to rbuf and gets preempted by T#1
->> T#1 adds to rbuf and gets preempted by T#2
->> ...
->> T#n-1 adds to rbuf and gets preempted by T#n
->>
->> We fill the mailbox software queue without any thread getting to
->> msg_submit().
+The synchronization of CPU offlining with GP initialization is confusing
+to put it mildly (rightfully so as the issue it deals with is complex).
+Recent discussions brought up a question -- what prevents the
+rcu_implicit_dyntick_qs() from warning about QS reports for offline
+CPUs (missing QS reports for offline CPUs causing indefinite hangs).
 
-I try to understand this case. Is this patch from code inspection or
-the issue could be reproduced on real platform?
+QS reporting for now-offline CPUs should only happen from:
+- gp_init()
+- rcutree_cpu_report_dead()
 
-If the client continuously issues 'mbox_send_message',
-there might be possibility that 'msg_submit' does not have chance to get
-get chan lock.
+Add some documentation on this and refer to it from comments in the code
+explaining how QS reporting is not missed when these functions are
+concurrently running.
 
->>
->I get that but I still don't see a problem.
->When the queue gets filled the next submission will be rejected and
->have to wait until the mailbox gets some work done. Which is the
->expected behaviour. And will be the same even if we don't release the
->lock between add_to_rbug and and msg_submit and there are enough
->mbox_send_message calls coming in faster than the transmission bus.
+I referred heavily to this post [1] about the need for the ofl_lock.
+[1] https://lore.kernel.org/all/20180924164443.GF4222@linux.ibm.com/
 
-Not sure I get it clear, do you mean this?
-When the mailbox queue is full, any new message submission will be rejected.
-The sender must wait until space becomes available as messages are processed.
+[ Applied paulmck feedback on moving documentation to Requirements.rst ]
 
-This is the expected behavior and ensures proper flow control. Even if we
-avoid releasing the lock between add_to_rbuf() and msg_submit(), the outcome
-remains the same: if mbox_send_message() calls arrive faster than the bus can
-transmit, the queue will eventually fill up and block further submissions.
+Link: https://lore.kernel.org/all/01b4d228-9416-43f8-a62e-124b92e8741a@paulmck-laptop/
+Co-developed-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+---
+ .../RCU/Design/Requirements/Requirements.rst  | 87 +++++++++++++++++++
+ kernel/rcu/tree.c                             | 19 +++-
+ 2 files changed, 105 insertions(+), 1 deletion(-)
 
-Thanks,
-Peng
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
+index 771a1ce4c84d..841326d9358d 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.rst
++++ b/Documentation/RCU/Design/Requirements/Requirements.rst
+@@ -2011,6 +2011,93 @@ after the CPU hotplug scanning.
+ By incrementing gp_seq first, CPU1's RCU read-side critical section
+ is guaranteed to not be missed by CPU2.
+ 
++**Concurrent Quiescent State Reporting for Offline CPUs**
++
++RCU must ensure that CPUs going offline report quiescent states to avoid
++blocking grace periods. This requires careful synchronization to handle
++race conditions
++
++**Race condition causing Offline CPU to hang GP**
++
++A race between CPU offlining and new GP initialization (gp_init) may occur
++because `rcu_report_qs_rnp()` in `rcutree_report_cpu_dead()` must temporarily
++release the `rcu_node` lock to wake the RCU grace-period kthread:
++
++.. code-block:: none
++
++   CPU1 (going offline)                 CPU0 (GP kthread)
++   --------------------                 -----------------
++   rcutree_report_cpu_dead()
++     rcu_report_qs_rnp()
++       // Must release rnp->lock to wake GP kthread
++       raw_spin_unlock_irqrestore_rcu_node()
++                                        // Wakes up and starts new GP
++                                        rcu_gp_init()
++                                          // First loop:
++                                          copies qsmaskinitnext->qsmaskinit
++                                          // CPU1 still in qsmaskinitnext!
++                                          
++                                          // Second loop:
++                                          rnp->qsmask = rnp->qsmaskinit
++                                          mask = rnp->qsmask & ~rnp->qsmaskinitnext
++                                          // mask is 0! CPU1 still in both masks
++       // Reacquire lock (but too late)
++     rnp->qsmaskinitnext &= ~mask       // Finally clears bit
++
++Without `ofl_lock`, the new grace period includes the offline CPU and waits
++forever for its quiescent state causing a GP hang.
++
++**A solution with ofl_lock**
++
++The `ofl_lock` (offline lock) prevents `rcu_gp_init()` from running during
++the vulnerable window when `rcu_report_qs_rnp()` has released `rnp->lock`:
++
++.. code-block:: none
++
++   CPU0 (rcu_gp_init)                   CPU1 (rcutree_report_cpu_dead)
++   ------------------                   ------------------------------
++   rcu_for_each_leaf_node(rnp) {
++       arch_spin_lock(&ofl_lock) -----> arch_spin_lock(&ofl_lock) [BLOCKED]
++       
++       // Safe: CPU1 can't interfere
++       rnp->qsmaskinit = rnp->qsmaskinitnext
++       
++       arch_spin_unlock(&ofl_lock) ---> // Now CPU1 can proceed
++   }                                    // But snapshot already taken
++
++**Another race causing GP hangs in rcu_gpu_init(): Reporting QS for Now-offline CPUs**
++
++After the first loop takes an atomic snapshot of online CPUs, as shown above,
++the second loop in `rcu_gp_init()` detects CPUs that went offline between
++releasing `ofl_lock` and acquiring the per-node `rnp->lock`. This detection is
++crucial because:
++
++1. The CPU might have gone offline after the snapshot but before the second loop
++2. The offline CPU cannot report its own QS if it's already dead
++3. Without this detection, the grace period would wait forever for CPUs that
++   are now offline.
++
++The second loop performs this detection safely:
++
++.. code-block:: none
++
++   rcu_for_each_node_breadth_first(rnp) {
++       raw_spin_lock_irqsave_rcu_node(rnp, flags);
++       rnp->qsmask = rnp->qsmaskinit;  // Apply the snapshot
++       
++       // Detect CPUs offline after snapshot
++       mask = rnp->qsmask & ~rnp->qsmaskinitnext;
++       
++       if (mask && rcu_is_leaf_node(rnp))
++           rcu_report_qs_rnp(mask, ...)  // Report QS for offline CPUs
++   }
++
++This approach ensures atomicity: quiescent state reporting for offline CPUs
++happens either in `rcu_gp_init()` (second loop) or in `rcutree_report_cpu_dead()`,
++never both and never neither. The `rnp->lock` held throughout the sequence
++prevents races - `rcutree_report_cpu_dead()` also acquires this lock when
++clearing `qsmaskinitnext`, ensuring mutual exclusion.
++
+ Scheduler and RCU
+ ~~~~~~~~~~~~~~~~~
+ 
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index c31b85e62310..f669f9b45e80 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1883,6 +1883,10 @@ static noinline_for_stack bool rcu_gp_init(void)
+ 	/* Exclude CPU hotplug operations. */
+ 	rcu_for_each_leaf_node(rnp) {
+ 		local_irq_disable();
++		/*
++		 * Serialize with CPU offline. See Requirements.rst > Hotplug CPU >
++		 * Concurrent Quiescent State Reporting for Offline CPUs.
++		 */
+ 		arch_spin_lock(&rcu_state.ofl_lock);
+ 		raw_spin_lock_rcu_node(rnp);
+ 		if (rnp->qsmaskinit == rnp->qsmaskinitnext &&
+@@ -1957,7 +1961,12 @@ static noinline_for_stack bool rcu_gp_init(void)
+ 		trace_rcu_grace_period_init(rcu_state.name, rnp->gp_seq,
+ 					    rnp->level, rnp->grplo,
+ 					    rnp->grphi, rnp->qsmask);
+-		/* Quiescent states for tasks on any now-offline CPUs. */
++		/*
++		 * Quiescent states for tasks on any now-offline CPUs. Since we
++		 * released the ofl and rnp lock before this loop, CPUs might
++		 * have gone offline and we have to report QS on their behalf.
++		 * See Requirements.rst > Hotplug CPU > Concurrent QS Reporting.
++		 */
+ 		mask = rnp->qsmask & ~rnp->qsmaskinitnext;
+ 		rnp->rcu_gp_init_mask = mask;
+ 		if ((mask || rnp->wait_blkd_tasks) && rcu_is_leaf_node(rnp))
+@@ -4388,6 +4397,13 @@ void rcutree_report_cpu_dead(void)
+ 
+ 	/* Remove outgoing CPU from mask in the leaf rcu_node structure. */
+ 	mask = rdp->grpmask;
++
++	/*
++	 * Hold the ofl_lock and rnp lock to avoid races between CPU going
++	 * offline and doing a QS report (as below), versus rcu_gp_init().
++	 * See Requirements.rst > Hotplug CPU > Concurrent QS Reporting section
++	 * for more details.
++	 */
+ 	arch_spin_lock(&rcu_state.ofl_lock);
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags); /* Enforce GP memory-order guarantee. */
+ 	rdp->rcu_ofl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+@@ -4398,6 +4414,7 @@ void rcutree_report_cpu_dead(void)
+ 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	}
++	/* Clear from ->qsmaskinitnext to mark offline. */
+ 	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext & ~mask);
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	arch_spin_unlock(&rcu_state.ofl_lock);
+-- 
+2.43.0
 
->Thanks.
->
