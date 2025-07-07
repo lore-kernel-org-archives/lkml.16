@@ -1,285 +1,145 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E14800;
-	Mon,  7 Jul 2025 08:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC35800;
+	Mon,  7 Jul 2025 08:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875294; cv=none; b=cIZ75KFapyNEvr24/XnIC614V0CHRHQoEez/lBfBbilemag3pfwFAjdc1gVbTxTbSnev43AGfyFQP9qI7SYBX2WrFKVD5aB7SEXORRSB0XYSw6htEiPtqbGyGRD31/TvWA0CMVoXtjfb9qjW/Mo7eY3Id/9VxmDpVHZ1jLk/B7s=
+	t=1751875343; cv=none; b=i0wQH9UPaZm5R/v9SHkqfcrQ9sfg7knojD8aejwm9qaTf3pQ5RmhwM7OYxlUiN0gcsdd/+mhC2XtrCamg07SfS2UvTWL6eJ08xcI5patqUUfGTKrtcqRkZuxzSAZGXd2agLi1R/IWye5N92WS2WpCN5jD8tbMYUy4R1RgtYmUi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875294; c=relaxed/simple;
-	bh=RpImpVG9EIF2g3n4yXnQRz3qgswHwTKFgQQuR9EpX6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tw8+Z1SGUjh5NIHmTOYdHx8r5Hdjt8c/3whUYSWqXK3dUTGy/MdaSbbmQ81pozJ/ETDZrIDnJKIeS1io10FEAn34rR0Py2cAqFSCF7cLKvhN5NmWmk80iZsJQA75k8I19PJ6a5Gn/dTys6mt1EaJ+1pBhvN5eSkyFCqZuIHRbdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cuz3otFy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751875343; c=relaxed/simple;
+	bh=N7TeHc8uA+dRWRGg8sis7a69LSQxgrglsAuwm+wt4Co=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mXsNl2PuIEtl0yywpBQ9uKrqcbT7xo6B5zCd0z3XXDvtCvFbLkNQTFE6jhPRvARuFVap9lAPGBOvNFRgzPyobLbgmuKhAPp4oWXVMU1e41F8UpevN/QPbVh5BUiTD3YTn943tYbTvNBYDrqTy7N+OmSnLnmF3QLsXqw4QTVX8bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2dBAFzd; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cuz3otFy"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566HlJVH012718;
-	Mon, 7 Jul 2025 08:01:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=EzRUp7
-	3z34SHGEivuSu2RUhOIhbeJLqoOp+hOwWfx6w=; b=cuz3otFyYXKh/nJgcaxlEJ
-	Bh53Y3HHJrIjVyDStRb70r1ARVriATavMBbRVwIAVJe1VkjYcJCh6Fb6rvtay1AN
-	Vi/Fk/ubc6g7FMb/LItb5N/qq6ZDBLJpNWOqARmQlQDrgPQXPdLDW2IJX3la6u72
-	OeuMc5wa7RNj4u2U9gMBsuTV67Gtdl3yTz4TJXUvP7evXm1k0Y9PWmOpliXx2vy4
-	lBHKbNB2yhU3qX3uhPUdnTaiHU9GkLoE8LmjF8AIC2jmgajpVLOIYjIn6FccK4JM
-	hXMnwbXXHyJ96+THOz2sQFQ7uCicfUmtnf+wXp9BsOonTGhf8IGkr/XdiPOUAT7g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur6r7xd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 08:01:08 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5677wdD6029682;
-	Mon, 7 Jul 2025 08:01:07 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur6r7x9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 08:01:07 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5673raGg010841;
-	Mon, 7 Jul 2025 08:01:06 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qeryw7yd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 08:01:06 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 567814KE14418336
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Jul 2025 08:01:04 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 389EA2004D;
-	Mon,  7 Jul 2025 08:01:04 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 83BA420040;
-	Mon,  7 Jul 2025 08:01:01 +0000 (GMT)
-Received: from [9.39.28.208] (unknown [9.39.28.208])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Jul 2025 08:01:01 +0000 (GMT)
-Message-ID: <3ebe82c1-d9ae-419e-9e49-61fcb71abe34@linux.ibm.com>
-Date: Mon, 7 Jul 2025 13:31:00 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2dBAFzd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751875342; x=1783411342;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N7TeHc8uA+dRWRGg8sis7a69LSQxgrglsAuwm+wt4Co=;
+  b=h2dBAFzdP+kHxLVQp+unNgq7+D3QAN2iM9LHf4IuSV9qNAwotP3ngKfN
+   dnVBw+OO4LYD1KmREHARwnV9w1MozMXeOuxARev/OfUS6zKc5CF7wUMvP
+   QNdN6Nw4yfSO+/t/7Ol3jl/MP6vh6LjG/uAErdIpMfx4ytyFXvc5tDZxN
+   6Dnh+2V6h9qLXM8bhTi7v98XdBysIaX+gfNV5/+i+IVt1HQZJrHOnba9I
+   +6e1HURkeT5IqiFVrobqq1XvAvJJiN/okFhvt6YpQZn8ucfgJOH1F/PlI
+   N+mFc6DqvWticLjhkds+9tJ6LxXWxtJvZoAX0SXwVlJYRsg9FeYakTYFJ
+   w==;
+X-CSE-ConnectionGUID: K0UdxFVbQhmxICk1YI54yQ==
+X-CSE-MsgGUID: zcbVEhLyScmp8ulTSWSS4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65541986"
+X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
+   d="scan'208";a="65541986"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 01:02:20 -0700
+X-CSE-ConnectionGUID: VSf3HB/2Qi+d4IAoxJBfJg==
+X-CSE-MsgGUID: rAXXNYSFSwmLSxUNL/u5dQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
+   d="scan'208";a="154565268"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 07 Jul 2025 01:02:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 5DB11182; Mon, 07 Jul 2025 11:02:06 +0300 (EEST)
+Date: Mon, 7 Jul 2025 11:02:06 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
+Message-ID: <eq5h4a5dvlkncthg3lic3go22op2docbhdaolpfwrq2ieai3qo@j3b26mmhf52q>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
+ <49f7c370-1e28-494b-96a9-f45e06ed4631@intel.com>
+ <20250706101342.069b5068@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
-To: Bjorn Helgaas <helgaas@kernel.org>,
-        Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Anastasio <sanastasio@raptorengineering.com>,
-        Lukas Wunner <lukas@wunner.de>
-References: <20250624223413.GA1550003@bhelgaas>
-Content-Language: en-US
-From: Krishna Kumar <krishnak@linux.ibm.com>
-In-Reply-To: <20250624223413.GA1550003@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA0NCBTYWx0ZWRfX0W8hzeI9bZbu cxoWJIicovCuuPNDDNI+BRVmo5XKqPeu4leTUAv3AjdTGlTwxo3p4fSm+6lxImbfDMOpo1ZQS8m FJzJfzcETxUvim1ToyrVTcdbQW88RENvAVcBjUJ3Poox/dTJyiW9xmP65PsPEKsUrLo9Idhm8tr
- b8Gl/7tezemDQpXXFYZgmf3HK1RdLPi0O/2JvwMr/bMHxwPm0qh6Oev1XTeKJS0m6FyMqmwpHRv pqBuv0I9A5u8SkvTpMIQOay2C6B+ox4S7Sv3hSz8qcOymzxBwKlmNBEYoj4foWPUXddUD2WgBBl GhSNWn4wBtrNYUrXLGNT4fJVp5aFYoY5N5zK7OIaz5L2gCjVfKVQT3uw6H3Zr6eji/bf0Eij2K+
- 3S3kzfahcR0tdFaMpoI/gaV6pammmMBbJtoswNrYrLe/ahxkJ16cfuaLPG55aWQCkGh9W9R2
-X-Proofpoint-GUID: Ecs3JysoJt8mU_lQtglqJi1hLvMtE8Eu
-X-Proofpoint-ORIG-GUID: _wfs4VuPJ9FbReg9dPwfaWA4mI87GAsQ
-X-Authority-Analysis: v=2.4 cv=W/M4VQWk c=1 sm=1 tr=0 ts=686b7ec4 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=_AprYWD3AAAA:8 a=voM4FWlXAAAA:8 a=VnNF1IyMAAAA:8 a=1UX6Do5GAAAA:8
- a=1XWaLZrsAAAA:8 a=hNuwOlM9Oy3Jar5w7j4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fKH2wJO7VO9AkD4yHysb:22 a=IC2XNlieTeVoXbcui8wp:22 a=Et2XPkok5AAZYJIKzHr1:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_01,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1011 suspectscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070044
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250706101342.069b5068@pumpkin>
 
-Thanks all for the review and Thanks a bunch to Timothy for fixing the PE Freeze issue. The hotplug issues are like you fix N issue and N+1 th issue will come with new HW.
+On Sun, Jul 06, 2025 at 10:13:42AM +0100, David Laight wrote:
+> On Thu, 3 Jul 2025 10:13:44 -0700
+> Dave Hansen <dave.hansen@intel.com> wrote:
+> 
+> > On 7/1/25 02:58, Kirill A. Shutemov wrote:
+> > > Extract memcpy and memset functions from copy_user_generic() and
+> > > __clear_user().
+> > > 
+> > > They can be used as inline memcpy and memset instead of the GCC builtins
+> > > whenever necessary. LASS requires them to handle text_poke.  
+> > 
+> > Why are we messing with the normal user copy functions? Code reuse is
+> > great, but as you're discovering, the user copy code is highly
+> > specialized and not that easy to reuse for other things.
+> > 
+> > Don't we just need a dirt simple chunk of code that does (logically):
+> > 
+> > 	stac();
+> > 	asm("rep stosq...");
+> > 	clac();
+> > 
+> > Performance doesn't matter for text poking, right? It could be stosq or
+> > anything else that you can inline. It could be a for() loop for all I
+> > care as long as the compiler doesn't transform it into some out-of-line
+> > memset. Right?
+> > 
+> 
+> It doesn't even really matter if there is an out-of-line memset.
+> All you need to do is 'teach' objtool it isn't a problem.
 
-We had a meeting of around 1.5 -2.0 hr with demo, code review and log review and we decided to let these fixes go ahead. I am consolidating what we discussed -
+PeterZ was not fan of the idead;
 
+https://lore.kernel.org/all/20241029113611.GS14555@noisy.programming.kicks-ass.net/
 
-1. Let these fixes go ahead as it solves wider and much needed customer issue and its urgently needed for time being. We have verified in live demo that nothing is broken from legacy flow and 
+> Is this for the boot-time asm-alternatives?
 
-PE/PHB freeze, race condition, hung, oops etc has been solved correctly. Basically it fixes below issues -
+Not only boot-time. static_branches are switchable at runtime.
 
-root-port(phb) -> switch(having4 port)--> 2 nvme devices
+> In that case I wonder why a 'low' address is being used?
+> With LASS enabled using a low address on a life kernel would make it
+> harder for another cpu to leverage the writable code page, but
+> that isn't a requirement of LASS.
 
-1st case - only removal of EP-nvme device (surprise hotplug disables msi at root port), soft removal may work
-2nd case  - If we remove switch itself (surprise hotplug disable msi at root port) .
+Because kernel side of address space is shared across all CPU and we don't
+want kernel code to be writable to all CPUs
 
+> If it is being used for later instruction patching you need the
+> very careful instruction sequences and cpu synchronisation.
+> In that case I suspect you need to add conditional stac/clac
+> to the existing patching code (and teach objtool it is all ok).
 
-Some explanation of problem -
+STAC/CLAC is conditional in text poke on LASS presence on the machine.
 
-PHB Freeze (Interrupt is not reaching there) - Fence - Need to reset ||
-EP device on removal generated msi - goes to cpu (via root port and then apic mmio region to cpu ),
-PHB/root port itself got freeze and cpu never get interrupt - No wq/event going to work - driver is noit working
-
-
-One area what I thought to fix it with OPAL call is below piece of code-
-
-ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
-+    if (ret) {
-+        SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible frozen PHB", ret);
-+        SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot activation\n");
-+        for (i = 0; i < 3; i++) {
-+            /* Slot activation failed, PHB may be fenced from a prior device failure
-+             * Use the OPAL fundamental reset call to both try a device reset and clear
-+             * any potentially active PHB fence / freeze
-+             */
-+            SLOT_WARN(php_slot, "Try %d...\n", i + 1);
-+            pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
-+            msleep(250);
-+            pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
-+
-+            ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
-+            if (!ret)
-+                break;
-+        }
-
-
-I would like to see this fix in skiboot, the opal call should reset it and it should work. Normally opal call is responsible for  link training and reset, so ideally it should  happens from there. As if now, Timothy has some explanation for it, so its fine for now. He can add his points for record.
-
-
-2. In future we have decided to work on items like - removal of Work-queue with threaded irq, addition of dpc support in this driver.
-
-3. We have also discussed if we want to move pciehpc.c driver in future, we have to keep below things in mind, Timothy can add some more points for record.
-
-Device Node (DTB) & its relationship with slot, Can we decouple it and will pciehpc.c going to work correctly for this ?
-Driver binding and unbinding based on hotplug event and its relationship with slot. Role of DTB in this. Our driver  also depends on OPAL call for link reset etc, can we decouple from it ? If we add some PPC specific code in pciehpc.c, how will it gets handled (by VFT/Function-Pointer or #ifdef or by seperate files ?)
-
-
-Lukas has some points for above and I am somewhat aligned with below points, but it needs to be tested to see conceptually it fixes above issues, I am consolidating his points and he can add more  if needed-
-
-Only the host bridge
-has to be enumerated in the devicetree or DSDT.
-
-pnv_php.c seems to search the devicetree for hotplug slots and
-instantiates them.
-
-We've traditionally dealt with such issues by inserting pcibios_*()
-hooks in generic code, with a __weak implementation (which is usually
-an empty stub) and a custom implementation in arch/powerpc/.
-
-The linker then chooses the custom implementation over the __weak one.
-
-You can find the existing hooks with:
-
-git grep "__weak .*pcibios" -- drivers/pci
-git grep pcibios -- arch/powerpc
-
-An alternative method is to add a callback to struct pci_host_bridge.
-
-pciehp is used on all kinds of arches, it's just an implementation of the PCIe Base Spec.
-
-
-
-Best Regards,
-
-Krishna
-
-
-
-
-On 6/25/25 4:04 AM, Bjorn Helgaas wrote:
-> On Wed, Jun 18, 2025 at 07:37:54PM -0500, Timothy Pearson wrote:
->> ----- Original Message -----
->>> From: "Bjorn Helgaas" <helgaas@kernel.org>
->>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->>> Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
->>> <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
->>> "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
->>> <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>
->>> Sent: Wednesday, June 18, 2025 2:01:46 PM
->>> Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention indicator
->>> On Wed, Jun 18, 2025 at 11:58:59AM -0500, Timothy Pearson wrote:
->>>>  state
->>> Weird wrapping of last word of subject to here.
->> I'll need to see what's up with my git format-patch setup. Apologies
->> for that across the multiple series.
-> No worries.  If you can figure out how to make your mailer use the
-> normal "On xxx, somebody wrote:" attribution instead of duplicating
-> all those headers, that would be far more useful :)
->
->>>> +static int pnv_php_get_raw_indicator_status(struct hotplug_slot *slot, u8
->>>> *state)
->>>> +{
->>>> +	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->>>> +	struct pci_dev *bridge = php_slot->pdev;
->>>> +	u16 status;
->>>> +
->>>> +	pcie_capability_read_word(bridge, PCI_EXP_SLTCTL, &status);
->>>> +	*state = (status & (PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC)) >> 6;
->>> Should be able to do this with FIELD_GET().
->> I used the same overall structure as the pciehp_hpc driver here.  Do
->> you want me to also fix up that driver with FIELD_GET()?
-> Nope, I think it's fine to keep this looking like pciehp for now.
-> If somebody wants to use FIELD_GET() in pciehp, I'd probably be OK
-> with that, but no need for you to open that can of worms.
->
->>> Is the PCI_EXP_SLTCTL_PIC part needed?  It wasn't there before, commit
->>> log doesn't mention it, and as far as I can tell, this would be the
->>> only driver to do that.  Most expose only the attention status (0=off,
->>> 1=on, 2=identify/blink).
->>>
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +
->>>>  static int pnv_php_get_attention_state(struct hotplug_slot *slot, u8 *state)
->>>>  {
->>>>  	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
->>>>  
->>>> +	pnv_php_get_raw_indicator_status(slot, &php_slot->attention_state);
->>> This is a change worth noting.  Previously we didn't read the AIC
->>> state from PCI_EXP_SLTCTL at all; we used php_slot->attention_state to
->>> keep track of whatever had been previously set via
->>> pnv_php_set_attention_state().
->>>
->>> Now we read the current state from PCI_EXP_SLTCTL.  It's not clear
->>> that php_slot->attention_state is still needed at all.
->> It probably isn't.  It's unclear why IBM took this path at all,
->> given pciehp's attention handlers predate pnv-php's by many years.
->>
->>> Previously, the user could write any value at all to the sysfs
->>> "attention" file and then read that same value back.  After this
->>> patch, the user can still write anything, but reads will only return
->>> values with PCI_EXP_SLTCTL_AIC and PCI_EXP_SLTCTL_PIC.
->>>
->>>>  	*state = php_slot->attention_state;
->>>>  	return 0;
->>>>  }
->>>> @@ -461,7 +474,7 @@ static int pnv_php_set_attention_state(struct hotplug_slot
->>>> *slot, u8 state)
->>>>  	mask = PCI_EXP_SLTCTL_AIC;
->>>>  
->>>>  	if (state)
->>>> -		new = PCI_EXP_SLTCTL_ATTN_IND_ON;
->>>> +		new = FIELD_PREP(PCI_EXP_SLTCTL_AIC, state);
->>> This changes the behavior in some cases:
->>>
->>>  write 0: previously turned indicator off, now writes reserved value
->>>  write 2: previously turned indicator on, now sets to blink
->>>  write 3: previously turned indicator on, now turns it off
->> If we're looking at normalizing with pciehp with an eye toward
->> eventually deprecating / removing pnv-php, I can't think of a better
->> time to change this behavior.  I suspect we're the only major user
->> of this code path at the moment, with most software expecting to see
->> pciehp-style handling.  Thoughts?
-> I'm OK with changing this, but I do think it would be worth calling
-> out the different behavior in the commit log.
->
-> Bjorn
->
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
