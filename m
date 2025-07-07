@@ -1,30 +1,33 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1749028A1CE;
-	Mon,  7 Jul 2025 10:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFC92877FA;
+	Mon,  7 Jul 2025 10:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882585; cv=none; b=rkYCIbCGSdvJfNGKWNmpjoH4D5qHr/xZd4Xo3P/bKtT9kCB5LS4vql/XkXywACQf8E2aNdasZtUHbDU701Ux5CNPhIwzwwDDC5Um4BCAA7i/vtYPX8MsmCR0MbcQ50rzkvRvwsVOb7FfZ5UCK7kG3nPk8skg26i34JLMF9ydyBM=
+	t=1751882686; cv=none; b=ejilbX9IEn+q13DJ3wB2Oi4jvRvo8J9d0QMKoP+WecU7emGLvi0NJllquwO2MAstgdD2AFcmwVG7l+n6FGm/UdnFoPDOYNW1r0OT+wSlGWLpgQN1qg/dafCEzRegPuR9/bUlnsyxSnDJlLGU9pCLSkt2Rc9p8ZZk8FHW14IsDSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882585; c=relaxed/simple;
-	bh=Fr153gJd+FEKlvqP+y6xczT1kZJgs0HMt4ilXQEXtDk=;
+	s=arc-20240116; t=1751882686; c=relaxed/simple;
+	bh=vp9ywsjl/JEMhIHCA38Yt/LN7Gjc9ppK3dA+sfupOwc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HItFs6m2Myfz9MagwPep4ajTPcXl3CWEUkYb/p25pBjMLSrdlza/QYYxCjFIoGepsVFYB3mrEobhE/MWhFaRD2Jiw7COXdHtZOCDPuoCTGfUy9NYm/QCkMEyaZBbRcfk3B8q+x6YTsXy/m6OndrMZwceWGG1rvElDYS7r5tcwxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=n8lMu26K; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=OkhA/UW24ImMqZrHizUs3YUK0mil9uef/waRkyi4CQGqqZbsZNKuHc00wSZg9JeDkgjRKJXJLUUi5NMZ3Z7rDuT/RzStIcS9+/hwDdstr9QLr7SgdWVQRv5qjjKX6aITAdxd8lZi24g5E2SfYIVYSwwLnpWuxh2aXf3attBIoCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sw7tljgQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="n8lMu26K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=JKlpTevxu85gp6f6igNYxYtQcdo+vMwHhI23b2Bpl/U=;
-	b=n8lMu26KcKMwR2qks3e+G25Tf7fLeySn28QSabCIcoGWDfYAqRFAT8oVYmEwiL
-	PcqxKaa/n0CmUkq9DQArZAhyApzTQvLMfj7ovRkehozIolYHm5+BiqPKRY/pfHLk
-	Z/T1x1pbbmeGQyyLx/Fc7UGzrNDGbagUEOwm++sZfsjTE=
-Received: from [10.42.20.80] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wAHHCs+m2toxqqODA--.34329S2;
-	Mon, 07 Jul 2025 18:02:39 +0800 (CST)
-Message-ID: <1567a84b-3f78-4f0a-9549-bfe9fd4aa96b@163.com>
-Date: Mon, 7 Jul 2025 18:02:38 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sw7tljgQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50CF4C4CEE3;
+	Mon,  7 Jul 2025 10:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751882685;
+	bh=vp9ywsjl/JEMhIHCA38Yt/LN7Gjc9ppK3dA+sfupOwc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Sw7tljgQc58h7W12oZUpa2NJlCaK0pqB/mcZn2e6jaCNWx9XRVmWr20jiY7wEA1Ej
+	 3C0z3kyjV2UwlKF3GH+B/MVAwPMkZ2Z1VQrCU6z/hvJYr0TPfiIHB2B7pTjnDDrF9t
+	 Ykrx4z8pnVs12iuUX1OZ0UZbbu8QytnOKiGZqD8tEVJWxvBZ4V5hohXPiFr1xwPyJV
+	 pNdUHyjfFFJdgkr53PdHixoasY1ggFmJR4qM2sJciMSiI7Sn6jmvVIsNchoHaPs4zQ
+	 ZEyj2VEBTdAcfSICtrYOhn5B7KJ9aOM/o/hMIypb5kpFmKr0bqzJjQViU6RB9W4VDt
+	 kbJsuVYUiuUtA==
+Message-ID: <e62e5fb9-17bb-4e1d-8c67-3eedcb895fbb@kernel.org>
+Date: Mon, 7 Jul 2025 12:04:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,216 +35,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
- but not fixuped
-To: Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>
-Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Shixiong Ou <oushixiong@kylinos.cn>
-References: <20250626094937.515552-1-oushixiong1025@163.com>
- <3b3feb03-c417-4569-b7b0-44565d7cce4f@suse.de>
- <a937f41f-2cee-459d-b94f-b7f979072f3e@163.com>
- <1687bb52-e724-46a8-af75-26b486634c20@suse.de>
-From: Shixiong Ou <oushixiong1025@163.com>
-In-Reply-To: <1687bb52-e724-46a8-af75-26b486634c20@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAHHCs+m2toxqqODA--.34329S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKrWxGr43XF4kAFW8JF15CFg_yoWxWFyxpF
-	WfGFW3CF48Xrn7Grs0g3Wqyrn3tr4kWFyq9FsxKw1UJFyqyF1avrnruryDurykZr4kGF1I
-	qr4jy34akF15CFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ua0PhUUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/xtbBYwCDD2hrkI3wHAAAsd
+Subject: Re: [PATCH] power: supply: core: fix static checker warning
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Sebastian Reichel <sre@kernel.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20250707-fix-psy-static-checker-warning-v1-1-42d555c2b68a@collabora.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250707-fix-psy-static-checker-warning-v1-1-42d555c2b68a@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 7-Jul-25 01:26, Sebastian Reichel wrote:
+> static checker complains, that the block already breaks if IS_ERR(np)
+> and thus the extra !IS_ERR(np) check in the while condition is
+> superfluous. Avoid the extra check by using while(true) instead. This
+> should not change the runtime behavior at all and I expect the binary
+> to be more or less the same for an optimizing compiler.
+> 
+> Fixes: f368f87b22da ("power: supply: core: convert to fwnnode")
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/linux-pm/285c9c39-482c-480c-8b0b-07111e39fdfe@sabinyo.mountain/
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
 
 
-在 2025/7/7 17:28, Thomas Zimmermann 写道:
-> Hi
->
-> Am 07.07.25 um 11:24 schrieb Shixiong Ou:
->>
->> 在 2025/6/27 17:13, Thomas Zimmermann 写道:
->>> Hi
->>>
->>> Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
->>>> From: Shixiong Ou <oushixiong@kylinos.cn>
->>>>
->>>> [WHY]
->>>> On an ARM machine, the following log is present:
->>>> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, 
->>>> total 3072k
->>>> [    2.297884] amdgpu 0000:04:00.0: 
->>>> remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 
->>>> 0x100fffffff
->>>> [    2.297886] amdgpu 0000:04:00.0: 
->>>> remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 
->>>> 0x10101fffff
->>>> [    2.297888] amdgpu 0000:04:00.0: 
->>>> remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
->>>>
->>>> It show that the efifb framebuffer base is out of PCI BAR, and this
->>>> results in both efi-framebuffer and amdgpudrmfb co-existing.
->>>>
->>>> The fbcon will be bound to efi-framebuffer by default and cannot be 
->>>> used.
->>>>
->>>> [HOW]
->>>> Do not load efifb driver if PCI BAR has changed but not fixuped.
->>>> In the following cases:
->>>>     1. screen_info_lfb_pdev is NULL.
->>>>     2. __screen_info_relocation_is_valid return false.
->>>
->>> Apart from ruling out invalid screen_info, did you figure out why 
->>> the relocation tracking didn't work? It would be good to fix this if 
->>> possible.
->>>
->>> Best regards
->>> Thomas
->>>
->> I haven’t figure out the root cause yet.
->>
->> This issue is quite rare and might be related to the EFI firmware.
->> However, I wonder if we could add some handling when no PCI resources 
->> are found in screen_info_fixup_lfb(), as a temporary workaround for 
->> the problem I mentioned earlier.
->
-> As I said elsewhere in the thread, you can clear the screen_info's 
-> video type in the branch at [1] to disable it entirely. We should have 
-> probably done this anyway. Knowing the cause of the issue would still 
-> be nice though.
->
-> Best regards
-> Thomas
->
-> [1] 
-> https://elixir.bootlin.com/linux/v6.15.5/source/drivers/video/screen_info_pci.c#L44 
->
->
-thanks for you suggestion, while there are two cases:
-     1. screen_info_lfb_pdev is NULL.
-     2. __screen_info_relocation_is_valid return false.
-
-should we do it at [1] too?
-
-Best regards
-Shixiong Ou
-
-[1] 
-https://elixir.bootlin.com/linux/v6.15.5/source/drivers/video/screen_info_pci.c#L47
-
->>
->> Best regards
->> Shixiong Ou
->>
->>>>
->>>> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
->>>> ---
->>>>   drivers/video/fbdev/efifb.c     |  4 ++++
->>>>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
->>>>   include/linux/screen_info.h     |  5 +++++
->>>>   3 files changed, 33 insertions(+)
->>>>
->>>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
->>>> index 0e1bd3dba255..de8d016c9a66 100644
->>>> --- a/drivers/video/fbdev/efifb.c
->>>> +++ b/drivers/video/fbdev/efifb.c
->>>> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info 
->>>> *si, char *options)
->>>>     static inline bool fb_base_is_valid(struct screen_info *si)
->>>>   {
->>>> +    /* check whether fb_base has changed but not fixuped */
->>>> +    if (!screen_info_is_useful())
->>>> +        return false;
->>>> +
->>>>       if (si->lfb_base)
->>>>           return true;
->>>>   diff --git a/drivers/video/screen_info_pci.c 
->>>> b/drivers/video/screen_info_pci.c
->>>> index 66bfc1d0a6dc..ac57dcaf0cac 100644
->>>> --- a/drivers/video/screen_info_pci.c
->>>> +++ b/drivers/video/screen_info_pci.c
->>>> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
->>>>   static size_t screen_info_lfb_bar;
->>>>   static resource_size_t screen_info_lfb_res_start; // original 
->>>> start of resource
->>>>   static resource_size_t screen_info_lfb_offset; // framebuffer 
->>>> offset within resource
->>>> +static bool screen_info_changed;
->>>> +static bool screen_info_fixuped;
->>>>     static bool __screen_info_relocation_is_valid(const struct 
->>>> screen_info *si, struct resource *pr)
->>>>   {
->>>> @@ -24,6 +26,24 @@ static bool 
->>>> __screen_info_relocation_is_valid(const struct screen_info *si, stru
->>>>       return true;
->>>>   }
->>>>   +bool screen_info_is_useful(void)
->>>> +{
->>>> +    unsigned int type;
->>>> +    const struct screen_info *si = &screen_info;
->>>> +
->>>> +    type = screen_info_video_type(si);
->>>> +    if (type != VIDEO_TYPE_EFI)
->>>> +        return true;
->>>> +
->>>> +    if (screen_info_changed && !screen_info_fixuped) {
->>>> +        pr_warn("The screen_info has changed but not fixuped");
->>>> +        return false;
->>>> +    }
->>>> +
->>>> +    pr_info("The screen_info is useful");
->>>> +    return true;
->>>> +}
->>>> +
->>>>   void screen_info_apply_fixups(void)
->>>>   {
->>>>       struct screen_info *si = &screen_info;
->>>> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
->>>>           struct resource *pr = 
->>>> &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
->>>>             if (pr->start != screen_info_lfb_res_start) {
->>>> +            screen_info_changed = true;
->>>>               if (__screen_info_relocation_is_valid(si, pr)) {
->>>>                   /*
->>>>                    * Only update base if we have an actual
->>>>                    * relocation to a valid I/O range.
->>>>                    */
->>>>                   __screen_info_set_lfb_base(si, pr->start + 
->>>> screen_info_lfb_offset);
->>>> +                screen_info_fixuped = true;
->>>>                   pr_info("Relocating firmware framebuffer to 
->>>> offset %pa[d] within %pr\n",
->>>>                       &screen_info_lfb_offset, pr);
->>>>               } else {
->>>>                   pr_warn("Invalid relocating, disabling firmware 
->>>> framebuffer\n");
->>>>               }
->>>>           }
->>>> +    } else {
->>>> +        screen_info_changed = true;
->>>>       }
->>>>   }
->>>>   diff --git a/include/linux/screen_info.h 
->>>> b/include/linux/screen_info.h
->>>> index 923d68e07679..632cdbb1adbe 100644
->>>> --- a/include/linux/screen_info.h
->>>> +++ b/include/linux/screen_info.h
->>>> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct 
->>>> screen_info *si, struct resource *r,
->>>>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
->>>>     #if defined(CONFIG_PCI)
->>>> +bool screen_info_is_useful(void);
->>>>   void screen_info_apply_fixups(void);
->>>>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
->>>>   #else
->>>> +bool screen_info_is_useful(void)
->>>> +{
->>>> +    return true;
->>>> +}
->>>>   static inline void screen_info_apply_fixups(void)
->>>>   { }
->>>>   static inline struct pci_dev *screen_info_pci_dev(const struct 
->>>> screen_info *si)
->>>
->>
->
+> ---
+>  drivers/power/supply/power_supply_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+> index aedb20c1d2767309ae716712f8be8002b988f1b4..7c3913155dc0b7e51cdefe2974b09a9259ccb4b9 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -212,7 +212,7 @@ static int __power_supply_populate_supplied_from(struct power_supply *epsy,
+>  			break;
+>  		}
+>  		fwnode_handle_put(np);
+> -	} while (!IS_ERR(np));
+> +	} while (true);
+>  
+>  	return 0;
+>  }
+> 
+> ---
+> base-commit: f9335bb4f5d4f3b913efd5872c2794d027dd85a6
+> change-id: 20250707-fix-psy-static-checker-warning-f6aac00b24dd
+> 
+> Best regards,
 
