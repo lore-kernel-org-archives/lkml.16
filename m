@@ -1,130 +1,136 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6AFAD21;
-	Mon,  7 Jul 2025 12:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A96AD21;
+	Mon,  7 Jul 2025 12:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.169
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751891459; cv=pass; b=olEKUB9B5UfNvkmxaNXPvDh/py1Xdo+Ido3IyGQQv/40KdHNTehA60l10Sh1dYgX443wbs07bKpjnhhlXIg2Yr+wFjDtxFpg6ViLJ+rRJe0H9dwSCBN1ewd0KSuQ7vVkK4LXBGmSX9iGPMXV46CpZRjYUmKHweI/OkmXprZrrVM=
+	t=1751891470; cv=pass; b=kGE8V7PKDGaMf94vr25fUtNXndKDwpSI1Dt2GBK46WgrUn+fo1bBoh3ywCJ5HFGHSRV1ze9EC86+L1uQDBODso1JrAkCgkpb67WFjcLd98zSov07N8JEotFVANqnWA1WBCYXouzFXGzjZDW5bFwtz5uaQQk3xC7958f53BfiYb8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751891459; c=relaxed/simple;
-	bh=mrX151EJF7Pcl37M7XXhv1rCHMoq0+4T4pL6rb4tY4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IKla8fw/LmDDihv5QCIFtx4pZN+abqUJhjcqNEAC75KgIcxnAbKpzakLXw+LnT5huFqg/wzXZB5j9DMbUa61H22Z1O0Eoh5OiSArIaJhjgW13A/SN7qdWDnY4xidKNR+r4B7qPnB8kn2Lsh8OQ0VgsGpUHM1XGyVedCvQA3+rX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=JADAi+vt; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751891470; c=relaxed/simple;
+	bh=3686iIqcrD1v0rIwnE5BDEhqKpyTR1lXHiLv92Viv20=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=izqtcYrQSUZSwihSrI8N3t3U9eGtJ6zG1Mchj3ElucN3O07QLUdJ3M49Hn711+hxP38jiB95fM0N3FIAETUjKi7+J0NsBUKhEUtxBRyFVOVfqQHDKe1UUM6O7JDMHcs7GC/G4nz3uK0SyIo80B9S2oBH3v7/913hSdoYonNRgYY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=Ui4jOvCk; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=TqsNTytV; arc=pass smtp.client-ip=81.169.146.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="JADAi+vt"
-ARC-Seal: i=1; a=rsa-sha256; t=1751891423; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=guxRtBBaoBOEbe2mv519AShg7WTGKpai/GyzQOpPeKEsp86SflGgsZPw5MLFV9ymNrAVdvxujmsEPkbH+3v3ashCOAsaWRhUxfcNBpU/+SYWaGwobEpeJxTkGvhQ6UwNgUV4RRB+f2mjaeEdYl2WFz74F18SWNOq1B5nycNtwPA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751891423; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Hb6TrggivYkthnZKYMQ9PhC1kEPhFxpQeSRzkBBHQEA=; 
-	b=U36TrsD4eINCTFoWjiQbKwGX8xiddAAgrsQv9DEm7kr40VK5RED1blR2aCsFpH0DN2ODJ+QDbQ3aFmAuHfBoTrcsN76XmvUy7vu36C1A0IrodxgStHQj3Dscm9Ym0wAve+Rrgn7AZdDjpOQns0tydxYpqMpGt99LHG0957B8QQA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751891423;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=Hb6TrggivYkthnZKYMQ9PhC1kEPhFxpQeSRzkBBHQEA=;
-	b=JADAi+vt3MiH5E9UlXPBZri8ivvFMgidymfePSPtrA/1/z0O8gMJy1zsvbixTdJS
-	cad+XfO9xMhL3f7WS8IERNGyh6DEKfQhhhdYRGNmzqqi52dCpVXVIlL8LB/cucdRLgb
-	l+Xa1TULSKpav/KTj/fTi31YcwmGmTCK17kco9b8=
-Received: by mx.zohomail.com with SMTPS id 1751891419333639.0502213968841;
-	Mon, 7 Jul 2025 05:30:19 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- kernel@collabora.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: document linked lists
-Date: Mon, 07 Jul 2025 14:30:15 +0200
-Message-ID: <2391623.ElGaqSPkdT@workhorse>
-In-Reply-To: <20250707101156.2cc84294@pumpkin>
-References:
- <20250702-linked-list-docs-v2-1-e36532f4b638@collabora.com>
- <20250707101156.2cc84294@pumpkin>
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="Ui4jOvCk";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="TqsNTytV"
+ARC-Seal: i=1; a=rsa-sha256; t=1751891115; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=DqaubCnZMp6bLgDWtNIBiLcD1MyeJM/9H/6m7WhnkCl0ciZtjU9vpJyv+sgKx/a81G
+    H8Dp2ggI+IdYXLaf9Woi/APm9pSK52d7Qzy4m0RHhOwGMMpoaamMOfDX0H1vH0ceIYHV
+    xP9NG6WuH+9Ws4CgG5hiphfDgz56OOEmmeFjdpH+IgodkatKsZqrEGQ0VNTu6In5l0fJ
+    Df6dx3AQtmruvqEL/wrz6fzVX8p92pHYArfPpcrtz3YwAPnTgb/wn+/8A+N8EN9FKeYz
+    OK8vHgRy2uNADECA+YyY5RD76mdHQ2mfTDUpynYrfeqz44/L8frbQu7Ie7WFxM3XtOhJ
+    4WIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1751891115;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=Uw2joeTt8PfL+vQ6RmT2S3am/XAVy6q4yrugxQwId/U=;
+    b=AJUcd/noiOUPy7rO03KbgRvuab+zfnZjp0kfrAmomtYkmk3Dv3En6jl50sm7eLyTNL
+    rn9wZA2fjizScgVeAOOfmuPmrDk+4t0dz9wVJFMyurnFOPJX8VZHDUMsPmwxIWtxbIfA
+    3ip1psMQm7SMeLxyrXmwQyVYTRXzoRMVIoav0jlMu+B0L0tvV6DKcwLb84RdlBpUPwLB
+    EAScTyAB4q6Iv6oA+3dXIoBKWha9tpooYAN/YXjueUs0TPCe5OlgAmhOTOPI2bw9Xffa
+    V+H96+rkEMJbxSH611topiHOYar4UQApQRhyjIEq5IQKwCjzIp2t/uu/4wriv8+onquD
+    xjgg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751891115;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=Uw2joeTt8PfL+vQ6RmT2S3am/XAVy6q4yrugxQwId/U=;
+    b=Ui4jOvCke4ATdPbLMoTR60JHZOy5UcmnkHiMNgHSrBXELOa6CmeWROtlp+F7E/TS+L
+    0k/ASo7Sg9SPAN0BPTN8cZPMKEZ9r0OwKBXRk5kOddvxpHsdHjccXgCZZO1ONqwtnDMe
+    8TeBIbxUJYouKP0+i4eXpAk7Q9asu7A+eth6HSD3r/aVTNn80Uf3DflBSy9cTEdwu3u2
+    gYmOeAOoLjXV5U7UYfZ5rj3HcDGFneugWeZmTxUD2ZNAErvAs3yTz73WpvNLzcfHb+i1
+    wsUh1vakzS81TPk9Qc1xaX0l8cfe7o9zandcMcxaKpHpyfjeNZVW3W+FDKCj/YagUjMt
+    yOPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751891115;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=Uw2joeTt8PfL+vQ6RmT2S3am/XAVy6q4yrugxQwId/U=;
+    b=TqsNTytV284J+D3b5tLesOQZIwJp9fq6hZVj39JpNaoJFUVIp5GRGnhPnkBLD0WUnj
+    8iF/5U6fTA8btC3pFrAg==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
+Received: from ws2104.lan.kalrayinc.com
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id J1bd32167CPE712
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 7 Jul 2025 14:25:14 +0200 (CEST)
+From: Julian Vetter <julian@outer-limits.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Julian Vetter <julian@outer-limits.org>
+Subject: [PATCH RESEND 1/5] Replace __get_unaligned_cpu32 in jhash function
+Date: Mon,  7 Jul 2025 14:24:56 +0200
+Message-Id: <20250707122500.724699-2-julian@outer-limits.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250707122500.724699-1-julian@outer-limits.org>
+References: <20250707122500.724699-1-julian@outer-limits.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Monday, 7 July 2025 11:11:56 Central European Summer Time David Laight wrote:
-> On Wed, 02 Jul 2025 22:24:47 +0200
-> Nicolas Frattaroli <nicolas.frattaroli@collabora.com> wrote:
-> 
-> > The kernel contains various generic data structures that should ideally
-> > not be reinvented. However, it often fails to document the usage of
-> > these in the in-tree kernel documentation beyond just a listing of
-> > header symbols in the very lengthy kernel-api docs page. This is fine
-> > for things that have simple invocations, but occasionally things devolve
-> > into several layers of concatenating macros, which are subpar for humans
-> > to parse.
-> > 
-> > Begin making a small impact by adding some rudimentary example-driven
-> > documentation for the linked list functions. Many aspects are covered,
-> > though it is not an exhaustive listing of the entire set of list
-> > operations. We also direct readers towards further documentation should
-> > they be interested in concurrency.
-> >
-> 
-> Jeepers; TLDR.
-> I don't think the kernel docs are a place to explain linked lists.
+The __get_unaligned_cpu32 function is deprecated. So, replace it with
+the more generic get_unaligned and just cast the input parameter.
 
-That is not what this is doing. In fact, the very first paragraph
-of the documentation page that was too long for you to read does
-explain this. What are you trying to achieve with this response?
+Signed-off-by: Julian Vetter <julian@outer-limits.org>
+---
+ include/linux/jhash.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> What may be relevant is a description of the types of linked list
-> the kernel uses.
-
-That is what this is.
-
-> For that you pretty much only need a picture of the head and two
-> items showing both the forward and backward pointers.
-
-No you don't, that does not explain the operations on them. The way
-the kernel embeds nodes as struct members to then do a container_of
-on is not obvious to many, as is evidenced by there existing out-of-
-tree documentation explaining this very fact. The way this interacts
-with how these list operations are called is worth documenting.
-
-> Then a list of the valid operations for that list type.
-
-Function names are not self-explanatory. That lists are circular and
-how that can break traversal after list modifications is not immediately
-evident.
-
-> What you can (efficiently) do with a list depends very much on how
-> it is constructed.
-
-No. O-notation was invented for a reason. There is no way in which you
-can construct a list to make it not a linear search, even if you sort
-it.
-
-> 
-> Then repeat for hlist and hlist_nulls - I think they are the other
-> main list types.
-> 
-
-hlist literally just lacks a single pointer in the head, it does not
-differ from the kernel's doubly linked list in any meaningful way,
-and would be an actual TL;DR.
-
-> IIRC 'LIST' is a double-linked list through a dummy item.
-> Not my favourite list type and can cause the sanitisers grief.
-
-I don't see how your opinion on the datastructure is relevant here.
-
-> 
-> 	David
-> 
-
+diff --git a/include/linux/jhash.h b/include/linux/jhash.h
+index fa26a2dd3b52..7c1c1821c694 100644
+--- a/include/linux/jhash.h
++++ b/include/linux/jhash.h
+@@ -24,7 +24,7 @@
+  * Jozsef
+  */
+ #include <linux/bitops.h>
+-#include <linux/unaligned/packed_struct.h>
++#include <linux/unaligned.h>
+ 
+ /* Best hash sizes are of power of two */
+ #define jhash_size(n)   ((u32)1<<(n))
+@@ -77,9 +77,9 @@ static inline u32 jhash(const void *key, u32 length, u32 initval)
+ 
+ 	/* All but the last block: affect some 32 bits of (a,b,c) */
+ 	while (length > 12) {
+-		a += __get_unaligned_cpu32(k);
+-		b += __get_unaligned_cpu32(k + 4);
+-		c += __get_unaligned_cpu32(k + 8);
++		a += get_unaligned((u32 *)k);
++		b += get_unaligned((u32 *)(k + 4));
++		c += get_unaligned((u32 *)(k + 8));
+ 		__jhash_mix(a, b, c);
+ 		length -= 12;
+ 		k += 12;
+-- 
+2.34.1
 
