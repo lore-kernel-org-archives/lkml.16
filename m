@@ -1,147 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB7C1FCF41;
-	Mon,  7 Jul 2025 12:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D2D1FFC48;
+	Mon,  7 Jul 2025 12:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889730; cv=none; b=KLWq6xUFzOTh17hKwE97K2y3YQ/H3v5SevUXbgXm4tXyFkhSqlLiBF+Kf9cgNRz8cCu/GxGIrKU5sO01qZBiFTNsu9N2Eb0WHzAcqgfX+jBrZl0m/W6VRdrQapfz4blJfcqW8mndguaQc+YmROvA7L0xFsPS/llP6VkyvmlAV8U=
+	t=1751889746; cv=none; b=cIJLTMkGhoq0mvi1lwhrQ0tX8alnLD0wMB20Ag5atkSGoVSMGpvUeubTsdx8RDkYMrS8/kG5IcrGc0+gIRrKAOZUItUq4Awnw8DUy1qR6SHAAYHDahlb0h/KWYUkpPfzQd8IX5IGj3Aja67vaxxZnbwtB+BsvOPDM5eyURrUSW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889730; c=relaxed/simple;
-	bh=kVFoEUGp2UNblRLb6XHbJyewGsxkZT1YXp1RdETPjgA=;
+	s=arc-20240116; t=1751889746; c=relaxed/simple;
+	bh=VIqjqK+ketF5zBLE5EGm5mXuiGUfQu9PenuTdQQYfpE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MaGLz6/eu34iuabuAWJFb2N2p4ukNDEvsVsEMcqAIPn32zIyMFX4uaZ/kDL2tLWr5tONGyF6dzmiTmPVws61xrF6njzAh55psMJa+X8yCgqyEn2HJAC8Fz/1s8BwWHmB+8NuM776z+SlaIe3XQpFaq3ZR9h8A/2tspcjWdsZHzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDKAXIhz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUyVPX6R7AXAO0clouspDe5Kl4iqLfmyD6IL1KhcW0HNFaA+XUNJf6+IDKOe3TCeP3nMinbLy/u3+PFszcQVEoW20MnaBgDRr0Wzyc34F2cwzVBpbfnNUuQzFVN7ru+V2BvZj1+9aqkrRLRgaiwdp1Y56GybrVTQxCVFFWlvbj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeJKZrTL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDKAXIhz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C767C4CEE3;
-	Mon,  7 Jul 2025 12:02:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeJKZrTL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6169C4CEE3;
+	Mon,  7 Jul 2025 12:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751889730;
-	bh=kVFoEUGp2UNblRLb6XHbJyewGsxkZT1YXp1RdETPjgA=;
+	s=k20201202; t=1751889745;
+	bh=VIqjqK+ketF5zBLE5EGm5mXuiGUfQu9PenuTdQQYfpE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KDKAXIhzKK8nhyJsT1ghan+q23bZK33/gYBQZL9JnKbtsq8KKMS+FrxY1bLcWYHD/
-	 z80rAiXnLR53tqaCiw/W2KhnhQY8bB7nnstEZr1P6Ve5i6oYF4I4OTTK/6Q3grAVsC
-	 E/Mm1Sbintz3rLtIO7ZOmG5edqv4KkUrASMdIZEbiJNbx3d+iF3v5GeTegBeiFJRGs
-	 Jtu1ucNnrHR4t1eETXsFnRY6dc121wka+ovWmiU4x/BGpKM65+0aSJS53ARECgDD61
-	 I83/3HkMrradwCjf9AwlMhMonNPswOpgLuLevANe+LCWLrjB/olbCdMQLiWNMeulIG
-	 PxNotJYXYv4uw==
-Date: Mon, 7 Jul 2025 14:02:03 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Asahi Lina <lina+kernel@asahilina.net>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] rust: i2c: add manual I2C device creation
- abstractions
-Message-ID: <aGu3O8QzboCQiKSL@pollux>
-References: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
- <20250704153912.1197034-1-igor.korotin.linux@gmail.com>
- <aGgxfNh-sgkJls_h@cassiopeiae>
- <954a40a4-2f5a-4ef8-84ea-3d2ba2c85cfe@gmail.com>
+	b=UeJKZrTLur64RLZYwjXyuTAHpBO/SvLlA+iTwBBpbfL1JJdS3Zg8SGBs9RvpyO1Ow
+	 5/4HQUuK+fQNL06y+B6pFbc2BtHn0deA4U6335NwiTV0uu44578T5dUslBKCQocztt
+	 VScD9mNHwCqyRXezy8Vi1SpwhDXoJEVWlpJfinScAlE/IC7YPbj+fYHSEIV5SGcnbY
+	 Mo7O90tPWwgN+oUY17V06pDHDHamBl92ykP8UocnMPR4SFIQkVS0Zeh1a9YiAsosxz
+	 NygEgv7oNvMCJby5umSijI/8ao68wh8jhhDIr+AlzxJCd/8h+I2GmILwVehTxTbATo
+	 ivkWLjZpU2jyg==
+Date: Mon, 7 Jul 2025 13:02:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Weidong Wang <wangweidong.a@awinic.com>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] ASoC: codecs: Add Awinic AW8898 amplifier driver
+Message-ID: <57472ea1-a9c1-472b-a178-eae1cb207468@sirena.org.uk>
+References: <20250705-aw8898-v2-0-9c3adb1fc1a2@lucaweiss.eu>
+ <20250705-aw8898-v2-2-9c3adb1fc1a2@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MlZQHhqJVJF+tiCZ"
+Content-Disposition: inline
+In-Reply-To: <20250705-aw8898-v2-2-9c3adb1fc1a2@lucaweiss.eu>
+X-Cookie: We are what we are.
+
+
+--MlZQHhqJVJF+tiCZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <954a40a4-2f5a-4ef8-84ea-3d2ba2c85cfe@gmail.com>
 
-On Mon, Jul 07, 2025 at 12:20:15PM +0100, Igor Korotin wrote:
-> 
-> 
-> On 7/4/25 20:54, Danilo Krummrich wrote:
-> > On Fri, Jul 04, 2025 at 04:39:12PM +0100, Igor Korotin wrote:
-> >> -pub struct Device<Ctx: device::DeviceContext = device::Normal>(
-> >> +pub struct Device<Ctx: device::DeviceContext = device::Normal, State: DeviceState = state::Borrowed>(
-> >>      Opaque<bindings::i2c_client>,
-> >>      PhantomData<Ctx>,
-> >> +    PhantomData<State>,
-> >>  );
-> > 
-> > I see what you're doing here, but I think you're thinking this way too
-> > complicated.
-> > 
-> > I recommend not to reuse the Device type to register a new I2C client device,
-> > it's adding too much complexity without any real value.
-> > 
-> > You also don't want the DeviceContext types for a device registration, since the
-> > registration will never have any other DeviceContext than device::Normal (see
-> > also my comment on the sample module).
-> > 
-> > DeviceContext types are only useful for &Device (i.e. references) given out for
-> > a specific scope, such as probe(), remove(), etc.
-> > 
-> > The only thing you really want to do is to register a new I2C client device, get
-> > a i2c::Registration instance and call i2c_unregister_device() when the
-> > i2c::Registration is dropped.
-> > 
-> > This is exactly the same use-case as we have in the auxiliary bus. I highly
-> > recommend looking at what auxiliary::Registration does [1].
-> > 
-> > Also note that if you want a reference to the device in the i2c::Registration,
-> > you can also add a i2c::Registration::device() method that returns an
-> > &i2c::Device, which through into() you can obtain an ARef<i2c::Device> from.
-> > 
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/auxiliary.rs?h=v6.16-rc4#n299
-> 
-> I took a quick look at the auxiliary Registration abstraction and I see
-> that it is not applicable for I2C subsystem. The issue here is that I2C
-> C code doesn't provide with an API that can registers an I2C client from
-> already existing `struct i2c_client`.
+On Sat, Jul 05, 2025 at 02:03:06PM +0200, Luca Weiss wrote:
 
-I don't see why the following wouldn't work:
+> +static void aw8898_update_dev_mode(struct aw8898 *aw8898)
+> +{
+> +	unsigned int mode = AW8898_SYSCTRL_SPK_MODE;
+> +
+> +	if (aw8898->dev_mode == AW8898_RECEIVER)
+> +		mode = AW8898_SYSCTRL_RCV_MODE;
+> +
+> +	regmap_update_bits(aw8898->regmap, AW8898_SYSCTRL,
+> +			   AW8898_SYSCTRL_MODE_MASK,
+> +			   FIELD_PREP(AW8898_SYSCTRL_MODE_MASK, mode));
+> +}
 
-	struct Registration(NonNull<bindings::i2c_client>);
+Why is this open coded rather than just being a standard enum?  AFAICT
+we never reference dev_mode outside of here or the _get() and put()
+callbacks.  You might be looking for a _VALUE_ENUM?
 
-	impl Registration {
-	   pub fn new(adp: &I2cAdapterRef, info: &I2cBoardInfo) -> Result<Self> {
-	      // SAFETY: [...]
-	      let cli = unsafe { bindings::i2c_new_client_device(adp.as_raw(), info.as_raw()) };
-	
-	      // Handle ERR_PTR()
-	
-	      Self(NonNull::new(cli))
-	   }
-	}
-	
-	impl Drop for Registration {
-	   fn drop(&mut self) {
-	      // SAFETY: [...]
-	      unsafe { bindings::i2c_unregister_device(self.as_ptr()) };
-	   }
-	}
+> +	if (!fw) {
+> +		dev_err(&aw8898->client->dev, "Failed to load firmware\n");
+> +		return;
+> +	}
+> +
+> +	dev_dbg(&aw8898->client->dev, "Loaded %s - size: %zu\n", AW8898_CFG_NAME, fw->size);
 
-And in you sample driver you can still the exactly the same as you did before:
+We print the firmware name we were looking for if we loaded it, but not
+if we failed to load it when it's probably more useful.
 
-	struct SampleDriver {
-	   _reg: i2c::Registration,
-	}
-	
-	impl kernel::Module for SampleDriver {
-	    fn init(_module: &'static ThisModule) -> Result<Self> {
-	        let adapter = i2c::I2cAdapterRef::get(0).ok_or(EINVAL)?;
-	
-	        let reg = i2c::Registration::new(&adapter, &BOARD_INFO)?;
-	
-	        Ok(Self { _reg: reg })
-	    }
-	}
+> +	aw8898_cfg_write(aw8898, aw8898_cfg);
 
-Note that you can also combine you two sample drivers into one by doing the
-above *and* register a and I2C driver that probes against your device
-registration. :)
+The "firmware" here is just a list of arbatrary register writes with no
+validation of addresses or anything...
+
+> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+> +	case SND_SOC_DAIFMT_I2S:
+> +		if ((fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK)
+> +				!= SND_SOC_DAIFMT_CBC_CFC) {
+> +			dev_err(component->dev, "Invalid codec master mode: %d\n",
+
+Clock provider mode.
+
+> +static int aw8898_startup(struct snd_pcm_substream *substream,
+> +               struct snd_soc_dai *dai)
+> +{
+> +	struct aw8898 *aw8898 = snd_soc_component_get_drvdata(dai->component);
+> +	unsigned int val;
+> +	int err;
+> +
+> +	err = regmap_read_poll_timeout(aw8898->regmap, AW8898_SYSST,
+> +				       val, val & AW8898_SYSST_PLLS,
+> +				       2000, 1 * USEC_PER_SEC);
+
+What's this actually checking?  You shouldn't rely on I2S being clocked
+prior to trigger...
+
+--MlZQHhqJVJF+tiCZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhrt0sACgkQJNaLcl1U
+h9BPMQf/dmqzpSi55P7foF7RBlZpMSycih4Oi7PCjW3U957fX0OuP/4eq5U+gMl3
+MBbPPPDqBzN4ljGvWGXuAsWxyjNt+U+LEyNa8YJRnz+ysQvPjwANW+SnRKj+WtcE
+LJHf8JhuNzKaoMa4UQUNv9N2xFYbfZYCzkfmN1pGVrvxTJrKeeZSB8zAXfkdBM5s
+T/7g8OM3OG+BZs2WGFGmYNfVNZ/UTtNgbKAigqGj4pVrSuh+ICi7BBkf34nVBHFE
+/f6ywCEL/iKctaKft7NVU3E5y7mBtkQ8nCyZhGmcGvKoBlq3PBkUfZZz+PAab9P3
+f4P1tsKTIlHQ+EHMNlV0jemhAKRBLA==
+=Qb73
+-----END PGP SIGNATURE-----
+
+--MlZQHhqJVJF+tiCZ--
