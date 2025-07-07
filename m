@@ -1,107 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A587D944F
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840428A1D3
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874407; cv=none; b=MK1weyDV2XQzqOZh46SSv/GE0b0yHCF7Xl74AnP8C49xeOPrYYc0bzowgA3mpFYr0/aT5InfIJv5zgB6nP+5JcpniFOvuN6aAYdajSYdheRJzMZLc4LY7SibVgBEQo/0NZxxvetcwcellpL+l4dSmxfPTv6iSk64S+PtlwISKLY=
+	t=1751874412; cv=none; b=Rd9kqm+QSn6As+QC4DGNDYjhoH1ZgA3HWBP05gnnBWZujJnbD2RzL6KIf2u6ZVZGIZoIZsJ6RIQ7ZuY+5fc/Dhqup9LcSRHwSXjvPywaTAum5O8/nuJp8R/ytaXQhlES4CgVV648GGQGADManhp9BZv6N3GLpJNt6+hsAVLFjQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874407; c=relaxed/simple;
-	bh=RHS1kEt/R1LtPeuN6Hb8NzwmJ5aGjq8jLqTwouNfDc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZLNnZo4HtGnP9JaVlJjekgSc4eu02W9w7rcpBhZjbjB99sBRVlulb5oKkf2f4yyGUf80wHE42AqmwbXWBx66XPpVhDEuybPklvjds3bJKKedRJBWPZ1dIZY5mJx9Sfj3jQ4HFOVw79SGCcNgOzQe2xoy9ztrLdelQwWUuisILk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=c2pG/QzZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751874412; c=relaxed/simple;
+	bh=wgirFmFyQOVRX7pwQ81LfLbwnMDKABb03D/FH3MjlU4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uCAjvfcICVBQqZSwBHt6Hv142KE1+4o+vkX1NUqR0qK4xxnn8fY/sQCD2dCkDz8i1f77Ss08XVkgjlzGA/iCyIPJxoHse4N0XWTjL99ZLljBgI84ze3ZVw/WCPkyHo+RqktSmw0AqmBj/LhB++yIDIB69KVWrZWODvlhaqkxiho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x+r1gjNG; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="c2pG/QzZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2BBC4CEE3;
-	Mon,  7 Jul 2025 07:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751874407;
-	bh=RHS1kEt/R1LtPeuN6Hb8NzwmJ5aGjq8jLqTwouNfDc0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c2pG/QzZbWK/wG5wHA3ElW8SsJmI34657ByG/+axtYuojbxQI8f5Ao3DggsVs2Urd
-	 xoabl2Rh6K2AATLZCz2mk5CaZFmbN3oNHQ31c0Z01EHhXZoG/y22qWg/jj1BEaFLK4
-	 OCsmbLSG5En3UsXPNIqwRglqlmwzNd2RJ04LPtms=
-Date: Mon, 7 Jul 2025 09:46:43 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
-Cc: "Abliyev, Reuven" <reuven.abliyev@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [char-misc-next v2] mei: bus: fix device leak
-Message-ID: <2025070710-civil-laborious-ad3c@gregkh>
-References: <20250624110520.1403597-1-alexander.usyskin@intel.com>
- <2025062836-twentieth-kudos-1148@gregkh>
- <CY5PR11MB63664DE1B93F480CCC199D8FED46A@CY5PR11MB6366.namprd11.prod.outlook.com>
- <2025063022-riverbed-country-5c2b@gregkh>
- <CY5PR11MB6366BBFF44C7F21C24292590ED46A@CY5PR11MB6366.namprd11.prod.outlook.com>
- <2025063042-usual-acutely-0d3b@gregkh>
- <CY5PR11MB636694A9C7A086AF584B7CDDED4FA@CY5PR11MB6366.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x+r1gjNG"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2c2c762a89so2046179a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751874410; x=1752479210; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9fNW/ipNPp9E7WVydECVXrddec24Up9r1hPRynNq8M0=;
+        b=x+r1gjNGxw5g6G4kRYli/oyr4WXcCKQlzS3l8Q/oGyj1ZNPUWinqAJwheRFDZw+nOG
+         Bmob8DrWWS/E1T5zbiKh3t+eJkhaeAfRu4cIrUrHF6WWAyLXZhD787eoMQ0EojqGDoob
+         SzGiRxvA5YnxvufcLIEn011zKa3rg/WNdJq9fxylJCBn5OzrZ1hirNeTUZ1FdoyMAGlK
+         QIwHTwDw1wGm0qE8YB/UAf7yU25Wh61ytuJGRV6CpYT3GsOi1lZMZc9jxZDgchablKJc
+         QwNjSM2YVwjiFbZMeUB3xFirh34yGfkAJtvkjLmd7CSqGaLWaUSUjvlhb2aiL/Zzjplu
+         mUlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751874410; x=1752479210;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9fNW/ipNPp9E7WVydECVXrddec24Up9r1hPRynNq8M0=;
+        b=tuX6w+5kyLkdt1o6Lr51MZtUcdtuxF6ED2qk67H1YjJwRbjIqjYOO+VnPi5Js6b8AV
+         MbmOnomfL9tMvvXcKmvblwz34eSVcSexiBGBGHKYAl1pybdOcxpfB+ZxzqJrz2qBXuvq
+         epRZPp6itzZKMsmrzunSxCZHa7iaKGQo+Y20/Qadyl2Tbnb1wGv9daT+Xo5ubSV3AE0/
+         LkzNtezj4duOlVGr05o+sIa+nUCDyI3/WrjW8hbWIF5gaSPl3pfjQfuL+5Xs6CQcrqWm
+         2bJ6CMpfgIWBhZhll+9BAST4zGmTNY+5TRlF2gAOWiWm5mGOSO7EpmoPq0XzpZPWO0Go
+         uLBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5kOxwUODr2XeUf4XiONVM8pf4DeKtXqFYiGUQzYPmbDodgIARi7nx8ZGXMgn0kyWMzbNf26RTmB84muc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyh+mrc7Yb/hBAV2jkMrMabI0RnUSIljrsk/1A//EofSu0oNgZ
+	Q80AAtA6WmxwamQ484B3XmcbWgRDC3qk+RhiESPtUyGfvQ9vvFPhUti9l1+tlhQwFS18gV3r7Xc
+	nT/4OGyb6TaQDoGsKrTIQz9VQTh5LRM22TDl2h63s
+X-Gm-Gg: ASbGncsoqAl4gsDVLlMYTGLoJarcq/ZNWvHs715IYIYB0k0liuzjHRbw01Dc6l5mIDP
+	RN5h1HRZKe7lWaFtzSpbqIUlZCAY74+H0fB0pZ3d+Ah2zSeoibG10XtqA1aiAFIa+gqBEI2zOq9
+	UJYOcqrNTsM5msOyC/cZ32bI/RDe9V/gSFhXYQHBvtgJJEXWQzD4ZS4CD7VsgcLZX8kyH+YRE2A
+	g==
+X-Google-Smtp-Source: AGHT+IGqO9oM46vaRZElMnGr6n15joXe3K7RM5q8sFYWV7Px+OQQzqoIe4GGrFaVhxXnxZxDnFNqlZsOgY72zLirvzc=
+X-Received: by 2002:a17:90b:57d0:b0:30e:5c7f:5d26 with SMTP id
+ 98e67ed59e1d1-31aba8d28a3mr10983089a91.24.1751874409534; Mon, 07 Jul 2025
+ 00:46:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY5PR11MB636694A9C7A086AF584B7CDDED4FA@CY5PR11MB6366.namprd11.prod.outlook.com>
+References: <cover.1751862634.git.alx@kernel.org> <740755c1a888ae27de3f127c27bf925a91e9b264.1751862634.git.alx@kernel.org>
+In-Reply-To: <740755c1a888ae27de3f127c27bf925a91e9b264.1751862634.git.alx@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Mon, 7 Jul 2025 09:46:12 +0200
+X-Gm-Features: Ac12FXwJB9HCD4i8JLB6RoA7PkR95ZBhaAJktuICujVit91FZfsr8G443fGUagE
+Message-ID: <CANpmjNNQaAExO-E3-Z83MKfgavX4kb2C5GmefRZ0pXc5FPBazw@mail.gmail.com>
+Subject: Re: [RFC v3 5/7] mm: Fix benign off-by-one bugs
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, 
+	Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Jann Horn <jannh@google.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 07, 2025 at 07:08:33AM +0000, Usyskin, Alexander wrote:
-> > Subject: Re: [char-misc-next v2] mei: bus: fix device leak
-> > 
-> > On Mon, Jun 30, 2025 at 11:27:14AM +0000, Usyskin, Alexander wrote:
-> > > > Subject: Re: [char-misc-next v2] mei: bus: fix device leak
-> > > >
-> > > > On Mon, Jun 30, 2025 at 10:52:08AM +0000, Usyskin, Alexander wrote:
-> > > > > > Subject: Re: [char-misc-next v2] mei: bus: fix device leak
-> > > > > >
-> > > > > > On Tue, Jun 24, 2025 at 02:05:20PM +0300, Alexander Usyskin wrote:
-> > > > > > > The bus rescan function creates bus devices for all clients.
-> > > > > > > The fixup routine is executed on all devices, unneeded
-> > > > > > > devices are removed and fully initialized once set
-> > > > > > > is_added flag to 1.
-> > > > > >
-> > > > > > I don't understand why the mei bus is so special that it has to have
-> > > > > > this type of flag, when no other bus has that for its devices.  The bus
-> > > > > > code should know if the device has been properly added or not, if not,
-> > > > > > then no release function can be called and the structure isn't even
-> > > > > > viable to be used or touched at all.
-> > > > > >
-> > > > > > So why is this needed?
-> > > > >
-> > > > > It seems that is_added can be replaced by device_is_registered().
-> > > >
-> > > > Again, why do you need to track that?
-> > > >
-> > > > But yes, that should work, although using it is usually a sign that
-> > > > something is a bit broken in the design.
-> > > >
-> > >
-> > > Mei bus uses device_initialize() and device_add() pair.
-> > > After device_initialize() there are different hooks and filters called,
-> > > that may lead to dropping the device or adding with device_add().
-> > > Thus, we should track if device_add() is called when destroying the device.
-> > > Not sure if this can be re-architected to use device_register().
-> > 
-> > You don't need to use device_register() but perhaps stop it with the
-> > "rescan the bus and attempt to add all devices again" logic that is in
-> > mei_cl_bus_rescan()?  There's no need to call device_add() on a device
-> > and then way later attempt to initialize it, right?
-> > 
-> > Just find any new devices that you don't already have on your list of
-> > registered devices, and then only add/initialize them, should be a lot
-> > simpler logic overall than what the code is currently doing.
-> > 
-> > greg k-h
-> 
-> This will require a big refactoring. I'll look how that can be done.
-> Meanwhile can this fix be merged on current codebase and
-> refactoring will be done separately?
+On Mon, 7 Jul 2025 at 07:06, Alejandro Colomar <alx@kernel.org> wrote:
+>
+> We were wasting a byte due to an off-by-one bug.  s[c]nprintf()
+> doesn't write more than $2 bytes including the null byte, so trying to
+> pass 'size-1' there is wasting one byte.  Now that we use seprintf(),
+> the situation isn't different: seprintf() will stop writing *before*
+> 'end' --that is, at most the terminating null byte will be written at
+> 'end-1'--.
+>
+> Fixes: bc8fbc5f305a (2021-02-26; "kfence: add test suite")
+> Fixes: 8ed691b02ade (2022-10-03; "kmsan: add tests for KMSAN")
 
-Why not do it properly just once?  What is urgent about this rare leak
-now?
+Not sure about the Fixes - this means it's likely going to be
+backported to stable kernels, which is not appropriate. There's no
+functional problem, and these are tests only, so not worth the churn.
 
-thanks,
+Did you run the tests?
 
-greg k -h
+Otherwise:
+
+Acked-by: Marco Elver <elver@google.com>
+
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  mm/kfence/kfence_test.c | 4 ++--
+>  mm/kmsan/kmsan_test.c   | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
+> index ff734c514c03..f02c3e23638a 100644
+> --- a/mm/kfence/kfence_test.c
+> +++ b/mm/kfence/kfence_test.c
+> @@ -110,7 +110,7 @@ static bool report_matches(const struct expect_report *r)
+>
+>         /* Title */
+>         cur = expect[0];
+> -       end = &expect[0][sizeof(expect[0]) - 1];
+> +       end = ENDOF(expect[0]);
+>         switch (r->type) {
+>         case KFENCE_ERROR_OOB:
+>                 cur = seprintf(cur, end, "BUG: KFENCE: out-of-bounds %s",
+> @@ -140,7 +140,7 @@ static bool report_matches(const struct expect_report *r)
+>
+>         /* Access information */
+>         cur = expect[1];
+> -       end = &expect[1][sizeof(expect[1]) - 1];
+> +       end = ENDOF(expect[1]);
+>
+>         switch (r->type) {
+>         case KFENCE_ERROR_OOB:
+> diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
+> index a062a46b2d24..882500807db8 100644
+> --- a/mm/kmsan/kmsan_test.c
+> +++ b/mm/kmsan/kmsan_test.c
+> @@ -105,7 +105,7 @@ static bool report_matches(const struct expect_report *r)
+>
+>         /* Title */
+>         cur = expected_header;
+> -       end = &expected_header[sizeof(expected_header) - 1];
+> +       end = ENDOF(expected_header);
+>
+>         cur = seprintf(cur, end, "BUG: KMSAN: %s", r->error_type);
+>
+> --
+> 2.50.0
+>
