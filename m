@@ -1,433 +1,494 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE4A2777E4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874061; cv=none; b=AyWv5DK3Qlqwf74VSCQaDWKXAzkSP/DvEmAEDp6uTSwohgcbdmRyVIJ/xK0jj1ZMbrhDSccPzMVUDzXdu5S2njpbgjdt0NNcF6FoixKPFUrU5pmLxbaU/wQTNEOJbhO2Met18gg/7bL24WLp69iKyUK0QNDae56w93NDrR3HJG4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874061; c=relaxed/simple;
-	bh=LsdlC/42pE4V9Y6Nzuv1hDJnzZVdXiyEY91obs/3TbA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KoNLHD1cEgRiuBNo1zuuBlRAe6IC2gz4EvQQoIWpEUoylG6BH8e0PLeLi3BbgKcDRtpGWiGPSPDcnaP9CI0BqD6emy/oPXo3TUOjs0HnBjuUK+KwD81eG+awC3gdwNEp24u5W+NrB1eFjiE23vk13bgYKtrPVAOQfBt8biLGBHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZibA7NCC; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533BF279DC0;
+	Mon,  7 Jul 2025 07:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751874082; cv=fail; b=UlLI0XLle2IhZD3WuWwGVYPX6jwzHVxFsgNAbplj45Ib+2NHk/t9Qrg/kT78V5Zsowow4E7MWMOE+7sBALhkQf5SIMEp6qaoLazeMKSYXkSo7w9weYVI4R+202cYJ4ZX9ZOR9g5TVFrED7LuwC1vHZkBEMpnafUBarEKL2/TKbc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751874082; c=relaxed/simple;
+	bh=B4PMfFhB9xbbnUPX5bl6a+NbiaFO0X0UhKTmBrBhhTc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LM4gFhdX2Hk1HkRAB8XHUOlkgKdDIqEv4Ib2eg6foeRnqfEH+5LaxMV83+kDRO6wnzdYjADjVYHsUX4v5tT0+U6WgaY4KYTaqEfU4wRATZ7ru97QIKfLoUFxBu5flce2n67j0P9svLOGK6JVMEIxV2C8HQta2jbpr2s667mGD1Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Vi2wDCXs; arc=fail smtp.client-ip=40.107.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZibA7NCC"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a4eee2398bso1102415f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751874058; x=1752478858; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJUD6X4GS4YlprJU4Nu4OFQVyc8HR9vGBcNZ8yZyQEE=;
-        b=ZibA7NCCEFW4/4IXlVEBS+gzynCtY/TuX3QtWnmY6zPaPfDx76aj+w1gI/eQmGUx3Q
-         0VPMorTAiPVTLM2Vy+TsOl66ToeG9nXEhcxwdAgJBHusSBYAGjB2xrYp20jZ8CpC+Eo9
-         1dZQmYRcNl/111L8Cz7q9zteeZKhpLe/MNoKaXMIGF7TRAPE25Gl5thEoybqRtaRHoYz
-         y8dXZDNA2o+GzxfAEZx8AhpZc2gAKiTmhMwupnRZYV1RAFbj1jcNkvPyArnHzBxT9wtB
-         V2YSh7Kw/7f+qiNPWpcDxdwic4pwHWL0hE++TuD3tIDhaH/6sehmOOVqG1Vm0DnQsmSK
-         whDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874058; x=1752478858;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJUD6X4GS4YlprJU4Nu4OFQVyc8HR9vGBcNZ8yZyQEE=;
-        b=Gk6wsPu6kMNiqLzPtHQ9rCCZCpGDkfW8PmH5cY4Yrw8ursQ+dwzd0s2JmV2K4MBNL4
-         5HgxcnAf+CnMdiiZtQaCXqlN8GD3lvgJQO3hHMbeaXl0SsEPZ2ZIxj82kB3NZErkQ1Zj
-         u0/qRusXY/12MTuRYc7n1JZRs8asg1Xy3o0PKJ3KW6wg1VBh2vJDD7b14INEutIWQv5q
-         lWOMJKz9yp2+BVbxBbKF6ONcksKNJgRjEdtuUwr4WYaVFHLZZAfbX8XS8CYRhUK+XQgC
-         0Q7jAnRgznkQC+LoFUihg0E4qgFz+vB0Rtwmq8m9+AWL5dFrPmrFvaeGng83hjpwNIEa
-         U1xA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsYTHgX5yxUVf9Wsk9hB0VWFNVPcHUW8uD5Km8tGHGsyifnUyXOf1DldNcq6CUBEo101wcW/Z6+GrtQKs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv4pL6t/UsrswfsADiZKCyvtLLkz9VTzz9YqcfVkPhGstjvm6k
-	1l5+hgS0Vfcn6Fw+4S6hitda37iOiohos+CgNma5Etv984wNUDJeFNmYLcrLEEzSDiN/8dUYSNg
-	5CKPV0ugdDw2WdRADZg==
-X-Google-Smtp-Source: AGHT+IEQf7gF3CDATeAkdxoy1lakbmpl77+ngHJbtFgvj6kukP1PTmvKUpxaBaaF51Ybn0pIXIPzIN7ozusSR84=
-X-Received: from wmbej15.prod.google.com ([2002:a05:600c:3e8f:b0:454:abf8:a8aa])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:4a01:b0:3a3:67bb:8f3f with SMTP id ffacd0b85a97d-3b49aa8a304mr6237280f8f.53.1751874058223;
- Mon, 07 Jul 2025 00:40:58 -0700 (PDT)
-Date: Mon, 7 Jul 2025 07:40:57 +0000
-In-Reply-To: <20250704-topics-tyr-platform_iomem-v12-1-1d3d4bd8207d@collabora.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Vi2wDCXs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mImHEGzEJFgAhC6xm222rkjAys9setcfwtAgEAHYckv2+IE21AS4nO7fX25HAAd2CtiFbiajxhvtKo1JqmIIzBnLH4lsFgYYLLSsF4FBRTiKVszBDd5kIiJNDpw2TpTpJNhFRq8xvT58mXEiyYO+tDu5cPRqu/GkzbKmcm4kuOHrTlYhwgi8wHKQT0Y3B04ZtYH+Ox81CXLVf77z3MBrvHBQxDS8Wx/FuB4la2atVcP2GuSJeMK5t7fdbvENf8CHnnVAaZm8SqgHMJx96BRcOw5Kijxn+eeDZmeK/cGstUK0hG7u3CcFbsvTWgmr9xRzptj1DQZtsqrAFH3c6uOy+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iwTQe4gD2q8C0CNnXKBBzjOx9f1TZaoez635t+0Ukws=;
+ b=cik+U4EaRdc60MICSZN5NC5XRi60OMinryYBgkj4L3jRfeB4j56MbUUYqdAAv1/PID6L9dfFBWisOYagdFeIqLwqUIFxKTpxCEZxgrq0hG1lHDj5bb0J3oe8nopM+t6K3Jir8iH9PXqvpvs1AqOMzF8y26tdTkzc09w52xdTjvt7aDGzpU9t+65YeHMF4I4BFCM+Iyltvuyr0eVoOGoggisTiuDLLOwEirHt7TeK5GFVdpV4/ZrAHUhjjiGEhuLH6JvHYOjKpASyW7DJdIw/2nwZ6GgXXGxvPf+JivUqorPySK8i3yxrCEjZRGNa1yT1ckUWkv4ejmxv2Aqp1qT5gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iwTQe4gD2q8C0CNnXKBBzjOx9f1TZaoez635t+0Ukws=;
+ b=Vi2wDCXsLvdZEwy9hYPtqeyzS4fNSvSqlXB3Bs0yvthJQ+7pM4cPtfcemgLuvEAqjCHhkZmKom0rHFkj2Lj8KCtDlKIQXC47LjfOsBVFefhCHWGxf9m6Enr3Nbd09vP+PQRVMdiaOCiuh3RZixIYYZELDTtU/SbGSnWgO5qRLSc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ DM6PR12MB4337.namprd12.prod.outlook.com (2603:10b6:5:2a9::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.24; Mon, 7 Jul 2025 07:41:14 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8901.018; Mon, 7 Jul 2025
+ 07:41:14 +0000
+Message-ID: <1f18d7a3-b515-4096-aff5-1aea31ce4f7e@amd.com>
+Date: Mon, 7 Jul 2025 13:11:00 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 14/29] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
+ corbet@lwn.net, will@kernel.org
+Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+ thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+ shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+ peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+ praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
+ alok.a.tiwari@oracle.com, dwmw2@infradead.org, baolu.lu@linux.intel.com
+References: <cover.1751677708.git.nicolinc@nvidia.com>
+ <49a93d92ce657cf6a0d588d2b31ad3600ace21f7.1751677708.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <49a93d92ce657cf6a0d588d2b31ad3600ace21f7.1751677708.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0102.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:2ac::7) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com>
- <20250704-topics-tyr-platform_iomem-v12-1-1d3d4bd8207d@collabora.com>
-Message-ID: <aGt6CZAUeuK0XnmP@google.com>
-Subject: Re: [PATCH v12 1/3] rust: io: add resource abstraction
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Ying Huang <huang.ying.caritas@gmail.com>, 
-	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|DM6PR12MB4337:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b0751d8-3441-4dc5-047e-08ddbd29a609
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UnhNSzJYdXA3eWpxc2Y5S2c1RVJ1UHY0VCtFS0dmby9nUVJLQU1tL1F5U2NC?=
+ =?utf-8?B?WkdEUEozNFk4M0V6aFhMTDFRQXo1ck0zWnlSL2pRS202dXFSejRKU2RVSHhv?=
+ =?utf-8?B?bGlWWDFtVXl2VG9nZXNGbUVmT0N0RzRRTlFFUW9nZmw1UVJ3bHhzNVNSTE00?=
+ =?utf-8?B?M3RLazl2TXM5Zno4TjhURHBXMi91YlRwZ3JiNUFSVHl1KysyekJVRWdMb0Vy?=
+ =?utf-8?B?cWpXUng1U2tVYk1ESCtzRWJBY2Z0bUNHUHlSa3dZckgzRzkzYjVtUzFOb3l2?=
+ =?utf-8?B?cmFuS0VsUWt1YzBRcGk1ZUQzeC81SktJZXVvcEpqQlFDTFdRWDR5QXM3YUtC?=
+ =?utf-8?B?RThzMkxPYmFyNjNNQmgyRElPOTg0UENaUEp2V0E1SytrNHFwZ2pESFJsT2dB?=
+ =?utf-8?B?d0hxaGR0LzEvTStGMDhEdG1XYnNacHp3ZklHekxDWDZaTFVxWnB6Z3JDMDAv?=
+ =?utf-8?B?MXNwZnhiTll0QzlMU0hnTGY2K3ZzSWVuWWpDeWtJWSszclVQcFNjRGV2QTVa?=
+ =?utf-8?B?bHpjZFZKa0dVWXhDUGZjZmN4cjR2YzZOV09JaWxZSUdYZW83Vm5OeXVrSE9q?=
+ =?utf-8?B?SnpZaHMxSWhsZjgwYjV2Yk5rd1ZTVWV1enB5QUxpeHo5Q3JZY05BYjdrUEww?=
+ =?utf-8?B?MWZMSmQ2RVhEaFVtdUVNYnVoRVU3T3F1WUVUelUrK3NBc0JjbUJLZE96SElR?=
+ =?utf-8?B?d0ZpMURVZ015SnUxWmZxMlNjeUNJV1lMdmlOYkpsNVBDeFc2R1BHUk43ajkr?=
+ =?utf-8?B?THRHcm95RENSQ3RRQzJ5QjVWTUV6RExKaU56anc2aHFCWmVJc3dLRjFQcjdC?=
+ =?utf-8?B?Qk9WNGRkaTYrdndkdkdwbTJJRWhZejFvUkYxbTkxV3pRWTdwTndmREg0VVFN?=
+ =?utf-8?B?TUs5bTNvMDlJcTkrMnR0RGFyeU9VTWRNMU40YkJYV0FDaFR5T2hkQ2ZTZTZG?=
+ =?utf-8?B?TlJBeW9sL3JDMlJIVHIyeHZmNFQ4a3pvdmpBaFg4Y1N1TmYrQkt1SkpDbi9F?=
+ =?utf-8?B?RXg3WklFdmdHNDFoLzZLRlhvVDY0NzVDUVJlNVRzd2lyMU8wNDBjTWpnUG1W?=
+ =?utf-8?B?SWNNYmZCeEF5aEJqSTRXN0o3ZkUrNzVCYjJYZ202WVFqZWZzWk5IajNOQXBp?=
+ =?utf-8?B?UmFMVWJPbXJhRFdpWjQya0RqaHdHSVpKYkk0K2lKOGdXek9rQlBZbm9ZM09v?=
+ =?utf-8?B?c3R6RkdWaGpnekNBS2R1dWZkRXJIQTVINHRTNm52aDdkQlAzRG1kLzBrNU01?=
+ =?utf-8?B?SERRR0RML1ZrenVBT0Z0QnhqZFkvMkxTUlNTWXNEMVRBeUk5VS96bndIMHpL?=
+ =?utf-8?B?cVZ0a3NQcklTYldMYXBEL0krZmZYSGhiRi84K1E3Y1FMbTQ2SDgxa24rUjhU?=
+ =?utf-8?B?Wmw1dWVnbzM2am1MRUtqN3NtQk0xU3NMVnR6UVZvcWNNb2FoZUM2QU5RaWJZ?=
+ =?utf-8?B?SGVjb2NhSTJIMGhrS2hJNzlCK2psdmtMd25zZ3NYemVPeG95azhDODVyRjFK?=
+ =?utf-8?B?UmdSTjAzSXZiVU96TDdRWDJHbUhmWEhaV3V2cTNMQkR5bGtKeXkwQzY5c28v?=
+ =?utf-8?B?MFI5bEFqWkpFUmdwWUNrRlVzUVFycFY2U3AwczlWK1UrSWdhQVZnV2hpZzhO?=
+ =?utf-8?B?OGlIMVVUR3ZtUVMvdEhrTHgxMkN4RXBObnhCbUl2dnc2VU95M054dEVvdlB0?=
+ =?utf-8?B?YmhNbEVpcE1zZnd2QVZ0U2hRT1FOT2V4MlpGaXhEMzNGMW5SSHpoeHZKWGp1?=
+ =?utf-8?B?TDJVc0ZmWjl5bmpONi9DSVozMTlQeGVkSVpzVmo0L0JJWVh4amYwQmhUOXhw?=
+ =?utf-8?B?aTUybTBFOUUwK2VJemJsQ0JGdGZtbXFmVmxXbDhvYUJPc25rdGl4NzByNlZO?=
+ =?utf-8?B?ODlkZkZTdVNoVHFQZjBLdDVFa1N4bWJEVDZlSUdPSUhjS2psQmVtRGt4YnJw?=
+ =?utf-8?Q?Lki01KOK6EA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aTBxMTBaZXlpODBCYm5FVTdVYjY3NzhZLzZVOFNwQ3gvQmp3eEJ5OU16MXlm?=
+ =?utf-8?B?aEtuT3VpaVcrL1cwYUFacjZTTGlNKzZpbGhaYW9FTm5MaTVUaXFQb01qLzN3?=
+ =?utf-8?B?NUIxWFB3Q2U1V0psbjhuSnhUNitZdFdwbmVnMGhLbE0yU2pOTjl1NHM1bE55?=
+ =?utf-8?B?UlVnNWlOTVU4bTRNcHJqWHdwWW1NbEhuWkpTQlNQODhNZVZiVk0vZ0FKck5S?=
+ =?utf-8?B?OXVhZGRIa3RHUkR0bXFlWk9hQ1g4cGlhRk13RDVBdW4vbGtXWUpobEh0bDRY?=
+ =?utf-8?B?amFxMmNsUDJITWVRUllzVzZwZDNFTFVBenZEL0t3ZHliQ3hRTUc4NjZORkVp?=
+ =?utf-8?B?MjB3eXdJM0R2NFhkWVJOWVVFcWgxcDZzN2NQL3JTVlhjSXVOK2dvVGZ2alF6?=
+ =?utf-8?B?M2lmUnVUOFFpMzBjOUpRenZFZzNsbDd3RnBTZ1pROHU0RllIOEVLVGY5YndH?=
+ =?utf-8?B?cGxCSk4xWDdLR0QzOFN1L2F4VXVZMFNvd1c3eGtFa0J2ZFFWMFBSdWk4Vml2?=
+ =?utf-8?B?VUgyRzhDQkl5MEpRK3pIM2VnUml3cDNKS3lMTCtsSUVIZ3NkOFRaUEpwc25n?=
+ =?utf-8?B?ODNyOXczSVp0MG5sT2VVSFlCMHNFWnRycHNFbHVIS3FzdTVrcHRMRVB5NU1U?=
+ =?utf-8?B?eUx1YU85Qmk4RDRaYUhKUlVCdTBwRzhHL3VaY00zVHVISnZPU1NaeUtUdlBQ?=
+ =?utf-8?B?SE4rdnZQM0FZS0JLc3MxOFgzdmFNUElqV0V6UkZUNllFTDhxakNkNHczdnRr?=
+ =?utf-8?B?TGFwdENjYUN2TGhQYmpEZHdVdnphREFNa3lpWDYzNTEwNzZKMWVrRVFOWFl1?=
+ =?utf-8?B?Q0psdWF3dE92ZFBTTlFNcC9qT2VldHdreFpNbFBxMm5Rc1VWd0xzemJyN3px?=
+ =?utf-8?B?RGNrblJYTDVQa21Ma1ZDYitXU08rUmNiOHZQTkkyWTlGa0JWOXZJbmtXZmkz?=
+ =?utf-8?B?L0I5aWpCT21jOU9GL1BkQVhacCtya2NnMk9LWTVQUlRPUmU3ZWI5N3U0R0tx?=
+ =?utf-8?B?UGU3ZmhIeUZ6emRsLzNvQnNoRzJDaTBpQWgwaVdsVGdBMlJwUVl2UXptTG5J?=
+ =?utf-8?B?aVFDODg1SSt0N0lGVW9HUHV0OGxjQW5OeUk2VkxxaExxdmd0TFMzalQwWUg3?=
+ =?utf-8?B?U0xEVy9RTnRET3hPM0Q2ZUZxZ1hrYm52dHlYVnQ5WUtwUm1Yc2dKOXhobVNw?=
+ =?utf-8?B?N3pTeVZyanhQa0FvSkFOTVhSZDgraTFLMTBISWU3bTk4MzVkdnJjUnJveWNx?=
+ =?utf-8?B?R1paQmpUdUg0eUgvOUplOFNrVXVaWWY4M1U0bXgyblNzZmdsVnFTenB0K2U2?=
+ =?utf-8?B?emFLQVorQWZGVG5LWlhaRWcyN1QvaHVMWmJ5dzAxcUs3T1pETlMrNmdzMFp6?=
+ =?utf-8?B?NFVRV3k4Wk5JZkh1b0FRMWlGcll5ejNpYTI1a21ZU000Y1F2K2dhU2FvK0VH?=
+ =?utf-8?B?Y1pSaEtnOS9WbVpXbmpZVWN2eEthWHV5ZnBtZG9ENWczVWF2NnN4S0lzOFZ5?=
+ =?utf-8?B?amh1MXpFU0RSZjRRZFcrU2RSR0l3NjJZWVZUcHVrUlM3TFNjWkwwcVZWVVNh?=
+ =?utf-8?B?R0NpUW4zb0pMb0VITHBtUlkwMWphOE0wM2RvUDVsdFBMZE10eFVjbnp1OTFh?=
+ =?utf-8?B?dElzTStPdU1ZSDJ6Mm5nV1l5RG5DZXVIRit3R1pLOEVDY2JCMkR0dzRtaXF0?=
+ =?utf-8?B?WEtIWUxzZjRkd00rVDQ4clBsUGhsd0FuUmxjM0g4SkZsRy83RVMra3B3MmZs?=
+ =?utf-8?B?cjB2R21BbFowU3ZTR2ZWbzBQT2o4QlR5SEJpMm9Ld1RyV1AvOENjbmlzZzht?=
+ =?utf-8?B?OVhYc3d1V3RZOTQrMjc2Ky9UR2hIOUJEWFFoMVVlMkYzQm9JbTZ4eFpEMVNj?=
+ =?utf-8?B?YzVNMm5OM2RyREZtOThpQmVGUmJlM2VwaHFsOXFxV1ZxWldqb0JRTkZIeWtG?=
+ =?utf-8?B?N3dQRGZqV0tNVkZNcSszYk5mam5oTEdwcUlKaDdjcGJidXZyb1FWaVFNckUy?=
+ =?utf-8?B?MjU5eXptN21wUkxhcTltQmt2V3BHSnVQYXlBOW5GNnZVVGVlRjNicFJCa2FW?=
+ =?utf-8?B?Y05Ld2pCZ0R2d0ZHRmJDaU1tem1HcHhoQ3dCTkw4QllCS1JLWE1FeHVmaVRu?=
+ =?utf-8?Q?3axzj01Eirv/ceJRdZqDBaEeX?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b0751d8-3441-4dc5-047e-08ddbd29a609
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 07:41:13.9373
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qZnm960t1b/fOefuH4M35hgTvfoA8W5bYQ+1YDSg0D5NA/TdDiRj70Mz9FDIEOVImvvedstdFbdlqXsCCeruTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4337
 
-On Fri, Jul 04, 2025 at 01:25:26PM -0300, Daniel Almeida wrote:
-> In preparation for ioremap support, add a Rust abstraction for struct
-> resource.
-> 
-> A future commit will introduce the Rust API to ioremap a resource from a
-> platform device. The current abstraction, therefore, adds only the
-> minimum API needed to get that done.
-> 
-> Co-developed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+Hi ,
 
-Overall looks reasonable, but some comments below:
 
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/io.c               |  36 +++++++
->  rust/kernel/io.rs               |   4 +
->  rust/kernel/io/resource.rs      | 209 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 250 insertions(+)
+On 7/5/2025 6:43 AM, Nicolin Chen wrote:
+> Introduce a new IOMMUFD_CMD_HW_QUEUE_ALLOC ioctl for user space to allocate
+> a HW QUEUE object for a vIOMMU specific HW-accelerated queue, e.g.:
+>  - NVIDIA's Virtual Command Queue
+>  - AMD vIOMMU's Command Buffer, Event Log Buffers, and PPR Log Buffers
 > 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index 7e8f2285064797d5bbac5583990ff823b76c6bdc..5f795e60e889b9fc887013743c81b1cf92a52adb 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -53,6 +53,7 @@
->  #include <linux/file.h>
->  #include <linux/firmware.h>
->  #include <linux/fs.h>
-> +#include <linux/ioport.h>
->  #include <linux/jiffies.h>
->  #include <linux/jump_label.h>
->  #include <linux/mdio.h>
-> diff --git a/rust/helpers/io.c b/rust/helpers/io.c
-> index 15ea187c5466256effd07efe6f6995a1dd95a967..404776cf6717c8570c7600a24712ce6e4623d3c6 100644
-> --- a/rust/helpers/io.c
-> +++ b/rust/helpers/io.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
+> Since this is introduced with NVIDIA's VCMDQs that access the guest memory
+> in the physical address space, add an iommufd_hw_queue_alloc_phys() helper
+> that will create an access object to the queue memory in the IOAS, to avoid
+> the mappings of the guest memory from being unmapped, during the life cycle
+> of the HW queue object.
+> 
+> AMD's HW will need an hw_queue_init op that is mutually exclusive with the
+> hw_queue_init_phys op, and their case will bypass the access part, i.e. no
+> iommufd_hw_queue_alloc_phys() call.
+
+Thanks. We will implement hw_queue_init[_iova] to support AMD driver and fixup
+iommufd_hw_queue_alloc_ioctl(). Is that the correct understanding?
+
+-Vasant
+
+> 
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> --->  drivers/iommu/iommufd/iommufd_private.h |   2 +
+>  include/linux/iommufd.h                 |   1 +
+>  include/uapi/linux/iommufd.h            |  33 +++++
+>  drivers/iommu/iommufd/main.c            |   6 +
+>  drivers/iommu/iommufd/viommu.c          | 177 ++++++++++++++++++++++++
+>  5 files changed, 219 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+> index 06b8c2e2d9e6..dcd609573244 100644
+> --- a/drivers/iommu/iommufd/iommufd_private.h
+> +++ b/drivers/iommu/iommufd/iommufd_private.h
+> @@ -652,6 +652,8 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd);
+>  void iommufd_viommu_destroy(struct iommufd_object *obj);
+>  int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd);
+>  void iommufd_vdevice_destroy(struct iommufd_object *obj);
+> +int iommufd_hw_queue_alloc_ioctl(struct iommufd_ucmd *ucmd);
+> +void iommufd_hw_queue_destroy(struct iommufd_object *obj);
 >  
->  #include <linux/io.h>
-> +#include <linux/ioport.h>
+>  #ifdef CONFIG_IOMMUFD_TEST
+>  int iommufd_test(struct iommufd_ucmd *ucmd);
+> diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
+> index f13f3ca6adb5..ce4011a2fc27 100644
+> --- a/include/linux/iommufd.h
+> +++ b/include/linux/iommufd.h
+> @@ -123,6 +123,7 @@ struct iommufd_vdevice {
+>  struct iommufd_hw_queue {
+>  	struct iommufd_object obj;
+>  	struct iommufd_viommu *viommu;
+> +	struct iommufd_access *access;
 >  
->  void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
->  {
-> @@ -99,3 +100,38 @@ void rust_helper_writeq_relaxed(u64 value, void __iomem *addr)
->  	writeq_relaxed(value, addr);
->  }
+>  	u64 base_addr; /* in guest physical address space */
+>  	size_t length;
+> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+> index 640a8b5147c2..55459b9eee31 100644
+> --- a/include/uapi/linux/iommufd.h
+> +++ b/include/uapi/linux/iommufd.h
+> @@ -56,6 +56,7 @@ enum {
+>  	IOMMUFD_CMD_VDEVICE_ALLOC = 0x91,
+>  	IOMMUFD_CMD_IOAS_CHANGE_PROCESS = 0x92,
+>  	IOMMUFD_CMD_VEVENTQ_ALLOC = 0x93,
+> +	IOMMUFD_CMD_HW_QUEUE_ALLOC = 0x94,
+>  };
+>  
+>  /**
+> @@ -1156,4 +1157,36 @@ enum iommu_hw_queue_type {
+>  	IOMMU_HW_QUEUE_TYPE_DEFAULT = 0,
+>  };
+>  
+> +/**
+> + * struct iommu_hw_queue_alloc - ioctl(IOMMU_HW_QUEUE_ALLOC)
+> + * @size: sizeof(struct iommu_hw_queue_alloc)
+> + * @flags: Must be 0
+> + * @viommu_id: Virtual IOMMU ID to associate the HW queue with
+> + * @type: One of enum iommu_hw_queue_type
+> + * @index: The logical index to the HW queue per virtual IOMMU for a multi-queue
+> + *         model
+> + * @out_hw_queue_id: The ID of the new HW queue
+> + * @nesting_parent_iova: Base address of the queue memory in the guest physical
+> + *                       address space
+> + * @length: Length of the queue memory
+> + *
+> + * Allocate a HW queue object for a vIOMMU-specific HW-accelerated queue, which
+> + * allows HW to access a guest queue memory described using @nesting_parent_iova
+> + * and @length.
+> + *
+> + * A vIOMMU can allocate multiple queues, but it must use a different @index per
+> + * type to separate each allocation, e.g.
+> + *     Type1 HW queue0, Type1 HW queue1, Type2 HW queue0, ...
+> + */
+> +struct iommu_hw_queue_alloc {
+> +	__u32 size;
+> +	__u32 flags;
+> +	__u32 viommu_id;
+> +	__u32 type;
+> +	__u32 index;
+> +	__u32 out_hw_queue_id;
+> +	__aligned_u64 nesting_parent_iova;
+> +	__aligned_u64 length;
+> +};
+> +#define IOMMU_HW_QUEUE_ALLOC _IO(IOMMUFD_TYPE, IOMMUFD_CMD_HW_QUEUE_ALLOC)
 >  #endif
+> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+> index 778694d7c207..4e8dbbfac890 100644
+> --- a/drivers/iommu/iommufd/main.c
+> +++ b/drivers/iommu/iommufd/main.c
+> @@ -354,6 +354,7 @@ union ucmd_buffer {
+>  	struct iommu_destroy destroy;
+>  	struct iommu_fault_alloc fault;
+>  	struct iommu_hw_info info;
+> +	struct iommu_hw_queue_alloc hw_queue;
+>  	struct iommu_hwpt_alloc hwpt;
+>  	struct iommu_hwpt_get_dirty_bitmap get_dirty_bitmap;
+>  	struct iommu_hwpt_invalidate cache;
+> @@ -396,6 +397,8 @@ static const struct iommufd_ioctl_op iommufd_ioctl_ops[] = {
+>  		 struct iommu_fault_alloc, out_fault_fd),
+>  	IOCTL_OP(IOMMU_GET_HW_INFO, iommufd_get_hw_info, struct iommu_hw_info,
+>  		 __reserved),
+> +	IOCTL_OP(IOMMU_HW_QUEUE_ALLOC, iommufd_hw_queue_alloc_ioctl,
+> +		 struct iommu_hw_queue_alloc, length),
+>  	IOCTL_OP(IOMMU_HWPT_ALLOC, iommufd_hwpt_alloc, struct iommu_hwpt_alloc,
+>  		 __reserved),
+>  	IOCTL_OP(IOMMU_HWPT_GET_DIRTY_BITMAP, iommufd_hwpt_get_dirty_bitmap,
+> @@ -559,6 +562,9 @@ static const struct iommufd_object_ops iommufd_object_ops[] = {
+>  	[IOMMUFD_OBJ_FAULT] = {
+>  		.destroy = iommufd_fault_destroy,
+>  	},
+> +	[IOMMUFD_OBJ_HW_QUEUE] = {
+> +		.destroy = iommufd_hw_queue_destroy,
+> +	},
+>  	[IOMMUFD_OBJ_HWPT_PAGING] = {
+>  		.destroy = iommufd_hwpt_paging_destroy,
+>  		.abort = iommufd_hwpt_paging_abort,
+> diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+> index 081ee6697a11..00641204efb2 100644
+> --- a/drivers/iommu/iommufd/viommu.c
+> +++ b/drivers/iommu/iommufd/viommu.c
+> @@ -201,3 +201,180 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+>  	iommufd_put_object(ucmd->ictx, &viommu->obj);
+>  	return rc;
+>  }
 > +
-> +resource_size_t rust_helper_resource_size(struct resource *res)
+> +static void iommufd_hw_queue_destroy_access(struct iommufd_ctx *ictx,
+> +					    struct iommufd_access *access,
+> +					    u64 base_iova, size_t length)
 > +{
-> +	return resource_size(res);
+> +	iommufd_access_unpin_pages(access, base_iova, length);
+> +	iommufd_access_detach_internal(access);
+> +	iommufd_access_destroy_internal(ictx, access);
 > +}
 > +
-> +struct resource *rust_helper_request_mem_region(resource_size_t start,
-> +						resource_size_t n,
-> +						const char *name)
+> +void iommufd_hw_queue_destroy(struct iommufd_object *obj)
 > +{
-> +	return request_mem_region(start, n, name);
+> +	struct iommufd_hw_queue *hw_queue =
+> +		container_of(obj, struct iommufd_hw_queue, obj);
+> +
+> +	if (hw_queue->destroy)
+> +		hw_queue->destroy(hw_queue);
+> +	if (hw_queue->access)
+> +		iommufd_hw_queue_destroy_access(hw_queue->viommu->ictx,
+> +						hw_queue->access,
+> +						hw_queue->base_addr,
+> +						hw_queue->length);
+> +	if (hw_queue->viommu)
+> +		refcount_dec(&hw_queue->viommu->obj.users);
 > +}
 > +
-> +void rust_helper_release_mem_region(resource_size_t start, resource_size_t n)
+> +/*
+> + * When the HW accesses the guest queue via physical addresses, the underlying
+> + * physical pages of the guest queue must be contiguous. Also, for the security
+> + * concern that IOMMUFD_CMD_IOAS_UNMAP could potentially remove the mappings of
+> + * the guest queue from the nesting parent iopt while the HW is still accessing
+> + * the guest queue memory physically, such a HW queue must require an access to
+> + * pin the underlying pages and prevent that from happening.
+> + */
+> +static struct iommufd_access *
+> +iommufd_hw_queue_alloc_phys(struct iommu_hw_queue_alloc *cmd,
+> +			    struct iommufd_viommu *viommu, phys_addr_t *base_pa)
 > +{
-> +	release_mem_region(start, n);
+> +	struct iommufd_access *access;
+> +	struct page **pages;
+> +	size_t max_npages;
+> +	size_t length;
+> +	u64 offset;
+> +	size_t i;
+> +	int rc;
+> +
+> +	offset =
+> +		cmd->nesting_parent_iova - PAGE_ALIGN(cmd->nesting_parent_iova);
+> +	/* DIV_ROUND_UP(offset + cmd->length, PAGE_SIZE) */
+> +	if (check_add_overflow(offset, cmd->length, &length))
+> +		return ERR_PTR(-ERANGE);
+> +	if (check_add_overflow(length, PAGE_SIZE - 1, &length))
+> +		return ERR_PTR(-ERANGE);
+> +	max_npages = length / PAGE_SIZE;
+> +
+> +	/*
+> +	 * Use kvcalloc() to avoid memory fragmentation for a large page array.
+> +	 * Set __GFP_NOWARN to avoid syzkaller blowups
+> +	 */
+> +	pages = kvcalloc(max_npages, sizeof(*pages), GFP_KERNEL | __GFP_NOWARN);
+> +	if (!pages)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	access = iommufd_access_create_internal(viommu->ictx);
+> +	if (IS_ERR(access)) {
+> +		rc = PTR_ERR(access);
+> +		goto out_free;
+> +	}
+> +
+> +	rc = iommufd_access_attach_internal(access, viommu->hwpt->ioas);
+> +	if (rc)
+> +		goto out_destroy;
+> +
+> +	rc = iommufd_access_pin_pages(access, cmd->nesting_parent_iova,
+> +				      cmd->length, pages, 0);
+> +	if (rc)
+> +		goto out_detach;
+> +
+> +	/* Validate if the underlying physical pages are contiguous */
+> +	for (i = 1; i < max_npages; i++) {
+> +		if (page_to_pfn(pages[i]) == page_to_pfn(pages[i - 1]) + 1)
+> +			continue;
+> +		rc = -EFAULT;
+> +		goto out_unpin;
+> +	}
+> +
+> +	*base_pa = page_to_pfn(pages[0]) << PAGE_SHIFT;
+> +	kfree(pages);
+> +	return access;
+> +
+> +out_unpin:
+> +	iommufd_access_unpin_pages(access, cmd->nesting_parent_iova,
+> +				   cmd->length);
+> +out_detach:
+> +	iommufd_access_detach_internal(access);
+> +out_destroy:
+> +	iommufd_access_destroy_internal(viommu->ictx, access);
+> +out_free:
+> +	kfree(pages);
+> +	return ERR_PTR(rc);
 > +}
 > +
-> +struct resource *rust_helper_request_region(resource_size_t start,
-> +					    resource_size_t n, const char *name)
+> +int iommufd_hw_queue_alloc_ioctl(struct iommufd_ucmd *ucmd)
 > +{
-> +	return request_region(start, n, name);
+> +	struct iommu_hw_queue_alloc *cmd = ucmd->cmd;
+> +	struct iommufd_hw_queue *hw_queue;
+> +	struct iommufd_viommu *viommu;
+> +	struct iommufd_access *access;
+> +	size_t hw_queue_size;
+> +	phys_addr_t base_pa;
+> +	u64 last;
+> +	int rc;
+> +
+> +	if (cmd->flags || cmd->type == IOMMU_HW_QUEUE_TYPE_DEFAULT)
+> +		return -EOPNOTSUPP;
+> +	if (!cmd->length)
+> +		return -EINVAL;
+> +	if (check_add_overflow(cmd->nesting_parent_iova, cmd->length - 1,
+> +			       &last))
+> +		return -EOVERFLOW;
+> +
+> +	viommu = iommufd_get_viommu(ucmd, cmd->viommu_id);
+> +	if (IS_ERR(viommu))
+> +		return PTR_ERR(viommu);
+> +
+> +	if (!viommu->ops || !viommu->ops->get_hw_queue_size ||
+> +	    !viommu->ops->hw_queue_init_phys) {
+> +		rc = -EOPNOTSUPP;
+> +		goto out_put_viommu;
+> +	}
+> +
+> +	hw_queue_size = viommu->ops->get_hw_queue_size(viommu, cmd->type);
+> +	if (!hw_queue_size) {
+> +		rc = -EOPNOTSUPP;
+> +		goto out_put_viommu;
+> +	}
+> +
+> +	/*
+> +	 * It is a driver bug for providing a hw_queue_size smaller than the
+> +	 * core HW queue structure size
+> +	 */
+> +	if (WARN_ON_ONCE(hw_queue_size < sizeof(*hw_queue))) {
+> +		rc = -EOPNOTSUPP;
+> +		goto out_put_viommu;
+> +	}
+> +
+> +	hw_queue = (struct iommufd_hw_queue *)_iommufd_object_alloc_ucmd(
+> +		ucmd, hw_queue_size, IOMMUFD_OBJ_HW_QUEUE);
+> +	if (IS_ERR(hw_queue)) {
+> +		rc = PTR_ERR(hw_queue);
+> +		goto out_put_viommu;
+> +	}
+> +
+> +	access = iommufd_hw_queue_alloc_phys(cmd, viommu, &base_pa);
+> +	if (IS_ERR(access)) {
+> +		rc = PTR_ERR(access);
+> +		goto out_put_viommu;
+> +	}
+> +
+> +	hw_queue->viommu = viommu;
+> +	refcount_inc(&viommu->obj.users);
+> +	hw_queue->access = access;
+> +	hw_queue->type = cmd->type;
+> +	hw_queue->length = cmd->length;
+> +	hw_queue->base_addr = cmd->nesting_parent_iova;
+> +
+> +	rc = viommu->ops->hw_queue_init_phys(hw_queue, cmd->index, base_pa);
+> +	if (rc)
+> +		goto out_put_viommu;
+> +
+> +	cmd->out_hw_queue_id = hw_queue->obj.id;
+> +	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
+> +
+> +out_put_viommu:
+> +	iommufd_put_object(ucmd->ictx, &viommu->obj);
+> +	return rc;
 > +}
-> +
-> +struct resource *rust_helper_request_muxed_region(resource_size_t start,
-> +						  resource_size_t n,
-> +						  const char *name)
-> +{
-> +	return request_muxed_region(start, n, name);
-> +}
-> +
-> +void rust_helper_release_region(resource_size_t start, resource_size_t n)
-> +{
-> +	release_region(start, n);
-> +}
-> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-> index 72d80a6f131e3e826ecd9d2c3bcf54e89aa60cc3..7b70d5b5477e57d6d0f24bcd26bd8b0071721bc0 100644
-> --- a/rust/kernel/io.rs
-> +++ b/rust/kernel/io.rs
-> @@ -7,6 +7,10 @@
->  use crate::error::{code::EINVAL, Result};
->  use crate::{bindings, build_assert};
->  
-> +pub mod resource;
-> +
-> +pub use resource::Resource;
-> +
->  /// Raw representation of an MMIO region.
->  ///
->  /// By itself, the existence of an instance of this structure does not provide any guarantees that
-> diff --git a/rust/kernel/io/resource.rs b/rust/kernel/io/resource.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..a8ad04b1abf8e46928ed98564e64a07180250024
-> --- /dev/null
-> +++ b/rust/kernel/io/resource.rs
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Abstractions for [system
-> +//! resources](https://docs.kernel.org/core-api/kernel-api.html#resources-management).
-> +//!
-> +//! C header: [`include/linux/ioport.h`](srctree/include/linux/ioport.h)
-> +
-> +use core::ops::Deref;
-> +use core::ptr::NonNull;
-> +
-> +use crate::str::CStr;
-> +use crate::types::Opaque;
-> +
-> +/// Resource Size type.
-> +///
-> +/// This is a type alias to either `u32` or `u64` depending on the config option
-> +/// `CONFIG_PHYS_ADDR_T_64BIT`.
-> +#[cfg(CONFIG_PHYS_ADDR_T_64BIT)]
-> +pub type ResourceSize = u64;
-> +
-> +/// Resource Size type.
-> +///
-> +/// This is a type alias to either `u32` or `u64` depending on the config option
-> +/// `CONFIG_PHYS_ADDR_T_64BIT`.
-> +#[cfg(not(CONFIG_PHYS_ADDR_T_64BIT))]
-> +pub type ResourceSize = u32;
-> +
-> +/// A region allocated from a parent [`Resource`].
-> +///
-> +/// # Invariants
-> +///
-> +/// - `self.0` points to a valid `bindings::resource` that was obtained through
-> +///   `bindings::__request_region`.
-> +pub struct Region(NonNull<bindings::resource>);
-> +
-> +impl Deref for Region {
-> +    type Target = Resource;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        // SAFETY: Safe as per the invariant of `Region`.
-> +        unsafe { Resource::as_ref(self.0.as_ptr()) }
-> +    }
-> +}
-> +
-> +impl Drop for Region {
-> +    fn drop(&mut self) {
-> +        // SAFETY: Safe as per the invariant of `Region`.
-> +        let res = unsafe { Resource::as_ref(self.0.as_ptr()) };
-> +        let flags = res.flags();
-> +
-> +        let release_fn = if flags.contains(flags::IORESOURCE_MEM) {
-> +            bindings::release_mem_region
-> +        } else {
-> +            bindings::release_region
-> +        };
 
-You can avoid this unsafe via the deref() impl.
-
-let (flags, start, size) = {
-    let res = &**self;
-    (res.flags(), res.start(), res.size())
-};
-
-> +        // SAFETY: Safe as per the invariant of `Region`.
-> +        unsafe { release_fn(res.start(), res.size()) };
-> +    }
-> +}
-> +
-> +// SAFETY: `Region` only holds a pointer to a C `struct resource`, which is safe to be used from
-> +// any thread.
-> +unsafe impl Send for Region {}
-> +
-> +// SAFETY: `Region` only holds a pointer to a C `struct resource`, references to which are
-> +// safe to be used from any thread.
-> +unsafe impl Sync for Region {}
-> +
-> +/// A resource abstraction.
-> +///
-> +/// # Invariants
-> +///
-> +/// [`Resource`] is a transparent wrapper around a valid `bindings::resource`.
-> +#[repr(transparent)]
-> +pub struct Resource(Opaque<bindings::resource>);
-> +
-> +impl Resource {
-> +    /// Creates a reference to a [`Resource`] from a valid pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller must ensure that for the duration of 'a, the pointer will
-> +    /// point at a valid `bindings::resource`.
-> +    ///
-> +    /// The caller must also ensure that the [`Resource`] is only accessed via the
-> +    /// returned reference for the duration of 'a.
-> +    pub(crate) const unsafe fn as_ref<'a>(ptr: *mut bindings::resource) -> &'a Self {
-
-We usually call this method `from_raw`.
-
-> +        // SAFETY: Self is a transparent wrapper around `Opaque<bindings::resource>`.
-> +        unsafe { &*ptr.cast() }
-> +    }
-> +
-> +    /// Requests a resource region.
-> +    ///
-> +    /// Exclusive access will be given and the region will be marked as busy.
-> +    /// Further calls to [`Self::request_region`] will return [`None`] if
-> +    /// the region, or a part of it, is already in use.
-> +    pub fn request_region(
-> +        &self,
-> +        start: ResourceSize,
-> +        size: ResourceSize,
-> +        name: &'static CStr,
-
-Is this name used for a lookup or stored? If just a lookup, then it
-doesn't need to be 'static.
-
-> +        flags: Flags,
-> +    ) -> Option<Region> {
-> +        // SAFETY: Safe as per the invariant of `Resource`.
-> +        let region = unsafe {
-> +            bindings::__request_region(
-> +                self.0.get(),
-> +                start,
-> +                size,
-> +                name.as_char_ptr(),
-> +                flags.0 as i32,
-
-I would use `as c_int` here. (Or change the type stored in Flags.)
-
-> +            )
-> +        };
-> +
-> +        Some(Region(NonNull::new(region)?))
-> +    }
-> +
-> +    /// Returns the size of the resource.
-> +    pub fn size(&self) -> ResourceSize {
-> +        let inner = self.0.get();
-> +        // SAFETY: safe as per the invariants of `Resource`.
-> +        unsafe { bindings::resource_size(inner) }
-> +    }
-> +
-> +    /// Returns the start address of the resource.
-> +    pub fn start(&self) -> u64 {
-> +        let inner = self.0.get();
-> +        // SAFETY: safe as per the invariants of `Resource`.
-> +        unsafe { *inner }.start
-
-This needs to be
-
-unsafe { (*inner).start }
-
-What you wrote is not equivalent. (*inner) is a place expression, but
-when you write `unsafe { <place expr> }` that turns it into a value
-expression by reading the value. So this code copies the entire struct
-to the stack, and then you read `start` from the copy on the stack.
-
-> +    }
-> +
-> +    /// Returns the name of the resource.
-> +    pub fn name(&self) -> &'static CStr {
-> +        let inner = self.0.get();
-> +        // SAFETY: safe as per the invariants of `Resource`
-> +        unsafe { CStr::from_char_ptr((*inner).name) }
-> +    }
-> +
-> +    /// Returns the flags associated with the resource.
-> +    pub fn flags(&self) -> Flags {
-> +        let inner = self.0.get();
-> +        // SAFETY: safe as per the invariants of `Resource`
-> +        let flags = unsafe { *inner }.flags;
-> +
-> +        Flags(flags)
-> +    }
-> +}
-> +
-> +// SAFETY: `Resource` only holds a pointer to a C `struct resource`, which is
-> +// safe to be used from any thread.
-> +unsafe impl Send for Resource {}
-> +
-> +// SAFETY: `Resource` only holds a pointer to a C `struct resource`, references
-> +// to which are safe to be used from any thread.
-> +unsafe impl Sync for Resource {}
-> +
-> +/// Resource flags as stored in the C `struct resource::flags` field.
-> +///
-> +/// They can be combined with the operators `|`, `&`, and `!`.
-> +///
-> +/// Values can be used from the [`flags`] module.
-> +#[derive(Clone, Copy, PartialEq)]
-> +pub struct Flags(usize);
-
-Based on usage it looks like the correct type is c_int?
-
-> +impl Flags {
-> +    /// Check whether `flags` is contained in `self`.
-> +    pub fn contains(self, flags: Flags) -> bool {
-> +        (self & flags) == flags
-> +    }
-> +}
-> +
-> +impl core::ops::BitOr for Flags {
-> +    type Output = Self;
-> +    fn bitor(self, rhs: Self) -> Self::Output {
-> +        Self(self.0 | rhs.0)
-> +    }
-> +}
-> +
-> +impl core::ops::BitAnd for Flags {
-> +    type Output = Self;
-> +    fn bitand(self, rhs: Self) -> Self::Output {
-> +        Self(self.0 & rhs.0)
-> +    }
-> +}
-> +
-> +impl core::ops::Not for Flags {
-> +    type Output = Self;
-> +    fn not(self) -> Self::Output {
-> +        Self(!self.0)
-> +    }
-> +}
-> +
-> +/// Resource flags as stored in the `struct resource::flags` field.
-> +pub mod flags {
-
-You can do:
-
-impl Flags {
-    pub const IORESOURCE_IO: Flags = Flags(bindings::IORESOURCE_IO as usize);
-}
-
-instead of a module.
-
-> +    use super::Flags;
-> +
-> +    /// PCI/ISA I/O ports.
-> +    pub const IORESOURCE_IO: Flags = Flags(bindings::IORESOURCE_IO as usize);
-> +
-> +    /// Resource is software muxed.
-> +    pub const IORESOURCE_MUXED: Flags = Flags(bindings::IORESOURCE_MUXED as usize);
-> +
-> +    /// Resource represents a memory region.
-> +    pub const IORESOURCE_MEM: Flags = Flags(bindings::IORESOURCE_MEM as usize);
-> +
-> +    /// Resource represents a memory region that must be ioremaped using `ioremap_np`.
-> +    pub const IORESOURCE_MEM_NONPOSTED: Flags = Flags(bindings::IORESOURCE_MEM_NONPOSTED as usize);
-> +}
-> 
-> -- 
-> 2.50.0
-> 
