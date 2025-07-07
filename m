@@ -1,151 +1,112 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2631A1E22FC;
-	Mon,  7 Jul 2025 13:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7FA2882C2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751895374; cv=none; b=fCUSl2eZeOBInNaQiL/r8j9liHyMUu3ykyEbuwSyul/IdBsg91OtbEo6ZNLbIc8KEyAY4m3B/0FiLAFudxNFVnVINz3+H8Z4hsOQcX4bO+TazE473hrxJF5fzAPPvJ+JHm5VLf9kJCQ+1rCRthbJh8YuZzzMDSqKLpS2uSZR5ic=
+	t=1751895554; cv=none; b=WBUZHzBWje13HpNj8DxstrxSUZIxrEUsF1BvXUnN2rcamrJbtBbjdRQaZ0soB9IASNEEdcHUy4spluTSqbKHxIybSBp6JucQ3HL0TFagNXylhLJQM7xv4XomLEOwyxzs3i9SXbPzecCA9vhk0FRFtfKs28LHDGdX1IODRUu9xcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751895374; c=relaxed/simple;
-	bh=O377eaO+Jlj86ZSB2RpCzQcB8R9z4Xe0q5jCGof+Qtk=;
+	s=arc-20240116; t=1751895554; c=relaxed/simple;
+	bh=rSVN+37OZ1nxxk0c4XpB4pzH8Koab5xLneDmAWjx9j0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rR6TrOD5QMBG62B5+w0TVDPhVdiakKBs3YgR+xwbQ6RUkMi32dkTOJhYdNWMXE+jg9BL6F/cY+lW67tFcYNDnf7R4VUaZstpOskNzFjmrXVcIiODv9IR7J3FNZUyzH6YX2sNlePwdVg3IKP3y1unKf630tDNF1IF10yQyw8o188=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAwxzTh1; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=AQejLkX0DgyPjSEvbIxUGbuDh75EsTYY4VOI3MiKIiM3N/nlxQuj84LCS72PsjMQSB1eRiDsvwZ4bro/UIzqg1/QXnrXjJm8lskIfoxgJ1JgER9Q1RSlBQLL7vkgYazA3GwKGdpDEGbdBSfh7Uih/J2kxH4f+mvPTbDshAq4/J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cgeruFAl; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAwxzTh1"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso6028987a12.1;
-        Mon, 07 Jul 2025 06:36:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cgeruFAl"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45348bff79fso34417555e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 06:39:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751895371; x=1752500171; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751895551; x=1752500351; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B67QLvyHZDkG3dCW4xDkICWa2oqhwCHUYXHYCu0rbCU=;
-        b=EAwxzTh1Xn7XfEbAzHaOZtxe9G1IpVeZvi/qJGpYaHjmG7h4w9qeNeUrFt4RW/g7+y
-         KNkq1WceyAM2kjZL4evwjw70CnG9GQNyUBM7GW1/U+ukrzDC5DXKwFkVna/JssTmZnT9
-         zLeyoxE2XQxI3ACksvdGowUIskhdPol+hZenepBHd0Q6DMhBh3pQeGWQcBtvzRTWmYsk
-         67aU5xrRf7wqHLS9An70b+7ALQRHFFzgWyBxNsIb9J4QzC13mLgoyTbIz6UgUzQXloip
-         ZSNcjYRHgN8zA26kSF/kVZXTjD5WCSx074ihrjPMxog9WcrWKZiGA54g+VKQF7aA8sxJ
-         3EEQ==
+        bh=4FB3akW2uROgcxiqH7umM6G5loDI0rtj9L6/XnUx0ZE=;
+        b=cgeruFAlQMbMVDkMS24jz1ZYefPwkPp5X4CLsNx8OB+O1XKw7vxVEQCTLd6RuJZIaf
+         BE1oe2FpKlXvodaQy+g9BzGFuTs/qyAhkWBggTZmttg6ivTqHUvDiCWTIvlIcYz8KDAz
+         R9qi7kSQOYF79VdbWE1Bhdi05FfOOoLbwrOmZO9BI7SmHUqTeRBdxdvBE1Fje2YIP5KT
+         phFvVHEtPA9Zn4V7DeRbzVXCnSQQqttYgewIM/9EvsY7Xu2ZPB5kEFw0Bb2rW47ZwPkF
+         SJogtXtIBVw7dr+kQUIXPahibcKERSrLKz5CqUmYQzREzf3Q/8CscVPcTx/vbjjh+kHl
+         7FZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751895371; x=1752500171;
+        d=1e100.net; s=20230601; t=1751895551; x=1752500351;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B67QLvyHZDkG3dCW4xDkICWa2oqhwCHUYXHYCu0rbCU=;
-        b=Cml52tiOyH5yAr09JQR11baxE6QAz7aoZ+ywlCkgIX2s2S4XITCxbGI21rI8/amapB
-         1zhcyQoQ5ZS7G3z1ZG6BmFKPQJfqMke5F7loj6TUgx94zZlO9FMM+tk7Xh+XCERLZZRa
-         NP/nG1Wnz6MbFY2uICmSrKS2Rj352BlBCArcfj1ypaaL1fgLgaaLiWjfMy7gssdYKNvk
-         GL+n5fW9Vi8hUOgUZZwWNBiJE+bqHLoVM0j3qIbwwyDPA/Us1xKBkuf2389JJm/mtbtC
-         TuB7glrPnzQxnHyV5jhlsEzXN/E+eEhQGHhn50X+/PdAVX9vtSwD+2PJBZI14tojq+RC
-         7bfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwgvkFOPhZodGrA61+zlqxfvn4+Gnu59SlaYVMxtUO884W8JJ2DdD6xBk2tcskKwlTiECGkEXu+S4NOqRu@vger.kernel.org, AJvYcCXdejgPR5oCjdsJnUjv+Dxdzz2tny9LuO3EmJPcSt22zdk/dM6ykXszD6Tcc6njS7sxIC4N84T2FHRYcvq/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhI4KK0P442SJE2/vfaMLIB7DyhTh6CIslMlzcNEKzCX4vlinD
-	8l/yGPh5PYiv5WP5A0T+XHG9n2SRhcQClzn5w1GEIGE4oBxUi6DJthOV5rw5IzduLZWGs8s108+
-	cYXY1RFS5hRU+JFAFgBa6OK5YFiO3+2fKg6Fv
-X-Gm-Gg: ASbGnct4LP3g6lGUc+abrHbA3xBPkCzmerH0BQ+7ivn69fkqAxyZdzFY+VQ1TEDb+UH
-	5slBbarU6ik8tTOCY3+qAUws/xKUR59wOYcFUCczI+K8vykXv1rsQLww0l8QcUzIf+aCyr6N3o/
-	B2ITnCLwfX303Ff9SucKMfSGpGxedcflcfvkahj+4Lq7VGpFUA4/2J1mDzR7mxyqbzkawhZBIPo
-	Hb5x8JzJk97
-X-Google-Smtp-Source: AGHT+IE3xKDRxiceWfgDhOqdfWXtjxPAUKmvoHmxd7No4ahz6Uels53hHP1g6tE+28lVM037geC6nzs3mFbTA+YYN6U=
-X-Received: by 2002:a05:6402:280d:b0:607:19a6:9f1d with SMTP id
- 4fb4d7f45d1cf-60ff388d517mr7405843a12.14.1751895371254; Mon, 07 Jul 2025
- 06:36:11 -0700 (PDT)
+        bh=4FB3akW2uROgcxiqH7umM6G5loDI0rtj9L6/XnUx0ZE=;
+        b=t1tm5XVvJC3wn4yVcs7Is46hh8dsyjkLrH58tauD4Q+d3w4N1aBjxkziioSgnUXWt4
+         t42OUnuzpZhngRDHUhg+ltS6MKWvqEVhKxOYwNxA5HdmEUoA+TVGEnjhE0WUR21YYARv
+         3+Htg0mXcao17kQR76lzOX3It6/KtBePt3h+YOXqP8Q5oIWDsdq39VVdA5j6+MKAfpF7
+         ILX1OTJ0W77fIR0QJFmfkAT8GQ7doU36+4vCIf1AWrGKVJ9F7ZlWqkkJGAuuoTXxhuba
+         d3N/0wu4kO4Dw5DS7XWwJquFKKFNb1Y95L1WRlVr32DRwtzmeNWAdTKwMFeig9YcdaYB
+         DFLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSgr2QAkjBW0WTqiNDqCSSGi/BmMBkBoesokKf69o+2oE9fjNmmqm1sV5f4nFbTU+Rqd/VtzNVq1q4D00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzexZhcPVpcZaZxsp3eIWS6jTEbbbOG22PpgDj4gfs7K/H5LRRv
+	D0FDi03B/BMVHiCBduo3jzXRB4b7XMhWjrIcZQgsHk9Bt4oplrTBGeBbR7r5wvObZUz8FZKZ1AG
+	OCgqMxeMLNV7ikFCI72me+KQBbj/jREEsbhe2TSRq
+X-Gm-Gg: ASbGncuY35puohOjWVuUOPK+FnIhHPQDLaGEaORee+4itTRIKTyuNa+88RPA2lClaUd
+	Gc5C9o/Ub/q2p1cIBEp2kv5TUbYV2jZyf0XUamrrJCqgRb9nYxz6jGy2ATtAMEDl8u5Xf3G3fLP
+	D8L2gpj+HQhZA66L0wbDt+8l0eropwvytrk6g6befvsfa2KD5fFCBvJLW8+A8U7VmDRY6kvBSPo
+	72ptApjkQ==
+X-Google-Smtp-Source: AGHT+IEaUZnenYQLKgYyVo3pyfBJMB9pXTg1TRSCW3BPSEm7LC8Pa9g2F7WOtEqZWQqlTsZ6zPdnN8WIllT+obQvkzc=
+X-Received: by 2002:a05:600c:8594:b0:450:cf42:7565 with SMTP id
+ 5b1f17b1804b1-454b51126afmr73979285e9.23.1751895550535; Mon, 07 Jul 2025
+ 06:39:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703064738.2631-1-lirongqing@baidu.com>
-In-Reply-To: <20250703064738.2631-1-lirongqing@baidu.com>
-From: Stefan Hajnoczi <stefanha@gmail.com>
-Date: Mon, 7 Jul 2025 09:35:58 -0400
-X-Gm-Features: Ac12FXwqf0z-MDIQB81h2vm6zchf-sItAwZG0CkAA6vlslCY0d5FQLuB129JRRE
-Message-ID: <CAJSP0QUcOr=1SZiMSaFXP=kh5RpAYjduy6D73QEQu9JnV1ua+Q@mail.gmail.com>
-Subject: Re: [PATCH] virtio_fs: fix the hash table using in virtio_fs_enqueue_req()
-To: lirongqing <lirongqing@baidu.com>
-Cc: vgoyal@redhat.com, stefanha@redhat.com, miklos@szeredi.hu, 
-	eperezma@redhat.com, virtualization@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fushuai Wang <wangfushuai@baidu.com>
+References: <20250707-module-params-v3-v15-0-c1f4269a57b9@kernel.org> <20250707-module-params-v3-v15-1-c1f4269a57b9@kernel.org>
+In-Reply-To: <20250707-module-params-v3-v15-1-c1f4269a57b9@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 7 Jul 2025 15:38:58 +0200
+X-Gm-Features: Ac12FXx_fVjA2nF_nJiYWwsUf6PmudMDj0J-14ydNb016WmDb53IS0-a5p2ihe4
+Message-ID: <CAH5fLgiKo=jN_V5cAe_AJqxxp7mQWqhKx7knkEj6js3yiU9sqA@mail.gmail.com>
+Subject: Re: [PATCH v15 1/7] rust: sync: add `SetOnce`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
+	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 3, 2025 at 2:48=E2=80=AFAM lirongqing <lirongqing@baidu.com> wr=
-ote:
+On Mon, Jul 7, 2025 at 3:32=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
 >
-> From: Li RongQing <lirongqing@baidu.com>
+> Introduce the `SetOnce` type, a container that can only be written once.
+> The container uses an internal atomic to synchronize writes to the intern=
+al
+> value.
 >
-> The original commit be2ff42c5d6e ("fuse: Use hash table to link
-> processing request") converted fuse_pqueue->processing to a hash table,
-> but virtio_fs_enqueue_req() was not updated to use it correctly.
-> So use fuse_pqueue->processing as a hash table, this make the code
-> more coherent
->
-> Co-developed-by: Fushuai Wang <wangfushuai@baidu.com>
-> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> ---
->  fs/fuse/dev.c       | 1 +
->  fs/fuse/virtio_fs.c | 6 ++++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+LGTM:
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
->
-> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> index e80cd8f..4659bc8 100644
-> --- a/fs/fuse/dev.c
-> +++ b/fs/fuse/dev.c
-> @@ -322,6 +322,7 @@ unsigned int fuse_req_hash(u64 unique)
->  {
->         return hash_long(unique & ~FUSE_INT_REQ_BIT, FUSE_PQ_HASH_BITS);
->  }
-> +EXPORT_SYMBOL_GPL(fuse_req_hash);
->
->  /*
->   * A new request is available, wake fiq->waitq
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index b8a99d3..d050470 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -21,6 +21,7 @@
->  #include <linux/cleanup.h>
->  #include <linux/uio.h>
->  #include "fuse_i.h"
-> +#include "fuse_dev_i.h"
->
->  /* Used to help calculate the FUSE connection's max_pages limit for a re=
-quest's
->   * size. Parts of the struct fuse_req are sliced into scattergather list=
-s in
-> @@ -1382,7 +1383,7 @@ static int virtio_fs_enqueue_req(struct virtio_fs_v=
-q *fsvq,
->         unsigned int out_sgs =3D 0;
->         unsigned int in_sgs =3D 0;
->         unsigned int total_sgs;
-> -       unsigned int i;
-> +       unsigned int i, hash;
->         int ret;
->         bool notify;
->         struct fuse_pqueue *fpq;
-> @@ -1442,8 +1443,9 @@ static int virtio_fs_enqueue_req(struct virtio_fs_v=
-q *fsvq,
->
->         /* Request successfully sent. */
->         fpq =3D &fsvq->fud->pq;
-> +       hash =3D fuse_req_hash(req->in.h.unique);
->         spin_lock(&fpq->lock);
-> -       list_add_tail(&req->list, fpq->processing);
-> +       list_add_tail(&req->list, &fpq->processing[hash]);
->         spin_unlock(&fpq->lock);
->         set_bit(FR_SENT, &req->flags);
->         /* matches barrier in request_wait_answer() */
-> --
-> 2.9.4
->
->
+> +impl<T> Drop for SetOnce<T> {
+> +    fn drop(&mut self) {
+> +        if self.init.load(Acquire) =3D=3D 2 {
+> +            // SAFETY: By the type invariants of `Self`, `self.init =3D=
+=3D 2` means that `self.value`
+> +            // contains a valid value. We have exclusive access, as we h=
+old a `mut` reference to
+> +            // `self`.
+> +            unsafe { drop_in_place(self.value.get()) };
+
+This load does not need to be Acquire. It can be a Relaxed load or
+even an unsynchronized one since the access is exclusive.
+
+Alice
