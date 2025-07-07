@@ -1,118 +1,118 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1075B136358;
-	Mon,  7 Jul 2025 06:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD06279788
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 06:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751869473; cv=none; b=uz6yjdKTDG6mwvsmOzwdzHu5Z+kWqFTTUBvbbpmwTQrQ6MlGQQ2Dk6ORtl5NoBxE1UxwyIK/tX9uHzPmLYOnRRJF0s3i4bC32rFrYb1t8jQLmf8T7Pqzq4uXeiFrXjRdiMYpuGlao7ln0Zy4YZjW5C8OXnZ6+GD4ls44ubLGjbI=
+	t=1751869495; cv=none; b=dfnsp58GPx/mvRI+mthWXVNZOCoPomSuUoq/QGJcYX6zvO/E/rHhM/BK4qpCJBd4sL+rpmAGJDo97f9GlYhPTjlrCbf0q/2R4VCv+QMX+x8FS+reQHmOeR5BO/7hCYlHoY+RI7nzoARtgadbpzTq7xp6F0s9H//IB5eaam47XCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751869473; c=relaxed/simple;
-	bh=KneRpDaBu/OIUx1+siTGnBxOUS5aNTA+t1jCilAF5ZU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=l0En9mxZTts0WKIhILGUmH2rboC1JdR06noERp2F4dofCoDLb8hNoU1aRrkEBwlesSFXE8yrwxiG0BFsJelAfwrehODRbc3Oe6qdYRr9ntUnuqCvaolMNT72dQ4wu9yTkNcar4Ai0Y6yWuJyRP39Czu2yRQMSp8b8t3gF7JIbbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awVtSv8z; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751869495; c=relaxed/simple;
+	bh=L9MOZhKG6b8EYegJSPVDZQYaJGvT/up6iHdbhWzRvSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oSDLVisU26PKlD3v2GwTFK7zgqnPeMbmHiHUA/OdRGZJGa1lD9hy9IAJX+GJy2P1GbIEgiPE2s/hzc7MFr/zNCZdbecYZduorJCZcb1pPKgzA+Ov1esCpAGm5FPIjFII3qsVYYWKKv/+0aqInho2CdG0HIEaZtrhweeFJfi7Weg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R7VbQ8k2; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awVtSv8z"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so2196476a12.3;
-        Sun, 06 Jul 2025 23:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751869471; x=1752474271; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBuB4dH/hzHeCKyp/uVPhDU5cvA1wkgSSiyP38ooQns=;
-        b=awVtSv8z8E5am4JhsCVAZa+4ePlOiO/JqEdb8Xcz6SY78OQgxDb3/QROjzfbsJh2CA
-         w5B5TtAgV+e2/kdhSBFNTIQ9xn2MTjmXmjHIm8CGte5u32Mjf81OhmAosQo6cdhpVyNk
-         ZxB7dqutzboG0JEp4ZaHoQBu19RJOqTwgddNwGJ9e9T/Drg3+jGVHDLqtTGSk4irz9IP
-         Hfmy41h30P06ZnbDzH5IMw0QShtqDL2FSYUktE2lAxhacaGblzDgbby0b3AwwdvLhhlV
-         z872NCi5Twdtde0O94IZ/IVUZv9uTQUuEiYrf+fuBJGvP6Xc0qYsbxvFt6+GvklGxzKQ
-         SUKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751869471; x=1752474271;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qBuB4dH/hzHeCKyp/uVPhDU5cvA1wkgSSiyP38ooQns=;
-        b=TfNiC0CjYJEE6ik4U1IadSBvxouATESgyjIXi5w7VI6Ncftjuklt+oEH31QZ4dDiQ5
-         dBg4hhX3eWfgNExz78y4XCqsHVe0UGpz3HKH0qdc9EcjFLKGEGYkG8gXLxKPyq/BUQov
-         Myxg3sosmxLhrJ/bkCzOlT4mScZkLTGuIZrpYhA5RJl6iitGXtWus0JNW8i+BtRpfxX7
-         /C+dV2IJLdREW8pSe6VUkda8XrHTfJWzuSh0sihtFsC+G4SfS/LUiBApMKGsUgJco7U7
-         Gl7wT3AbnFDHkINpEj5v/9CvEZIzCi6W2b7k+ySDWsZKaO6Nx+Onm4qeuOE4zNEpRhb3
-         XnDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEx4L/3NvKGLpYzNH3HWzDDc6fwKL3Uq09Ww4DRmkgQ13apOHFnVnSeeOudGkV7HNYmUsL6mGc@vger.kernel.org, AJvYcCXoQr8dzroP+iLygSMg1M02tj6IluzxQ/KySBhXBieveq7ELiF2znSfVxl06MNXYQIoDMY4uJ4osU0ba+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSaERnaOYWyg+XGgt6V7fm2bfF5WVlh469EBKDmfrWFnpAWxZQ
-	AN/gW5lOhT+6vRLz31bS5fZYIiI8zhUiHqltv4o+wmaP+Khjr63pI/P8
-X-Gm-Gg: ASbGncti5vsBQUBgF0QVU51gRyCQNb+MRGxtYIn3Jo7mdTTtitPVO3t7takR9oW8ye/
-	qQPRMBgUD0HV4g4irsKMeEVtPzAKB/ORdLW9t4U3O5T5qqEjOXyGATGBRO+5waw6o0b2iKrFc20
-	UGm96ysSCx0/qRMCK9FJuekFFHe/YfttIV9sHs8divQjYswkfpRCT+mAligh758aepJdrcjFIRJ
-	E1gEG+3RDUPggMR0O1oZRzuFDB3nK489xNe2BFu3/PF2LyeJmSOjBydhXqKb6CFgjWOj7dM1SbX
-	PIauaGPcV4MGPdSk1J9oXRBL7gNTWTOB+mmk3aNczODJwfstUGFY17EtTOYy6A==
-X-Google-Smtp-Source: AGHT+IFQhKvL2bKpZOWkiz6C0RYKXn7gvQkKPp8twCufFbRHNK21PovhQgY+6eIbkoIUgVGPCuZHFg==
-X-Received: by 2002:a05:6a21:6f09:b0:216:6108:788f with SMTP id adf61e73a8af0-2260ba7221emr17717207637.35.1751869471199;
-        Sun, 06 Jul 2025 23:24:31 -0700 (PDT)
-Received: from [192.168.1.26] ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee62dd6asm7956099a12.64.2025.07.06.23.24.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jul 2025 23:24:30 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Mon, 07 Jul 2025 03:24:05 -0300
-Subject: [PATCH] platform/x86: alienware-wmi-wmax: Fix `dmi_system_id`
- array
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R7VbQ8k2"
+Message-ID: <6134aafc-d91d-46d8-ac6d-ef10ef459929@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751869491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mCKKvbNBmu93XBKYP00Xkr5d+vwBwYFx9i2TAoKmHLs=;
+	b=R7VbQ8k22nVEIPnOosPpVwWQ80dsUvoJsouKmHewWIR5bPrZkGJYRtHgdUJ9gEwilq0sNo
+	xBMHfEtHwtf3K5Mw7oDPFeGRzjjiaRN4KLW4EXxtP7nf4q7mjFnm5IHg4XhTMglcnAJUHU
+	f4k/kJnzE4Vku2Q1n1uWmBXt8WLLXY0=
+Date: Mon, 7 Jul 2025 14:24:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250707-dmi-fix-v1-1-6730835d824d@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAARoa2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDcwNT3ZTcTN20zArdlDRD8zQLM0NLS1MzJaDqgqJUoDDYpOjY2loAoUl
- vzlkAAAA=
-X-Change-ID: 20250705-dmi-fix-df17f8619956
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>, Mario Limonciello <mario.limonciello@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=914; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=KneRpDaBu/OIUx1+siTGnBxOUS5aNTA+t1jCilAF5ZU=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBnZGZxXHnC1rJS/95H9Lfcf+y8zXipvVtGtVsq10phiJ
- /rWnNmzo5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACYSmsDI8LDY1OZu88W47AU3
- Oh5of91voW50vfjumv82jM8EF6ySns7wT1/pyPNj2qyrHj+Zt3n/h4q7f6U+rFv9Iyh1++zn4Ws
- N1jEAAA==
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Subject: Re: [PATCH v1 04/11] dm-pcache: add segment layer
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: mpatocka@redhat.com, agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk,
+ hch@lst.de, dan.j.williams@intel.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+ <20250624073359.2041340-5-dongsheng.yang@linux.dev>
+ <20250701154659.000067f9@huawei.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <20250701154659.000067f9@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Add missing empty member to `awcc_dmi_table`.
 
-Cc: stable@vger.kernel.org
-Fixes: 6d7f1b1a5db6 ("platform/x86: alienware-wmi: Split DMI table")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 1 +
- 1 file changed, 1 insertion(+)
+在 7/1/2025 10:46 PM, Jonathan Cameron 写道:
+> On Tue, 24 Jun 2025 07:33:51 +0000
+> Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
+>
+>> Introduce segment.{c,h}, an internal abstraction that encapsulates
+>> everything related to a single pcache *segment* (the fixed-size
+>> allocation unit stored on the cache-device).
+>>
+>> * On-disk metadata (`struct pcache_segment_info`)
+>>    - Embedded `struct pcache_meta_header` for CRC/sequence handling.
+>>    - `flags` field encodes a “has-next” bit and a 4-bit *type* class
+>>      (`CACHE_DATA` added as the first type).
+>>
+>> * Initialisation
+>>    - `pcache_segment_init()` populates the in-memory
+>>      `struct pcache_segment` from a given segment id, data offset and
+>>      metadata pointer, computing the usable `data_size` and virtual
+>>      address within the DAX mapping.
+>>
+>> * IO helpers
+>>    - `segment_copy_to_bio()` / `segment_copy_from_bio()` move data
+>>      between pmem and a bio, using `_copy_mc_to_iter()` and
+>>      `_copy_from_iter_flushcache()` to tolerate hw memory errors and
+>>      ensure durability.
+>>    - `segment_pos_advance()` advances an internal offset while staying
+>>      inside the segment’s data area.
+>>
+>> These helpers allow upper layers (cache key management, write-back
+>> logic, GC, etc.) to treat a segment as a contiguous byte array without
+>> knowing about DAX mappings or persistence details.
+>>
+>> Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+> Hi
+>
+> Just one trivial comment.
+>
+>> diff --git a/drivers/md/dm-pcache/segment.h b/drivers/md/dm-pcache/segment.h
+>> new file mode 100644
+>> index 000000000000..9675951ffaf8
+>> --- /dev/null
+>> +++ b/drivers/md/dm-pcache/segment.h
+>> @@ -0,0 +1,73 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +#ifndef _PCACHE_SEGMENT_H
+>> +#define _PCACHE_SEGMENT_H
+>> +
+>> +#include <linux/bio.h>
+>> +
+>> +#include "pcache_internal.h"
+>> +
+>> +struct pcache_segment_info {
+>> +	struct pcache_meta_header	header;	/* Metadata header for the segment */
+> The comment is fairly obvious given the type of the field. I'd drop the comment.
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 20ec122a9fe0571a1ecd2ccf630615564ab30481..1c21be25dba54699b9ba21f53e3845df166396e1 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -233,6 +233,7 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &g_series_quirks,
- 	},
-+	{}
- };
- 
- enum AWCC_GET_FAN_SENSORS_OPERATIONS {
+Hi Jonathan,
 
----
-base-commit: 4f30f946f27b7f044cf8f3f1f353dee1dcd3517a
-change-id: 20250705-dmi-fix-df17f8619956
--- 
- ~ Kurt
+Sounds not bad, will change it.
 
+Thanx
+
+>
+>> +	__u32			flags;
+>> +	__u32			next_seg;
+>> +};
+>
