@@ -1,114 +1,129 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A0827B4E8
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CC215D1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872817; cv=none; b=ESSuuoMI2ttbecQUddCYYTIoqTjGMNYm5L9CkctwT9RuXCSHqHmnqZ0PS56JruLPyRY6+d5VXSo6RUYLyO8rKtuv2i1N0Hzuorfs9HGatgFXQsdsEm2zu+HAsai0UzrD65wAzAD6pNlihTN/dYGbH4iQpaLvn5padz9+S8aBQG8=
+	t=1751872892; cv=none; b=YJVFKRzaPsMU4580n0KTzPt3Swf3H1V2MAyImm0dzp71WBJwSOHTlsRnGok4ahTkB4k1mXvR3yBzhlj+8LDapFx/BdnthGTvWcJXCJR+evowpyl+Usp69Gqjq6YAwzCtt2tHxOFql9BHZFqeEXlEUqMCrQLPGQU9OqEbqpPXQgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751872817; c=relaxed/simple;
-	bh=87Ke5nC7A24u7KtVf8kqJVSYbabKjGlRuRbxRJNwnno=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U9zqX9vrthLH5ngudeqRgp4Ga8us2ILBu2n0P7kQCHPmMTVEZA4iHOuIVuD7KjMud9LHD8Zk1uIzfHnFIRdqfGmH003rLf8U8c+8+02LlgwHp61HJ0g/hongJOBcDQXdrLbqW/oSkdhooyrj1BhRLPAhbSQlF4SKo5k5dXl3swA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XI/WP+1U; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1751872892; c=relaxed/simple;
+	bh=qxc/X70pqNaJOhCIrlhit0fU5Btv3EL3u2/8T9VYUKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sdGNeWmNcLi1M/xiDUgqtQJbcfYVXCej5MK1emadXDSarkqO91QqfWcN12Fd93eh7+oqyOauG4qW2MVrOMS8gzigZYrVB4IHjCvEsfrCyi6rTIF97uKeRjIgDeyBgOF9tkfjraUviIq27NKVU97mJ8Ar8H7H3L9xtx8ZLSn+pO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D0UyZRAt; arc=none smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XI/WP+1U"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-454c2c08d36so6783825e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:20:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D0UyZRAt"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a97a67aa97so16097121cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751872814; x=1752477614; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CPa/GNPaGoYDS7VJTJPTGS9zhlJrJsTcMsk83eU4tMI=;
-        b=XI/WP+1UkgUgJQNXkAtnfoLImU/pkNWnfWbpDMdSDX7j/C3YsKu+zakYq7hXMpHPrv
-         plbr79oP2v9o004Nl/DNaEMqirGgruRowsyRrT8DTYm8JKDN/U6zn0y4LoTKYl+qE7ar
-         HHxviqGRLg+IfV65VLWBzJXs1OoW0/+f3+Oxum/p82REndjaZvg1oRwRvZUifGg5rijd
-         u2ZYrCpvgxmphBfgUXrkWmpE8xvQchqtaTmUzN/3lmHyDM7PtaFG4fC3ShviCV2uXWsm
-         tBSUkSAZkmXFW/xso6G3WvqCA4vAQc2YdK5MTrCahAgrXpIOaJRcahJBu6MzipB0Ysgd
-         kOvA==
+        d=google.com; s=20230601; t=1751872890; x=1752477690; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qxc/X70pqNaJOhCIrlhit0fU5Btv3EL3u2/8T9VYUKY=;
+        b=D0UyZRAtT/QiYh5tgF46Ejr1kqfHQDLVm3ljY+k25/eUpYRPc+DFfhL5KvZrntoZLn
+         bVyd6X8vg+tju5js82pIDEAKNYZgdJiFyUa9sDhqw3VZoML7Pn9hTA7N5UdwS6WxsxnU
+         tU+rFOThkcGZgcBxKMqmexkRIMPynt9uf/ZrqO82heZNi2QYiHeqbstLPP0qvlth6xF+
+         JGMnjlibnjcwskMY8t8hlG2dcvcsxN/Np7Qw6wfHklH9T/wz5i1ovWKP/0YTTFtTqMmV
+         Cu9IQj682lnOg5SCowVIro0DCW8MU0itJSN2pa/wAlojDo/101kTDWtBR2P6lPDHwoYF
+         bC6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751872814; x=1752477614;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CPa/GNPaGoYDS7VJTJPTGS9zhlJrJsTcMsk83eU4tMI=;
-        b=K/NvrtYqLu3IkOgeo6yMulyEKRPwW7G9ObHU6YuF6nhUeorDdVG7MC62nFL1G64XLL
-         6RWu2NJpODPw3VMrJ/hQUgF/TMOFCRiz8fHPig/fti1gBC3+0K2g357A+7lu8q8AdOgx
-         0Nm8tGRfmu/EAZgkUHzRhY1J//c7qKjAG03Lz39AAsDCS06admnG2VTSeOskaRkq8H5w
-         /CeEK2gWUO8f/pNl5q6MsYUGW1uFiLmmaIlve7EqeuIWf6VNSRa3N+gGURI3epeokULq
-         0cE03YpNAKK2LvvsJUlN0MgTOhgWsNYQ5kegF6pqHT2qNhKKm0+PHehssdovVQTd/VpI
-         iSTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFLrPO4DQSa2pxCLLi1yU5Y+H1Z+HnJc7eDj+3ytkzRD65nQ7dPwyTQwn1up/yKq9eFlgPS/3gFF8D/cs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyii79Z/zofF8sxmZTnmU04cYjgv1dFYnIdunV5xlZzof7jzFab
-	VY9V3mBi+y+hRYLYGeHV/WI6fskrszE7sBJyYzP89r3iiuzbRQYIS2h/LNaxRder7gcWMaEV1Nl
-	o7KSTcz8bMxWhAtlFLw==
-X-Google-Smtp-Source: AGHT+IFc7KjdNjSAMcYeehUHBQshvYidNFTTtOkCBEt+IJunO64ZHKge3ng0VY/1tFIuP98OJUwpkNE/tVUytCk=
-X-Received: from wrbep8.prod.google.com ([2002:a05:6000:42c8:b0:3a4:f6c6:e37f])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1a8b:b0:3a5:27ba:479c with SMTP id ffacd0b85a97d-3b49702e827mr8298792f8f.43.1751872814443;
- Mon, 07 Jul 2025 00:20:14 -0700 (PDT)
-Date: Mon, 7 Jul 2025 07:20:12 +0000
-In-Reply-To: <aGgETV_-MgEiZDHC@Mac.home>
+        d=1e100.net; s=20230601; t=1751872890; x=1752477690;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qxc/X70pqNaJOhCIrlhit0fU5Btv3EL3u2/8T9VYUKY=;
+        b=remeTAElmNoJUttHFNmgUyvuyVOX940RzmUcvXMRkDxyRJpLO8hnH14HcyUi291840
+         ORVPzdPJ6brMmk7AMQ5aS/DdVDF1v6oSz1X9Z0eYuOS7xmN6JADpwHqj2vAobQtdwVDo
+         jDAx62XIOz9MMbsi2tdXF7MXzn0xVyIWIuAhCFO8HwrgvIB7gd5TXRUbuWOa9wVTCjF/
+         gemwHDEhdikUGpNjWtHn/6iKnRWh0tvHS0jQ3UgPnZNPONlxJv6vR77YOHmMOwD97H0T
+         U9rTkrXHB9/TSK1djjn9NeF35RApJAWHKRa0vhgkZr6oHgaLgEyVjJyL3f1mxZhGeytH
+         rELQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnZnIrvSxz0zcnZ2HiomFjGR/dVKCCUPw190Qo39JEQ0NcsX6K/y46X+yqfRrQsoLsHLaJNcqxATPl7a4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG/sFpLZ/XnZfNzQiO7dpttu4YCzRX0fXzRkCDiFsSuyzE6PkA
+	4SyJU43BxUFGgmQJY6eb7H4e7bfZ49umVgyFyQa9RxF6PHlBaDda2AFvDIsmMM92bTo3DW++u0B
+	u948Dn/r25Da7YY+E+xyZxijHHlrlezGoJFzuWdxw
+X-Gm-Gg: ASbGnctkg8nVD7m+NdoAz8BxyJp7QbCzlkotQdZ3qxtuRlfRVn2xTsBLynW5CdxjeB+
+	RUp0WX/MIP6GxKxLq9MTuYD2fGxuv2agBrOdmOHpXjNiBNNSiAIbrSUNXV82Yg0vxMp7IMG5RnG
+	PXNAVxDwPHlrQoevqAwlC1jogjzi5klSt7SeYa1rywYg==
+X-Google-Smtp-Source: AGHT+IG7wr5dEGh6h9pfxfRWkI384hQypq8lNPyCGN36O3Fa3+8sw2G/22BonIyraYeaEv0BoxQTe/Ssj2U6AuOxCXo=
+X-Received: by 2002:a05:622a:15cb:b0:4a7:6e64:a52b with SMTP id
+ d75a77b69052e-4a9987f8adamr167676801cf.35.1751872889643; Mon, 07 Jul 2025
+ 00:21:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250703-topics-tyr-request_irq-v6-0-74103bdc7c52@collabora.com>
- <20250703-topics-tyr-request_irq-v6-3-74103bdc7c52@collabora.com>
- <aGgDpWkU6xAn5IFN@Mac.home> <aGgETV_-MgEiZDHC@Mac.home>
-Message-ID: <aGt1LLA8acAzDAGU@google.com>
-Subject: Re: [PATCH v6 3/6] rust: irq: add support for non-threaded IRQs and handlers
-From: Alice Ryhl <aliceryhl@google.com>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C2=B4nski?=" <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250707054112.101081-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250707054112.101081-1-jiayuan.chen@linux.dev>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 7 Jul 2025 00:21:18 -0700
+X-Gm-Features: Ac12FXxxeKN13WecyDKW9_C_Pkuorhiq_652hNh4S6bIhPzhaSIolIIPI1t4jqA
+Message-ID: <CANn89iLRxmaj=Tc__BbK=AaauTKm0Mvb_SxQmaFb=xdj+kQu_A@mail.gmail.com>
+Subject: Re: [PATCH net-next v4] tcp: Correct signedness in skb remaining
+ space calculation
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: netdev@vger.kernel.org, mrpre@163.com, 
+	syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com, 
+	Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 04, 2025 at 09:41:49AM -0700, Boqun Feng wrote:
-> On Fri, Jul 04, 2025 at 09:39:01AM -0700, Boqun Feng wrote:
-> > On Thu, Jul 03, 2025 at 04:30:01PM -0300, Daniel Almeida wrote:
-> > [...]
-> > > +#[pin_data]
-> > > +pub struct Registration<T: Handler + 'static> {
-> > > +    #[pin]
-> > > +    inner: Devres<RegistrationInner>,
-> > > +
-> > > +    #[pin]
-> > > +    handler: T,
-> > 
-> > IIRC, as a certain point, we want this to be a `UnsafePinned<T>`, is
-> > that requirement gone or we still need that but 1) `UnsafePinned` is not
-> > available and 2) we can rely on the whole struct being !Unpin for the
-> > address stability temporarily?
-> > 
-> > I think it was not a problem until we switched to `try_pin_init!()`
-> > instead of `pin_init_from_closure()` because we then had to pass the
-> > address of `handler` instead of the whole struct.
-> > 
-> > Since we certainly want to use `try_pin_init!()` and we certainly will
-> > have `UnsafePinned`, I think we should just keep this as it is for now,
-> 
-> Of course the assumption is we want to it in before `UnsafePinned` ;-)
-> Alternatively we can do what `Devres` did:
-> 
-> 	https://lore.kernel.org/rust-for-linux/20250626200054.243480-4-dakr@kernel.org/
-> 
-> using an `Opaque` and manually drop for now.
+On Sun, Jul 6, 2025 at 10:41=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.de=
+v> wrote:
+>
+> Syzkaller reported a bug [1] where sk->sk_forward_alloc can overflow.
+>
+> When we send data, if an skb exists at the tail of the write queue, the
+> kernel will attempt to append the new data to that skb. However, the code
+> that checks for available space in the skb is flawed:
+> '''
+> copy =3D size_goal - skb->len
+> '''
+>
+> The types of the variables involved are:
+> '''
+> copy: ssize_t (s64 on 64-bit systems)
+> size_goal: int
+> skb->len: unsigned int
+> '''
+>
+> Due to C's type promotion rules, the signed size_goal is converted to an
+> unsigned int to match skb->len before the subtraction. The result is an
+> unsigned int.
+>
+> When this unsigned int result is then assigned to the s64 copy variable,
+> it is zero-extended, preserving its non-negative value. Consequently, cop=
+y
+> is always >=3D 0.
+>
+> Assume we are sending 2GB of data and size_goal has been adjusted to a
+> value smaller than skb->len. The subtraction will result in copy holding =
+a
+> very large positive integer. In the subsequent logic, this large value is
+> used to update sk->sk_forward_alloc, which can easily cause it to overflo=
+w.
+>
+> The syzkaller reproducer uses TCP_REPAIR to reliably create this
+> condition. However, this can also occur in real-world scenarios. The
+> tcp_bound_to_half_wnd() function can also reduce size_goal to a small
+> value. This would cause the subsequent tcp_wmem_schedule() to set
+> sk->sk_forward_alloc to a value close to INT_MAX. Further memory
+> allocation requests would then cause sk_forward_alloc to wrap around and
+> become negative.
+>
+> [1]: https://syzkaller.appspot.com/bug?extid=3Dde6565462ab540f50e47
+>
+> Reported-by: syzbot+de6565462ab540f50e47@syzkaller.appspotmail.com
+> Fixes: 270a1c3de47e ("tcp: Support MSG_SPLICE_PAGES")
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-The struct uses PhantomPinned, so the code is correct as-is. Using a
-common abstraction for UnsafePinned is of course nice, but I suggest
-that we keep it like this if both patches land in the same cycle. We can
-always have it use UnsafePinned in a follow-up.
-
-Alice
+Reviewed-by : Eric Dumazet <edumazet@google.com>
