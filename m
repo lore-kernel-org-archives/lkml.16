@@ -1,98 +1,110 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E106329A9CD;
-	Mon,  7 Jul 2025 11:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE55191F98;
+	Mon,  7 Jul 2025 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889259; cv=none; b=IPBtCoosZOGsJa8Y3+evAlNm/K3B42Inrtq3MFJk+uecciypoZLaSG7G+aCoPaBFvgm69wWL4Y0fRS4z0NRmJg1t/dB3oRYLHxT4C16diC/sgSO28V5UNk+5qgnbJKCNFrEzbU4qLJflNaHG0uWkDPTkxVUkpfwgTpuEe9+7yDs=
+	t=1751889354; cv=none; b=MLfF8qrQOZL4fjFekNc+/K4WYBFjrtkj4u96wnxx33sNLMqSA1TRyx8xDIHzro6yXGOWvR8Bq0WcsE+AAA+8KoA8eXV8Ki3XWwU8EgkeRQC7HVIAMcKdFI91c6CsACXXSvmm2PNN7z/tpE+c71Ph1JwQLG8S5oGWdkBFnerg5cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889259; c=relaxed/simple;
-	bh=39LPr17ACdwb6Fx3Y2TKqi/hC45TY5NRU9P5grwB8oU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C4Ohd6kVI7e5bVVM3bNy3LVwymrcEK4YdHICuSBCmO5Y8aX+1QCyv+wgC0hjeR9hqx07T9/sUE2/mJo8jJR31+PVu8CO6K1IZcAfB76kg/fwpyc/bM1OZBhsRT0rxI2FJlb8txXk1SG9H6ZcFEbmIcfQv5bEoEPCTltcbxOr6Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-528ce9731dbso877036e0c.0;
-        Mon, 07 Jul 2025 04:54:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751889255; x=1752494055;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6bj8LVd3iBj6tYM9itj7dth7Drbx2NZZmmY2Uq/QUDk=;
-        b=h8UqsmSD+PiJAILzjXyBdFm6rSlgk8hn0pf0/EW4YmbuHTNElD0zEDjB34osjUHHWv
-         N4Sk9tjHTIDUwNIZKzTO2X6ZPC/Ut6WjRaaDkwJGBf/a9LJJRxZHK21ZFxaSc4+2bH/8
-         xoN5fynY5uyXq9AEHxZKdbayYs61wjYQq4uIRqVh6VSQ3A+HkD+41lK9Ktz12D0cpBzC
-         ucSksYmHfrfvZMqbgWDyFXcK5/jax9GquBxiwIDOiimWIaBHFGMigBZPC57U3F+OgeXV
-         XVFOEapAx6BIzv/x67hXfPyX9fokrwesfAcrpG9+PgH/tgrg2QIEm+KUxzA1+TwOpfQI
-         B90A==
-X-Forwarded-Encrypted: i=1; AJvYcCU4pQZ3aYF5zitn4rdMtO9maBrC6jS5N9lbUaUqNJ+JGJ+lGsEaAvu5hROCtgmH9D8ZGLtzsDWVOzCHBNS4@vger.kernel.org, AJvYcCUJcFlik5KJj2gpl6JcP/FK18XmdUpSQqzyM931pvVpk20uwd/4pBVbZnAyF+t5xSAxGvrO1uvJn/KyskdIQqxmfe4=@vger.kernel.org, AJvYcCW2ZMrKnp7pfXyEumWf3JWTEZ46Ztl7fvLnLrTjrgrGR3DHppaD9g5WF3LOyd90gzJJwU6Vppj7gTo6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhy22C8FNwGeEZqJ/fG0cFVh0AgPpdIrAcGs0SmDA2aPXB5lWV
-	tUqyJccE2w39OQNlmdbhQDMiTvrzH+Fm6tvY+ueBV+QCNUSOdHSiEb29aHgb+hpq
-X-Gm-Gg: ASbGncsECFxVUuQb+sw0neqI/pvf1oB7h2SeC70L0kTYJ5mHu7CvYn0emnB0O0ztpF3
-	vRE/W0h3GOnIQUsklSgpD5SaLdqoxwokC/bDxucvcf3D1izHPDgMbzWcMs2UVxLgBXCJoVMy/1U
-	ff4H/IqNvFeV7IYvJ8KSzGRnZILwl+oENj1KZTBCe6r+32WnGTMJQ31Je0/fLDTaWL2DAmVFS8C
-	tBvLGyVcgPaa2MifJLVzpWZXNxA1SpvsZIem/16nSf/+HMVcvqlzO4kmk+uQRWcN7AM57XRr6/1
-	bsh4F2GDB6VsF3BxHf1pYWlX4lrO4lf+HzGYhNod5W73Gnv5f5S2cQVK0qOK3V9X51d/+qTwBdA
-	kSESGHK66l2k3ZrgoswUiwK8d
-X-Google-Smtp-Source: AGHT+IF0HuV3PO1U7Kz3uINWqCpkPthljRJ0u7e5FSuLiurgVOnVndBbC5EcSmtv6rujSxyeHJ01eQ==
-X-Received: by 2002:a05:6122:8c4:b0:530:72da:d13d with SMTP id 71dfb90a1353d-5347e3c228emr5901688e0c.1.1751889255439;
-        Mon, 07 Jul 2025 04:54:15 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-534889ac18fsm930091e0c.27.2025.07.07.04.54.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 04:54:15 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-8815049d0a8so958235241.2;
-        Mon, 07 Jul 2025 04:54:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUKBaadtt8AzlaavUD6GQHYNNKx9eNyWLoaY80aYRfQR/vdZ7dfuSbRbxLvhzXs6XNqz35hUYbQ8bNR0n8t@vger.kernel.org, AJvYcCVlgeU04ftXXPI71koI5fGSbxB22jzzfd2mSKaDw0kWbwE8KeSKJ/RkOwAW8YmpXQrGpSold7cfNH8VGPCwUwfHlAU=@vger.kernel.org, AJvYcCWQWtu1z0f6V4HzLCxLu7TUYhtSm2C6pi+G/U+EtV0IIRvz+gHRLxjYGxNH31JgfFoM9A+wHmkv4giD@vger.kernel.org
-X-Received: by 2002:a05:6102:41a5:b0:4e2:df8d:dfeb with SMTP id
- ada2fe7eead31-4f2f1df683fmr6581192137.6.1751889254860; Mon, 07 Jul 2025
- 04:54:14 -0700 (PDT)
+	s=arc-20240116; t=1751889354; c=relaxed/simple;
+	bh=RCcOSQOjTIizrX78WjWaYbISpylDhgQ4eezd52RGlzg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gl7gGOev0kFkq31LAJYJgpYL7WxLWryngDytJGjOJ6vQCH55A3Sicj7L573VxV08hs00VgKZqmsQFsj69qW3GYIqfEXJB8bktqOoPbjwSfJL7Mhi2gnsdxcieDS48laf+4Yrm5JOV7MAtiw8q52R6Asq9HEnzCU9XHR89aHu1Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V8a6324R; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V8a6324R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751889353; x=1783425353;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=RCcOSQOjTIizrX78WjWaYbISpylDhgQ4eezd52RGlzg=;
+  b=V8a6324R66w8edu4hEoNurjxbG0ADhwMvTJ69EQkH/lNwwD+8/jwQNtZ
+   HUB3HhRk2nYLObj4E0k5Duo8RCxsqTdUu72sHhrY/DvP02GEjizcBG8c9
+   d4Q/Uts0ztIwjzlL5FZpFAI72cdZETgKsi/wy3xKNLh554FvpfzQxEWvQ
+   3zTSd/h2jCgLe+70XxtRAuQGpKuPmuWBKYrL1zvYdFFXmjwKo7Jm05P3V
+   dQBKWRhBN2ioQzYw1ccA4OfcjYW6S+cAaEoPxklLesl9F81QH9klsI6cP
+   eNIWuaEEHer8BYZGb/9NiBsVWvmO5HLdmA8I3YWMz0M3tZN8NHFYgRDXi
+   g==;
+X-CSE-ConnectionGUID: iYIIRleYTr2WfCOUlQ3vfg==
+X-CSE-MsgGUID: f+Uhyuq0QLiKkSxjGJO3wA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65454760"
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="65454760"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 04:55:52 -0700
+X-CSE-ConnectionGUID: f+wB1+5aTuCJNEWN6B7MBg==
+X-CSE-MsgGUID: dbpasXQyTxyrfQZ+hNRX6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="154820889"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.104])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 04:55:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Jul 2025 14:55:46 +0300 (EEST)
+To: Eren Turhan <apole.dev@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    James Seo <james@equiv.tech>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add DMI support for HP Victus
+ 16-s0xxx (8BD5)
+In-Reply-To: <20250704211911.366402-1-apole.dev@gmail.com>
+Message-ID: <82d1840f-5a07-6d95-0b04-ef97bf7330fc@linux.intel.com>
+References: <20250704211911.366402-1-apole.dev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703235544.715433-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250703235544.715433-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250703235544.715433-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 7 Jul 2025 13:54:01 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVqmD71zvTedO8r1v=gcLf2QQhQiy3KZ6pixM+7j1GLWg@mail.gmail.com>
-X-Gm-Features: Ac12FXx0WFuBdOBxsv57dnaFzBp3glsE_LVd5RaXXGHg3gLnq4Slk6zkIRwEGC0
-Message-ID: <CAMuHMdVqmD71zvTedO8r1v=gcLf2QQhQiy3KZ6pixM+7j1GLWg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Fix
- pinctrl node name for GBETH1
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 4 Jul 2025 at 01:55, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Rename the GBETH1 pinctrl node from "eth0" to "eth1" to avoid duplicate
-> node names in the DT and correctly reflect the label "eth1_pins".
->
-> Fixes: f111192baa80 ("arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable GBETH")
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Sat, 5 Jul 2025, Eren Turhan wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17.
+> ---
+>  Makefile  |    1 +
+>  dkms.conf |    5 +
+>  hp-wmi.c  | 2291 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 2297 insertions(+)
+>  create mode 100644 Makefile
+>  create mode 100644 dkms.conf
+>  create mode 100644 hp-wmi.c
+> 
+> diff --git a/Makefile b/Makefile
+> new file mode 100644
+> index 0000000..5c135ae
+> --- /dev/null
+> +++ b/Makefile
+> @@ -0,0 +1 @@
+> +obj-m := hp-wmi.o
+> diff --git a/dkms.conf b/dkms.conf
+> new file mode 100644
+> index 0000000..8351ef2
+> --- /dev/null
+> +++ b/dkms.conf
+> @@ -0,0 +1,5 @@
+> +PACKAGE_NAME="hp-wmi-custom"
+> +PACKAGE_VERSION="1.0"
+> +BUILT_MODULE_NAME[0]="hp-wmi"
+> +DEST_MODULE_LOCATION[0]="/kernel/drivers/platform/x86"
+> +AUTOINSTALL="yes"
+> diff --git a/hp-wmi.c b/hp-wmi.c
+> new file mode 100644
+> index 0000000..2f41b4a
+> --- /dev/null
+> +++ b/hp-wmi.c
 
-Gr{oetje,eeting}s,
+Hi,
 
-                        Geert
+Unfortunately this is not based on the correct git repo and branch. Please 
+resubmit with platform-drivers-x86 repo as the base if you want to have 
+support for this to be included into the mainline kernel and we will be 
+happy to consider your patch.
+
+You should also write full changelog for the change, it's not enough to 
+rely solely on the text in the shortlog (in Subject).
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ i.
