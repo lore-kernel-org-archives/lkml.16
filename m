@@ -1,333 +1,161 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B301514F6
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DDC242D9A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751860357; cv=none; b=MAoHDsJVPIJo33ZZxtgAwT0d4dg07oz7H+2lGnsEZ++1rnTzi7KHkgtCAJlaPEk+jbEIaxnzsJi3kewTDFg7Y3ZfTz7WyTgmXAkcg8OUtDHT6p+ic40J1TqvkiZwQwprWq5Qbg3oU/+Fif7q7o0AwUTP4jLlzG4LMdGrpmDAATM=
+	t=1751860389; cv=none; b=BVw8ohhhfRuPlCtfdwQvPVDMEG1Sc5vcmzsHkeCpOMGeyh5AeD9BHqExn9y8N9QVeIdbY55p4nYcXGP6PwOHaK6PYTwUSig38Dn1b/EQOLc3rOX5Sv2Swx7EIsQc4tHDIkeJGVjU4gfOoxmE78JYa1OPuXLK0IRhzvNdwVxFzug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751860357; c=relaxed/simple;
-	bh=FbLIH/MbbwPuvdvJxyKy/t968nX3PCiN6WDVvIzs/UQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=omBFJYugYN53Q5TqFOy8oo/P0j0bOi5Bs/cx33PaWhc9/ACDE0EcNZ3V+JLBkz9iB9eYPWKZeyrB61aaBmp33eajeQ4NODL73TpmOs/ZO14TS+nigTF60Y169eChmIBSdVHVD9QFTFcyLasefzMtKdCN87PLF/GBbC13WT/s5Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ddnf/tFD; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751860389; c=relaxed/simple;
+	bh=/fve97GTd9bXitqStqnzD3wq1Emy4aKwuUyvzEethf0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WyY+1TgxgD0lSw0ET4SrbPxg4UJSNWNQhJE2MRSYf6j9mOLpUH64qQUQIXQE3+M1BUCAGqd59ln0S55MKFm6PRHK9inWQo0VoUWBnNC3DAZPYde7ZzcRpyYplmkCOKq81LxCv3KVpdfYPxKoUQGtfagiKtsB5WYjkEqIaGU8t9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=M85gggbz; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ddnf/tFD"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55502821bd2so2921952e87.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:52:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="M85gggbz"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-74264d1832eso3263170b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751860352; x=1752465152; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1751860387; x=1752465187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MUQIlBnVCvjQJOuG6eQpz9FIxtecKMH41CZkyLg0qvk=;
-        b=ddnf/tFD4DWCWMFV9DLrEjbrubYjM3/vJUR+fUiGAEK/o6MSZGyI3lhVS0FIFWpkBU
-         X1mrKJLzb0q/BJQLkCFQ1MnwZZkLVIe+Av2vusPMe3G1OFYzy1gOHWWcR8XAFpj4Gl5d
-         rjD7GdpLHFrBOiH7l9Pu5pSH37bbBFwkml1qVHTX/KAJRoBGP2YYE8WJOXlAGkW/9hw8
-         m24PQaI/nPab8raxW1x9EHfjqBiM4+UshAUFkdomm+sAO2EllflDzmybMjR/MIoXmqKu
-         8TZON0EEKauolN86jKIBfduCWW0NOFLEbG3yzpSxA0bczwrtZoxEV1816zwBYLhRce+z
-         Du5w==
+        bh=mub7PjK+ZQMm18cy8qNtEOXQgRqk+RrTOpKNrinRMis=;
+        b=M85gggbzleyl75AKcW75Gr+fuPYxB3zn8bnX3qIGBLkv9LG8oewUWUfCFns/SZFqP+
+         ZHipB8vpt8/6TrgOmIF/4+R3m/1M6uhLUmXb3GlY64fG/Ttf3kaUlQ0OYZu6PsHP/tPv
+         WWt2Jg1OiS6yTlUYN6OO4zaC/Ofrnqc+iEKetJvVbGYJfMHJrSDgH+ywo+Y86RPk2G6i
+         RKNj3kY0CMZm481x66rqyXoqOfIGRdcMe8hwjjztBUzmMnGZsMpoQzPf5g105pYR7Goc
+         msHLyKrGvglB5pvrpcVbEJ5NQZFQLwKSne3SRK94zoEfYdELnd2ktZrspdqpj7hT7ohQ
+         3NrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751860352; x=1752465152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751860387; x=1752465187;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MUQIlBnVCvjQJOuG6eQpz9FIxtecKMH41CZkyLg0qvk=;
-        b=Ip2etl0aA6ivopl/lpgA4eBGvaUsXJJAaoNZ8DyMi8YAQEZ9Hfr1EO7RRKKkCBf+F6
-         0q2GCXTKSL9eWTyfZzDYdwPDA4OPqTpaqI/FWuuVjWotfINhucjhlhSp89iAXYspBD7U
-         0nmBhvcm/xhqS4HZy0hVNCdaoN1S26bCljCu1CxcZUzkG7XJ6oFCPeAHgRTwrrxzzLbd
-         BSAYIoND7DHfW8/iPt5lvSKhOYnnhz9+BBmZFM0d3ObaHqU2iEtgHfc2kKdUU1zzZ5xe
-         XpM64WhkZhbb2YKB0vSDIFJdcQybdvlu21EdAvsQu9yg2+jrCwedrRENyNaB6tfq7J4Z
-         d9/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXt/A1c3Kc96R6NoOSH2oqLG3yf7B/BfCXOJ5OtTRYx81yDyl3GFFkb1Rx35wPy+NBV2nvPSRZugcZ1GIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh+6RPdl+qHYkiIOVgxrF2EG4GbMSP4vCJdy1SPSoJjgBjCvkU
-	jl36UFuToxslUbaQZTNaOAWW9CpXS0eCKleVL7ylxddneYde4PYRm+SJDbyBlVCgcOjsnTurS+/
-	GOzcJ86/a7HSylC8fngJkyPSzklVsxNu9lXONxmub4w==
-X-Gm-Gg: ASbGncuuZ7YQWbUf332Qe3WULJI2VSFt98B0wU/GIJm91aLr7AkrLaeSp0ZzuE8aLhV
-	VKm9yZV5zqzPcnVFzIaQsUBHJWttzYeO4R7WUSMRGhJwOr+TX6GI5OqB2+cegdEc7zAzr8VP829
-	es/Q6vy8h54JM3w9tyTr0LX9mVaZci8kaOMZ+xF0T6YyFo
-X-Google-Smtp-Source: AGHT+IFJDXlM49nFRTXjGx4L8EaFlrcU2NO1PfUWgbKlCo6Hf/HOIywhsRANHuQhpEJQAXmwbNqc18KLW6FUtpdpNs0=
-X-Received: by 2002:a05:6512:3c98:b0:553:3383:6766 with SMTP id
- 2adb3069b0e04-556dbe8cf86mr3642717e87.19.1751860352392; Sun, 06 Jul 2025
- 20:52:32 -0700 (PDT)
+        bh=mub7PjK+ZQMm18cy8qNtEOXQgRqk+RrTOpKNrinRMis=;
+        b=si/f8Prs5b2jsK3zMjma066+1g7nwvKFNJPwAZ01cDBMZmOo2L/fno5QYFMDYGwX9s
+         Rv/Gr2A8ecRE5dVhyTPQVe9CSws7ExxzMXjspUiPjmlMSaDPkt68vG7o9I1zAenSpgWI
+         rjEVBgtrwcyDyPQDLcxQR+mscJcDmGHgCWn0F18CBZGKoYlvQXhtVCHndAK3oTppckHc
+         YSLoe2NphsGs+2cB0iqx5aVyG8Gfda4iXnG8l6nsZTDEzeWhVvW9/kwiwGruu6p8d8Zu
+         3WbfqdJyRXLaqV71WQiHNku7bZwBxJmbJmHs0ao/izSMdPTNeS8j1MzEWAd746Vuvzcm
+         HmnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkWdrKcxDo2q19hGwgjv4uImh0/ZEl4jLQhdUazIcnKRsEcjPO6Cq/V1wmRYDKOpdz05qQKHlFgO+tR4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1aIcE9JKjRuSDcqBuRv5/yK/3CawFwd3sVmNduvawpVZB5dLH
+	C2h5Hn56jfl9paQjWTROaum2oVH8z4aMj4W7luwMFnqmSZZ78N2camc46RopNxFbXxY=
+X-Gm-Gg: ASbGncuLt830FpcPQ8fvewrreAbZvJ/W/WUty8Qw/gZQ4ftk8UQ1foai6TvAi9j9Nwk
+	8alz+Vu8bvVlURWRWZzAo4ZZUGvxhey76Ti+dj2GlRvD1sSAJ8fC4JfqzEK/afhPObzEGw/V3M+
+	7Wr911LsNUkb5iukOUsNJb7Imn67nahoeFNnXtT6YaYAOlNT89SjjuKadhcfvp9C2IJiP45lT0m
+	P5Cv1i5JZAp4gcDQk6hzaG+q53OPmfNg0eA2o0REw1Zhdx90WDk43zv+kICjGaUVHI/voPYt1yv
+	X6n1Y2bwQMRS5K5rQ7yNkn+9KNwGLt6MdwgUQuzs1Qfw1UPezto9RXQY+HpM15bzqbBaOS+IqpF
+	S1oOtQFcQxgc1UuI7xdIUdJU=
+X-Google-Smtp-Source: AGHT+IFtHyTBc6qEYu6hdCH6cigb35sVn8qLgWaMfVrg0MupVPG7/z/yW4uRvdyfX28do9yc+RvdzQ==
+X-Received: by 2002:a05:6a20:6a0d:b0:225:defd:26f0 with SMTP id adf61e73a8af0-2260c92da99mr18422851637.32.1751860387103;
+        Sun, 06 Jul 2025 20:53:07 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.6])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee74cf48sm7538658a12.77.2025.07.06.20.53.02
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 06 Jul 2025 20:53:06 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: lkp@intel.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	david@redhat.com,
+	jgg@ziepe.ca,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	oe-kbuild-all@lists.linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH v2 1/5] mm: introduce num_pages_contiguous()
+Date: Mon,  7 Jul 2025 11:52:59 +0800
+Message-ID: <20250707035259.61640-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <202507050529.EoMuEtd8-lkp@intel.com>
+References: <202507050529.EoMuEtd8-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704153838.6575-1-apatel@ventanamicro.com>
- <20250704153838.6575-3-apatel@ventanamicro.com> <88ef2551-edc2-416b-9399-b45ad880d52e@linux.dev>
-In-Reply-To: <88ef2551-edc2-416b-9399-b45ad880d52e@linux.dev>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Mon, 7 Jul 2025 09:22:20 +0530
-X-Gm-Features: Ac12FXwn282f_3bW5Pneh_M2UvX4JOua-H683a3X8eh516woEbDUIqy35qDmvRo
-Message-ID: <CAK9=C2V9_+HSMvk9fVkKO4878WwsqNUiUj8unmAicmCrzWDyDg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] RISC-V: KVM: Move HGEI[E|P] CSR access to IMSIC virtualization
-To: Atish Patra <atish.patra@linux.dev>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
-	Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jul 5, 2025 at 1:12=E2=80=AFPM Atish Patra <atish.patra@linux.dev> =
-wrote:
->
->
-> On 7/4/25 8:38 AM, Anup Patel wrote:
-> > There is one HGEI line associated with each IMSIC VS-file on a host CPU=
-.
-> > The IMSIC virtualization already keeps track of the HGEI line and the
-> > associated IMSIC VS-file used by each VCPU.
-> >
-> > Currently, the common AIA functions kvm_riscv_vcpu_aia_has_interrupts()
-> > and kvm_riscv_aia_wakeon_hgei() lookup HGEI line using an array of VCPU
-> > pointers before accessing HGEI[E|P] CSR which is slow. Move the HGEI[E|=
-P]
-> > CSR access to IMSIC virtualization so that costly HGEI line lookup and
-> > potential race-conditions when updating HGEI[E|P] CSR can be avoided.
->
-> The patch looks good to me. It removes the redundant hgei lookup which
-> is great.
-> But can you elaborate the race condition and it's effect (lost interrupt
-> because of hgei is disabled during context switch) in the commit text ?
+On Sat, 5 Jul 2025 05:19:34 +0800, lkp@intel.com wrote:
+ 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from arch/sh/include/asm/page.h:160,
+>                     from arch/sh/include/asm/thread_info.h:13,
+>                     from include/linux/thread_info.h:60,
+>                     from include/asm-generic/preempt.h:5,
+>                     from ./arch/sh/include/generated/asm/preempt.h:1,
+>                     from include/linux/preempt.h:79,
+>                     from include/linux/spinlock.h:56,
+>                     from include/linux/mmzone.h:8,
+>                     from include/linux/gfp.h:7,
+>                     from include/linux/mm.h:7,
+>                     from arch/sh/kernel/asm-offsets.c:14:
+>    include/linux/mm.h: In function 'num_pages_contiguous':
+> >> include/asm-generic/memory_model.h:48:21: error: implicit declaration of function 'page_to_section'; did you mean 'present_section'? [-Wimplicit-function-declaration]
+>       48 |         int __sec = page_to_section(__pg);                      \
+>          |                     ^~~~~~~~~~~~~~~
+>    include/asm-generic/memory_model.h:53:32: note: in definition of macro '__pfn_to_page'
+>       53 | ({      unsigned long __pfn = (pfn);                    \
+>          |                                ^~~
+>    include/asm-generic/memory_model.h:65:21: note: in expansion of macro '__page_to_pfn'
+>       65 | #define page_to_pfn __page_to_pfn
+>          |                     ^~~~~~~~~~~~~
+>    include/linux/mm.h:200:38: note: in expansion of macro 'page_to_pfn'
+>      200 | #define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
+>          |                                      ^~~~~~~~~~~
+>    include/linux/mm.h:221:33: note: in expansion of macro 'nth_page'
+>      221 |                 if (pages[i] != nth_page(first_page, i))
+>          |                                 ^~~~~~~~
+>    include/linux/mm.h: At top level:
+> >> include/linux/mm.h:2002:29: error: conflicting types for 'page_to_section'; have 'long unsigned int(const struct page *)'
+>     2002 | static inline unsigned long page_to_section(const struct page *page)
+>          |                             ^~~~~~~~~~~~~~~
+>    include/asm-generic/memory_model.h:48:21: note: previous implicit declaration of 'page_to_section' with type 'int()'
+>       48 |         int __sec = page_to_section(__pg);                      \
+>          |                     ^~~~~~~~~~~~~~~
+>    include/asm-generic/memory_model.h:53:32: note: in definition of macro '__pfn_to_page'
+>       53 | ({      unsigned long __pfn = (pfn);                    \
+>          |                                ^~~
+>    include/asm-generic/memory_model.h:65:21: note: in expansion of macro '__page_to_pfn'
+>       65 | #define page_to_pfn __page_to_pfn
+>          |                     ^~~~~~~~~~~~~
+>    include/linux/mm.h:200:38: note: in expansion of macro 'page_to_pfn'
+>      200 | #define nth_page(page,n) pfn_to_page(page_to_pfn((page)) + (n))
+>          |                                      ^~~~~~~~~~~
+>    include/linux/mm.h:221:33: note: in expansion of macro 'nth_page'
+>      221 |                 if (pages[i] != nth_page(first_page, i))
+>          |                                 ^~~~~~~~
+>    make[3]: *** [scripts/Makefile.build:98: arch/sh/kernel/asm-offsets.s] Error 1
+>    make[3]: Target 'prepare' not remade because of errors.
+>    make[2]: *** [Makefile:1274: prepare0] Error 2
+>    make[2]: Target 'prepare' not remade because of errors.
+>    make[1]: *** [Makefile:248: __sub-make] Error 2
+>    make[1]: Target 'prepare' not remade because of errors.
+>    make: *** [Makefile:248: __sub-make] Error 2
+>    make: Target 'prepare' not remade because of errors.
+> 
+> 
+> vim +2002 include/linux/mm.h
+> 
+> bf4e8902ee5080 Daniel Kiper      2011-05-24  2001  
+> aa462abe8aaf21 Ian Campbell      2011-08-17 @2002  static inline unsigned long page_to_section(const struct page *page)
+> d41dee369bff3b Andy Whitcroft    2005-06-23  2003  {
+> d41dee369bff3b Andy Whitcroft    2005-06-23  2004  	return (page->flags >> SECTIONS_PGSHIFT) & SECTIONS_MASK;
+> d41dee369bff3b Andy Whitcroft    2005-06-23  2005  }
+> 308c05e35e3517 Christoph Lameter 2008-04-28  2006  #endif
+> d41dee369bff3b Andy Whitcroft    2005-06-23  2007  
 
-It's not a case of lost interrupt rather HGEI wakeup not firing even when
-there is interrupt pending in IMSIC VS-file due to incorrect setting in HGE=
-IE
-CSR. I will update the commit description in the next revision.
+Thank you. Let's move function num_pages_contiguous() below the
+definition of page_to_section() to resolve this compilation error.
 
-Regards,
-Anup
-
->
-> > Fixes: 3385339296d1 ("RISC-V: KVM: Use IMSIC guest files when available=
-")
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > ---
-> >   arch/riscv/include/asm/kvm_aia.h |  4 ++-
-> >   arch/riscv/kvm/aia.c             | 51 +++++--------------------------=
--
-> >   arch/riscv/kvm/aia_imsic.c       | 45 ++++++++++++++++++++++++++++
-> >   arch/riscv/kvm/vcpu.c            |  2 --
-> >   4 files changed, 55 insertions(+), 47 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/kvm_aia.h b/arch/riscv/include/asm/=
-kvm_aia.h
-> > index 0a0f12496f00..b04ecdd1a860 100644
-> > --- a/arch/riscv/include/asm/kvm_aia.h
-> > +++ b/arch/riscv/include/asm/kvm_aia.h
-> > @@ -87,6 +87,9 @@ DECLARE_STATIC_KEY_FALSE(kvm_riscv_aia_available);
-> >
-> >   extern struct kvm_device_ops kvm_riscv_aia_device_ops;
-> >
-> > +bool kvm_riscv_vcpu_aia_imsic_has_interrupt(struct kvm_vcpu *vcpu);
-> > +void kvm_riscv_vcpu_aia_imsic_load(struct kvm_vcpu *vcpu, int cpu);
-> > +void kvm_riscv_vcpu_aia_imsic_put(struct kvm_vcpu *vcpu);
-> >   void kvm_riscv_vcpu_aia_imsic_release(struct kvm_vcpu *vcpu);
-> >   int kvm_riscv_vcpu_aia_imsic_update(struct kvm_vcpu *vcpu);
-> >
-> > @@ -161,7 +164,6 @@ void kvm_riscv_aia_destroy_vm(struct kvm *kvm);
-> >   int kvm_riscv_aia_alloc_hgei(int cpu, struct kvm_vcpu *owner,
-> >                            void __iomem **hgei_va, phys_addr_t *hgei_pa=
-);
-> >   void kvm_riscv_aia_free_hgei(int cpu, int hgei);
-> > -void kvm_riscv_aia_wakeon_hgei(struct kvm_vcpu *owner, bool enable);
-> >
-> >   void kvm_riscv_aia_enable(void);
-> >   void kvm_riscv_aia_disable(void);
-> > diff --git a/arch/riscv/kvm/aia.c b/arch/riscv/kvm/aia.c
-> > index 19afd1f23537..dad318185660 100644
-> > --- a/arch/riscv/kvm/aia.c
-> > +++ b/arch/riscv/kvm/aia.c
-> > @@ -30,28 +30,6 @@ unsigned int kvm_riscv_aia_nr_hgei;
-> >   unsigned int kvm_riscv_aia_max_ids;
-> >   DEFINE_STATIC_KEY_FALSE(kvm_riscv_aia_available);
-> >
-> > -static int aia_find_hgei(struct kvm_vcpu *owner)
-> > -{
-> > -     int i, hgei;
-> > -     unsigned long flags;
-> > -     struct aia_hgei_control *hgctrl =3D get_cpu_ptr(&aia_hgei);
-> > -
-> > -     raw_spin_lock_irqsave(&hgctrl->lock, flags);
-> > -
-> > -     hgei =3D -1;
-> > -     for (i =3D 1; i <=3D kvm_riscv_aia_nr_hgei; i++) {
-> > -             if (hgctrl->owners[i] =3D=3D owner) {
-> > -                     hgei =3D i;
-> > -                     break;
-> > -             }
-> > -     }
-> > -
-> > -     raw_spin_unlock_irqrestore(&hgctrl->lock, flags);
-> > -
-> > -     put_cpu_ptr(&aia_hgei);
-> > -     return hgei;
-> > -}
-> > -
-> >   static inline unsigned long aia_hvictl_value(bool ext_irq_pending)
-> >   {
-> >       unsigned long hvictl;
-> > @@ -95,7 +73,6 @@ void kvm_riscv_vcpu_aia_sync_interrupts(struct kvm_vc=
-pu *vcpu)
-> >
-> >   bool kvm_riscv_vcpu_aia_has_interrupts(struct kvm_vcpu *vcpu, u64 mas=
-k)
-> >   {
-> > -     int hgei;
-> >       unsigned long seip;
-> >
-> >       if (!kvm_riscv_aia_available())
-> > @@ -114,11 +91,7 @@ bool kvm_riscv_vcpu_aia_has_interrupts(struct kvm_v=
-cpu *vcpu, u64 mask)
-> >       if (!kvm_riscv_aia_initialized(vcpu->kvm) || !seip)
-> >               return false;
-> >
-> > -     hgei =3D aia_find_hgei(vcpu);
-> > -     if (hgei > 0)
-> > -             return !!(ncsr_read(CSR_HGEIP) & BIT(hgei));
-> > -
-> > -     return false;
-> > +     return kvm_riscv_vcpu_aia_imsic_has_interrupt(vcpu);
-> >   }
-> >
-> >   void kvm_riscv_vcpu_aia_update_hvip(struct kvm_vcpu *vcpu)
-> > @@ -164,6 +137,9 @@ void kvm_riscv_vcpu_aia_load(struct kvm_vcpu *vcpu,=
- int cpu)
-> >               csr_write(CSR_HVIPRIO2H, csr->hviprio2h);
-> >   #endif
-> >       }
-> > +
-> > +     if (kvm_riscv_aia_initialized(vcpu->kvm))
-> > +             kvm_riscv_vcpu_aia_imsic_load(vcpu, cpu);
-> >   }
-> >
-> >   void kvm_riscv_vcpu_aia_put(struct kvm_vcpu *vcpu)
-> > @@ -174,6 +150,9 @@ void kvm_riscv_vcpu_aia_put(struct kvm_vcpu *vcpu)
-> >       if (!kvm_riscv_aia_available())
-> >               return;
-> >
-> > +     if (kvm_riscv_aia_initialized(vcpu->kvm))
-> > +             kvm_riscv_vcpu_aia_imsic_put(vcpu);
-> > +
-> >       if (kvm_riscv_nacl_available()) {
-> >               nsh =3D nacl_shmem();
-> >               csr->vsiselect =3D nacl_csr_read(nsh, CSR_VSISELECT);
-> > @@ -472,22 +451,6 @@ void kvm_riscv_aia_free_hgei(int cpu, int hgei)
-> >       raw_spin_unlock_irqrestore(&hgctrl->lock, flags);
-> >   }
-> >
-> > -void kvm_riscv_aia_wakeon_hgei(struct kvm_vcpu *owner, bool enable)
-> > -{
-> > -     int hgei;
-> > -
-> > -     if (!kvm_riscv_aia_available())
-> > -             return;
-> > -
-> > -     hgei =3D aia_find_hgei(owner);
-> > -     if (hgei > 0) {
-> > -             if (enable)
-> > -                     csr_set(CSR_HGEIE, BIT(hgei));
-> > -             else
-> > -                     csr_clear(CSR_HGEIE, BIT(hgei));
-> > -     }
-> > -}
-> > -
-> >   static irqreturn_t hgei_interrupt(int irq, void *dev_id)
-> >   {
-> >       int i;
-> > diff --git a/arch/riscv/kvm/aia_imsic.c b/arch/riscv/kvm/aia_imsic.c
-> > index ea1a36836d9c..fda0346f0ea1 100644
-> > --- a/arch/riscv/kvm/aia_imsic.c
-> > +++ b/arch/riscv/kvm/aia_imsic.c
-> > @@ -677,6 +677,48 @@ static void imsic_swfile_update(struct kvm_vcpu *v=
-cpu,
-> >       imsic_swfile_extirq_update(vcpu);
-> >   }
-> >
-> > +bool kvm_riscv_vcpu_aia_imsic_has_interrupt(struct kvm_vcpu *vcpu)
-> > +{
-> > +     struct imsic *imsic =3D vcpu->arch.aia_context.imsic_state;
-> > +     unsigned long flags;
-> > +     bool ret =3D false;
-> > +
-> > +     /*
-> > +      * The IMSIC SW-file directly injects interrupt via hvip so
-> > +      * only check for interrupt when IMSIC VS-file is being used.
-> > +      */
-> > +
-> > +     read_lock_irqsave(&imsic->vsfile_lock, flags);
-> > +     if (imsic->vsfile_cpu > -1)
-> > +             ret =3D !!(csr_read(CSR_HGEIP) & BIT(imsic->vsfile_hgei))=
-;
-> > +     read_unlock_irqrestore(&imsic->vsfile_lock, flags);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +void kvm_riscv_vcpu_aia_imsic_load(struct kvm_vcpu *vcpu, int cpu)
-> > +{
-> > +     /*
-> > +      * No need to explicitly clear HGEIE CSR bits because the
-> > +      * hgei interrupt handler (aka hgei_interrupt()) will always
-> > +      * clear it for us.
-> > +      */
-> > +}
-> > +
-> > +void kvm_riscv_vcpu_aia_imsic_put(struct kvm_vcpu *vcpu)
-> > +{
-> > +     struct imsic *imsic =3D vcpu->arch.aia_context.imsic_state;
-> > +     unsigned long flags;
-> > +
-> > +     if (!kvm_vcpu_is_blocking(vcpu))
-> > +             return;
-> > +
-> > +     read_lock_irqsave(&imsic->vsfile_lock, flags);
-> > +     if (imsic->vsfile_cpu > -1)
-> > +             csr_set(CSR_HGEIE, BIT(imsic->vsfile_hgei));
-> > +     read_unlock_irqrestore(&imsic->vsfile_lock, flags);
-> > +}
-> > +
-> >   void kvm_riscv_vcpu_aia_imsic_release(struct kvm_vcpu *vcpu)
-> >   {
-> >       unsigned long flags;
-> > @@ -781,6 +823,9 @@ int kvm_riscv_vcpu_aia_imsic_update(struct kvm_vcpu=
- *vcpu)
-> >        * producers to the new IMSIC VS-file.
-> >        */
-> >
-> > +     /* Ensure HGEIE CSR bit is zero before using the new IMSIC VS-fil=
-e */
-> > +     csr_clear(CSR_HGEIE, BIT(new_vsfile_hgei));
-> > +
-> >       /* Zero-out new IMSIC VS-file */
-> >       imsic_vsfile_local_clear(new_vsfile_hgei, imsic->nr_hw_eix);
-> >
-> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> > index fe028b4274df..b26bf35a0a19 100644
-> > --- a/arch/riscv/kvm/vcpu.c
-> > +++ b/arch/riscv/kvm/vcpu.c
-> > @@ -211,12 +211,10 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vc=
-pu)
-> >
-> >   void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
-> >   {
-> > -     kvm_riscv_aia_wakeon_hgei(vcpu, true);
-> >   }
-> >
-> >   void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu)
-> >   {
-> > -     kvm_riscv_aia_wakeon_hgei(vcpu, false);
-> >   }
-> >
-> >   int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
->
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
->
->
+Thanks,
+Zhe
