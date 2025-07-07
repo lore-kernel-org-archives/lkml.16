@@ -1,104 +1,75 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF2C1C5D7D;
-	Mon,  7 Jul 2025 08:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C91228A72A;
+	Mon,  7 Jul 2025 08:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751878291; cv=none; b=MZZaHYKwmKYG++gGSokcJccsJkmn8ok176jy4WArY0J+Y9uMu3OgU/inwfrYe68t04P12rnaW7r41DHdqJNbdwpw/fST+xt4P94pdToZt/60fdCLP4fZEQfitqUXDSOMN7vY/t3qTnIjqbmZoUrICmcLOqCnJmUwiQB0exnJCuE=
+	t=1751878334; cv=none; b=OSMgVZv1I6UIF7yfw5huYpEFDOCmKXnwHW/omQQ7Abi3zKNzdZDtBTsGU9AZerv+sBG2c3TX7SK4lyVWeMFaC04s25o4SdyHbwrY2TtuLWBe5uto8lCyJH6sd10UZehVprWfH6hzHijGJVqsTCnDRXTq+TDwawST1GUyp1HzzQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751878291; c=relaxed/simple;
-	bh=xyXSjUac5AGCu2QSk4UshgnsvQfLhCvPryWR7LixtPs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VqOfwF4HxSDCvlmmMv1yRlkhe0dyujas/VenTQaiRWMm8uyoGvcVZ7lpDoqIsGSXV+879qUPEGBXANoqpKtmjFtaQ6iEOPX9HPkeZtCsJcPZ7GzhQ9lPJRqJS4jGsn28yV8udHIsEFCOBViRZjDi94jZux7sqA4lnXmtOw2jEDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IvUGnz3t; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1751878334; c=relaxed/simple;
+	bh=6D3VXogMfnFsIdn20Y64K01AIIjUCYdlxjGOy7uCzag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NDkTohVD75/FDckJzEx1d15QIOqpQcsVbLtgg19dXzJJ9/vzGHAUZOpDqicwS4r1sD5sQaPalysPVND9hwlmeF04IhX2WHgkSvldLoG75awzug1/9gCJlGGOauOZFFS+dRId//GIIgtKWi0sBge4ihOVbTJCIuvSkgf487VEFUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sx20lxzw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IvUGnz3t"
-Received: from namjain-Virtual-Machine.mshome.net (unknown [4.213.232.46])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C5632211159A;
-	Mon,  7 Jul 2025 01:43:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C5632211159A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1751877811;
-	bh=IzZxjdEKdUzEmCBBclWYxqtPmDvV/k2c6OKLkjo+vRU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IvUGnz3t3Y0x8uLWeFSC+jA8vYApPVKomRvcYkSTFIzpp5dQq12KESKd5CL3NJVkx
-	 jBvaF72SOGq5YbF+FCtQo6JToz3V5TMFHJVY1bWBn68czDBV1tTH9ML4F+rL2a0gPu
-	 PZAiLKOdB7813nsGixFM0bDnhiITwh2bAGOtHPQo=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Roman Kisel <romank@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@kernel.org,
-	namjain@microsoft.com
-Subject: [PATCH] Drivers: hv: Fix the check for HYPERVISOR_CALLBACK_VECTOR
-Date: Mon,  7 Jul 2025 14:13:22 +0530
-Message-Id: <20250707084322.1763-1-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sx20lxzw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459EBC4CEF6;
+	Mon,  7 Jul 2025 08:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751878333;
+	bh=6D3VXogMfnFsIdn20Y64K01AIIjUCYdlxjGOy7uCzag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sx20lxzwt5UjEitScSSJxobl6rhisXSCxYkCzyzwffVEiOIWWewPxIzdkDUTyqdXz
+	 lPSnvkYmxTV0/pZkHvZnvVaXmpFL5m+R+D5TGeNDLLu+20pMXHIfyTOEiTqxjwXlj+
+	 FogB183pBONm8hMbwTAwylHURi59y80aQ2WTSrdJjIcIFKMmZOM9vjwXMUs5rXZUHN
+	 YbawANl7FB5qlvgh+9T5lEeTxp01blWq/4yTkpKVMc93+quKP3lOFZ53IOQYhD555A
+	 NN6jNq1Qn6zmRbbhqGnkxOMS9wpD+NFOnwKgeDBJS43dD9SOwFCZ/qlJOIndnFA250
+	 8AkoadxiyZRcA==
+Date: Mon, 7 Jul 2025 09:52:10 +0100
+From: Simon Horman <horms@kernel.org>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	stable@kernel.org
+Subject: Re: [PATCH v1 2/2] appletalk: Fix type confusion in
+ handle_ip_over_ddp
+Message-ID: <20250707085210.GA89747@horms.kernel.org>
+References: <20250703052837.15458-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703052837.15458-1-linma@zju.edu.cn>
 
-__is_defined(HYPERVISOR_CALLBACK_VECTOR) would return 1, only if
-HYPERVISOR_CALLBACK_VECTOR macro is defined as 1. However its value is
-0xf3 and this leads to __is_defined() returning 0. The expectation
-was to just check whether this MACRO is defined or not and get 1 if
-it's defined. Replace __is_defined with #ifdef blocks instead to
-fix it.
+On Thu, Jul 03, 2025 at 01:28:37PM +0800, Lin Ma wrote:
+> This code uses "ipddp0" calling __dev_get_by_name(), believing it must
+> return device created in ipddp_init() function, ignoring the fact that a
+> malicious user could hijack the interface name.
+> 
+> Fortunately, the upstream kernel already removed the code via commit
+> 85605fb694f0 ("appletalk: remove special handling code for ipddp"). This
+> fix should be applied to other stable versions.
+> 
+> Cc: stable@kernel.org
+> Signed-off-by: Lin Ma <linma@zju.edu.cn>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 
-Fixes: 1dc5df133b98 ("Drivers: hv: vmbus: Get the IRQ number from DeviceTree")
-Cc: stable@kernel.org
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
----
- drivers/hv/vmbus_drv.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Thanks Lin Ma,
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 33b524b4eb5e..2ed5a1e89d69 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2509,7 +2509,7 @@ static int vmbus_acpi_add(struct platform_device *pdev)
- 	return 0;
- }
- #endif
--
-+#ifndef HYPERVISOR_CALLBACK_VECTOR
- static int vmbus_set_irq(struct platform_device *pdev)
- {
- 	struct irq_data *data;
-@@ -2534,6 +2534,7 @@ static int vmbus_set_irq(struct platform_device *pdev)
- 
- 	return 0;
- }
-+#endif
- 
- static int vmbus_device_add(struct platform_device *pdev)
- {
-@@ -2549,11 +2550,11 @@ static int vmbus_device_add(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	if (!__is_defined(HYPERVISOR_CALLBACK_VECTOR))
--		ret = vmbus_set_irq(pdev);
-+#ifndef HYPERVISOR_CALLBACK_VECTOR
-+	ret = vmbus_set_irq(pdev);
- 	if (ret)
- 		return ret;
--
-+#endif
- 	for_each_of_range(&parser, &range) {
- 		struct resource *res;
- 
+I agree that this code change looks good.
+That the code in question has been present since git history started.
+And was removed by the commit cited above, in v6.7-rc1.
 
-base-commit: 26ffb3d6f02cd0935fb9fa3db897767beee1cb2a
--- 
-2.34.1
+Reviewed-by: Simon Horman <horms@kernel.org>
 
+
+Greg,
+
+I'm unsure how this case should be handled from a stable PoV.
+
+...
