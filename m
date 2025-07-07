@@ -1,322 +1,268 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84DD28FFE6
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE0261595
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880604; cv=none; b=FIlWSo6l66z3GAvuMb5qdC2czfm9TI90KFdmSf6hpXxhfN7rtmGROFaTmYRuA6YAjeTS41UJkayahPcqreRaVo3rlcY2hi4J+7/pVBpMlh+bwcd7oosmDEJCzt5QmIgJsVKOwfAQe7hCcjSG2b/eDDJjaRIc1MWMp3qpf28lQBs=
+	t=1751880669; cv=none; b=ckMD+qJO7gq3TNMhI+C+3P1hIl+DSp5B2fXRJUoxpGhq7pimYNYNVJjHQ3PGeDNTtUlOyTgUi15Ox3J3DSo+FwtFwApsiYfSF2kSaSoOLYwtmn10UsUrdSVRfaOK/EbJj+4Mx8Tr2y3iuNfw0p/QmGDtuSofw0B7wZbS8Q3kep8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880604; c=relaxed/simple;
-	bh=5jvcgDEantFuEhTdDGL+ocpN5YEQvBVC+/WveJlL0us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tHmsp0Sk5vPcRSEyxWshm/ymnkuSERZxzaR+wT5E71Xnw0FaAv7G0YT+l+YsblbORSIahgFKKep74udY/lI0VDS/1RMBD2eThDWDmcPs6Eap4JwWIZExTR/RZLxDiyaf9lWsBGoXjhyCUlCA/QgpQihovQKv7d2ktP6ppi8tcJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=MadFQYoD; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1751880669; c=relaxed/simple;
+	bh=9LS1/8t7DaKVh82SCYm0AEnt4c7Rroj4z2PBzKThYNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=L46PJ2LIr/okt1K1RZLNdQyomd6T6q+ee1jrFpo3Hq93KIzLivOIJbDu0gOb6L3Lvc8xc8OlAAx6AC2xn/+wH9jutO7ahFSWs3A49sy+Ma5qNDKF2gfor32fmnG++CYvkTRNoh0Os8UVn0D+qfWgYljyYTG7lqhhTtet7251I9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=C1JbOEwB; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="MadFQYoD"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-454b1d0a115so8171565e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751880599; x=1752485399; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YBopqN4/kQa+aOaqKN5s0U/OHv3IvGI0wkWm8ojU9sA=;
-        b=MadFQYoDqAbJqP972mFgidGmgvPleg0hGnSkB6iI6aFQ4YFPGay9WHy1UktzDiRiKp
-         EEcJOxsLyoijM0UkzbN6+2Lz004RJpRcS9oJ5Zhbk2hEyK/1802bGfOzlLU+LiRBbUto
-         nuHvw9gxENRGM49czSeNWA0Gj7VXdsuYCIcioMVRYF60CVYG035vQPfex8Qvypmy2Xfj
-         z5eIaJYBOOnFKrjfoIHvAWc2Lsut/q99kTgOhPwwfEjhUZ3DuPeuKY/9JSJL7g9DPvUb
-         N+tpW+dkip6QvqojEV7Vl43Z8QTm/eFNA9X2ovHzmmGq7VdG08vlf3ZE2g0nZw4tIpBK
-         L5pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751880599; x=1752485399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YBopqN4/kQa+aOaqKN5s0U/OHv3IvGI0wkWm8ojU9sA=;
-        b=nPAEOzrzwex9XEbQhiwTVN3pyS1nd5GzixXxKbAC61aKndJhrG9rie0AhP/STn5X+q
-         fgsvYJuruXHZkAYKT967DjaRWU1HhR9+m9FBaEsdUQO9CaHVK/BfGw+PMMcvbj+W51rQ
-         iAdo5WNu55MrRTnfKY3hgTOf1j52SulxQAvlMO73Ic5luHgXq+1kvfbmAaAUaNJUR4Po
-         DH5odJeDSWSD0ltXpsLeA5+/7Raim7rMCy1S2UqBKYOGZsLvZ8by+RXpaLQp28ytZLUe
-         ZOR4wOqmgZHDvyrSPE8hYYwSLkN0oVUcueFS/TDOM1J7DeNP544CtbLgIE4WGVBpTr9A
-         eYPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3cAFfshhz/vM+tNsMzWPV+GkoJzjXnau16QUbzF0l4Q2ruwNDx0bJEQQdVcqb8Z+6ZjvZJhGMa2cruQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyWxh9iMcHy9IPzg3XaRMQOz3krzhWHnTmkgPUBjCPNHgbKsr/
-	d8jI0mr6cBkcKVjm8CkoBi4u+aMDSvc2C18GBBaKG9lPt4Np7z5zDNkzF7E28Hlm4PvfNd5nrFe
-	GfmA2s84YDyA0rH4ihqHkmztFG+COW0GrpZKdjMKtwA==
-X-Gm-Gg: ASbGncuinG6hfhwUzA6ncbjlLbH1WIzsDtx5NbQa6dyqiMObAZZ8Yc1IRstD14NMeFf
-	ideEJFJ5xgr0d0bgEiqEthJEBajZIPaqNqQXBqqfWDDSnNzI7D/z47KzOO9q7fLSZ1vH00vOSxW
-	uXCOMWYR8VhsKTt5AQS41q8+umvrolO68DPtDiRk2yGwyrxg==
-X-Google-Smtp-Source: AGHT+IFYO17VdpJkXKyCPrctRgd0p1eg8twLrHrvA7MgQGyjyYonUinveltNkkukOIhcTx/2KGStT26+0oMi0Y4ix74=
-X-Received: by 2002:a05:6000:4909:b0:3a6:d6e4:dffd with SMTP id
- ffacd0b85a97d-3b497019165mr9286179f8f.14.1751880598925; Mon, 07 Jul 2025
- 02:29:58 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="C1JbOEwB"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BF41240E0208;
+	Mon,  7 Jul 2025 09:30:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jbK1aqKiTf2C; Mon,  7 Jul 2025 09:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751880650; bh=1lz/JpPtCN7njwwxfe47p4WGy8o2scBRxB/pzapm9KI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=C1JbOEwBSbRAVbykwKs8j6NZofsnsHLWDwhg4FLoR2hrJ0ltzP4r7S7+F3KK6mirk
+	 v/rCCS8xa6TGIIo50OAUFj/q+KaLj9laFQK8H4NU00MYbRd8VELaWqLakGizgVmPxF
+	 gF130GLXTOK0kC2XMlhqlRWVA+aLXT+NLACNz7uA1ckAbNtp8lfqGpFb5vkZmVAuHu
+	 bTY5rsJ6MB3w6so3CFXEIDSXBJ+fyJZZmrxUviZh2lyQzhX+k3KgkTHuM44Y4FjA6+
+	 LPGFHpYKjlTfE9FvW5HXm9dhzt9/MmLGy9lwA19GUkMDF47jgY8/dkbmYv9akmViC0
+	 dVxS8JAfnC7+wJyzdBsD/Jn1V2kPdHiixWL/IgBEKwT3vE9rLrLV7D75Wg3Qdo/ta+
+	 fms9sXLrObKOj1kwjm7FtogFPfKm9jvkzzH5mKyMfPZy7rqBk6M2r5bRrg4ZAQRyeW
+	 fIF2Hhhdi1+q06jLKL4kFOUOKVO0hz1p7JQCr3DeoH2AXqlNmCJ4fXjuAo5EWlPApe
+	 IMLDnuhHdrXA+eXkdFdqYLFZoVjC5AjrlOvOiVH8JKjCwt3eZe/Fh4YMPr9qtdQwTB
+	 TNvQTxnEcs9L8vJDnNtg27jlmHoBTkBPyolu5VueCzbaMnJ0WKT+/W7TO4vnDjCaYh
+	 2azpldGwVqgZj+jC4LTqwKdE=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 50F4940E0198;
+	Mon,  7 Jul 2025 09:30:40 +0000 (UTC)
+Date: Mon, 7 Jul 2025 11:30:32 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: amd-gfx@lists.freedesktop.org
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
+	Ramesh Errabolu <Ramesh.Errabolu@amd.com>,
+	Arvind Yadav <Arvind.Yadav@amd.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: WARNING: drivers/gpu/drm/drm_gem.c:286 at
+ drm_gem_object_handle_put_unlocked+0xb1/0xf0 [drm]
+Message-ID: <20250707093032.GAaGuTuJ0ZYHPgA2q3@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <20250415024532.26632-27-songmuchun@bytedance.com> <aGKHXWJl0ECKN1Zh@hyeyoo> <aGRdVzB5Ao1KkEu1@hyeyoo>
-In-Reply-To: <aGRdVzB5Ao1KkEu1@hyeyoo>
-From: Muchun Song <songmuchun@bytedance.com>
-Date: Mon, 7 Jul 2025 17:29:22 +0800
-X-Gm-Features: Ac12FXwHR19F3-OQz6JNsz_IWrXQcKv3piDCzJFFhHLteEbVb23UBkLndGuMBtA
-Message-ID: <CAMZfGtVh0bYd5E=kK0ZMqECJraif+t0HrqVR046Q29aSJVZNvQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH RFC 26/28] mm: memcontrol: introduce memcg_reparent_ops
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, akpm@linux-foundation.org, 
-	david@fromorbit.com, zhengqi.arch@bytedance.com, yosry.ahmed@linux.dev, 
-	nphamcs@gmail.com, chengming.zhou@linux.dev, linux-kernel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com, 
-	apais@linux.microsoft.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 2, 2025 at 6:13=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> wro=
-te:
->
-> On Mon, Jun 30, 2025 at 09:47:25PM +0900, Harry Yoo wrote:
-> > On Tue, Apr 15, 2025 at 10:45:30AM +0800, Muchun Song wrote:
-> > > In the previous patch, we established a method to ensure the safety o=
-f the
-> > > lruvec lock and the split queue lock during the reparenting of LRU fo=
-lios.
-> > > The process involves the following steps:
-> > >
-> > >     memcg_reparent_objcgs(memcg)
-> > >         1) lock
-> > >         // lruvec belongs to memcg and lruvec_parent belongs to paren=
-t memcg.
-> > >         spin_lock(&lruvec->lru_lock);
-> > >         spin_lock(&lruvec_parent->lru_lock);
-> > >
-> > >         2) relocate from current memcg to its parent
-> > >         // Move all the pages from the lruvec list to the parent lruv=
-ec list.
-> > >
-> > >         3) unlock
-> > >         spin_unlock(&lruvec_parent->lru_lock);
-> > >         spin_unlock(&lruvec->lru_lock);
-> > >
-> > > In addition to the folio lruvec lock, the deferred split queue lock
-> > > (specific to THP) also requires a similar approach. Therefore, we abs=
-tract
-> > > the three essential steps from the memcg_reparent_objcgs() function.
-> > >
-> > >     memcg_reparent_objcgs(memcg)
-> > >         1) lock
-> > >         memcg_reparent_ops->lock(memcg, parent);
-> > >
-> > >         2) relocate
-> > >         memcg_reparent_ops->relocate(memcg, reparent);
-> > >
-> > >         3) unlock
-> > >         memcg_reparent_ops->unlock(memcg, reparent);
-> > >
-> > > Currently, two distinct locks (such as the lruvec lock and the deferr=
-ed
-> > > split queue lock) need to utilize this infrastructure. In the subsequ=
-ent
-> > > patch, we will employ these APIs to ensure the safety of these locks
-> > > during the reparenting of LRU folios.
-> > >
-> > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > > ---
-> > >  include/linux/memcontrol.h | 20 ++++++++++++
-> > >  mm/memcontrol.c            | 62 ++++++++++++++++++++++++++++++------=
---
-> > >  2 files changed, 69 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> > > index 27b23e464229..0e450623f8fa 100644
-> > > --- a/include/linux/memcontrol.h
-> > > +++ b/include/linux/memcontrol.h
-> > > @@ -311,6 +311,26 @@ struct mem_cgroup {
-> > >     struct mem_cgroup_per_node *nodeinfo[];
-> > >  };
-> > >
-> > > +struct memcg_reparent_ops {
-> > > +   /*
-> > > +    * Note that interrupt is disabled before calling those callbacks=
-,
-> > > +    * so the interrupt should remain disabled when leaving those cal=
-lbacks.
-> > > +    */
-> > > +   void (*lock)(struct mem_cgroup *src, struct mem_cgroup *dst);
-> > > +   void (*relocate)(struct mem_cgroup *src, struct mem_cgroup *dst);
-> > > +   void (*unlock)(struct mem_cgroup *src, struct mem_cgroup *dst);
-> > > +};
-> > > +
-> > > +#define DEFINE_MEMCG_REPARENT_OPS(name)                             =
-       \
-> > > +   const struct memcg_reparent_ops memcg_##name##_reparent_ops =3D {=
- \
-> > > +           .lock           =3D name##_reparent_lock,                =
- \
-> > > +           .relocate       =3D name##_reparent_relocate,            =
- \
-> > > +           .unlock         =3D name##_reparent_unlock,              =
- \
-> > > +   }
-> > > +
-> > > +#define DECLARE_MEMCG_REPARENT_OPS(name)                           \
-> > > +   extern const struct memcg_reparent_ops memcg_##name##_reparent_op=
-s
-> > > +
-> > >  /*
-> > >   * size of first charge trial.
-> > >   * TODO: maybe necessary to use big numbers in big irons or dynamic =
-based of the
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index 1f0c6e7b69cc..3fac51179186 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -194,24 +194,60 @@ static struct obj_cgroup *obj_cgroup_alloc(void=
-)
-> > >     return objcg;
-> > >  }
-> > >
-> > > -static void memcg_reparent_objcgs(struct mem_cgroup *memcg)
-> > > +static void objcg_reparent_lock(struct mem_cgroup *src, struct mem_c=
-group *dst)
-> > > +{
-> > > +   spin_lock(&objcg_lock);
-> > > +}
-> > > +
-> > > +static void objcg_reparent_relocate(struct mem_cgroup *src, struct m=
-em_cgroup *dst)
-> > >  {
-> > >     struct obj_cgroup *objcg, *iter;
-> > > -   struct mem_cgroup *parent =3D parent_mem_cgroup(memcg);
-> > >
-> > > -   objcg =3D rcu_replace_pointer(memcg->objcg, NULL, true);
-> > > +   objcg =3D rcu_replace_pointer(src->objcg, NULL, true);
-> > > +   /* 1) Ready to reparent active objcg. */
-> > > +   list_add(&objcg->list, &src->objcg_list);
-> > > +   /* 2) Reparent active objcg and already reparented objcgs to dst.=
- */
-> > > +   list_for_each_entry(iter, &src->objcg_list, list)
-> > > +           WRITE_ONCE(iter->memcg, dst);
-> > > +   /* 3) Move already reparented objcgs to the dst's list */
-> > > +   list_splice(&src->objcg_list, &dst->objcg_list);
-> > > +}
-> > >
-> > > -   spin_lock_irq(&objcg_lock);
-> > > +static void objcg_reparent_unlock(struct mem_cgroup *src, struct mem=
-_cgroup *dst)
-> > > +{
-> > > +   spin_unlock(&objcg_lock);
-> > > +}
-> > >
-> > > -   /* 1) Ready to reparent active objcg. */
-> > > -   list_add(&objcg->list, &memcg->objcg_list);
-> > > -   /* 2) Reparent active objcg and already reparented objcgs to pare=
-nt. */
-> > > -   list_for_each_entry(iter, &memcg->objcg_list, list)
-> > > -           WRITE_ONCE(iter->memcg, parent);
-> > > -   /* 3) Move already reparented objcgs to the parent's list */
-> > > -   list_splice(&memcg->objcg_list, &parent->objcg_list);
-> > > -
-> > > -   spin_unlock_irq(&objcg_lock);
-> > > +static DEFINE_MEMCG_REPARENT_OPS(objcg);
-> > > +
-> > > +static const struct memcg_reparent_ops *memcg_reparent_ops[] =3D {
-> > > +   &memcg_objcg_reparent_ops,
-> > > +};
-> > > +
-> > > +#define DEFINE_MEMCG_REPARENT_FUNC(phase)                          \
-> > > +   static void memcg_reparent_##phase(struct mem_cgroup *src,      \
-> > > +                                      struct mem_cgroup *dst)      \
-> > > +   {                                                               \
-> > > +           int i;                                                  \
-> > > +                                                                   \
-> > > +           for (i =3D 0; i < ARRAY_SIZE(memcg_reparent_ops); i++)   =
- \
-> > > +                   memcg_reparent_ops[i]->phase(src, dst);         \
-> > > +   }
-> > > +
-> > > +DEFINE_MEMCG_REPARENT_FUNC(lock)
-> > > +DEFINE_MEMCG_REPARENT_FUNC(relocate)
-> > > +DEFINE_MEMCG_REPARENT_FUNC(unlock)
-> > > +
-> > > +static void memcg_reparent_objcgs(struct mem_cgroup *src)
-> > > +{
-> > > +   struct mem_cgroup *dst =3D parent_mem_cgroup(src);
-> > > +   struct obj_cgroup *objcg =3D rcu_dereference_protected(src->objcg=
-, true);
-> > > +
-> > > +   local_irq_disable();
-> > > +   memcg_reparent_lock(src, dst);
-> > > +   memcg_reparent_relocate(src, dst);
-> > > +   memcg_reparent_unlock(src, dst);
-> > > +   local_irq_enable();
-> >
-> > Hi,
-> >
-> > It seems unnecessarily complicated to 1) acquire objcg, lruvec and
-> > thp_sq locks, 2) call their ->relocate() callbacks, and
-> > 3) release those locks.
-> >
-> > Why not simply do the following instead?
-> >
-> > for (i =3D 0; i < ARRAY_SIZE(memcg_reparent_ops); i++) {
-> >       local_irq_disable();
-> >       memcg_reparent_ops[i]->lock(src, dst);
-> >       memcg_reparent_ops[i]->relocate(src, dst);
-> >       memcg_reparent_ops[i]->unlock(src, dst);
-> >       local_irq_enable();
-> > }
-> >
-> > As there is no actual lock dependency between the three.
-> >
-> > Or am I missing something important about the locking requirements?
->
-> Hmm... looks like I was missing some important requirements!
->
-> It seems like:
->
-> 1) objcg should be reparented under lruvec locks, otherwise
->    users can observe folio_memcg(folio) !=3D lruvec_memcg(lruvec)
->
-> 2) Similarly, lruvec_reparent_relocate() should reparent all folios
->    at once under lruvec locks, otherwise users can observe
->    folio_memcg(folio) !=3D lruvec_memcg(lruvec) for some folios.
->
->    IoW, lruvec_reparent_relocate() cannot do something like this:
->    while (lruvec is not empty) {
->            move some pages;
->            unlock lruvec locks;
->            cond_resched();
->            lock lruvec locks;
->    }
->
-> Failing to satisfy 1) and 2) means user can't rely on a stable binding
-> between a folio and a memcg, which is a no-go.
->
-> Also, 2) makes it quite undesirable to iterate over folios and move each
-> one to the right generation in MGLRU as this will certainly introduce
-> soft lockups as the memcg size grows...
+Hi all,
 
-Sorry for the late reply. Yes, you are right. We should iterate each folio
-without holding any spinlocks. So I am confirming if we could do some
-preparation work like making it suitable for reparenting without holding an=
-y
-spinlock. Then we could reparent those folios like the non-MGLRU case.
+I see the below on -rc5 + tip, on a RN machine.
 
-Thanks.
+---
 
->
-> Is my reasoning correct?
-> If so, adding a brief comment about 1 and 2 wouldn't hurt ;)
+[    5.592468] cdc_ncm 2-2:2.0 eth0: register 'cdc_ncm' at usb-0000:03:00.3=
+-2, CDC NCM (NO ZLP), f8:e4:3b:33:37:71
+[    5.593133] usbcore: registered new interface driver cdc_ncm
+[    5.597944] usbcore: registered new interface driver cdc_wdm
+[    5.600108] usbcore: registered new interface driver cdc_mbim
+[    6.912317] ------------[ cut here ]------------
+[    6.912377] WARNING: drivers/gpu/drm/drm_gem.c:286 at drm_gem_object_han=
+dle_put_unlocked+0xb1/0xf0 [drm], CPU#1: Xorg/629
+[    6.912429] Modules linked in: cdc_mbim(E) cdc_wdm(E) cdc_ncm(E) cdc_eth=
+er(E) amd_atl(E) nls_ascii(E) nls_cp437(E) vfat(E) fat(E) joydev(E) amdgpu(=
+E) edac_mce_amd(E) snd_hda_codec_realtek(E) snd_hda_codec_generic(E) snd_hd=
+a_scodec_component(E) snd_hda_codec_hdmi(E) rtw88_8822ce(E) hid_multitouch(=
+E) amdxcp(E) kvm_amd(E) sha3_generic(E) rtw88_8822c(E) i2c_algo_bit(E) rtw8=
+8_pci(E) drm_client_lib(E) snd_hda_intel(E) drm_ttm_helper(E) rtw88_core(E)=
+ jitterentropy_rng(E) hid_generic(E) snd_intel_dspcfg(E) tpm_crb(E) wmi_bmo=
+f(E) drbg(E) ttm(E) kvm(E) snd_hda_codec(E) drm_exec(E) mac80211(E) irqbypa=
+ss(E) snd_hwdep(E) snd_hda_core(E) ghash_clmulni_intel(E) gpu_sched(E) liba=
+rc4(E) aesni_intel(E) snd_pcm(E) drm_suballoc_helper(E) drm_panel_backlight=
+_quirks(E) sp5100_tco(E) rapl(E) cec(E) snd_timer(E) watchdog(E) cfg80211(E=
+) drm_buddy(E) snd_rn_pci_acp3x(E) ucsi_acpi(E) snd_acp_config(E) drm_displ=
+ay_helper(E) pcspkr(E) i2c_piix4(E) xhci_pci(E) snd_soc_acpi(E) acpi_cpufre=
+q(E) snd(E) video(E) typec_ucsi(E) roles(E) drm_kms_helper(E)
+[    6.912495]  ccp(E) soundcore(E) snd_pci_acp3x(E) xhci_hcd(E) k10temp(E)=
+ rfkill(E) i2c_smbus(E) typec(E) battery(E) wmi(E) tpm_tis(E) i2c_hid_acpi(=
+E) tpm_tis_core(E) i2c_hid(E) hid(E) ac(E) button(E) fuse(E) drm(E) efi_pst=
+ore(E) tpm(E) libaescfb(E) ecdh_generic(E) ecc(E) rng_core(E) autofs4(E) ev=
+dev(E) serio_raw(E)
+[    6.912538] CPU: 1 UID: 0 PID: 629 Comm: Xorg Tainted: G            E   =
+    6.16.0-rc5+ #1 PREEMPT(voluntary)=20
+[    6.912542] Tainted: [E]=3DUNSIGNED_MODULE
+[    6.912544] Hardware name: HP HP ProBook 635 Aero G7 Notebook PC/8830, B=
+IOS S84 Ver. 01.05.00 05/14/2021
+[    6.912547] RIP: 0010:drm_gem_object_handle_put_unlocked+0xb1/0xf0 [drm]
+[    6.912573] Code: 55 d1 1e f3 48 89 ef e8 fd 22 1e f3 eb d8 48 8b 43 08 =
+48 8d b8 f8 0c 00 00 e8 cb 85 1a f3 c7 83 18 01 00 00 00 00 00 00 eb 98 <0f=
+> 0b 5b 5d e9 26 d1 1e f3 48 8b 83 f8 01 00 00 48 8b 00 48 85 c0
+[    6.912575] RSP: 0018:ffffb5ebc32e3ba0 EFLAGS: 00010246
+[    6.912578] RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffb5ebc32=
+e3b1c
+[    6.912581] RDX: 0000000000000000 RSI: ffff9efb8cb005e8 RDI: ffff9efb861=
+cd448
+[    6.912583] RBP: ffff9efb8cb00010 R08: 0000000000000001 R09: ffff9efb8cb=
+00610
+[    6.912584] R10: 0000000000000000 R11: ffffb5ebc32e3b58 R12: ffff9efb8c2=
+41700
+[    6.912586] R13: 00000000ffffffdd R14: ffffb5ebc32e3c80 R15: ffff9efb8cb=
+00010
+[    6.912588] FS:  00007f320acb2b00(0000) GS:ffff9efcd29b8000(0000) knlGS:=
+0000000000000000
+[    6.912591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    6.912593] CR2: 00005605532d6164 CR3: 000000000bee9000 CR4: 00000000003=
+50ef0
+[    6.912595] Call Trace:
+[    6.912597]  <TASK>
+[    6.912599]  drm_gem_fb_destroy+0x2c/0x50 [drm_kms_helper]
+[    6.912616]  drm_mode_cursor_universal+0x10d/0x2a0 [drm]
+[    6.912647]  drm_mode_cursor_common.part.0+0xb0/0x200 [drm]
+[    6.912676]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
+[    6.912700]  drm_ioctl_kernel+0xa9/0x100 [drm]
+[    6.912728]  drm_ioctl+0x275/0x520 [drm]
+[    6.912752]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
+[    6.912777]  ? lock_release+0xc6/0x290
+[    6.912783]  ? _raw_spin_unlock_irqrestore+0x44/0x60
+[    6.912789]  amdgpu_drm_ioctl+0x4e/0x90 [amdgpu]
+[    6.913114]  __x64_sys_ioctl+0x85/0xd0
+[    6.913120]  do_syscall_64+0x6a/0x2e0
+[    6.913125]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[    6.913128] RIP: 0033:0x7f320b0338db
+[    6.913131] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 =
+00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89=
+> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+[    6.913134] RSP: 002b:00007ffd66400810 EFLAGS: 00000246 ORIG_RAX: 000000=
+0000000010
+[    6.913137] RAX: ffffffffffffffda RBX: 00007ffd664008a0 RCX: 00007f320b0=
+338db
+[    6.913139] RDX: 00007ffd664008a0 RSI: 00000000c02464bb RDI: 00000000000=
+0000f
+[    6.913141] RBP: 00007ffd664008a0 R08: 00007f320a8cbb20 R09: 00000000000=
+00001
+[    6.913143] R10: 000000000000004b R11: 0000000000000246 R12: 00000000c02=
+464bb
+[    6.913145] R13: 000000000000000f R14: 0000000000000001 R15: 00005605530=
+01d10
+[    6.913152]  </TASK>
+[    6.913153] irq event stamp: 354561
+[    6.913155] hardirqs last  enabled at (354569): [<ffffffffb2b951f2>] __u=
+p_console_sem+0x52/0x60
+[    6.913159] hardirqs last disabled at (354576): [<ffffffffb2b951d7>] __u=
+p_console_sem+0x37/0x60
+[    6.913161] softirqs last  enabled at (352542): [<ffffffffb2aeb586>] __i=
+rq_exit_rcu+0x96/0xc0
+[    6.913165] softirqs last disabled at (352537): [<ffffffffb2aeb586>] __i=
+rq_exit_rcu+0x96/0xc0
+[    6.913167] ---[ end trace 0000000000000000 ]---
+[    6.913288] ------------[ cut here ]------------
+[    6.913290] WARNING: drivers/gpu/drm/drm_gem.c:286 at drm_gem_object_han=
+dle_put_unlocked+0xb1/0xf0 [drm], CPU#1: Xorg/629
+[    6.913318] Modules linked in: cdc_mbim(E) cdc_wdm(E) cdc_ncm(E) cdc_eth=
+er(E) amd_atl(E) nls_ascii(E) nls_cp437(E) vfat(E) fat(E) joydev(E) amdgpu(=
+E) edac_mce_amd(E) snd_hda_codec_realtek(E) snd_hda_codec_generic(E) snd_hd=
+a_scodec_component(E) snd_hda_codec_hdmi(E) rtw88_8822ce(E) hid_multitouch(=
+E) amdxcp(E) kvm_amd(E) sha3_generic(E) rtw88_8822c(E) i2c_algo_bit(E) rtw8=
+8_pci(E) drm_client_lib(E) snd_hda_intel(E) drm_ttm_helper(E) rtw88_core(E)=
+ jitterentropy_rng(E) hid_generic(E) snd_intel_dspcfg(E) tpm_crb(E) wmi_bmo=
+f(E) drbg(E) ttm(E) kvm(E) snd_hda_codec(E) drm_exec(E) mac80211(E) irqbypa=
+ss(E) snd_hwdep(E) snd_hda_core(E) ghash_clmulni_intel(E) gpu_sched(E) liba=
+rc4(E) aesni_intel(E) snd_pcm(E) drm_suballoc_helper(E) drm_panel_backlight=
+_quirks(E) sp5100_tco(E) rapl(E) cec(E) snd_timer(E) watchdog(E) cfg80211(E=
+) drm_buddy(E) snd_rn_pci_acp3x(E) ucsi_acpi(E) snd_acp_config(E) drm_displ=
+ay_helper(E) pcspkr(E) i2c_piix4(E) xhci_pci(E) snd_soc_acpi(E) acpi_cpufre=
+q(E) snd(E) video(E) typec_ucsi(E) roles(E) drm_kms_helper(E)
+[    6.913380]  ccp(E) soundcore(E) snd_pci_acp3x(E) xhci_hcd(E) k10temp(E)=
+ rfkill(E) i2c_smbus(E) typec(E) battery(E) wmi(E) tpm_tis(E) i2c_hid_acpi(=
+E) tpm_tis_core(E) i2c_hid(E) hid(E) ac(E) button(E) fuse(E) drm(E) efi_pst=
+ore(E) tpm(E) libaescfb(E) ecdh_generic(E) ecc(E) rng_core(E) autofs4(E) ev=
+dev(E) serio_raw(E)
+[    6.913408] CPU: 1 UID: 0 PID: 629 Comm: Xorg Tainted: G        W   E   =
+    6.16.0-rc5+ #1 PREEMPT(voluntary)=20
+[    6.913412] Tainted: [W]=3DWARN, [E]=3DUNSIGNED_MODULE
+[    6.913414] Hardware name: HP HP ProBook 635 Aero G7 Notebook PC/8830, B=
+IOS S84 Ver. 01.05.00 05/14/2021
+[    6.913416] RIP: 0010:drm_gem_object_handle_put_unlocked+0xb1/0xf0 [drm]
+[    6.913438] Code: 55 d1 1e f3 48 89 ef e8 fd 22 1e f3 eb d8 48 8b 43 08 =
+48 8d b8 f8 0c 00 00 e8 cb 85 1a f3 c7 83 18 01 00 00 00 00 00 00 eb 98 <0f=
+> 0b 5b 5d e9 26 d1 1e f3 48 8b 83 f8 01 00 00 48 8b 00 48 85 c0
+[    6.913441] RSP: 0018:ffffb5ebc32e3ba0 EFLAGS: 00010246
+[    6.913443] RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffb5ebc32=
+e3b1c
+[    6.913445] RDX: 0000000000000000 RSI: ffff9efb8cb005e8 RDI: ffff9efb861=
+cd448
+[    6.913447] RBP: ffff9efb8cb00010 R08: 0000000000000001 R09: ffff9efb8cb=
+00610
+[    6.913449] R10: 0000000000000000 R11: ffffb5ebc32e3b58 R12: ffff9efb8c2=
+41700
+[    6.913451] R13: 00000000ffffffdd R14: ffffb5ebc32e3c80 R15: ffff9efb8cb=
+00010
+[    6.913453] FS:  00007f320acb2b00(0000) GS:ffff9efcd29b8000(0000) knlGS:=
+0000000000000000
+[    6.913455] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    6.913457] CR2: 00005605532d6164 CR3: 000000000bee9000 CR4: 00000000003=
+50ef0
+[    6.913459] Call Trace:
+[    6.913461]  <TASK>
+[    6.913464]  drm_gem_fb_destroy+0x2c/0x50 [drm_kms_helper]
+[    6.913477]  drm_mode_cursor_universal+0x10d/0x2a0 [drm]
+[    6.913506]  drm_mode_cursor_common.part.0+0xb0/0x200 [drm]
+[    6.913534]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
+[    6.913557]  drm_ioctl_kernel+0xa9/0x100 [drm]
+[    6.913583]  drm_ioctl+0x275/0x520 [drm]
+[    6.913607]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
+[    6.913631]  ? lock_release+0xc6/0x290
+[    6.913637]  ? _raw_spin_unlock_irqrestore+0x44/0x60
+[    6.913642]  amdgpu_drm_ioctl+0x4e/0x90 [amdgpu]
+[    6.913818]  __x64_sys_ioctl+0x85/0xd0
+[    6.913823]  do_syscall_64+0x6a/0x2e0
+[    6.913828]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[    6.913830] RIP: 0033:0x7f320b0338db
+[    6.913832] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 =
+00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89=
+> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+[    6.913835] RSP: 002b:00007ffd66400810 EFLAGS: 00000246 ORIG_RAX: 000000=
+0000000010
+[    6.913838] RAX: ffffffffffffffda RBX: 00007ffd664008a0 RCX: 00007f320b0=
+338db
+[    6.913839] RDX: 00007ffd664008a0 RSI: 00000000c02464bb RDI: 00000000000=
+0000f
+[    6.913841] RBP: 00007ffd664008a0 R08: 00007f320a8cbb20 R09: 00000000000=
+00001
+[    6.913843] R10: 000000000000004b R11: 0000000000000246 R12: 00000000c02=
+464bb
+[    6.913845] R13: 000000000000000f R14: 0000000000000001 R15: 00005605530=
+01d10
+[    6.913852]  </TASK>
+[    6.913853] irq event stamp: 355561
+[    6.913855] hardirqs last  enabled at (355569): [<ffffffffb2b951f2>] __u=
+p_console_sem+0x52/0x60
+[    6.913858] hardirqs last disabled at (355576): [<ffffffffb2b951d7>] __u=
+p_console_sem+0x37/0x60
+[    6.913861] softirqs last  enabled at (352542): [<ffffffffb2aeb586>] __i=
+rq_exit_rcu+0x96/0xc0
+[    6.913864] softirqs last disabled at (352537): [<ffffffffb2aeb586>] __i=
+rq_exit_rcu+0x96/0xc0
+[    6.913866] ---[ end trace 0000000000000000 ]---
+[   45.744032]     percentage:          78%
+[  225.782261]     percentage:          79%
 
-OK.
+--=20
+Regards/Gruss,
+    Boris.
 
->
-> --
-> Cheers,
-> Harry / Hyeonggon
+https://people.kernel.org/tglx/notes-about-netiquette
