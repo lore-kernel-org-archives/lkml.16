@@ -1,33 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C516629994A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3951296155;
+	Mon,  7 Jul 2025 11:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751887374; cv=none; b=f0EAYBnGQ1lOMaQ7j0NCtxIATLgJOlnP7DA7qXSbAMpLrCDHY136FBLsZ/1DAt40LVPQ19iuGj8aOVyyA9A4Pj3wb9vuSY/Hm0Bjs1ty24BPBTpa+cRKUzXflwGqlhbAK7vRSxN13uTio7eIPrXUGSe9OhWwRsAdpPbdBgjB/QE=
+	t=1751887403; cv=none; b=nszmMEHPD1TdpGu2x9euPyeRtiqlE+7ObzxDaezqGHkywzMeH4zlOKkX5XDkLV1kqfCO4gN9GckpStvwuaoEAqsVYT/IJJTVyfB3O1d2ZF9WaXPX/JAayH/ofigFv65A2c6oJXQU6LAV3qXLjaEd3Jkj738jwOhyqXP25SdO/Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751887374; c=relaxed/simple;
-	bh=7SKvBSBl8ewoL2gELoxqBtizcHpPDe7vJ7QfhlYKQBw=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iBBY/xeTq7MXj1x3pJGjybvIdsy1DJ0wMzVTLSgZbR5H0gACauUqrIkyPV//pQ0vRDc1Bsxs0BjS1JIawDT4HgK6966oCsBc6tnsC5CYDeLIIx1fOW9dtkw/79ox9gziw9WD16vHLgOhVkBYEECCDcRTcevD9YucSj5725uoMB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLaUdpuW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751887403; c=relaxed/simple;
+	bh=zYpKy3zoXx6tFNa3dHkNJBWhDM4hWDk5bp7SFg+ilIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=azSuQ7qyzyc8KF9AJMa68gSQ52Pqi1oghgUwmc7vDcZG7qslV2qxHIYfpNyHMvJZ1M3JEXZIAJZVC1fMFdEwVcbquP6Gbb9ER346SufSWAuLdudhzh5mbmlpALQBZ5O9n4FlirkwB1Pex3O+pLiL3HoZNFArv1BYahu95zFumkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OydWPQIS; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLaUdpuW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B9C5C4CEE3;
-	Mon,  7 Jul 2025 11:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751887373;
-	bh=7SKvBSBl8ewoL2gELoxqBtizcHpPDe7vJ7QfhlYKQBw=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=VLaUdpuWGl63t3PCbX0rj5c8Gc/xPwxvre3xaZ9PEbb94QtwN9rF8MnLd2hWPznD4
-	 mm0BvI8CwRqhcvaobVhY4O9oGgfsx2CScqGtAWtDtrH7E6yfDxbFojoAWISUWp0vai
-	 jTf/tdd2AAHBKwMUfXospWrwgu2SgWECFeOHeHYjyQeKlt2KOmpqMgLEY2iCp8txtW
-	 zbJqIrCvumQjdhvhDLrT0pixtoptAmaSS+zE79Hlee4X13NUNT12QoLAgQ/NqvuLYL
-	 s4BScdlc97AYGluH1Wr5onG0mDlERyj9nZYe7oRLUfVAcTVz9lAHgVsvYaTodVI9+9
-	 gznLghs949HgA==
-Message-ID: <0b45c2d9-a610-4839-baa6-75041a6c37d5@kernel.org>
-Date: Mon, 7 Jul 2025 19:22:48 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OydWPQIS"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-454aaade1fbso33677825e9.3;
+        Mon, 07 Jul 2025 04:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751887400; x=1752492200; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6TPVjeNQlRzgAMgy//+OuyCJbbVfiaWjK7V9mAikz/0=;
+        b=OydWPQIS+B3iYohTF8e/7A3XxUZHNYreGtj2YXpepapBVfFE/tC9+RVnMfOAIpWZSa
+         PFvILpJQ3vn6g4clONYtXMrWnSWmcALNVwq0zFtqXN3d9eqN1rheDr7ESU9TVK47GiRl
+         TLB20jlsT1+fuCy4aJ0d/B6lxNbH2FFr6xaxes8piOhOqdUaHT3K++NXwgs4vSuTt+/8
+         Gcpsm4JLBJH6Gvl9CMObi5pfXS1KKBfaDFEL9NMJhI85EPE/9c+AtADSpBNaEFFtMXBD
+         Lim+wSrA8ofnPH7gc2Oxm7O1nAPRFNbBJvD+e2TfpmrdRGMDRbz+HUMYqud9dvaJrYYC
+         F3OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751887400; x=1752492200;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6TPVjeNQlRzgAMgy//+OuyCJbbVfiaWjK7V9mAikz/0=;
+        b=Ex2KfmuzzftGGM9MAg1MA8t2CQWd221f3/N0+YylSd1Kh9gFhWY2kslWv3K1HnvXYo
+         zNNbcVLQ5xk8du3+WgJhauHqxV1W+bGhjagwTLyZw+dqMiCqx58XMsBS0m6tyTyC4qAD
+         FpHIwfhnP3n17c0xTvK+sFoCqEKYi4Qtt0c/SRlYT5fGnZeXyyU9hXyuNH9f6+GFmnH/
+         B9PugTZtnvm1sDlIv8duL718AwpimTEqJaxCEWM0oM2OrXoq8zf7Z0Tl++Gfn61W6r7K
+         iUgkfXuicmpZSXbLiCXSLuiWuxzSyjdDEvjpVj2/81wK2r0Rhgne2lg7cImIXOeqITuW
+         j8qA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGCFSZA2dFkV6r0MR5DIqKfWQae/yqT3+nDHP7lMwUVBh1p5+KKxaWKtjxPsPKPhCWSKLvIQoE/gE=@vger.kernel.org, AJvYcCWBtYnqMoE40E9WvQkYadpizIR6CeRk8ZVfSgokSJrp0LYvPIesBlRvLFjw5LU/h74i1pWgEz0fHYJypTNk@vger.kernel.org, AJvYcCX/M42s/V362lNPy5uQwr1/nf+ZzKO482DPa2pow/PZyPcqcyN4ThkuZjRwfpi+iL4wJGiyLH4yhm0qvl0hIOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJjKSoxLCrXc7EBkvWGiFSfAwfB0nzDF3cvJtyurDSOLqt/PTI
+	lp3VSE3C1NdMPCRcjW1N7n05ptVOKMqHeIhCMsdpKu8NjJvdG+qV6Gl6JKP1BaCE
+X-Gm-Gg: ASbGncuRtJwDp+in7GKtW8npcaPvc7FP1GFpWnsYl+xPZZvb3g1ln/34h0GtHbscA+Y
+	UOQxWlUFp2rGNk1wU236Ivyxx0jGXVM1eTa/jVQiKHF8O6E0UF8IqWYs/+2RixQ1yEBc8jQYTNv
+	xLqew0nL8nIJyNthUw9m76WvWsqT/xDFO8h7rWjk388WhihFIc9DAJJfqFxCEHWuA7VoYvUa1Bh
+	LWwypi8Kf8GEEtbr7NZccBwg7ynlJBwmVCng2588c2D4dk3yoMlIrzMwlHTkNumZx3UX5yrrkK6
+	v1UpxBrHRg+K6lffxyo37lQ5SXjFvqcmzfxscRHKlwD9TUqmaIyxy6kfWkVGTGSzT81j
+X-Google-Smtp-Source: AGHT+IGC9dHI7hG34Y33iS7Tohcxr0UIkxnnLlR/ZbwCJnzdqWYCXb792UejIfSJCcUscd30OWtpsg==
+X-Received: by 2002:a05:600c:8b2f:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-454b4ec3e6fmr123912525e9.30.1751887399813;
+        Mon, 07 Jul 2025 04:23:19 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47030ba48sm9998966f8f.13.2025.07.07.04.23.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 04:23:19 -0700 (PDT)
+Message-ID: <420eff5c-e569-4aec-81fe-ac8ad2060768@gmail.com>
+Date: Mon, 7 Jul 2025 12:23:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,59 +66,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Yue Hu <zbestahu@gmail.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
- <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>
-Subject: Re: [PATCH] erofs: fix to add missing tracepoint in erofs_readahead()
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org
-References: <20250707084832.2725677-1-chao@kernel.org>
- <c911e159-d216-4b0f-865b-f4524e6f8f0f@linux.alibaba.com>
+Subject: Re: [PATCH v2 1/4] rust: i2c: add basic I2C device and driver
+ abstractions
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Asahi Lina <lina+kernel@asahilina.net>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Hung <alex.hung@amd.com>,
+ Tamir Duberstein <tamird@gmail.com>,
+ Xiangfei Ding <dingxiangfei2009@gmail.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
+ <20250704153657.1195687-1-igor.korotin.linux@gmail.com>
+ <aGg2qkyrKBIPiSeE@cassiopeiae>
+ <0ae92ad8-810f-4c10-a442-c403755cbab7@gmail.com>
+ <CANiq72knUt_=vcvVqWaFz_VJEQ9W=4RiTzwSNyxwC_pyBoHB1Q@mail.gmail.com>
 Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <c911e159-d216-4b0f-865b-f4524e6f8f0f@linux.alibaba.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+In-Reply-To: <CANiq72knUt_=vcvVqWaFz_VJEQ9W=4RiTzwSNyxwC_pyBoHB1Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 7/7/25 18:17, Gao Xiang wrote:
-> 
-> 
-> On 2025/7/7 16:48, Chao Yu wrote:
->> Commit 771c994ea51f ("erofs: convert all uncompressed cases to iomap")
->> converts to use iomap interface, it removed trace_erofs_readahead()
->> tracepoint in the meantime, let's add it back.
+
+
+On 7/7/25 11:47, Miguel Ojeda wrote:
+> On Mon, Jul 7, 2025 at 12:31 PM Igor Korotin
+> <igor.korotin.linux@gmail.com> wrote:
 >>
->> Fixes: 771c994ea51f ("erofs: convert all uncompressed cases to iomap")
+>> As for being added as a reviewer or co-maintainer, I’m not yet confident
+>> in my Rust skills. I’m learning Rust from scratch and, given my
+>> extensive C-kernel background, I thought I’d start by contributing
+>> something useful to the Rust side.
 > 
-> Thanks Chao, btw, should we add tracepoint to erofs_read_folio() too?
+> At the moment, for any given subsystem, it is possible that
+> maintainers have even less Rust experience than you do :)
+> 
+> In general, it never hurts to offer to help with maintenance -- it
+> shows you are committed to the code you want to add etc.
+> 
 
-Xiang, I guess it is useful for debug if we can add it, let me figure out
-a patch for that?
+Sounds reasonable from this perspective. In that case waiting for a
+@Wolfram's response.
 
-Thanks,
+Best Regards
+Igor
 
-> 
-> Thanks,
-> Gao Xiang
-> 
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->>   fs/erofs/data.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index 6a329c329f43..534ac359976e 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -356,6 +356,9 @@ static int erofs_read_folio(struct file *file, struct folio *folio)
->>     static void erofs_readahead(struct readahead_control *rac)
->>   {
->> +    trace_erofs_readahead(rac->mapping->host, readahead_index(rac),
->> +                    readahead_count(rac), true);
->> +
->>       return iomap_readahead(rac, &erofs_iomap_ops);
->>   }
->>   
-> 
-> 
 
