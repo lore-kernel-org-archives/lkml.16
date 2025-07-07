@@ -1,499 +1,482 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E76128A3EF
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AC928A3EF;
+	Mon,  7 Jul 2025 10:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751883723; cv=none; b=b3XbFxxknQXN9LYfnJwL/es4142ffjJa7XfbHoXQ3D4t2ZKSqKJ94hq8AZE7V71CdOVlG9ukvhseNM+NDOlxqDPtn0lRpVtkGi3VnqX7N1vOmcuoVmDbrMPrDTqRjlASFLGy91rd7ZF/miR+EUiWr2R9NgVrgq/t0qTCkacVkQE=
+	t=1751883763; cv=none; b=ZsKDT8k1qBazRwtL2g52kK30PkbK2EU98UEGCrmoLzFRAYfpemWBCZg7wDrF+248cRyOmXQxZwKowTkcqDTp+aL1L6wDOHk/Adq+EWusKdLGyb3TAa000rQz6FcrreextIBFqi3rJkAXcZhsi55gkR8/KmnDJkyKHVUDdmyRltM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751883723; c=relaxed/simple;
-	bh=Rt9MAimnuHSHmjSqQvWtHRQPgf8WmpFHHK6TM9HySQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gUYyORfn3hyBYUg1n3a17y9EGRYyu8K9sd7CwKmKwfWB1CwjfICBZI8KjrYVGgzmoZQC6oAwGrnAAqSASybrBFHmkxfxRfXaiQB2ccGIf5tfu6W58uQ2BBBhanlPx2ksJK8CC51T5UOuwXJkOYby6uFAn8rh/2vJfAj/gs7TXhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AMB5ORh/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mkSuCdb7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0Ht0grQl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hdZeCFJi; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AMB5ORh/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mkSuCdb7";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0Ht0grQl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hdZeCFJi"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B6A402116D;
-	Mon,  7 Jul 2025 10:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751883719; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2DyJxLxzMZWM9tZSNK1RTqW0y29XhF043mBlu7jaHZ0=;
-	b=AMB5ORh/mfTgszPMam7PzsVZfm7roSwmabHbZyXDpp/S0yvnc3FvyQEAqzYqNjS3nvrEy9
-	Xc52gwRPKK7cKpDubxXNfMisieaFtrLuR7EHnsV7Ix7PP7k6lfoqH2XHFessjsJT3Qjz/+
-	lCx0AkEvvujmCFaEoWRo9Qb6tDcQQcw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751883719;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2DyJxLxzMZWM9tZSNK1RTqW0y29XhF043mBlu7jaHZ0=;
-	b=mkSuCdb7lmW3WTviCf4kNq4Asf8fgXOMObxVzM2cZ6HAKA0UEeBU8XQBzcbaNbbOWPP0Zr
-	biAhnaChx2yCk8Dg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0Ht0grQl;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=hdZeCFJi
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751883718; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2DyJxLxzMZWM9tZSNK1RTqW0y29XhF043mBlu7jaHZ0=;
-	b=0Ht0grQlDyKpeGPpE4D22/NkSreFs0ecE+2e+KXbmEWzcuI8UBLCh3T1F/EfIPgDEip6xD
-	oA3GJNffFu1yYNgE4HLkJubX0QlvwpVQ/udem7KCAHMlJ83IxX3GfFC3SE5pALhJKluqW6
-	Ebuf6VPQOBN7/N+Qis8hwuWyaRGHNEI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751883718;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2DyJxLxzMZWM9tZSNK1RTqW0y29XhF043mBlu7jaHZ0=;
-	b=hdZeCFJiwtL++4UJaudivoEUZmnBnaG1Nuq/lfA+RVg69kP2poyqje0Fj81pfEE6RI70cY
-	AYkmC+eNw5QXgdAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4898A13757;
-	Mon,  7 Jul 2025 10:21:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id udlSEMafa2gfWwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 07 Jul 2025 10:21:58 +0000
-Message-ID: <bd8cefb9-1712-456f-bcf6-9269d4052e45@suse.de>
-Date: Mon, 7 Jul 2025 12:21:57 +0200
+	s=arc-20240116; t=1751883763; c=relaxed/simple;
+	bh=AIkdq6M0L7MSBoi0kiJ4+qlLHbwYNXTLj0FbkVjibtU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EoIg2LLwT5TVMpoS16oTVfv/+gFT9/6LmvGnOJb6mcLg6b356cdBJnJooNztre3vJacmyCTicQ4047A995kdKLuHHFY24c9ZPC2l2or6eo1cIRrNWsoeeVpGbjg5EP+vyfpOlOV24Kshxnk6VchTKSiZ7dp64bsYebuICkp3kys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553b544e7b4so2827978e87.3;
+        Mon, 07 Jul 2025 03:22:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751883754; x=1752488554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6sLO+XCFjd6kZQcTbPTUaHXEMjyFiunpLQXn/d3kRmo=;
+        b=G2aEHJB4KMfsxOA4ohd+LpxSj0pqu4pW9L+xGB5/pnGoLMp/quECW4NBdEsvX9tOol
+         rf8pn8/7aZYlgPYMKeA5rfOsrRuZ5yzuidKKp9Gtn6oO3sIz8I5j5Ya9OrQ9cWAenxrR
+         U0ySrC3CxoPtquiqyGfPpgZsLHq1TAJs0jWPnhgN2G9xsjbaewfrjADCsFTM5KgiFpIQ
+         KVa9nDUuSvGprhgIokPyXha7F2vc2XqZczQTGNxyP/68JWRrj+NlAbExByFrjQUxWJWq
+         UuSk6n7Jk79tEz+FToOUfFGE/gYmGWOnzKhLwPp77Fd4m3HFbfcd4qu6imkOya6tKoX2
+         qpRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO/vjSQEcYEgeUBzu3kgfV11GwsxvRcmVOiyYI06pSLuEicW4yrpGv79pggLnlZ9bxcVZhgADJHxdn@vger.kernel.org, AJvYcCVTQMufckcYwZ4i9uLTT0VFhnewRsQE+sucFetKjwEVX1L9yIB59qzlzCKfiB36ZiCxlwpPlzuMqV/9Ug==@vger.kernel.org, AJvYcCWbMtlJoXU8vbywm8NIAExbhju8bnCCpAl2+OhSqC2dOVqa1XmfMbWSZ9HC7SP2s/y33nCCqx4y@vger.kernel.org, AJvYcCXLY9+nvjUSdI1xY9MdcQsiVR/PR9ZBfyVKn+megYTwokKMPsTPTz7q+pODStwnsKM45risHxuoOfbrqrR0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMe4XZf3hNQ3rkPoAhoSpL41+GQBOFZXuEkIKoRmvm+5mMVS0O
+	Cy30X4bK2RaMObhw8/1Dpm/bS1zKy2RvNPSfetGC+Bwuq+8B+bHKNoUEXUG/puXM
+X-Gm-Gg: ASbGnctZp9s5wJs2/IfoH+2ANX+1iuDhNFwMmq0cvB7vO5MKAXAhfQoJnJ6pXwlqRyd
+	klV4bOY4vv3qZVztSYbzpRYmUJVKzcb8t2EOl01Tt6lrROiOFLI4LYXdqYPiT8HD1auQ9agxjui
+	oEdiiKbVnHG9VCn7QjMM5te7/gcEQr3iJlyG/yJWZnbyvqRslBplOXrElJG8kXrVYbE+MJhg3l3
+	iZecJiqqZBunA0YSib6HT/87oPqiGGlnGg+1fiHU9Ox2jcCvERyyenwgk+RlTtqxB/Zk0k0pAL9
+	7QeGVgWwXLwWoaIGc8YJhgKEp4DQ3ixhDtstz2jKKE21liNxJFqRwM3UF+ORwXF6Ftqm71dyGfG
+	msHfmdMZHNkbdeo/YJ40=
+X-Google-Smtp-Source: AGHT+IHPDVtKJGF4tTeA+7RigB6lLjHFufqa58UqulVE7fkNmT827EVpOyXniTphiAtCiwoSTu0AhA==
+X-Received: by 2002:a05:6512:3d88:b0:545:1082:91a1 with SMTP id 2adb3069b0e04-557a14219cemr3168477e87.7.1751883753740;
+        Mon, 07 Jul 2025 03:22:33 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-556383b518fsm1292917e87.14.2025.07.07.03.22.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 03:22:32 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b5226e6beso26266311fa.2;
+        Mon, 07 Jul 2025 03:22:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjGwFgiCIHRLLNceH4HOhapzp5VVscZDCuShUiljlkakO03brtdC0CvLSV+SBehfxv+gGf2+bz@vger.kernel.org, AJvYcCVeNzotoG5PcWCaE47Us/CctpUw6uOlzDo7VcVAN+fl0aATiilTNpUEsFACE51shnIjtMG4tf7eCjC0@vger.kernel.org, AJvYcCWsWNkmCR0JCOs49VabAZUNj8ziapupY5KhC8t2oqCobvEmGPykQ/aLvJCNmHrlPsZ/ZEBogyOzUJhpPzDH@vger.kernel.org, AJvYcCXzQIaal9gRxxEbgn5lrPzWEgSBguG463dVsaFB9uaabeHs+pnAMmWdApA5fga3XtY4qTm7YLYP9dT7Ow==@vger.kernel.org
+X-Received: by 2002:a05:651c:2105:b0:32b:75f0:cfa4 with SMTP id
+ 38308e7fff4ca-32f092c6873mr36486781fa.25.1751883752130; Mon, 07 Jul 2025
+ 03:22:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/framebuffer: Acquire internal references on GEM
- handles
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- asrivats@redhat.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- airlied@gmail.com, simona@ffwll.ch, jean-christophe@guillain.net,
- superm1@kernel.org, satadru@gmail.com
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Bert Karwatzki <spasswolf@web.de>, Sumit Semwal <sumit.semwal@linaro.org>,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- stable@vger.kernel.org
-References: <20250707093200.78436-1-tzimmermann@suse.de>
- <4b20c75a-8459-42c5-9937-ebfdbee5ed32@amd.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <4b20c75a-8459-42c5-9937-ebfdbee5ed32@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B6A402116D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,web.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[amd.com,redhat.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,guillain.net];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[lists.freedesktop.org,vger.kernel.org,web.de,linaro.org,lists.linaro.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.51
+References: <20250626080923.632789-1-paulk@sys-base.io> <20250626080923.632789-2-paulk@sys-base.io>
+ <20250704233535.4b026641@minigeek.lan> <20250705153825.2be2b333@minigeek.lan>
+ <aGm8n_wJPiGk85E4@collins> <CAGb2v66s-nWA2dFRpgX6DbDET3dWOm1jPKWm1k9SmGSqhTWoWA@mail.gmail.com>
+ <aGuV3gcKSRIyey53@collins> <CAGb2v66U94RxVTC4O-Z9Pn2RyJK5Xz=pNZCvkFN-5Ax0wG6Cug@mail.gmail.com>
+ <aGud0aVLHGoql3Vj@collins>
+In-Reply-To: <aGud0aVLHGoql3Vj@collins>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Mon, 7 Jul 2025 18:22:19 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64vCdsY7V2OsJVC+Qy+tbStYSWbh19mBrjuJMwZqUQ=Yw@mail.gmail.com>
+X-Gm-Features: Ac12FXyg9XXCP12FlM42TuajsfubuWC369QAdithyWrauBmCL6zemqSIgfSLhuw
+Message-ID: <CAGb2v64vCdsY7V2OsJVC+Qy+tbStYSWbh19mBrjuJMwZqUQ=Yw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: Andre Przywara <andre.przywara@arm.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
-
-Am 07.07.25 um 12:07 schrieb Christian König:
-> On 07.07.25 11:31, Thomas Zimmermann wrote:
->> Acquire GEM handles in drm_framebuffer_init() and release them in
->> the corresponding drm_framebuffer_cleanup(). Ties the handle's
->> lifetime to the framebuffer. Not all GEM buffer objects have GEM
->> handles. If not set, no refcounting takes place. This is the case
->> for some fbdev emulation. This is not a problem as these GEM objects
->> do not use dma-bufs and drivers will not release them while fbdev
->> emulation is running. Framebuffer flags keep a bit per color plane
->> of which the framebuffer holds a GEM handle reference.
->>
->> As all drivers use drm_framebuffer_init(), they will now all hold
->> dma-buf references as fixed in commit 5307dce878d4 ("drm/gem: Acquire
->> references on GEM handles for framebuffers").
->>
->> In the GEM framebuffer helpers, restore the original ref counting
->> on buffer objects. As the helpers for handle refcounting are now
->> no longer called from outside the DRM core, unexport the symbols.
->>
->> v2:
->> - track framebuffer handle refs by flag
->> - drop gma500 cleanup (Christian)
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Fixes: 5307dce878d4 ("drm/gem: Acquire references on GEM handles for framebuffers")
->> Reported-by: Bert Karwatzki <spasswolf@web.de>
->> Closes: https://lore.kernel.org/dri-devel/20250703115915.3096-1-spasswolf@web.de/
->> Tested-by: Bert Karwatzki <spasswolf@web.de>
->> Tested-by: Mario Limonciello <superm1@kernel.org>
->> Cc: Thomas Zimmermann <tzimmermann@suse.de>
->> Cc: Anusha Srivatsa <asrivats@redhat.com>
->> Cc: Christian König <christian.koenig@amd.com>
->> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
->> Cc: Maxime Ripard <mripard@kernel.org>
->> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> Cc: "Christian König" <christian.koenig@amd.com>
->> Cc: linux-media@vger.kernel.org
->> Cc: dri-devel@lists.freedesktop.org
->> Cc: linaro-mm-sig@lists.linaro.org
->> Cc: <stable@vger.kernel.org>
->> ---
->>   drivers/gpu/drm/drm_framebuffer.c            | 31 ++++++++++++++--
->>   drivers/gpu/drm/drm_gem.c                    | 38 ++++++++++++--------
->>   drivers/gpu/drm/drm_gem_framebuffer_helper.c | 16 ++++-----
->>   drivers/gpu/drm/drm_internal.h               |  2 +-
->>   drivers/gpu/drm/drm_modeset_helper.c         |  2 +-
->>   include/drm/drm_framebuffer.h                |  9 +++++
->>   6 files changed, 71 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
->> index b781601946db..23b56cde21d7 100644
->> --- a/drivers/gpu/drm/drm_framebuffer.c
->> +++ b/drivers/gpu/drm/drm_framebuffer.c
->> @@ -862,11 +862,23 @@ EXPORT_SYMBOL_FOR_TESTS_ONLY(drm_framebuffer_free);
->>   int drm_framebuffer_init(struct drm_device *dev, struct drm_framebuffer *fb,
->>   			 const struct drm_framebuffer_funcs *funcs)
->>   {
->> +	unsigned int i;
->>   	int ret;
->> +	bool exists;
->>   
->>   	if (WARN_ON_ONCE(fb->dev != dev || !fb->format))
->>   		return -EINVAL;
->>   
->> +	for (i = 0; i < fb->format->num_planes; i++) {
->> +		if (drm_WARN_ON_ONCE(dev, fb->flags & DRM_FRAMEBUFFER_HAS_HANDLE_REF(i)))
-> Looks mostly good, but fb->flags are the userspace mode flags IIRC.
+On Mon, Jul 7, 2025 at 6:13=E2=80=AFPM Paul Kocialkowski <paulk@sys-base.io=
+> wrote:
 >
-> Overloading that sounds like a bad idea. I would just create another bool fb->obj_has_handle_ref[DRM_FORMAT_MAX_PLANES] array for that state.
-
-OK, that seems like a waste of resources, but I'll make it a separate 
-field of flags. We should later consider renaming the current flags to 
-something like mode_flags.
-
-I'll send out an update later today, so that we don't waste time before 
-the upcoming -rc6.
-
-Best regards
-Thomas
-
+> Hi,
 >
-> Regards,
-> Christian.
+> Le Mon 07 Jul 25, 17:52, Chen-Yu Tsai a =C3=A9crit :
+> > On Mon, Jul 7, 2025 at 5:39=E2=80=AFPM Paul Kocialkowski <paulk@sys-bas=
+e.io> wrote:
+> > >
+> > > Hi Chen-Yu,
+> > >
+> > > Le Sun 06 Jul 25, 23:04, Chen-Yu Tsai a =C3=A9crit :
+> > > > On Sun, Jul 6, 2025 at 8:00=E2=80=AFAM Paul Kocialkowski <paulk@sys=
+-base.io> wrote:
+> > > > >
+> > > > > Hi Andre,
+> > > > >
+> > > > > Le Sat 05 Jul 25, 15:38, Andre Przywara a =C3=A9crit :
+> > > > > > On Fri, 4 Jul 2025 23:35:35 +0100
+> > > > > > Andre Przywara <andre.przywara@arm.com> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > > On Thu, 26 Jun 2025 10:09:19 +0200
+> > > > > > > Paul Kocialkowski <paulk@sys-base.io> wrote:
+> > > > > > >
+> > > > > > > Hi Paul,
+> > > > > > >
+> > > > > > > > The Allwinner A100/A133 only has a single emac instance, wh=
+ich is
+> > > > > > > > referred to as "emac" everywhere. Fix the pin names to drop=
+ the
+> > > > > > > > trailing "0" that has no reason to be.
+> > > > > > >
+> > > > > > > Sorry, but this is wrong. There *is* a second EMAC on the A13=
+3 die: it's
+> > > > > > > indeed not mentioned in the manual, but you can probe its MMI=
+O
+> > > > > > > registers (@0x5030000), and there is a second syscon register
+> > > > > > > (@0x03000034). It's mentioned in several BSP code places ([1]=
+).
+> > > > > > > It seem like no suitable pins are connected on the A133
+> > > > > > > package, but that should not affect the A100 .dtsi (we use a =
+similar
+> > > > > > > approach for the H616 and A523).
+> > > > > > >
+> > > > > > > So I think we should keep the emac0 name.
+> > > > > >
+> > > > > > just thinking that it's even worse: this changes the DT visible=
+ pinctrl
+> > > > > > function name, so it's a DT ABI change. With the "emac0" functi=
+on name,
+> > > > > > Ethernet would work with stable kernels already (as everything =
+is
+> > > > > > compatible, it's just about DT changes). But with this change, =
+pinctrl
+> > > > > > drivers in older kernels would not match.
+> > > > >
+> > > > > Given that the port is still very early and experimental and has =
+very few users
+> > > > > and no field deployment so I don't really think it would have ann=
+oyed anybody in
+> > > > > practice. But yes in principle you are right, while the header re=
+names keep the
+> > > > > same value, the string names are used to match the device-tree de=
+finitions and
+> > > > > this constitues ABI that needs to remain stable.
+> > > > >
+> > > > > > So I would very much like to see this patch moved out. Is it ju=
+st in
+> > > > > > LinusW's tree so far? I don't see it in -next yet.
+> > > > >
+> > > > > I don't think the patches were accepted for over a week so we can=
+ probably
+> > > > > still act. I will send reverts, unless maintainers want to manual=
+ly remove
+> > > > > these commits?
+> > > >
+> > > > I can drop the dts patches from the sunxi tree. Linus might be able=
+ to
+> > > > drop the pinctrl patch.
+> > > >
+> > > > You definitely need to send a revert for the DT binding patch that =
+is
+> > > > already in net-next.
+> > >
+> > > Should this really affect the bindings though?
+> > >
+> > > From what Andre reported, both EMAC0 and EMAC1 should be the same blo=
+ck so it
+> > > doesn't seem particularly necessary to have a different compatible.
+> > >
+> > > Looking at Allwiner's BSP code for the A133[0], I don't see any diffe=
+rence
+> > > between the two. While there's device_type property in Allwinner's dt=
+, it's
+> > > apparently not used by the driver[1].
+> > >
+> > > So I think we're still fine with a single compatible (without the con=
+troller
+> > > index in it).
+> >
+> > The block is the same, but the integration is slightly different, as
+> > the register for the RGMII clock delays and other stuff is at a differe=
+nt
+> > offset in the system controller. The BSP handles this by directly
+> > including the register in the "reg" property.
 >
+> Ah I see, I forgot about the syscon register. However it doesn't seem lik=
+e a
+> very good approach to have a different compatible to express the idea tha=
+t an
+> external resource is different. Just like we do for clocks, resets and ot=
+her
+> things, we should probably find a way to express the offset via some dedi=
+cated
+> property instead of spinning a different compatible each time it changes.
 >
->> +			fb->flags &= ~DRM_FRAMEBUFFER_HAS_HANDLE_REF(i);
->> +		if (fb->obj[i]) {
->> +			exists = drm_gem_object_handle_get_if_exists_unlocked(fb->obj[i]);
->> +			if (exists)
->> +				fb->flags |= DRM_FRAMEBUFFER_HAS_HANDLE_REF(i);
->> +		}
->> +	}
->> +
->>   	INIT_LIST_HEAD(&fb->filp_head);
->>   
->>   	fb->funcs = funcs;
->> @@ -875,7 +887,7 @@ int drm_framebuffer_init(struct drm_device *dev, struct drm_framebuffer *fb,
->>   	ret = __drm_mode_object_add(dev, &fb->base, DRM_MODE_OBJECT_FB,
->>   				    false, drm_framebuffer_free);
->>   	if (ret)
->> -		goto out;
->> +		goto err;
->>   
->>   	mutex_lock(&dev->mode_config.fb_lock);
->>   	dev->mode_config.num_fb++;
->> @@ -883,7 +895,16 @@ int drm_framebuffer_init(struct drm_device *dev, struct drm_framebuffer *fb,
->>   	mutex_unlock(&dev->mode_config.fb_lock);
->>   
->>   	drm_mode_object_register(dev, &fb->base);
->> -out:
->> +
->> +	return 0;
->> +
->> +err:
->> +	for (i = 0; i < fb->format->num_planes; i++) {
->> +		if (fb->flags & DRM_FRAMEBUFFER_HAS_HANDLE_REF(i)) {
->> +			drm_gem_object_handle_put_unlocked(fb->obj[i]);
->> +			fb->flags &= ~DRM_FRAMEBUFFER_HAS_HANDLE_REF(i);
->> +		}
->> +	}
->>   	return ret;
->>   }
->>   EXPORT_SYMBOL(drm_framebuffer_init);
->> @@ -960,6 +981,12 @@ EXPORT_SYMBOL(drm_framebuffer_unregister_private);
->>   void drm_framebuffer_cleanup(struct drm_framebuffer *fb)
->>   {
->>   	struct drm_device *dev = fb->dev;
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < fb->format->num_planes; i++) {
->> +		if (fb->flags & DRM_FRAMEBUFFER_HAS_HANDLE_REF(i))
->> +			drm_gem_object_handle_put_unlocked(fb->obj[i]);
->> +	}
->>   
->>   	mutex_lock(&dev->mode_config.fb_lock);
->>   	list_del(&fb->head);
->> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
->> index bc505d938b3e..41cdab6088ae 100644
->> --- a/drivers/gpu/drm/drm_gem.c
->> +++ b/drivers/gpu/drm/drm_gem.c
->> @@ -224,23 +224,34 @@ static void drm_gem_object_handle_get(struct drm_gem_object *obj)
->>   }
->>   
->>   /**
->> - * drm_gem_object_handle_get_unlocked - acquire reference on user-space handles
->> + * drm_gem_object_handle_get_if_exists_unlocked - acquire reference on user-space handle, if any
->>    * @obj: GEM object
->>    *
->> - * Acquires a reference on the GEM buffer object's handle. Required
->> - * to keep the GEM object alive. Call drm_gem_object_handle_put_unlocked()
->> - * to release the reference.
->> + * Acquires a reference on the GEM buffer object's handle. Required to keep
->> + * the GEM object alive. Call drm_gem_object_handle_put_if_exists_unlocked()
->> + * to release the reference. Does nothing if the buffer object has no handle.
->> + *
->> + * Returns:
->> + * True if a handle exists, or false otherwise
->>    */
->> -void drm_gem_object_handle_get_unlocked(struct drm_gem_object *obj)
->> +bool drm_gem_object_handle_get_if_exists_unlocked(struct drm_gem_object *obj)
->>   {
->>   	struct drm_device *dev = obj->dev;
->>   
->>   	guard(mutex)(&dev->object_name_lock);
->>   
->> -	drm_WARN_ON(dev, !obj->handle_count); /* first ref taken in create-tail helper */
->> +	/*
->> +	 * First ref taken during GEM object creation, if any. Some
->> +	 * drivers set up internal framebuffers with GEM objects that
->> +	 * do not have a GEM handle. Hence, this counter can be zero.
->> +	 */
->> +	if (!obj->handle_count)
->> +		return false;
->> +
->>   	drm_gem_object_handle_get(obj);
->> +
->> +	return true;
->>   }
->> -EXPORT_SYMBOL(drm_gem_object_handle_get_unlocked);
->>   
->>   /**
->>    * drm_gem_object_handle_free - release resources bound to userspace handles
->> @@ -273,7 +284,7 @@ static void drm_gem_object_exported_dma_buf_free(struct drm_gem_object *obj)
->>   }
->>   
->>   /**
->> - * drm_gem_object_handle_put_unlocked - releases reference on user-space handles
->> + * drm_gem_object_handle_put_unlocked - releases reference on user-space handle
->>    * @obj: GEM object
->>    *
->>    * Releases a reference on the GEM buffer object's handle. Possibly releases
->> @@ -284,14 +295,14 @@ void drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
->>   	struct drm_device *dev = obj->dev;
->>   	bool final = false;
->>   
->> -	if (WARN_ON(READ_ONCE(obj->handle_count) == 0))
->> +	if (drm_WARN_ON(dev, READ_ONCE(obj->handle_count) == 0))
->>   		return;
->>   
->>   	/*
->> -	* Must bump handle count first as this may be the last
->> -	* ref, in which case the object would disappear before we
->> -	* checked for a name
->> -	*/
->> +	 * Must bump handle count first as this may be the last
->> +	 * ref, in which case the object would disappear before
->> +	 * we checked for a name.
->> +	 */
->>   
->>   	mutex_lock(&dev->object_name_lock);
->>   	if (--obj->handle_count == 0) {
->> @@ -304,7 +315,6 @@ void drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
->>   	if (final)
->>   		drm_gem_object_put(obj);
->>   }
->> -EXPORT_SYMBOL(drm_gem_object_handle_put_unlocked);
->>   
->>   /*
->>    * Called at device or object close to release the file's
->> diff --git a/drivers/gpu/drm/drm_gem_framebuffer_helper.c b/drivers/gpu/drm/drm_gem_framebuffer_helper.c
->> index c60d0044d036..618ce725cd75 100644
->> --- a/drivers/gpu/drm/drm_gem_framebuffer_helper.c
->> +++ b/drivers/gpu/drm/drm_gem_framebuffer_helper.c
->> @@ -100,7 +100,7 @@ void drm_gem_fb_destroy(struct drm_framebuffer *fb)
->>   	unsigned int i;
->>   
->>   	for (i = 0; i < fb->format->num_planes; i++)
->> -		drm_gem_object_handle_put_unlocked(fb->obj[i]);
->> +		drm_gem_object_put(fb->obj[i]);
->>   
->>   	drm_framebuffer_cleanup(fb);
->>   	kfree(fb);
->> @@ -183,10 +183,8 @@ int drm_gem_fb_init_with_funcs(struct drm_device *dev,
->>   		if (!objs[i]) {
->>   			drm_dbg_kms(dev, "Failed to lookup GEM object\n");
->>   			ret = -ENOENT;
->> -			goto err_gem_object_handle_put_unlocked;
->> +			goto err_gem_object_put;
->>   		}
->> -		drm_gem_object_handle_get_unlocked(objs[i]);
->> -		drm_gem_object_put(objs[i]);
->>   
->>   		min_size = (height - 1) * mode_cmd->pitches[i]
->>   			 + drm_format_info_min_pitch(info, i, width)
->> @@ -196,22 +194,22 @@ int drm_gem_fb_init_with_funcs(struct drm_device *dev,
->>   			drm_dbg_kms(dev,
->>   				    "GEM object size (%zu) smaller than minimum size (%u) for plane %d\n",
->>   				    objs[i]->size, min_size, i);
->> -			drm_gem_object_handle_put_unlocked(objs[i]);
->> +			drm_gem_object_put(objs[i]);
->>   			ret = -EINVAL;
->> -			goto err_gem_object_handle_put_unlocked;
->> +			goto err_gem_object_put;
->>   		}
->>   	}
->>   
->>   	ret = drm_gem_fb_init(dev, fb, mode_cmd, objs, i, funcs);
->>   	if (ret)
->> -		goto err_gem_object_handle_put_unlocked;
->> +		goto err_gem_object_put;
->>   
->>   	return 0;
->>   
->> -err_gem_object_handle_put_unlocked:
->> +err_gem_object_put:
->>   	while (i > 0) {
->>   		--i;
->> -		drm_gem_object_handle_put_unlocked(objs[i]);
->> +		drm_gem_object_put(objs[i]);
->>   	}
->>   	return ret;
->>   }
->> diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
->> index f921cc73f8b8..e79c3c623c9a 100644
->> --- a/drivers/gpu/drm/drm_internal.h
->> +++ b/drivers/gpu/drm/drm_internal.h
->> @@ -161,7 +161,7 @@ void drm_sysfs_lease_event(struct drm_device *dev);
->>   
->>   /* drm_gem.c */
->>   int drm_gem_init(struct drm_device *dev);
->> -void drm_gem_object_handle_get_unlocked(struct drm_gem_object *obj);
->> +bool drm_gem_object_handle_get_if_exists_unlocked(struct drm_gem_object *obj);
->>   void drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj);
->>   int drm_gem_handle_create_tail(struct drm_file *file_priv,
->>   			       struct drm_gem_object *obj,
->> diff --git a/drivers/gpu/drm/drm_modeset_helper.c b/drivers/gpu/drm/drm_modeset_helper.c
->> index ef32f6af10d4..1e8822c4b370 100644
->> --- a/drivers/gpu/drm/drm_modeset_helper.c
->> +++ b/drivers/gpu/drm/drm_modeset_helper.c
->> @@ -94,7 +94,7 @@ void drm_helper_mode_fill_fb_struct(struct drm_device *dev,
->>   		fb->offsets[i] = mode_cmd->offsets[i];
->>   	}
->>   	fb->modifier = mode_cmd->modifier[0];
->> -	fb->flags = mode_cmd->flags;
->> +	fb->flags = mode_cmd->flags & DRM_FRAMEBUFFER_FLAGS_UAPI_MASK;
->>   }
->>   EXPORT_SYMBOL(drm_helper_mode_fill_fb_struct);
->>   
->> diff --git a/include/drm/drm_framebuffer.h b/include/drm/drm_framebuffer.h
->> index 668077009fce..11fa20d21c58 100644
->> --- a/include/drm/drm_framebuffer.h
->> +++ b/include/drm/drm_framebuffer.h
->> @@ -23,6 +23,7 @@
->>   #ifndef __DRM_FRAMEBUFFER_H__
->>   #define __DRM_FRAMEBUFFER_H__
->>   
->> +#include <linux/bits.h>
->>   #include <linux/ctype.h>
->>   #include <linux/list.h>
->>   #include <linux/sched.h>
->> @@ -100,6 +101,14 @@ struct drm_framebuffer_funcs {
->>   		     unsigned num_clips);
->>   };
->>   
->> +#define __DRM_FRAMEBUFFER_FLAGS_BIT_OFFSET 16
->> +
->> +#define DRM_FRAMEBUFFER_FLAGS_UAPI_MASK \
->> +	GENMASK(__DRM_FRAMEBUFFER_FLAGS_BIT_OFFSET - 1, 0)
->> +
->> +#define DRM_FRAMEBUFFER_HAS_HANDLE_REF(_i) \
->> +	BIT((__DRM_FRAMEBUFFER_FLAGS_BIT_OFFSET + (_i)))
->> +
->>   /**
->>    * struct drm_framebuffer - frame buffer object
->>    *
+> > So yes, you do need a separate compatible string, if only to deal with
+> > the slight difference in the integration layer.
+>
+> So maybe an additional allwinner,syscon-offset property or a new
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+If you can get that accepted, I think that works?
 
+> allwinner,syscon that takes the syscon phandle first and the offset secon=
+d?
+
+I would prefer to avoid any changes to the syscon reference that would
+require more custom code. I only just recently found that we could use
+the standard syscon code with the provider registering the syscon. We
+could drop the of_parse_phandle() + find device + dev_get_regmap() bits.
+This is partially covered in my GMAC200 series.
+
+ChenYu
+
+> It seems that various other platforms are doing similar things (e.g.
+> ti,syscon-pcie-mode).
+>
+> Thanks
+>
+> Paul
+>
+> >
+> > ChenYu
+> >
+> > > [0]: https://github.com/engSinteck/A133_Image/blob/main/longan/kernel=
+/linux-4.9/arch/arm64/boot/dts/sunxi/sun50iw10p1.dtsi#L2016
+> > > [1]: https://github.com/engSinteck/A133_Image/blob/main/longan/kernel=
+/linux-4.9/drivers/net/ethernet/allwinner/sunxi-gmac.c
+> > >
+> > > All the best,
+> > >
+> > > Paul
+> > >
+> > > >
+> > > > ChenYu
+> > > >
+> > > >
+> > > > > Cheers,
+> > > > >
+> > > > > Paul
+> > > > >
+> > > > > > Cheers,
+> > > > > > Andre.
+> > > > > >
+> > > > > > > [1]
+> > > > > > > https://github.com/qiaoweibiao/T507_Kernel/blob/main/arch/arm=
+64/boot/dts/sunxi/sun50iw10p1.dtsi
+> > > > > > >
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Fixes: 473436e7647d ("pinctrl: sunxi: add support for the A=
+llwinner A100 pin controller")
+> > > > > > > > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> > > > > > > > ---
+> > > > > > > >  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 32 +++++++++=
++-----------
+> > > > > > > >  1 file changed, 16 insertions(+), 16 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/=
+drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > > > > index b97de80ae2f3..95b764ee1c0d 100644
+> > > > > > > > --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > > > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > > > > @@ -546,33 +546,33 @@ static const struct sunxi_desc_pin a1=
+00_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x2, "i2c0"),          /* SCK */
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD1 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD1 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x2, "i2c0"),          /* SDA */
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD0 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD0 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x2, "i2c1"),          /* SCK */
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXCTL =
+*/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXCTL =
+*/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x2, "i2c1"),          /* SDA */
+> > > > > > > >             SUNXI_FUNCTION(0x3, "cir0"),          /* OUT */
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* CLKIN =
+*/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* CLKIN =
+*/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* TX */
+> > > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* CS */
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD1 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD1 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > > @@ -580,14 +580,14 @@ static const struct sunxi_desc_pin a1=
+00_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* RX */
+> > > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* CLK */
+> > > > > > > >             SUNXI_FUNCTION(0x4, "ledc"),
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD0 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD0 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* RTS */
+> > > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* MOSI *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXCK *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXCK *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > > @@ -595,7 +595,7 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* CTS */
+> > > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* MISO *=
+/
+> > > > > > > >             SUNXI_FUNCTION(0x4, "spdif"),         /* OUT */
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXCTL =
+*/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXCTL =
+*/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > > @@ -611,7 +611,7 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x2, "dmic"),          /* DATA0 =
+*/
+> > > > > > > >             SUNXI_FUNCTION(0x3, "spi2"),          /* CLK */
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s2"),          /* BCLK *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* MDC */
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* MDC */
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > > @@ -619,7 +619,7 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x2, "dmic"),          /* DATA1 =
+*/
+> > > > > > > >             SUNXI_FUNCTION(0x3, "spi2"),          /* MOSI *=
+/
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s2"),          /* LRCK *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* MDIO *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* MDIO *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > > @@ -642,33 +642,33 @@ static const struct sunxi_desc_pin a1=
+00_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x3, "i2c3"),          /* SCK */
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* MCLK *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* EPHY *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* EPHY *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* BCLK *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD3 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD3 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* LRCK *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD2 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD2 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout0"),    /* DOUT0 =
+*/
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s3_din1"),     /* DIN1 *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXCK *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXCK *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout1"),    /* DOUT1 =
+*/
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s3_din0"),     /* DIN0 *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD3 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD3 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > > @@ -676,7 +676,7 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > > >             SUNXI_FUNCTION(0x2, "cir0"),          /* OUT */
+> > > > > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout2"),    /* DOUT2 =
+*/
+> > > > > > > >             SUNXI_FUNCTION(0x4, "i2s3_din2"),     /* DIN2 *=
+/
+> > > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD2 *=
+/
+> > > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD2 *=
+/
+> > > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
+> > > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+> > > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >
+> > > > > > >
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Paul Kocialkowski,
+> > > > >
+> > > > > Independent contractor - sys-base - https://www.sys-base.io/
+> > > > > Free software developer - https://www.paulk.fr/
+> > > > >
+> > > > > Expert in multimedia, graphics and embedded hardware support with=
+ Linux.
+> > >
+> > > --
+> > > Paul Kocialkowski,
+> > >
+> > > Independent contractor - sys-base - https://www.sys-base.io/
+> > > Free software developer - https://www.paulk.fr/
+> > >
+> > > Expert in multimedia, graphics and embedded hardware support with Lin=
+ux.
+>
+> --
+> Paul Kocialkowski,
+>
+> Independent contractor - sys-base - https://www.sys-base.io/
+> Free software developer - https://www.paulk.fr/
+>
+> Expert in multimedia, graphics and embedded hardware support with Linux.
