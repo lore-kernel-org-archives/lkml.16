@@ -1,368 +1,417 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5502288502
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D3626057F;
+	Mon,  7 Jul 2025 10:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751883224; cv=none; b=Q/MdYVZihBcQLiHN6+ziOLTg7LKaMgZlKqzGOhkJaKDRsE+Xj5Zjpf9AoxO6tXIfsvQxbl0IxTWrhvEspSUYDG+M6JPdgOYVUUff6M8ikgalZFU4JB+Cgiyx6xPliVlJ4/laiREBuoY8veYr7uzHbI3PRFyQuQvOMVASZyeGy5Y=
+	t=1751883235; cv=none; b=X1uM31MboLx+NrVn0D5dS/u8NyBRD5V6xlbiJGjqc2mgDMgptJpor7TKfOhbIigNcfTbOpLHm9Cjck4cx/4y1E7895SWy92P004sz4fEQU47OfYaAfP46tI2oZOEnZT8iv9K7GtbDur6f/6skqpuugfEviUzLaQssF0DPgC0TvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751883224; c=relaxed/simple;
-	bh=1T5/s1JnwQ0GhHq+dolYPbnUsq4nV9FPtPSIgX5mbAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SnkkF01x59ssH5LeWgil09OtS6UP8jBokXFsfZ6ssuQDe32GpnQiOzdBj5/MnmtsWahmP26HUdqvPJby7P53EV6tYq0bqQ1qtvq2GfmxTOGpnvYIYo1SkKClmQWBeLJJayAIQQp6ni2JEjU76szniWFo5ZRRVKAVYd0gzeRPEqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=X+eOXd+T; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="X+eOXd+T"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D9D143AD8;
+	s=arc-20240116; t=1751883235; c=relaxed/simple;
+	bh=CV1n2Ca1CRz/Vqwuq/jZCCA8Yxvy0aZV9rmI+cWy3c4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5bwiXyb7qu7y0OvM7H8E2qqB6WagL9c6N4pTOgzZpL/I7iDtPcwe9UnFalzxnIzimC6e8AWqVRiw86nFrjRF3NB/W9fsANws+LYwKHehYqQwa5QOzElEORVQbTCri5Ptwlm1vYCPCtU/Z+XiYY6j5QvJYYPngMEwao86DH1Rb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 42BAD1F00056;
+	Mon,  7 Jul 2025 10:13:44 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 91573ACACDB; Mon,  7 Jul 2025 10:13:42 +0000 (UTC)
+X-Spam-Level: 
+Received: from collins (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 98F05ACACD3;
 	Mon,  7 Jul 2025 10:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751883221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uJ6v8vKMuUeSsnqwBVwgaKkap7Pusx+eOZgrYQrQo6o=;
-	b=X+eOXd+T15l8C8kbXpUVnuaNdaFGDRpJ+yKULX8vRV0l1AXvaW8fuSU0ZRuRnIW3moaeGy
-	APyse81GVkDtqP1O2AdRlStvfuYsLWWSKaSQPmuQ0gTsAK4H/MeaX717HWqBIJEOcoF+CT
-	1yEVAcQVY4PDCNIbuuaHnDNuBYppsavPaILCh/0JJib3s3vlyVo0VRM3sKfocGkfQJ6ftf
-	/T/9ang/348nZRZCXzk/g6RAbPKl+PT8DegbvXx52PDH2KM4/RNkys3oFg6yV7KxiH5rLq
-	PynTYD/7Q7IW1ARrtSlOREMoUlzh8ViY7llK5Zi7ZfzsTVq1yzBTHl+B7BMUew==
-Date: Mon, 7 Jul 2025 12:13:19 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Inki Dae
- <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Marek
- Szyprowski <m.szyprowski@samsung.com>, Jani Nikula
- <jani.nikula@linux.intel.com>, Dmitry Baryshkov <lumag@kernel.org>, Hui Pu
- <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Kevin Hilman <khilman@baylibre.com>, Jerome
- Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 00/32] drm/mipi-dsi: avoid DSI host drivers to have
- pointers to DSI devices
-Message-ID: <20250707121319.1e40a73a@booty>
-In-Reply-To: <20250707115853.128f2e6f@booty>
-References: <20250625-drm-dsi-host-no-device-ptr-v1-0-e36bc258a7c5@bootlin.com>
-	<20250707-strange-warm-bear-cb4ee8@houat>
-	<20250707115853.128f2e6f@booty>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+Date: Mon, 7 Jul 2025 12:13:37 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Andre Przywara <andre.przywara@arm.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: Fix a100 emac pin function name
+Message-ID: <aGud0aVLHGoql3Vj@collins>
+References: <20250626080923.632789-1-paulk@sys-base.io>
+ <20250626080923.632789-2-paulk@sys-base.io>
+ <20250704233535.4b026641@minigeek.lan>
+ <20250705153825.2be2b333@minigeek.lan>
+ <aGm8n_wJPiGk85E4@collins>
+ <CAGb2v66s-nWA2dFRpgX6DbDET3dWOm1jPKWm1k9SmGSqhTWoWA@mail.gmail.com>
+ <aGuV3gcKSRIyey53@collins>
+ <CAGb2v66U94RxVTC4O-Z9Pn2RyJK5Xz=pNZCvkFN-5Ax0wG6Cug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yZa9VLu47USVw4Sh"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66U94RxVTC4O-Z9Pn2RyJK5Xz=pNZCvkFN-5Ax0wG6Cug@mail.gmail.com>
+
+
+--yZa9VLu47USVw4Sh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefudehfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvgeejjeevhefhiefgffethfdtieffheefvedtgeekteejffdtvedugeeihfdvkeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeekjedruddvtddrvddukedrvddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekjedruddvtddrvddukedrvddtjedphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdehpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghir
- hhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hi Maxime,
+Hi,
 
-ouch, e-mail sent by mistake unfinished and without proof-reading...
-well, let me continue it below.
+Le Mon 07 Jul 25, 17:52, Chen-Yu Tsai a =C3=A9crit :
+> On Mon, Jul 7, 2025 at 5:39=E2=80=AFPM Paul Kocialkowski <paulk@sys-base.=
+io> wrote:
+> >
+> > Hi Chen-Yu,
+> >
+> > Le Sun 06 Jul 25, 23:04, Chen-Yu Tsai a =C3=A9crit :
+> > > On Sun, Jul 6, 2025 at 8:00=E2=80=AFAM Paul Kocialkowski <paulk@sys-b=
+ase.io> wrote:
+> > > >
+> > > > Hi Andre,
+> > > >
+> > > > Le Sat 05 Jul 25, 15:38, Andre Przywara a =C3=A9crit :
+> > > > > On Fri, 4 Jul 2025 23:35:35 +0100
+> > > > > Andre Przywara <andre.przywara@arm.com> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > > On Thu, 26 Jun 2025 10:09:19 +0200
+> > > > > > Paul Kocialkowski <paulk@sys-base.io> wrote:
+> > > > > >
+> > > > > > Hi Paul,
+> > > > > >
+> > > > > > > The Allwinner A100/A133 only has a single emac instance, whic=
+h is
+> > > > > > > referred to as "emac" everywhere. Fix the pin names to drop t=
+he
+> > > > > > > trailing "0" that has no reason to be.
+> > > > > >
+> > > > > > Sorry, but this is wrong. There *is* a second EMAC on the A133 =
+die: it's
+> > > > > > indeed not mentioned in the manual, but you can probe its MMIO
+> > > > > > registers (@0x5030000), and there is a second syscon register
+> > > > > > (@0x03000034). It's mentioned in several BSP code places ([1]).
+> > > > > > It seem like no suitable pins are connected on the A133
+> > > > > > package, but that should not affect the A100 .dtsi (we use a si=
+milar
+> > > > > > approach for the H616 and A523).
+> > > > > >
+> > > > > > So I think we should keep the emac0 name.
+> > > > >
+> > > > > just thinking that it's even worse: this changes the DT visible p=
+inctrl
+> > > > > function name, so it's a DT ABI change. With the "emac0" function=
+ name,
+> > > > > Ethernet would work with stable kernels already (as everything is
+> > > > > compatible, it's just about DT changes). But with this change, pi=
+nctrl
+> > > > > drivers in older kernels would not match.
+> > > >
+> > > > Given that the port is still very early and experimental and has ve=
+ry few users
+> > > > and no field deployment so I don't really think it would have annoy=
+ed anybody in
+> > > > practice. But yes in principle you are right, while the header rena=
+mes keep the
+> > > > same value, the string names are used to match the device-tree defi=
+nitions and
+> > > > this constitues ABI that needs to remain stable.
+> > > >
+> > > > > So I would very much like to see this patch moved out. Is it just=
+ in
+> > > > > LinusW's tree so far? I don't see it in -next yet.
+> > > >
+> > > > I don't think the patches were accepted for over a week so we can p=
+robably
+> > > > still act. I will send reverts, unless maintainers want to manually=
+ remove
+> > > > these commits?
+> > >
+> > > I can drop the dts patches from the sunxi tree. Linus might be able to
+> > > drop the pinctrl patch.
+> > >
+> > > You definitely need to send a revert for the DT binding patch that is
+> > > already in net-next.
+> >
+> > Should this really affect the bindings though?
+> >
+> > From what Andre reported, both EMAC0 and EMAC1 should be the same block=
+ so it
+> > doesn't seem particularly necessary to have a different compatible.
+> >
+> > Looking at Allwiner's BSP code for the A133[0], I don't see any differe=
+nce
+> > between the two. While there's device_type property in Allwinner's dt, =
+it's
+> > apparently not used by the driver[1].
+> >
+> > So I think we're still fine with a single compatible (without the contr=
+oller
+> > index in it).
+>=20
+> The block is the same, but the integration is slightly different, as
+> the register for the RGMII clock delays and other stuff is at a different
+> offset in the system controller. The BSP handles this by directly
+> including the register in the "reg" property.
 
-On Mon, 7 Jul 2025 11:58:53 +0200
-Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
+Ah I see, I forgot about the syscon register. However it doesn't seem like a
+very good approach to have a different compatible to express the idea that =
+an
+external resource is different. Just like we do for clocks, resets and other
+things, we should probably find a way to express the offset via some dedica=
+ted
+property instead of spinning a different compatible each time it changes.
 
-> On Mon, 7 Jul 2025 08:16:49 +0200
-> Maxime Ripard <mripard@kernel.org> wrote:
->=20
-> > Hi Luca,
-> >=20
-> > On Wed, Jun 25, 2025 at 06:45:04PM +0200, Luca Ceresoli wrote: =20
-> > > This series is the first attempt at avoiding DSI host drivers to have
-> > > pointers to DSI devices (struct mipi_dsi_device), as discussed during=
- the
-> > > Linux Plumbers Conference 2024 with Maxime and Dmitry.
-> > >=20
-> > > It is working, but I consider this a draft in order to discuss and
-> > > challenge the proposed approach.
-> > >=20
-> > > Overall work
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >=20
-> > > This is part of the work towards removal of bridges from a still exis=
-ting
-> > > DRM pipeline without use-after-free. The grand plan as discussed in [=
-1].
-> > > Here's the work breakdown (=E2=9E=9C marks the current series):
-> > >=20
-> > >  1. =E2=80=A6 add refcounting to DRM bridges (struct drm_bridge)
-> > >     (based on devm_drm_bridge_alloc() [0])
-> > >     A. =E2=9C=94 add new alloc API and refcounting (in v6.16-rc1)
-> > >     B. =E2=9C=94 convert all bridge drivers to new API (now in drm-mi=
-sc-next)
-> > >     C. =E2=9C=94 kunit tests (now in drm-misc-next)
-> > >     D. =E2=80=A6 add get/put to drm_bridge_add/remove() + attach/deta=
-ch()
-> > >          and warn on old allocation pattern (under review)
-> > >     E. =E2=80=A6 add get/put on drm_bridge accessors
-> > >        1. =E2=80=A6 drm_bridge_chain_get_first_bridge() + add a clean=
-up action
-> > >        2. =E2=80=A6 drm_bridge_chain_get_last_bridge()
-> > >        3. drm_bridge_get_prev_bridge()
-> > >        4. drm_bridge_get_next_bridge()
-> > >        5. drm_for_each_bridge_in_chain()
-> > >        6. drm_bridge_connector_init
-> > >        7. of_drm_find_bridge
-> > >        8. drm_of_find_panel_or_bridge, *_of_get_bridge
-> > >     F. debugfs improvements
-> > >  2. handle gracefully atomic updates during bridge removal
-> > >  3. =E2=9E=9C avoid DSI host drivers to have dangling pointers to DSI=
- devices
-> > >       (this series)
-> > >  4. finish the hotplug bridge work, removing the "always-disconnected"
-> > >     connector, moving code to the core and potentially removing the
-> > >     hotplug-bridge itself (this needs to be clarified as points 1-3 a=
-re
-> > >     developed)
-> > >=20
-> > > [0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7=
-fc1e629b715ea3d1ba537ef2da95eec
-> > > [1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6=
-f2c9c3058@bootlin.com/t/#u
-> > >=20
-> > > Motivation
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >=20
-> > > The motivation for this series is that with hot-pluggable hardware a =
-DSI
-> > > device can be disconnected from the DSI host at runtime, and later on
-> > > reconnected, potentially with a different model having different bus
-> > > parameters.
-> > >=20
-> > > DSI host drivers currently receive a struct mipi_dsi_device pointer i=
-n the
-> > > attach callback and some store it permanently for later access to the=
- bur
-> > > format data (lanes, channel, pixel format etc). The stored pointer can
-> > > become dangling if the device is removed, leading to a use-after-free.
-> > >=20
-> > > Currently the data exchange between DSI host and device happens prima=
-rily
-> > > by two means:
-> > >=20
-> > >  * the device requests attach, detach and message transfer to the hos=
-t by
-> > >    calling mipi_dsi_attach/detach/transfer which in turn call the cal=
-lbacks
-> > >    in struct mipi_dsi_host_ops
-> > >     - for this to work, struct mipi_dsi_device has a pointer to the h=
-ost:
-> > >       this is OK because the goal is supporting hotplug of the "remot=
-e"
-> > >       part of the DRM pipeline
-> > >  * the host accesses directly the fields of struct mipi_dsi_device, to
-> > >    which it receives a pointer in the .attach and .detach callbacks
-> > >=20
-> > > The second bullet is the problematic one, which we want to remove.
-> > >=20
-> > > Strategy
-> > > =3D=3D=3D=3D=3D=3D=3D=3D
-> > >=20
-> > > I devised two possible strategies to address it:
-> > >=20
-> > >  1. change the host ops to not pass a struct mipi_dsi_device, but ins=
-tead
-> > >     to pass only a copy of the needed information (bus format mainly)=
-, so
-> > >     the host driver does never access any info from the device
-> > >    =20
-> > >  2. let the host get info from the device as needed, but without havi=
-ng a
-> > >     pointer to it; this is be based on:
-> > >      - storing a __private mipi_dsi_device pointer in struct mipi_dsi=
-_host
-> > >      - adding getters to the DSI core for the host to query the needed
-> > >        info, e.g. drm_mipi_dsi_host_get_device_lanes(host) (the gette=
-rs
-> > >        would be allowed to dereference the device pointer)
-> > >=20
-> > > This series implements strategy 1. It does so by adding a .attach_new=
- host
-> > > op, which does not take a mipi_dsi_device pointer, and converting mos=
-t host
-> > > drivers to it. Once all drivers are converted, the old op can be remo=
-ved,
-> > > and .attach_new renamed to .attach.   =20
-> >=20
-> > I don't recall discussing this particular aspect at Plumbers, so sorry
-> > if we're coming back to the same discussion we had.
-> >=20
-> > I'm not necessarily opposed to changing the MIPI-DSI bus API, but I
-> > don't think changing the semantics to remove the fact that a particular
-> > device is connected or not is a good idea.
-> >=20
-> > I would have expected to have bus driver (maybe) take a device pointer
-> > at attach, and drop it at detach.
-> >=20
-> > Then, when we detect the hotplug of a DSI device, we detach it from its
-> > parent, and we're done.
-> >=20
-> > What prevents us from using that approach? =20
->=20
-> I probably should have done a recap of the whole discussion, so let me
-> do it now.
->=20
-> It all starts with one fact: a DSI device can be disconnected and then
-> a different one connected later on, having a different DSI bus format
-> (lanes, channel, mode flags, whatever). A detach/attach sequence would
-> handle that, but only in the simple case when there is a host/device
-> pair. Let's how consider this topology:
->                                                      =20
->                 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90                 =20
->                 =E2=94=82    DSI bridge    =E2=94=82                 =20
-> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=90  A  =E2=94=82                  =E2=94=82  B  =
-=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
-> =E2=94=82 DSI host=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA=
-=E2=94=82device        host=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=96=BA=E2=94=82DSI device =E2=94=82
-> =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=98     =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=
-=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=98
->                                                      =20
-> Here link A is always connected, link B is hot-pluggable. When the tail
-> device is removed and a different one plugged, a detach/attach sequence
-> can update the bus format on the DSI bridge, but then the DSI bridge
-> cannot update the format on the first host without faking a
-> detach/attach that does not map a real event.
->=20
-> The above topology is probably not common, but it is exactly what the
-> hotplug-bridge introduces [0]. Whether the hotplug-bridge will have to
-> eventually exist or not to support hotplug is still to be defined, but
-> regardless there is another problematic aspect.
->=20
-> The second problematic aspect is that several DSI host drivers will not
-> even drm_bridge_add() until they have an attached DSI device. One such
-> example is samsung-dsim, which calls drm_bridge_add()
-> in samsung_dsim_host_attach(). When such a driver implements the first
-> DSI host, the DSI bridge must register a DSI device before the DRM card
-> can be instantiated. See the lengthy comment before
-> hotplug_bridge_dsi_attach() in [0] for more gory details, but the
-> outcome is that the hotplug-bridge needs to attach a DSI device with
-> a fake format once initially just to let the DRM card probe, and the
-> detach and reattach with the correct format once an actual DSI device
-> is connected at the tail.
->=20
-> [0] https://lore.kernel.org/all/20240917-hotplug-drm-bridge-v4-4-bc4dfee6=
-1be6@bootlin.com/
->=20
-> The above would be improved if the DSI host API provided a way to
-> notify to the host about a bus format change, which is however not
-> present currently.
->=20
-> The naive solution would be adding a new DSI host op:
->=20
->  struct mipi_dsi_host_ops {
->  	int (*attach)(struct mipi_dsi_host *host,
->  		      struct mipi_dsi_device *dsi);
->  	int (*detach)(struct mipi_dsi_host *host,
->  		      struct mipi_dsi_device *dsi);
-> +	int (*bus_fmt_changed)(struct mipi_dsi_host *host,
-> + 		      struct mipi_dsi_device *dsi);
->  	ssize_t (*transfer)(struct mipi_dsi_host *host,
->  			    const struct mipi_dsi_msg *msg);
->  };
->=20
-> This would allow reduce the current sequence:
->  1. attach with dummy format (no tail device yet)
->  2. fake detach
->  3. attach
->=20
-> with:
->  1. attach with dummy format (no tail device yet)
->  2. update format
->=20
-> Adding such a new op would be part of chapter 4 of this work, being it
-> quite useless without hotplug.
->=20
-> However while reasoning about this I noticed the DSI host drivers peek
-> into the struct mipi_dsi_device fields to read the format, so there is
-> no sort of isolation between host and device. Introducing a struct to
-> contain all the format fields looked like a good improvement in terms
-> of code organization.
->=20
-> Yet another aspect is that several host drivers keep a pointer to the
-> device, and thus in case of format change in the DSI device they might
-> be reading different fields at different moments, ending up with an
-> inconsistent format.
->=20
-> The above considerations, which are all partially overlapped, led me to
-> the idea of introducing a struct to exchange a DSI bus format, to be
-> exchanged as a whole ("atomically") between host and device. What's
-> your opinion about introducing such a struct?
->=20
-> The second aspect of this series is not passing pointers, and that's
-> the core topic you questioned. I realize it is not strictly necessary
-> to reach the various goals discussed in this e-mail. The work I'm doing
-> on the drm_bridge struct is actually a way to store a pointer while
-> avoiding use-after-free, so that can obviously be done for a simpler
-> scenario such as DSI host-device. However I thought not passing a
-> pointer would be a more radical solution: if a driver receives no
-> pointer, then it cannot by mistake keep it stored when it shouldn't,
-> maybe in a rare case within a complex driver where it is hard to spot.
->=20
-> I'll be OK to change the approach and keep the pointer passed in the
-> attach/detach ops, if that is the best option. However I'd like to have
-> your opinion about the above topics before working towards that
-> direction, and ensure I fully grasp the usefulness of keeping the
-> pointer.
->=20
-> Post scriptum. The very initial issue that led to all this discussion
-> when writing the hotplug-bridge driver is that the samsung-dsim driver
-> will not drm_bridge_add() until a DSI device does .attach to it. Again,
-> see the comments before hotplug_bridge_dsi_attach() in [0] for details.
-> However by re-examining the driver for the N-th time now from a new
-> POV, I _think_ this is not correct and potentially easy to solve. But thi=
-s leads to one fundamental question:
+> So yes, you do need a separate compatible string, if only to deal with
+> the slight difference in the integration layer.
 
-The question is: should a DSI host bridge driver:
+So maybe an additional allwinner,syscon-offset property or a new
+allwinner,syscon that takes the syscon phandle first and the offset second?
+It seems that various other platforms are doing similar things (e.g.
+ti,syscon-pcie-mode).
 
- A) wait for a DSI device to .attach before drm_bridge_add()ing itself,
-    or
- B) drm_bridge_add() itself unconditionally, and let the DSI device
-    .attach whenever it happens?
+Thanks
 
-A) is what many drivers (IIRC the majority) does. It implies the card
-will not be populated until .attach, which in the hotplug case could
-happen very late
+Paul
 
-B) is done by a few drivers and allows the card to appear in the
-hotplug case without the device, which is needed for hotplug.
-
-I had tried simply moving drm_bridge_add() from .attach to probe in
-the samsung-dsim driver in the pase but that would not work. Now I did
-yet another check at the code and I suspect it can be done with a small
-additional change, but cannot access the hardware to test it currently.
-
-Answering this last question might change and simplify the requirements
-discussed in the (very lengthy, sorry about that) discussion above.
-
-Best regards,
-Luca
+>=20
+> ChenYu
+>=20
+> > [0]: https://github.com/engSinteck/A133_Image/blob/main/longan/kernel/l=
+inux-4.9/arch/arm64/boot/dts/sunxi/sun50iw10p1.dtsi#L2016
+> > [1]: https://github.com/engSinteck/A133_Image/blob/main/longan/kernel/l=
+inux-4.9/drivers/net/ethernet/allwinner/sunxi-gmac.c
+> >
+> > All the best,
+> >
+> > Paul
+> >
+> > >
+> > > ChenYu
+> > >
+> > >
+> > > > Cheers,
+> > > >
+> > > > Paul
+> > > >
+> > > > > Cheers,
+> > > > > Andre.
+> > > > >
+> > > > > > [1]
+> > > > > > https://github.com/qiaoweibiao/T507_Kernel/blob/main/arch/arm64=
+/boot/dts/sunxi/sun50iw10p1.dtsi
+> > > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > Fixes: 473436e7647d ("pinctrl: sunxi: add support for the All=
+winner A100 pin controller")
+> > > > > > > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> > > > > > > ---
+> > > > > > >  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 32 ++++++++++-=
+----------
+> > > > > > >  1 file changed, 16 insertions(+), 16 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c b/dr=
+ivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > > > index b97de80ae2f3..95b764ee1c0d 100644
+> > > > > > > --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > > > +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+> > > > > > > @@ -546,33 +546,33 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x2, "i2c0"),          /* SCK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD1 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD1 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 0)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 1),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x2, "i2c0"),          /* SDA */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD0 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD0 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 1)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x2, "i2c1"),          /* SCK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXCTL */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXCTL */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 2)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 3),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x2, "i2c1"),          /* SDA */
+> > > > > > >             SUNXI_FUNCTION(0x3, "cir0"),          /* OUT */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* CLKIN */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* CLKIN */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 3)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 4),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* TX */
+> > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* CS */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD1 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD1 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 4)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 5),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > @@ -580,14 +580,14 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* RX */
+> > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* CLK */
+> > > > > > >             SUNXI_FUNCTION(0x4, "ledc"),
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD0 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD0 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 5)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 6),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* RTS */
+> > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* MOSI */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXCK */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXCK */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 6)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 7),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > @@ -595,7 +595,7 @@ static const struct sunxi_desc_pin a100_p=
+ins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x2, "uart3"),         /* CTS */
+> > > > > > >             SUNXI_FUNCTION(0x3, "spi1"),          /* MISO */
+> > > > > > >             SUNXI_FUNCTION(0x4, "spdif"),         /* OUT */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXCTL */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXCTL */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 7)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 8),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > @@ -611,7 +611,7 @@ static const struct sunxi_desc_pin a100_p=
+ins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x2, "dmic"),          /* DATA0 */
+> > > > > > >             SUNXI_FUNCTION(0x3, "spi2"),          /* CLK */
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s2"),          /* BCLK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* MDC */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* MDC */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 9)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 10),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > @@ -619,7 +619,7 @@ static const struct sunxi_desc_pin a100_p=
+ins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x2, "dmic"),          /* DATA1 */
+> > > > > > >             SUNXI_FUNCTION(0x3, "spi2"),          /* MOSI */
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s2"),          /* LRCK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* MDIO */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* MDIO */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 10)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 11),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > @@ -642,33 +642,33 @@ static const struct sunxi_desc_pin a100=
+_pins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x3, "i2c3"),          /* SCK */
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* MCLK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* EPHY */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* EPHY */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 13)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 14),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* BCLK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD3 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD3 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 14)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 15),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s3"),          /* LRCK */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXD2 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXD2 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 15)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 16),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout0"),    /* DOUT0 */
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s3_din1"),     /* DIN1 */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* RXCK */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* RXCK */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 16)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 17),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > >             SUNXI_FUNCTION(0x1, "gpio_out"),
+> > > > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout1"),    /* DOUT1 */
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s3_din0"),     /* DIN0 */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD3 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD3 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 17)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 18),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > > > @@ -676,7 +676,7 @@ static const struct sunxi_desc_pin a100_p=
+ins[] =3D {
+> > > > > > >             SUNXI_FUNCTION(0x2, "cir0"),          /* OUT */
+> > > > > > >             SUNXI_FUNCTION(0x3, "i2s3_dout2"),    /* DOUT2 */
+> > > > > > >             SUNXI_FUNCTION(0x4, "i2s3_din2"),     /* DIN2 */
+> > > > > > > -           SUNXI_FUNCTION(0x5, "emac0"),         /* TXD2 */
+> > > > > > > +           SUNXI_FUNCTION(0x5, "emac"),          /* TXD2 */
+> > > > > > >             SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 18)),
+> > > > > > >   SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+> > > > > > >             SUNXI_FUNCTION(0x0, "gpio_in"),
+> > > > > >
+> > > > > >
+> > > > >
+> > > >
+> > > > --
+> > > > Paul Kocialkowski,
+> > > >
+> > > > Independent contractor - sys-base - https://www.sys-base.io/
+> > > > Free software developer - https://www.paulk.fr/
+> > > >
+> > > > Expert in multimedia, graphics and embedded hardware support with L=
+inux.
+> >
+> > --
+> > Paul Kocialkowski,
+> >
+> > Independent contractor - sys-base - https://www.sys-base.io/
+> > Free software developer - https://www.paulk.fr/
+> >
+> > Expert in multimedia, graphics and embedded hardware support with Linux.
 
 --=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--yZa9VLu47USVw4Sh
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhrndEACgkQhP3B6o/u
+lQxU5w//XeJBg1LfklJq+6k5MFiGmENiAMlLOG5lZARbxyA5fB6PA7HVBW22PwSG
+ssmozFf/NveM0koeSRSeDFYJ9dhCgEMl3PkC4BWa9ifKawl8C6e1l+ntr6pS3LK8
+fgmikJbvGbgpjg/RxafPTcIfo3YGVX/mNKoVJE8kf/n5AiIcG2fVWC/TcWEYuYDf
+PPTLT81HrvKqyDMkGw/xt2VceyHJOB0nTNRUVDCf+50qy0k4SE2eJF3Pbj9iN9ZZ
+UTj2X/OaTVsJ7ie+LO5xoZNWCUCv/ZiOdDNt+hODF6UbS8QnQdSrQ+/zSKxse6Xm
+jHZbYfuTRUKDZSR+EIAt9GDDBlwmqIs5QGGIiJ9GvB0dpAz3ZPgDOIGPtW+RWMqE
+jGzM1C+oLTU09V1eAkFj+mI72Wmb1qjHjgoE6x4e99LcAS9V92KwP+aOuJMiVdB8
+Wef8haAwKrX3UkFKUv02Hq6vxrrF4CpvdA3RfXShvLjQKow05dmenzc3gpPNYdgV
+5/ZAfTOkra5NoX8cnJPJHdbvNaQJxbe/qLQttUs9t2ayaUb2Tdfbji274CBCPDEx
+DaOriH8OpJHV8M+fAgk1sRbZyZUX3+2TJ0pbBsHi37B24LY/muiwapqlMSK5dUnb
+LEa07CHuUs1R03XGaZRYVjWEGKdF9g7wRprEtxbWYmGXQv+x99o=
+=e1Oj
+-----END PGP SIGNATURE-----
+
+--yZa9VLu47USVw4Sh--
