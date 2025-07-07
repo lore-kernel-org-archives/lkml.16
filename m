@@ -1,114 +1,287 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618201E22FC;
-	Mon,  7 Jul 2025 13:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53401E22FC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894812; cv=none; b=ogzTwLApgM2WcIkl8TLaLn3mPSIRTUBEMX4BWWbJhsmuHnGrA4ylW6QNZjROLrD4BCWNRroOMp/y1v99dSHogTd0vh4rX9GmDt5bTGLLX3xAT9472SkukEDGOOcCqZF8XbdnUqL2LkV7fAkGMeK8D0ONn2kzN7OZO6MCeGJkjyI=
+	t=1751894823; cv=none; b=PbLWiOhaNExHyXOVp/BYLZ5xWRl+TIn3vOf+/TeLFPF3pHQhNYy9vsDihhK1AUrV1keRnDAJC3jIca8LDyzHLjN1CpTLGvZI6BJgbVINVgy3rb3WzC9bPVogk+ZAvI4qKTzRHdXqGh9zoPEG7FBCRUMEhHeZJ/UkdTfiViuD82E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894812; c=relaxed/simple;
-	bh=+eDQoI7Ih5xCp1XC5oM2SFOUr5/BpsbWEEV8qr+fx7s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jGdzFVp9Jwdpw/L0RrJDqcqMnzDq9SLxrVgkmjMxVc6oBRA4VvqqPk9jw5Knk9cuTRjU8i0xiQOM3bZiKz2OcQxdyRg1A4dHZ4PsXfJe5eayn+lJt4cMFPEab8zoA3gNvf+gzZ+YqCINK4slsMXRt340Bj3MPdsfBrQwzeypUK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jUGrLI0G; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751894823; c=relaxed/simple;
+	bh=3ietx0ofqi6mn1rjSW7Z6012jGl4TXWv2+pakZQ6JGs=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=u9stvpOrHpg6brMCgmdi+PWqEmgzDZgdVv6kRCctHy0FPMhCnKqp9CrvxlSLKrjS1wYGiedxKFrjTGN45m1TnVky3Fba18m0f+K5gIiJT+8gZE6u9GIWBRsWU1JTeqvz6Cu2iamKBeHHptc1ftgWkI3+QrFwxj3nnLO9HxCLcR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gzlsbwFh; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUGrLI0G"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e81881bdd55so350285276.0;
-        Mon, 07 Jul 2025 06:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751894810; x=1752499610; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+eDQoI7Ih5xCp1XC5oM2SFOUr5/BpsbWEEV8qr+fx7s=;
-        b=jUGrLI0G21ULBTd6mLvIvoCLEDDgfzrvHlqU52K4SsaQZUZ9pVzeSl0CmvHeUhOUNL
-         kza4xQUl9AK9Byh7BCnhKQDP+ncm6WjPJ240HJx8YGq9iQVh3/sGDd0IkJCp5rptvpzK
-         ZF8E28HM6xYeq0MjkT20eSz94WWL8H2d0LLob3sAoxiBbzIhtxlKF2wgX10R6mLthC0p
-         cnn2JLa9FtrbPBTJwzp9jOef/FaVdwauXywf/+VUndVP391Qk9TatS6PdTL2r3eNbmRS
-         cNuF0G4Og4B1keCtk/WmjG/Kb2OWVrBv93xtjuebwLzQ3VhJEVpWtRTuDPi/8tNu1rub
-         gPEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751894810; x=1752499610;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+eDQoI7Ih5xCp1XC5oM2SFOUr5/BpsbWEEV8qr+fx7s=;
-        b=Dtxx+yPqvH93k0ccULKskPl05o/iX05R6/VqKGUi29+Pv31FHdy4xSbqEuOIukaRLJ
-         sMXgAFQ+9XuwK8SpxObQLxtFIvH82UJOQ0K/0ZdU6slGJxgyOWAnzbJAiPjidhvntaV/
-         Jg5xcR+Q/4jeEvVN9a1+IvshzZ7VjwU3NwEtQ1EjOmXtVLfTqGRartn8kcGLiV9cafGF
-         gzqEhMQ7kAhB38XisArPIiUT6BLwzd0TAwO5BvBCZzPnSrrVIh5V74zPluSb8hOEmSBG
-         /eMG+4i97lnejchOXsXvU9ia83yYDFWM5IR4s9zMnghSTH6oUDCvTroJEw1Rz7U2lehi
-         qzVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVO4KIeBP8q7sw9uulh8OPOstWB+FoK4YLCXWIe8orykNtdidRcJZb6n90xt+rDySXzQEW5hwlwl6GA6Co=@vger.kernel.org, AJvYcCWeiRhgIBIJ+LCT7Dormz53T9vO2dBSkKV4zcHVR8Yl+geeXxV6aNmpJyYEbtjZhF5+Jj1wn701680XDPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyogY6r3am+0Cg5epPzUtmRioUIO7T/aW7QghEP8lj/MntWfbfc
-	wQ4L5qENPkrpEUqusaY34UDTSQX6H4MmMDRi3Y1jYzBvklX1+6HTuz/bVWDNviMCoe/cb31JXuq
-	be5k/s68jRQu4+bTlpnf1HdiyVwFHvxs=
-X-Gm-Gg: ASbGnct5qJYIQgs7V4/huGV5XYBVt6XT3PKg4lHZS9fruXdGJ3tkns0KCI9Jl7h0rlS
-	hlRRFO512M7zOqBdmE88ySPFvdsYU36U0EBJj08i+Oz9ktNZMe8OStsduI5MOWHpSFWloegWxck
-	bWRqggNlKKS7v3A1KTZAnFe/sAriQ9L2tHDwrP1U6tyQM=
-X-Google-Smtp-Source: AGHT+IEsKVW5JtW0RfRAq3tfnMDl8JVZLWNsI8dc7R+PLM4F6s/NZqeVQ76z6bAd0IbxM3Q0haEdHbKUvGerwwkKP3s=
-X-Received: by 2002:a05:690c:6713:b0:714:305:7c74 with SMTP id
- 00721157ae682-71669ed6b45mr81445977b3.3.1751894810104; Mon, 07 Jul 2025
- 06:26:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gzlsbwFh"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
- <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
- <CAGn2d8OMRaeozOMxj1Ry8i9T3sJ5J1QqA_Jpk7wYO8KiUbpKBA@mail.gmail.com>
- <aGPYZhK65LaD0wVO@smile.fi.intel.com> <836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org>
- <CAGn2d8NBEwWm0mQ0YQ3KZ+V1Zon84zusfsQQV2foVmUTBAzEAQ@mail.gmail.com> <fbfbd0e5-2c27-4f32-a3d7-9cf57fde5098@kernel.org>
-In-Reply-To: <fbfbd0e5-2c27-4f32-a3d7-9cf57fde5098@kernel.org>
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Date: Mon, 7 Jul 2025 16:26:38 +0300
-X-Gm-Features: Ac12FXzBqmNuWj7ejiaKXMMV8TVKT4LYL9tFZe6Npx2f8doOsoH6QUPVop8Pawo
-Message-ID: <CAGn2d8M5+5ErZd0YF_hQ75j5FWEFC60qCPX6U7G5j2HgDmz1PA@mail.gmail.com>
-Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
- HMM_BO_DEVICE_INITED flag
-To: Hans de Goede <hansg@kernel.org>, hdegoede@redhat.com, andy@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
-	skhan@linuxfoundation.com, dan.carpenter@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751894819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E+sLFlb61uxhm84r2R5IWZpx5sgQHLlxHf5gjLWdiro=;
+	b=gzlsbwFhc8xYSQzw4WtIhG0I68RN6NgMJv+398SBvQJMJtZPaCS/qHJA6wPWCUeSq4zMy4
+	hn4pGPWliTtg5Qvpgmvmn1jqKWztAsTdileWZx56WYFXhbuPB6ud9CmP7Z4NfrEa7mbsfV
+	tLJ1zb4xj4U0IBTnH9Sw3oq1ptrwuiQ=
+Date: Mon, 07 Jul 2025 13:26:56 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: qiang.zhang@linux.dev
+Message-ID: <527a257218a02fe85571746d339a4c24f5564d68@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH RFC 1/3] rcu: Fix rcu_read_unlock() deadloop due to IRQ
+ work
+To: "Joel Fernandes" <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+ "Paul E. McKenney" <paulmck@kernel.org>, "Frederic Weisbecker"
+ <frederic@kernel.org>, "Neeraj Upadhyay" <neeraj.upadhyay@kernel.org>,
+ "Josh Triplett" <josh@joshtriplett.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Uladzislau Rezki" <urezki@gmail.com>, "Steven
+ Rostedt" <rostedt@goodmis.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "Lai Jiangshan"
+ <jiangshanlai@gmail.com>
+Cc: rcu@vger.kernel.org
+In-Reply-To: <20250705203918.4149863-1-joelagnelf@nvidia.com>
+References: <20250705203918.4149863-1-joelagnelf@nvidia.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Hans, Andy
+>=20
+>=20Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+>=20
+>=20---
+>=20
+>=20 kernel/rcu/tree.h | 11 ++++++++++-
+>=20
+>=20 kernel/rcu/tree_plugin.h | 29 ++++++++++++++++++++++-------
+>=20
+>=20 2 files changed, 32 insertions(+), 8 deletions(-)
+>=20
+>=20diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+>=20
+>=20index 3830c19cf2f6..f8f612269e6e 100644
+>=20
+>=20--- a/kernel/rcu/tree.h
+>=20
+>=20+++ b/kernel/rcu/tree.h
+>=20
+>=20@@ -174,6 +174,15 @@ struct rcu_snap_record {
+>=20
+>=20 unsigned long jiffies; /* Track jiffies value */
+>=20
+>=20 };
+>=20
+>=20=20
+>=20
+> +/*
+>=20
+>=20+ * The IRQ work (deferred_qs_iw) is used by RCU to get scheduler's a=
+ttention.
+>=20
+>=20+ * It can be in one of the following states:
+>=20
+>=20+ * - DEFER_QS_IDLE: An IRQ work was never scheduled.
+>=20
+>=20+ * - DEFER_QS_PENDING: An IRQ work was scheduler but never run.
+>=20
+>=20+ */
+>=20
+>=20+#define DEFER_QS_IDLE 0
+>=20
+>=20+#define DEFER_QS_PENDING 1
+>=20
+>=20+
+>=20
+>=20 /* Per-CPU data for read-copy update. */
+>=20
+>=20 struct rcu_data {
+>=20
+>=20 /* 1) quiescent-state and grace-period handling : */
+>=20
+>=20@@ -192,7 +201,7 @@ struct rcu_data {
+>=20
+>=20 /* during and after the last grace */
+>=20
+>=20 /* period it is aware of. */
+>=20
+>=20 struct irq_work defer_qs_iw; /* Obtain later scheduler attention. */
+>=20
+>=20- bool defer_qs_iw_pending; /* Scheduler attention pending? */
+>=20
+>=20+ int defer_qs_iw_pending; /* Scheduler attention pending? */
+>=20
+>=20 struct work_struct strict_work; /* Schedule readers for strict GPs. =
+*/
+>=20
+>=20=20
+>=20
+>  /* 2) batch handling */
+>=20
+>=20diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+>=20
+>=20index dd1c156c1759..baf57745b42f 100644
+>=20
+>=20--- a/kernel/rcu/tree_plugin.h
+>=20
+>=20+++ b/kernel/rcu/tree_plugin.h
+>=20
+>=20@@ -486,13 +486,16 @@ rcu_preempt_deferred_qs_irqrestore(struct task_=
+struct *t, unsigned long flags)
+>=20
+>=20 struct rcu_node *rnp;
+>=20
+>=20 union rcu_special special;
+>=20
+>=20=20
+>=20
+> + rdp =3D this_cpu_ptr(&rcu_data);
+>=20
+>=20+ if (rdp->defer_qs_iw_pending =3D=3D DEFER_QS_PENDING)
+>=20
+>=20+ rdp->defer_qs_iw_pending =3D DEFER_QS_IDLE;
+>=20
+>=20+
+>=20
+>=20 /*
+>=20
+>=20 * If RCU core is waiting for this CPU to exit its critical section,
+>=20
+>=20 * report the fact that it has exited. Because irqs are disabled,
+>=20
+>=20 * t->rcu_read_unlock_special cannot change.
+>=20
+>=20 */
+>=20
+>=20 special =3D t->rcu_read_unlock_special;
+>=20
+>=20- rdp =3D this_cpu_ptr(&rcu_data);
+>=20
+>=20 if (!special.s && !rdp->cpu_no_qs.b.exp) {
+>=20
+>=20 local_irq_restore(flags);
+>=20
+>=20 return;
+>=20
+>=20@@ -623,12 +626,24 @@ notrace void rcu_preempt_deferred_qs(struct tas=
+k_struct *t)
+>=20
+>=20 */
+>=20
+>=20 static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
+>=20
+>=20 {
+>=20
+>=20- unsigned long flags;
+>=20
+>=20- struct rcu_data *rdp;
+>=20
+>=20+ volatile unsigned long flags;
+>=20
+>=20+ struct rcu_data *rdp =3D this_cpu_ptr(&rcu_data);
+>=20
+>=20=20
+>=20
+> - rdp =3D container_of(iwp, struct rcu_data, defer_qs_iw);
+>=20
+>=20 local_irq_save(flags);
+>=20
+>=20- rdp->defer_qs_iw_pending =3D false;
+>=20
+>=20+
+>=20
+>=20+ /*
+>=20
+>=20+ * Requeue the IRQ work on next unlock in following situation:
+>=20
+>=20+ * 1. rcu_read_unlock() queues IRQ work (state -> DEFER_QS_PENDING)
+>=20
+>=20+ * 2. CPU enters new rcu_read_lock()
+>=20
+>=20+ * 3. IRQ work runs but cannot report QS due to rcu_preempt_depth() =
+> 0
+>=20
+>=20+ * 4. rcu_read_unlock() does not re-queue work (state still PENDING)
+>=20
+>=20+ * 5. Deferred QS reporting does not happen.
+>=20
+>=20+ */
+>=20
+>=20+ if (rcu_preempt_depth() > 0) {
 
-On Sun, Jul 6, 2025 at 9:25=E2=80=AFPM Hans de Goede <hansg@kernel.org> wro=
-te:
->
-> Hi, Abdelrahman
->
-> On 1-Jul-25 5:45 PM, Abdelrahman Fekry wrote:
-> > Hi Hans,
-> >
-> > On Tue, Jul 1, 2025 at 4:54=E2=80=AFPM Hans de Goede <hansg@kernel.org>=
- wrote:
 
-> * And maybe you'll find more possible cleanups while working on this
+For Preempt-RT kernels, the rcu_preempt_deferred_qs_handler() be invoked
+in per-cpu irq_work kthreads, the return value of rcu_preempt_depth()
+may always be 0, should we use IRQ_WORK_INIT_HARD() to initialize defer_q=
+s_iw?
 
-I was working on some cleanups and i found something that i really
-don't understand.
-how is the error checking of hmm_alloc is handled , some functions are
-checking the
-returning value of it using mmgr_NULL and other use mmgr_EXCEPTION
-while in fact, when __hm_alloc fails it doesn't return either
-mmgr_EXCEPTION or mmgr_NULL in
-most cases.
+Thanks
+Zqiang
 
-> Regards,
+
+
+>=20
+>=20+ WRITE_ONCE(rdp->defer_qs_iw_pending, DEFER_QS_IDLE);
+>=20
+>=20+ local_irq_restore(flags);
+>=20
+>=20+ return;
+>=20
+>=20+ }
+>=20
+>=20 local_irq_restore(flags);
+>=20
+>=20 }
+>=20
+>=20=20
+>=20
+> @@ -675,7 +690,7 @@ static void rcu_read_unlock_special(struct task_str=
+uct *t)
+>=20
+>=20 set_tsk_need_resched(current);
+>=20
+>=20 set_preempt_need_resched();
+>=20
+>=20 if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+>=20
+>=20- expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
+>=20
+>=20+ expboost && rdp->defer_qs_iw_pending !=3D DEFER_QS_PENDING && cpu_o=
+nline(rdp->cpu)) {
+>=20
+>=20 // Get scheduler to re-evaluate and call hooks.
+>=20
+>=20 // If !IRQ_WORK, FQS scan will eventually IPI.
+>=20
+>=20 if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
+>=20
+>=20@@ -685,7 +700,7 @@ static void rcu_read_unlock_special(struct task_s=
+truct *t)
+>=20
+>=20 else
+>=20
+>=20 init_irq_work(&rdp->defer_qs_iw,
+>=20
+>=20 rcu_preempt_deferred_qs_handler);
+>=20
+>=20- rdp->defer_qs_iw_pending =3D true;
+>=20
+>=20+ rdp->defer_qs_iw_pending =3D DEFER_QS_PENDING;
+>=20
+>=20 irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+>=20
+>=20 }
+>=20
+>=20 }
+>=20
+>=20--=20
+>=20
+> 2.43.0
 >
-> Hans
->
->
-Best,
-Abdelrhaman Fekry
