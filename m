@@ -1,315 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7A94A06
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D67028642B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873378; cv=none; b=gWRZgF4xlhGv+PIKAj2PUQthdG/qe7d2+pW3HEId5fX/bE05zGDfaaD2gyWKtBv5mK5+aaGeMqvtUSZl4a4VDbdnfawJouh6gUAfATZ6QKGw0fUvyG76AYyDuQXEPmjPbZc/exEyMIPgVtwlvAovol7+TGuP8DCUScMNBGvRlx8=
+	t=1751873413; cv=none; b=YHC9TswCOirF8zv0azbMtGl/AOeuaiL4i6alUpPTPiLGpwK2A8DUn+icGUABKEvOg1Fyr9tFdZn44ghxE+yMr80sSwuSDH8vQrWKX9utM8eZ1GsGxmYZBBFv3GzQA77C7oyyvLoLRu5TccOWsxNVa4qoUZgoYq/+unTa1UkfPdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873378; c=relaxed/simple;
-	bh=oqnnEgK6RFVD7FtUKlR3QdTM5hsomoyMk03OZYmhHnY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YV3/gLPjuPwALFFFRhbF1kxCzB+eLDDf5aw+2yA0QAjjC+k3ipOKI8vT6vbQPSCc6auTqPGbnRwwb/QBZT7VKl9plBEW1bBHVmlDYeb4hcqPHSHRwrthuBrFbcsdUQv8dneSRSiXojZ6nxFRjt2SQ7/z3VeoJ5SlwWNTMuN61M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E3hcciIW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751873413; c=relaxed/simple;
+	bh=pgLYMyGHLNeV2wGGNHnI3FUm05yQj+XGapiC7w3Q5Ec=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MOAGew1syNKaSk85aDCFomAxHAT5Ri3DWGEVofsvPPlRYtCC8a38KCnh3KwYtIBfZAmXqwv1crJ93Ad8bq0KMax/FLDHQZYOzGbQoNuaHnQsIgdDrwMTDUXfkbl64pXK+9PM3CXrbVhdvGFgg+YfKinxBcktBcMK29t+JodIfvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4TqsciHp; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3hcciIW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751873375;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UniRdOeAILwBv1NP0bui+CugXDW/jLDR72O3UtptutA=;
-	b=E3hcciIWJ6g2IjtkDwIYBZS62SXxq329VTeTeB4bEUpNsjrhQDD2B9LtRthsrrcIBQQk61
-	u6dfoOk4Jnk/XQOhsINQl4UbiG7TnivtcIDjStbvw0Xf6jDHWFBhd16blC0SRgDq86WNxr
-	CY3gXLOXZd3q6xX4MaFWt74clNtRkgs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-524-goTh0_UUMGy-whF37csE4Q-1; Mon, 07 Jul 2025 03:29:34 -0400
-X-MC-Unique: goTh0_UUMGy-whF37csE4Q-1
-X-Mimecast-MFC-AGG-ID: goTh0_UUMGy-whF37csE4Q_1751873373
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4ff581df3so1156435f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:29:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4TqsciHp"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450de98b28eso17399075e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751873410; x=1752478210; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SwLel3oj580C8N1fRuRBXYbCfvfOLh56/Z9RsgGJodE=;
+        b=4TqsciHpe/LihS/U2gXzkNbGzEN3pysavc5xaUe/1jBACMqCHlTeoCGTm3Ffb7FPYG
+         3MEuoH6D50scBmMPk0SsnoTlXPKjp32G36FGd6V+tf8G7PJobsHFZFi/xnHjCmHwIreU
+         qYX/CwDd+0igE1JhJ2HtR/3Nnwjn8Nk6EmPeRCVxilQOEYYzvxObe1xAj3KCrO+19yk4
+         WG+3+8vgsILOzw5D1WIoYlwBrwpf1sas4m9D671r8wGORORvcp8IPvqd72p3ep1133Nb
+         u1808RsS3sN9fN0VK1Wrya2ySAVgaSl1PtNT9WQRIdzCmNvY1hxz9WPgLD5B/+4rBoub
+         Nf2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751873373; x=1752478173;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UniRdOeAILwBv1NP0bui+CugXDW/jLDR72O3UtptutA=;
-        b=LAg49ExE0yGjwnfLiCIFYqVyjPqlYpy7MK2NEJinHek+sqFljtIVG2Nxhah/KJ+OUs
-         c/i2wSJdIL+iT97Tn9oJPK3P9vTpfzLeAzo5MuT+MWx2s6yJ7oSyGsN3e1GXfbondbPr
-         +mO3a+FjgZJlYTMnjhEQlyU8rHDXSM1Oi4cPkQ/wCmxDM85kApWBt3FtE+Uu8AwoIwly
-         veIBpz9v940wgUIwpHUX9aA9TW9RI46Edl9XppDtRIplvoG0Ulbfx5FxETh3wbpc6puV
-         tV7iawz6aCytgAe5CeIVLIqzGF8e88fDOKaInMVk0RbrnrNGA/46N7lQKlxG+30IjL7f
-         QtXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOH8dSy/hfgAQXQU5Uzi6NkeBAA6JvHu/GlO6lNhQOcGoXXLOr/OaMF46JASaSHjO+bwjeeZx7d86krkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywech77lzPbZhkdq/tB+yvERSGJbGxdVGtBEhn8LAyj5kUnuMPm
-	s5HK8nj+Gz0quSrwGarkezdfLoccY+mOfcSYTUXm5X1jIVv799HEm2DMBXh25t54ozwOHSWt0Ck
-	oa1YXkZYlHI0dL4JOcJT/hnhmZ4RhcPD9zUV7D6YKKeHCatXbgHogkH/AMwtUsOREPeVshGmJPA
-	==
-X-Gm-Gg: ASbGnctbWZjED4qMYo7+yEkb/yMEqdVsCzVLeCg5uDNWWuigIY2Xa6Djt0eslKKlzVj
-	enf9IwRiQa4QTCZH8Mb4Clev7vzWkvQSFUfSIWL+djRIfNdZapiy/qjLgDXSN6nftCHYrfJfd91
-	9yRr8N0j8dCctV4qBjIdzFwE6hnk3tKNa/9pVqKqf+bQESbsmwNQBd9+XH0XAdkmmaXGCH9npg0
-	CGBOJPv2sfsbpGm1PfNhUZIfKqdHKbbViI7/yfRpCa7kc6hXmCl7uXdQ4I8f/x7xfk4GmZBEKOS
-	YADLEJe66nzdcbF4T6u0pU6MmSwEM9C8UQmQKwa6Lod4ioAa0OW+p94khvFKNLk6EJMhzeGb/gf
-	afvIefrzrTiThPC6OqXv2N1Wi2QKxzSZ47qKOVGxncN9pSNSzzQ==
-X-Received: by 2002:a05:6000:1885:b0:3a5:271e:c684 with SMTP id ffacd0b85a97d-3b49558ac68mr10619518f8f.24.1751873372659;
-        Mon, 07 Jul 2025 00:29:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGwPSb5edQLRTwGOfVpOm0bfilvCQbmAoa4KXrkeUF5ArI8SkxYDqX8rGSHXn0rf+nVk0uRfg==
-X-Received: by 2002:a05:6000:1885:b0:3a5:271e:c684 with SMTP id ffacd0b85a97d-3b49558ac68mr10619487f8f.24.1751873372170;
-        Mon, 07 Jul 2025 00:29:32 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f38:1d00:657c:2aac:ecf5:5df8? (p200300d82f381d00657c2aacecf55df8.dip0.t-ipconnect.de. [2003:d8:2f38:1d00:657c:2aac:ecf5:5df8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b161fb78sm103469475e9.1.2025.07.07.00.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 00:29:31 -0700 (PDT)
-Message-ID: <9d74e93d-5a5f-4ffa-91fa-eb2061080f94@redhat.com>
-Date: Mon, 7 Jul 2025 09:29:30 +0200
+        d=1e100.net; s=20230601; t=1751873410; x=1752478210;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SwLel3oj580C8N1fRuRBXYbCfvfOLh56/Z9RsgGJodE=;
+        b=HsfXGoCrX1v3KCOe+GZgzlyH4U2AAzAbUriyqXm0obVxoTVh9b56AncogkAYlugfHV
+         Ig/s3UxL1avVuFNfjR/x4VNMqkvxWCXcfGE7KOzM6mKkhbxZexRL3FLSwYZn3L+sDcEW
+         jkzidr9DPuA/BqcuDtmbt2l1a1uoiGYlirbeFxKazpLVtFqUSHlRWdGm5a/l/eM9fUhY
+         zuVc6CIMkm2mBCvx5sr6/SFYjJHNFsNP17396XHM4TC1PspYUznY3eFWvflcVZZeATC+
+         cRspaX3nu25Pr1U3WfXsYAQ2/wnjQ2M2z55ON5zRVJiGCIv3530EtqVQFCIjep9oJc1H
+         8/PA==
+X-Forwarded-Encrypted: i=1; AJvYcCWH74JxPS9Y10J1/Tve3Mgo5o4a3BZ+DuPdKFQz6TckeyocLuQHoyGi616Vl8g4R/jsWSlrPk+vwaQbWLs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUty0+5hdAoLF2qzC9k/QJnasI7yaDffcm6zZdhcVXsbfBZVUL
+	OvH0YXu1yN3H7lig7nbxL6U33B2tzC+7Kq+h8Rzt41KUYoHkwab/bnrT1lY8Mdi+C4mRvFVXtEh
+	qwP4NK60ypizAXnzwGA==
+X-Google-Smtp-Source: AGHT+IH3sHQSTPT6qkcRPl99+vS+dV0MBa5vxmJeSjdd/cUZL8GfFrqHDPKIvhdS958mINyUuAOllmYPCuUOyFY=
+X-Received: from wran1.prod.google.com ([2002:adf:8b01:0:b0:3a4:ead6:8232])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2484:b0:3a3:6478:e08 with SMTP id ffacd0b85a97d-3b495cc168fmr8923049f8f.23.1751873410477;
+ Mon, 07 Jul 2025 00:30:10 -0700 (PDT)
+Date: Mon, 7 Jul 2025 07:30:09 +0000
+In-Reply-To: <aGlgpyuz2JKErAUj@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] vfio/type1: optimize vfio_pin_pages_remote()
-To: lizhe.67@bytedance.com, alex.williamson@redhat.com,
- akpm@linux-foundation.org, jgg@ziepe.ca, peterx@redhat.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250707064950.72048-1-lizhe.67@bytedance.com>
- <20250707064950.72048-3-lizhe.67@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250707064950.72048-3-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com>
+ <20250704-topics-tyr-platform_iomem-v12-1-1d3d4bd8207d@collabora.com> <aGlgpyuz2JKErAUj@cassiopeiae>
+Message-ID: <aGt3gRsnwfNs6jHT@google.com>
+Subject: Re: [PATCH v12 1/3] rust: io: add resource abstraction
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Ying Huang <huang.ying.caritas@gmail.com>, 
+	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+Content-Type: text/plain; charset="utf-8"
 
-On 07.07.25 08:49, lizhe.67@bytedance.com wrote:
-> From: Li Zhe <lizhe.67@bytedance.com>
+On Sat, Jul 05, 2025 at 07:28:07PM +0200, Danilo Krummrich wrote:
+> On Fri, Jul 04, 2025 at 01:25:26PM -0300, Daniel Almeida wrote:
+> > +/// Resource Size type.
+> > +///
+> > +/// This is a type alias to either `u32` or `u64` depending on the config option
+> > +/// `CONFIG_PHYS_ADDR_T_64BIT`.
+> > +#[cfg(CONFIG_PHYS_ADDR_T_64BIT)]
+> > +pub type ResourceSize = u64;
+> > +
+> > +/// Resource Size type.
+> > +///
+> > +/// This is a type alias to either `u32` or `u64` depending on the config option
+> > +/// `CONFIG_PHYS_ADDR_T_64BIT`.
+> > +#[cfg(not(CONFIG_PHYS_ADDR_T_64BIT))]
+> > +pub type ResourceSize = u32;
 > 
-> When vfio_pin_pages_remote() is called with a range of addresses that
-> includes large folios, the function currently performs individual
-> statistics counting operations for each page. This can lead to significant
-> performance overheads, especially when dealing with large ranges of pages.
-> Batch processing of statistical counting operations can effectively enhance
-> performance.
+> I think someone commented on this previously, but maybe I also do not remember
+> correctly.
 > 
-> In addition, the pages obtained through longterm GUP are neither invalid
-> nor reserved. Therefore, we can reduce the overhead associated with some
-> calls to function is_invalid_reserved_pfn().
+> Anyways, can't we just do:
 > 
-> The performance test results for completing the 16G VFIO IOMMU DMA mapping
-> are as follows.
+> 	pub type ResourceSize = bindings::phys_addr_t;
 > 
-> Base(v6.16-rc4):
-> ------- AVERAGE (MADV_HUGEPAGE) --------
-> VFIO MAP DMA in 0.047 s (340.2 GB/s)
-> ------- AVERAGE (MAP_POPULATE) --------
-> VFIO MAP DMA in 0.280 s (57.2 GB/s)
-> ------- AVERAGE (HUGETLBFS) --------
-> VFIO MAP DMA in 0.052 s (310.5 GB/s)
-> 
-> With this patch:
-> ------- AVERAGE (MADV_HUGEPAGE) --------
-> VFIO MAP DMA in 0.027 s (602.1 GB/s)
-> ------- AVERAGE (MAP_POPULATE) --------
-> VFIO MAP DMA in 0.257 s (62.4 GB/s)
-> ------- AVERAGE (HUGETLBFS) --------
-> VFIO MAP DMA in 0.031 s (517.4 GB/s)
-> 
-> For large folio, we achieve an over 40% performance improvement.
-> For small folios, the performance test results indicate a
-> slight improvement.
-> 
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->   drivers/vfio/vfio_iommu_type1.c | 83 ++++++++++++++++++++++++++++-----
->   1 file changed, 71 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 1136d7ac6b59..03fce54e1372 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -318,7 +318,13 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
->   /*
->    * Helper Functions for host iova-pfn list
->    */
-> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-> +
-> +/*
-> + * Find the highest vfio_pfn that overlapping the range
-> + * [iova_start, iova_end) in rb tree.
-> + */
-> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
-> +		dma_addr_t iova_start, dma_addr_t iova_end)
->   {
->   	struct vfio_pfn *vpfn;
->   	struct rb_node *node = dma->pfn_list.rb_node;
-> @@ -326,9 +332,9 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->   	while (node) {
->   		vpfn = rb_entry(node, struct vfio_pfn, node);
->   
-> -		if (iova < vpfn->iova)
-> +		if (iova_end <= vpfn->iova)
->   			node = node->rb_left;
-> -		else if (iova > vpfn->iova)
-> +		else if (iova_start > vpfn->iova)
->   			node = node->rb_right;
->   		else
->   			return vpfn;
-> @@ -336,6 +342,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->   	return NULL;
->   }
->   
-> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-> +{
-> +	return vfio_find_vpfn_range(dma, iova, iova + PAGE_SIZE);
-> +}
-> +
->   static void vfio_link_pfn(struct vfio_dma *dma,
->   			  struct vfio_pfn *new)
->   {
-> @@ -614,6 +625,39 @@ static long vaddr_get_pfns(struct mm_struct *mm, unsigned long vaddr,
->   	return ret;
->   }
->   
-> +
-> +static long vpfn_pages(struct vfio_dma *dma,
-> +		dma_addr_t iova_start, long nr_pages)
-> +{
-> +	dma_addr_t iova_end = iova_start + (nr_pages << PAGE_SHIFT);
-> +	struct vfio_pfn *top = vfio_find_vpfn_range(dma, iova_start, iova_end);
-> +	long ret = 1;
-> +	struct vfio_pfn *vpfn;
-> +	struct rb_node *prev;
-> +	struct rb_node *next;
-> +
-> +	if (likely(!top))
-> +		return 0;
-> +
-> +	prev = next = &top->node;
-> +
-> +	while ((prev = rb_prev(prev))) {
-> +		vpfn = rb_entry(prev, struct vfio_pfn, node);
-> +		if (vpfn->iova < iova_start)
-> +			break;
-> +		ret++;
-> +	}
-> +
-> +	while ((next = rb_next(next))) {
-> +		vpfn = rb_entry(next, struct vfio_pfn, node);
-> +		if (vpfn->iova >= iova_end)
-> +			break;
-> +		ret++;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   /*
->    * Attempt to pin pages.  We really don't want to track all the pfns and
->    * the iommu can only map chunks of consecutive pfns anyway, so get the
-> @@ -680,32 +724,47 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->   		 * and rsvd here, and therefore continues to use the batch.
->   		 */
->   		while (true) {
-> +			long nr_pages, acct_pages = 0;
-> +
->   			if (pfn != *pfn_base + pinned ||
->   			    rsvd != is_invalid_reserved_pfn(pfn))
->   				goto out;
->   
-> +			/*
-> +			 * Using GUP with the FOLL_LONGTERM in
-> +			 * vaddr_get_pfns() will not return invalid
-> +			 * or reserved pages.
-> +			 */
-> +			nr_pages = num_pages_contiguous(
-> +					&batch->pages[batch->offset],
-> +					batch->size);
-> +			if (!rsvd) {
-> +				acct_pages = nr_pages;
-> +				acct_pages -= vpfn_pages(dma, iova, nr_pages);
-> +			}
-> +
->   			/*
->   			 * Reserved pages aren't counted against the user,
->   			 * externally pinned pages are already counted against
->   			 * the user.
->   			 */
-> -			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
-> +			if (acct_pages) {
->   				if (!dma->lock_cap &&
-> -				    mm->locked_vm + lock_acct + 1 > limit) {
-> +						mm->locked_vm + lock_acct + acct_pages > limit) {
+> Given that phys_addr_t is already either u32 or u64.
 
-Weird indentation change.
+In addition, it would be nice for the documentation to mention that it
+can be 64-bit even on a 32-bit machine.
 
-It should be
-
-if (!dma->lock_cap &&
-     mm->locked_vm + lock_acct + acct_pages > limit) {
-
-     ^ aligned here
-
-
-Please don't drop acks/rbs already given in previous submissions.
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
-
+Alice
