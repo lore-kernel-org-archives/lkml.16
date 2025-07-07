@@ -1,152 +1,205 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012030.outbound.protection.outlook.com [52.101.126.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306C82D8375;
-	Mon,  7 Jul 2025 14:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898180; cv=none; b=CIJnPZBhcpTvMjB+uwcOr+vlgZNY+vKT+gvjKsjHL3o+ZyaZBFgfE8s2+kRTdlXVYXiUCpf5V5rTU6l4FDJA5zdnd1SbSvZW8blEJvjerYjSWD9S93vY75KaKJ2JX4FAcNgFdNPkWAEczFqL25q4hV7Nvz/We9bmIrG3xr+4MYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898180; c=relaxed/simple;
-	bh=mwRNkUG9Ads6twT1NddkxxWfD8nyJM5H91oOZh3c1t4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nnULpuRBOTpjmldiXHrQ3Eta4+IrLlBUwzv+iDAp3Fl05ORZCszhi+fe4vGY0VsG5TBhWlfJ5NO2vn1V64ylAloxKiInorQCsAtBxpZgvhJAaeDfYPQgQekRC48L9hBXpHfvAVJwB9yxNlChgKHW4XjGL4M6zoI0af2M9hpHZFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bbRKX4lN0zYQtvZ;
-	Mon,  7 Jul 2025 22:22:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 780E91A0E25;
-	Mon,  7 Jul 2025 22:22:55 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP3 (Coremail) with SMTP id _Ch0CgBnxyQ22GtoNazLAw--.46745S4;
-	Mon, 07 Jul 2025 22:22:53 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ojaswin@linux.ibm.com,
-	sashal@kernel.org,
-	naresh.kamboju@linaro.org,
-	jiangqi903@gmail.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	libaokun1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v4 00/11] ext4: fix insufficient credits when writing back large folios
-Date: Mon,  7 Jul 2025 22:08:03 +0800
-Message-ID: <20250707140814.542883-1-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7EE1E22FC;
+	Mon,  7 Jul 2025 14:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751898178; cv=fail; b=e5PMO/QJ/qh4hzRApbimWIibbXLKXgtsu2LkKIBKEkt3y7ToAGVzXXWqLWgeOPrF8u7rIjTSf+O/GdiEZq1i2aLUPiO0ZVbzyNL2M+nDmxSn4x/y2k6T2sy8NoqSVTQ9AHaq/VD104hiumMgjDC1K4Fd7p+rPibeTsifxWDdgBo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751898178; c=relaxed/simple;
+	bh=3BabiXKC12eD3Ujx9vWvlgoFyHWbfIHq0D5na9Btb5U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qkSRRuwVck8/nwgnbGXjg3TiI9LmRib/Wg74gUnGIMOlermWYcrzDa7/k+Q72BUUipPxJ4JU844txtSrF3XwGmXI1cOE4OEBAsh5m4vWk/vNf2WKZ90n0XCB9NtAjPv1cGOsXG5fRuWM++cRWWjeSr0kHFXS1ChvWJYBvKrwypU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=mB24d1qT; arc=fail smtp.client-ip=52.101.126.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="mB24d1qT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aAAJR6kFRARPxhTXx6SBfm7qzVvPt+4A5Gt0nxSFk9rvN9OpyTYXjF/Tm/M6DFMEG3+nYAtl/RZ0glpi5tnUokWrSc1SgPtlkJQaPATuekesFJMMzPThpGn1zWa09naNFz0+uYHgpQ+GKTpmFcJl7NU7kMbH7gOAR94coR2ynJHZ0yWJWEPPJ7FHr5OGzu77ymzmAzMuOyu7dsZOUo3Bo9YQwBzdadFCX20O0+IJifprvwKkQptDY/ySq8oOdIQzt7DHg91GnrCUikMKYwbso5tvjaCBt7nR0s3Irz+J3DTKHnJ/7FTB/KJCPvs+awsrXuSkxh1Mvk/jKI0cGgk06A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kGeF/QDQM6kOU7Z88PLGGb7evzXP40VihY8cK2RUYP8=;
+ b=bkI3ZGGKTwAK44WA2go/NmDbvRiT/YWy/KCCDIyzsNRbaJ7qkZvA4ov9OnHh1xeR2dgTtqQDe5A+odC3vkBNJrmbd/FNMkBViW0Nua0VgqYWLeIVLjAvVv/6GJM1G481DbpcSHRxc+Qwbqq7h+CkMYBTYh0vAAqHRn8lba+gQ0y/gWoCuOJA/l+wRjS5pKl7COaLlXpbivhtLBXwWqu1agcx+PxHFJn8rp5XmVXUVDP2m/HuDIgVx7G0uAMhxdAhekY3WDB5xIhBulNm4a6JxeX7Bty0bzdL05bEVKvkcDDQff5cilBtsYPLisPLQzOYh2HLw1lmYCAohD58WqHrnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kGeF/QDQM6kOU7Z88PLGGb7evzXP40VihY8cK2RUYP8=;
+ b=mB24d1qT3oE+i2XptD73qUmHHNhcpOz/RzoKETiyFJ2QX9qPkaGdQebWBhhrpKMtxZWE/OObZvQMZnrKeb1qJBqYrkJq1gtqOb0QXE4rRoK1HMV682ATo/0aXgug2huzUNCd3qPCSx0i/uD/ARD/iIgWkZqe07bHOiyvb5YHtFytxs6S9IKlyIAym5F577bH8VPK5ULpevMDNoe4nmoUb0uakqv4F9u4WyOrnjsZQcI7XxH3evsdNwGzWOTPsowncia7PZt8htuo8bPbXk7Lqn0Pq1XXEfzAIk4x28d+SLERfgvOKxRIhCvYqEvWLAmnNvPaiYTjgU6dbqbVKMlnhA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by SEYPR06MB6902.apcprd06.prod.outlook.com (2603:1096:101:1da::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Mon, 7 Jul
+ 2025 14:22:48 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%7]) with mapi id 15.20.8901.023; Mon, 7 Jul 2025
+ 14:22:48 +0000
+Message-ID: <72c9d0c2-773c-4508-9d2d-e24703ff26e1@vivo.com>
+Date: Mon, 7 Jul 2025 22:22:44 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hfsplus: don't use BUG_ON() in
+ hfsplus_create_attributes_file()
+To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
+ "glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>,
+ "penguin-kernel@I-love.SAKURA.ne.jp" <penguin-kernel@I-love.SAKURA.ne.jp>,
+ "slava@dubeyko.com" <slava@dubeyko.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <54358ab7-4525-48ba-a1e5-595f6b107cc6@I-love.SAKURA.ne.jp>
+ <4ce5a57c7b00bbd77d7ad6c23f0dcc55f99c3d1a.camel@ibm.com>
+Content-Language: en-US
+From: Yangtao Li <frank.li@vivo.com>
+In-Reply-To: <4ce5a57c7b00bbd77d7ad6c23f0dcc55f99c3d1a.camel@ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR04CA0008.apcprd04.prod.outlook.com
+ (2603:1096:4:197::20) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBnxyQ22GtoNazLAw--.46745S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFy5tF4kWry5tr1DKFyUJrb_yoWrJF4UpF
-	W3CF15Gr1rZw17Za9rXa18CF1rGan5Cr47Xry3K3s8uayDuFyIkFZaga1Y9FyUArZ3GFy0
-	qr4jyryDCFy5A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUFjjgDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEYPR06MB6902:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75ed1d8b-a352-45b4-cd9a-08ddbd61bf49
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aERVUHBNaGhLaHNmZXUyd1prQ3NuZHNsNUx0dUV1eE1DVEpqTE1yeVBDWmQ0?=
+ =?utf-8?B?YlNZQTEvMnp4ZlR2NS9zYjBFZ0g4aTJUendkVFJ1TzJWYi9YU3VPYTJFVlFz?=
+ =?utf-8?B?TmxJcHd1TzUrRCtWWG9NdXRaTXYra1Zqb3A4Z0FzVnNVSkY0SEdneERhKzJq?=
+ =?utf-8?B?R0k0WkJQdVNFSW9YRHFFUnlsdjJmblpDV1VqRWpuZ2VPYzhjV0t2Ym11and6?=
+ =?utf-8?B?N09LRDZKRHpiYVl3UWJwYVZXZ0NQSVFZMU9pb0RhMzBYcy9FMGtwSmZTckFG?=
+ =?utf-8?B?d3VKUFJ1WUpwRldqd0FmdEtobHZsS3pKcmVnVUlzVVZZRTVHOXRuVWxZR3Ay?=
+ =?utf-8?B?VnpWS1I4cWp1UGdGaGFGZWE5cHhCRFR4cmVzQXRTMjZTanNWRTFQeEo3Mm4y?=
+ =?utf-8?B?dFBabnVIWVkyOHg0K1hBNzRKWVZDYWwybDR2RzVBQTJKMGU2bHF3TVRNalls?=
+ =?utf-8?B?WlNzeStDR2VxSlNOYi9wWXFjMFpDN2V4WXVpVC9sMVc2WnAwRnJtRXMzVHFk?=
+ =?utf-8?B?aU5OUXZZam5pVDRrVFpISzdnMmRWUWNKdGtIVWY4c3JZUWsrYzdseG5jQjJU?=
+ =?utf-8?B?OFViL2lJbnB6cjAxdWdOT2plbnY2YlpBdXF4NTFWSWRyVjVXcEowU25HTkVG?=
+ =?utf-8?B?QzRuditoSC9pbnJkQktEdmtubWdKTnVlcFFlS3VPWE5XV29UV3BoamNlc09Q?=
+ =?utf-8?B?YVZNZ1YxYUQwaDN4MWhnVUY2N2ZYT2puMll5em80cVlXMmFKdzY0cldrMCtB?=
+ =?utf-8?B?VmpZYzkwQnVwUXZyVFVsaU9UNWtyMmhHL0I0WGhyVUdObGJ0VC9JajNZZVF2?=
+ =?utf-8?B?ME1qVU56dHdDY0QxbEI0ZDdBQ2hxaDBqRXZwd2VkRlVOWGRXR2ttUHpUNHVJ?=
+ =?utf-8?B?VGgwWEdQbEZxYTZGSDhWWVBBMEpMMmtyNkxUdy9UeEhERUdDMmtYWUVQc1hF?=
+ =?utf-8?B?d2NFd21IWXQ5bTZlbWx5dXh5Yms5UThFRjNuemNrMnFRSm9zSkxOelVGU1kr?=
+ =?utf-8?B?MSszSFkwUE1qU01EUU5OZUNqcUUyb3VEcE9aUnE0dkxlbi9wYzBMQkJOMTRh?=
+ =?utf-8?B?VE9jYXRnUXd5V09oYkxOK01aZURhWm5kTWs5RWdyUlE2UGt2cXRwUG9hK3Vl?=
+ =?utf-8?B?eTd5VGFnYWZQeEFDNVFqVmdIazErREs2dGRSMkJjT3Uwa3daTElGSjRNNmZG?=
+ =?utf-8?B?Wndvc1lxME1YaGFFMWdQVjdVUEgrcDVUU1VPMGtCRklTL2E3c0grKzVoency?=
+ =?utf-8?B?alRJdDVTYTFXVzBkWFQ0VVBhL09xNERpUVhrQ1MzVnd3Z2dvc3B3S25nclcw?=
+ =?utf-8?B?KzJSaExXZUN5TmJSbFJhZnhHMEsrTGc2aDF5WFVVbWRVR0VtZUdGRU50cmFk?=
+ =?utf-8?B?dUVSZHJBSzRDZTRzTnBlZHpIN3doYmZNdG45TSs0R1M4QWVHRGhTZkpnVzVl?=
+ =?utf-8?B?MnR1QVJaRVdvdzBVUVhuMVYrMmFCSjlTVnVmbGtxSmFVbDZrMzZmeGhjZzdV?=
+ =?utf-8?B?Q2RkSW9ZWklUYVkrVnYySmdncmd6aVdOalRyYkVnUGkxMmpkN1VqZjVMbTFF?=
+ =?utf-8?B?M1RISStOUThKTkxWci9MTXFacmZJbklvNzR0cWtLVDlFdzdtd3Rpcy9TRStC?=
+ =?utf-8?B?VkpmUGh1alNLZCt3M3VaSWhmTCtSQ2RxbU00c2llWlBYZFMzeVJQRGwxYWZC?=
+ =?utf-8?B?S0pBTTJvYlNLa3h4VzJFVmRxQ2daTHFXamlCMkxHeUdpL1FoRHZ5cmdxMGJi?=
+ =?utf-8?B?MG1MVXNWZExsUm9IN1dCZmZKRzdXb0QyTVIyS2FWMkxjUjZQeHlIYThscy9s?=
+ =?utf-8?Q?2ZTbMk5s1eKiwVSNJaeTn2j/u6FkDtO6ZlOGs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RFp0bncvc21DeUlIM2JsUENqbndvakUxekY1ek5NOS85V0xmOG0wREd1eEJx?=
+ =?utf-8?B?VWQ1bHB6M1pmQ3BjUS94QmduNmJzaWkwd3RJbGZncUkwRUtPdGRCaUc0cmMw?=
+ =?utf-8?B?N0E2bFBrKzAzVVdqNVEwRGFxMi9UUERzUVVMc3ZJbXRzWVYvdDgyRklCZ0ph?=
+ =?utf-8?B?VStsSGVoL29oK2NReDk1ZDJZeiszYVMwTkxFYzl1aWVBK2FYSFpnRGZldkV6?=
+ =?utf-8?B?cE9mUGNleUdMOWVnM0FHSkRnbGNrMnBaK3BMWXBUZDg3V1dDWGNPeDNMNTM2?=
+ =?utf-8?B?dTNoT01mZTZLYTZYWmt1clFMbXVhMVVwc05zakVrZjJvcUVuamxVZThEaHBG?=
+ =?utf-8?B?U2I5eXpkN05ucU1NODhiRkEyWVhwSHdKZERjSE05NDV2YXowcWxKWGZFa1Zm?=
+ =?utf-8?B?YVd4ZzNiVWRucWZ1eHRJeVgweXhFU2Uyb3dTazBDR2FuMWJWcHY1S2lyaDNs?=
+ =?utf-8?B?bzZ1NWdDS1krV04wc0sxK0hxYlF4ZkJmWlFHSFY0TVNRMG9FOENwTDZIQnJv?=
+ =?utf-8?B?TW5qUzRsMzl2aHBmM2F6NncyZVZIUWY4TU5YaDFMMTdLYzdlajgrNUs3V1li?=
+ =?utf-8?B?SjVWRzVrMTNRU1Y2eGxMWG9lZUIxMkNwNC9IQmlMaTIwMHdNR0Fpd1d1NEtP?=
+ =?utf-8?B?OE9jbXp0VW5JOVpoeld0TStna3N1VElMdjVoMXlFUHUxNnY5Sk0wUFdZN2t0?=
+ =?utf-8?B?ZkNsVmUrdCtRUTQ2cGhIMGh5S1RlOFRldU44V2NaZkVMZ2pvVndDMUhWNnp4?=
+ =?utf-8?B?M1pCd3IrT2R0Y2xxK3ZGTC90WjBUdHVudThETlVDSVZkTEs1NFBoUWVCUmFh?=
+ =?utf-8?B?Rlh0SFVLRThRU3ZGeDdvMmVaVXpmWjNIYnAvODJ5d0hSak4xTDNHa095UjlS?=
+ =?utf-8?B?TFBGdTk3bVI0aU1yZ0t4bkNXTDRSWVRqODN5WittTlY2NTR6ZkVZUE1FVnpL?=
+ =?utf-8?B?K05EUXd2OFNRRHo5VWRQSVFNQjc2WTZCRytaQ2gydmJqWS9vTU9vT2REUHZF?=
+ =?utf-8?B?U3p3bWgxTUpzNkhnQnRTTFhyeEkxekkvVlZ1VzR4VWtUdUplRnkzd011U01T?=
+ =?utf-8?B?YkVMWGNKOWtCL1FJa0JQank5dE0vSU0xTjQxWGVSV2hrdlpOVVkwSzFQQUNX?=
+ =?utf-8?B?ZEtCNlBHUXIzcDlTeVlWME1xclE1cXZtVENMYmRmVHdLd2toT3J4ZjA4VThE?=
+ =?utf-8?B?UXpWU00xOHhLYlpiMFVxOVB2VEVyS0l6bmZ0eVNiVHRWTkhkMllwNU9TTHNC?=
+ =?utf-8?B?b0ZpT1NXMXFkbTZnZnpVbW5qTktlV3VBb3ZjRXhIK3BrcG9PZkg4V1BFZTZ3?=
+ =?utf-8?B?UlZMQW9Qa2l0SDlwTXRWTlJwN1Rrb3JWajNtbnNiWFlmUXVyTW9rby9DV3da?=
+ =?utf-8?B?WFZrSC9sOFB5S3JtWEo3dUtXMHBETFdnQjc0WjV0Nk4xU05tdHJuR1BlODU0?=
+ =?utf-8?B?K20xVjREOHJ4Q3lsUzBBbU52cTJpSXkyQXdjK1IrbWFJWTJ0cDBWcHBWR1o2?=
+ =?utf-8?B?MWZmVTZZN1RhMzRieVdEYy9hYUZKQ055Y2h3OXZ6ZlJuK0Z6SzJvT3d0bWEy?=
+ =?utf-8?B?THl5Vjc2cGdRVjdtMVdic21tV01lV2w4bVJ4ZkpScysvZjFucitjSkRqUXdk?=
+ =?utf-8?B?VTliVkxXNXVRYXlNa01OeTltQXJnS3o2aVQzQnRwaXVrMWNCWCtXckRJYjJD?=
+ =?utf-8?B?ZHV4VmNPdEtzV3ZmbkptYUs5NnVOMTdvNFE5V3BOWVE3OWRuTlVOR1VFclFz?=
+ =?utf-8?B?aGhUeU1SVkhQRUNicDgxZCtFemhVNVpGcElSMk9EMytqZTUvaEV6K25hUkZF?=
+ =?utf-8?B?T3k1U081YmRsbHduYnEwSVdHS2l2aG5nWkNzTll5OGZ0V2tNR1NnYUZaY0k0?=
+ =?utf-8?B?RjJCd2VjVjlESmZmVjRtUlRKUm9ocExjOGp5RTdkRlNnREZDL1BvUnl3SlBU?=
+ =?utf-8?B?VmFlblA5STVBTTZ4VjI5ZkxmaEExbzVpQU5nUWVSbUlZak5HZ202TGZMWmdL?=
+ =?utf-8?B?NjlwUVFSYUEyeEd5SURPdUJsMDc2U1hiMVUxaXo2SFRqdjJFZ0c4enZHem42?=
+ =?utf-8?B?RHRyVjZ2K2p6ZkRrV2Y3TEZxSzE4K2Mwalo5QndCR015UnN1c0QvVzRnQWRn?=
+ =?utf-8?Q?ZtumP3HVoIMieMMCJQr5thhmV?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75ed1d8b-a352-45b4-cd9a-08ddbd61bf49
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 14:22:47.9184
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 72qey+VtT4JWD9ifJcMjhZc+J6s9TCKKunf8iwTiEqsxGYQcWUbtI8zXz9C/XyJJtaWFD3LpW6c+SGjiZZKLWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6902
 
-From: Zhang Yi <yi.zhang@huawei.com>
+在 2025/7/1 01:18, Viacheslav Dubeyko 写道:
+> On Wed, 2025-06-25 at 19:10 +0900, Tetsuo Handa wrote:
+>> syzkaller can mount crafted filesystem images.
+>> Don't crash the kernel when we can continue.
+>>
+>> Reported-by: syzbot <syzbot+1107451c16b9eb9d29e6@syzkaller.appspotmail.com>
+>> Closes: https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
+>> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>> ---
+>>   fs/hfsplus/xattr.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+>> index 9a1a93e3888b..191767d4cf78 100644
+>> --- a/fs/hfsplus/xattr.c
+>> +++ b/fs/hfsplus/xattr.c
+>> @@ -172,7 +172,11 @@ static int hfsplus_create_attributes_file(struct super_block *sb)
+>>   		return PTR_ERR(attr_file);
+>>   	}
+>>   
+>> -	BUG_ON(i_size_read(attr_file) != 0);
+> 
+> So, it's something like unexpected situation here. Why do we have
+> i_size_read(attr_file) != 0 here? It looks like hfsplus_create_attributes_file()
+> was called in incorrect context. Probably, it's not the whole fix. Any ideas?
 
-Changes since v3:
- - Fix the end_pos assignment in patch 01.
- - Rename mpage_submit_buffers() to mpage_submit_partial_folio(), and
-   fix a left shift out-of-bounds problem in patch 03.
- - Fix the spelling errors in patch 04.
- - Add a comment for NULL 'handle' test in
-   ext4_journal_ensure_extent_credits().
- - Add patch 11 to limit the maximum order of the folio to 2048 fs
-   blocks, prevent the overestimation of reserve journal credits during
-   folios write-back.
-Changes since v2:
- - Convert the processing of folios writeback in bytes instead of pages.
- - Refactor ext4_page_mkwrite() and ensure journal credits in
-   ext4_block_write_begin() instead of in _ext4_get_block().
- - Enhance tracepoints in ext4_do_writepages().
- - Replace the outdated ext4_da_writepages_trans_blocks() and
-   ext4_writepage_trans_blocks() with the new helper used to reserve
-   credits for a single extent.
-Changes since v1:
- - Make the write-back process supports writing a partial folio if it
-   exits the mapping loop prematurely due to insufficient sapce or
-   journal credits, it also fix the potential stale data and
-   inconsistency issues.
- - Fix the same issue regarding the allocation of blocks in
-   ext4_write_begin() and ext4_page_mkwrite() when delalloc is not
-   enabled.
+161         case HFSPLUS_VALID_ATTR_TREE:
+162                 return 0;
+163         case HFSPLUS_FAILED_ATTR_TREE:
+164                 return -EOPNOTSUPP;
+165         default:
+166                 BUG();
+167         }
 
-v3: https://lore.kernel.org/linux-ext4/20250701130635.4079595-1-yi.zhang@huaweicloud.com/
-v2: https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
-v1: https://lore.kernel.org/linux-ext4/20250530062858.458039-1-yi.zhang@huaweicloud.com/
+I haven't delved into the implementation details of xattr yet, but there 
+is a bug in this function. It seems that we should convert the bug to 
+return EIO in another patch?
 
-Original Description
+Otherwise LGTM.
 
-This series addresses the issue that Jan pointed out regarding large
-folios support for ext4[1]. The problem is that the credits calculation
-may insufficient in ext4_meta_trans_blocks() when allocating blocks
-during write back a sufficiently large and discontinuous folio, it
-doesn't involve the credits for updating bitmap and group descriptor
-block. However, if we fix this issue, it may lead to significant
-overestimation on the some filesystems with a lot of block groups.
+Reviewed-by: Yangtao Li <frank.li@vivo.com>
 
-The solution involves first ensure that the current journal transaction
-has enough credits when we mapping an extent during allocating blocks.
-Then if the credits reach the upper limit, exit the current mapping
-loop, submit the partial folio and restart a new transaction. Finally,
-fix the wrong credits calculation in ext4_meta_trans_blocks(). Please
-see the following patches for details.
-
-[1] https://lore.kernel.org/linux-ext4/ht54j6bvjmiqt62xmcveqlo7bmrunqs4ji7wikfteftdjijzek@7tz5gpejaoen/
-
-Thanks,
-Yi.
-
-Zhang Yi (11):
-  ext4: process folios writeback in bytes
-  ext4: move the calculation of wbc->nr_to_write to mpage_folio_done()
-  ext4: fix stale data if it bail out of the extents mapping loop
-  ext4: refactor the block allocation process of ext4_page_mkwrite()
-  ext4: restart handle if credits are insufficient during allocating
-    blocks
-  ext4: enhance tracepoints during the folios writeback
-  ext4: correct the reserved credits for extent conversion
-  ext4: reserved credits for one extent during the folio writeback
-  ext4: replace ext4_writepage_trans_blocks()
-  ext4: fix insufficient credits calculation in ext4_meta_trans_blocks()
-  ext4: limit the maximum folio order
-
- fs/ext4/ext4.h              |   4 +-
- fs/ext4/extents.c           |   6 +-
- fs/ext4/ialloc.c            |   3 +-
- fs/ext4/inline.c            |   6 +-
- fs/ext4/inode.c             | 349 +++++++++++++++++++++++-------------
- fs/ext4/move_extent.c       |   3 +-
- fs/ext4/xattr.c             |   2 +-
- include/trace/events/ext4.h |  47 ++++-
- 8 files changed, 272 insertions(+), 148 deletions(-)
-
--- 
-2.46.1
-
+Thx,
+Yangtao
