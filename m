@@ -1,131 +1,184 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FF413635C;
-	Mon,  7 Jul 2025 12:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA12228937F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751891518; cv=none; b=IzLz0iAXcw6tHJxWGhOVUULDotrYKhdLvrf7ZUmBjqjF1qUbaM+LH25S/d5CA0wkCZLn4OiKkvODTeR4wu59rF32SNeX1wZoKfZPe5znQmf9bXhgwdz8h5G57JZStxHagipwMFwE5QHPGyoeGwmg/uZCvEWm9AR2OY+jpIsDCCM=
+	t=1751891534; cv=none; b=rBk9aQxrS2VCTOQBS6Afpwon8vRxVUDZr4fPvRrnj4GWp9oBN5c8+8ytjUiIOR5Abkk2/hl5W4nNgvXM7pJ2+XR/DcSAlkoKfww2+TBy/cWIaHtx0XqRLyVjcOTDcsWYqb/AHEK9x+FGuOJXw5ApVnIRKzOt0y+DdqUNyu4fUTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751891518; c=relaxed/simple;
-	bh=wvly/6V0VhTLw5qhV1M0kl22++EJC0qJq/oWdAgapQY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pt+Nyuv0scFaDXFlIGRieLMqGOUCGDY7C0ivVYBj7EV2oqB0NAzOJK9Y8ecbJ+KoPPT2Cs3sK2M3rRDeoFLkNOTIPz3GiMHsxJfWG3m0N6+FXNlz9RNj/0hizzcjTavc1jTZTCAAmFk6GssJMLid/94+yvkklwSMl1xSkdD8kh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=B5yWjzj0; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="B5yWjzj0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=u+p92K+WF5x52aje9i/LpkCJfE+P3HIQKZfRO6Uc4pc=; b=B5yWjzj0u62lJ8SIrqAQ3ddPkL
-	IXQJN0FgsdkRkgKMXgQxNWl5DXdybQG+LJ+ONxnTY4LxFWD+aNw5LmV7/9tCLbxI4HogN7M/HrfrT
-	5KdtGKU3udFZ41m3tIBWb3Xi5m3ZS9+Hjha2M2/B4G49UT0oyfBPHfv4pKlH/1kL+M7EGLcUl15bb
-	QE00i5MVhZrI4l8fyr8OICjoJ81fpZ764LSPwHrXgu3JoRC6IWeanTWuYcfxX/WjxW3lqMXTjIfwE
-	H7hkMX4v/BA3yA3eYzkMdxGJiRwnU7VMFE8pw8PHUbDaHySKtmUW0pUWbkmQB8bT7SGhsPRojn6wu
-	foHxYxrw==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uYl0Q-000FEO-2A;
-	Mon, 07 Jul 2025 14:31:36 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uYl0P-0004Qg-2E;
-	Mon, 07 Jul 2025 14:31:33 +0200
-Message-ID: <98f27ecc-a69f-4bcb-a2d7-6fff91383225@iogearbox.net>
-Date: Mon, 7 Jul 2025 14:31:32 +0200
+	s=arc-20240116; t=1751891534; c=relaxed/simple;
+	bh=Xs3aIWRVPOmUJxZYSF0bSCsU7L3fH2o3QpvMU9WeOQU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bBpNzUAG80f9UeEwpJYmWvjKiSgEbA9lMnD4Y4j3N+zM4g1lplVM4KLazLbF1F7OeGVLYoN2IRgkjDGas4dgU3gqdCXZYC+ukAvT0IkU0lBdarIoB1MDlT18FSIE+93oBZ+0MB2d52bEioLb4sDq/3P8qzY7cJHHwOiIf9jwYH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bbNrV45T2z6M56Q;
+	Mon,  7 Jul 2025 20:31:06 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0DB1B1402F8;
+	Mon,  7 Jul 2025 20:32:09 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 7 Jul
+ 2025 14:32:08 +0200
+Date: Mon, 7 Jul 2025 13:32:07 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ben Horgan <ben.horgan@arm.com>
+CC: James Morse <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
+	<sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, <WillDeaconwill@kernel.org>
+Subject: Re: [PATCH v2 1/3] cacheinfo: Set cache 'id' based on DT data
+Message-ID: <20250707133207.00001b88@huawei.com>
+In-Reply-To: <9495df36-053e-49a3-8046-1e6aed63b4af@arm.com>
+References: <20250704173826.13025-1-james.morse@arm.com>
+	<20250704173826.13025-2-james.morse@arm.com>
+	<9495df36-053e-49a3-8046-1e6aed63b4af@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/bpf: Set CONFIG_PACKET=y for selftests
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: hbathini@linux.ibm.com, sachinpb@linux.ibm.com, andrii@kernel.org,
- eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, martin.lau@linux.dev,
- song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- shuah@kernel.org
-References: <20250707071735.705137-1-skb99@linux.ibm.com>
-Content-Language: en-US
-From: Daniel Borkmann <daniel@iogearbox.net>
-Autocrypt: addr=daniel@iogearbox.net; keydata=
- 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
-In-Reply-To: <20250707071735.705137-1-skb99@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27692/Mon Jul  7 10:35:53 2025)
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 7/7/25 9:17 AM, Saket Kumar Bhaskar wrote:
-> BPF selftest fails to build with below error:
-> 
->    CLNG-BPF [test_progs] lsm_cgroup.bpf.o
-> progs/lsm_cgroup.c:105:21: error: variable has incomplete type 'struct sockaddr_ll'
->    105 |         struct sockaddr_ll sa = {};
->        |                            ^
-> progs/lsm_cgroup.c:105:9: note: forward declaration of 'struct sockaddr_ll'
->    105 |         struct sockaddr_ll sa = {};
->        |                ^
-> 1 error generated.
-> 
-> lsm_cgroup selftest requires sockaddr_ll structure which is not there
-> in vmlinux.h when the kernel is built with CONFIG_PACKET=m.
-> 
-> Enabling CONFIG_PACKET=y ensures that sockaddr_ll is available in vmlinux,
-> allowing it to be captured in the generated vmlinux.h for bpf selftests.
-> 
-> Reported-by: Sachin P Bappalige <sachinpb@linux.ibm.com>
-> Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+On Mon, 7 Jul 2025 11:27:06 +0100
+Ben Horgan <ben.horgan@arm.com> wrote:
 
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+> Hi James,
+> 
+> On 7/4/25 18:38, James Morse wrote:
+> > From: Rob Herring <robh@kernel.org>
+> > 
+> > Use the minimum CPU h/w id of the CPUs associated with the cache for the
+> > cache 'id'. This will provide a stable id value for a given system. As
+> > we need to check all possible CPUs, we can't use the shared_cpu_map
+> > which is just online CPUs. As there's not a cache to CPUs mapping in DT,
+> > we have to walk all CPU nodes and then walk cache levels.
+> > 
+> > The cache_id exposed to user-space has historically been 32 bits, and
+> > is too late to change. This value is parsed into a u32 by user-space
+> > libraries such as libvirt:
+> > https://github.com/libvirt/libvirt/blob/master/src/util/virresctrl.c#L1588
+> > 
+> > Give up on assigning cache-id's if a CPU h/w id greater than 32 bits
+> > is found.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > [ ben: converted to use the __free cleanup idiom ]
+> > Signed-off-by: Ben Horgan <ben.horgan@arm.com>
+> > [ morse: Add checks to give up if a value larger than 32 bits is seen. ]
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > ---
+> > Use as a 32bit value has also been seen in DPDK patches here:
+> > http://inbox.dpdk.org/dev/20241021015246.304431-2-wathsala.vithanage@arm.com/
+> > 
+> > Changes since v1:
+> >   * Remove the second loop in favour of a helper.
+> >   
+> > An open question from v1 is whether it would be preferable to use an
+> > index into the DT of the CPU nodes instead of the hardware id. This would
+> > save an arch specific swizzle - but the numbers would change if the DT
+> > were changed. This scheme isn't sensitive to the order of DT nodes.
+> > 
+> > ---
+> >   drivers/base/cacheinfo.c | 38 ++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 38 insertions(+)
+> > 
+> > diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+> > index cf0d455209d7..df593da0d5f7 100644
+> > --- a/drivers/base/cacheinfo.c
+> > +++ b/drivers/base/cacheinfo.c
+> > @@ -8,6 +8,7 @@
+> >   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >   
+> >   #include <linux/acpi.h>
+> > +#include <linux/bitfield.h>
+> >   #include <linux/bitops.h>
+> >   #include <linux/cacheinfo.h>
+> >   #include <linux/compiler.h>
+> > @@ -183,6 +184,42 @@ static bool cache_node_is_unified(struct cacheinfo *this_leaf,
+> >   	return of_property_read_bool(np, "cache-unified");
+> >   }
+> >   
+> > +static bool match_cache_node(struct device_node *cpu,
+> > +			     const struct device_node *cache_node)
+> > +{
+> > +	for (struct device_node *cache __free(device_node) = of_find_next_cache_node(cpu);  
+> Looks like the creation of this helper function has upset the 
+> device_node reference counting. This first __free(device_node) will only 
+> cause of_node_put() to be called in the case of the early return from 
+> the loop. You've dropped the second __free(device_node) which accounts 
+> for 'cache' changing on each iteration.
+
+Good catch - this behaves differently from many of the of_get_next* type
+helpers in that it doesn't drop the reference to the previous iteration
+within the call.
+
+Maybe it should?
+
+I checked a few of the call sites and some would be simplified if it did
+others would need some more complex restructuring but might benefit as
+well.
+
+> > +	     cache != NULL; cache = of_find_next_cache_node(cache)) {
+> > +		if (cache == cache_node)
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +static void cache_of_set_id(struct cacheinfo *this_leaf,
+> > +			    struct device_node *cache_node)
+> > +{
+> > +	struct device_node *cpu;
+> > +	u32 min_id = ~0;
+> > +
+> > +	for_each_of_cpu_node(cpu) {
+> > +		u64 id = of_get_cpu_hwid(cpu, 0);
+> > +
+> > +		if (FIELD_GET(GENMASK_ULL(63, 32), id)) {
+> > +			of_node_put(cpu);
+> > +			return;
+> > +		}
+> > +
+> > +		if (match_cache_node(cpu, cache_node))
+> > +			min_id = min(min_id, id);
+> > +	}
+> > +
+> > +	if (min_id != ~0) {
+> > +		this_leaf->id = min_id;
+> > +		this_leaf->attributes |= CACHE_ID;
+> > +	}
+> > +}
+> > +
+> >   static void cache_of_set_props(struct cacheinfo *this_leaf,
+> >   			       struct device_node *np)
+> >   {
+> > @@ -198,6 +235,7 @@ static void cache_of_set_props(struct cacheinfo *this_leaf,
+> >   	cache_get_line_size(this_leaf, np);
+> >   	cache_nr_sets(this_leaf, np);
+> >   	cache_associativity(this_leaf);
+> > +	cache_of_set_id(this_leaf, np);
+> >   }
+> >   
+> >   static int cache_setup_of_node(unsigned int cpu)  
+> 
+> 
+> Thanks,
+> 
+> Ben
+> 
+> 
+
