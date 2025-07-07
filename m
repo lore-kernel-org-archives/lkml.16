@@ -1,133 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012050.outbound.protection.outlook.com [52.101.66.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D2D1FFC48;
-	Mon,  7 Jul 2025 12:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889746; cv=none; b=cIJLTMkGhoq0mvi1lwhrQ0tX8alnLD0wMB20Ag5atkSGoVSMGpvUeubTsdx8RDkYMrS8/kG5IcrGc0+gIRrKAOZUItUq4Awnw8DUy1qR6SHAAYHDahlb0h/KWYUkpPfzQd8IX5IGj3Aja67vaxxZnbwtB+BsvOPDM5eyURrUSW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889746; c=relaxed/simple;
-	bh=VIqjqK+ketF5zBLE5EGm5mXuiGUfQu9PenuTdQQYfpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUyVPX6R7AXAO0clouspDe5Kl4iqLfmyD6IL1KhcW0HNFaA+XUNJf6+IDKOe3TCeP3nMinbLy/u3+PFszcQVEoW20MnaBgDRr0Wzyc34F2cwzVBpbfnNUuQzFVN7ru+V2BvZj1+9aqkrRLRgaiwdp1Y56GybrVTQxCVFFWlvbj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeJKZrTL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82EF29AB07
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751889751; cv=fail; b=Z389rR8SFhUVieoKPk5aB+4VSwsNMeq2kmsYJ0tpLhoWn/zcX8wyv3TulX5uUT4W0Ni3eIYMFiXT5/i5emUZLIpVlPqwbe2dJWz3wP9x5cz+fK/0nD3kC5syOFJl66t4ZDE1R0MPXmNws9sVcYLzSF9FQ0exlhEYIlBlUzd53+Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751889751; c=relaxed/simple;
+	bh=ikjpDUBq8PsD7MOnCaPR6cpGI2hZ2wgk0Z+lTZ8XC5I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZDVXOsy5B1MP3La18WhtReYqHVOkGC5d2LgF0N5evZmdiKMEXgBpxOsffDECkIpL6EPvtklnJqablu01mx0fUnB2rxrpR0sYMNP5UK/TvD5N8LEgm7rTazzZpPo58V1McIeT4vteoU9p5HelqoWLmqgPQy/weqxOdiuBklXov+g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=B2ygUW6x; arc=fail smtp.client-ip=52.101.66.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeJKZrTL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6169C4CEE3;
-	Mon,  7 Jul 2025 12:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751889745;
-	bh=VIqjqK+ketF5zBLE5EGm5mXuiGUfQu9PenuTdQQYfpE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UeJKZrTLur64RLZYwjXyuTAHpBO/SvLlA+iTwBBpbfL1JJdS3Zg8SGBs9RvpyO1Ow
-	 5/4HQUuK+fQNL06y+B6pFbc2BtHn0deA4U6335NwiTV0uu44578T5dUslBKCQocztt
-	 VScD9mNHwCqyRXezy8Vi1SpwhDXoJEVWlpJfinScAlE/IC7YPbj+fYHSEIV5SGcnbY
-	 Mo7O90tPWwgN+oUY17V06pDHDHamBl92ykP8UocnMPR4SFIQkVS0Zeh1a9YiAsosxz
-	 NygEgv7oNvMCJby5umSijI/8ao68wh8jhhDIr+AlzxJCd/8h+I2GmILwVehTxTbATo
-	 ivkWLjZpU2jyg==
-Date: Mon, 7 Jul 2025 13:02:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Luca Weiss <luca@lucaweiss.eu>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Weidong Wang <wangweidong.a@awinic.com>,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] ASoC: codecs: Add Awinic AW8898 amplifier driver
-Message-ID: <57472ea1-a9c1-472b-a178-eae1cb207468@sirena.org.uk>
-References: <20250705-aw8898-v2-0-9c3adb1fc1a2@lucaweiss.eu>
- <20250705-aw8898-v2-2-9c3adb1fc1a2@lucaweiss.eu>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="B2ygUW6x"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X6eWEZIShni7W3oO52qin7dm07ZNHObwzTLYBz2+UKrUcU82SKaXLuUhXPZhrJWbbHHw0x9OH/OivOH8VIbY7U7MI2Y2nEjZylXfdM4+oqkcBhExIwnCtSWkI96dTE4ziiDBoTa8gYGC7lRsjfmzrb9xqZoHx2cxv9u7XTQqp37FaCxMTpJQzMnxTpzRYJOEEcUuSU3A04hVawz/QODN6M9QUwlTH7d9baXL4tKsDfOzEr1m5s4OGM5H0fhjMuBYVpjjJXrwwpdt9ADX7whlS5Um+xWqEZBzS4cY9i3TCzI11NcQ7tPi05+bC6N106jfIIAfxlEjIPa+CvONuK8qjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j8ZjbuKIXd+W+VykMtrZL3kgexrQowgcVqAxKlkahNU=;
+ b=TrFsNk1hBtpBDHIR0E2DkJmk61BFCOF/1AkGLvgR+2iJ7KbCWBgGSHlDwKAX3DY/cTfirNIzkKgC3347tTFXrgycdhDtXfBKc3Cc5OeYvQoX3yustZkMEUwRhBpmJ4ZNqV4V42EE4xIwFywV5ZafYW135V5NWKEYB2u8p07MBXJtNasWF1xNEqoURSAsI7PZs9Mjgse9dVYdopbi5B6p5OAjwm5DZzK4/X3Kchs5KH9OSZCNrtlps5bp1V+px1xXg0EAY/zQtmi6Ahx81r/Yx7D7DgOmw4n9MpXdciG7c4jCwy9A0FTZZFq8DfnLzjlO9Pckrh+PmYovtuEIpqCbVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j8ZjbuKIXd+W+VykMtrZL3kgexrQowgcVqAxKlkahNU=;
+ b=B2ygUW6xp3EpB19cjxnSINIewz2Bw3lZFlhcJIukfYwzzNqzszCjQrnwQez3FdaUCMcuKtHXS3IpJLdRX/uYbg6FI4mdS+Sajjbu9GLZQb7NTFssHa1FDDVreiq++obYOezZN5vPEDLR2qStmfjSAHTxQt982Nxgw5sPWW+0qkzw9CroJ9MGre+gzu9fN0e8uWKcyewrjhkynprMGI+Q7p4QZnfj42oQxenJ+pp51gInttmyyIMGEchMYTQQt82U3p+30OTqLyDvxG67WiiPj6yTxFC4oaWhPRVDvz3HV8BoMiwcYs20Qw/IUW8dbGM0kZVMtJxXpbObC1FUl3qT7w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU2PR04MB8582.eurprd04.prod.outlook.com (2603:10a6:10:2d9::24)
+ by VI0PR04MB10298.eurprd04.prod.outlook.com (2603:10a6:800:21b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.24; Mon, 7 Jul
+ 2025 12:02:23 +0000
+Received: from DU2PR04MB8582.eurprd04.prod.outlook.com
+ ([fe80::c96e:12f1:67b7:ed74]) by DU2PR04MB8582.eurprd04.prod.outlook.com
+ ([fe80::c96e:12f1:67b7:ed74%3]) with mapi id 15.20.8901.024; Mon, 7 Jul 2025
+ 12:02:22 +0000
+Message-ID: <9a16e06c-c96f-4a86-a017-b02e8f067498@oss.nxp.com>
+Date: Mon, 7 Jul 2025 15:02:20 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 19/20] clocksource/drivers/nxp-pit: Add NXP Automotive
+ s32g2 / s32g3 support
+Content-Language: en-GB
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
+Cc: S32@nxp.com, linux-kernel@vger.kernel.org
+References: <20250705160129.3688026-1-daniel.lezcano@linaro.org>
+ <20250705160129.3688026-19-daniel.lezcano@linaro.org>
+From: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+In-Reply-To: <20250705160129.3688026-19-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0364.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f8::12) To DU2PR04MB8582.eurprd04.prod.outlook.com
+ (2603:10a6:10:2d9::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MlZQHhqJVJF+tiCZ"
-Content-Disposition: inline
-In-Reply-To: <20250705-aw8898-v2-2-9c3adb1fc1a2@lucaweiss.eu>
-X-Cookie: We are what we are.
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8582:EE_|VI0PR04MB10298:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a6d967f-ec20-4093-9b95-08ddbd4e21a9
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|19092799006|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RGVVSGpLb0lXVEVqV3ZoUkZYRnBOR0lyUmRhZXpOc2NHeTlseVRkcC91RWdE?=
+ =?utf-8?B?OGowN3g5VXVxdzRhTjZuMnVseGFUS1diODhJZENOdGF3ZHFTazJ2WEIyalQv?=
+ =?utf-8?B?RlpkcE4xQmhYNTk1M2w1bW00Rk5OWXkySm00YndqVkRWM1JNSGZNNW82KzVn?=
+ =?utf-8?B?OUc2RVJ2Z0l1OGsyNzNkdHlFTVl2Z0duN2pFV2dNUmJUR0sremNwaTduK3JP?=
+ =?utf-8?B?N2lMWU0yWlV0SHpzMVl6S01wbERSOTF6bklHL29QZ2hCZlJaeUJmclVaS3ph?=
+ =?utf-8?B?VlFES2g0TmIyR2RGUk5UMWplWHdZUVRSR0RjRnhnbkoyenNQWm9ZWGFmYTlx?=
+ =?utf-8?B?UG9NNGpEWkFqc3RmcERERkdVTFNueXRyeTF4L2RjRjZWMWlzeUVZTG5meXlx?=
+ =?utf-8?B?QTJZSGJObU1ndUVZTHBTMVZOdVdEZUYxZy9NZ1Raa2ZwVGxMOVJpeENZVHNu?=
+ =?utf-8?B?dTVSb3N0SCtQVVBBOWJHbzIxRTBmWFFBOHJHc1J6L2VSbmErb0dDNTRSMkZP?=
+ =?utf-8?B?NXRrc0tab0oxUU1FYTNZRURKVGZsVXdvc25WcU5JTHBVM3Jvc3FvTXJQWEZs?=
+ =?utf-8?B?VE4xd2RDTVZzOVorTzRwd0t1SDM3NWdPZmI4VDEzcnBnWWVPZkpCUWIzWUNh?=
+ =?utf-8?B?WGxKNW9yWTlHR2JWTDluYldxNDJzY2FLK3VFVmhxd01MaHM1dzMxNjBhQ25K?=
+ =?utf-8?B?OWNYT1h3NDZNWHE2dTBRa2NTbzRqbmxTSy9TZVBFZDF5Q3VoR1lMQlpLZ1BV?=
+ =?utf-8?B?bjltbVNPSzNjazEzSW1wSTducE5neDJaeTZHZEI3bjVVK0JhSlZuNWlHeDlI?=
+ =?utf-8?B?L0dmbWk4U3FIT04wdFBVWU1OZitYNUJtcUt1c2VIM0tHRGdoTkd0UjIrc2Nx?=
+ =?utf-8?B?VCtNdVQwVjNSdk5iTlFyWHZTM04vczdVZFEvOXRjUnlISVpyeWFGdWdoRUU0?=
+ =?utf-8?B?cEF3MWx5eWZ6cTVXallWT2x2SDIvbm96ZStTSVFSUGVrV2dvU0pYaUJyMDFU?=
+ =?utf-8?B?bzNSVWtYWGR3cWMzYjZuekFmeVQ4SE00VlpSd2F4Qm5NZmxEWHd4QUVwV1h0?=
+ =?utf-8?B?Qm84QkovMU5qOHhNOFQxZ3I3QVFkUDFIUXBSKzVKZy8rN3h0MWZ1TWprN2tN?=
+ =?utf-8?B?TnU1WEh0QVJyb1NpNE9rVVZEQTZWQXNMbElkUEpiYzI4UEp6ZnZLdm14amFP?=
+ =?utf-8?B?VWRWZVlYVnVmNzloeHF2cHE1YXhWUFkyNjlPQTFyK3hVanB2Sk5zeEIzZzdT?=
+ =?utf-8?B?QnMyaWsyYXNRdytzOFZaUzZCM2l5U1oyZElxbC81bGV1Qmk0YVhQQ0RvZHdV?=
+ =?utf-8?B?RnRackxGVE5IRWNaSUNnUWRWQ3k4dWFCN282a1Y4ZjFzYXRBYXE2VmpNZnNr?=
+ =?utf-8?B?OTBneThHT1VUQ2lTeERaczZnTDFlbGF3MVVBS2NnVFhUR21BRFZQdkEwbFlB?=
+ =?utf-8?B?elFtaXE0WDh1VlJUZFR0NW1nelBwdjFKUnVEOXhHeGtYMm5HUEhrejhsUmIy?=
+ =?utf-8?B?Nyt1Q3RyV01SUXpUaEJlTDBiMFhha1lsM1dqQ0pGK3BaZHBUUFZnSlpCNmlu?=
+ =?utf-8?B?a2J4dllRRWJoUlNTUGhoSFRlc0x4VTl0ZUZZWHJGTDhucXQwRVluSEdOclE5?=
+ =?utf-8?B?cS9INyszUlZHb1NwSWRqQnZLVFY3R1hnUzEwNGJJRnNCOTd0UWJEdnJkdm9T?=
+ =?utf-8?B?c09uK2ppbTZ3SnNEUVp1ZG8vdEllNXE3UXlRVlRVb05MOFF4NlQxblBHQWkx?=
+ =?utf-8?B?Y3I5eFVhaUNjRHYyMFBmTU1GemJtKytuVEhLUWU3NXFycHptZWxMUHBnK25o?=
+ =?utf-8?B?aEVHRElVKzdlekJqcW5TbTk1VU9LWTc3NjJsVTg2Vk43K2xVRE43YXppZ3BM?=
+ =?utf-8?B?NitWcTBXWGJRR3YyVnJGUnRNZG9mbzNlalJHZU5XVERzeVBEUXB1NWxlRms1?=
+ =?utf-8?Q?l0KcSIA2RzI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8582.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(19092799006)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZGs5cTM5UXNrS09uNXMybVJxSzFXMWhnUTM3TWdtZDd4TnhzNWtjMURNRm1I?=
+ =?utf-8?B?Q0wrd2xjQVdZV05aSUVjVTVhM0s5R01EQ3E2RnEwcWpaQzloQnQzUld1SzhD?=
+ =?utf-8?B?UzJyRHBFeGJQaVluRmdncVRVblltb0NCdXp6K1JVTTVocGhHaXd2WmpERFcv?=
+ =?utf-8?B?N21IdmNpeTZ5NHBUeXhJWitJRVZ4dEcyWEEvd3dISUxxYVZIcGtPeGxpMEhC?=
+ =?utf-8?B?L05vZi9ZVXNsOUF3NmE2MTE5dFk3NTZaU1FvazA1R1lqYTNSWko3VzZWdGha?=
+ =?utf-8?B?VnNhOXdLcXQ0WENIaDVDSllRU3FzdkFIT2lLRVc3aDQ2eFF0K3JIZ1RYbVB3?=
+ =?utf-8?B?ZG9iS0VKSDRQUm5WQ2xVWHlpVFNtbk1tWDVvSThhUlNVZXFWc2dPeFRLVG83?=
+ =?utf-8?B?enYybFM0VEJST1kzM1lkTmorc1RqR2lhUUR0dHJwZS93OWRHTjVRNUVKSXBS?=
+ =?utf-8?B?bTBQd0hhMlBWL3VNQnFjaldkcHVmOG8yNFMzampIUjdCUUJ4dllPUU9yc2s3?=
+ =?utf-8?B?Mk9IL3hadFBwMHU3Z3RFMXlNOEc0dkZSRnlOL2h3VDUwbXg5VytJUDdBTWhJ?=
+ =?utf-8?B?enZkOFNsbktlTmx1ekN2UHl2bE0wUmxvYnc4OFFlY1A0eWRwaTRqZmdUdjJO?=
+ =?utf-8?B?SS9nY0RXa2hUcDhjMjVlN2FNOWRDRnplaFJJayt1YTR1Y01xRGJDVnFzaWRj?=
+ =?utf-8?B?L0d3WURwZ3ZYSlY4bUp6dysydnB0aE5NdEZKUU9KSjNLREdnSG05KzNiZHg3?=
+ =?utf-8?B?WVVFak91MUxURG9naTBxNHA1Z3RFYlI0ZUVKZDhSZDB2TVpzUUhBeWljWnVx?=
+ =?utf-8?B?eXJaVG9nUDZtVytmS2FKUFJUMCtidkJ2VGxjVEJ5QWRIbHJlaGlMSGYyczhS?=
+ =?utf-8?B?MFRFcFdBOFBXSS9zUnhZYnE0eWJZNE42VG9YT24rTmh4aXJxbDVoVHdDZWta?=
+ =?utf-8?B?bkhKVG9BZWs1ZC8yT1NRTzdnRE9TcVRYQnhJV1NYa3pBdXE4VGg3bkxZVUpZ?=
+ =?utf-8?B?R0ptTThlYmFmSVVSamRrUlRYWDAzZ0tCYUhjaFg1WGlVaGZ0TmM1anYxZmtN?=
+ =?utf-8?B?MmllODFHd0RHNitFNTBMVXFxMUIrVnhXS0FidlBqNmZwMVRoZkkyQlRXWDRM?=
+ =?utf-8?B?b3VSOTRRQjVybWN5UG1hVExiaW1KT2FHWWs3MDFndHpGcFdhVTZydHZyc1Rw?=
+ =?utf-8?B?Z2NOVjdzVk1sRi9MQzVNcjBUUVhidHprYno1b0VZUWhMRUtVTnhQOHFsdXVU?=
+ =?utf-8?B?Sm9mUHo5NHhad1lvVGFBRlNGOHluam9xSGRWZnhTUjZlZSs5NlN1RlVDaklL?=
+ =?utf-8?B?bjk3VTdxTEVIOXpLMDlYc2dVWkN5ZkhtLzdCQTVxd3VBY0thdTk0Z21uVGpT?=
+ =?utf-8?B?Nk9OR3FhVUlVTVJTeWlOQ1JscVRnblNRY2svVmp2eCtkNnorZVo1UHB3UFBs?=
+ =?utf-8?B?SHk5Skc0VU9WQVErWnc5MVhEOHI3VEpxeDZDV3hnMEdjYStkbFAzU251bjZI?=
+ =?utf-8?B?WWVGMm1WS2pQSTFFcTNMUnFjNjlvSlJFQkU3cWI1S1YvbndxVXFCMmRKa3Bt?=
+ =?utf-8?B?TVpadHZaOHJZU0doaFJqY09mdHk3QU5RUHNkMUJvY1Y3cXdscElybVQ2d3NH?=
+ =?utf-8?B?WWRCcFpGOU5tMFRXdlBUQndNSE5ORDM4dk5iVEw1dHFLOE1Ha2hoZ0V1YWFl?=
+ =?utf-8?B?Q3BqWElJWWFqZmVjeUN0M0xUMmhtaC8waXpRRjZxcEk0bEZqQkdGN1lrQVd3?=
+ =?utf-8?B?WjBDYWJwb21KRVEwck4rQStEdDZXbDQ2SGRudmsvVkZFQjNJR1ordzBXbWFv?=
+ =?utf-8?B?T1pyQmoybEpuUDBtaWZ6MzZQTzBzbEkyby9GT0lzc0dZc3ljd1NoTTRQSHRX?=
+ =?utf-8?B?U2EyVldZMVRjWTE3c1lIWFdHbmV6WlphTUpIZTljWThMZ1dEcGxYeVVrTVVL?=
+ =?utf-8?B?Uy9EMzVWdFlVdHo1N1IzdE54c2JtR0Zya2tLaTMwR3FTU0Eya04xdkQyMVFh?=
+ =?utf-8?B?b3B4ZU8wN3g0d0NqVmZ2UEhxTWVkaUtEWnZlOUlJLzB0VXhseHFrUjgzUGxr?=
+ =?utf-8?B?MW5LbVFIY05sQjlwM01DeERCbE56a2lrcURpTEZKaXhRN1hrSk9uamJvc2M0?=
+ =?utf-8?B?QUZRRk9ZVFhoQmttM3B2MXY4NXdSbklkU0VwLy9JT3VpRFRsRDJ0ei82UXc5?=
+ =?utf-8?Q?b3+/aW0y4yHQY3aTD1EzCkI=3D?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a6d967f-ec20-4093-9b95-08ddbd4e21a9
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8582.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 12:02:22.9445
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z/Llpo96ydkplxex7Cgto+rWNZpfaK/+21fLqzJkymhRINvX2sJkBli5mUuXPzhJNLms15fh5TdrtaoPBDAFuU91Ys09Jt5DeNUq7tEWYCM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10298
 
+On 7/5/2025 7:01 PM, Daniel Lezcano wrote:
+> The S32G platform has two Periodic Interrupt Timer (PIT). The IP is
+> exactly the same as the VF platform.
+> 
+> The setup found for this platform is each timer instance is bound to
+> CPU0 and CPU1.
+> 
+> The changes bring the support for multiple timer instances. When we
+> reach the maximum PIT instances for this platform, which is described
+> in the match table data, the hotplug callbacks are called where they
+> finish the per CPU setup.
+> 
+> Tested on a s32g274a-rdb2.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
 
---MlZQHhqJVJF+tiCZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The current description does not clearly explain how the resources are used within the driver. It would be helpful to mention that channel 2 is used as the clocksource, while channel 3 is designated for clockevents.
 
-On Sat, Jul 05, 2025 at 02:03:06PM +0200, Luca Weiss wrote:
+Additionally, the S32G2 platform supports suspend and resume functionality. However, this capability is not yet implemented in the driver. Do you plan to include support for it in a future patch?
 
-> +static void aw8898_update_dev_mode(struct aw8898 *aw8898)
-> +{
-> +	unsigned int mode = AW8898_SYSCTRL_SPK_MODE;
-> +
-> +	if (aw8898->dev_mode == AW8898_RECEIVER)
-> +		mode = AW8898_SYSCTRL_RCV_MODE;
-> +
-> +	regmap_update_bits(aw8898->regmap, AW8898_SYSCTRL,
-> +			   AW8898_SYSCTRL_MODE_MASK,
-> +			   FIELD_PREP(AW8898_SYSCTRL_MODE_MASK, mode));
-> +}
+[...]
 
-Why is this open coded rather than just being a standard enum?  AFAICT
-we never reference dev_mode outside of here or the _get() and put()
-callbacks.  You might be looking for a _VALUE_ENUM?
-
-> +	if (!fw) {
-> +		dev_err(&aw8898->client->dev, "Failed to load firmware\n");
-> +		return;
+> -static int __init pit_timer_init(struct device_node *np)
+> +static int pit_timer_init(struct device_node *np)
+>  {
+>  	struct pit_timer *pit;
+>  	struct clk *pit_clk;
+> @@ -261,16 +296,31 @@ static int __init pit_timer_init(struct device_node *np)
+>  
+>  	clk_rate = clk_get_rate(pit_clk);
+>  
+> -	/* enable the pit module */
+> -	pit_module_enable(timer_base);
+> +	pit_module_disable(timer_base);
+>  
+>  	ret = pit_clocksource_init(pit, name, timer_base, clk_rate);
+> -	if (ret)
+> +	if (ret) {
+> +		pr_err("Failed to initialize clocksource '%pOF'\n", np);
+>  		goto out_pit_module_disable;
 > +	}
-> +
-> +	dev_dbg(&aw8898->client->dev, "Loaded %s - size: %zu\n", AW8898_CFG_NAME, fw->size);
+>  
+> -	ret = pit_clockevent_init(pit, name, timer_base, clk_rate, irq, 0);
+> -	if (ret)
+> +	ret = pit_clockevent_per_cpu_init(pit, name, timer_base, clk_rate, irq, pit_instances);
+> +	if (ret) {
+> +		pr_err("Failed to initialize clockevent '%pOF'\n", np);
+>  		goto out_pit_clocksource_unregister;
+> +	}
 
-We print the firmware name we were looking for if we loaded it, but not
-if we failed to load it when it's probably more useful.
+This mechanism is very restrictive and will allow to assign the PIT0 and PIT1 to CPU0 and CPU1 only. Have you considered alternatives where the mapping is given as mask through early_param?
 
-> +	aw8898_cfg_write(aw8898, aw8898_cfg);
-
-The "firmware" here is just a list of arbatrary register writes with no
-validation of addresses or anything...
-
-> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> +	case SND_SOC_DAIFMT_I2S:
-> +		if ((fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK)
-> +				!= SND_SOC_DAIFMT_CBC_CFC) {
-> +			dev_err(component->dev, "Invalid codec master mode: %d\n",
-
-Clock provider mode.
-
-> +static int aw8898_startup(struct snd_pcm_substream *substream,
-> +               struct snd_soc_dai *dai)
-> +{
-> +	struct aw8898 *aw8898 = snd_soc_component_get_drvdata(dai->component);
-> +	unsigned int val;
-> +	int err;
-> +
-> +	err = regmap_read_poll_timeout(aw8898->regmap, AW8898_SYSST,
-> +				       val, val & AW8898_SYSST_PLLS,
-> +				       2000, 1 * USEC_PER_SEC);
-
-What's this actually checking?  You shouldn't rely on I2S being clocked
-prior to trigger...
-
---MlZQHhqJVJF+tiCZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhrt0sACgkQJNaLcl1U
-h9BPMQf/dmqzpSi55P7foF7RBlZpMSycih4Oi7PCjW3U957fX0OuP/4eq5U+gMl3
-MBbPPPDqBzN4ljGvWGXuAsWxyjNt+U+LEyNa8YJRnz+ysQvPjwANW+SnRKj+WtcE
-LJHf8JhuNzKaoMa4UQUNv9N2xFYbfZYCzkfmN1pGVrvxTJrKeeZSB8zAXfkdBM5s
-T/7g8OM3OG+BZs2WGFGmYNfVNZ/UTtNgbKAigqGj4pVrSuh+ICi7BBkf34nVBHFE
-/f6ywCEL/iKctaKft7NVU3E5y7mBtkQ8nCyZhGmcGvKoBlq3PBkUfZZz+PAab9P3
-f4P1tsKTIlHQ+EHMNlV0jemhAKRBLA==
-=Qb73
------END PGP SIGNATURE-----
-
---MlZQHhqJVJF+tiCZ--
+-- 
+Regards,
+Ghennadi
