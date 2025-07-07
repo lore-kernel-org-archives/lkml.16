@@ -1,43 +1,46 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FBA944F;
-	Mon,  7 Jul 2025 09:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA470944F;
+	Mon,  7 Jul 2025 09:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751878970; cv=none; b=shY2+esfHnmjJfukaMaszM3ZYA2iBt2Y3H5/J8X+2LVfuzYjo3XGjGPKnLJ6fXVsGj4WHK0oPlDAUp8gqij70yc1CgkDMggXpqxYdV3+Z4Xl3vklLoyLIvSPXeVNpM9aiucFbHoFbb5O15BMaft2BFlLO0wZ6rgM1aan8vhtfNs=
+	t=1751878993; cv=none; b=XIvn5IbBPJEpnVLg1Hp8s5SSI9QKfGyrDp6qi8k3X6C8TnGfkZGoo742emcXh8MxYD2nPYyrbN0XD0mInIAnp9ydDh5pSIIU/dmEBsqlvzvRwUn6FPplCgy9LDTd+Mi9y9l0aIaa21oJURSOQYS8gnFVGxzbS2U8Lb3QYtBjNeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751878970; c=relaxed/simple;
-	bh=FTGqUyW93lewUVwmc1LrpUgjcIqBOp7eeSxuuA4yea8=;
+	s=arc-20240116; t=1751878993; c=relaxed/simple;
+	bh=JoUNvgk0Indgh9IQjsCN1n80NHUme0ZNNFbwUw6oGJU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JFuUy8mh5GNaLC7NCN9fhmdVAErWgNzo0zAraR3YU2FD94Ey3N2Nv3uTdParGi+Bb7eWu88PqmphH/idGEwfZdiLfWCZIG94wMw2QVc9kQJB4/fHAtLmhytCpwcSCZQIMJsrOR/ah2eEaWWmNC1C/LBMAM1IOdsrGjbWpmr0llw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=Eljto0eD; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="Eljto0eD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=sHBLCi+DIw3uUiQhPef0s/I0wx23cXQdEUx2HNS8QpA=;
-	b=Eljto0eDL4gDa1GyStcrRd56ugcUeW2ozC1EmSo2NJY9WiDhyzsu8P8mLlV6UW
-	RUvhfRh7JKgAqWqKk0r/TBbbrdLNVjHOvB13UKjnDVAq5B5lFy5l6HZmE4jqLiJx
-	nd1OcXpYQRiUvFqVZQ6nYjxpfw8vK+4/IpKWg4X9JB9gE=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgD37wgRjWtoZQp6AA--.22272S3;
-	Mon, 07 Jul 2025 17:02:11 +0800 (CST)
-Date: Mon, 7 Jul 2025 17:02:09 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Sherry Sun <sherry.sun@nxp.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-	Frank.Li@nxp.com, ping.bai@nxp.com, haibo.chen@nxp.com,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH V2] arm64: dts: imx94: add missing clock related
- properties to flexcan1
-Message-ID: <aGuNES0DTTcm-eCm@dragon>
-References: <20250702062724.2459200-1-sherry.sun@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMNIjNzCbuRAFItQSsAExaTEv0tfJe0Sp8QtPOrbtdLtXsKttSlvTzhaZvCSLB1aUZ6/etpDd5jeqPDREAd8Trsx8W8/Yt2oNIo6TrkFZTQPsV0tJKpOm4dFtak2jAnUTZgmDoWfyUUisPJylO2xnFAduTNFwrXv1FpLOC0q5+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC8A168F;
+	Mon,  7 Jul 2025 02:02:58 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8E2B3F694;
+	Mon,  7 Jul 2025 02:03:10 -0700 (PDT)
+Date: Mon, 7 Jul 2025 10:03:08 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
+Message-ID: <20250707090308.GA2182465@e132581.arm.com>
+References: <20250703143941.182414597@linuxfoundation.org>
+ <CA+G9fYu=JdHJdZo0aO+kK-TBNMv3dy-cLyO7KF4RMB20KyDuAg@mail.gmail.com>
+ <CA+G9fYv4UUmNpoJ77q7F5K20XGiNcO+ZfOzYNLQ=h7S3uTEc8g@mail.gmail.com>
+ <2025070605-stuffy-pointy-fd64@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,18 +49,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702062724.2459200-1-sherry.sun@nxp.com>
-X-CM-TRANSID:Ms8vCgD37wgRjWtoZQp6AA--.22272S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU7jg4UUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIhNcwWhrjRNGAAAA33
+In-Reply-To: <2025070605-stuffy-pointy-fd64@gregkh>
 
-On Wed, Jul 02, 2025 at 02:27:24PM +0800, Sherry Sun wrote:
-> Add missing clocks and clock-names properties for flexcan1 in
-> imx94.dtsi to align with other FlexCAN instances.
+On Sun, Jul 06, 2025 at 08:55:32AM +0200, Greg Kroah-Hartman wrote:
+
+[...]
+
+> > Bisection results pointing to,
+> > 
+> >     coresight: Only check bottom two claim bits
+> >      [ Upstream commit a4e65842e1142aa18ef36113fbd81d614eaefe5a ]
+> > 
+> > The following patch needs to be back ported ?
+> >    b36e78b216e6 ("ARM: 9354/1: ptrace: Use bitfield helpers")
 > 
-> Fixes: b0d011d4841b ("arm64: dts: freescale: Add basic dtsi for imx943")
-> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> Thanks, that makes sense, and is easier than me fixing this up by hand
+> like I had tried to in one of the branches :)
+> 
+> Now queued up.
 
-Applied, thanks!
+I built for the Arm target in my local environment and confirmed that
+the build failure has been fixed on the linux-6.6.y branch.
 
+Thanks for reporting and resolving the issue.
+
+Leo
