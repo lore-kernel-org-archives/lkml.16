@@ -1,65 +1,65 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E002586EA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 06:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4D9279783
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 06:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751869116; cv=none; b=PthGzXLZXN/mtIMbXyiIkfY9I8tA/XtBDl5OkmOy3eV58VWnMPN5FV7HwY/ou+MVxysTLhQ0jsr36jKWDaEL4jejRONsDmQXZX/bRiEXS10PCd94zbIoXnqbNtkrWTeSo/2rpFJoHN11L1/PFzLs66YXcBNsgs2VemmQmqCsP8M=
+	t=1751869121; cv=none; b=rfmtz30cfgiwgNu1kfceSFQHXdXSQk9eM8opv0krERfCRyYeq3xxR/oql3ueIlTlCRW29vizkytIvxa8NyG0Myj/UJi7M1Jr13FdiE7yVPG91I/F7giLSydYUzj0WUcFqgW5WcXqsABF8b3tzrWbVBCkHG2F8/8H3okj5E0vKVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751869116; c=relaxed/simple;
-	bh=flbnou7XSx1ETCmAxdlZnvB3+bqdNxru9LUU48yIE7A=;
+	s=arc-20240116; t=1751869121; c=relaxed/simple;
+	bh=3U0bowJZD1UHEussz5PlKOBS3bAoQPdxBHy2P4TuJ5A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DCdgbqoQQIap4hRvBE021vOsGhU1IZ5bshZW2B1P58CvtcrdwA25+kYN3UW78oaCuIlnZ+3iuVO4MbbuiivXTvDgtjlpirZQBTtAsgbukKTq8pP6pyqVDQUY5T8dDUsKaQQoIdMkfcjBA9J5sbCWIjyNniOPXbagPDVdAVBbk1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+3LvjYp; arc=none smtp.client-ip=209.85.215.181
+	 In-Reply-To:To:Cc; b=JLjIwRBl/XOiUTwL6xJsXm60wspUWixNGnukxL4rfyjQ+Hg9ZitrV55e9dTtGMN+WVXGHrqcaGhkqwItvK+gWnrFKYGMTTvsxpgMn8rnNjeAaaUSdBVKyWwKiTOHV7P2oGNk3qOCVZSjDmilpzNUemdV+V7Rj8AuqDl4Q3H1Q9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CvvV/zIU; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+3LvjYp"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b321bd36a41so2214496a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 23:18:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvvV/zIU"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7481600130eso3742671b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 23:18:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751869114; x=1752473914; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751869119; x=1752473919; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gZKppSrZ04BhPYsPEMDVl7eb2YZ+sFy//28ARL2GCmc=;
-        b=A+3LvjYpn0ZeHEsrliihf6vnYWXd7bBuqa8HG0BTpVBsKbn4QMOPaoXkf5nddNxRSu
-         Oxl6DkmCEvkS9PnHNgAVM1kKNZoreoeyUT2YutiHpcXG3CFeRQVAR0OB4JVwWoBL6yYq
-         EOwGUVoG9t10o52DEWlxonu7nmku2pULl6UBLUpag/mP6ZEynOQWtvGndhckC+9cJEu6
-         Vp7Znnivt9P9i0uaIFAYV2me32CANffEeekDZF3dEGl6+taByidH3iKFbsQgOZi/z3GN
-         xVsNbtsITuay7FuRf9p1zUQw5ufW1LBrywHnr6R6jtnWYbY9B9cIOvUR+nmH9FO6oJ1l
-         arwQ==
+        bh=IKfocSyum6c+ZXGva6cBv+Qtfqbf1qkUCIjZpV0tOYg=;
+        b=CvvV/zIUoUV9nZKRguCiqLCyuF70zXxEvx99cDOW59nxA0+0cVcb5VDrkRp8AA6nFn
+         l+KxhZ+Dqw1xsLNbRTGljpXQTmGdqz5wHofjeKTDTgi3uaRDp0UmK2xL7/gPFu57oozf
+         at9I8JKQdKeavNvzP9KWE8gRlwnDZjUqFjd/oLsZQzgecscJKefrOwYz1rnmbcG5kWy4
+         JIt8bf19f36mQx7qrHIL0cjQlFYPU1LboZK5RQG5LaADcU01SVm42EM7CsqzO1vFzIp/
+         wmuO5lXk3NO7dmniz9Fj2c/Hz75mLpm0Hizc//iCHL7mSrE6bBBf29rtCXAEC/zZDMHA
+         VARg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751869114; x=1752473914;
+        d=1e100.net; s=20230601; t=1751869119; x=1752473919;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gZKppSrZ04BhPYsPEMDVl7eb2YZ+sFy//28ARL2GCmc=;
-        b=Jg1NxwtfopJRWxKQOuyNY+a1yOkunCt7ckhP2RaW0lSrHYZSmEEtrizGuwiyfyweDf
-         2HSrZwvwFS5bJPR+YqKJgsrWEKdWW8mV6Uksq1Dxba5mPueS2V6LkPLfIpDgFP1N4KHs
-         trBT/kv0erTAeOOLGyb22kbncrSOnA+rcy2rjp5aQ48U6hZZEuIFmXjSMid6MeHxtVuK
-         ++12zY/lXvjrLTZJLBOIWdRoc53hxvUe9CKfm+CVz7Kc8A2UA8uCBy/JXAcVxdxnokZE
-         NejGRQkl7DWZf5qFlvARLm5EKJ5eG8Fm6gzPLoFRQ+prlEiYYTNOOPiuInEXNvbev3z1
-         ExKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgwSUoBJSoZtwDI0qcoqFSz+PouP6lxVqkRUmuZR1TBrJKNiZtKkqpvhRdRpsOiOMKY88DavQYFXd/33c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZoBu2aTextsf5MYRcpnm1xFBDBx2sNcsoL31NkbZ+/OATDaJl
-	ZmumDtyeAKODqtV/mBbsqaPE39XQRxmHGSNtLbnbiuRtawIWPVQEwvRnuHDa7xxUkkY=
-X-Gm-Gg: ASbGnctSAXaArb7YcwfgVBkQef6gnbhWxa2r8OMetoAF7AgWA8cfhTXrbczgTvZWoWS
-	2EbN+F0v5tGsDln6AuWK/7sDVCq1sHVzG/ezjmHOhUWCQg8myFZZWnH17HdKJFEojxdCSEqQQHI
-	zO3i0E8tAwFFRdMxIvqeOJVL8IHCW7sJtkthCKQmBKx4mXhCynLudFHgKSWEH7tTgThO29/YUjm
-	Kn05HtChjipJ+11wB2O8r5+MbXPb2SxbWJcYergUXvPvKMSH8mF+7xMqRVyL6yffFwjkwzYpZdH
-	rhOVRcK/6QIMgswL0r2St+YAxSYV3ueg5U9k3ohrBayRtq4egaVPr1/bW5o=
-X-Google-Smtp-Source: AGHT+IEhrv3fmXBC2zf/SakWM0z47cC7OpSvTf+Ugbc9/YCKMZxghEVPFjk+9Rao57znNMbR7C25Og==
-X-Received: by 2002:a05:6300:2414:b0:220:82c7:309c with SMTP id adf61e73a8af0-22608fb3070mr13270461637.7.1751869114109;
-        Sun, 06 Jul 2025 23:18:34 -0700 (PDT)
+        bh=IKfocSyum6c+ZXGva6cBv+Qtfqbf1qkUCIjZpV0tOYg=;
+        b=WVx8OG6ijWykdnLd9WE/kM/mBJbTP9lL+nnTgE+u1ex2xxAgara576Uv41K3njoRFA
+         ldT+L8cw8KkO3GUqVBpi6pKukuir7/rn6ANsJFhdm6SvY1CjtNHKsgXvklF5D7jJLox7
+         tnN0HDii5pQ9gRATzU8mKvHezNsPPXCZps0DzowQtBA/KidJ6CzNbeI30NJh6YGUc+KP
+         EyfJXjjoiokmm1uriljlqivggjFG/YlGyMi5RFUq5z1GrbvINkJkkowIgg35WOrucTxB
+         SZ/rYgtdlOmBVaiAjfAK1wsskrxuiBCJaFWP8jzVOhNyJjZvDJ2I/hV/KcQlKFb4hDGM
+         qptw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyMoXqmwwA1o5n5SAWJxIQGfD/Eq1AnzuNH7fgTpL+TRoFw3quLKDe6Y0LO6ubD6aNUszOS7zX8DEvE0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJuW7byun1km8+UuYR8oI4k/8OnICDu69c4mpR0a81STCez3cs
+	SS63RkoYB3Z5o0/XRDH18tohbFdSrnEwpC8nWGBSoKGBT5axwDVqGWda6J0bmmx9Usc=
+X-Gm-Gg: ASbGnctTwINRQFcgGWJ4KSCVIxcHo9pXhZNIdCdoAyTt/8UYci1v/hMRp1j5TCAz7FO
+	ShQF0kDOb6de1nTq2yFG9jsf4/sloHtmIpuFWZkbSBOwXDeP7+/Wv7rBBALI3XpjTB8Qh3fiYd3
+	YkGeRAw4aknLQwHKRgEpj1120ymHEfzoUmLHVzWoLT581l0ZEVF2/wusABeIgTwTrg5580HdmuZ
+	A+1iFodL7mz1i5OI8CqnLIhdtGw5xve0h8Tn10aRXHUHpoHTM6EmASCcJGroXbHm7lTw5tg/sqc
+	WdxB6SFeOYWSCfhgxfQiONUqQaLC3qXC5jV/ktJKGM4NYLEdMdd0y7Nh05Q=
+X-Google-Smtp-Source: AGHT+IHpu+7N095Dkvfv/xXCbcaHF/m5rGZUrD4vjHs5Fv7m1f25d05bGH5t9VgB3jR6lHG9xDeaXQ==
+X-Received: by 2002:a05:6a21:339b:b0:215:cf53:c35 with SMTP id adf61e73a8af0-225ba537030mr18417131637.31.1751869119377;
+        Sun, 06 Jul 2025 23:18:39 -0700 (PDT)
 Received: from [127.0.1.1] ([103.163.156.9])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee450ccbsm8037327a12.3.2025.07.06.23.18.27
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee450ccbsm8037327a12.3.2025.07.06.23.18.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jul 2025 23:18:33 -0700 (PDT)
+        Sun, 06 Jul 2025 23:18:39 -0700 (PDT)
 From: Jun Nie <jun.nie@linaro.org>
-Date: Mon, 07 Jul 2025 14:17:59 +0800
-Subject: [PATCH v12 04/12] drm/msm/dpu: bind correct pingpong for quad pipe
+Date: Mon, 07 Jul 2025 14:18:00 +0800
+Subject: [PATCH v12 05/12] drm/msm/dpu: Add pipe as trace argument
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250707-v6-16-rc2-quad-pipe-upstream-v12-4-67e3721e7d83@linaro.org>
+Message-Id: <20250707-v6-16-rc2-quad-pipe-upstream-v12-5-67e3721e7d83@linaro.org>
 References: <20250707-v6-16-rc2-quad-pipe-upstream-v12-0-67e3721e7d83@linaro.org>
 In-Reply-To: <20250707-v6-16-rc2-quad-pipe-upstream-v12-0-67e3721e7d83@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -81,55 +81,67 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Jun Nie <jun.nie@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751869084; l=1809;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751869084; l=2487;
  i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=flbnou7XSx1ETCmAxdlZnvB3+bqdNxru9LUU48yIE7A=;
- b=8J0scBIavzi43Hc18EtLQ0upqpSsevKQ8nja/mECnzE4bufiDHQr1EC6aLVX4rEF26cw5m/f9
- 1POTKLa7ev5BqipWab+rOy402M4esn20vuhkdBAEbl/rKZAxXTIcGSH
+ bh=3U0bowJZD1UHEussz5PlKOBS3bAoQPdxBHy2P4TuJ5A=;
+ b=ZP/NQiBXA71l6lBIz06Tal8NsSeCQ9sxKtlwYnwimsk+bkLSNgzf6+x324sO23baWtdXeQVH3
+ a5uYD4cLF8LAbzVyjHaQqjivAn3k4gAxzESl5hHfuqkzoUfhg5MWUMI
 X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
  pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-There are 2 interfaces and 4 pingpong in quad pipe. Map the 2nd
-interface to 3rd PP instead of the 2nd PP.
+Add pipe as trace argument in trace_dpu_crtc_setup_mixer() to ease
+converting pipe into pipe array later.
 
 Signed-off-by: Jun Nie <jun.nie@linaro.org>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index b476d3c97ac9b6b4c5ca2963aa4a5805d57c8d7e..2d88d9129ec787df6dac70e6f4488ab77c6aeeed 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1158,7 +1158,7 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 	struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_blk *hw_dsc[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_blk *hw_cwb[MAX_CHANNELS_PER_ENC];
--	int num_ctl, num_pp, num_dsc;
-+	int num_ctl, num_pp, num_dsc, num_pp_per_intf;
- 	int num_cwb = 0;
- 	bool is_cwb_encoder;
- 	unsigned int dsc_mask = 0;
-@@ -1237,10 +1237,16 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 		dpu_enc->cur_master->hw_cdm = hw_cdm ? to_dpu_hw_cdm(hw_cdm) : NULL;
- 	}
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index 9a40492e5aa961f7180ba4ac6c86e06fcccef8c2..cd0ec3edfe2fa8132e114bc1544c389141d1c1ec 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -419,7 +419,7 @@ static void _dpu_crtc_blend_setup_pipe(struct drm_crtc *crtc,
  
-+	/*
-+	 * There may be 4 PP and 2 INTF for quad pipe case, so INTF is not
-+	 * mapped to PP 1:1. Let's calculate the stride with pipe/INTF
-+	 */
-+	num_pp_per_intf = num_pp / dpu_enc->num_phys_encs;
-+
- 	for (i = 0; i < dpu_enc->num_phys_encs; i++) {
- 		struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
+ 	trace_dpu_crtc_setup_mixer(DRMID(crtc), DRMID(plane),
+ 				   state, to_dpu_plane_state(state), stage_idx,
+-				   format->pixel_format,
++				   format->pixel_format, pipe,
+ 				   modifier);
  
--		phys->hw_pp = dpu_enc->hw_pp[i];
-+		phys->hw_pp = dpu_enc->hw_pp[num_pp_per_intf * i];
- 		if (!phys->hw_pp) {
- 			DPU_ERROR_ENC(dpu_enc,
- 				"no pp block assigned at idx: %d\n", i);
+ 	DRM_DEBUG_ATOMIC("crtc %d stage:%d - plane %d sspp %d fb %d multirect_idx %d\n",
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
+index 5307cbc2007c5044c5b897c53b44a8e356f1ad0f..cb24ad2a6d8d386bbc97b173854c410220725a0d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h
+@@ -651,9 +651,9 @@ TRACE_EVENT(dpu_crtc_setup_mixer,
+ 	TP_PROTO(uint32_t crtc_id, uint32_t plane_id,
+ 		 struct drm_plane_state *state, struct dpu_plane_state *pstate,
+ 		 uint32_t stage_idx, uint32_t pixel_format,
+-		 uint64_t modifier),
++		 struct dpu_sw_pipe *pipe, uint64_t modifier),
+ 	TP_ARGS(crtc_id, plane_id, state, pstate, stage_idx,
+-		pixel_format, modifier),
++		pixel_format, pipe, modifier),
+ 	TP_STRUCT__entry(
+ 		__field(	uint32_t,		crtc_id		)
+ 		__field(	uint32_t,		plane_id	)
+@@ -676,9 +676,9 @@ TRACE_EVENT(dpu_crtc_setup_mixer,
+ 		__entry->dst_rect = drm_plane_state_dest(state);
+ 		__entry->stage_idx = stage_idx;
+ 		__entry->stage = pstate->stage;
+-		__entry->sspp = pstate->pipe.sspp->idx;
+-		__entry->multirect_idx = pstate->pipe.multirect_index;
+-		__entry->multirect_mode = pstate->pipe.multirect_mode;
++		__entry->sspp = pipe->sspp->idx;
++		__entry->multirect_idx = pipe->multirect_index;
++		__entry->multirect_mode = pipe->multirect_mode;
+ 		__entry->pixel_format = pixel_format;
+ 		__entry->modifier = modifier;
+ 	),
 
 -- 
 2.34.1
