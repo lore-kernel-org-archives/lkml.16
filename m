@@ -1,38 +1,65 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C9E1373;
-	Mon,  7 Jul 2025 01:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C4728E7;
+	Mon,  7 Jul 2025 01:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751851595; cv=none; b=KxCoIDE+xmlGRVQqAt0f6zwCcPhuiEBedZFJC1x4yi8MZiVZ3tdv03SjrJ0UY/Qei/r/v4arwdHiSK4le/kh/MIL7VlE72dLYx5CBgo46mX6rii1tpktuHhwRvB64VY9ysogNS8g5Hm/SUHiaz+1y8gfhvP17IKOQxoitsdk1ts=
+	t=1751851932; cv=none; b=kSscAYGBGjslJNqN9o3YT9p8Eeut+lo9XYnUNcHZXhf/+HiUfQaPxBNy6cJFOfU/hTj3g2ezlSmYMInC28wz0VuNbstgUxBqYdcDwr+943+rvm9YG+XpBG2uSJJknuPUx5HJIE6+4M8UXyTr+cSxddgz+DwjuTkOtg1/Ww3S56o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751851595; c=relaxed/simple;
-	bh=F99Y9Nl0L+tPWONLGzd7cu1Iv6bSj6id5Kb4yAQhMxo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c/rI9SuT9ZaFuBJPttcnD4BAFY2x6FyOe2vSQClHewg3TXtz+jPIkEAxEoQBRT7ew14JHUKRQYelTuvNwUe0a1T/0IRWeVtMy+gi4xeUuzbiWND9SEBTEBYss8NK+rnryF0SsbpBfbUHu56RAUNyxTdwwh44VoUPr0Rgj58H84Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bb5k26d8czYQtnf;
-	Mon,  7 Jul 2025 09:09:30 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id BB9571A0DC4;
-	Mon,  7 Jul 2025 09:09:29 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.170])
-	by APP3 (Coremail) with SMTP id _Ch0CgB32SZGHmto0L6PAw--.34564S4;
-	Mon, 07 Jul 2025 09:09:28 +0800 (CST)
-From: Wang Zhaolong <wangzhaolong@huaweicloud.com>
-To: sfrench@samba.org,
-	pshilov@microsoft.com,
-	aaptel@suse.com
-Cc: linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2] smb: client: fix use-after-free in cifs_oplock_break
-Date: Mon,  7 Jul 2025 09:09:26 +0800
-Message-Id: <20250707010926.31623-1-wangzhaolong@huaweicloud.com>
-X-Mailer: git-send-email 2.34.3
+	s=arc-20240116; t=1751851932; c=relaxed/simple;
+	bh=c4mz24+uIEgZP/zbZ4GY5gUi4GHqqwmZtQDCr5bdGtM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=df5/Q0EceTmlYAFSZKtaxfSD+3oBYLop/m820LmUvJ6BNPdlC2x/mWrTbHBabnUq4x+x/Jw9BqZMqLkZYhZgnPuk0sZxxDi1JRFOT+u88btPeUGaMNRQKWql3mbs34CAfaaqJXMQ5vH5GpGZs5BXM/tHDJ8M8gzs1N87sAM6tdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=BnlR651Z; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BnlR651Z"
+X-UUID: 30e8cc8c5ad211f0b1510d84776b8c0b-20250707
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ZzMOl2Ky58KKtiKwQ5AlruNWO0UQZa7Vyr+LxTHTVVA=;
+	b=BnlR651ZLf8lepxYjBZEC0oULSHtlh94pqeeAXfu9Ve2NThVjSbYJSwSKUaJA8KB7EWNG4jVezf3VCYv2/uMpvkkRQFPbZrIITQkasYaz4KOuuTw8YhVvEQ0M7hkgNzYiBzVURFFFWI0vy7+qbL15L8ASkPApkvJvjN08N4IYMQ=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.2,REQID:68331ff6-c91b-4b9d-829f-e9af432df466,IP:0,UR
+	L:25,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:20
+X-CID-META: VersionHash:9eb4ff7,CLOUDID:3abe0260-2aa0-4c76-8faa-804d844c7164,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:11|97|99|83|106|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:
+	0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 30e8cc8c5ad211f0b1510d84776b8c0b-20250707
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+	(envelope-from <shangyao.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1224092829; Mon, 07 Jul 2025 09:32:05 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Mon, 7 Jul 2025 09:32:04 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Mon, 7 Jul 2025 09:32:04 +0800
+From: shangyao lin <shangyao.lin@mediatek.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: Shangyao Lin <shangyao.lin@mediatek.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH v2 02/13] dt-bindings: media: mediatek: add seninf-core binding
+Date: Mon, 7 Jul 2025 09:31:43 +0800
+Message-ID: <20250707013154.4055874-3-shangyao.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250707013154.4055874-1-shangyao.lin@mediatek.com>
+References: <20250707013154.4055874-1-shangyao.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,112 +67,169 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgB32SZGHmto0L6PAw--.34564S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF4kGF4kuFy5uFW5JFyxXwb_yoW5Zr1kpF
-	13tr15Gr45GryUuwsaqF4ru3W3t3WkWa1F9ry8uw1Sy3sxA3ySgF4Fyr129F4SqFWkAr1q
-	gF4jg3yqvF1UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
-X-CM-SenderInfo: pzdqw6xkdrz0tqj6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain
 
-A race condition can occur in cifs_oplock_break() leading to a
-use-after-free of the cinode structure when unmounting:
+From: "shangyao.lin" <shangyao.lin@mediatek.com>
 
-  cifs_oplock_break()
-    _cifsFileInfo_put(cfile)
-      cifsFileInfo_put_final()
-        cifs_sb_deactive()
-          [last ref, start releasing sb]
-            kill_sb()
-              kill_anon_super()
-                generic_shutdown_super()
-                  evict_inodes()
-                    dispose_list()
-                      evict()
-                        destroy_inode()
-                          call_rcu(&inode->i_rcu, i_callback)
-    spin_lock(&cinode->open_file_lock)  <- OK
-                            [later] i_callback()
-                              cifs_free_inode()
-                                kmem_cache_free(cinode)
-    spin_unlock(&cinode->open_file_lock)  <- UAF
-    cifs_done_oplock_break(cinode)       <- UAF
+1. Add camera isp7x module device document
 
-The issue occurs when umount has already released its reference to the
-superblock. When _cifsFileInfo_put() calls cifs_sb_deactive(), this
-releases the last reference, triggering the immediate cleanup of all
-inodes under RCU. However, cifs_oplock_break() continues to access the
-cinode after this point, resulting in use-after-free.
-
-Fix this by holding an extra reference to the superblock during the
-entire oplock break operation. This ensures that the superblock and
-its inodes remain valid until the oplock break completes.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=220309
-Fixes: b98749cac4a6 ("CIFS: keep FileInfo handle live during oplock break")
-Signed-off-by: Wang Zhaolong <wangzhaolong@huaweicloud.com>
 ---
- fs/smb/client/file.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-V1 -> V2:
-Correct the commit message call stack
+Changes in v2:
+  - Rename binding file to mediatek,mt8188-seninf-core.yaml
+  - Various fixes per review comments
+  - Update maintainers list
 
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index e9212da32f01..1421bde045c2 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -3086,20 +3086,27 @@ bool is_size_safe_to_change(struct cifsInodeInfo *cifsInode, __u64 end_of_file,
- void cifs_oplock_break(struct work_struct *work)
- {
- 	struct cifsFileInfo *cfile = container_of(work, struct cifsFileInfo,
- 						  oplock_break);
- 	struct inode *inode = d_inode(cfile->dentry);
--	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
-+	struct super_block *sb = inode->i_sb;
-+	struct cifs_sb_info *cifs_sb = CIFS_SB(sb);
- 	struct cifsInodeInfo *cinode = CIFS_I(inode);
- 	struct cifs_tcon *tcon;
- 	struct TCP_Server_Info *server;
- 	struct tcon_link *tlink;
- 	int rc = 0;
- 	bool purge_cache = false, oplock_break_cancelled;
- 	__u64 persistent_fid, volatile_fid;
- 	__u16 net_fid;
- 
-+	/*
-+	 * Hold a reference to the superblock to prevent it and its inodes from
-+	 * being freed while we are accessing cinode. Otherwise, _cifsFileInfo_put()
-+	 * may release the last reference to the sb and trigger inode eviction.
-+	 */
-+	cifs_sb_active(sb);
- 	wait_on_bit(&cinode->flags, CIFS_INODE_PENDING_WRITERS,
- 			TASK_UNINTERRUPTIBLE);
- 
- 	tlink = cifs_sb_tlink(cifs_sb);
- 	if (IS_ERR(tlink))
-@@ -3168,10 +3175,11 @@ void cifs_oplock_break(struct work_struct *work)
- 		spin_unlock(&cinode->open_file_lock);
- 
- 	cifs_put_tlink(tlink);
- out:
- 	cifs_done_oplock_break(cinode);
-+	cifs_sb_deactive(sb);
- }
- 
- static int cifs_swap_activate(struct swap_info_struct *sis,
- 			      struct file *swap_file, sector_t *span)
- {
+Question for reviewer (CK):
+
+Hi CK,
+
+Thank you for your review and suggestions on this patch, especially for providing the reference patch (https://patchwork.kernel.org/project/linux-mediatek/list/?series=874617) and for mentioning in another patch ([V1,02/10] MEDIA: PLATFORM: MEDIATEK: ADD SENINF CONTROLLER) the suggestion to "Move the phy part to phy/mediatek/ folder. You could refer to phy/mediatek/phy-mtk-mipi-csi-0-5.c".
+
+After reading your comments and the reference patches, my understanding is that only the seninf-core driver should manage all ports internally, and each port corresponds to a PHY. During probe, the driver will parse each port, obtain the corresponding PHY (e.g., devm_phy_get(dev, "csi0"), devm_phy_get(dev, "csi1"), etc.), and operate the PHY for each port individually during stream on/off or power on/off.
+
+Could you please confirm if my understanding is correct?
+If you have any additional reference patches or examples, I would greatly appreciate it.
+
+Thank you for your guidance!
+
+Best regards,
+Shangyao
+
+Signed-off-by: shangyao.lin <shangyao.lin@mediatek.com>
+---
+ .../mediatek/mediatek,mt8188-seninf-core.yaml | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100755 Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-seninf-core.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-seninf-core.yaml b/Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-seninf-core.yaml
+new file mode 100755
+index 000000000000..763b96b561cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-seninf-core.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (c) 2023 MediaTek Inc.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/media/mediatek,seninf-core.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: The seninf-core top unit of MediaTek ISP system
++
++maintainers:
++  - Shangyao Lin <shangyao.lin@mediatek.com>
++  - Shu-hsiang Yang <shu-hsiang.yang@mediatek.com>
++  - Shun-yi Wang <shun-yi.wang@mediatek.com>
++  - Teddy Chen <teddy.chen@mediatek.com>
++
++description: |
++  MediaTek seninf-core is the ISP sensor interface unit in MediaTek SoC.
++  The sensor interface serves as the MIPI-CSI2 top RX controller.
++
++properties:
++  compatible:
++    const: mediatek,mt8188-seninf-core
++
++  reg:
++    minItems: 1
++    maxItems: 1
++    description: |
++      Base address register region.
++
++  reg-names:
++    items:
++      - const: base
++    minItems: 1
++    maxItems: 1
++
++  mtk_csi_phy_ver:
++    description: Describes MediaTek camera Rx controller version
++    $ref: /schemas/types.yaml#/definitions/string
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  power-domains:
++    minItems: 1
++    maxItems: 4
++
++  clocks:
++    minItems: 4
++    maxItems: 4
++    description: List of clock phandles required by the controller.
++
++  clock-names:
++    items:
++      - const: clk_cam_seninf
++      - const: clk_top_seninf
++      - const: clk_top_seninf1
++      - const: clk_top_camtm
++    minItems: 4
++    maxItems: 4
++
++  mediatek,larbs:
++    description: |
++      List of phandles to the local arbiters in the current SoCs.
++      Refer to bindings/memory-controllers/mediatek,smi-larb.yaml.
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 1
++    maxItems: 32
++
++  dma-ranges:
++    description: |
++      Describes the address information of IOMMU mapping to memory.
++      Defines six fields for the MediaTek IOMMU extended iova, pa, and size.
++    minItems: 1
++
++  phys:
++    description: List of phandle and args to the PHY provider.
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++
++  phy-names:
++    description: Names of the PHYs.
++    $ref: /schemas/types.yaml#/definitions/string-array
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - power-domains
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/power/mediatek,mt8188-power.h>
++    #include <dt-bindings/clock/mediatek,mt8188-clk.h>
++
++    seninf@16010000 {
++      compatible = "mediatek,mt8188-seninf-core";
++      reg = <0 0x16010000 0 0x8000>;
++      reg-names = "base";
++      mtk_csi_phy_ver = "mtk_csi_phy_2_0";
++      interrupts = <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH 0>;
++      power-domains = <&spm MT8188_POWER_DOMAIN_CSIRX_TOP>,
++                      <&spm MT8188_POWER_DOMAIN_CAM_VCORE>,
++                      <&spm MT8188_POWER_DOMAIN_CAM_MAIN>;
++      clocks = <&camsys CLK_CAM_MAIN_SENINF>,
++               <&topckgen CLK_TOP_SENINF>,
++               <&topckgen CLK_TOP_SENINF1>,
++               <&topckgen CLK_TOP_CAMTM>;
++      clock-names = "clk_cam_seninf",
++                    "clk_top_seninf",
++                    "clk_top_seninf1",
++                    "clk_top_camtm";
++    };
++
++...
+\ No newline at end of file
 -- 
-2.34.3
+2.18.0
 
