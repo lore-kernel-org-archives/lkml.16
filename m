@@ -1,63 +1,63 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E382D8393;
-	Mon,  7 Jul 2025 14:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A722D8371;
+	Mon,  7 Jul 2025 14:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897936; cv=none; b=l9nf1Wa5wgYwfvgwYmg6+Z/C2en6KlgpFS/Hq8yLofa302S1rqE/kXX3Kko/5nvdkilanhiPxTIv8Wt0X0A4fON65s5/F63n5V0sEN7f3tmR7m5i51t9wvUUzmrMPsyLwnoLNPVFiu+zG49bIiFGB5oCokDGyX2ItGd8dQ+MuFM=
+	t=1751897936; cv=none; b=RI2H21xhFCfraRRlM3VAQjual/1+Xc+OBevjeIYjxnr7bmK6M3O0zmbsZ/ZDJoNzMG4+XO3O9yJntUTKQpNQ4VW5mk+Y9CID28dJTqEjBMzX3MklS2FeohuXszreW8VMTrBXfsS9gtntTnNlDDea4XWZrw3Ob7JVSDyahDkHdZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751897936; c=relaxed/simple;
-	bh=RCqVNrzJHaDjGi0nTRmKOCM2IBNClaZu6a32Pmp0POs=;
+	bh=NOZc7un03Ey0gmPzOir0UNu2yUPYNopFYExaS+yplPU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ldEP2Floi9UruVmp8Wh/VB55qSuXbnS78G2MhSLwkRfcrsl97L359Wllg6pbGgfObrZhlqpGbzuBJdj93f/trJ2Z1M4KNkarGVEmjvOEbSFJDUEuNal6Q+ITz3h9JdoXoT7vVdG8yAbeuSJBGdEJ8TSlOtOLJiNwnkMv6mjq+F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgNdtAJR; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version; b=qvREmsFEeONXEyfg1bMMMGSMi+Xw+u0jFAXGYRfDvlPXPO50jgb6kfN9py6Fhi7kU3CM9VQZjIC/l0JB2U8t8rAS0qFxwCySoD77xahSuHwtppk8BYDohwG9/3Aponzntu1/eyeVOSOoXNkSiHdE0MMznYkagu1wq2ZNmFvRLyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4T5odjR; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgNdtAJR"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2194084f8f.0;
-        Mon, 07 Jul 2025 07:18:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4T5odjR"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4537fdec33bso19701885e9.1;
+        Mon, 07 Jul 2025 07:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751897933; x=1752502733; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751897930; x=1752502730; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OIhIWADLdNO/nd33yinxD1H8qsnfEtBKs3ChjZsVi4s=;
-        b=NgNdtAJRAgmXiCUZHVeuB0r9oi5uz/Usng+0P58uuI0kzRq/7b3MoswdmByXRTYqvZ
-         Pta+9hcn+eb0jqZcQVvdha7bjntUlrISLMgacYYgsaxNfGBDb7ImHZ3MEzZ5GD23uaII
-         v+Nzg5wkgESL3Sr7PETJ3+bwS/CkuEVHinrQ0qos+2tEf8Hw/4n6CSHqmVra8pLLAk22
-         0xXsnOVR8FMc6LHuEJwaEMsudYDnylgAhOjVBP8NzIBdqwH4f8iubb7tDNX8ichC1ibh
-         6DvtggfDojbzcSiXjtDKI/wHo8EDJuT58Dk50YsLMDVVB4qgLywo760HS191YeQRxfZh
-         pzjw==
+        bh=5ZG+6Kvpw4cXSgWih98fLU49OAPritoAzwNthu8La5Y=;
+        b=d4T5odjRsMfnLm81+Lc36UZvbsLL/5cg7WBocDaL8jO602arbmk6Rm2kxUr2De77xL
+         12al1AdDKbhyx8xBovEKJw0SXvRBnoiy+c4MUDZPD1eEXGiroqeQkqT9/CgfK48sMcCF
+         YyczI9SC+CLAxvhYDnYDV2BYukuDovaNI5XyDHEPPfpnxGDQlJ5CbwtuDNq1+L1ynNv1
+         VBEGwoutDNEaseVdEchERvrOGWT8zOH7ctq2xsyT4fKt0W4799ziyB49XwLwmD/LvLkP
+         imf5WuW2YbrHjQtnme/y2awRIFXphwqnCNzTsdAJA7tD4ElzZBG8yMrYRPkT1VqrBBWo
+         SSog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751897933; x=1752502733;
+        d=1e100.net; s=20230601; t=1751897930; x=1752502730;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OIhIWADLdNO/nd33yinxD1H8qsnfEtBKs3ChjZsVi4s=;
-        b=d2VE/DAR84EmLMf8V9unRvRe+BvH4nEp6btC/AX60psQ0oHv4XgjmIzLIKXmdWl0Ue
-         1gYCuN3/rys9eqiIP6EW7ZfFksUX/hFivfk7VQAkQLxB8Fz36BKMzX1bZVuc1eOZz783
-         J3q6BYbzE2lIA45p6KsENSvQ2Sum+n2RtPi6Gsh4A+L0ylynOOvsYkJWh9Ba2ojkHO/J
-         kxLfH5ZCMBvS84EdxQK41azxDTGzG4NDFck1AmYmTYacjt2y59uh2S6Fy043k4WEuBdL
-         xqAZv7X6lRri3FkegQiSF+9uAR21bFwOonTErnruZKIrDJdaA50pBsbLWaSrGruAhDEI
-         QoJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULQKSjrzRq0vRw6oXzjMYbW5FPz+eCJTHrcQve6B9EuJbTEQbn8VqREHSz2gq/G0oPDW3v5Tailvpy@vger.kernel.org, AJvYcCVqM889bbNGej18YNHtCATz0oCh2guWJd85mnPm6VlVHZcs5t+3q54iFg7T3Tx9HwC4SerkUohVHZkhpsD9@vger.kernel.org, AJvYcCWPdBN4HoEpuNqVthTynZFp3MCfmdd6UVkdzoYNgxzKie5WASKX8/AP92Q/yRQbTUmaLp+JgrAJI8oTAg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtHk2Jk+EZyc22Btsus0hxHq0fo5wK7EOZZsYlp03ItLpWs7c9
-	nsUCpcvtLqiiS9nMJh6YXhr4to2ByVZCg6JAKMGNrBodxwJQV1DIFCXt
-X-Gm-Gg: ASbGncvvRRF3NxNw6pB3BY4e203/8bzWqGNH1sfGgym6+DeWt7cXxzwywbtCtK+zhTc
-	7WVZuBMj7JjcZG5W5Hd8KFmzYvwExmmI399ZQUIsqwUrqYXhah1vnUwElD2tt4xXY3/J8rIgVmG
-	0k6pqjS2me628Par0xtilWXQVWdSw+SIXx2DCL1agSOvWqV+wnhx8VH28C2LfTSebGxHcI8bbdX
-	4WjztYAKp3h5gTBGB29OY3o5LNWIPaFFzm0v7PUQRWR0yiAe/QYAgU1ipSsJSMbBDFAbCU+Fh3k
-	ao9tcC2qYEXOXGQK+rKOK6RoNrh4i2nSdbXDztUrTglH/EUuqWRbnu49yiwuuRuWvCv3iYUsmM8
-	FzBZ0cOd0oLIVji6ciNc=
-X-Google-Smtp-Source: AGHT+IGjLz6S5fM35cF5+hKHA2tlk2smJKUGXb+pW5FqZs9HjzbC9U07thu3RNUJDSRoioKMADfuCA==
-X-Received: by 2002:a05:6000:200c:b0:3b3:9c56:b825 with SMTP id ffacd0b85a97d-3b4955895fbmr11097185f8f.22.1751897932896;
-        Mon, 07 Jul 2025 07:18:52 -0700 (PDT)
+        bh=5ZG+6Kvpw4cXSgWih98fLU49OAPritoAzwNthu8La5Y=;
+        b=PJlqW5rFXvKpJPKLJSHsELAPQpYAiP0cPTBEyJewouFHivpVIGUzTRmzMzmB65adzn
+         zWrkjnfkxb15B/i5V4LAM9FgelxL+DTnSPMR/aA/oieYFetZV4EjZRwJ9TTsDy9tgoXc
+         +I/GsbTKTpxLXNbB0lM6O5NjES7XYrkMxpvIzS/ILt8l01jPRW9Z5T64caJVNskj3DLH
+         UDYWA+NtuGXl1x1nq6pJQJHmml3YPYqXElWwizgRy2/tUXwonhydM4UOkR3ga61OnczE
+         ZBubziUUALGz5qXUprhfPx96Kc+f27YhSMM0P8TdLn+yZZ7lfFBveJWG537zHutSawsL
+         0UFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCvIS+ycDfYfoQN4B1cFyLJbSQQbHaOrWYAIJwD2azGFxIxkBjfsNOlpRwrYLKGxwJs7JPS5FlxnRlKDhP@vger.kernel.org, AJvYcCVZnuIHQljQKYpAkpbvzV8XfdUoBntcNjzVhG4ZEj0YoiE7RVTb1Vq6P0bJmPQqd5du6Qx00gn+sOH0fQ==@vger.kernel.org, AJvYcCXz1/x+P3mapbEmwMpn753Ic87M4GHGuqlReM8ehWC6KNmBAG+kymgvhbV3As61J1why85U2aGDrB7D@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdyjne+Lw1i2NoxkskjWnbmu2hv7H+Y7xkvZIEooHj2qjIIV63
+	lS7H1q3lYYGQl6+iJ0zF+WnE0dBkc4XmLN1pWJhkZLAVIMFXUuIPpMqv
+X-Gm-Gg: ASbGncvVHj9yQdQG4ehnRYNFp/48u9Jf1r5pThCpD4oHInXsC+Sz6x4n2a41HJIrwxm
+	L/z7xIYYTw1lzx1Jf5NK71snWXwSeXyuL8fk0towUvuA1ulXV9ymLglAxpgpi/SOfwuR+8cArHf
+	I6R24XEk5JshXniT3m3ynWOzUpr8KK0Rs3ztSphIztCgOBK8EAg//ax949nnhlxdY8hMelV44DX
+	bLLDI9sXaZOqQkfagVw7XPlGVXfdJWSdNxZAgo/Sg7PvQ1FwHAm+I9W7JxQMoZ/Ue0p/hmuHyAT
+	0dOErp6XLXFe8zFiBMEVw/t4+vSpes7mBNpYVLOHXRjY+lPIXxWnPllcpHp9nHB3fWDAvZwIDMz
+	rJ52/19/tSFoWFm7ZOsM=
+X-Google-Smtp-Source: AGHT+IF8osvRnUApHFrMkhCX+isGtvHJffC3wQCCYEa9mkQPOUHt0afFVtS27sCO05kuGlg4L4d2Cg==
+X-Received: by 2002:a05:600c:648a:b0:442:ccfa:1461 with SMTP id 5b1f17b1804b1-454b4e76b63mr105086555e9.13.1751897930402;
+        Mon, 07 Jul 2025 07:18:50 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:d418:e5eb:1bc:30dd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b966cbsm10131868f8f.49.2025.07.07.07.18.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b471b966cbsm10131868f8f.49.2025.07.07.07.18.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 07:18:52 -0700 (PDT)
+        Mon, 07 Jul 2025 07:18:49 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -75,9 +75,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: [PATCH v3 3/3] pinctrl: renesas: rzt2h: Add support for RZ/N2H SoC
-Date: Mon,  7 Jul 2025 15:18:48 +0100
-Message-ID: <20250707141848.279528-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H and RZ/N2H SoCs
+Date: Mon,  7 Jul 2025 15:18:46 +0100
+Message-ID: <20250707141848.279528-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -91,86 +91,197 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The RZ/N2H (R9A09G087) SoC from Renesas shares a similar pin controller
-architecture with the RZ/T2H (R9A09G077) SoC, differing primarily in the
-number of supported pins-576 on RZ/N2H versus 729 on RZ/T2H.
+Document the pin and GPIO controller IP for the Renesas RZ/T2H
+(R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
+header file used by both the bindings and the driver.
 
-Add the necessary pin configuration data and compatible string to enable
-support for the RZ/N2H SoC in the RZ/T2H pinctrl driver.
+The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
+Both share the same controller architecture; separate compatible
+strings are added for each SoC to distinguish them.
 
+Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
 v2->v3:
-- No changes.
+- Dropped refference to gpio.txt instead pointed to
+  in include/dt-bindings/gpio/gpio.h.
 
 v1->v2:
-- New patch.
+- Added a new DT binding file
 ---
- drivers/pinctrl/renesas/Kconfig         |  3 ++-
- drivers/pinctrl/renesas/pinctrl-rzt2h.c | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ .../pinctrl/renesas,rzt2h-pinctrl.yaml        | 132 ++++++++++++++++++
+ .../pinctrl/renesas,r9a09g077-pinctrl.h       |  22 +++
+ 2 files changed, 154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+ create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
 
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 0d0920f4678b..8cbd79a13414 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -45,6 +45,7 @@ config PINCTRL_RENESAS
- 	select PINCTRL_RZG2L if ARCH_R9A09G056
- 	select PINCTRL_RZG2L if ARCH_R9A09G057
- 	select PINCTRL_RZT2H if ARCH_R9A09G077
-+	select PINCTRL_RZT2H if ARCH_R9A09G087
- 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
- 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
- 	select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
-@@ -304,7 +305,7 @@ config PINCTRL_RZN1
- 	  This selects pinctrl driver for Renesas RZ/N1 devices.
- 
- config PINCTRL_RZT2H
--	bool "pin control support for RZ/T2H" if COMPILE_TEST
-+	bool "pin control support for RZ/N2H and RZ/T2H" if COMPILE_TEST
- 	depends on 64BIT && OF
- 	select GPIOLIB
- 	select GENERIC_PINCTRL_GROUPS
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzt2h.c b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-index 877f6d00830f..55c64d74cb54 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-@@ -764,6 +764,12 @@ static const u8 r9a09g077_gpio_configs[] = {
- 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f,
- };
- 
-+static const u8 r9a09g087_gpio_configs[] = {
-+	0x1f, 0xff, 0xff, 0x1f, 0, 0xfe, 0xff, 0, 0x7e, 0xf0, 0xff, 0x1,
-+	0xff, 0xff, 0xff, 0, 0xe0, 0xff, 0xff, 0, 0xff, 0xff, 0xff, 0x1,
-+	0xe0, 0xff, 0xff, 0x7f, 0, 0xfe, 0xff, 0x7f, 0, 0xfc, 0x7f,
-+};
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+new file mode 100644
+index 000000000000..ead5ab7e7ebb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/renesas,rzt2h-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- static struct rzt2h_pinctrl_data r9a09g077_data = {
- 	.port_pins = rzt2h_gpio_names,
- 	.n_port_pins = ARRAY_SIZE(r9a09g077_gpio_configs) * RZT2H_PINS_PER_PORT,
-@@ -771,11 +777,22 @@ static struct rzt2h_pinctrl_data r9a09g077_data = {
- 	.n_ports = ARRAY_SIZE(r9a09g077_gpio_configs),
- };
- 
-+static struct rzt2h_pinctrl_data r9a09g087_data = {
-+	.port_pins = rzt2h_gpio_names,
-+	.n_port_pins = ARRAY_SIZE(r9a09g087_gpio_configs) * RZT2H_PINS_PER_PORT,
-+	.port_pin_configs = r9a09g087_gpio_configs,
-+	.n_ports = ARRAY_SIZE(r9a09g087_gpio_configs),
-+};
++title: Renesas RZ/T2H Pin and GPIO controller
 +
- static const struct of_device_id rzt2h_pinctrl_of_table[] = {
- 	{
- 		.compatible = "renesas,r9a09g077-pinctrl",
- 		.data = &r9a09g077_data,
- 	},
-+	{
-+		.compatible = "renesas,r9a09g087-pinctrl",
-+		.data = &r9a09g087_data,
-+	},
- 	{ /* sentinel */ }
- };
- 
++maintainers:
++  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++
++description:
++  The Renesas RZ/T2H SoC features a combined Pin and GPIO controller.
++  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
++  Each port features up to 8 pins, each of them configurable for GPIO function
++  (port mode) or in alternate function mode.
++  Up to 8 different alternate function modes exist for each single pin.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r9a09g077-pinctrl # RZ/T2H
++      - renesas,r9a09g087-pinctrl # RZ/N2H
++
++  reg:
++    minItems: 1
++    items:
++      - description: Non-safety I/O Port base
++      - description: Safety I/O Port safety region base
++      - description: Safety I/O Port Non-safety region base
++
++  reg-names:
++    minItems: 1
++    items:
++      - const: nsr
++      - const: srs
++      - const: srn
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++    description:
++      The first cell contains the global GPIO port index, constructed using the
++      RZT2H_GPIO() helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
++      (e.g. "RZT2H_GPIO(3, 0)" for P03_0). The second cell represents the consumer
++      flag. Use the macros defined in include/dt-bindings/gpio/gpio.h.
++
++  gpio-ranges:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++additionalProperties:
++  anyOf:
++    - type: object
++      additionalProperties: false
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++      description:
++        Pin controller client devices use pin configuration subnodes (children
++        and grandchildren) for desired pin configuration.
++        Client device subnodes use the below standard properties.
++
++      properties:
++        pinmux:
++          description:
++            Values are constructed from GPIO port number, pin number, and
++            alternate function configuration number using the RZT2H_PORT_PINMUX()
++            helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>.
++        pins: true
++        gpio-hog: true
++        gpios: true
++        input: true
++        input-enable: true
++        output-enable: true
++        output-high: true
++        output-low: true
++        line-name: true
++
++    - type: object
++      additionalProperties:
++        $ref: "#/additionalProperties/anyOf/0"
++
++allOf:
++  - $ref: pinctrl.yaml#
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
++  - clocks
++  - power-domains
++
++examples:
++  - |
++    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
++    #include <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
++
++    pinctrl@802c0000 {
++        compatible = "renesas,r9a09g077-pinctrl";
++        reg = <0x802c0000 0x2000>,
++              <0x812c0000 0x2000>,
++              <0x802b0000 0x2000>;
++        reg-names = "nsr", "srs", "srn";
++        clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&pinctrl 0 0 288>;
++        power-domains = <&cpg>;
++
++        sci_pins: serial0 {
++            pinmux = <RZT2H_PORT_PINMUX(38, 0, 1)>, /* Tx */
++                     <RZT2H_PORT_PINMUX(38, 1, 1)>; /* Rx */
++        };
++
++        sd1-pwr-en-hog {
++            gpio-hog;
++            gpios = <RZT2H_GPIO(39, 2) 0>;
++            output-high;
++            line-name = "sd1_pwr_en";
++         };
++    };
+diff --git a/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h b/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
+new file mode 100644
+index 000000000000..c73a7f25ef5c
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * This header provides constants for Renesas RZ/T2H family pinctrl bindings.
++ *
++ * Copyright (C) 2025 Renesas Electronics Corp.
++ */
++
++#ifndef __DT_BINDINGS_PINCTRL_RENESAS_R9A09G077_PINCTRL_H__
++#define __DT_BINDINGS_PINCTRL_RENESAS_R9A09G077_PINCTRL_H__
++
++#define RZT2H_PINS_PER_PORT	8
++
++/*
++ * Create the pin index from its bank and position numbers and store in
++ * the upper 16 bits the alternate function identifier
++ */
++#define RZT2H_PORT_PINMUX(b, p, f)	((b) * RZT2H_PINS_PER_PORT + (p) | ((f) << 16))
++
++/* Convert a port and pin label to its global pin index */
++#define RZT2H_GPIO(port, pin)	((port) * RZT2H_PINS_PER_PORT + (pin))
++
++#endif /* __DT_BINDINGS_PINCTRL_RENESAS_R9A09G057_PINCTRL_H__ */
 -- 
 2.49.0
 
