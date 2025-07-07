@@ -1,65 +1,33 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751C828FFD8
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CCB16DEB1;
+	Mon,  7 Jul 2025 10:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882402; cv=none; b=gwwn1rPnEctg5HMlxQQNA1kFfukQHrEaPcCYjG5mQPo77mI5MzZvzjYqdP9G7QEshwO/84fVH77Yey0S868BF5H5l5ccYSLEmV6LdNzA5+i/4JxQJdpDQ6WCBH2SP1LSB+X3GfQQ1HBbA8K3ZXbkoG9Z79ErYRhzaJFvJ2vo3rE=
+	t=1751882441; cv=none; b=u3Gr60GKdleJZJHjizbanyeVxWe2+jdJfeTXor7Kt70z3ZR9MbBsVz9TvrEwRQkdHpqilYfWESYlLz9mRa8gsJSCJ9j5+f0K0PmnEVX3VfhupbsAynBN4XVgQshE+Oi6imv8Sh3GMBduIZYnmvppL8BOmYVpuqqUL48K4/s9wmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882402; c=relaxed/simple;
-	bh=OQ34og8I8X3z80o99fbXU1v3ZxqvcPIL2A769bcQgaI=;
+	s=arc-20240116; t=1751882441; c=relaxed/simple;
+	bh=BlBD4CEIwIa0l/ZBHCnwTrIa4rAYovnkqlgWjQOi2VE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b08aMLI3iJNseZErzDlDn5ZSDSa7Soh4RkIAJLMHzgYsRJvVJ7TJs8GTyXNtQ2XRtlIEXmNzoHALTYcEGA7Vqbe+wyZG7vydq+b7hdR7RMkbEmmCG+peINGdu8E3HzKR4vBb1Ld2f+br+skJCTYRGPLzG62F6+mSW3LsnDsaDB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=desZQQHh; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=bqs4qXDk0+AY3pm3nPY2CCr5GBBykODcwsY9ivhzXSU+YOcgT3qdDZKh+Mv2HykM327FnaMjcfDN4ezQBlsbIH5SxX4cZXalgVg89jefftWJCgClth1fRQDG5k8TnbLQDccC/aSlnVUuAUF5KhzjQJmJ0Nvn0ofkYmdwlM4FGe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqwQUCoH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="desZQQHh"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so26168125e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 03:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751882399; x=1752487199; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GF8vc1c9D0lLEMqMMZKCgAxa6DKwsWgtBoqT1qS5YRs=;
-        b=desZQQHhqp3mhpyYeupR5QZNaL047znpGYcRsaIDNHT0aCQ3fYlUJZVXTu41/TPm94
-         gSAheh7zv53nzMlaSnWP19iZlOourWHrDpYySkuHtrfveS1XN9rvKYPYUFiqc6+QcZaE
-         7MskhgwNV5gYyDnTIxQhvrBkvTsHxxC2pydo5jeLIQZypE0IlyQPKhOXkWlFldiL5mU0
-         ix7l3nMTmqZYO7Z0bTjYqJh4Ok/oSLkAhGgSqoKLMTl82tAO6S91m1jVj64SWtv7/NR7
-         rTKtG49i0LC+BSKqTGYlI7MTB7OfyoavnJEnFqBu/krWIYy9gbMQo353hC0axZXsAurc
-         PA6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751882399; x=1752487199;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GF8vc1c9D0lLEMqMMZKCgAxa6DKwsWgtBoqT1qS5YRs=;
-        b=G4qafkU6b9f4IF2jbQqbnCUP0PpBsBGgSOOqQbuT8SlEMkzt10LUPRgDO3l489D/1X
-         1IInHsYcqgV21OEXxwYK/5NmRfbblLMMkODSzxC/d0Rr0/Ns0wk62owK9GmBAjih4Ysh
-         1GnkxJC7Y04bft1zKelNISskhmygy7+64hZsqw5RsWBA/+VqdjifbCNkru3V9tkN+Vhb
-         qqolwsmNhG7GNrspoEwqpmBJ5wRG04HsKy1UZr6E0RDYBbNFvcfw9kEnp0PTEFrp6Z4k
-         LeePc17XzKkhEI8ANHL4mtLbyNgqPahAe0RRBd5mx9UZatlGO8/3I8q1Q0lpsbfvlStV
-         HImg==
-X-Forwarded-Encrypted: i=1; AJvYcCUD4haRf+quhNHejj7ZW4gZwl2Gu7tyY6uvMa+P0P8ZESOClDiMUwQmpJjr/MaKQjCZWk373SEeIGNi7NU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgKNiOoldlhf3OkyOX9H7gs2Y/Gw83wKog2tsF9PEgmDRlcWmP
-	zgmLt/D9rZVi9uKORRbg9Dy/kD36IoImTk7jmLfuJLFGvWUJ0Q6zt1sTr3tRgm/QTYM=
-X-Gm-Gg: ASbGncviVQFASOdOTIyRlQAiwwleiQBhQ70yPYfGpxbZBJTI451IfX9mVZsgvoV56Le
-	Smu5MYn12N0z7NmLtor2dzgGZ/+vOYD3rjwefb/6DYMmw5Ewq1ud3jaXRRmjYn02gbgLI0xwu1u
-	QqKZNjU+qU/kZKIHurhxXVYNjVksqLQ9lyPworJDY/IFfVWAtuTgPpjB0RjKF3lslbmKtWPvQKi
-	U8t4Y9qcl7UHLK8pF+vK2wZm2N8oTxiyPxlZtTA8lp4XYC3mqlvjtncmfkuihCpE8VGCNaGkWR+
-	3lU699l3+gicxaQ+r6OaDOBioy+nYZZUN5mCa6ouuM/yEIgNUO0SVPsrmjRRsVbZqg0FDd9nEaX
-	XntazjHEB9KneWva7lFUh/BtuGJNgL9DOGg==
-X-Google-Smtp-Source: AGHT+IHvlmHP0oa9KgbeYWJUl4MCBGVkpFuuQN5yKMcqWRZ/ketGUdB/VWArjJjtYOPvEISWj77cWw==
-X-Received: by 2002:a05:6000:26ca:b0:3a4:eb92:39b6 with SMTP id ffacd0b85a97d-3b497036356mr9229115f8f.54.1751882398533;
-        Mon, 07 Jul 2025 02:59:58 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e50:3860:1a22:119c:5b1d:302e? ([2a01:e0a:e50:3860:1a22:119c:5b1d:302e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47285e241sm9798553f8f.94.2025.07.07.02.59.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 02:59:57 -0700 (PDT)
-Message-ID: <5d179842-12ac-4b5d-b87e-098643e7cfd2@baylibre.com>
-Date: Mon, 7 Jul 2025 11:59:57 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqwQUCoH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44FEEC4CEEF;
+	Mon,  7 Jul 2025 10:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751882440;
+	bh=BlBD4CEIwIa0l/ZBHCnwTrIa4rAYovnkqlgWjQOi2VE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rqwQUCoHPdjiVgwMDgRtdwiJrd/O5Un5aNrzQs2VKgeZy9I2ujov5xihUM92ZTS5w
+	 FZwBmZn8AYv5jVr1PpBx4hqrt65zyjUwcwEAgEfKmktZJhFunz/OhC7YFejOadZvEI
+	 GDtyAVzcpOFEe6ugncojtXJefKTZ9Zxi5mad/Ez4WwgGTURhFv501pCTno0h11GXlY
+	 VEntLYT3pw4MKDUJh0yb/Ic6EBInpztqZq+0q2LioHs+3ODR6LP2pPLFakq8FIWeAG
+	 Kh4vznfoyqN1XinRMXv9VIfW8GeBBQXBoprXhyQVEQ+QzTLLaTHwbh96tZQOQwCZ0g
+	 ogEzgDS9ajrSQ==
+Message-ID: <c9824a36-7070-4600-9259-54b10b355790@kernel.org>
+Date: Mon, 7 Jul 2025 12:00:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,85 +35,191 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: Kconfig.platforms: remove useless select for
- ARCH_K3
-To: Nishanth Menon <nm@ti.com>,
- Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux@ew.tq-group.com
-References: <20250519-kconfig-v2-1-56c1a0137a0f@baylibre.com>
- <f44c7074337b79df9ad67f62acbc268acc344a23.camel@ew.tq-group.com>
- <e0773f0e-8d2f-4918-aaad-aab6345fdb81@baylibre.com>
- <9042d63de85f7ae8bf73760e9d2d7652c18a738c.camel@ew.tq-group.com>
- <20250703122813.jh2muwzwe4ok6b6d@process>
-Content-Language: fr
-From: Guillaume La Roque <glaroque@baylibre.com>
-In-Reply-To: <20250703122813.jh2muwzwe4ok6b6d@process>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v5 3/3] media: stk1160: use
+ usb_alloc_noncoherent/usb_free_noncoherent()
+To: Xu Yang <xu.yang_2@nxp.com>, ezequiel@vanguardiasur.com.ar,
+ mchehab@kernel.org, laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
+ gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
+ andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
+ thomas.weissschuh@linutronix.de
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
+References: <20250704095751.73765-1-xu.yang_2@nxp.com>
+ <20250704095751.73765-4-xu.yang_2@nxp.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250704095751.73765-4-xu.yang_2@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-Le 03/07/2025 à 14:28, Nishanth Menon a écrit :
-> On 09:25-20250702, Matthias Schiffer wrote:
->> On Tue, 2025-07-01 at 20:57 +0200, Guillaume La Roque wrote:
->>>
->>> Le 01/07/2025 à 16:36, Matthias Schiffer a écrit :
->>>> On Mon, 2025-05-19 at 10:20 +0200, Guillaume La Roque wrote:
->>>>>
->>>>> After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driver
->>>>> select on ARCH_K3 are not needed anymore.
->>>>> Select MAILBOX by default is not needed anymore[3],
->>>>> PM_GENERIC_DOMAIN if PM was enabled by default so not needed.
->>>>
->>>> Hi,
->>>
->>> Hi,
->>>
->>>>
->>>> what selects PM_GENERIC_DOMAIN in your configuration? linux-next fails to boot
->>>> on our AM62x-based TQMa62xx if I don't (partially) revert this patch - I have
->>>> not found a way to enable PM_GENERIC_DOMAIN and TI_SCI_PM_DOMAINS without
->>>> enabling other unneeded features to pull it in.
->>>>
->>> With master branch if i apply this patch and i do make ARCH=arm64
->>> defconfig and check in .config  both TI_SCI_PM_DOMAINS and
->>> PM_GENERIC_DOMAINS are enabled.
->>> with linux-next it's same. i don't really understand link with  PM part
->>> in this patch and boot issue on your SOM.
->>>
->>> I probably misunderstand something.
->>>
->>>
->>> what is your problem exactly ?
->>>
->>> if you can share log or link to jobs
->>
->>
->> Hi Guillaume,
->>
->> with arm64_defconfig, this problem doesn't occur, as other CONFIG_ARCH_* symbols
->> also have "select PM_GENERIC_DOMAINS" (with or without "if PM").
->>
->> We are using a smaller config specific to our K3-based SOMs however. I have
->> attached a defconfig that shows the problem - if you use this as the base for
->> .config on linux-next, there is no way to enable TI_SCI_PM_DOMAINS, as nothing
->> selects PM_GENERIC_DOMAINS.
->>
->> So unless I'm missing some other configuration that would actually be useful on
->> the K3 platform and that would pull in PM_GENERIC_DOMAINS, I think that part
->> needs to be reverted. I can send a patch to that effect later.
+On 4-Jul-25 11:57, Xu Yang wrote:
+> This will use USB noncoherent API to alloc/free urb buffers, then
+> stk1160 driver needn't to do dma sync operations by itself.
 > 
-> Is a better approach to select PM_GENERIC_DOMAINS in
-> drivers/pmdomain/ti/Kconfig instead of depends (similar to what
-> drivers/pmdomain/qcom/Kconfig or drivers/pmdomain/arm/Kconfig does since
-> TI_SCI_PM_DOMAINS requires PM_GENERIC_DOMAINS?
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+
+> ---
+> Changes in v5:
+>  - no changes
+> Changes in v4:
+>  - no changes
+> Changes in v3:
+>  - no changes
+> ---
+>  drivers/media/usb/stk1160/stk1160-v4l.c   |  4 ---
+>  drivers/media/usb/stk1160/stk1160-video.c | 43 ++++++-----------------
+>  drivers/media/usb/stk1160/stk1160.h       |  7 ----
+>  3 files changed, 11 insertions(+), 43 deletions(-)
 > 
+> diff --git a/drivers/media/usb/stk1160/stk1160-v4l.c b/drivers/media/usb/stk1160/stk1160-v4l.c
+> index 5ba3d9c4b3fb..715ce1dcb304 100644
+> --- a/drivers/media/usb/stk1160/stk1160-v4l.c
+> +++ b/drivers/media/usb/stk1160/stk1160-v4l.c
+> @@ -232,10 +232,6 @@ static int stk1160_start_streaming(struct stk1160 *dev)
+>  
+>  	/* submit urbs and enables IRQ */
+>  	for (i = 0; i < dev->isoc_ctl.num_bufs; i++) {
+> -		struct stk1160_urb *stk_urb = &dev->isoc_ctl.urb_ctl[i];
+> -
+> -		dma_sync_sgtable_for_device(stk1160_get_dmadev(dev), stk_urb->sgt,
+> -					    DMA_FROM_DEVICE);
+>  		rc = usb_submit_urb(dev->isoc_ctl.urb_ctl[i].urb, GFP_KERNEL);
+>  		if (rc) {
+>  			stk1160_err("cannot submit urb[%d] (%d)\n", i, rc);
+> diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
+> index 9cbd957ecc90..416cb74377eb 100644
+> --- a/drivers/media/usb/stk1160/stk1160-video.c
+> +++ b/drivers/media/usb/stk1160/stk1160-video.c
+> @@ -298,9 +298,7 @@ static void stk1160_process_isoc(struct stk1160 *dev, struct urb *urb)
+>  static void stk1160_isoc_irq(struct urb *urb)
+>  {
+>  	int i, rc;
+> -	struct stk1160_urb *stk_urb = urb->context;
+> -	struct stk1160 *dev = stk_urb->dev;
+> -	struct device *dma_dev = stk1160_get_dmadev(dev);
+> +	struct stk1160 *dev = urb->context;
+>  
+>  	switch (urb->status) {
+>  	case 0:
+> @@ -315,10 +313,6 @@ static void stk1160_isoc_irq(struct urb *urb)
+>  		return;
+>  	}
+>  
+> -	invalidate_kernel_vmap_range(stk_urb->transfer_buffer,
+> -				     urb->transfer_buffer_length);
+> -	dma_sync_sgtable_for_cpu(dma_dev, stk_urb->sgt, DMA_FROM_DEVICE);
+> -
+>  	stk1160_process_isoc(dev, urb);
+>  
+>  	/* Reset urb buffers */
+> @@ -327,7 +321,6 @@ static void stk1160_isoc_irq(struct urb *urb)
+>  		urb->iso_frame_desc[i].actual_length = 0;
+>  	}
+>  
+> -	dma_sync_sgtable_for_device(dma_dev, stk_urb->sgt, DMA_FROM_DEVICE);
+>  	rc = usb_submit_urb(urb, GFP_ATOMIC);
+>  	if (rc)
+>  		stk1160_err("urb re-submit failed (%d)\n", rc);
+> @@ -365,11 +358,9 @@ void stk1160_cancel_isoc(struct stk1160 *dev)
+>  
+>  static void stk_free_urb(struct stk1160 *dev, struct stk1160_urb *stk_urb)
+>  {
+> -	struct device *dma_dev = stk1160_get_dmadev(dev);
+> -
+> -	dma_vunmap_noncontiguous(dma_dev, stk_urb->transfer_buffer);
+> -	dma_free_noncontiguous(dma_dev, stk_urb->urb->transfer_buffer_length,
+> -			       stk_urb->sgt, DMA_FROM_DEVICE);
+> +	usb_free_noncoherent(dev->udev, stk_urb->urb->transfer_buffer_length,
+> +			     stk_urb->transfer_buffer, DMA_FROM_DEVICE,
+> +			     stk_urb->sgt);
+>  	usb_free_urb(stk_urb->urb);
+>  
+>  	stk_urb->transfer_buffer = NULL;
+> @@ -410,32 +401,19 @@ void stk1160_uninit_isoc(struct stk1160 *dev)
+>  static int stk1160_fill_urb(struct stk1160 *dev, struct stk1160_urb *stk_urb,
+>  			    int sb_size, int max_packets)
+>  {
+> -	struct device *dma_dev = stk1160_get_dmadev(dev);
+> -
+>  	stk_urb->urb = usb_alloc_urb(max_packets, GFP_KERNEL);
+>  	if (!stk_urb->urb)
+>  		return -ENOMEM;
+> -	stk_urb->sgt = dma_alloc_noncontiguous(dma_dev, sb_size,
+> -					       DMA_FROM_DEVICE, GFP_KERNEL, 0);
+> -
+> -	/*
+> -	 * If the buffer allocation failed, we exit but return 0 since
+> -	 * we allow the driver working with less buffers
+> -	 */
+> -	if (!stk_urb->sgt)
+> -		goto free_urb;
+>  
+> -	stk_urb->transfer_buffer = dma_vmap_noncontiguous(dma_dev, sb_size,
+> -							  stk_urb->sgt);
+> +	stk_urb->transfer_buffer = usb_alloc_noncoherent(dev->udev, sb_size,
+> +							 GFP_KERNEL, &stk_urb->dma,
+> +							 DMA_FROM_DEVICE, &stk_urb->sgt);
+>  	if (!stk_urb->transfer_buffer)
+> -		goto free_sgt;
+> +		goto free_urb;
+>  
+> -	stk_urb->dma = stk_urb->sgt->sgl->dma_address;
+>  	stk_urb->dev = dev;
+>  	return 0;
+> -free_sgt:
+> -	dma_free_noncontiguous(dma_dev, sb_size, stk_urb->sgt, DMA_FROM_DEVICE);
+> -	stk_urb->sgt = NULL;
+> +
+>  free_urb:
+>  	usb_free_urb(stk_urb->urb);
+>  	stk_urb->urb = NULL;
+> @@ -494,12 +472,13 @@ int stk1160_alloc_isoc(struct stk1160 *dev)
+>  		urb->transfer_buffer = dev->isoc_ctl.urb_ctl[i].transfer_buffer;
+>  		urb->transfer_buffer_length = sb_size;
+>  		urb->complete = stk1160_isoc_irq;
+> -		urb->context = &dev->isoc_ctl.urb_ctl[i];
+> +		urb->context = dev;
+>  		urb->interval = 1;
+>  		urb->start_frame = 0;
+>  		urb->number_of_packets = max_packets;
+>  		urb->transfer_flags = URB_ISO_ASAP | URB_NO_TRANSFER_DMA_MAP;
+>  		urb->transfer_dma = dev->isoc_ctl.urb_ctl[i].dma;
+> +		urb->sgt = dev->isoc_ctl.urb_ctl[i].sgt;
+>  
+>  		k = 0;
+>  		for (j = 0; j < max_packets; j++) {
+> diff --git a/drivers/media/usb/stk1160/stk1160.h b/drivers/media/usb/stk1160/stk1160.h
+> index 7b498d14ed7a..4cbcb0a03bab 100644
+> --- a/drivers/media/usb/stk1160/stk1160.h
+> +++ b/drivers/media/usb/stk1160/stk1160.h
+> @@ -16,8 +16,6 @@
+>  #include <media/videobuf2-v4l2.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-ctrls.h>
+> -#include <linux/usb.h>
+> -#include <linux/usb/hcd.h>
+>  
+>  #define STK1160_VERSION		"0.9.5"
+>  #define STK1160_VERSION_NUM	0x000905
+> @@ -195,8 +193,3 @@ void stk1160_select_input(struct stk1160 *dev);
+>  
+>  /* Provided by stk1160-ac97.c */
+>  void stk1160_ac97_setup(struct stk1160 *dev);
+> -
+> -static inline struct device *stk1160_get_dmadev(struct stk1160 *dev)
+> -{
+> -	return bus_to_hcd(dev->udev->bus)->self.sysdev;
+> -}
 
-I send patch to do this :
-https://lore.kernel.org/all/20250704-depspmdomain-v1-1-ef2710556e62@baylibre.com/
-
-Regards
-Guillaume
