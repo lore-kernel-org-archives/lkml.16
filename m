@@ -1,217 +1,432 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DB911CA9;
-	Mon,  7 Jul 2025 07:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872526; cv=fail; b=Y24spwPmvRixtpECGGDCfWrk3HU/WMsQwTUcstyF6OfpByaLfYnf1av+TpIIXHgyxMW81SN/IO3Cg5BrGawNrCwmgxkD7caJ5FdoCWOhggGMKAC52JY+ZKqhGx/7V3k+/tljhFziK2ZVZNsVY6QHldiHOJlbEqSmKmseivxkOg4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751872526; c=relaxed/simple;
-	bh=neX6IecG1xx1uY7esJE4aVdumd/wivfZC5GGX7oZLi8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=M16RsdriN+niSklSonAoFshpJVF4rqV/jW++wLfzfgd89khDFM6SF0coZzRDBa7h9lfcul1jppF1PszBEwqWc7y5SVRr69arTuDFjmYwFIo/wFBXMMki4KBpGvqn/hxjTwz1K+3KQcDNlqJf2E2sawzJs6KNa6oRlmXhD63ubCA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QI/ydmho; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE7B1EF1D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751872589; cv=none; b=UeVc9SmTuzgG7L1Y/Y7rY3VBYwTWpHXgMugUE2bsWL020c3RBbnUKUuE4VozKNKY9VwWclhGP3UJTmu3fAoF46Yf9KkgAYQHalW1KWS8FqzTvReCmW/K2hsEIh+tw+H8N5d7eOQUk+rv9XDD8/Wk55Uqb0SwZcQKPJM2RBY8Dzc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751872589; c=relaxed/simple;
+	bh=nXbsMvaba6aiUnJCHdwSQVfHA//I8drvmjZ0+Kh6WXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SI4v7Z5C4ku2ldy5v1+vAHTy49artYvHdww3VCianrx4+xALwuv+PUCdH/l+C37SKx8vVq6wGsG+FpoVRs/L9+j/qoJo5dQB48PrQD1WLPn6kWFVMWu5pJfUuxOE6i/ppJBMg1eRK6zC/1AqqeBosz4vumS3tRoRvN6dviGdA/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DdUQf8Lv; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QI/ydmho"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751872525; x=1783408525;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=neX6IecG1xx1uY7esJE4aVdumd/wivfZC5GGX7oZLi8=;
-  b=QI/ydmhojPWgpzuJWKIj52E4vKUAqPPcFWwpoy0DJcNQRI9ZGyo2JSCu
-   duQnpfPduALsCIn0VJcj0WWeT3Ayo0hfYWx2pXX699NMugD8fqR61xjIS
-   MiEUOFOm9b+H/ijMsqWumzPS6zhUNbhTw+ca2YtFtmrsDOg9mBhJjQ6vs
-   aqlz2cQo8zj3UU6EqLXe5Bhwl5tORgXc8J+fj5H7jYSjaY+8nGMLbrPI1
-   babtJXKWPpuQqD8pImA0gnRPshreomFQml5YWpTmNuIl2WtnQlyj2AXSb
-   6zJ03BfgwzsMuTwNwv+zW8xRzyLvxCG4d6NrUCi2dSoKs49xUn2FMMVw0
-   A==;
-X-CSE-ConnectionGUID: pfWxlq4jRfah80y6kSJSLA==
-X-CSE-MsgGUID: PEqcr0+vQUuRuG9sMYmtxw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="64676516"
-X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="64676516"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 00:15:24 -0700
-X-CSE-ConnectionGUID: iA1wBmPRSIigW0XObL47QA==
-X-CSE-MsgGUID: VeHOo4HjR2O3nZ9rfEnZgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="154563066"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 00:15:23 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 7 Jul 2025 00:15:23 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 7 Jul 2025 00:15:22 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.70)
- by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 7 Jul 2025 00:15:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nDpCCIRd+lhWC6WDqDPbD/4BWianF1Obwe2toYM8R50sMzU3ET7liTVz0jTABY2CAhyC5keWvt6AckZcNVIi+FbWCIoSUtaTEWdusOxgTQHMWdaXaph9Ihe5Uo4kq6gNPgdlmTZCgQqRucu1PoEZZKpPo61YJWDLa1NgcCkjQEAkbtbs33E0FIVe0zlwZXiDilCu9JDnnA7Aj2vo4WaZYae1zRR1oRD2OPH59iyFBwQ/9TiKYFYBlOLmdcWNYqzMETqdIAVBZ79VbHNmv5Ekhx28wJnySlFaevyiK8VTFzTjh7ssQOjss3TrpxthZStONTSn/nIMQN7YeHgCw45ImQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V5YX5+7f/TUH7SWMVaLuY7Orp1qJ2KQsG6y9Hk51EJY=;
- b=EKx9sT7iJD49v3BfXeQrUMrG12lRU3qTbu1xrTE/ScvNMxqHeeybvGjXGJJomwQ+Jr02NCRW//2xy2KUut5xdDK6q7qUGYjdv+DJ7Wx3eoXXClKFI0c4mI6czfJgtUPdfEBOBO6vKd+VcCChQHsxwjPUbCRZeF4GZtB5jNC5cMtbMy34Gi+xJkDFqHg8FZmLoQc49tiHkXXMlU1UAeHOvD65y1DFGgYYdOYs88rM2azyBpqjWHTwMNbrMJuiB8wX1a41Cq9AX49QOWD2Bz4QDrVdFVTqDJqRkwomcgczxtP8inNKOdICYvNaMCySjzBzaxlkwOGONFS00qUTAczdGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by PH7PR11MB7027.namprd11.prod.outlook.com (2603:10b6:510:20a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.25; Mon, 7 Jul
- 2025 07:15:13 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8835.025; Mon, 7 Jul 2025
- 07:15:13 +0000
-Date: Mon, 7 Jul 2025 15:15:00 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-CC: Adrian Hunter <adrian.hunter@intel.com>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vannapurve@google.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov
-	<bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
-	<mingo@redhat.com>, <x86@kernel.org>, H Peter Anvin <hpa@zytor.com>,
-	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<rick.p.edgecombe@intel.com>, <kirill.shutemov@linux.intel.com>,
-	<kai.huang@intel.com>, <reinette.chatre@intel.com>, <xiaoyao.li@intel.com>,
-	<tony.lindgren@linux.intel.com>, <binbin.wu@linux.intel.com>,
-	<isaku.yamahata@intel.com>, <yan.y.zhao@intel.com>
-Subject: Re: [PATCH V2 2/2] x86/tdx: Skip clearing reclaimed pages unless
- X86_BUG_TDX_PW_MCE is present
-Message-ID: <aGtz9KfszwNKBrZb@intel.com>
-References: <20250703153712.155600-1-adrian.hunter@intel.com>
- <20250703153712.155600-3-adrian.hunter@intel.com>
- <aGs7/C0W58nEUVNk@intel.com>
- <ca275d32-c9fd-4f60-9cf4-cd88efc77d78@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ca275d32-c9fd-4f60-9cf4-cd88efc77d78@intel.com>
-X-ClientProxiedBy: SG2PR06CA0188.apcprd06.prod.outlook.com (2603:1096:4:1::20)
- To CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DdUQf8Lv"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-73a43d327d6so1646682a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751872587; x=1752477387; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qUP0DUWzm8NrO7MzcRs7sXfo7Dkll6lZPIJdSpwpNxY=;
+        b=DdUQf8Lvtu5no9eim0Pjr/rG+9Zf02pW8U3+zLX0Bo6HLrt7zk/tI8O3LNSEZ4Wt+T
+         /Qsu78UDDJ/vBwUBtL1G+YwbVfaR56EHMj+mMTUUU+Dsy42gQhTdFBxRRXVUpQ6piHit
+         +c/8myr61dKYzlQG/yzkMNYANmVvkXMuIGWkfPFSHhj35gSF+2iPdEg0Jhs0Ld4HR0aK
+         sJdMz5yorwWTy2Ck4F87r78DmzpkRg5HMqWokugVzLW0jW+FrpngZzcptdy6p/LnG7h4
+         +skeAQRd3NGh1XpODeVI4kIwME5VzhAUO5gOly4OW+c132ftUEQZM6zglMIHbz/NoFel
+         Z5Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751872587; x=1752477387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qUP0DUWzm8NrO7MzcRs7sXfo7Dkll6lZPIJdSpwpNxY=;
+        b=b3iz5+5YIqmBa9llaZPNRG9bKufEihVsdvbCVe9WgLeiPx+ILqK/UrsjXfpjskEjVe
+         J2cHENVBVCP1tPOhXf7gSeKDFQWyOmFbvA/gU817kps23aBbwpyz73GJMQGTY4Znz2MM
+         l9NDLfKCENl26+IkQXLj57+FDfbXZw2Wv54sB83hfyrB8wzOhOnhurJqfxRzzjMmNuY9
+         AdUOczz3VdbvQ7kqYuvdWgoN43QBzUHJl/L5oRtEWz2w/n+DwChVQaR8/OvkIRWFodb6
+         r2f7JVvRN5PRlSQeJcs+0tDyL1ohHncOf1QOg1oV0e977Y8lli6lIWGpYkI0wjrRzAft
+         lNUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2cwx/jZ40IWoy1RHyBt8IdayAV1pYkkMAwVHxDmzS7WBzZr7qLbb1QxSpxSBqiEQZSpJuphfSf27kYZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQIAiu5XKU1QA3PljFlImEnMiuV9/8N61P8LVbGMBDe2y++ZSS
+	38aScOtpDTN2nhEAkG0kPzYnrd3jAhjy+j5ue6R89uY2h7k5zEFVCTZ2mY6ojYizLaOeBVzdOPO
+	0Mg0Q+LtXskNTQBogWomHvxpS4EoNOOgXOgVypJHJJw==
+X-Gm-Gg: ASbGncscUxldBv6ogoC29mGc3bFZz33lxPaRDEn0/pSJUyuhMdASLFqpwAYw2kBir3e
+	4ejKXDLYIk3ZG46joZZi75d6sXb5eJZgONHZH1qXkmbhIINcJsip8tBuuIebsMdmiQ/3b2DbVe9
+	p7INMaRnDKb9QPlX5kBXhH0W+ATVKRukroqH2IiQr6QI6I
+X-Google-Smtp-Source: AGHT+IFMyBczzKElrESwPhgOU1rzzIsdM3cnUOxQm2j1E9L8US6VNieQQzSWClkIoyTpdfs8LiptAVY3dmgeRyhMJ0M=
+X-Received: by 2002:a05:6830:6c81:b0:72b:9d8d:5881 with SMTP id
+ 46e09a7af769-73ca672a595mr6343669a34.28.1751872586592; Mon, 07 Jul 2025
+ 00:16:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|PH7PR11MB7027:EE_
-X-MS-Office365-Filtering-Correlation-Id: d54770ff-51d4-4b86-8310-08ddbd2603fd
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Ko0rlZp1Rcpaogzk4UyfhSAO6Yd8RwR8KDcaUXACtqo0sk8XOa/ZZCgqc8bk?=
- =?us-ascii?Q?MF7vqHOasNkQGICOhWjrVTHrfsEkBwr46uv+jpdJ/DT4G7YIpKrDlsBP+4d7?=
- =?us-ascii?Q?1jID5NCjuWrhQCBtvcz88CX8dmjpMTckdgslfgmpBfn5bx2Au9yX+knKPA9+?=
- =?us-ascii?Q?ApEfrYVMxgQt4C7zA36Hk7JM7/dnK6VzeQmDtpq+mBDpZ4RrGzBEIH6EQnBh?=
- =?us-ascii?Q?jEDxKkwF5tY5UGGhGXHW7HaKX6smSSf4wtainvOK8rWy19C2ETG3x/jhtC5Y?=
- =?us-ascii?Q?Qlrf4wG/7tfvXz0Gw0fUA/hGavsjia3UxDc0UtoANI+SpG3+IpFtBNz4NqKb?=
- =?us-ascii?Q?Yhq3/FRjdbMwjduKA/OFp/D6Sd1v8udFAGBeV6bIkAmh6ZzYL6JHE4af81oE?=
- =?us-ascii?Q?UDwA//QqXsMZMOzpvQ1fe+S64+LlXCoQ3/n//ZjFRv2TmJCEOj5R7Bt80rDE?=
- =?us-ascii?Q?2e9A5kZ1J4fKCOD3anN995bEWQLlQGXRCzSxuGDosPK3UvOwrllKuAR75TLI?=
- =?us-ascii?Q?2OKX+ogGAAJ3rooOlqr4qdjyNKR08SZZ2WmWKJUGmvw+QPJkDMqWS0p1G+AZ?=
- =?us-ascii?Q?g7PdimfP2rPtUd2EEqZCqnT4vLDo+1+k9i1RlIZSzhk5610bB8xLHtCbAEtP?=
- =?us-ascii?Q?Y7nhCq4SgEWpYz5NeGZG1aG+gNKHQbQAUka/QSiiS8DvI3AFMZfUxcl3dS9s?=
- =?us-ascii?Q?gYlA50FOUouW0DqcRmF0XnjfePHVM2GmZUQ32353BddnN20jNhV/Nt6FTRAq?=
- =?us-ascii?Q?wAaEucXacAOkV5Dq62ebApGX8ozN1JhQ0Won82yB30Y8XZiWWmsxrUmprGZa?=
- =?us-ascii?Q?Aleq033k9pHzA5beJ45XRhAmZGdllk+oxr4K04N83RQ4zhMZBw1fBGov/cPG?=
- =?us-ascii?Q?2n9UaPvqAlgyhdOQzq64dgSOlsCDMr55szu1Qz0sZAYJRJw98sqYRzCJ1JxH?=
- =?us-ascii?Q?Q+gR1IMYWj7/YHSS2ekn3Tq7x/+Ms+3kpIK9vq014K+Jg/S4KUwl7I7cEkzP?=
- =?us-ascii?Q?qXfsk5dbNXZpyHFRIHM0s7K/+v5kCfyBTKwmV6l/NAKPkPoL2Lzzl/c3SU2C?=
- =?us-ascii?Q?JLzjca99e0Sp8LqsFVXTVBDSTKrKc4DpnlWQXzm2P+ufbzF/TETccU+KLFlM?=
- =?us-ascii?Q?5CGyY+cQT+FaRrdLJ6cMGnRSY0rwcH5iw/9aI64ld3xQQVvMJEjBgaG0vSMm?=
- =?us-ascii?Q?kMeXMOEDwlDn2K40yVIGAs5HMpekujEOZ3jts6iXIBxENNjR+EnyVTwboFR+?=
- =?us-ascii?Q?quAueTt0yAZRedWreloCzY6zni9go2dfSX1YiFORU8J8raJAFDeHnSsAPvuG?=
- =?us-ascii?Q?eCU0Jr4e6XjgfLMm8/FLVT4yotphh890uEBVFSwwMxwRqlNXd+bL+uyKYlRR?=
- =?us-ascii?Q?iTPdmbR2Naf2imllDJWE7bTlkymVvgHPtjvVrL4YGxAkg1Pmw2ctGaDBch42?=
- =?us-ascii?Q?dZE4M3ffLfs=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zV/ToFiabCyhKxurhlplYGbfafaFN4iDrLLJI1sN2bnrJMRW4bDQQGGb+bCe?=
- =?us-ascii?Q?wIkq5TyoluIQuJubYNPPZHYAsL+SqkNatH3rzU7YvKrwOd3rRfcSeXVhutdY?=
- =?us-ascii?Q?o7pvWUzQHx2v4wNT7+TRRiTT+X1YxvJqEjAmAF0FZHj0GtRivPA6fUjxNknI?=
- =?us-ascii?Q?kii51U2GDiJr0wgkI8nZQ9QZVhVWoBYJy/ut+m9JE1NoY4mW7in4OHkZRuho?=
- =?us-ascii?Q?0Vd3Kfbi4FSzkQN8fgGwHaly43IzdSCkjf5CCwFR1kmsGnqUm6xn4PXN/THv?=
- =?us-ascii?Q?2TOrG5Ngq4ttf7B9voApbG3m79BofUQdza2TE4FOiI8Yt7i1yyvpRHmiIE1q?=
- =?us-ascii?Q?T+lgruLLHWza2S9YTQovJBHj8r3IIIxZnFcV2/vPjC1VdopPGos7pgQz/DEW?=
- =?us-ascii?Q?Hqdk9MAv2y8+C1WB5zCv22X0KywuvORceD3NoyP5YQehC/VfYp3n3KsmArj2?=
- =?us-ascii?Q?whBxXVdjsLIdDK9Z5m2ZxCCdPppYqG4xUIt4J8zYmFRyLsRJng1p0z2yeyp/?=
- =?us-ascii?Q?caFZyLDs6oxZcNe2o7zMPUtWRoROgg+r81wBluX80z0CkgG71lbTeNJYumPh?=
- =?us-ascii?Q?XNTx2X1jLtIk51rBTL1nnWCISRT9Iua4bfUUm+yzvIUnrvFSbAuZc/TDlKy+?=
- =?us-ascii?Q?+ZosXgFyJGHFA3jxZhrV8ll08P8LqvVCly1Luc9cvOmHO9MchFovjIah9Zfs?=
- =?us-ascii?Q?jYbaxVB1efc8sztfahXI1FctEYsgjmYzv+E/DTtyQIhLGt/NWwC1GqFEQv+7?=
- =?us-ascii?Q?Uv6PfEiOMtINnQDL6aureHoEv0DIC7j4DWnr+jRJ0uYMeR7CgZjb/2NHVtNO?=
- =?us-ascii?Q?6UNFZrtdIgui8eC3XDax4+7ih6R1JDIb303X6VXpz1xw9PPH75qcojq8HkKy?=
- =?us-ascii?Q?rqofDg3CC3hsZ3n0OvokAdJ/B4Ij7HFWzDdXv3ZVUpi+oRa20UAG3J0GVCcr?=
- =?us-ascii?Q?i5gGUTSjW9JHLqpAHKc7T41k4eqruk9FQoXkXNLm650RxiuHTgwogLqYBO7T?=
- =?us-ascii?Q?5P1RU9sHHePECH7C3mX/qIE1WYx6I8jAW8s1vBs/uBNsmZwNMYGzKJwWOEmf?=
- =?us-ascii?Q?w/zi8CtHH/JVJdzzZccMJVrY8QAatZFDNSlSHR3Et3bGPA+beSsd+/vibkZr?=
- =?us-ascii?Q?oYqQr5jvXztXwWM88eJjt68XLbiK2Gcrbot90q6M/w0bRoNP6TSavb6PVl2O?=
- =?us-ascii?Q?d4TJT6vxRRxw+pZr/6qUNmTm2307EaqnZwX5X1s0kfdujJRcIBo1AwNMZieF?=
- =?us-ascii?Q?NFGwOYKrUINg8p1S0e/B1x6Jg4dil0Eu2NC+dpLH5sZLUSk1KYIYB9qOMzS5?=
- =?us-ascii?Q?cfXV749qzGYJ/Cqyy6ZxMptKh7UnCrqcuQXdts9NSAzUquv0IM/mL5B/OXNV?=
- =?us-ascii?Q?Id4n8ncQaR0jAdgmlEeCiXsNyaQBmYhVx7PnqZqJ9L2Z+OKXpRgnRo/ontMj?=
- =?us-ascii?Q?JG9LA3LXjbzBevgH3Ofne2JZ3X/gSYJ9XTiyWtPvzN8Hn0m64ZsiOHqghBIF?=
- =?us-ascii?Q?wiCXD2SC9UWk8ZuvAsB/+TrJ7xr/LPufo83jKOqdt99Gx/reQHSNtc+ZYvnG?=
- =?us-ascii?Q?ciP7G3QqiVbwkV/3edgB8AF3cBtiDzYmXj43cXwZ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d54770ff-51d4-4b86-8310-08ddbd2603fd
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 07:15:13.2018
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1byB8s6R1Rhu71jO0DZSpyZ3014Ql+3zLSeUE9iG/h4j89W08TFsI2Tuj+8ktGu1QCOuc9+oHS0uPnBzyNsd4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7027
-X-OriginatorOrg: intel.com
+References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
+ <20250523-b4-gs101_max77759_fg-v4-2-b49904e35a34@uclouvain.be>
+ <CADrjBPqOMOyHP=aQ1+fg2X58NWRp-=MJBRZfpbEhQsTzaZ9LHw@mail.gmail.com> <bc40326f-db40-4657-84a7-152def2ca9e3@uclouvain.be>
+In-Reply-To: <bc40326f-db40-4657-84a7-152def2ca9e3@uclouvain.be>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 7 Jul 2025 08:16:15 +0100
+X-Gm-Features: Ac12FXwMRomWxAk899mtr7ERc1Q1HFgMOstsgrsF7Db8eRule70Om9Vs1Zufc88
+Message-ID: <CADrjBPo2=FajKA0t7TTMdH6iK_qbWCSJK-hEqh+UWEuzC7wyGQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] power: supply: add support for max77759 fuel gauge
+To: Thomas Antoine <t.antoine@uclouvain.be>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Dimitri Fedrau <dima.fedrau@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 06, 2025 at 09:23:05PM -0700, Dave Hansen wrote:
->On 7/6/25 20:16, Chao Gao wrote:
->> Even on a CPU w/ SEAM_NR and w/o X86_BUG_TDX_PW_MCE, is there still a risk of
->> poisoned memory being returned to the host kernel? Since only poison
->> consumption causes #MCE, if a poisoned page is never consumed in SEAM non-root
->> mode, there will be no #MCE, and the mentioned commit won't mark the page as
->> poisoned.
->> 
->> A reclaimed poisoned page could be reused and potentially cause a kernel panic.
->> While WBINVD could help, we believe it's not worth it as it will slow down the
->> vast majority of cases. Is my understanding correct?
+Hi Thomas,
+
+On Tue, 24 Jun 2025 at 16:45, Thomas Antoine <t.antoine@uclouvain.be> wrote=
+:
 >
->How is this any different from any other kind of hardware poison?
+>
+>
+> On 6/6/25 1:40 PM, Peter Griffin wrote:
+> > Hi Thomas,
+> >
+> > Thanks for your patch and working to get fuel gauge functional on
+> > Pixel 6! I've tried to do quite an in-depth review comparing with the
+> > downstream driver.
+> Hi Peter,
+>
+> Thank you very much for the in-depth review!
+>
+> > On Fri, 23 May 2025 at 13:52, Thomas Antoine via B4 Relay
+> > <devnull+t.antoine.uclouvain.be@kernel.org> wrote:
+> >>
+> >> From: Thomas Antoine <t.antoine@uclouvain.be>
+> >>
+> >> The interface of the Maxim MAX77759 fuel gauge has a lot of common wit=
+h the
+> >> Maxim MAX1720x. A major difference is the lack of non-volatile memory
+> >> slave address. No slave is available at address 0xb of the i2c bus, wh=
+ich
+> >> is coherent with the following driver from google: line 5836 disables
+> >> non-volatile memory for m5 gauge.
+> >>
+> >> Link: https://android.googlesource.com/kernel/google-modules/bms/+/1a6=
+8c36bef474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c
+> >>
+> >> Other differences include the lack of V_BATT register to read the batt=
+ery
+> >> level. The voltage must instead be read from V_CELL, the lowest voltag=
+e of
+> >> all cells. The mask to identify the chip is different. The computation=
+ of
+> >> the charge must also be changed to take into account TASKPERIOD, which
+> >> can add a factor 2 to the result.
+> >>
+> >> Add support for the MAX77759 by taking into account all of those
+> >> differences based on chip type.
+> >>
+> >> Do not advertise temp probes using the non-volatile memory as those ar=
+e
+> >> not available.
+> >>
+> >> The regmap was proposed by Andr=C3=A9 Draszik in
+> >>
+> >> Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455=
+a116.camel@linaro.org/
+> >
+> > I think it would be worth noting in the commit message this is basic
+> > initial support for the M5 gauge in MAX77759, and things like loading
+> > & saving the m5 model aren't implemented yet.
+> >
+> > That's important as some values such as the REPSOC register value used
+> > for POWER_SUPPLY_PROP_CAPACITY show the result after all processing
+> > including ModelGauge mixing etc, so these values won't be as accurate
+> > as downstream.
+>
+> I will add that to the next version.
 
-I wasn't arguing that MOVDIR64B should be kept. I was highlighting the risk of
-kernel panic on CPUs even without the partial write bug and guessing why it was
-not worth fixing.
-
-Regarding your question, the poison likely occurs due to software bugs rather
-than hardware issues. And, as stated in the comment removed in patch 1, unlike
-other hardware poison, this poison can be cleared using MOVDIR64B.
+Ok great :)
 
 >
->Why should this specific kind of freeing (TDX private memory being freed
->back to the host) operation be different from any other kind of free?
+> >>[...]
+> >> +static const enum power_supply_property max77759_battery_props[] =3D =
+{
+> >> +       POWER_SUPPLY_PROP_PRESENT,
+> >
+> > I checked the register values match downstream - this looks correct
+> >
+> >> +       POWER_SUPPLY_PROP_CAPACITY,
+> >
+> > I checked the register offset matchs downstream. The value reported
+> > varies a bit versus downstream. As mentioned above that is likely due
+> > to the REPSOC register reporting after mixing with the m5 model which
+> > is not loaded currently. Also the application specific values and cell
+> > characterization information used by the model isn't configured
+> > currently (see link below in _TEMP property below for the initial fuel
+> > gauge params used by downstream.
+> >
+>
+> I have dumped the model written to my phone by a userdebug stock android.
+> If you think it is necessary, I can implement model loading where the
+> model is passed in the devicetree for next version.
 
-To limit the impact of software bugs (e.g., TDX module bugs) to TDX guests
-rather than affecting the entire kernel. Debugging a TDX module bug that
-results in a #MCE in a random host context can be quite frustrating, right?
-But, on the other hand, MOVDIR64B incurs a 40% slowdown when shutting down a
-TD. So, It's a tradeoff between containing theoretical software bugs and
-experiencing a 40% slowdown.
+See comment a bit further down about using a dedicated compatible.
+Also I think it's probably worth thinking about it conceptually as 3
+things
+1) Ensuring the application specific values and initial registers are
+initialized like downstream does from DT (DesignCap, CONFIG register
+etc)
+2) Loading the M5 model gauge algorithm
+3) Saving and restoring the "algorithm configuration" values to nvmem
+and re-loading them on a fresh boot.
 
-Personally, I also prefer to remove MOVDIR64B, but I also want to point out the
-bug triage issue and the risk of kernel panic after removing MOVDIR64B.
+Most of the code for these features is in the following file
+https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef4745=
+73cc8629cc1d121eb6a81ab68c/max_m5.c
+downstream.
+
+>
+> >> +       POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> >
+> > I checked the register offset matchs downstream. Values reported look s=
+ensible.
+> >
+> >> +       POWER_SUPPLY_PROP_CHARGE_FULL,
+> >
+> > Downstream has a slightly different implementation than upstream for
+> > this property. See here
+> > https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef=
+474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c#2244
+> >
+>
+> Indeed, the main difference seems to be to use FULLCAPNOM instead of
+> FULLCAP. I will check out to see if both differ in value.
+>
+>
+> >> +       POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
+> >
+> > I checked the register offset value is correct. However this is
+> > reporting 3000000 and downstream reports 4524000. I checked and it's
+> > just converting the register reset value of DESIGNCAP which is 0xbb8.
+> >
+> > This is listed as a "application specific" value, so it maybe we just
+> > need to write the correct initial value to DESIGNCAP (see TEMP section
+> > below)
+> >
+>
+> The value  3000000 is the default value which will be set after a hardwar=
+e
+> reset. I was able to extract the init sequence from a stock android.
+> It indeed writes the DESIGNCAP value. Here is a summary of the registers
+> written to upon a hardware reset. When (DTS) is written next to it,
+> it means that the value is exactly the same as given by the table in
+> maxim,cos-a1-2k at the link
+> https://android.googlesource.com/kernel/gs/+/refs/heads/android-gs-raviol=
+e-5.10-android15/arch/arm64/boot/dts/google/gs101-oriole-battery-data.dtsi
+>
+>   "0x05 0x0000" #REPCAP
+>   "0x2a 0x0839" #RELAXCFG (DTS)
+>   "0x60 0x0080" #COMMAND UNLOCK_CFG
+>   "0x48 0x5722" #VFSOC0 (Value read from reg 0xff)
+>   "0x28 0x260e" #LEARNCFG (DTS)
+>   "0x1d 0x4217" #CONFIG (DTS)
+>   "0xbb 0x0090" #CONFIG2 (DTS)
+>   "0x13 0x5f00" #FULLSOCTHR (DTS)
+>   "0x35 0x08e8" #FULLCAPREP
+>   "0x18 0x08d6" #DESIGNCAP (DTS)
+>   "0x46 0x0c80" #DPACC
+>   "0x45 0x0094" #DQACC
+>   "0x00 0x0002" #STATUS
+>   "0x23 0x0905" #FULLCAPNOM
+>   "0x3a 0xa561" #VEMPTY (DTS)
+>   "0x12 0x2f80" #QRTABLE0 (DTS)
+>   "0x22 0x1400" #QRTABLE1 (DTS)
+>   "0x32 0x0680" #QRTABLE2 (DTS)
+>   "0x42 0x0580" #QRTABLE3 (DTS)
+>   "0x38 0x03bc" #RCOMP0
+>   "0x39 0x0c02" #TCOMPO
+>   "0x3c 0x2d00" #TASKPERIOD (DTS)
+>   "0x1e 0x05a0" #ICHGTERM (DTS)
+>   "0x2c 0xed51" #TGAIN (DTS)
+>   "0x2d 0x1eba" #TOFF (DTS)
+>   "0x2b 0x3870" #MISCCFG (DTS)
+>   "0x04 0x0000" #ATRATE (DTS)
+>   "0xb6 0x06c3" #CV_MIXCAP (value =3D 75% of FULLCAPNOM)
+>   "0xb7 0x0600" #CV_HALFTIME
+>   "0x49 0x2241" #CONVGCFG (DTS)
+>   "0x60 0x0000" #COMMAND LOCK_CFG
+>   "0xb9 0x0014" #CURVE (DTS)
+>   "0x29 0xc623" #FILTERCFG (DTS)
+>   "0x2e 0x0400" #CGAIN (hard coded)
+>   "0xbb 0x00b0" #CONFIG2 (DTS | 0x0020)
+
+Bit 5 is "LdMdl" see
+https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef4745=
+73cc8629cc1d121eb6a81ab68c/max_m5_reg.h#1489
+It is set to 1 to initiate loading a model, and firmware clears the
+bit to zero to indicate model loading is finished. You can see more
+info about how this works
+https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef4745=
+73cc8629cc1d121eb6a81ab68c/max_m5.c#459
+
+>   "0x02 0x0780" #TALRTTH
+>   "0x00 0x0000" #STATUS
+>   "0x17 0x9320" #CYCLES
+>
+> As can be seen, most values come directly from the devicetree but some
+> are not present in there or differ from the value given in the devicetree=
+.
+
+Some of those registers like RepCap, Cycles, FullCapNom are ModelGauge
+algorithm outputs.
+
+Others like DQACC, DPACC, RCOMP0 are part of the values that should be
+saved and restored to some nvmem. You can see the function here that
+does this https://android.googlesource.com/kernel/google-modules/bms/+/1a68=
+c36bef474573cc8629cc1d121eb6a81ab68c/max_m5.c#657
+
+>
+> Without a similar init, charge and temperature will be non-functional
+> other values will most likely be wrong.
+> The fuel gauge stays powered through reboot so it doesn't reset even
+> when switching from android to linux, meaning that without any hardware
+> crash (e.g. empty batterry), the chip will look perfectly initialized.
+> A hardware reset of the fuel gauge can be forced by writing to
+> /proc/sysrq-trigger or by writing 0xf to 0x60.
+
+Ah that explains it then, as Andre mentioned he thought this reported
+a correct value in a previous version. It might be worth adding that
+info in the cover letter of future versions.
+
+>
+> I am unsure about what to do about this initalization, especially for val=
+ues
+> which slightly differ from the devicetree. I think for next version, I
+> will have the same parameters be passed in the devicetree like android.
+
+We don't really pass register values like the downstream driver is
+doing in the device tree. I think you will likely need to add a
+max77759-gs101-oriole compatible to the driver and then have the
+application specific values, and m5 gauge model algorithm as static
+info in the driver applied from the dedicated compatible. It would
+also be worth checking whether any more of those register values can
+be represented by the standard power-supply binding properties that
+already exist.
+
+> (except maybe IAvgEmpty which seems to be unused in the downsteam driver?=
+)
+>
+> >> +       POWER_SUPPLY_PROP_CHARGE_AVG,
+> >
+> > This property isn't reported downstream. The value is changing and not
+> > just the reset value. I noticed REPSOC is an output of the ModelGauge
+> > algorithm so it is likely not to be completely accurate.
+> >
+> >> +       POWER_SUPPLY_PROP_TEMP,
+> >
+> > I checked the register offset value is correct. However the
+> > temperature is always being reported as the register reset value of
+> > 220. This is for obvious reasons quite an important one to report
+> > correctly.
+> >
+> > I started debugging this a bit, and it is caused by an incorrectly
+> > configured CONFIG (0x1D) register. In particular the TEX[8] bit is 1
+> > on reset in this register which means temperature measurements are
+> > written from the host AP. When this bit is set to 0, measurements on
+> > the AIN pin are converted to a temperature value and stored in the
+> > Temperature register (I then saw values of 360 and the value
+> > changing).
+> >
+> > See here for the bits in that CONFIG register
+> > https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef=
+474573cc8629cc1d121eb6a81ab68c/max_m5_reg.h#403
+> >
+> > In downstream all these initial register settings are taken from DT
+> > here  https://android.googlesource.com/kernel/google-modules/raviole-de=
+vice/+/refs/heads/android14-gs-pixel-6.1/arch/arm64/boot/dts/google/gs101-f=
+ake-battery-data.dtsi#27
+> >
+> > For temperature when TEX=3D0, TGAIN, TOFF and TCURVE registers should
+> > also be configured to adjust the temperature measurement.
+> >
+> > I think it would likely be worth initialising all the fuel gauge
+> > registers referenced in maxim,fg-params as that includes some of the
+> > application specific values for DESIGNCAP, also some of the cell
+> > characterization information, and hopefully we will get more accurate
+> > values from the fuel gauge generally.
+> >
+>
+> See previous comment.
+>
+> >> +       POWER_SUPPLY_PROP_CURRENT_NOW,
+> >
+> > I checked the register offset matches downstream. Values reported look
+> > reasonable.
+> >
+> >> +       POWER_SUPPLY_PROP_CURRENT_AVG,
+> >
+> > I checked the register offset matches downstream. Values reported look
+> > reasonable.
+> >
+> >> +       POWER_SUPPLY_PROP_MODEL_NAME,
+> >
+> > This property isn't reported downstream.
+>
+> Is this a problem?
+
+Nope, that was more for my own benefit when doing the review :)
+
+Thanks,
+
+Peter
+
+
+>
+> >> [...]
+> >>  /*
+> >>   * Current and temperature is signed values, so unsigned regs
+> >>   * value must be converted to signed type
+> >> @@ -390,16 +507,36 @@ static int max1720x_battery_get_property(struct =
+power_supply *psy,
+> >>                 val->intval =3D max172xx_percent_to_ps(reg_val);
+> >>                 break;
+> >>         case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> >> -               ret =3D regmap_read(info->regmap, MAX172XX_BATT, &reg_=
+val);
+> >> -               val->intval =3D max172xx_voltage_to_ps(reg_val);
+> >> +               if (info->id =3D=3D MAX1720X_ID) {
+> >> +                       ret =3D regmap_read(info->regmap, MAX172XX_BAT=
+T, &reg_val);
+> >> +                       val->intval =3D max172xx_voltage_to_ps(reg_val=
+);
+> >
+> > I think MAX1720X using MAX172XX_BATT register is likely a bug as the
+> > downstream driver uses MAX172XX_VCELL for that variant  see here
+> > https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef=
+474573cc8629cc1d121eb6a81ab68c/max1720x.h#304
+> >
+>
+> Based on the comments from Sebastian Reichel, it seems that it is
+> downstream which is wrong:
+> https://lore.kernel.org/all/4cahu6dog7ly4ww6xyjmjigjfxs4m55mrnym2bjmzsksc=
+fvk34@guazy6wxbzfh/
+>
+> > Having said that, if we do need to cope with differing register
+> > offsets for the different fuel gauge variants it would be nicer to
+> > abstract them in a way similar to the downstream driver. See here
+> > https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef=
+474573cc8629cc1d121eb6a81ab68c/max_m5.c#1235
+> > I think that would be more scalable in supporting multiple variants in
+> > one driver. Otherwise we will have an explosion of if(id=3D=3Dblah) els=
+e
+> > if (id=3D=3Dblah) in the driver.
+> >
+> > kind regards,
+> >
+> > Peter
+>
+>
+> I completely agree about the need for abstraction if we want to keep both
+> chips in the same driver. I will try to implement that for next version.
+> Best regards,
+> Thomas
