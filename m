@@ -1,115 +1,103 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8836E288CBE
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11AE288CA2;
+	Mon,  7 Jul 2025 10:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882863; cv=none; b=D6JPDbgQ6ENALMhAVYduT/BuSGxSflvBLRcinGAlPnlHJZlN1aC5lfCiqKrusQCkQo2rbSK0psfdRvUcnGed5slNzIKyqNLKcvNXCjlbTqbOYXX0naagCHHCDrd7E/5yihGOYOsgJXSqzRHTXY8SDHiSFPUSGkeK1ySHTOAeumU=
+	t=1751882929; cv=none; b=FEZSGzC0Xy9mBMLETe/0JIPGMgfYqI1EKOCdYnZGoFOZqdII/aDQCYoG354F0Fv81ZhbqNpudusYmyiyEMJURm99rbjzL8ilGuz97cTNMc6VH5IEUT40fdQ0a5ow3rvriw5/9QqJkDsPTG/jYY3jiOFnirIuIuzBYHMhgcAkIrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882863; c=relaxed/simple;
-	bh=FtQESEScKEGm4ZZCj0RN7mGsIyE/eoEObXJoSKFHpWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HCp4HBUExYhs8XHsPyx2Qt9KvRkLh4oiQKEnw9sEknmG5UawNA92YlaCnvgULE0VHRkXLfI04tK11HGopCX7e4eYU6kUfj2e7+JOPC2t25MNy+StZd6c8qrclQ/y5T8qdFfCDz3WGUHv3S/2sOKH57g7YTiTML4eLhG5r928hiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uYikg-00055p-AG; Mon, 07 Jul 2025 12:07:10 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uYikc-007EDt-2n;
-	Mon, 07 Jul 2025 12:07:06 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 6B531439509;
-	Mon, 07 Jul 2025 10:07:06 +0000 (UTC)
-Date: Mon, 7 Jul 2025 12:07:05 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Ming Yu <a0282524688@gmail.com>, Lee Jones <lee@kernel.org>, 
-	tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v13 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250707-new-psychedelic-termite-a309d3-mkl@pengutronix.de>
-References: <20250627102730.71222-1-a0282524688@gmail.com>
- <20250627102730.71222-2-a0282524688@gmail.com>
- <20250702161513.GX10134@google.com>
- <CAOoeyxXWbjWvOgsSvXb9u2y6yFExq347ceZe96bm9w+GQAp2Rg@mail.gmail.com>
- <0360d2e0-e071-4259-a7c7-23c31e52e563@wanadoo.fr>
+	s=arc-20240116; t=1751882929; c=relaxed/simple;
+	bh=M7wabJOYeEFYdcGzXwo9L3S7QpLBsXP2w5nnmZsXRA4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N/q0pKZwpf+WWr3VjTbnQSFVHV2NzwLhqhqL30BKK099wQhAyrC6lINZu6LMmRtSFCDEbtMLaqbQojRwKIBBAv43pk+2li+t+NUaj/AwDArDyi+0l0PTB5uD+xZDXjJmh2G8GJdakdfiz5SipbNcpyDJaI+nDS4nDjEPnxgUyRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5314d78e74fso942432e0c.3;
+        Mon, 07 Jul 2025 03:08:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751882926; x=1752487726;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hEE7LsEuzsjlHpRv/aMmBqg48cddn8MmPxcsHcoqk3k=;
+        b=HPlGSTqjVwYQlC1Ug6R4r6aWFXYBq1v0rprBWPopdMaPldmM4VHtwSTT/qaY6j3KsA
+         D5oWqoAzcEHsHq+jq2JEI7m0Hge063yzyxPWYfJ3YBD2v42Gkec4IVv94qb0H26mFXgy
+         82h3w3vfm3C2OZ47//PfoHGT30snhferW4pTQj/f9KQQUGuN1tIjJO2TsnZD5eW5jyFt
+         d8SAQR03FS6G9AS/FUqpJDQqZlpuBefcVO0/djdK5ihVqOu24hE5UTdU1bTaP0w3hXzz
+         AViQ332CWZUCrEoBwVf5YJlQRgi5jtj3C1DgOEEImpcF88ATc6NRNyCqwJeNAB+tjc4W
+         kqZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfXSp6P8Y6jmd9K6ci3vLM+nosOh0tOxpWU4DWsz2bBP6QEpGYfXqfsP++u8JI/TnZjD6K4erpVincJmRD@vger.kernel.org, AJvYcCVfG0YJ8OeCJwfEgbsF10VrzVx6T8ndat05vG5JTFhKk7EybkRK7AFUcgATLN5aFTT+oKNbfRQB0eVREZ16l8n6lgo=@vger.kernel.org, AJvYcCWBXDbjDiZg7ZptpLOLNNMLxEHLk1XaH5EU0OBZyxXQJHRzv4gra+a+ij8yB5rWxz5b8kRrYpppOjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhkJ3hAswAT2EV4Oakm2Q11k26MAkjsHlIDinkwUIcV3IVjwiq
+	YsflV5Ka+wRzyhu3ybLwfZN/nz10daeu/GB3emIhl+S5hP4X+RaRs0EIrS7zTXLo
+X-Gm-Gg: ASbGnct8ooYaRfTkV8YF7FtkZSxYryljr6zOTmAldz1pB/76Ztd3BFf2+BV376taGPS
+	PEYfE/gDFQvL8vZqMyMXA45n4BCH3PXeVaNlgo8bo+1OS+O0UaVkPto10mtNRLr0eycebSvgTqr
+	IxFJyihVsPHcGo+6Ci3Y7dE7d5N8P2eC0alzjcCRPO2bPzc3PpBedL9U+N9Ei/dHONim64JAROy
+	gBgKD03Uj7FS6qC/GOU+UoDHGg5qa4517eLojif/rKzfWOaGJSdMuJSjsJbhr6vWTxS8gAYSSaH
+	GRbQGPVt/SGzZfhjj0tulK91x2dIbwZtoAcYI05ZGiT6eXt0re254jPL6fzmeEKJ2ykwPtslyn3
+	7FHA6HbxlnDiaNwh/VbWbUOyW
+X-Google-Smtp-Source: AGHT+IH+2ILCJPgAnLyRHIkPf+P+pmqF5oAekv/k/3enIYvGwMgCKtXVFdWRSqnel2msMc99LKrvVg==
+X-Received: by 2002:a05:6102:3708:b0:4e7:bf04:412e with SMTP id ada2fe7eead31-4f2f19909a7mr6696812137.0.1751882926021;
+        Mon, 07 Jul 2025 03:08:46 -0700 (PDT)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4f2ea541f7csm1091387137.8.2025.07.07.03.08.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 03:08:45 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-8815049d0a8so904922241.2;
+        Mon, 07 Jul 2025 03:08:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUtShm3pfxR67RSS+oK+84P+krujAwPSS38sZh7Ks9/7YrNDynkW5IXPKmFq62K0C5tCzjxtllsWjlp/ElakXtb8jU=@vger.kernel.org, AJvYcCXrJ4lcj0AdoVfiSEf5zLuAkE+dxpPgqMAg5+Jh79f6Zq0LolA/mtwuhXE7pzaZEuqWU55N8GdS+V3Hrplx@vger.kernel.org, AJvYcCXxectUB2lZ17pKF5LVqttuxv3AMs3+h6KSIN/8cnOdbsMvzydPCblk6pTiwG6GHU9rUsv9z5uQE08=@vger.kernel.org
+X-Received: by 2002:a05:6102:5a85:b0:4e5:9323:d2b9 with SMTP id
+ ada2fe7eead31-4f2f1dbe7abmr6756499137.2.1751882925371; Mon, 07 Jul 2025
+ 03:08:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kr6nkexyn6izj5au"
-Content-Disposition: inline
-In-Reply-To: <0360d2e0-e071-4259-a7c7-23c31e52e563@wanadoo.fr>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250704134328.3614317-1-claudiu.beznea.uj@bp.renesas.com> <20250704134328.3614317-2-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250704134328.3614317-2-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 7 Jul 2025 12:08:33 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWyMG9TGVyXa2EcDSuSpMzYK9UiLDqB3bap95u5fCWfAQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwrsPyJ9_3hxwPxkkb02TBHHYqK6wuBOagDK7JGzkG2YVl8M7Djfx0lJX8
+Message-ID: <CAMuHMdWyMG9TGVyXa2EcDSuSpMzYK9UiLDqB3bap95u5fCWfAQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] clk: renesas: r9a08g045: Add MSTOP for coupled clocks
+ as well
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 4 Jul 2025 at 15:43, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> If MSTOP is not added for both clocks in a coupled pair, and the clocks
+> are not disabled in the reverse order of their enable sequence, the MSTOP
+> may remain enabled when disabling the clocks.
+>
+> This happens because rzg2l_mod_clock_endisable() executes for coupled
+> clocks only when a single clock from the pair is enabled. If one clock has
+> no MSTOP defined, it can result in the MSTOP configuration being left
+> active when the clocks are disabled out of order (i.e., not in the reverse
+> order of enabling).
+>
+> Fixes: c49695952746 ("clk: renesas: r9a08g045: Drop power domain instantiation")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
---kr6nkexyn6izj5au
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v13 1/7] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.17.
 
-On 03.07.2025 11:44:27, Vincent Mailhol wrote:
-> On 03/07/2025 =C3=A0 11:39, Ming Yu wrote:
-> > Dear Lee,
-> >=20
-> > Thanks for your feedback and review.
-> > Currently, the status of the sub-device drivers is as follows (A/R/T):
-> >     [v13,1/7] mfd: Add core driver for Nuvoton NCT6694 (- - -)
-> >     [v13,2/7] gpio: Add Nuvoton NCT6694 GPIO support (1 1 -)
-> >     [v13,3/7] i2c: Add Nuvoton NCT6694 I2C support (1 - -)
-> >     [v13,4/7] can: Add Nuvoton NCT6694 CANFD support (- 2 -)
->=20
-> For the CAN driver, my Reviewed-by can be interpreted as an Acked-by :)
+Gr{oetje,eeting}s,
 
-Feel free to interpret my my Reviewed-by as an Acked-by, too.
+                        Geert
 
-regards,
-Marc
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---kr6nkexyn6izj5au
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhrnEYACgkQDHRl3/mQ
-kZz+HAgAo6jP3UtNysl6cnqkkovHfol1pDeGThMia/s6eTksN4DY0u5zqdBI03dN
-dXpm+0P8HVf83Alft8JysqSicG3HxMbdHs8En1RAlkkWYlr/kkL8zfEM06mFYVdL
-6EqNun8pwyIg9PrvRFwslkSTu6zKfqhafW8ouC9+65btTk0MG/AgbUgCLX2fe14v
-5jBv/B8OS97ARLf8pGTDQDqO6vXO2imOkP3Td+Ik61oUgLiQhUxLQVR8RvDKbuEA
-+iyqwWyWKsyoiF+0sU+mGLy0ejmuzh+PSvo19hzEE7ic08gZYvB4BA5pxljMiGAR
-1NJdMVxN2BILPjtt1d6e95y9ZqFOiA==
-=dD5C
------END PGP SIGNATURE-----
-
---kr6nkexyn6izj5au--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
