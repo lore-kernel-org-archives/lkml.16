@@ -1,95 +1,67 @@
-Received: from smtp153-170.sina.com.cn (smtp153-170.sina.com.cn [61.135.153.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D322191F98
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2F9288C32
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751887647; cv=none; b=ZiG2DgirkTDRz2P4CgaWYW9eqjg3zzC+AIzsNhEKzf/QZu83LtsdVUcO6negVQoxPDybWyBmMqHzl3jq3nvs2jF16hxfJYQ8Whr5O/Eed+R4bJkAVF7ASnGNHvh5S7pc9T/Mg5qz1zu4+ASJVJddWmfmG/OAO71rNaMkci039qI=
+	t=1751887719; cv=none; b=Wr4SoNBA6zkbHM4F6/fIbMsArarYhxpVA/ocCe6KIa+jszRjNK2XV86oHdtRprie1bJnLdk24v/WLCakCiUahNBGPKOzragSrZyLG4qZlJRlfx2iTMeURU/Ml53e1lCkEzbDFVDQp0a3xT0ObzcsU/BgVpTAYgi6mlJOMCIaCbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751887647; c=relaxed/simple;
-	bh=g+vvJB3WXfl2xhA7Q5Uia4MeTxDf2UERYo86cQ4YVPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aFrKPuAMQMkSCbQ7GbP2YT6iBsDm/YW67i86Pg23l2781gWBVgF2ZE9VK+4Ig2JoRXVonGg4crTl3TYGegIz6tDSDOOnEKVMt4wePt6mwocJkO/NScpF2hranwhV/MVh8fTKn5F7Bl0E0FwoyOBA7MiWSik6sTESrI6/jUF/6eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=In4futyK; arc=none smtp.client-ip=61.135.153.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+	s=arc-20240116; t=1751887719; c=relaxed/simple;
+	bh=EA0hpz1UbcidrfIudaAkghUylB3IlkSpgXf2f5joHZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFT4EMK9Mb/lTdRC75XGD9GSgv9Qd/kwXSAuJPhmIdZpA8tzIZWktC5euzUO5hO/gvDYR7OFZBDtPcgV0C2uhvwzF5fFCgbLu6lapMMCdgc8o2dl//FDQOrUP88XuIDKoO5dz8kez4QcdWvteIEhRFS/or0ymKDpn1jflfbJPV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJxlFdSS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="In4futyK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751887640;
-	bh=HGiW0pW1raEYw9x5KszA1dnRrGgit3o4p+Xv797shsI=;
-	h=From:Subject:Date:Message-ID;
-	b=In4futyKcvIbCeu6Kc8QjOi5vJKTlVvzAwJ27CGUTfGV77njUPX48JHvAM5MOd9do
-	 NwqOGUfFiUN0Kbn44oyQro9gXvth31sCnWYAPdiVAj9Ua3iMHjBaMG7iq4eI+w/HLS
-	 h6IjCE70qC+C87Bf9o9g9bqMFP/dAc6FoOfgIxcc=
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.34) with ESMTP
-	id 686BAF0B00005B0E; Mon, 7 Jul 2025 19:27:09 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 1463686291937
-X-SMAIL-UIID: B7B899CEF6914A2B852DE1CB19B06490-20250707-192709-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+4e21d5f67b886a692b55@syzkaller.appspotmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJxlFdSS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17403C4CEE3;
+	Mon,  7 Jul 2025 11:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751887717;
+	bh=EA0hpz1UbcidrfIudaAkghUylB3IlkSpgXf2f5joHZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bJxlFdSS3WDgLvMAFDVDS0opoBzXxi8jYos6Doi52ULQNW7f0osIGoNdmEuhHnVqo
+	 5FIKWuE7i0VbshYfV2dfOj4qcMV+MiDMY2fv5eFHnTwLlTpH4juiQPg5bKkXlhu0DT
+	 iYiYNodZcciD15TFILEIUdtPRNWc+Ft1jRMjtquFpmlBOLylA+5wit7WLm3/QYJYfH
+	 EdLAiFK6iVGEiyZ1jkpgG95CTflqWfNTf26iVz4bUzLDSrblIKJQnonHi1NwCfhbov
+	 /UYTUxvcwAN0nMGYybRdaO/h9LWStBgWnePYeCEC4HCXUJiw96SIVy1R1mnovbknJX
+	 6fGlz8nYa+fgw==
+Date: Mon, 7 Jul 2025 13:28:34 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
 Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] BUG: corrupted list in remove_wait_queue (2)
-Date: Mon,  7 Jul 2025 19:26:57 +0800
-Message-ID: <20250707112658.2733-1-hdanton@sina.com>
-In-Reply-To: <686b939a.a00a0220.c7b3.007e.GAE@google.com>
-References: 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v7 5/7] sched/isolation: Force housekeeping if isolcpus
+ and nohz_full don't leave any
+Message-ID: <aGuvYlexf7wZxUG3@localhost.localdomain>
+References: <20250626114900.106061-1-gmonaco@redhat.com>
+ <20250626114900.106061-6-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250626114900.106061-6-gmonaco@redhat.com>
 
-> Date: Mon, 07 Jul 2025 02:30:02 -0700
-> syzbot has bisected this issue to:
+Le Thu, Jun 26, 2025 at 01:48:58PM +0200, Gabriele Monaco a écrit :
+> Currently the user can set up isolcpus and nohz_full in such a way that
+> leaves no housekeeping CPU (i.e. no CPU that is neither domain isolated
+> nor nohz full). This can be a problem for other subsystems (e.g. the
+> timer wheel imgration).
 > 
-> commit 8ffdff6a8cfbdc174a3a390b6f825a277b5bb895
-> Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Date:   Wed Apr 14 08:58:10 2021 +0000
+> Prevent this configuration by invalidating the last setting in case the
+> union of isolcpus and nohz_full covers all CPUs.
 > 
->     staging: comedi: move out of staging directory
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13009f70580000
-> start commit:   05df91921da6 Merge tag 'v6.16-rc4-smb3-client-fixes' of gi..
-> git tree:       upstream
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=10809f70580000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17009f70580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=45bd916a213c79bb
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4e21d5f67b886a692b55
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=161cdc8c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d1a582580000
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-#syz test upstream master
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
---- x/drivers/comedi/comedi_fops.c
-+++ y/drivers/comedi/comedi_fops.c
-@@ -2454,7 +2454,7 @@ static __poll_t comedi_poll(struct file
- 	struct comedi_device *dev = cfp->dev;
- 	struct comedi_subdevice *s, *s_read;
- 
--	down_read(&dev->attach_lock);
-+	down_write(&dev->attach_lock);
- 
- 	if (!dev->attached) {
- 		dev_dbg(dev->class_dev, "no driver attached\n");
-@@ -2484,7 +2484,7 @@ static __poll_t comedi_poll(struct file
- 	}
- 
- done:
--	up_read(&dev->attach_lock);
-+	up_write(&dev->attach_lock);
- 	return mask;
- }
- 
---
+-- 
+Frederic Weisbecker
+SUSE Labs
