@@ -1,219 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FE5291C1F;
-	Mon,  7 Jul 2025 09:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF89E293C59
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751881807; cv=none; b=cm1BYnNA0VIpRd1BzxFaW0Jqxe1WElN8RZxbEbP/QR6GA3N29uk9l/eq0Lxweumi/I4hwp1IOyPhPhKInvUKRD76QGpHcyB+4+PWdeVgAMNk0KkQ/JYH6DDD+Hn6QeGWivynWOeGvJ+NRSvLVVEhSi0CkE5E8omtWLH/ehDQ3AE=
+	t=1751881829; cv=none; b=jLn2TL1WIHQuhYXltymbgoMBuTvxVe/qorZdMQu8RqWp8XlHY1eXoWvW56sZekvxZi5pKLKHtzxqW6dtUcbkeFxljeWThgx1DeNFDoYqPTsiHmmo1kygwtiKuGJvWKi1y4OnuvKuMivoYY3T9y06vQjHndzpwhg6lmdOOB4kVJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751881807; c=relaxed/simple;
-	bh=7KaMEj8xzP0ksk4G6oStKO53a2h7yxZ7Hc/eGxrDOXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AJSL27xx+2gvFD1HnwrIKXLrsD7uoV2geNS3OvUO7b4NhHCXLiBoT1KX71fgzgWV5gr6949G3Uku6H+78qxXZZ6ljWumhIIVRZc0MbV4BRoECWJ8Zg7fGuMQ3BtCruj6TJVsdaW6Y2aTEd1WmmWTagYwskQx40Xqx8lO06nGrLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSep1Zqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751881829; c=relaxed/simple;
+	bh=35OCjncpjipJkDFoyGMGdc2lgjRMhccLUmqYrDrHROE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ao+JRgd9Eb2nj1Jse2pBos9KsGSh36CxnCwrHa5OdG+72MjXsVfQFKTWNxVWXJ66PpTM/5Z6Ab7MAKi5mdnVN0sjw8xKuXzzsaigqTvZwkwW6FZP70VBH0VCZDYfWQjm9j9oDxebrJSg4ci96jWxtIdluwhcsQMITvGFdgwisE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MASQr36U; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSep1Zqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BDCFC4CEE3;
-	Mon,  7 Jul 2025 09:50:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751881806;
-	bh=7KaMEj8xzP0ksk4G6oStKO53a2h7yxZ7Hc/eGxrDOXQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lSep1Zqyp2fCZ2aHu/ClmOtBmegeHNX1KWMkwEJSwk1hm3x0Igup/b4yK6iYkOeaK
-	 BTv45DfgHNxl++y+8O9k3KhzSeoP0YJECwvbqvNyO2KwOPqWScF3JYnAuiVubwW9o2
-	 1VfHEu2GpUuCeBi+pfhyvVJUrO4BHYIX75qD0r0OIqvAD9ZZPhjcyf9RWsl9aaSQAn
-	 CmoDak9t7OhOWnRB9Z23mD6iDLzv4jA0OSO+nJCizbi5CJyrc3sg2W3EyA9ylppM3/
-	 9uo+ShwcOXcinxILcSHQPapGk5JQxJCaIzGQttT9eE+/qlEq6/rDcesj7BolOdutPh
-	 E60aO22ywZ0XQ==
-Message-ID: <a4380f08-bd39-42ea-a77d-7a6662ad8a34@kernel.org>
-Date: Mon, 7 Jul 2025 11:50:01 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MASQr36U"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a577ab8c34so386817f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751881826; x=1752486626; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GXFnfOOJYhBfICKorcW7Y1lqLwAP+51IB28GYyetozY=;
+        b=MASQr36U92BHmelCNasP4gydx1oePXM59CHWGK5jXuteC/9tn3CpKKzbSpOGPQe9Z9
+         nQjeqQZ0spIEF1AyYFHS1cTNbkTkzSNZWhUFbIZWMQ8H7oJyV1bAB+BV8fWAtwzBZOBj
+         xjUNYj52DCJGuHiCkl44uZK4cd4kbXFUuKiAZgTgev1Hrz9etb/HIj1E0+R4vXZRi9E7
+         8X3O0GgZVqHJIO4aPc4/8YzKf9dZFZtoLU/X736SRyfL9kQr0/6pyCoileYnEMYaXfkX
+         ck19PS4id/q68oLW5hY77bgE+ctn+/xVu3XLd4iVzYkhdbqXvmHfaAgycFkd9emJMW+J
+         lvMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751881826; x=1752486626;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GXFnfOOJYhBfICKorcW7Y1lqLwAP+51IB28GYyetozY=;
+        b=l+eb1/tQ/wZXI1yxsXKGfJZ1aGtZGxrrQM2ET7S3nAbpi/dwYgT7SMtgY2PdzccliO
+         +d6T+9dj1+5Abm3Gg7NayXi1OXG3AHufIWITH/qdJQDZc1xtqi9MFFU2x6kFXm6bhMdX
+         KbdmNyoUy+KK95NAJJaGUnK6e1/t2Q7gzoOekgH8J+t2wHRtqfX+vTjk4Q7Wb2zSWhtG
+         cCTKadHevmoY/7ooSHKrdiPr/LO27OuSIJokZpu0mPbmg7wP5YE7gFH54NtWlUIJz678
+         0I/ooU2KCX93Nuk6YXgoKwg/V6xjsvoAX9KWA8s3AUUuFlAUptYsZkoqpP5y6t/0Zzgn
+         UchQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJDAwk6ul8U9D8g/WYay2Sl+eM7bN6Sf3ckjxBruYeDXa0monKadfaUkrtnO4VY+1ZgA0LrcEHILcLKMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrH++AljLdlOaTyYWR+tKEkrF9VcenJ+IoHtyEkG5W5Kkipzfv
+	V+ckNaWiEa5GO16rFbpJG7q9YDknH908GS0/RfEAt4gCfySpk2iP2zvtcUXJmYGPMaQ=
+X-Gm-Gg: ASbGncv15CQmmo7ti7u6oAC7ZhsBu3a78C3DcGt62ID/MwYGUkuJqIyXihkEvhFSLkk
+	81RfJ6wum78zj56u4/4lD9mmndLjOM6oRX2/dF8cAtO3k7KaAkh+OuuzaXtLeRxVmX9mC+abcxJ
+	s7xaZ/zMRBTJTKsVyTU7s6SdpXlEw8fR5LaJTaBX4MEf5CQ5LqxPA+Ez731AVQPB4UIICytaUsc
+	0dWmsNRtfS/3HqeSuinlNI0UwaNP7uQ6kVshG4N7JpCr/N4AF8qtbrXJOuN9p18ISN+g+2FbA3Y
+	fHjaqr9i5wG/4+5qQqw+xUa3UI8CCKGG5YOFnEhuLCgzaVMuiYqQqbeSgKrnRsc1KQbCjGf5flw
+	=
+X-Google-Smtp-Source: AGHT+IFxiu0G+5YXwffxCvLR/dJosKTSDTmxQi/9EfK0g+CXahfPrEkRqEPOFFF7ZnVdE60AvIrrog==
+X-Received: by 2002:a05:6000:2d07:b0:3a5:8b43:2c19 with SMTP id ffacd0b85a97d-3b4964fdc81mr2162438f8f.4.1751881825858;
+        Mon, 07 Jul 2025 02:50:25 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.222.89])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b49cb46c61sm5670871f8f.63.2025.07.07.02.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:50:25 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Conor Dooley <conor@kernel.org>
+Subject: [PATCH v2 1/3] docs: dt: writing-bindings: Rephrase typical fallback (superset) usage
+Date: Mon,  7 Jul 2025 11:50:20 +0200
+Message-ID: <20250707095019.66792-4-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] media: uvcvideo: use
- usb_alloc_noncoherent/usb_free_noncoherent()
-To: Xu Yang <xu.yang_2@nxp.com>, ezequiel@vanguardiasur.com.ar,
- mchehab@kernel.org, laurent.pinchart@ideasonboard.com,
- gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
- andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
- thomas.weissschuh@linutronix.de
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
-References: <20250704095751.73765-1-xu.yang_2@nxp.com>
- <20250704095751.73765-3-xu.yang_2@nxp.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250704095751.73765-3-xu.yang_2@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1475; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=35OCjncpjipJkDFoyGMGdc2lgjRMhccLUmqYrDrHROE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoa5hbK/qWu4PWrJMdllFBjL3Py4EqOd8xSxGSi
+ c4seHxuXR2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaGuYWwAKCRDBN2bmhouD
+ 17uND/0ebQzn2NtraGz9v3Jw6ULdK5JM9tVhhC71q1PtT1TsXttHulxyJHhj4/M+4XUhlf8u2Oe
+ feNkstbhhejh7tg9KdWq4Z+q0FpID3C43CL4scnwT+VKkl+tYsNd68qWIT8YzRZSk02q4t6oZpJ
+ 72EJOIX8jXlLkgdDOrZFtfSXZV9t5ZCjDCpPbUDfNaR+67VB2LhDyjR5T9+QxGaJ0Qqs5OREuHs
+ Xv148Q13z4cgyryj2SSVjbdU7fesVGwn0XxFRP/RsCNpAUh1+lU+BR0VYTbDfdK2yFtsK+SOtSo
+ OLj+VGWn1NISDNAIMT6hpS2jWSBHTI9Sjk6h8bFOyKK2Jo2PdGYCGDUAlAxH4T3H1lspl/xiSnj
+ ByJ/LO+XzI2sRdTBGhwAGYzKi7i1HZXoyXvL1BRyqPGvNrviJJhCfXVB0j74NvPFuIBFIUDlygX
+ zFuWiahemsN7sy8PZHI+0FnnRafxm1Jvx5/41VCuhxMQUFxRqQI19tJqzpfY4Qsbu/NXvrM98SW
+ ub5uwp8nIJfxKVWZks/3myTLZLiz3XuYGSSTbvQrTlu3NAveHKHHwXFpsRf1uUib2hv97UWr5Fg
+ M1CE6IKu52ocUOokMxeYFsTJ5BHZQufTDVNT0wDO2wwETb1ZA65lzyZYZdLonpJT0lSgclk9Lop fYynXNIPrpJOKoA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-Hi,
+When speaking about compatibles for new devices comparing to "prior
+implementations", usually we expect new device to come with more
+features, thus logically it is a superset, not subset, of "prior
+implementations".
 
-On 4-Jul-25 11:57, Xu Yang wrote:
-> This will use USB noncoherent API to alloc/free urb buffers, then
-> uvc driver needn't to do dma sync operations by itself.
-> 
-> Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+Suggested-by: Conor Dooley <conor@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks, patch looks good to me:
+---
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
+Changes in v2:
+1. New patch, superset suggested by Conor.
+---
+ Documentation/devicetree/bindings/writing-bindings.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-
-Hans
-
-
-> ---
-> Changes in v5:
->  - add Rb tag
-> Changes in v4:
->  - remove uvc_stream_to_dmadev()
-> Changes in v3:
->  - no changes
-> ---
->  drivers/media/usb/uvc/uvc_video.c | 61 +++++++------------------------
->  1 file changed, 14 insertions(+), 47 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> index e3567aeb0007..a75af314e46b 100644
-> --- a/drivers/media/usb/uvc/uvc_video.c
-> +++ b/drivers/media/usb/uvc/uvc_video.c
-> @@ -1275,20 +1275,6 @@ static inline enum dma_data_direction uvc_stream_dir(
->  		return DMA_TO_DEVICE;
->  }
->  
-> -static inline struct device *uvc_stream_to_dmadev(struct uvc_streaming *stream)
-> -{
-> -	return bus_to_hcd(stream->dev->udev->bus)->self.sysdev;
-> -}
-> -
-> -static int uvc_submit_urb(struct uvc_urb *uvc_urb, gfp_t mem_flags)
-> -{
-> -	/* Sync DMA. */
-> -	dma_sync_sgtable_for_device(uvc_stream_to_dmadev(uvc_urb->stream),
-> -				    uvc_urb->sgt,
-> -				    uvc_stream_dir(uvc_urb->stream));
-> -	return usb_submit_urb(uvc_urb->urb, mem_flags);
-> -}
-> -
->  /*
->   * uvc_video_decode_data_work: Asynchronous memcpy processing
->   *
-> @@ -1310,7 +1296,7 @@ static void uvc_video_copy_data_work(struct work_struct *work)
->  		uvc_queue_buffer_release(op->buf);
->  	}
->  
-> -	ret = uvc_submit_urb(uvc_urb, GFP_KERNEL);
-> +	ret = usb_submit_urb(uvc_urb->urb, GFP_KERNEL);
->  	if (ret < 0)
->  		dev_err(&uvc_urb->stream->intf->dev,
->  			"Failed to resubmit video URB (%d).\n", ret);
-> @@ -1736,12 +1722,6 @@ static void uvc_video_complete(struct urb *urb)
->  	/* Re-initialise the URB async work. */
->  	uvc_urb->async_operations = 0;
->  
-> -	/* Sync DMA and invalidate vmap range. */
-> -	dma_sync_sgtable_for_cpu(uvc_stream_to_dmadev(uvc_urb->stream),
-> -				 uvc_urb->sgt, uvc_stream_dir(stream));
-> -	invalidate_kernel_vmap_range(uvc_urb->buffer,
-> -				     uvc_urb->stream->urb_size);
-> -
->  	/*
->  	 * Process the URB headers, and optionally queue expensive memcpy tasks
->  	 * to be deferred to a work queue.
-> @@ -1750,7 +1730,7 @@ static void uvc_video_complete(struct urb *urb)
->  
->  	/* If no async work is needed, resubmit the URB immediately. */
->  	if (!uvc_urb->async_operations) {
-> -		ret = uvc_submit_urb(uvc_urb, GFP_ATOMIC);
-> +		ret = usb_submit_urb(uvc_urb->urb, GFP_ATOMIC);
->  		if (ret < 0)
->  			dev_err(&stream->intf->dev,
->  				"Failed to resubmit video URB (%d).\n", ret);
-> @@ -1765,17 +1745,15 @@ static void uvc_video_complete(struct urb *urb)
->   */
->  static void uvc_free_urb_buffers(struct uvc_streaming *stream)
->  {
-> -	struct device *dma_dev = uvc_stream_to_dmadev(stream);
-> +	struct usb_device *udev = stream->dev->udev;
->  	struct uvc_urb *uvc_urb;
->  
->  	for_each_uvc_urb(uvc_urb, stream) {
->  		if (!uvc_urb->buffer)
->  			continue;
->  
-> -		dma_vunmap_noncontiguous(dma_dev, uvc_urb->buffer);
-> -		dma_free_noncontiguous(dma_dev, stream->urb_size, uvc_urb->sgt,
-> -				       uvc_stream_dir(stream));
-> -
-> +		usb_free_noncoherent(udev, stream->urb_size, uvc_urb->buffer,
-> +				     uvc_stream_dir(stream), uvc_urb->sgt);
->  		uvc_urb->buffer = NULL;
->  		uvc_urb->sgt = NULL;
->  	}
-> @@ -1786,26 +1764,13 @@ static void uvc_free_urb_buffers(struct uvc_streaming *stream)
->  static bool uvc_alloc_urb_buffer(struct uvc_streaming *stream,
->  				 struct uvc_urb *uvc_urb, gfp_t gfp_flags)
->  {
-> -	struct device *dma_dev = uvc_stream_to_dmadev(stream);
-> -
-> -	uvc_urb->sgt = dma_alloc_noncontiguous(dma_dev, stream->urb_size,
-> -					       uvc_stream_dir(stream),
-> -					       gfp_flags, 0);
-> -	if (!uvc_urb->sgt)
-> -		return false;
-> -	uvc_urb->dma = uvc_urb->sgt->sgl->dma_address;
-> -
-> -	uvc_urb->buffer = dma_vmap_noncontiguous(dma_dev, stream->urb_size,
-> -						 uvc_urb->sgt);
-> -	if (!uvc_urb->buffer) {
-> -		dma_free_noncontiguous(dma_dev, stream->urb_size,
-> -				       uvc_urb->sgt,
-> -				       uvc_stream_dir(stream));
-> -		uvc_urb->sgt = NULL;
-> -		return false;
-> -	}
-> +	struct usb_device *udev = stream->dev->udev;
->  
-> -	return true;
-> +	uvc_urb->buffer = usb_alloc_noncoherent(udev, stream->urb_size,
-> +						gfp_flags, &uvc_urb->dma,
-> +						uvc_stream_dir(stream),
-> +						&uvc_urb->sgt);
-> +	return !!uvc_urb->buffer;
->  }
->  
->  /*
-> @@ -1953,6 +1918,7 @@ static int uvc_init_video_isoc(struct uvc_streaming *stream,
->  		urb->complete = uvc_video_complete;
->  		urb->number_of_packets = npackets;
->  		urb->transfer_buffer_length = size;
-> +		urb->sgt = uvc_urb->sgt;
->  
->  		for (i = 0; i < npackets; ++i) {
->  			urb->iso_frame_desc[i].offset = i * psize;
-> @@ -2009,6 +1975,7 @@ static int uvc_init_video_bulk(struct uvc_streaming *stream,
->  				  size, uvc_video_complete, uvc_urb);
->  		urb->transfer_flags = URB_NO_TRANSFER_DMA_MAP;
->  		urb->transfer_dma = uvc_urb->dma;
-> +		urb->sgt = uvc_urb->sgt;
->  
->  		uvc_urb->urb = urb;
->  	}
-> @@ -2120,7 +2087,7 @@ static int uvc_video_start_transfer(struct uvc_streaming *stream,
->  
->  	/* Submit the URBs. */
->  	for_each_uvc_urb(uvc_urb, stream) {
-> -		ret = uvc_submit_urb(uvc_urb, gfp_flags);
-> +		ret = usb_submit_urb(uvc_urb->urb, gfp_flags);
->  		if (ret < 0) {
->  			dev_err(&stream->intf->dev,
->  				"Failed to submit URB %u (%d).\n",
+diff --git a/Documentation/devicetree/bindings/writing-bindings.rst b/Documentation/devicetree/bindings/writing-bindings.rst
+index 1ad081de2dd0..66c94b5adc87 100644
+--- a/Documentation/devicetree/bindings/writing-bindings.rst
++++ b/Documentation/devicetree/bindings/writing-bindings.rst
+@@ -40,9 +40,9 @@ Properties
+ ==========
+ 
+ - DO make 'compatible' properties specific. DON'T use wildcards in compatible
+-  strings. DO use fallback compatibles when devices are the same as or a subset
+-  of prior implementations. DO add new compatibles in case there are new
+-  features or bugs.
++  strings. DO use fallback compatibles when devices are the same as or a
++  superset of prior implementations. DO add new compatibles in case there are
++  new features or bugs.
+ 
+ - DO use a vendor prefix on device-specific property names. Consider if
+   properties could be common among devices of the same class. Check other
+-- 
+2.43.0
 
