@@ -1,84 +1,72 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79DC28C2B3
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946BE285CBD;
+	Mon,  7 Jul 2025 07:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875057; cv=none; b=mB8i+XEzVx73ytmwABos2LexEns3lAojfA6LuN41c1TELeejqr4Wg5kE2pZLsNmVunq93NxAjc4+Ix4S4jRcKphrqi19PEom3pORER4MimEzS6ApCj8EVbIjaZbSeQPMlwHoylybMjRxamfAHCU8F/yRcuuOP4e7nTDCtiSJF4Y=
+	t=1751875108; cv=none; b=ezhosZ9MkyI+r29nn+nzAgkTki+98MF4McTzaTz/r9YlB3dJ6TWqYUXrgFD/FGDAA5bUWKFj/kj8cyPMV3HOvt1rvslOFK4zWJezxjuWJpZ4S81tIjVSaIM5LBb9wpxKuj6hD5CvIbKjofKEfOupgIFlcctbfln+tnmoNXWjOYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875057; c=relaxed/simple;
-	bh=TIYvoKfMMCjlv2uIdTylizwMRIdwqTIRMTgS9s8saVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fPM1hWLN+IuTUjMFz8PuGVM5mXkX0nOmzAqVKP6VNZQoPX+YnSco5HRJYYLDmzG4xy3f8b2kDY8QaJq+QLCncxx8aHRm7xoIYH1G1v7rg6eVqaVvKP/C8iOgO0A8FKyNveDoDJ8Mx2shm3cmIdOxt13+ikIP84WqoV6ipX3D3jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=fAXCp2Ok; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
+	s=arc-20240116; t=1751875108; c=relaxed/simple;
+	bh=vG8OgBoIJAJ/fjHrQBxrQUOlAhQ0jCVXyx811UfAhiU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ry3lVCZwTpgIWyMWwB/Pxm2OguXtdccnofPPol+8K4JPVQgrS5pRXLZ2R93SHMWwi6g4cCqHAVvFVfyhucqEDw6weFol3UQaGE85Fp4PdSXB59XWbG6hfxYmGA9JJZy1+DJVZ/qVMlpvUmdXcNIYrsnw6im735WSEEP+D/a4hcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7CbttIo; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="fAXCp2Ok"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af51596da56so2098205a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7CbttIo"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a577ab8c34so377374f8f.3;
+        Mon, 07 Jul 2025 00:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brighamcampbell.com; s=google; t=1751875055; x=1752479855; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/MC/xohKHOcg+vnOOSNCEDTYlZuTz6zJxo6U8fkD0yY=;
-        b=fAXCp2OkG630hcC1x3SNl4GRMHD9RpPkRHnjMVtZ6FFYIFmA53Ndu6pC/DKss6AMO0
-         miJtcA+RgIfT4ZcCMdSEHsINFBUDHyI0z9bz3OFdiVmnswRIdua/ZjZp3X9iF03RlRyR
-         PlUD4+PZJqaqi9vMAIRxLOFBwL3Hi5gjOBPSrGPWxESuMLzJJOVV8as2NhmOjRDLPHtl
-         HVcFX1ZR1kifAT7YyHm/ado3fX+5d0vOwbVHRgRNFvCfyoPlU5Qg1W6jn8MtBpl6pjkw
-         Zn6Z1VO6TWQKNSdiSDneMvIRQkdurjS0pAs9Yw5opKmDyrHORLnwUS5tm6zN109SuUJL
-         OU/Q==
+        d=gmail.com; s=20230601; t=1751875105; x=1752479905; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RjyVxs/Q2vcmJ8jiHHHzlw00PcDAeYgQ5mh7+BGVK9M=;
+        b=K7CbttIoa+ywuWLEsfAKfETQhDZowAEyLxIUINNl/ChX9KnHeZpmTAjqCMMZNZX/Il
+         zdpNGO1Qt9uAsUSojq+N5knwV91DTPxOl3J04jyhT4wgweY9Mwx9h9Vrk2amm/ZpkLvy
+         ityUwZkahNxPr78YPqclvgL4Si0SXaTypfJyScdRcE4leEjfiTkLaWPFDWfZygafR2fG
+         FNoYJJAMaYOfmU6XwzETRElSn7uxYs/kdr5WcVHS/No2W5WdsPizUFONf4p5HGOQvBuK
+         AIyeABXmHKfrUogBMbzWMB4xSe48WHPwSl/IUjoCz29Ex9Vx7xoYORjVcH32vLTQwlvl
+         jz9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751875055; x=1752479855;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/MC/xohKHOcg+vnOOSNCEDTYlZuTz6zJxo6U8fkD0yY=;
-        b=EkMZCpI4Cv96KwM45Nrt0mQTWHgWfh19whG4CcCJiTsjed2ojzZRLpXJH9FY/GATE7
-         SwCjDTXFUA/HgiWJc1Z8e+kY13X2fbxyV5igaFu+SWa5vLglo5WiLa3GYFkrN4JxQq7n
-         sfT0cum+c1b7aCrM664Yp8v6Y2mYMadio4XU251mEH3VzU/jkPqo2GxtyzBimRjHUc/u
-         Q9dcSxonpeTQV+/f5/emjAzZY7J7+ZulHiIEmq0OZZRSgS+41jEKSzcdpnQyv2AHEkkr
-         mvf5UaYZ9mmLvb3vnv0Bbn/6nw3QBYqPKgiXqBrV8NgodecNWWC1teGWiDN9oxybuCNw
-         e+6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUCebzOyD5oy0lwE3juPrfOBID1ebAx/cc9wbuiVvfY3KJ1sgHqWGOpoAhpluR932HJZKnaF2qDJxzwr0w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKZzDSPIfVuUBxQN+reap05IH8vJ5fFZgi3EHlbZCyJymaGDZn
-	XhI5kU9j5k21KAAWCCuzp31fZEoqylFDnbfb64O2KfIRrQVoKHNZEATpZWQ6rGx/7Qg=
-X-Gm-Gg: ASbGncsMDba7MdetRHU3daOqdh73hspyykBfq2RPUF+DomvHKkMEPeoBWfKJandRTEK
-	AAoXKacCpAdTYE+i3UmcQWbRr9urMYNpscZ29brpcK6Ch5ggEIAWyTv4uFoT3kBieFz4GwMD5KY
-	c8PxvcHNBE9wRaqcaJC8egcpv3GqM5F6u+9U6IV02Z1T4tUlD8yjqweVjXFhZMqHzEYyBt7ddOw
-	I1dO24Ny02Edm1gu+YLl3NMkY4Y+1XKh+xeTD/TFPIXNZf8hUBnklYX6CYdnTpR7DPLFYXTGFWH
-	FyXiYuaiH2N/4cbbpZk9WEKoLCHPqjWOXdl1zw12ejJMR6xMldt5eWI2lvn0YSTzPW/+XjoBnqF
-	u1+zCBXg55WtyJQ3WSA==
-X-Google-Smtp-Source: AGHT+IEG3rUVLj/sU9Sc3cCmT/rktoO/r9+WAKUWx4b+U8GR+jBcTNhe69ooHHcJV8ngN58Oe5tUvA==
-X-Received: by 2002:a05:6a20:2583:b0:21f:54f0:3b84 with SMTP id adf61e73a8af0-2260b96873fmr18892440637.35.1751875054860;
-        Mon, 07 Jul 2025 00:57:34 -0700 (PDT)
-Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee62f8bdsm8246476a12.57.2025.07.07.00.57.33
+        d=1e100.net; s=20230601; t=1751875105; x=1752479905;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RjyVxs/Q2vcmJ8jiHHHzlw00PcDAeYgQ5mh7+BGVK9M=;
+        b=vAP/zWIOPiI12Sw4c1hQ1XgaT/pES3Cti1LyEDzcaNYLY94hVXRbV1EyWsq8lmwjgH
+         K4yfCYyIpCEoNBcgtYpg6nK+CPCUrgUw/TFnv2QgcaKozIgiofULPAh5wAfao7Q/jpDC
+         N8jM09U+NFpVCcF5O9Cq8yl9pQiZOdd1RPuEBLt+k/TpkGkQD1B53F30WeFT+ZV0SbpB
+         /JMmAf1X/ymuxHkmaywuNq04OQt/JVxTlCQGtHPnEFIuxEivsHiud3lHPo+NN7oqOixj
+         JaKCmmhZxpqmectkUP238GnX3CPJCom688p6BlGlszm9vML64atVgMrr15kW4YPtxH+/
+         5b8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUoUihqcTmEnkPdOBbCuL2Boq6MiNu7Rf9rW+jJ+A4FacEaSgcN8BfPXYD7WgN7rvFNLour4BKEDYkj5RTB@vger.kernel.org, AJvYcCWz9k9dip8aIMHkI2YWNMF6Y9bYmPq+Pl47sTmwshHSkjsbk1OTuNaSd16+fcQ2liiJ9vUiRtZIAus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlC8OUuZkiIB7nZcUg50fgX+qeepzFIXHzAjn0Zyg19OLeUKnn
+	75xkRYAUAOyv7EWCh6v2tdm61ZayLSqVrJ7kiNd4ZjxWFN4swma2ENBd
+X-Gm-Gg: ASbGncvt+QIwfEj8YT6kIALdMJHyZmlQawocCAEikhbih+IzYwqId7s5I/f9NMavOo/
+	UrGvjSm8T3HPXTXiWSVjNKsOpjbskB94JJUvzbETZYl5soDx3+sOzkqgnc0agOWrIoDSVIFX6uJ
+	x/xALPXRwLcTWmHuLGQYxPmErP5nnhL+sX6QTfnNvXO/EAi/Xj+LOuE8ctV8cPaGzLDkB+rArDJ
+	u8Ch0YdDTnVadQdrt8Dk8yWuo+3ki0kg7RbInxnP7pwtGUxwVi1oKJrtUXSWZvKYl1W48whn7Cb
+	BEaXprq45UY8a660W35Kl62fsQYml/sSQR0Py83UlEZGsRocvnximp1o96W2S1+nxcki6qjcMre
+	sdwsBMVfxQXQXu0M=
+X-Google-Smtp-Source: AGHT+IHwm8Gdrskiq/cenUe/LEOWyTv78WZl0qrMv0bnz/VYixW0Yr6bvqo4POjXw6MoNAT2xogSYQ==
+X-Received: by 2002:a05:6000:3105:b0:3a4:dd00:9ac3 with SMTP id ffacd0b85a97d-3b496624ed0mr3467144f8f.12.1751875104591;
+        Mon, 07 Jul 2025 00:58:24 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:ef01:c9dd:1349:ddcf])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3b46d4c8619sm9311904f8f.0.2025.07.07.00.58.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 00:57:34 -0700 (PDT)
-From: Brigham Campbell <me@brighamcampbell.com>
-To: dianders@chromium.org,
-	tejasvipin76@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Brigham Campbell <me@brighamcampbell.com>
-Subject: [PATCH 3/3] drm: docs: Remove completed task from drm TODO list
-Date: Mon,  7 Jul 2025 01:56:58 -0600
-Message-ID: <20250707075659.75810-4-me@brighamcampbell.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250707075659.75810-1-me@brighamcampbell.com>
-References: <20250707075659.75810-1-me@brighamcampbell.com>
+        Mon, 07 Jul 2025 00:58:24 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Guennadi Liakhovetski <g.liakhovetski@gmx.de>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: nbpfaxi:  Add missing check after DMA map
+Date: Mon,  7 Jul 2025 09:57:16 +0200
+Message-ID: <20250707075752.28674-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,43 +75,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove TODO item from drm documentation to transition away from using
-mipi_dsi_*_write_seq() macros now that the work is complete.
+The DMA map functions can fail and should be tested for errors.
+If the mapping fails, unmap and return an error.
 
-Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+Fixes: b45b262cefd5 ("dmaengine: add a driver for AMBA AXI NBPF DMAC IP cores")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
 ---
- Documentation/gpu/todo.rst | 18 ------------------
- 1 file changed, 18 deletions(-)
+ drivers/dma/nbpfaxi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
-index be8637da3fe9..76afb8a784e3 100644
---- a/Documentation/gpu/todo.rst
-+++ b/Documentation/gpu/todo.rst
-@@ -497,24 +497,6 @@ Contact: Douglas Anderson <dianders@chromium.org>
+diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
+index 0d6324c4e2be..0b75bb122898 100644
+--- a/drivers/dma/nbpfaxi.c
++++ b/drivers/dma/nbpfaxi.c
+@@ -711,6 +711,9 @@ static int nbpf_desc_page_alloc(struct nbpf_channel *chan)
+ 		list_add_tail(&ldesc->node, &lhead);
+ 		ldesc->hwdesc_dma_addr = dma_map_single(dchan->device->dev,
+ 					hwdesc, sizeof(*hwdesc), DMA_TO_DEVICE);
++		if (dma_mapping_error(dchan->device->dev,
++				      ldesc->hwdesc_dma_addr))
++			goto unmap_error;
  
- Level: Intermediate
+ 		dev_dbg(dev, "%s(): mapped 0x%p to %pad\n", __func__,
+ 			hwdesc, &ldesc->hwdesc_dma_addr);
+@@ -737,6 +740,16 @@ static int nbpf_desc_page_alloc(struct nbpf_channel *chan)
+ 	spin_unlock_irq(&chan->lock);
  
--Transition away from using mipi_dsi_*_write_seq()
---------------------------------------------------
--
--The macros mipi_dsi_generic_write_seq() and mipi_dsi_dcs_write_seq() are
--non-intuitive because, if there are errors, they return out of the *caller's*
--function. We should move all callers to use mipi_dsi_generic_write_seq_multi()
--and mipi_dsi_dcs_write_seq_multi() macros instead.
--
--Once all callers are transitioned, the macros and the functions that they call,
--mipi_dsi_generic_write_chatty() and mipi_dsi_dcs_write_buffer_chatty(), can
--probably be removed. Alternatively, if people feel like the _multi() variants
--are overkill for some use cases, we could keep the mipi_dsi_*_write_seq()
--variants but change them not to return out of the caller.
--
--Contact: Douglas Anderson <dianders@chromium.org>
--
--Level: Starter
--
- Remove devm_drm_put_bridge()
- ----------------------------
+ 	return ARRAY_SIZE(dpage->desc);
++
++unmap_error:
++	while (i--) {
++		ldesc--; hwdesc--;
++
++		dma_unmap_single(dchan->device->dev, ldesc->hwdesc_dma_addr,
++				 sizeof(hwdesc), DMA_TO_DEVICE);
++	}
++
++	return -ENOMEM;
+ }
  
+ static void nbpf_desc_put(struct nbpf_desc *desc)
 -- 
-2.49.0
+2.43.0
 
