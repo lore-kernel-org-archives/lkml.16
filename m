@@ -1,61 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F7128A1EA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75430285CBD;
+	Mon,  7 Jul 2025 07:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875043; cv=none; b=FI6dyARcAVqoeKrtkioMvqaghSS/O3Rk+anylr2oBoYl1CXokes1mXeAJP1RfrSm/KssvuqtH9BexjhOZb40QYv2M2dqUCIwJeMuO6tz5/jVykst6q9h5pXRtByAgeM6vEjAmjRJY5f/gYy8ABHM5+1QwmlXUiWxotV6bwGPGPY=
+	t=1751875049; cv=none; b=Di/xsOCRThCrivIiQaQdaHmmZDRbTwSzC6a3IStxKrA53sLQLIySOJu34E6MCRpItQcQWWjJkph/cp10juoVS04LdgMhnfF74as2suvvsyfN0nRTWkq/I47NAZXcCXHEKRotRRfodDaqeTuYd70Dicfi9IW2PM6hGnH6tCa1SKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875043; c=relaxed/simple;
-	bh=EBP+uX7EjPPG6O8rMrl9+Pdc7gOWG/A+1K6Rd8gbZSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XhVlwrmZhFqhPf03slMWeyYg2PBxbse0Dqeh+vj+jzuYalspNTc32Uu4ear9cQhSQXUE78njZUEOCBk3plazK3n2PY34TcG4+9XhIcSFWASy0yciIRlwwRMfbuLzhL44EUb4wqnBL6wYjM7pIHP1GmBGksKY1PdqyAZrbmZ4ix0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hRs+fFrV; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1751875049; c=relaxed/simple;
+	bh=NgImrN6amk2YtYswbo5+SrMae2P5F6NxO2Duvw5AbHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l11vpo25qYBl5jKhSs5rZ+NbZMMaM2Y0JrMXxLcJmSnKpTVf5Z0lP3X9y2BwPhXV65/sTFsZCnQl3viO9PMzcPzHn4JaZJrTIf9jJYS79YN1QoDqRAEMdLIKoCC0CUOuMn6N7V3h4i/bvnaSWy4mO8UxHC7pSVk06233fU+S+64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PqXGh+98; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hRs+fFrV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PqXGh+98"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751875042; x=1783411042;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=EBP+uX7EjPPG6O8rMrl9+Pdc7gOWG/A+1K6Rd8gbZSk=;
-  b=hRs+fFrVTpx739i+a3R8IxDCEltIv3/HLQza8CzHV2ws7+vEIDg18VeO
-   GSBJcIQaXlTTFYVUdRqKDONNbcbF1iqhU9ZfpZgqaNTp6GMhbHKxBBbMi
-   n5P7fDAq7pbOVvCEHeR985A2a7cy2dFrO0LTMJ+Z79w6B2fLnMimm6enC
-   ju8xPYGVnM0XnHWCq639LvlzmxCbQOLBevYtZrFVdl7e/aYvP7LGNBfBv
-   nRUrVIe0Z3RiajL7Ceo8IXPN86U2M4J+DPDSTj7bL26Lft78R55O4rmMn
-   US/wDfLD/TmETA/2tIXJTBo3j6tq0v3uOXvHFldYMgRoiykFDCOzjxbs6
-   w==;
-X-CSE-ConnectionGUID: b0VA8qEFRGSrXy1J4RbKjQ==
-X-CSE-MsgGUID: Mq/pYtpCRc6HkMHWDysAaw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="57889879"
+  t=1751875047; x=1783411047;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NgImrN6amk2YtYswbo5+SrMae2P5F6NxO2Duvw5AbHw=;
+  b=PqXGh+98CIjiuyi0bguWob/TGW9981XdocQcEgoPnJ+Ai7pIULcA+Vb7
+   ytMdrjlI1uyQAPrC2DTvCiJKFfyVcgzz4WhV0kga/KraotSLLGjzlz1v0
+   2HM7E4Vexk63ksiSvGlZoEwyVfDcwpQUQznLPKAykZivnFrsu9/sBkqs7
+   dKkA3w+QuTf2lEZeLn0oP4J3u8lQgZjKddnyhAabOxAKZUlDVOb2mJV96
+   yE+W6t1vEeRbnP/kbSXziJT58bGMmbtczmdYRH9KCFIsnq0OyI+nDFd2F
+   8X9QWEJoMA1RTOB1M3AQY8XrY5Osr7bC68Y1GWzDy4MVzOvWpMo2FX+uu
+   Q==;
+X-CSE-ConnectionGUID: v4WBFwQ3S26RiYG89X91Dg==
+X-CSE-MsgGUID: y/aBGctWReGQe8djyKXKdA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65151082"
 X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="57889879"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 00:57:21 -0700
-X-CSE-ConnectionGUID: asIM1z3ESgqRJr+UIuQgJA==
-X-CSE-MsgGUID: M58vytgJQviHWadG0PHniQ==
+   d="scan'208";a="65151082"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 00:57:23 -0700
+X-CSE-ConnectionGUID: STh4V0D9QkC8zr+WktbP7Q==
+X-CSE-MsgGUID: y9rrMQGzT32AhN6S68zIFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="186170792"
+   d="scan'208";a="155625886"
 Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 07 Jul 2025 00:57:19 -0700
+  by orviesa008.jf.intel.com with ESMTP; 07 Jul 2025 00:57:20 -0700
 Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uYgiz-0000Fj-13;
+	id 1uYgiz-0000Ff-0v;
 	Mon, 07 Jul 2025 07:57:17 +0000
-Date: Mon, 7 Jul 2025 15:56:51 +0800
+Date: Mon, 7 Jul 2025 15:56:53 +0800
 From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: mm/slub.o: warning: objtool: ___slab_alloc.isra.111.part.112+0x4c0:
- can't find jump dest instruction at
- .text.___slab_alloc.isra.111.part.112+0x68c
-Message-ID: <202507071557.SDU74U31-lkp@intel.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Peter Xu <peterx@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 05/10] mm/mremap: use an explicit uffd failure path for
+ mremap
+Message-ID: <202507071505.e2HFMCH2-lkp@intel.com>
+References: <be3e068c77107d385d89eae634317cb59e04e5ba.1751865330.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,29 +73,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <be3e068c77107d385d89eae634317cb59e04e5ba.1751865330.git.lorenzo.stoakes@oracle.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   d7b8f8e20813f0179d8ef519541a3527e7661d3a
-commit: 4496e1c1354bd4837bcc1414f6e1a4d042857903 crash_dump, nvme: select CONFIGFS_FS as built-in
-date:   6 weeks ago
-config: powerpc-randconfig-r131-20250707 (https://download.01.org/0day-ci/archive/20250707/202507071557.SDU74U31-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 8.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250707/202507071557.SDU74U31-lkp@intel.com/reproduce)
+Hi Lorenzo,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on akpm-mm/mm-everything]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Lorenzo-Stoakes/mm-mremap-perform-some-simple-cleanups/20250707-133132
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/be3e068c77107d385d89eae634317cb59e04e5ba.1751865330.git.lorenzo.stoakes%40oracle.com
+patch subject: [PATCH 05/10] mm/mremap: use an explicit uffd failure path for mremap
+config: i386-buildonly-randconfig-002-20250707 (https://download.01.org/0day-ci/archive/20250707/202507071505.e2HFMCH2-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250707/202507071505.e2HFMCH2-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507071557.SDU74U31-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507071505.e2HFMCH2-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
->> mm/slub.o: warning: objtool: ___slab_alloc.isra.111.part.112+0x4c0: can't find jump dest instruction at .text.___slab_alloc.isra.111.part.112+0x68c
+>> mm/mremap.c:1739:3: error: call to undeclared function 'mremap_userfaultfd_fail'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1739 |                 mremap_userfaultfd_fail(vrm->uf);
+         |                 ^
+   mm/mremap.c:1739:3: note: did you mean 'mremap_userfaultfd_prep'?
+   include/linux/userfaultfd_k.h:363:20: note: 'mremap_userfaultfd_prep' declared here
+     363 | static inline void mremap_userfaultfd_prep(struct vm_area_struct *vma,
+         |                    ^
+   1 error generated.
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for HUGETLBFS
-   Depends on [n]: (X86 || SPARC64 || ARCH_SUPPORTS_HUGETLBFS [=y] || BROKEN [=n]) && (SYSFS [=n] || SYSCTL [=n])
-   Selected by [y]:
-   - PPC_8xx [=y] && PPC32 [=y]
+
+vim +/mremap_userfaultfd_fail +1739 mm/mremap.c
+
+  1731	
+  1732	static void notify_uffd(struct vma_remap_struct *vrm, bool failed)
+  1733	{
+  1734		struct mm_struct *mm = current->mm;
+  1735	
+  1736		/* Regardless of success/failure, we always notify of any unmaps. */
+  1737		userfaultfd_unmap_complete(mm, vrm->uf_unmap_early);
+  1738		if (failed)
+> 1739			mremap_userfaultfd_fail(vrm->uf);
+  1740		else
+  1741			mremap_userfaultfd_complete(vrm->uf, vrm->addr,
+  1742				vrm->new_addr, vrm->old_len);
+  1743		userfaultfd_unmap_complete(mm, vrm->uf_unmap);
+  1744	}
+  1745	
 
 -- 
 0-DAY CI Kernel Test Service
