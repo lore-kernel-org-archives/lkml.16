@@ -1,93 +1,65 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E6B292B2E;
-	Mon,  7 Jul 2025 10:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C3E26057F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751883148; cv=none; b=ayZYMINWuWkTyenhZe2h7E5VgtGeCQGAzWn2/DihB3alvtz5nzr89s75lEg+aUNaGyawkYe8/Y2yuKoiTL1vQcjlXtufheJrXWEheF+N0fyjY4bPziAn2sX0OpC8DaGSXL80b0NvutbyjZ5IH9VTzkYIsL2menS7Jn0qjqO5m5M=
+	t=1751883177; cv=none; b=oqL+zWT4//ewvOxBjdG7W6pJvOEHvJlJtL2/8ja44b9YCm9wp/4rXZdUwPvIsbWaNmJbmd5K1VQ+RpOhIZNPvaX4rvfZvmz5VbgCZ/pT7XJPsW7HvTEFs9U6zijrtHP3wziRRxoXNVqY621J0nYapcDtiPOcsmTSiCDN7vNVGOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751883148; c=relaxed/simple;
-	bh=r0u0KcLgNzqStPxSo8tNTI+lkrR1NVJwDZIEcjacuXA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ED/la9kvfvfXguueckJ34F8lAwIw/01yNRr9mSC48FPce4zhPJvdjCESdrBltpFxjYIAkYOmD3nOFcR+EC3nMZJZDV8q3ZaT0hGzet5IdFCpVcsQUwp/zsXB0pdY07c+r7qUwKTTataHc8/RWHUqaf+4xcezcxj16BlCQmJOSxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=n9KLjXG5; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751883177; c=relaxed/simple;
+	bh=fGfiG/j3zqTYwlMYG6HVon3q3GGuYEiQgw/y/YoGr/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sUUdmlG8VukML3l7FxXhwq2CQ4iGgCTVmpLG2BQLSVPp2HwVyUlcujqcEAuqS3xWvHkk1fiLKt8CRfYdpj3Mul73RwdnA9jkqYDtUjBtepJGVb8hUsJaqZITCMjzUycPXmFAlcxcxYK2LMP2nmP2mwFb0icLNGCfFgzpeAopCk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbMspW1Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="n9KLjXG5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751883145;
-	bh=r0u0KcLgNzqStPxSo8tNTI+lkrR1NVJwDZIEcjacuXA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n9KLjXG54zD5nFCXqGHYJz1ZCGMjNx4MjrSwYaLCagMT0d5jOA7Ql42QP/jyVKxOl
-	 WyH/nVjMD6yR8Zw3Ut4FLF2g1tZ351hEXfY9ltZmvSZKEEES8iuZqdIfZF+LDll/v0
-	 4Ouk3jZ5v5wN7zL6x2ZhEMNqav1VVZMP1lqs9Z67ZxMv79/JpWjsFjzH9vg9+Z+++q
-	 wiXgYhxW43HUKJBV32Ms6HV+Bdqhj5mThE6+z6h3ZN8PcbndePIEjjJ7+MPJB1EBmy
-	 hkutms8W7aKyUu0a6cRL9NtzFritm3VP7iTrlUZ07NkUJVoyGvcjgK0LBuZrjK7n2T
-	 8+zlzF7Gj5ueQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A6C9A17E0523;
-	Mon,  7 Jul 2025 12:12:23 +0200 (CEST)
-Message-ID: <f4d046ea-f599-4b4b-a50b-bae00f9f3996@collabora.com>
-Date: Mon, 7 Jul 2025 12:12:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbMspW1Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B67C4CEF6;
+	Mon,  7 Jul 2025 10:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751883176;
+	bh=fGfiG/j3zqTYwlMYG6HVon3q3GGuYEiQgw/y/YoGr/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FbMspW1ZEbLbp8BChhp2S/7qqmDApuXDU5g5W77B2nO1QTdnw7CtoYNIBShomgHb2
+	 ysBVRmuwloPBCGocevIyOXVWQeB6Ia84UNswaGDq90wbIo1d/WV+p35VTkUXvvO/i1
+	 IEDKHqRUxR5prTLI4feUD6XkXSY4s9knFrWMbqaiLk3gNWejocsohZW/YBaqplXvSv
+	 osArul27QLSKNxhZ4qwPkDIcHvjNLzxm9fsjj81IozIJZpWwaT4TC7P+9W4aJBB0gm
+	 W1PxzRC4LNKoiDAY/whUBpmptOSqp4asjFyKc+M+fFWgH2JqVppr0Pm7wPpCqolJZS
+	 ZR2kwTLgbVBog==
+Date: Mon, 7 Jul 2025 12:12:54 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v7 1/7] timers: Rename tmigr 'online' bit to 'available'
+Message-ID: <aGudpkpZIsbNhBvr@localhost.localdomain>
+References: <20250626114900.106061-1-gmonaco@redhat.com>
+ <20250626114900.106061-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/16] dt-bindings: net: mediatek,net: add sram
- property
-To: Frank Wunderlich <linux@fw-web.de>,
- MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Georgi Djakov <djakov@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Johnson Wang <johnson.wang@mediatek.com>, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
- <arinc.unal@arinc9.com>, Landen Chao <Landen.Chao@mediatek.com>,
- DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Daniel Golle <daniel@makrotopia.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Felix Fietkau <nbd@nbd.name>
-Cc: Frank Wunderlich <frank-w@public-files.de>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250706132213.20412-1-linux@fw-web.de>
- <20250706132213.20412-5-linux@fw-web.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250706132213.20412-5-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250626114900.106061-2-gmonaco@redhat.com>
 
-Il 06/07/25 15:21, Frank Wunderlich ha scritto:
-> From: Frank Wunderlich <frank-w@public-files.de>
+Le Thu, Jun 26, 2025 at 01:48:54PM +0200, Gabriele Monaco a écrit :
+> The timer migration hierarchy excludes offline CPUs via the
+> tmigr_is_not_available function, which is essentially checking the
+> online bit for the CPU.
 > 
-> Meditak Filogic SoCs (MT798x) have dedicated MMIO-SRAM for dma operations.
+> Rename the online bit to available and all references in function names
+> and tracepoint to generalise the concept of available CPUs.
 > 
-> MT7981 and MT7986 currently use static offset to ethernet MAC register
-> which will be changed in separate patch once this way is accepted.
-> 
-> Add "sram" property to map ethernet controller to dedicated mmio-sram node.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Honestly, I was more comfortable adding the sram to the reg list instead,
-but I know that you got a negative review for that. Oh well.
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-Please disallow the sram property on SoCs that don't have the SRAM (sram: false),
-after which:
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
+-- 
+Frederic Weisbecker
+SUSE Labs
