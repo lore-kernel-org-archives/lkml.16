@@ -1,175 +1,106 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7A728A1D8
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC840275853
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874412; cv=none; b=itADQ78rhgTK0rDWlyRQoL+/SGcK7bJGIT3f+1/qlmOnYddv0YTnZIDQ1A+xmhVpQAdITp1jA2cXQhLvs4tlScjkwPR7Az6ymJBnVc33JJ2MHI7Prw9HV+A83uSKJ5vO8jV8HXaYO+2oR8XDxxRAcpjcLSzienJHqWWNlOJp2dI=
+	t=1751874439; cv=none; b=UicFjSAoozFbo8aNj0CFdtCSeKXrbXJSauvphDy4g8+XokXoElbgC1bh2/KWkBj5jWNQGNA/UwalPA2VvzWb8hFWrIio7v3eQDZpbpeFhJ5o4nvzhK/7v8IquOgQAjUcWlgdr9CdSRebZZPuiup7LHFnTsPVdKmFTA3V/H/CjAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874412; c=relaxed/simple;
-	bh=Ox8F8kx9gL9CRav3hh4fjm7hYU6h8nlzlsxIyBzYyF0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WmAbIuyQcEdPcL+A/DxJ24sv7JRgDvDeILTYPNtnaAVo6QHKwH6r87O81CSQNq246UUYDoeQE828SZ3GVcojpNwcF8qh5JP6rdgrSHm1ZGg+7LY9X/KABDUWM1KuMiJO7GZyxqsgqoRL6Y9/exYagSHZTnVHSJOq5OoYM7CnhSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T3L52Qsz; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1751874439; c=relaxed/simple;
+	bh=ze+IDbxGIYOAgtLI4CFP4fNt2QSwRvDTe2wvrdTzCJo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pJUOUMunJNyZNSY3jeYi63/XeWx0LuKA5XTrGTv+/Hgcr3CvcVxXx542e6A+UUmtXGQ5aPaRwYbHAlCanibh6Ne8SBwDdEfqGQ3NlWummvqtA2VPvKOYqLEj2hXIfllj5lvS9fpMITe3N7TRE+0G1j4R/GZrK8MLuWp9Nx6VDeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=star-ark.net; spf=pass smtp.mailfrom=star-ark.net; dkim=pass (2048-bit key) header.d=star-ark.net header.i=@star-ark.net header.b=eBTHjZNr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X6is8RTV; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=star-ark.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=star-ark.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3L52Qsz"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4536962204aso11183585e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751874409; x=1752479209; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=85Flp7b4ljo/UWljC390TJTCn2w0mqmX1hjOf0gOSUA=;
-        b=T3L52QszILlpY4ETQ782l3y56+cxCLcws11sXDFeMji80y9QbUbmj9b2zslO2P0Dzm
-         2uk/7bRhvkDxXT8k3aPt32fjx71VQ7DW2zlFwtG1CJegQ/sfClAB/qyo08HoJDEKWhPe
-         Gx+m23Ld2QDb8yzem5mx6bO3AgZM0aepY7XIPKGPjgOTm4POxU8iZ2/L158RAot0r4+l
-         9Iw6C82Xq5YuEJNMvfq4Q+D7aOobZLNWrgDWBFTcULDWulW1iA0tWbrfpqn5MvUWnAeT
-         kTIs1U1uHnmOfSzLGG6puml62qWEKNAtdLKxgcKDbFI8VZNmyQZAGz58TxDyPM6dAOjg
-         fRhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874409; x=1752479209;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=85Flp7b4ljo/UWljC390TJTCn2w0mqmX1hjOf0gOSUA=;
-        b=vEq/cASFsnlH+IKHa9Z+6gSH9jyH78RASujBZoSunjDWAse5IlJ1dQKdTRx5gqC5Om
-         kcnYiUD1CIXB05huto7suTd/pgRjoP63S0ZydjQTEdD0p+DZPrHOcOXV021kt3jEeeyJ
-         1JUEQ/Dqfg5pRh6GqZNjYa9E6mzlySQQ7FOHK13WfaRYSz+fGVLCm9mNxBBu6vSFgc2w
-         yUtryOx1orrhFIYc7JHcQryAtGoVQ2OpzfkKx7lE55/XX8i8VgusmO4gY2UjeErMUyWr
-         /2R/4VSkaPxu4shXMyRPzLYfjK4MuSM3yrqEThsxvkfzPTJYYP5U4H0E0WWxIz3kzDDd
-         T5LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxwmao6mioozDFr7TC2vG1hhaoFBqwnS5020m7jifwQEHo2XFErCmnXOuLvjXU9zshRNPIUf1Ix08OZd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuzqJPcRFSdHOe2QVTvMekGFObz+gHYbWnYcy+tl5BcnXoGfX1
-	afMnt1HPFgXc15LxLGZ4aSTrlC2j3z73RHC70fgBXdXFU1CSVut5FQ0bdcR2Zelx308vuDGcjZ6
-	7AGwB05KF8O4jXKlSCA==
-X-Google-Smtp-Source: AGHT+IF+X8nAaKNYaHvrOgUqLHjfkAfLscUr2qXaXIh/HgVu4ENFQdNOPCbYD+y33jPp+gAp7CgdOLLsDbEDjaY=
-X-Received: from wmqe3.prod.google.com ([2002:a05:600c:4e43:b0:442:ea0c:c453])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3b8e:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-454c3326920mr35345165e9.30.1751874409526;
- Mon, 07 Jul 2025 00:46:49 -0700 (PDT)
-Date: Mon, 7 Jul 2025 07:46:48 +0000
-In-Reply-To: <20250704-topics-tyr-platform_iomem-v12-2-1d3d4bd8207d@collabora.com>
+	dkim=pass (2048-bit key) header.d=star-ark.net header.i=@star-ark.net header.b="eBTHjZNr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X6is8RTV"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id DCCED7A01A0;
+	Mon,  7 Jul 2025 03:47:14 -0400 (EDT)
+Received: from phl-imap-16 ([10.202.2.88])
+  by phl-compute-01.internal (MEProxy); Mon, 07 Jul 2025 03:47:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=star-ark.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1751874434;
+	 x=1751960834; bh=knSaq5gt9Snf9nZAytZJgFXPSvM/0KJ3wC6imxZA8zI=; b=
+	eBTHjZNr1e+bHkFscYxH95l1a0aZ2oE633nU+9vcPUh8lgQAPNbKzrqwWN10fSro
+	eqT7GVWjd91FJlc8onepxJOvX1uF6DHwP+gQqboRhP5utz2BtiPI1stbxsxY7jzk
+	UgwpsrKjPzlbCOrlqkuQCgLxO7PQuTPQwCPc9e4ibD/TFXqhTSN35Vi+6lvjscsu
+	aOZauM0n5HyIg81V9yqQFpNK9zOjiIgmRvHbQCCSJInyEu8NsjzSI1XVu0ddasBB
+	4OpALih5598E/Op2X7lAEj4sNYN7tp9f8OMwi7FshTWqtmPB8Bp5wcb8aIYrfgmP
+	CSdUbsY2wYJzS2G9+eYtjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751874434; x=
+	1751960834; bh=knSaq5gt9Snf9nZAytZJgFXPSvM/0KJ3wC6imxZA8zI=; b=X
+	6is8RTVHTAVbiCrSP97u8QyrNFKpu7FC2W/z6oPq9oAyTKKKEP3P4gzisPrgYuEY
+	D0AkofNxwqo/LqHWZubddiLkZZSyZ2zIKb6e5C+0aesg188sXXBqppGFx8kSWvUL
+	9UArGk1dFdjgxadHCwPyy/x95mrPZ01gEBQbtpWJGyOW8oV6B/EwEQ34qBzPjlWf
+	LJBFyLZhRFSN7CMHzHYIR7gwbK5yqSGtTxd9kpO/4PXSgimqfbOnzCXNrOPIZQ6N
+	ebnq9yATOpHNLmDEGEl8F36R3qwL+gvLsZkt6ViR5RB5Czu7n+NfF+nldHemqWHr
+	yz1GhIIuGI7XILUE9gVUQ==
+X-ME-Sender: <xms:gntraPazxHFlSxEh196Bs8ufW3bz78szL0AvJIqUwxtGoQPbjeT27Q>
+    <xme:gntraOa_La3BsrtIebPYUt18tuZdQBxrf2HEx32AbLRm2aeomInvzpy1k_mexrm-h
+    8IFm7BVCgVm6he23xA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefuddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdfnihhllhhi
+    rghnuceuvghrrhihfdcuoehlihhllhhirghnsehsthgrrhdqrghrkhdrnhgvtheqnecugg
+    ftrfgrthhtvghrnhepgfdtgeegtdehfeefkefgfeffieekfedvtdeiudffvdevudekvdfh
+    heekfefhfffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homheplhhilhhlihgrnhesshhtrghrqdgrrhhkrdhnvghtpdhnsggprhgtphhtthhopeef
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouh
+    hnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuh
+    igrdhorhhgrdhukh
+X-ME-Proxy: <xmx:gntraIZvA_w11ytCEiYSLzi_ga-37XuTCdMjZn5rwDaCvSLdBg_53Q>
+    <xmx:gntraN_tGtUMugiic30RBv2KnNavu_pNoalerYb_ppFzHThNJN0tNw>
+    <xmx:gntraPiv4XK6AB4oIljIC6DUSqzodqkDpdVM45pQovNKvpohdgtlwg>
+    <xmx:gntraFfyEaTh1tZS1jnM0ELxBaRWFStWsTPGwo4M-CWwCs3IRkuSig>
+    <xmx:gntraP7T18UIrnhIJ1Tdp8yAtq_3AWBALJ3l45Mdagfd0BIl1mR-vNAZ>
+Feedback-ID: i8db94900:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 51E652CC0083; Mon,  7 Jul 2025 03:47:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com>
- <20250704-topics-tyr-platform_iomem-v12-2-1d3d4bd8207d@collabora.com>
-Message-ID: <aGt7aItuSINDzj2O@google.com>
-Subject: Re: [PATCH v12 2/3] rust: io: mem: add a generic iomem abstraction
-From: Alice Ryhl <aliceryhl@google.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Ying Huang <huang.ying.caritas@gmail.com>, 
-	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-ThreadId: T22376b854952dfb7
+Date: Mon, 07 Jul 2025 03:47:14 -0400
+From: "Lillian Berry" <lillian@star-ark.net>
+To: "Andrew Morton" <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, "Al Viro" <viro@zeniv.linux.org.uk>
+Message-Id: <9b5b233a-762d-4961-9c9a-8bbf4b67d3d5@app.fastmail.com>
+In-Reply-To: <20250706153239.3be93aee4b0c8d43e025bd85@linux-foundation.org>
+References: <20250706205738.1312194-1-lillian@star-ark.net>
+ <20250706153239.3be93aee4b0c8d43e025bd85@linux-foundation.org>
+Subject: Re: [PATCH v2] init/main.c: add warning when file specified in rdinit is
+ inaccessible
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 01:25:27PM -0300, Daniel Almeida wrote:
-> Add a generic iomem abstraction to safely read and write ioremapped
-> regions. This abstraction requires a previously acquired IoRequest
-> instance. This makes it so that both the resource and the device match,
-> or, in other words, that the resource is indeed a valid resource for a
-> given bound device.
-> 
-> A subsequent patch will add the ability to retrieve IoRequest instances
-> from platform devices.
-> 
-> The reads and writes are done through IoRaw, and are thus checked either
-> at compile-time, if the size of the region is known at that point, or at
-> runtime otherwise.
-> 
-> Non-exclusive access to the underlying memory region is made possible to
-> cater to cases where overlapped regions are unavoidable.
-> 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+On Sun, Jul 6, 2025, at 6:32 PM, Andrew Morton wrote:
+>> +	if (ramdisk_command_access != 0) {
+>> +		pr_warn("rdinit=%s is inaccessible or does not exist (errno %i), ignoring\n",
+>> +			ramdisk_execute_command, ramdisk_command_access);
+>
+> Again, I don't think we should assume (or say) "inaccessible or does not
+> exist".  After all, init_eaccess() could have returned -ENOMEM. 
+> Something like "access(%s) failed: %d", maybe.
 
-> +    /// ```no_run
-> +    /// # use kernel::{bindings, c_str, platform, of, device::Core};
-> +    /// # struct SampleDriver;
-> +    ///
-> +    /// impl platform::Driver for SampleDriver {
-> +    ///    # type IdInfo = ();
-> +    ///    # const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
-> +    ///
-> +    ///    fn probe(
+Sorry, I must've misunderstood your previous mail. I'll change the
+message to be more generic.
 
-When using # to hide lines from the example, it's useful to think about
-what's left. The rendered docs will have a weird empty newline at the
-beginning and before `fn probe`.
-
-So I would either remove those newlines or just not hide those lines.
-
-> +    /// Same as [`Self::iomap_sized`] but with exclusive access to the
-> +    /// underlying region.
-> +    ///
-> +    /// This uses the
-> +    /// [`ioremap()`](https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device)
-> +    /// C API.
-
-I would probably format this like this:
-
-/// This uses the [`ioremap()`] C API.
-///
-/// [`ioremap()`]: https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device
-
-> +/// An exclusive memory-mapped IO region.
-> +///
-> +/// # Invariants
-> +///
-> +/// - [`ExclusiveIoMem`] has exclusive access to the underlying [`IoMem`].
-> +#[pin_data]
-> +pub struct ExclusiveIoMem<const SIZE: usize> {
-
-You don't need #[pin_data] if there aren't any pinned fields.
-
-> +    /// The underlying `IoMem` instance.
-> +    iomem: IoMem<SIZE>,
-> +
-> +    /// The region abstraction. This represents exclusive access to the
-> +    /// range represented by the underlying `iomem`.
-> +    ///
-> +    /// This field is needed for ownership of the region.
-> +    _region: Region,
-> +}
-> [..]
-> +impl<const SIZE: usize> IoMem<SIZE> {
-> +    fn ioremap(resource: &Resource) -> Result<Self> {
-> +        let size = resource.size();
-> +        if size == 0 {
-> +            return Err(EINVAL);
-> +        }
-> +
-> +        let res_start = resource.start();
-> +
-> +        let addr = if resource
-> +            .flags()
-> +            .contains(io::resource::flags::IORESOURCE_MEM_NONPOSTED)
-> +        {
-> +            // SAFETY:
-> +            // - `res_start` and `size` are read from a presumably valid `struct resource`.
-> +            // - `size` is known not to be zero at this point.
-> +            unsafe { bindings::ioremap_np(res_start, size as usize) }
-
-Here you cast from ResourceSize to usize. Are you sure that is correct?
-I thought those types could be different.
-
-> +impl<const SIZE: usize> Drop for IoMem<SIZE> {
-> +    fn drop(&mut self) {
-> +        // SAFETY: Safe as by the invariant of `Io`.
-> +        unsafe { bindings::iounmap(self.io.addr() as *mut core::ffi::c_void) }
-
-Just c_void.
-
-Alice
+Kindly,
+Lillian
