@@ -1,57 +1,80 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2F670813;
-	Mon,  7 Jul 2025 05:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DE9270574;
+	Mon,  7 Jul 2025 05:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751867969; cv=none; b=S2DhMYTBYrA0avA6bxQnig5Uq8Z3vTeKrOe4nqGpIBzMdmyKN/2RISFHL6wlm39EdYTPWgOz6bSqbruwOQMrPjvg5tQrvIQnZpMaN/NXMZ87twwZPTN86JsTATizvXFry1/LR9OYIL+gSdS0C7URJALo3m32LonA72zM++sa4BI=
+	t=1751867997; cv=none; b=PSlWwMTUxj/QHs48mYgYztZclK4sOmffc0q0s3eY3oXzOec/ICkqldo7WcTta4pk4y9AIu6TuSN+7U/xKA3/yy3AiNTq+B9tv+xM22GTh/SjwqYNZ/iFCZyCUzf6Z2i8z4rQ2ScM62g0/lt1rrS5KZzRSJkL/fCzv4WtIg7nUM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751867969; c=relaxed/simple;
-	bh=8g0ar6DF+kofijbjdY0k7eoZW++N+JeAnr+Kd+aZ+e0=;
+	s=arc-20240116; t=1751867997; c=relaxed/simple;
+	bh=rCSGVt5MG2J78FFUL2ZdYS66ktuOBCmymP5uqA+Bpw4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LA/XYeNGbXX7XqMZhCz+4DFDnxYfzp2RvkxxI6G4kdZy0pTjeM7K6uzqtAS/IooLJqWe9y54iOGmxhBR6j5AuLphT8UHARtn4gVtKrQKNLPq5XM+ZJY1gQQrqNuECAQhyh2QRecZ4TPSlcgx1n6gXXm3xNawItAZARDUOHD035I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kFJMCrS/; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pb6dgSv1cOGJ+LcRXj7/S+x0hfcwmU39Qxb+tvFRvvlDiGhKlbzXdCe8Lw1ZICjBId7+lO6yzrO41q4zkH0e+x2fObsztItWxperVKVQ3uzqO05GjfAWitr5UJUXpxL0zUR1+Z/d4gQFxi9Pa7n17CQ7cdGrJwZRPHnDxiUd8/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Pc+Prd8u; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kFJMCrS/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8g0ar6DF+kofijbjdY0k7eoZW++N+JeAnr+Kd+aZ+e0=; b=kFJMCrS/PkBWqf41JH3xhptgo8
-	gQ6EmMAFkBoxe8AIn5gAnCwntJDUY8GWzstylLgdzT4Wz4ZrXEuxHGj/l7K7jokQ6xRhefrNxluNa
-	jBAvg6VGQAfsBZkY1/KPSr1G9wWnKXdklZV2hpViikkRr8BYDnx+agsBfka6LzgNszUuXhGyhI1RF
-	ihLWkJReqSaFhjpSuEFojEKE4ChVUAk7mxXcgJBaHNPAhNA8odY7dYbR1ZQEMVNGyBl9whAMT+mLq
-	fzFrXZOdvgOcYewZZVDy6DLPIYO2a7yaTCh9cGiIwkZA1qyHkEncBwlcUf3vQVQhF7qhbo+JuTkzC
-	uAwOR+tA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYesx-00000001V63-2ObU;
-	Mon, 07 Jul 2025 05:59:27 +0000
-Date: Sun, 6 Jul 2025 22:59:27 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 77/80] block: pm: Remove redundant
- pm_runtime_mark_last_busy() calls
-Message-ID: <aGtiP3FKLi92Gral@infradead.org>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
- <20250704075501.3223068-1-sakari.ailus@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Pc+Prd8u"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=1Mo12jIp7JGdEvtjsw2OulO3/3LfrKIJdrPsh7bBfbU=; b=Pc
+	+Prd8uRRGn3vPyj24SLIx2z/vxR16IRch5EJPI/NXNW9bNOWeLFTm1l68YI/NTY7xFLTYdSxDgrc3
+	yynyqF3Kmtjcjw/TqyhrRhsnj9lF7L2jHEMEECKcQq3MEhxtiFE6grgkwXhaXM0l/61W8tKwDH4uK
+	QEF71+OpQGxs4LM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uYetE-000gGj-GK; Mon, 07 Jul 2025 07:59:44 +0200
+Date: Mon, 7 Jul 2025 07:59:44 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH RFT net-next 02/10] net: stmmac: Add support for
+ Allwinner A523 GMAC200
+Message-ID: <e04e30fe-6f7c-4e48-90bb-24bf3f2081ad@lunn.ch>
+References: <20250701165756.258356-1-wens@kernel.org>
+ <20250701165756.258356-3-wens@kernel.org>
+ <c464d56b-dfd2-4e8c-a77a-4a0d05588768@lunn.ch>
+ <CAGb2v65rDZ+V6EuZQ5NDrV7n0C-4CpHLXP_M9M2hA-oR4cMJUQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250704075501.3223068-1-sakari.ailus@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v65rDZ+V6EuZQ5NDrV7n0C-4CpHLXP_M9M2hA-oR4cMJUQ@mail.gmail.com>
 
-Sending a single patch out of many to a list makes it unreviable.
+On Mon, Jul 07, 2025 at 11:06:55AM +0800, Chen-Yu Tsai wrote:
+> On Thu, Jul 3, 2025 at 4:19 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > > +     if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
+> >
+> > Please use the standard properties rx-internal-delay-ps and
+> > tx-internal-delay-ps.
+> 
+> Since they share the same binding, I guess I either need to split the
+> binding so that the new compatible uses the standard properties, or
+> introduce them to the existing dwmac-sun8i driver as well?
 
-That might not matter as a 80 patch series is basically unreviable
-anyway.
+You should get them for free from ethernet-controller.yaml. But you
+might need to add a constraint that allwinner,tx-delay-ps etc is not
+valid for this device.
 
+	Andrew
