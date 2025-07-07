@@ -1,151 +1,135 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB032980D0
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9519A288C2F;
+	Mon,  7 Jul 2025 13:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894614; cv=none; b=hZuhUbZJekdC1l8e+d8O9lC2AslDE7d96OwSe8BZITYo+BLoHUSb0WmVirZ7aRuimQ5H+slx+Bind3L0RUIDuLnSSlZFf+FpEDXv2K+E/eOHQEyddzdc2PID88B17OBfhoO04Lc1hrc3sC8iJNY7nw/dPPSwjSeDqruUK3J2hx4=
+	t=1751894650; cv=none; b=TIPwS8rsdJuCk3/jhZLHL+Uw63L1LTX76Me6mRkUmlhlsu/9G2ld0Jy//8N1eQIaUfNUVOG+vc045lJvY5dP3fLz4uYdKDM1/JIZ1SnG2GPma4vLJI+bCED8aViazqGxGtHh7CW3xP2Qk+1yaweOmgkx/zWQPXRSl3XlkWbIfWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894614; c=relaxed/simple;
-	bh=9XfDpieyU8b2140bQho6t1DhMkVdpW1ldUV4ZihuTTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RoRHtht3tx145kJyegIJrrIqCIzuSOe/RAGpxAvDobrMxCitoYu8qyUR7mUvFHzj98xH/O8xLIeJXwSTX6F98EpDUAza/nt/KRlNWbz4elvhGgcOM1oojk8fgC0fgxxeSiNDeA2vIjD3ppQv0bCyhU5XCN0zylSvEBeP8lVVtHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gevcj9V9; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751894650; c=relaxed/simple;
+	bh=8RjyTvSuow44Pogbmx4RVAaPQM0w6Xn4O6nez3/oVO8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bOOHwFJ+ZGC29n1KcgCprZ6CJNhEQZfAAUuRhlMFVhrOiFbvLcnCfMpq6OV9YcxBaSalMj5LtJ+hpBszS/+QReSi7Bx6ypc18nBqknXLqHKEMkMXZr7fe1f8MysXtVyg7bmhvrWX0bmVW8nuv3DQoL/cuSnpCS2Ocqaz8Z+WnSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B5twk7yd; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gevcj9V9"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so2922610f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 06:23:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5twk7yd"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so2646120f8f.1;
+        Mon, 07 Jul 2025 06:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751894610; x=1752499410; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A1JkCspwJaFqJzSejsi2dTXNLAQ9s3FaAdM20lcOhVo=;
-        b=Gevcj9V9EMw7bXaPKvYUKkie88kBByVNXW+lKU1EXPEP7LZnEfQUV3cn8x58bQVVwi
-         DgvPnSK4Ricdtz+otQKqZyLyJ5TkD/C1qTC3MpneMBtyg2nhIg07TkqqxsG8eOLi9h/D
-         nTQf2/HI/huOU+tN1ZB3FXviCoSl//+xlUS+96oCVHelxXpJE76qCWXJP7zxmA1Mzp2f
-         dPjFXQJAWLFBcoWMt0XFh3iXIC+jYPUmceClcCnKCf79zK6AL36Sb8fUFUVQowvTuKu1
-         akNZ5I/q+bfK3Vl+ju0teTttgLIrwM5838oQPUPhCAIxx8Y8ej81BimX9aQPl8nS8fnc
-         Cf2A==
+        d=gmail.com; s=20230601; t=1751894647; x=1752499447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GHwATOF4+CjMS6IdiNe2EhFIMS0JQ1rdlybp9oGNmTE=;
+        b=B5twk7ydaKGsCAJZhjS9tq5YpaStwL+ejITJbB+VG6viur9W+Kpf5kKvuMCihl4rQ/
+         rdIODzt7DFyaQlg41TIU/p9Ntxc9CAIloz2PFW2sQgvyc2E4EQCC+bgNw/AfAD8XPa5V
+         yj9jPH2hthRXUI9GcJsMfRlBrQJNwX00qlMURMpxYZMX4CRfixdkt2zy9C+/tDPZy/6W
+         PI4sTaSiLAxD5HgXi11pabQXlFcbnrc9DCoYkvd4rXyJG7rnP9B/m2QaXRn8s9b543up
+         xVhVGWWZI5pHkOPqje4+pWa5kLIC7WMyjAN6UK6l1khHhAsnLHV4Cz6ZAwjpe1/ucd2I
+         TzTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751894610; x=1752499410;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A1JkCspwJaFqJzSejsi2dTXNLAQ9s3FaAdM20lcOhVo=;
-        b=F+qiX9E3LYUY2BO5WJedQ3fpFYa3IN/+hHrGiXFkPVYHdzU6TVfRDuf9+cJy/Y53ol
-         HC8WhPVWs3AqFjTz2289oR+DMB4P8rdRcb3yeKilF7/vCJfhyaTD7kONS88FNQ2+oPO3
-         Uc/0SHflUe2N/c8aMey9hhZLYJgZM1kYeDUCmHA8HovtBz9KLvr6VCHadtP4ae3yKJ8b
-         15Svme3A4Y7/BUdZr+uCoCVpnraNw5Bw3plt1EIksroYDVAecurTlqy8BdrepjcqEazX
-         ntJOoUWzJiBAjkV/As5tuMC24o/p/ShhExu6E/zEOt7ZmRxpFr53dGQoZIqcQHkZhxF/
-         NZQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBdPI55MBiCe6NNz9P7gQMka9IkJWUE7EcKHIo4j2N60NBF71AXqG2D0MVqDwWpfNBxarUQXM3frtzVco=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/+LHyBEdXMh+HIPqMX+gGi+jmyWO6DdPScEiW/d/o8z9ZLbTL
-	w9EUiXbP3n21OgIPzXpnTmiTvdznlORA7U7RMYCD3xka0r/ZpLkE2eMRM6cYUJ2lDBs=
-X-Gm-Gg: ASbGncv9s7LDAcAK/81xn3JUr/BASbBfI3TcWsJsg4iDgubLamWoLZ8rh/p9XSYFhPm
-	IDaE1qcjtIvvav0tFDL/9boy/xfVOb6bUxCxmCQQELrQ1aXnTfIgtfkycAR2JNbmuMr/SSkpb1s
-	r9JCoF0ZOZLM737j20z2GXGTMUF35lPJ4AhzbCuWrCHSGtoY7upiYS+BvLEzHE75pdd/Q/dEv+L
-	O5mMp6UNkG90i13DwjKNnIIZUYxUQkR4E9izVAZQ+NwH1a0FBsHYEWaNN6Q+TSAynfTYyvfTofV
-	az5cvJaehTWMG9ygdnbCeTpSu0lmCcDem7b0DoEPIgyNYhRQHlTNrrqPKQyNKJkPyvixDX9b3pa
-	cYwX3ebF+OWNlaFb2IKsIzcS/qCzgyOM=
-X-Google-Smtp-Source: AGHT+IHqvfoZlxqkZhFZeUbrhKra+ACvfYiFm+JNhrK5L5id15gKmlIVnrRthZyMexYFNceXyA6Kmg==
-X-Received: by 2002:a5d:59c4:0:b0:3a3:6595:9209 with SMTP id ffacd0b85a97d-3b4970294afmr9707717f8f.36.1751894610045;
-        Mon, 07 Jul 2025 06:23:30 -0700 (PDT)
-Received: from [192.168.1.159] (p4fc3d4fa.dip0.t-ipconnect.de. [79.195.212.250])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9be0bacsm138744515e9.32.2025.07.07.06.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 06:23:29 -0700 (PDT)
-Message-ID: <06760125-4800-4068-8936-dddf27c28d17@linaro.org>
-Date: Mon, 7 Jul 2025 15:23:28 +0200
+        d=1e100.net; s=20230601; t=1751894647; x=1752499447;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GHwATOF4+CjMS6IdiNe2EhFIMS0JQ1rdlybp9oGNmTE=;
+        b=qmD/06EYoDRcZIWcBgtNXWQNVp245qpMFOfTIlFf6LZBrAulIJydFcoEBH8gMLg3i+
+         SNMqmCyhrlWQIYaFrA2368mGOWben0wQYPypSDFfilDoA+TPecSS4FwZGzO4GMo4fcLN
+         9zQTZyXYwEwwKD+Dh/51NxUvAKTi7CeIJGyRVbJFKp11qyuV7XqScvfWJztFJR0AS8TK
+         bW6Ii+YVT6xsSQjEqWumKdfFTN+L/eqlbMN+5mKepYTOcw44EqHD8AYsHWORSZTadFtg
+         kbudrC87LTuDegJ2OHiVYGEFadsmOcCndcVfmDo58FqCpd3z6WeiE1Tn8uyiHXvTPyNq
+         gDWg==
+X-Forwarded-Encrypted: i=1; AJvYcCV82Ma/T4gl/Z3nS9+fY6vhbj90v2/d3gcZrRz74tGSmODCXrUMGfRaZVxWYqG1+6Yv8sDCt3kfkc0VfkJRTu8=@vger.kernel.org, AJvYcCX0mNQApTE4AqKN91NTDnqMbOy+kVmXerH249jaRCZnl7eq1AwzhUdNXYkUSIJ8518QGGnjNTQAqa3QOYFB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwngWvJfoX8DK2w5nQ/FFuXmzJhU3+DXIv7bUtmrFh0RXa5TQyR
+	f9vlWpRnq1nxj+fHTWGowecWzLeVS59myzWOd4tsj46+Ppq9EQYmPajy
+X-Gm-Gg: ASbGncsYlaYnByoj84u+8E5ufxd0E4riwozvzGCKA7SnZvjJkcYkQXpg3lOdbsMqE2F
+	tdpBcji0wfQIJkKD2wAfS96aGjb0ib2nXQu/HagHteN3tS6miIoX9/Bgr517E6YuH1h9k0jQ2FC
+	kj5V/XAGmgJKxmTPQSLeXqrA5YTzaTVVotvqMzLtkm8WXjBoVnwFZ/jk7YASTgoxa/+dbonrf9f
+	rxwM62Vckdbe8bAsxE+VsjkbfxLVR40jd0sfoKzso9TZW8ARzILX9CBzJzfAOMtnbGc+AaD2Lmu
+	4n58luBZHW/VoLPH8HM5OU7wrvDmn/4sClix3AiPzN0ZMyWAMMsxhkYJXRTp
+X-Google-Smtp-Source: AGHT+IGtt8GxutZ5uOUaaH2YD0KB42AdE6oIi6ARJQVqLaHmKYYqZ3ZDw7TY0JnpeUWDARtw9Y2XMA==
+X-Received: by 2002:a5d:6f02:0:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3b495b9446amr12338612f8f.9.1751894646658;
+        Mon, 07 Jul 2025 06:24:06 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b47225a720sm10198472f8f.77.2025.07.07.06.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 06:24:06 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][V2] fortify: add branch hints on unlikely fortify_panic paths
+Date: Mon,  7 Jul 2025 14:23:40 +0100
+Message-ID: <20250707132340.1768807-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] pmdomain: qcom: rpmhpd: Add Milos power domains
-To: Luca Weiss <luca.weiss@fairphone.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20250707-sm7635-rpmhpd-v2-0-b4aa37acb065@fairphone.com>
- <20250707-sm7635-rpmhpd-v2-2-b4aa37acb065@fairphone.com>
-Content-Language: en-US
-From: Casey Connolly <casey.connolly@linaro.org>
-In-Reply-To: <20250707-sm7635-rpmhpd-v2-2-b4aa37acb065@fairphone.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+Analysis with gcov while running the stress-ng urandom stressor
+shows that there are a couple of fortify panic paths that are highly
+unlikely to be executed for well-behaving code. Adding appropriate
+branch hints improves the stress-ng urandom stressor my a small
+but statistically measureable amount. Ran 100 x 1 minute tests and
+measured the stressor bogo-op rates on a Debian based Intel(R)
+Core(TM) Ultra 9 285K with a 6.15 kernel with turbo disabled to
+reduce jitter.
 
+Results based on a Geometic Mean of 100 tests:
 
-On 7/7/25 12:18, Luca Weiss wrote:
-> Add the power domains exposed by RPMH in the Qualcomm Milos platform.
+Without patch: 50512.95 bogo-ops/sec
+With patch:    50819.58 bogo-ops/sec
 
-\o/ codenames!
+%Std.Deviation of ~0.18%, so low jitter in results, improvement of ~0.6%
 
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
->   drivers/pmdomain/qcom/rpmhpd.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
-> index 078323b85b5648e33dd89e08cf31bdc5ab76d553..e09552a469264f28952fc46c3ab8c125e87310da 100644
-> --- a/drivers/pmdomain/qcom/rpmhpd.c
-> +++ b/drivers/pmdomain/qcom/rpmhpd.c
-> @@ -217,6 +217,24 @@ static struct rpmhpd gmxc = {
->   	.res_name = "gmxc.lvl",
->   };
->   
-> +/* Milos RPMH powerdomains */
+Branch hints can only be enabled if CONFIG_TRACE_BRANCH_PROFILING due
+to a static variable being declared in __branch_check__ when using
+trace branch profiling in the unlikely macro causing build issues.
 
-I can't find any public docs telling us which SoC is Milos (the only 
-relevant result is Bjorn's email asking you to use that name instead of 
-SM7635). So for the sake of future generations could you reference both 
-names in a comment somewhere? Or even the commit message would be enough 
-tbh.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+V2: add fortify_unlikely macro wrapper for CONFIG_TRACE_BRANCH_PROFILING
+    build config.
+---
+ include/linux/fortify-string.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Off-topic here, but maybe it would be a good idea to add some Qualcomm 
-platform docs to the kernel with a table of all the publicly known names 
-for each SoC? This would also be really helpful even ignoring codenames 
-just to know that SM8550 is Snapdragon 8 Gen 2 for example.
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index e4ce1cae03bf..c740114bcbf8 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -10,6 +10,12 @@
+ #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
+ #define __RENAME(x) __asm__(#x)
+ 
++#if defined(CONFIG_TRACE_BRANCH_PROFILING)
++#define fortify_unlikely(x)		(x)
++#else
++#define fortify_unlikely(x)		unlikely(x)
++#endif
++
+ #define FORTIFY_REASON_DIR(r)		FIELD_GET(BIT(0), r)
+ #define FORTIFY_REASON_FUNC(r)		FIELD_GET(GENMASK(7, 1), r)
+ #define FORTIFY_REASON(func, write)	(FIELD_PREP(BIT(0), write) | \
+@@ -593,9 +599,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	 * (The SIZE_MAX test is to optimize away checks where the buffer
+ 	 * lengths are unknown.)
+ 	 */
+-	if (p_size != SIZE_MAX && p_size < size)
++	if (fortify_unlikely(p_size != SIZE_MAX && p_size < size))
+ 		fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
+-	else if (q_size != SIZE_MAX && q_size < size)
++	else if (fortify_unlikely(q_size != SIZE_MAX && q_size < size))
+ 		fortify_panic(func, FORTIFY_READ, p_size, size, true);
+ 
+ 	/*
+-- 
+2.50.0
 
-Kind regards,
-Casey (she/they)
-
-> +static struct rpmhpd *milos_rpmhpds[] = {
-> +	[RPMHPD_CX] = &cx,
-> +	[RPMHPD_CX_AO] = &cx_ao,
-> +	[RPMHPD_EBI] = &ebi,
-> +	[RPMHPD_GFX] = &gfx,
-> +	[RPMHPD_LCX] = &lcx,
-> +	[RPMHPD_LMX] = &lmx,
-> +	[RPMHPD_MSS] = &mss,
-> +	[RPMHPD_MX] = &mx,
-> +	[RPMHPD_MX_AO] = &mx_ao,
-> +};
-> +
-> +static const struct rpmhpd_desc milos_desc = {
-> +	.rpmhpds = milos_rpmhpds,
-> +	.num_pds = ARRAY_SIZE(milos_rpmhpds),
-> +};
-> +
->   /* SA8540P RPMH powerdomains */
->   static struct rpmhpd *sa8540p_rpmhpds[] = {
->   	[SC8280XP_CX] = &cx,
-> @@ -723,6 +741,7 @@ static const struct rpmhpd_desc qcs615_desc = {
->   };
->   
->   static const struct of_device_id rpmhpd_match_table[] = {
-> +	{ .compatible = "qcom,milos-rpmhpd", .data = &milos_desc },
->   	{ .compatible = "qcom,qcs615-rpmhpd", .data = &qcs615_desc },
->   	{ .compatible = "qcom,qcs8300-rpmhpd", .data = &qcs8300_desc },
->   	{ .compatible = "qcom,qdu1000-rpmhpd", .data = &qdu1000_desc },
-> 
