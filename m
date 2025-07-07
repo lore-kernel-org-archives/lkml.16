@@ -1,158 +1,135 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FB118C31;
-	Mon,  7 Jul 2025 09:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8547F28E59C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751881737; cv=none; b=C1zPQdUnfFkxhNx2oEQDrKIwRlSSTtZ+1paYizeU1HgibS1peg6MNmKeZr68HJH+w/QraAkvQodRyk5WImudNelFycT3b1BQYtYEepqqul93ac7xmy1v1PyWiCtqiP70WWl0VtJDXSptx1AaZ/qMOSdE2OVT7zdr/j2MlFBCnVI=
+	t=1751881772; cv=none; b=g23uA8fThoHMK9+3m3JyQdSck4Kjpax1bMNuwOFh2C8/bd9RSRvcZY5ggkUX7jqjUtCUF4FqG5m9atnHG48fAp5wMDJfUIgrmZtFWbLToBsTLlU44bmYIH6Wu7QVUROwZbnRmPq5vxkNi+kc92lVu3cJKbqtG2WsqXRtNeEOqCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751881737; c=relaxed/simple;
-	bh=yAwrHTTSCwzfQyTa/J0bibSx7PafptauV3h4+P74mnU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sKR83O6ptfVXjIKvZ5DeBgUeMEeNLvjg0OhAN0ma31hrg7A/yfBNdH5EiBC0DQjQKwmsHPZPlYD3zHi+I2xdt1czCk8Y2wngZh4RWKUTxuzHIjzG0JOQsRj8y+lns7docGbINy6VAk4vUro9hGdzL1HWjqRoosYCNQOO4de6QAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87f26496daeso671155241.2;
-        Mon, 07 Jul 2025 02:48:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751881732; x=1752486532;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X30nyVEkbf97p7ejjgeZnsoLvwP5WN63qwGxzHA4Chg=;
-        b=L09ElENQjSRsO3qchbRluNrxtjqyBbMChHaV/kYLzxRkXFPR2rDvf4Wq5cS6QXo068
-         EuuAG7CRAhjuCCs0IxPAk21tzm5mpxuQCiifgyfNEe7YDrsb0opeym3/5hTKc7A/j1Zz
-         K00KYyW0t/BWHG6VFGc1yuwluQcXZ0RgGiRIBaIu9sQTPsKVIrY3ZegUYKjh/NBm9nEo
-         iwOYAdK9595FSmatg+/n97fv6ZofNrvEyBGx7LMpu5KkYBaK04noNQwzVqwd5BFl3O17
-         NkHsUMCxkAY1W5bZARBCEVoHgtMeL8Kgvbd+pJFM1Lb4kBR6H/bXczFkG4kT+FzgsgrA
-         n34g==
-X-Forwarded-Encrypted: i=1; AJvYcCUseZcqaYinp5wBBH5bYrTGMs+LPYw67F8H1HE4NuvHXBrn7SEhF29wZXxWrS3+1Lbonsdo727WrsWK/rTL@vger.kernel.org, AJvYcCVnS/g6t67IgYuSOnWd6xhxXnM5Wqi8Swkf2/+ZCWyRjIyPmsD4JF9UMS57z5q5cV5OCkyeoXnuMCs0@vger.kernel.org, AJvYcCXmlbU8vHnRluMvGxjy5kdrTwNDu44Yia4t7TNbUF4nNlkCMfzM1L6BJ6qeeE4oQ0X6mnUM9Q0ZpetCq5jNNP7YVKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3oZGFA9w8JV7H1yt2wGmVvexlZC1mIDGmYTiUYmh4y72DYEyu
-	HDHoOhunQmC9Qoe2QdYPadPqmYZq88a9uIu8ZKQJvHNAbUJCa/luuVifsYU42mPH
-X-Gm-Gg: ASbGnctYnaapjRdXsDUFkzt227LhNOT7CHiKgI34T6+miyfTfgJtzvEBayYIERmI680
-	+1yPhOC3yRKBei9Erdd9RQe0B2Vzrd49mkC0iwlsj/lSTbaqDb1UmzaXVyEZ7iG1UKH5sB2zmjg
-	g+cC4Ddf3aQ9TI+ni35oFtwO3UBLmrRn1+eoePecGyeqM6EVVawtl0Qm/pvAIpRNTwe1rYr2pgb
-	0N2jzRKpxyV2OWb/lNIgGGvwNcqtGuVCZbwRJ3lduS3S+MXediQFl8qBDH34Q7Ar6cFwTMMZ3OH
-	QAas7cFkGDNYcQ2RP9dJy/LPFQU9HErPcKM/ZV4oPtQK/0oLKnzlUgOAIP+bC3z66DRmiLHE9jR
-	90YFCA5xVywgL12kayCIPTwOs
-X-Google-Smtp-Source: AGHT+IHYF9AB5d1FThVD6J80zFnKDSHHRfIp0EvpxufUtpPETyWGs9Iz/e69fH0CzCeTHUzvdDHXNw==
-X-Received: by 2002:a05:6102:2b99:b0:4ec:c53f:bd10 with SMTP id ada2fe7eead31-4f2f244587dmr5969314137.16.1751881731922;
-        Mon, 07 Jul 2025 02:48:51 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4f2ea543c1csm1075906137.7.2025.07.07.02.48.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 02:48:51 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-886b2fdba07so804971241.1;
-        Mon, 07 Jul 2025 02:48:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUxbSoUPBFtGRjjKhfanPGGbB695Q5P/9UPdi6LLDyCW5e4bhkqJRqu2B8ZaPHjU8IiolaX+U0uRRBTurJ4B7dOhyM=@vger.kernel.org, AJvYcCVXz1YvOH5VPresiDrIwaFLy+BpwQ6trITOgfXCEaTIgUe7MwLhsSeTaGAUJoaOxV0SBF0XbhFYAZ23CJ0L@vger.kernel.org, AJvYcCVzH5ti7UacRNezwMH62LR4op6zyJEnioQVQZasFKII92eAQaCIEniwpAlUQYkZV+oyyptEhPr9NkJu@vger.kernel.org
-X-Received: by 2002:a05:6102:50a5:b0:4ec:285:72e1 with SMTP id
- ada2fe7eead31-4f2f1e677e7mr5866844137.6.1751881731290; Mon, 07 Jul 2025
- 02:48:51 -0700 (PDT)
+	s=arc-20240116; t=1751881772; c=relaxed/simple;
+	bh=X2KTQj3sYrBODlaBUh5907GvBSYo7zkOz4ctatRTbww=;
+	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
+	 Content-Type:References; b=A84wpbGiCev962cWRoIuJiXqgf5fm0ctbiLkVTAx5y7aE2flsbSwuLHeD0nqrwfSR6fAr+RMaKcuaQu+fP8o/p49ZV53ybicE8s2ubS3bY72ph/FtPBHfNYZt0jlul156LKaqbGNp9fofYAJFphQvCG78c51G79RNF0r2DvvUPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=C2/hVxWs; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C2/hVxWs"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250707094928euoutp02f32ff059c133d59a2fbad4e383507a52~P7y-B2r7d1618516185euoutp022
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:49:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250707094928euoutp02f32ff059c133d59a2fbad4e383507a52~P7y-B2r7d1618516185euoutp022
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751881768;
+	bh=v184H/+hjF+g7LMn8OCQL3GzK+GQt5a9rJlf+wIu6Rs=;
+	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
+	b=C2/hVxWstxbxgta80C5Ph98Wnyw6+Oxm+ufwF584REQNd5gtjD1vleKcGwgiKTSeu
+	 8BpIUMKmFDtBRIshTnTFGWm9Qk/oA0ud8HewRF5X5nJr37k0XlYmvJz/e8ITw9v33k
+	 tlI8ObBlv7E7B6lTBTYN6PK0+QawZVbdx5yIyWt0=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250707094927eucas1p2be0302112d89f0ea39e4eeb21c771234~P7y_UFxDO1730317303eucas1p2t;
+	Mon,  7 Jul 2025 09:49:27 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250707094926eusmtip1f0ccbebd2086190de86602af194461dc~P7y9MVE5l0369203692eusmtip1X;
+	Mon,  7 Jul 2025 09:49:26 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Date: Mon, 07 Jul 2025 11:48:29 +0200
+Subject: [PATCH v10 1/7] pwm: Export `pwmchip_release` for external use
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250625153042.159690-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUuqwo5Q2SuB=GBMLVYr1yNTB0hoOCohV=HeQ09NE32xw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUuqwo5Q2SuB=GBMLVYr1yNTB0hoOCohV=HeQ09NE32xw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 7 Jul 2025 11:48:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU1G=h5AptjmO=i1Rfu7DhDKy0cHs4jhvXxrheYNny4zg@mail.gmail.com>
-X-Gm-Features: Ac12FXwyVXqd2V4btALDd9XkZXt7CMeZ8youkn0AjHf_1VLV6yj7Dj-maR7VVLY
-Message-ID: <CAMuHMdU1G=h5AptjmO=i1Rfu7DhDKy0cHs4jhvXxrheYNny4zg@mail.gmail.com>
-Subject: Re: [PATCH 4/6] arm64: dts: renesas: r9a09g087: Add SDHI nodes
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250707-rust-next-pwm-working-fan-for-sending-v10-1-d0c5cf342004@samsung.com>
+In-Reply-To: <20250707-rust-next-pwm-working-fan-for-sending-v10-0-d0c5cf342004@samsung.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
+	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
+	Turquette <mturquette@baylibre.com>,  Drew Fustini <fustini@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250707094927eucas1p2be0302112d89f0ea39e4eeb21c771234
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250707094927eucas1p2be0302112d89f0ea39e4eeb21c771234
+X-EPHeader: CA
+X-CMS-RootMailID: 20250707094927eucas1p2be0302112d89f0ea39e4eeb21c771234
+References: <20250707-rust-next-pwm-working-fan-for-sending-v10-0-d0c5cf342004@samsung.com>
+	<CGME20250707094927eucas1p2be0302112d89f0ea39e4eeb21c771234@eucas1p2.samsung.com>
 
-On Thu, 3 Jul 2025 at 11:56, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, 25 Jun 2025 at 17:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add SDHI0-SDHI1 nodes to RZ/N2H ("R9A09G087") SoC DTSI.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
-> > @@ -155,6 +155,46 @@ gic: interrupt-controller@83000000 {
-> >                         interrupt-controller;
-> >                         interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
-> >                 };
-> > +
-> > +               sdhi0: mmc@92080000  {
-> > +                       compatible = "renesas,sdhi-r9a09g087",
-> > +                                    "renesas,sdhi-r9a09g057";
-> > +                       reg = <0x0 0x92080000 0 0x10000>;
-> > +                       interrupts = <GIC_SPI 782 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                    <GIC_SPI 783 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&cpg CPG_MOD 1212>,
->
-> 1112?
->
-> > +                                <&cpg CPG_CORE R9A09G087_SDHI_CLKHS>;
-> > +                       clock-names = "aclk", "clkh";
-> > +                       power-domains = <&cpg>;
-> > +                       status = "disabled";
-> > +
-> > +                       sdhi0_vqmmc: vqmmc-regulator {
-> > +                               regulator-name = "SDHI0-VQMMC";
-> > +                               regulator-min-microvolt = <1800000>;
-> > +                               regulator-max-microvolt = <3300000>;
-> > +                               status = "disabled";
-> > +                       };
-> > +               };
-> > +
-> > +               sdhi1: mmc@92090000 {
-> > +                       compatible = "renesas,sdhi-r9a09g087",
-> > +                                    "renesas,sdhi-r9a09g057";
-> > +                       reg = <0x0 0x92090000 0 0x10000>;
-> > +                       interrupts = <GIC_SPI 784 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                    <GIC_SPI 785 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&cpg CPG_MOD 1213>,
->
-> 1113?
->
-> > +                                <&cpg CPG_CORE R9A09G087_SDHI_CLKHS>;
-> > +                       clock-names = "aclk", "clkh";
-> > +                       power-domains = <&cpg>;
-> > +                       status = "disabled";
-> > +
-> > +                       sdhi1_vqmmc: vqmmc-regulator {
-> > +                               regulator-name = "SDHI1-VQMMC";
-> > +                               regulator-min-microvolt = <1800000>;
-> > +                               regulator-max-microvolt = <3300000>;
-> > +                               status = "disabled";
-> > +                       };
-> > +               };
-> >         };
-> >
+The upcoming Rust abstraction layer for the PWM subsystem uses a custom
+`dev->release` handler to safely manage the lifetime of its driver
+data.
 
-Same here: it is indeed 1212/1213 as the bits belong to MSTPCRM register.
+To prevent leaking the memory of the `struct pwm_chip` (allocated by
+`pwmchip_alloc`), this custom handler must also call the original
+`pwmchip_release` function to complete the cleanup.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Make `pwmchip_release` a global, exported function so that it can be
+called from the Rust FFI bridge. This involves removing the `static`
+keyword, adding a prototype to the public header, and exporting the
+symbol.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+---
+ drivers/pwm/core.c  | 2 +-
+ include/linux/pwm.h | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-                        Geert
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index c1e8ab1a0945889d92dada003060b8b109f2a138..1d33438cd2cf0b5ca53dd22786ed5b5a9f5def8d 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -1600,7 +1600,7 @@ void pwmchip_put(struct pwm_chip *chip)
+ }
+ EXPORT_SYMBOL_GPL(pwmchip_put);
+ 
+-static void pwmchip_release(struct device *pwmchip_dev)
++void pwmchip_release(struct device *pwmchip_dev)
+ {
+ 	struct pwm_chip *chip = pwmchip_from_dev(pwmchip_dev);
+ 
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 8cafc483db53addf95591d1ac74287532c0fa0ee..8f0698c09e62b893d63fc258da3c34781183056f 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -478,6 +478,7 @@ static inline bool pwm_might_sleep(struct pwm_device *pwm)
+ 
+ /* PWM provider APIs */
+ void pwmchip_put(struct pwm_chip *chip);
++void pwmchip_release(struct device *dev);
+ struct pwm_chip *pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv);
+ struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv);
+ 
+@@ -551,6 +552,10 @@ static inline void pwmchip_put(struct pwm_chip *chip)
+ {
+ }
+ 
++static inline void pwmchip_release(struct device *dev)
++{
++}
++
+ static inline struct pwm_chip *pwmchip_alloc(struct device *parent,
+ 					     unsigned int npwm,
+ 					     size_t sizeof_priv)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
