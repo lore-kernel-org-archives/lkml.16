@@ -1,425 +1,194 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691041891AB;
-	Mon,  7 Jul 2025 13:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE0D1891AB;
+	Mon,  7 Jul 2025 13:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751896466; cv=none; b=eKJYpEZOohsBR11aAY/NX9oZWEYHBx24rKwja1/8rQ5QKwn+C4nY+0QJck0xJ+1THuPM1ioCQ3B5tc9XgSTXUsVEaKG55sFSJr/w0yuGAZEkHI9LWO9UwXeMHh4jl5s7iLNPChahRQ+ZDhHSAUhX6SzWj1YmXpbeGsb0YTu3PZ4=
+	t=1751896473; cv=none; b=qkQ+9lrxaSrcs8S+pqgkTPpD3Fg9QuakQE5tdChmbDXD9mx+a4nrWS2rNXiu/mt57mqSn6WmujWdgjezLM9NT8XFOjrqIb0JqQonpvcdy9QYJZRsxPkdbxLgKHwfFOpO5lBNn75ljAkET3gZ5Eu/ZLgJhg17eL08RMLUwgl7UYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751896466; c=relaxed/simple;
-	bh=cIXq5eaxVWtwkWpdPj2MhjtEuw7zX4XYu8BjQqVXcrw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SoCC/n44DMJDDJoCqvdH3ER4ZwQCv7kyW9ZmubFbtPckfAgxLDAUWtL+38hU1jI9n+tmhIjNyTimdr21P4v9SWyHBqW+yCppwO5I6U6qK4g49AcZEqugymEld+Ee8ewDA8QtYF3B9qHiykUMO4WiZhfkIzZzut/R75Pzz3ICEnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=mUBUZLzR; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1751896473; c=relaxed/simple;
+	bh=M7KnUGVbMMPFMpzTHogMwwXWP2hhGn1bZR4qt/UEBM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LIDTlhjm5TyZHf5Sm+j9tb3FgH2gNVQl1mi1MkxyPFe0cqDZwwT3ApYblcSfgCw6mtOaFCKNsttpBcankgEvduUwZdwyf6YSimXKd53K5gZvNVo3aonPdmZwhwKSMmGEt4MLxx4r5ZIIMObqdb8QeQ//xKRQ4q6IyS9Wxs01OBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuB+3IVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="mUBUZLzR"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 567DBY4t026983;
-	Mon, 7 Jul 2025 09:54:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=urPCX
-	OyGOBC5JOwTjdNHdZ0QtrvGaGBJFaFe545ErhY=; b=mUBUZLzRsDgYiEYgWg9Zk
-	tRUXmiO98Z28k77FdN7u1/mFMlDA29QWfx4mw3jbOhrJUv5yImWB32GG0BZvUF+c
-	N8pG1Ret9tLuWmj6z4h2OFWg4NY8qsNwDQR91lVr1RC4Aa1nSrEs7/EJjXoBRkpJ
-	A/L4MO7Ga7R3avO4JleBwHM1E95aIk5Pw1c2DAUbFaLAbqAHoSvnrHkIyVmBO4W9
-	k8RLCOn8+Ft7vnXMdbGFgC6+ilPRqGHFXaUEdrU2iQ4aMU2PD5eLqCQu0rn5cS8e
-	2b392U9GXP5JtohGVQGwJwOsRBIQlSOXoQ07NqOHK09Er/z4vSlGssDLsZ73MX3O
-	g==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47rayqh70g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 09:54:07 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 567Ds6da011795
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Jul 2025 09:54:06 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 7 Jul
- 2025 09:54:06 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Mon, 7 Jul 2025 09:54:06 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 567DrnMc016192;
-	Mon, 7 Jul 2025 09:53:52 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <andriy.shevchenko@intel.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <marcelo.schmitt1@gmail.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v8 10/12] iio: adc: ad4170-4: Add GPIO controller support
-Date: Mon, 7 Jul 2025 10:53:48 -0300
-Message-ID: <e031189d4b7e20cf02dd13220ab1ddf4798760c2.1751895245.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1751895245.git.marcelo.schmitt@analog.com>
-References: <cover.1751895245.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuB+3IVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7087EC4CEE3;
+	Mon,  7 Jul 2025 13:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751896472;
+	bh=M7KnUGVbMMPFMpzTHogMwwXWP2hhGn1bZR4qt/UEBM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tuB+3IVAs04qBzhql8pLHSdKWQR++hPBxFBxzUbIZLSRvqSDQ9wFNbL4Ysbh5SZEc
+	 DUu7ugObZc0dFFCrV/A8tBknd1M80enSCtEkxFd8oNY9uCW7Oa//1p7cqdVTn0FgPO
+	 tkzWpN/r732IgTdpy6Kei7OavDdhzEuxGY1r6thD+khTCXMuUK06sRj+q+cy6mJurb
+	 dGiM835zw0jdSskaGuixLfTR3dCymPCNErpLf8a+9ESHWr2lnpMujqlAXP6V7mzK75
+	 KThVXuJcvAI8RDhTvvFluF9fUu8zUn72+zTAkEly5qhxhxd4t5hiRuby909H5ZI6f4
+	 /UXf1G73s14EA==
+Date: Mon, 7 Jul 2025 15:54:29 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
+	Jared Kangas <jkangas@redhat.com>, Mattijs Korpershoek <mkorpershoek@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: reserved-memory: Introduce
+ carved-out memory region binding
+Message-ID: <20250707-cobalt-dingo-of-serenity-dbf92c@houat>
+References: <20250617-dma-buf-ecc-heap-v5-0-0abdc5863a4f@kernel.org>
+ <20250617-dma-buf-ecc-heap-v5-1-0abdc5863a4f@kernel.org>
+ <20250627193132.GB4032621-robh@kernel.org>
+ <20250630-attentive-fortunate-turaco-2e36d2@houat>
+ <20250630220819.GA3454648-robh@kernel.org>
+ <20250701-frisky-resolute-hamster-3dfedc@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=AP9nYgXq c=1 sm=1 tr=0 ts=686bd17f cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=gAnH3GRIAAAA:8 a=ovx6cSyaLB08nOeY--QA:9
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA4MSBTYWx0ZWRfX8YnrkHCU4WJA
- H8GamDLf/4nEC1q5MLCXI+u+4MKw/DQQ8CQ5dMaloRLxrHegXUnE8QZw6HK1lMRZIbvXV+L/Ha4
- rD2MNE1I+Sgnk4JtAnDzRMwoJQbfDzcUcAueBckz39HSCDWkgHWVoX6EvaWkxBmN0LvyY/RGkDr
- VOQZz39zXE+zlHyf8TfAWxEO10gzuW2GwSPQDSsK7avm92LFNs7OzDx5AEtm+skAmXv0iPoF5S7
- 1Oqkaz2AJZhksRvVimL6C3nl106/938I7kSEL5Gsyiv/tEUDzqZCgFGhm4g/GCmF4gVTQoiu0Mc
- NxyvAIKkUOkiGnE442bF3sm8I9BVlalRV/YygcFVpLQ2HDcy/7pFdrAVeFjBOe4D+CWR+cyisZT
- 64XQ0Rp/RXhjK3Bc8A11ckCJ3xkeUHTS9WlpB3SNwAdJ9sV6EhoN7/kMrBufr6ImkKNtlnQe
-X-Proofpoint-ORIG-GUID: eFL_puVkfSjO5OgJVeK3GESjJW2M07ra
-X-Proofpoint-GUID: eFL_puVkfSjO5OgJVeK3GESjJW2M07ra
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_03,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 impostorscore=0 malwarescore=0 adultscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070081
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="ocnrmtawiometb3v"
+Content-Disposition: inline
+In-Reply-To: <20250701-frisky-resolute-hamster-3dfedc@houat>
 
-The AD4170-4 has four multifunctional pins that can be used as GPIOs. The
-GPIO functionality can be accessed when the AD4170-4 chip is not busy
-performing continuous data capture or handling any other register
-read/write request. Also, the AD4170-4 does not provide any interrupt based
-on GPIO pin states so AD4170-4 GPIOs can't be used as interrupt sources.
 
-Implement gpio_chip callbacks to make AD4170-4 GPIO pins controllable
-through the gpiochip interface.
+--ocnrmtawiometb3v
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 1/2] dt-bindings: reserved-memory: Introduce
+ carved-out memory region binding
+MIME-Version: 1.0
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
-No changes since v7.
+Hi Rob,
 
- drivers/iio/adc/Kconfig    |   1 +
- drivers/iio/adc/ad4170-4.c | 224 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 224 insertions(+), 1 deletion(-)
+On Tue, Jul 01, 2025 at 09:12:18AM +0200, Maxime Ripard wrote:
+> On Mon, Jun 30, 2025 at 05:08:19PM -0500, Rob Herring wrote:
+> > On Mon, Jun 30, 2025 at 06:41:38PM +0200, Maxime Ripard wrote:
+> > > Hi Rob,
+> > >=20
+> > > On Fri, Jun 27, 2025 at 02:31:32PM -0500, Rob Herring wrote:
+> > > > On Tue, Jun 17, 2025 at 02:25:40PM +0200, Maxime Ripard wrote:
+> > > > > Some parts of the memory can be dedicated to specific purposes and
+> > > > > exposed as a dedicated memory allocator.
+> > > > >=20
+> > > > > This is especially useful if that particular region has a particu=
+lar
+> > > > > properties the rest of the memory doesn't have. For example, some
+> > > > > platforms have their entire RAM covered by ECC but for a small ar=
+ea
+> > > > > meant to be used by applications that don't need ECC, and its ass=
+ociated
+> > > > > overhead.
+> > > > >=20
+> > > > > Let's introduce a binding to describe such a region and allow the=
+ OS to
+> > > > > create a dedicated memory allocator for it.
+> > > > >=20
+> > > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > > > > ---
+> > > > >  .../bindings/reserved-memory/carved-out.yaml       | 49 ++++++++=
+++++++++++++++
+> > > > >  1 file changed, 49 insertions(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/ca=
+rved-out.yaml b/Documentation/devicetree/bindings/reserved-memory/carved-ou=
+t.yaml
+> > > > > new file mode 100644
+> > > > > index 0000000000000000000000000000000000000000..9ab5d1ebd9ebd9111=
+b7c064fabe1c45e752da83b
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/reserved-memory/carved-ou=
+t.yaml
+> > > > > @@ -0,0 +1,49 @@
+> > > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/reserved-memory/carved-out.ya=
+ml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Carved-out Memory Region
+> > > > > +
+> > > > > +description: |
+> > > >=20
+> > > > Don't need '|'.
+> > > >=20
+> > > > > +  Specifies that the reserved memory region has been carved out =
+of the
+> > > > > +  main memory allocator, and is intended to be used by the OS as=
+ a
+> > > > > +  dedicated memory allocator.
+> > > >=20
+> > > > Other than the commit msg, it is completely lost that this is for=
+=20
+> > > > ECC-less memory.
+> > >=20
+> > > Because it's not. One of the first feedback I got was that the way to
+> > > identify what a heap provides was the heap name.
+> > >=20
+> > > So, as far as the binding go, a heap just exposes a chunk of memory t=
+he
+> > > memory allocator wouldn't use. The actual semantics of that chunk of
+> > > memory don't matter.
+> >=20
+> > But they do because you use one carve out for one thing and another=20
+> > carve out for another purpose and they probably aren't interchangeable.
+>=20
+> That was also my initial thought, but it was then discussed that the
+> name of the region is enough of a discriminant. And it makes sense too,
+> it's a sufficient discriminant for the device tree to uniquely identify
+> a given memory region on a given platform already, so we don't really
+> need anything else.
+>=20
+> > For the most part, everything in /reserved-memory is a carve out from=
+=20
+> > regular memory though we failed to enforce that.
+> >=20
+> > > > This description applies to CMA area as well. So what's the differe=
+nce?
+> > >=20
+> > > Yeah, I kind of agree, which is why I initially started with a proper=
+ty,
+> > > and you then asked for a compatible.
+> >=20
+> > My issues with properties is we have to support N factorial cases for=
+=20
+> > combinations of N properties. It's already fragile. Whereas a compatibl=
+e=20
+> > is (hopefully) well defined as to what's needed and is only 1 more case=
+=20
+> > to support.
+>=20
+> I think that's also what John especially wanted to avoid. If we have a
+> generic compatible, but the attributes/properties/whatever of the
+> buffers allocated from that region differ (like ecc vs non-ecc,
+> protected vs non-protected, etc.) we will need properties in the device
+> tree to describe them too.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 36e506e8d8f1..d43edc7b0c0f 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -92,6 +92,7 @@ config AD4170_4
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
- 	depends on COMMON_CLK
-+	depends on GPIOLIB
- 	help
- 	  Say yes here to build support for Analog Devices AD4170-4 SPI analog
- 	  to digital converters (ADC).
-diff --git a/drivers/iio/adc/ad4170-4.c b/drivers/iio/adc/ad4170-4.c
-index 32e52d24656a..3153680c0a30 100644
---- a/drivers/iio/adc/ad4170-4.c
-+++ b/drivers/iio/adc/ad4170-4.c
-@@ -18,6 +18,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/gpio/driver.h>
- #include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/trigger.h>
-@@ -68,6 +69,9 @@
- #define AD4170_FILTER_FS_REG(x)				(0xC7 + 14 * (x))
- #define AD4170_OFFSET_REG(x)				(0xCA + 14 * (x))
- #define AD4170_GAIN_REG(x)				(0xCD + 14 * (x))
-+#define AD4170_GPIO_MODE_REG				0x191
-+#define AD4170_GPIO_OUTPUT_REG				0x193
-+#define AD4170_GPIO_INPUT_REG				0x195
- #define AD4170_ADC_CTRL_CONT_READ_EXIT_REG		0x200 /* virtual reg */
- 
- #define AD4170_REG_READ_MASK				BIT(14)
-@@ -106,6 +110,12 @@
- /* AD4170_FILTER_REG */
- #define AD4170_FILTER_FILTER_TYPE_MSK			GENMASK(3, 0)
- 
-+/* AD4170_GPIO_MODE_REG */
-+#define AD4170_GPIO_MODE_GPIO0_MSK			GENMASK(1, 0)
-+#define AD4170_GPIO_MODE_GPIO1_MSK			GENMASK(3, 2)
-+#define AD4170_GPIO_MODE_GPIO2_MSK			GENMASK(5, 4)
-+#define AD4170_GPIO_MODE_GPIO3_MSK			GENMASK(7, 6)
-+
- /* AD4170 register constants */
- 
- /* AD4170_CLOCK_CTRL_REG constants */
-@@ -146,9 +156,14 @@
- #define AD4170_FILTER_FILTER_TYPE_SINC5			0x4
- #define AD4170_FILTER_FILTER_TYPE_SINC3			0x6
- 
-+/* AD4170_GPIO_MODE_REG constants */
-+#define AD4170_GPIO_MODE_GPIO_INPUT			1
-+#define AD4170_GPIO_MODE_GPIO_OUTPUT			2
-+
- /* Device properties and auxiliary constants */
- 
- #define AD4170_NUM_ANALOG_PINS				9
-+#define AD4170_NUM_GPIO_PINS				4
- #define AD4170_MAX_ADC_CHANNELS				16
- #define AD4170_MAX_IIO_CHANNELS				(AD4170_MAX_ADC_CHANNELS + 1)
- #define AD4170_MAX_ANALOG_PINS				8
-@@ -177,6 +192,9 @@
- 
- #define AD4170_ADC_CTRL_CONT_READ_EXIT			0xA5
- 
-+/* GPIO pin functions  */
-+#define AD4170_GPIO_UNASSIGNED				0x00
-+
- static const unsigned int ad4170_reg_size[] = {
- 	[AD4170_CONFIG_A_REG] = 1,
- 	[AD4170_DATA_24B_REG] = 3,
-@@ -214,6 +232,9 @@ static const unsigned int ad4170_reg_size[] = {
- 	[AD4170_OFFSET_REG(5) ... AD4170_GAIN_REG(5)] = 3,
- 	[AD4170_OFFSET_REG(6) ... AD4170_GAIN_REG(6)] = 3,
- 	[AD4170_OFFSET_REG(7) ... AD4170_GAIN_REG(7)] = 3,
-+	[AD4170_GPIO_MODE_REG] = 2,
-+	[AD4170_GPIO_OUTPUT_REG] = 2,
-+	[AD4170_GPIO_INPUT_REG] = 2,
- 	[AD4170_ADC_CTRL_CONT_READ_EXIT_REG] = 0,
- };
- 
-@@ -365,6 +386,8 @@ struct ad4170_state {
- 	struct clk_hw int_clk_hw;
- 	unsigned int clock_ctrl;
- 	unsigned int pins_fn[AD4170_NUM_ANALOG_PINS];
-+	int gpio_fn[AD4170_NUM_GPIO_PINS];
-+	struct gpio_chip gpiochip;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the transfer buffers
- 	 * to live in their own cache lines.
-@@ -1475,6 +1498,194 @@ static int ad4170_soft_reset(struct ad4170_state *st)
- 	return 0;
- }
- 
-+static int ad4170_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct iio_dev *indio_dev = gpiochip_get_data(gc);
-+	struct ad4170_state *st = iio_priv(indio_dev);
-+	unsigned int val;
-+	int ret;
-+
-+	if (!iio_device_claim_direct(indio_dev))
-+		return -EBUSY;
-+
-+	ret = regmap_read(st->regmap, AD4170_GPIO_MODE_REG, &val);
-+	if (ret)
-+		goto err_release;
-+
-+	/*
-+	 * If the GPIO is configured as an input, read the current value from
-+	 * AD4170_GPIO_INPUT_REG. Otherwise, read the input value from
-+	 * AD4170_GPIO_OUTPUT_REG.
-+	 */
-+	if (val & BIT(offset * 2))
-+		ret = regmap_read(st->regmap, AD4170_GPIO_INPUT_REG, &val);
-+	else
-+		ret = regmap_read(st->regmap, AD4170_GPIO_OUTPUT_REG, &val);
-+	if (ret)
-+		goto err_release;
-+
-+	ret = !!(val & BIT(offset));
-+err_release:
-+	iio_device_release_direct(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int ad4170_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	struct iio_dev *indio_dev = gpiochip_get_data(gc);
-+	struct ad4170_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (!iio_device_claim_direct(indio_dev))
-+		return -EBUSY;
-+
-+	ret = regmap_assign_bits(st->regmap, AD4170_GPIO_OUTPUT_REG,
-+				 BIT(offset), !!value);
-+
-+	iio_device_release_direct(indio_dev);
-+	return ret;
-+}
-+
-+static int ad4170_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct iio_dev *indio_dev = gpiochip_get_data(gc);
-+	struct ad4170_state *st = iio_priv(indio_dev);
-+	unsigned int val;
-+	int ret;
-+
-+	if (!iio_device_claim_direct(indio_dev))
-+		return -EBUSY;
-+
-+	ret = regmap_read(st->regmap, AD4170_GPIO_MODE_REG, &val);
-+	if (ret)
-+		goto err_release;
-+
-+	if (val & BIT(offset * 2 + 1))
-+		ret = GPIO_LINE_DIRECTION_OUT;
-+	else
-+		ret = GPIO_LINE_DIRECTION_IN;
-+
-+err_release:
-+	iio_device_release_direct(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int ad4170_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct iio_dev *indio_dev = gpiochip_get_data(gc);
-+	struct ad4170_state *st = iio_priv(indio_dev);
-+	unsigned long gpio_mask;
-+	int ret;
-+
-+	if (!iio_device_claim_direct(indio_dev))
-+		return -EBUSY;
-+
-+	switch (offset) {
-+	case 0:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO0_MSK;
-+		break;
-+	case 1:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO1_MSK;
-+		break;
-+	case 2:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO2_MSK;
-+		break;
-+	case 3:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO3_MSK;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		goto err_release;
-+	}
-+	ret = regmap_update_bits(st->regmap, AD4170_GPIO_MODE_REG, gpio_mask,
-+				 AD4170_GPIO_MODE_GPIO_INPUT << (2 * offset));
-+
-+err_release:
-+	iio_device_release_direct(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int ad4170_gpio_direction_output(struct gpio_chip *gc,
-+					unsigned int offset, int value)
-+{
-+	struct iio_dev *indio_dev = gpiochip_get_data(gc);
-+	struct ad4170_state *st = iio_priv(indio_dev);
-+	unsigned long gpio_mask;
-+	int ret;
-+
-+	ret = ad4170_gpio_set(gc, offset, value);
-+	if (ret)
-+		return ret;
-+
-+	if (!iio_device_claim_direct(indio_dev))
-+		return -EBUSY;
-+
-+	switch (offset) {
-+	case 0:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO0_MSK;
-+		break;
-+	case 1:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO1_MSK;
-+		break;
-+	case 2:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO2_MSK;
-+		break;
-+	case 3:
-+		gpio_mask = AD4170_GPIO_MODE_GPIO3_MSK;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		goto err_release;
-+	}
-+	ret = regmap_update_bits(st->regmap, AD4170_GPIO_MODE_REG, gpio_mask,
-+				 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * offset));
-+
-+err_release:
-+	iio_device_release_direct(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int ad4170_gpio_init_valid_mask(struct gpio_chip *gc,
-+				       unsigned long *valid_mask,
-+				       unsigned int ngpios)
-+{
-+	struct ad4170_state *st = gpiochip_get_data(gc);
-+	unsigned int i;
-+
-+	/* Only expose GPIOs that were not assigned any other function. */
-+	for (i = 0; i < ngpios; i++) {
-+		bool valid = st->gpio_fn[i] == AD4170_GPIO_UNASSIGNED;
-+
-+		__assign_bit(i, valid_mask, valid);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad4170_gpio_init(struct iio_dev *indio_dev)
-+{
-+	struct ad4170_state *st = iio_priv(indio_dev);
-+
-+	st->gpiochip.label = "ad4170_gpios";
-+	st->gpiochip.base = -1;
-+	st->gpiochip.ngpio = AD4170_NUM_GPIO_PINS;
-+	st->gpiochip.parent = &st->spi->dev;
-+	st->gpiochip.can_sleep = true;
-+	st->gpiochip.init_valid_mask = ad4170_gpio_init_valid_mask;
-+	st->gpiochip.get_direction = ad4170_gpio_get_direction;
-+	st->gpiochip.direction_input = ad4170_gpio_direction_input;
-+	st->gpiochip.direction_output = ad4170_gpio_direction_output;
-+	st->gpiochip.get = ad4170_gpio_get;
-+	st->gpiochip.set_rv = ad4170_gpio_set;
-+	st->gpiochip.owner = THIS_MODULE;
-+
-+	return devm_gpiochip_add_data(&st->spi->dev, &st->gpiochip, indio_dev);
-+}
-+
- static int ad4170_parse_reference(struct ad4170_state *st,
- 				  struct fwnode_handle *child,
- 				  struct ad4170_setup *setup)
-@@ -1818,7 +2029,18 @@ static int ad4170_parse_firmware(struct iio_dev *indio_dev)
- 	if (ret)
- 		return ret;
- 
--	return ad4170_parse_channels(indio_dev);
-+	ret = ad4170_parse_channels(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Only create a GPIO chip if flagged for it */
-+	if (device_property_read_bool(dev, "gpio-controller")) {
-+		ret = ad4170_gpio_init(indio_dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static int ad4170_initial_config(struct iio_dev *indio_dev)
--- 
-2.47.2
+I thought about it some more over the weekend, but if a compatible isn't
+a great solution either, would it make sense to just create a heap for
+each shared-dma-pool region, and thus we just wouldn't need any extra
+compatible or property?
 
+Maxime
+
+--ocnrmtawiometb3v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGvRkQAKCRAnX84Zoj2+
+dkZwAX4rT+fDu6s03R98a9PhbxiZQuf0qatIim53ASVJNKer/7d+UzPQxlAZMm6T
+8lKd1fcBfR8q9qQI9VdMqnoE+7lwQZNgSMDmOsCrmn0yi30ou/EVVP7HptXFkwHt
+jYrff69ABQ==
+=nuJF
+-----END PGP SIGNATURE-----
+
+--ocnrmtawiometb3v--
