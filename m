@@ -1,75 +1,95 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp153-170.sina.com.cn (smtp153-170.sina.com.cn [61.135.153.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB288191F98;
-	Mon,  7 Jul 2025 11:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D322191F98
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751887594; cv=none; b=lME+3uIcX4o/lnxs5iTsM3+RPimg8aYSnERxIuhAPpTFaBz5X9kCyRgHLiYSEgojOxPfAX6LtS+Vv8mOohjLb/r4noemuakHeQrSjQNMFOjmZOOdud732vuHc2oydsksjwBURYArh+cNiQ7V60mnoG8E8dvv+NW0YCRz/fmlWig=
+	t=1751887647; cv=none; b=ZiG2DgirkTDRz2P4CgaWYW9eqjg3zzC+AIzsNhEKzf/QZu83LtsdVUcO6negVQoxPDybWyBmMqHzl3jq3nvs2jF16hxfJYQ8Whr5O/Eed+R4bJkAVF7ASnGNHvh5S7pc9T/Mg5qz1zu4+ASJVJddWmfmG/OAO71rNaMkci039qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751887594; c=relaxed/simple;
-	bh=Hcilk+1gc7opmTuORKXudv4wdN1mbGDUSQFfRBQvgBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZC/w96rayKoBdnPmzzH32xIjBn6HkcEXAZn8dqA+YsyJGOQxT+vRstKYQ1LY9WNWvZ/JHV8LmJCm4gzWG8O44ojsWfwEqN75YGUSQ0EF5Ne+vDdBJAMmvTGseFXuMASnNt2KS4QidA6qcaNXCMDMzo4SwnGr/qKx/Ax5QT9kXck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NVSXNiGZ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751887647; c=relaxed/simple;
+	bh=g+vvJB3WXfl2xhA7Q5Uia4MeTxDf2UERYo86cQ4YVPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aFrKPuAMQMkSCbQ7GbP2YT6iBsDm/YW67i86Pg23l2781gWBVgF2ZE9VK+4Ig2JoRXVonGg4crTl3TYGegIz6tDSDOOnEKVMt4wePt6mwocJkO/NScpF2hranwhV/MVh8fTKn5F7Bl0E0FwoyOBA7MiWSik6sTESrI6/jUF/6eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=In4futyK; arc=none smtp.client-ip=61.135.153.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NVSXNiGZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Pzsgu0KWdlrvYJUBaVS/BahIave3CRDWqYqZMw/y10s=; b=NVSXNiGZGUsEnLgLoQXSaxxKzS
-	5E5i3NfZ/JTpEpylCPKb9s/ePSMiCGUAFSENBPgfM2N8W9inRHFIqNmHOKqn+65bRnKzJDDuPhWyz
-	qN8/161xQ3akgW/mhKV5QECrEll9D1aOVUM+WlEeEfqXyRTMTUpCx7f1YB0Mt95RqLWdrN//J0ZAz
-	mMHJ3RuZPw50BsrPNkC/ZjUtDrJdnZGnqpJYvgI2zbFBaTd29qQXfpFnesNw0MKIb+F6cmo/tAVi4
-	3v/o/FNA0vBdqqxsDGOssaMCDvBkYgFQyAmrPupx3vQ6oLNklTDtbfl4odj7K2zcRz2o4BLJNBf0o
-	dS+ibZxw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYjzL-00000008Tg7-1xeD;
-	Mon, 07 Jul 2025 11:26:23 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 036FE300399; Mon, 07 Jul 2025 13:26:23 +0200 (CEST)
-Date: Mon, 7 Jul 2025 13:26:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH v3 2/2] tracing/preemptirq: Optimize
- preempt_disable/enable() tracepoint overhead
-Message-ID: <20250707112622.GZ1613376@noisy.programming.kicks-ass.net>
-References: <20250704170748.97632-1-wander@redhat.com>
- <20250704170748.97632-3-wander@redhat.com>
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="In4futyK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751887640;
+	bh=HGiW0pW1raEYw9x5KszA1dnRrGgit3o4p+Xv797shsI=;
+	h=From:Subject:Date:Message-ID;
+	b=In4futyKcvIbCeu6Kc8QjOi5vJKTlVvzAwJ27CGUTfGV77njUPX48JHvAM5MOd9do
+	 NwqOGUfFiUN0Kbn44oyQro9gXvth31sCnWYAPdiVAj9Ua3iMHjBaMG7iq4eI+w/HLS
+	 h6IjCE70qC+C87Bf9o9g9bqMFP/dAc6FoOfgIxcc=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.34) with ESMTP
+	id 686BAF0B00005B0E; Mon, 7 Jul 2025 19:27:09 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 1463686291937
+X-SMAIL-UIID: B7B899CEF6914A2B852DE1CB19B06490-20250707-192709-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+4e21d5f67b886a692b55@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] BUG: corrupted list in remove_wait_queue (2)
+Date: Mon,  7 Jul 2025 19:26:57 +0800
+Message-ID: <20250707112658.2733-1-hdanton@sina.com>
+In-Reply-To: <686b939a.a00a0220.c7b3.007e.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704170748.97632-3-wander@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 04, 2025 at 02:07:43PM -0300, Wander Lairson Costa wrote:
-> +#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
-> +#define preempt_count_dec_and_test() \
-> +	({ preempt_count_sub(1); should_resched(0); })
-> +#endif
+> Date: Mon, 07 Jul 2025 02:30:02 -0700
+> syzbot has bisected this issue to:
+> 
+> commit 8ffdff6a8cfbdc174a3a390b6f825a277b5bb895
+> Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date:   Wed Apr 14 08:58:10 2021 +0000
+> 
+>     staging: comedi: move out of staging directory
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13009f70580000
+> start commit:   05df91921da6 Merge tag 'v6.16-rc4-smb3-client-fixes' of gi..
+> git tree:       upstream
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=10809f70580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17009f70580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=45bd916a213c79bb
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4e21d5f67b886a692b55
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=161cdc8c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d1a582580000
 
-Also this is terrible. Surely you can do better.
+#syz test upstream master
+
+--- x/drivers/comedi/comedi_fops.c
++++ y/drivers/comedi/comedi_fops.c
+@@ -2454,7 +2454,7 @@ static __poll_t comedi_poll(struct file
+ 	struct comedi_device *dev = cfp->dev;
+ 	struct comedi_subdevice *s, *s_read;
+ 
+-	down_read(&dev->attach_lock);
++	down_write(&dev->attach_lock);
+ 
+ 	if (!dev->attached) {
+ 		dev_dbg(dev->class_dev, "no driver attached\n");
+@@ -2484,7 +2484,7 @@ static __poll_t comedi_poll(struct file
+ 	}
+ 
+ done:
+-	up_read(&dev->attach_lock);
++	up_write(&dev->attach_lock);
+ 	return mask;
+ }
+ 
+--
