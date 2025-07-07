@@ -1,268 +1,261 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE0261595
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E1B1A9B24;
+	Mon,  7 Jul 2025 09:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880669; cv=none; b=ckMD+qJO7gq3TNMhI+C+3P1hIl+DSp5B2fXRJUoxpGhq7pimYNYNVJjHQ3PGeDNTtUlOyTgUi15Ox3J3DSo+FwtFwApsiYfSF2kSaSoOLYwtmn10UsUrdSVRfaOK/EbJj+4Mx8Tr2y3iuNfw0p/QmGDtuSofw0B7wZbS8Q3kep8=
+	t=1751880788; cv=none; b=ZquDFaX63GZNrgo3Wk1xPkmlgT14xZ70N6RrXdPkSpPyM2rZqDSTwIrVobLk+8h03Rkv7mB2uuTyC5t9+ckbJCXPn33ngTV9/pDnBC12TLIHYfco6IK68a1/prg3rONjanSLDgSZYfgen7UvaokS2wxfd+XjatMkxv4plOM/u9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880669; c=relaxed/simple;
-	bh=9LS1/8t7DaKVh82SCYm0AEnt4c7Rroj4z2PBzKThYNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=L46PJ2LIr/okt1K1RZLNdQyomd6T6q+ee1jrFpo3Hq93KIzLivOIJbDu0gOb6L3Lvc8xc8OlAAx6AC2xn/+wH9jutO7ahFSWs3A49sy+Ma5qNDKF2gfor32fmnG++CYvkTRNoh0Os8UVn0D+qfWgYljyYTG7lqhhTtet7251I9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=C1JbOEwB; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="C1JbOEwB"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BF41240E0208;
-	Mon,  7 Jul 2025 09:30:54 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jbK1aqKiTf2C; Mon,  7 Jul 2025 09:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751880650; bh=1lz/JpPtCN7njwwxfe47p4WGy8o2scBRxB/pzapm9KI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=C1JbOEwBSbRAVbykwKs8j6NZofsnsHLWDwhg4FLoR2hrJ0ltzP4r7S7+F3KK6mirk
-	 v/rCCS8xa6TGIIo50OAUFj/q+KaLj9laFQK8H4NU00MYbRd8VELaWqLakGizgVmPxF
-	 gF130GLXTOK0kC2XMlhqlRWVA+aLXT+NLACNz7uA1ckAbNtp8lfqGpFb5vkZmVAuHu
-	 bTY5rsJ6MB3w6so3CFXEIDSXBJ+fyJZZmrxUviZh2lyQzhX+k3KgkTHuM44Y4FjA6+
-	 LPGFHpYKjlTfE9FvW5HXm9dhzt9/MmLGy9lwA19GUkMDF47jgY8/dkbmYv9akmViC0
-	 dVxS8JAfnC7+wJyzdBsD/Jn1V2kPdHiixWL/IgBEKwT3vE9rLrLV7D75Wg3Qdo/ta+
-	 fms9sXLrObKOj1kwjm7FtogFPfKm9jvkzzH5mKyMfPZy7rqBk6M2r5bRrg4ZAQRyeW
-	 fIF2Hhhdi1+q06jLKL4kFOUOKVO0hz1p7JQCr3DeoH2AXqlNmCJ4fXjuAo5EWlPApe
-	 IMLDnuhHdrXA+eXkdFdqYLFZoVjC5AjrlOvOiVH8JKjCwt3eZe/Fh4YMPr9qtdQwTB
-	 TNvQTxnEcs9L8vJDnNtg27jlmHoBTkBPyolu5VueCzbaMnJ0WKT+/W7TO4vnDjCaYh
-	 2azpldGwVqgZj+jC4LTqwKdE=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 50F4940E0198;
-	Mon,  7 Jul 2025 09:30:40 +0000 (UTC)
-Date: Mon, 7 Jul 2025 11:30:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: amd-gfx@lists.freedesktop.org
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
-	Ramesh Errabolu <Ramesh.Errabolu@amd.com>,
-	Arvind Yadav <Arvind.Yadav@amd.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: WARNING: drivers/gpu/drm/drm_gem.c:286 at
- drm_gem_object_handle_put_unlocked+0xb1/0xf0 [drm]
-Message-ID: <20250707093032.GAaGuTuJ0ZYHPgA2q3@fat_crate.local>
+	s=arc-20240116; t=1751880788; c=relaxed/simple;
+	bh=sljwZqqMmdRqQ2BExZ6tqrO/gV9+hjoy/WYRmxd+9Zo=;
+	h=From:Subject:To:Cc:Date:Message-ID:References:MIME-Version:
+	 Content-Type; b=Mfac9RE0CDWAv+cvhfDC2vBTQLY5a3gryNEMiADUZFpUx9Rit2Ndwckv39ZB4JkqfcFoJJq1SMK0hv8ZtLKYESmGohKoPtPLKhcUa8uOCpSUn+G2rgEqtUrwFwkW6b0O1ykZCmwnEXIq6O/Scjcdb9U5tTZkhLZXEvv+UXKsi7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5f03840c5b1511f0b29709d653e92f7d-20250707
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:33617028-8527-4551-8fb2-5c6d775983d4,IP:0,U
+	RL:0,TC:53,Content:-20,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:33
+X-CID-META: VersionHash:6493067,CLOUDID:f587e619f24542156914fdb6737be2ac,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|83|102|801,TC:4,Content:1|52,EDM:-3,I
+	P:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
+	,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 3,NGT|BAP
+X-CID-BAS: 3,NGT|BAP,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 5f03840c5b1511f0b29709d653e92f7d-20250707
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <dengjie03@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1831040693; Mon, 07 Jul 2025 17:32:59 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 4ACDB16001A04;
+	Mon,  7 Jul 2025 17:32:59 +0800 (CST)
+Received: by node4.com.cn (NSMail, from userid 0)
+	id 3992216001A03; Mon,  7 Jul 2025 17:32:59 +0800 (CST)
+From: =?UTF-8?B?6YKT5p2w?= <dengjie03@kylinos.cn>
+Subject: =?UTF-8?B?5Zue5aSNOiBSZTogW1BBVENIIHYyXSB1c2I6IHN0b3JhZ2U6IElnbm9yZSBVQVMgZHJpdmVyIGZvciBTYW5EaXNrIEV4dHJlbWUgUHJvIDU1QUYgc3RvcmFnZSBkZXZpY2U=?=
+To: 	=?UTF-8?B?R3JlZyBLSA==?= <gregkh@linuxfoundation.org>,
+Cc: 	=?UTF-8?B?c3Rlcm4=?= <stern@rowland.harvard.edu>,
+	=?UTF-8?B?bGludXgta2VybmVs?= <linux-kernel@vger.kernel.org>,
+	=?UTF-8?B?bGludXgtdXNi?= <linux-usb@vger.kernel.org>,
+	=?UTF-8?B?dXNiLXN0b3JhZ2U=?= <usb-storage@lists.one-eyed-alien.net>,
+Date: Mon, 07 Jul 2025 17:32:58 +0800
+X-Mailer: NSMAIL 7.0.0
+Message-ID: <215xmk9u7l1-21606fwob8m@nsmail7.0.0--kylin--1>
+References: 2025070725-circle-recite-bc04@gregkh
+X-Israising: 0
+X-Seclevel-1: 0
+X-Seclevel: 0
+X-Delaysendtime: Mon, 07 Jul 2025 17:32:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary=nsmail-249wt0pjjl4-249zcwcdn8p
+X-ns-mid: webmail-686b944a-2422sf45
+X-ope-from: <dengjie03@kylinos.cn>
 
-Hi all,
+This message is in MIME format.
 
-I see the below on -rc5 + tip, on a RN machine.
+--nsmail-249wt0pjjl4-249zcwcdn8p
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
----
+PHA+PGJyPjxicj48YnI+PGJyPjxicj48YnI+LS0tLTwvcD4KPGRpdiBpZD0i
+Y3MyY19tYWlsX3NpZ2F0dXJlIj48L2Rpdj4KPHA+Jm5ic3A7PC9wPgo8ZGl2
+IGlkPSJyZSIgc3R5bGU9Im1hcmdpbi1sZWZ0OiAwLjVlbTsgcGFkZGluZy1s
+ZWZ0OiAwLjVlbTsgYm9yZGVyLWxlZnQ6IDFweCBzb2xpZCBncmVlbjsiPjxi
+cj48YnI+PGJyPgo8ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiAjZjVm
+N2ZhOyI+PHN0cm9uZz7kuLvjgIDpopjvvJo8L3N0cm9uZz48c3BhbiBpZD0i
+c3ViamVjdCI+UmU6IFtQQVRDSCB2Ml0gdXNiOiBzdG9yYWdlOiBJZ25vcmUg
+VUFTIGRyaXZlciBmb3IgU2FuRGlzayBFeHRyZW1lIFBybyA1NUFGIHN0b3Jh
+Z2UgZGV2aWNlPC9zcGFuPiA8YnI+PHN0cm9uZz7ml6XjgIDmnJ/vvJo8L3N0
+cm9uZz48c3BhbiBpZD0iZGF0ZSI+MjAyNS0wNy0wNyAxNjo0Nzwvc3Bhbj4g
+PGJyPjxzdHJvbmc+5Y+R5Lu25Lq677yaPC9zdHJvbmc+PHNwYW4gaWQ9ImZy
+b20iPkdyZWcgS0g8L3NwYW4+IDxicj48c3Ryb25nPuaUtuS7tuS6uu+8mjwv
+c3Ryb25nPjxzcGFuIGlkPSJ0byIgc3R5bGU9IndvcmQtYnJlYWs6IGJyZWFr
+LWFsbDsiPumCk+adsDs8L3NwYW4+PC9kaXY+Cjxicj4KPGRpdiBpZD0iY29u
+dGVudCI+CjxkaXYgY2xhc3M9InZpZXdlcl9wYXJ0IiBzdHlsZT0icG9zaXRp
+b246IHJlbGF0aXZlOyI+CjxkaXY+T24gTW9uLCBKdWwgMDcsIDIwMjUgYXQg
+MDI6MjU6MDdQTSArMDgwMCwgSmllIERlbmcgd3JvdGU6PGJyPiZndDsgVGhl
+IFNhbkRpc2sgRXh0cmVtZSBQcm8gNTVBRiBzdG9yYWdlIGRldmljZSgwNzgx
+OjU1YWYpIGhhcyBwb29yIGNvbXBhdGliaWxpdHkgd2l0aCBVQVMgZHJpdmVy
+cy48YnI+Jmd0OyBUaGUgbG9nczo8YnI+Jmd0OyBbIDEuMzU5ODU5XVsgMF0g
+WyBUMTYzXSB1c2IgMi0xOiBuZXcgU3VwZXJTcGVlZCBHZW4gMSBVU0IgZGV2
+aWNlIG51bWJlciAyIHVzaW5nIHhoY2lfaGNkPGJyPiZndDsgWyAxLjM4NTcw
+OF1bIDBdIFsgVDE2M10gdXNiIDItMTogTmV3IFVTQiBkZXZpY2UgZm91bmQs
+IGlkVmVuZG9yPTA3ODEsIGlkUHJvZHVjdD01NWFmLCBiY2REZXZpY2U9MTAu
+ODU8YnI+Jmd0OyBbIDEuMzg1NzA5XVsgMF0gWyBUMTYzXSB1c2IgMi0xOiBO
+ZXcgVVNCIGRldmljZSBzdHJpbmdzOiBNZnI9MiwgUHJvZHVjdD0zLCBTZXJp
+YWxOdW1iZXI9MTxicj4mZ3Q7IFsgMS4zODU3MTBdWyAwXSBbIFQxNjNdIHVz
+YiAyLTE6IFByb2R1Y3Q6IEV4dHJlbWUgUHJvIDU1QUY8YnI+Jmd0OyBbIDEu
+Mzg1NzExXVsgMF0gWyBUMTYzXSB1c2IgMi0xOiBNYW51ZmFjdHVyZXI6IFNh
+bkRpc2s8YnI+Jmd0OyBbIDEuMzg1NzExXVsgMF0gWyBUMTYzXSB1c2IgMi0x
+OiBTZXJpYWxOdW1iZXI6IDMyMzIzNDMyMzkzNTM0MzAzMDM0MzYzNjxicj4m
+Z3Q7IFsgMS45Mjc2MDNdWyAwXSBbIFQzMDZdIHVzYmNvcmU6IHJlZ2lzdGVy
+ZWQgbmV3IGludGVyZmFjZSBkcml2ZXIgdXNiLXN0b3JhZ2U8YnI+Jmd0OyBb
+IDEuOTQwNTExXVsgMF0gWyBUMzA2XSBzY3NpIGhvc3QzOiB1YXM8YnI+Jmd0
+OyBbIDEuOTQwNTg0XVsgMF0gWyBUMzA2XSB1c2Jjb3JlOiByZWdpc3RlcmVk
+IG5ldyBpbnRlcmZhY2UgZHJpdmVyIHVhczxicj4mZ3Q7IFsgMS45NDA4NDNd
+WyAwXSBbIFQxODhdIHNjc2kgMzowOjA6MDogRGlyZWN0LUFjY2VzcyBTYW5E
+aXNrIEV4dHJlbWUgUHJvIDU1QUYgMTA4NSBQUTogMCBBTlNJOiA2PGJyPiZn
+dDsgWyAxLjk0MTM2M11bIDBdIFsgVDE4OF0gc2NzaSAzOjA6MDoxOiBFbmNs
+b3N1cmUgU2FuRGlzayBTRVMgRGV2aWNlIDEwODUgUFE6IDAgQU5TSTogNjxi
+cj4mZ3Q7IFsgMS45NDE2OTddWyAwXSBbIFQxODhdIHNkIDM6MDowOjA6IEF0
+dGFjaGVkIHNjc2kgZ2VuZXJpYyBzZzAgdHlwZSAwPGJyPiZndDsgWyAxLjk0
+MTc4M11bIDBdIFsgVDE4OF0gc2NzaSAzOjA6MDoxOiBBdHRhY2hlZCBzY3Np
+IGdlbmVyaWMgc2cxIHR5cGUgMTM8YnI+Jmd0OyBbIDEuOTQyMjk2XVsgMF0g
+WyBUMTg5XSBzZCAzOjA6MDowOiBbc2RhXSAxOTUzNDU5NjE3IDUxMi1ieXRl
+IGxvZ2ljYWwgYmxvY2tzOiAoMS4wMCBUQi85MzEgR2lCKTxicj4mZ3Q7IFsg
+MS45NDIzNzNdWyAwXSBbIFQxODldIHNkIDM6MDowOjA6IFtzZGFdIFdyaXRl
+IFByb3RlY3QgaXMgb2ZmPGJyPiZndDsgWyAxLjk0MjM3NF1bIDBdIFsgVDE4
+OV0gc2QgMzowOjA6MDogW3NkYV0gTW9kZSBTZW5zZTogMzcgMDAgMTAgMDA8
+YnI+Jmd0OyBbIDEuOTQyNTM0XVsgMF0gWyBUMTg5XSBzZCAzOjA6MDowOiBb
+c2RhXSBXcml0ZSBjYWNoZTogZW5hYmxlZCwgcmVhZCBjYWNoZTogZW5hYmxl
+ZCwgc3VwcG9ydHMgRFBPIGFuZCBGVUE8YnI+Jmd0OyBbIDEuOTQzNTg2XVsg
+MF0gWyBUMTg5XSBzZCAzOjA6MDowOiBbc2RhXSBPcHRpbWFsIHRyYW5zZmVy
+IHNpemUgMjA5NzE1MiBieXRlczxicj4mZ3Q7IFsgMS45NzY3OTddWyAwXSBb
+IFQxODldIHNkYTogc2RhMTxicj4mZ3Q7IFsgMS45Nzc4OThdWyAwXSBbIFQx
+ODldIHNkIDM6MDowOjA6IFtzZGFdIEF0dGFjaGVkIFNDU0kgZGlzazxicj4m
+Z3Q7IFsgMS45ODA0MDZdWyAwXSBbIFQyNjddIHNjc2kgMzowOjA6MTogRmFp
+bGVkIHRvIGdldCBkaWFnbm9zdGljIHBhZ2UgMHgxPGJyPiZndDsgWyAxLjk4
+MDQwOF1bIDBdIFsgVDI2N10gc2NzaSAzOjA6MDoxOiBGYWlsZWQgdG8gYmlu
+ZCBlbmNsb3N1cmUgLTE5PGJyPiZndDsgWyAxLjk4MDQxNF1bIDBdIFsgVDI2
+N10gc2VzIDM6MDowOjE6IEF0dGFjaGVkIEVuY2xvc3VyZSBkZXZpY2U8YnI+
+Jmd0OyBbIDEuOTgxMDY4XVsgMF0gWyBDMF0gc2QgMzowOjA6MDogW3NkYV0g
+dGFnIzEwIGRhdGEgY21wbHQgZXJyIC03NSB1YXMtdGFnIDEgaW5mbGlnaHQ6
+IENNRDxicj4mZ3Q7IFsgMS45ODEwNzFdWyAwXSBbIEMwXSBzZCAzOjA6MDow
+OiBbc2RhXSB0YWcjMTAgQ0RCOiBSZWFkKDEwKSAyOCAwMCA3NCA2ZiA2ZCAw
+MCAwMCAwMCAwOCAwMDxicj4mZ3Q7IFsgMzMuODE5MTg2XVsgMF0gWyBUMTg4
+XSBzZCAzOjA6MDowOiBbc2RhXSB0YWcjMTAgdWFzX2VoX2Fib3J0X2hhbmRs
+ZXIgMCB1YXMtdGFnIDEgaW5mbGlnaHQ6IENNRDxicj4mZ3Q7IFsgMzMuODE5
+MTg4XVsgMF0gWyBUMTg4XSBzZCAzOjA6MDowOiBbc2RhXSB0YWcjMTAgQ0RC
+OiBSZWFkKDEwKSAyOCAwMCA3NCA2ZiA2ZCAwMCAwMCAwMCAwOCAwMDxicj4m
+Z3Q7IFsgMzMuODQzMTg2XVsgMF0gWyBUMzA5XSBzY3NpIGhvc3QzOiB1YXNf
+ZWhfZGV2aWNlX3Jlc2V0X2hhbmRsZXIgc3RhcnQ8YnI+Jmd0OyA8YnI+Jmd0
+OyBEZXZpY2UgZGVjcmlwdG9yIGlzIGJlbG93Ojxicj4mZ3Q7IEJ1cyAwMDIg
+RGV2aWNlIDAwMzogSUQgMDc4MTo1NWFmIFNhbkRpc2sgQ29ycC4gRXh0cmVt
+ZSBQcm8gNTVBRjxicj4mZ3Q7IERldmljZSBEZXNjcmlwdG9yOjxicj4mZ3Q7
+IGJMZW5ndGggMTg8YnI+Jmd0OyBiRGVzY3JpcHRvclR5cGUgMTxicj4mZ3Q7
+IGJjZFVTQiAzLjIwPGJyPiZndDsgYkRldmljZUNsYXNzIDA8YnI+Jmd0OyBi
+RGV2aWNlU3ViQ2xhc3MgMDxicj4mZ3Q7IGJEZXZpY2VQcm90b2NvbCAwPGJy
+PiZndDsgYk1heFBhY2tldFNpemUwIDk8YnI+Jmd0OyBpZFZlbmRvciAweDA3
+ODEgU2FuRGlzayBDb3JwLjxicj4mZ3Q7IGlkUHJvZHVjdCAweDU1YWY8YnI+
+Jmd0OyBiY2REZXZpY2UgMTAuODU8YnI+Jmd0OyBpTWFudWZhY3R1cmVyIDIg
+U2FuRGlzazxicj4mZ3Q7IGlQcm9kdWN0IDMgRXh0cmVtZSBQcm8gNTVBRjxi
+cj4mZ3Q7IGlTZXJpYWwgMSAzMjMyMzQzMjM5MzUzNDMwMzAzNDM2MzY8YnI+
+Jmd0OyBiTnVtQ29uZmlndXJhdGlvbnMgMTxicj4mZ3Q7IENvbmZpZ3VyYXRp
+b24gRGVzY3JpcHRvcjo8YnI+Jmd0OyBiTGVuZ3RoIDk8YnI+Jmd0OyBiRGVz
+Y3JpcHRvclR5cGUgMjxicj4mZ3Q7IHdUb3RhbExlbmd0aCAweDAwNzk8YnI+
+Jmd0OyBiTnVtSW50ZXJmYWNlcyAxPGJyPiZndDsgYkNvbmZpZ3VyYXRpb25W
+YWx1ZSAxPGJyPiZndDsgaUNvbmZpZ3VyYXRpb24gMDxicj4mZ3Q7IGJtQXR0
+cmlidXRlcyAweDgwPGJyPiZndDsgKEJ1cyBQb3dlcmVkKTxicj4mZ3Q7IE1h
+eFBvd2VyIDg5Nm1BPGJyPiZndDsgSW50ZXJmYWNlIERlc2NyaXB0b3I6PGJy
+PiZndDsgYkxlbmd0aCA5PGJyPiZndDsgYkRlc2NyaXB0b3JUeXBlIDQ8YnI+
+Jmd0OyBiSW50ZXJmYWNlTnVtYmVyIDA8YnI+Jmd0OyBiQWx0ZXJuYXRlU2V0
+dGluZyAwPGJyPiZndDsgYk51bUVuZHBvaW50cyAyPGJyPiZndDsgYkludGVy
+ZmFjZUNsYXNzIDggTWFzcyBTdG9yYWdlPGJyPiZndDsgYkludGVyZmFjZVN1
+YkNsYXNzIDYgU0NTSTxicj4mZ3Q7IGJJbnRlcmZhY2VQcm90b2NvbCA4MCBC
+dWxrLU9ubHk8YnI+Jmd0OyBpSW50ZXJmYWNlIDA8YnI+Jmd0OyBFbmRwb2lu
+dCBEZXNjcmlwdG9yOjxicj4mZ3Q7IGJMZW5ndGggNzxicj4mZ3Q7IGJEZXNj
+cmlwdG9yVHlwZSA1PGJyPiZndDsgYkVuZHBvaW50QWRkcmVzcyAweDgxIEVQ
+IDEgSU48YnI+Jmd0OyBibUF0dHJpYnV0ZXMgMjxicj4mZ3Q7IFRyYW5zZmVy
+IFR5cGUgQnVsazxicj4mZ3Q7IFN5bmNoIFR5cGUgTm9uZTxicj4mZ3Q7IFVz
+YWdlIFR5cGUgRGF0YTxicj4mZ3Q7IHdNYXhQYWNrZXRTaXplIDB4MDQwMCAx
+eCAxMDI0IGJ5dGVzPGJyPiZndDsgYkludGVydmFsIDA8YnI+Jmd0OyBiTWF4
+QnVyc3QgMTU8YnI+Jmd0OyBFbmRwb2ludCBEZXNjcmlwdG9yOjxicj4mZ3Q7
+IGJMZW5ndGggNzxicj4mZ3Q7IGJEZXNjcmlwdG9yVHlwZSA1PGJyPiZndDsg
+YkVuZHBvaW50QWRkcmVzcyAweDAyIEVQIDIgT1VUPGJyPiZndDsgYm1BdHRy
+aWJ1dGVzIDI8YnI+Jmd0OyBUcmFuc2ZlciBUeXBlIEJ1bGs8YnI+Jmd0OyBT
+eW5jaCBUeXBlIE5vbmU8YnI+Jmd0OyBVc2FnZSBUeXBlIERhdGE8YnI+Jmd0
+OyB3TWF4UGFja2V0U2l6ZSAweDA0MDAgMXggMTAyNCBieXRlczxicj4mZ3Q7
+IGJJbnRlcnZhbCAwPGJyPiZndDsgYk1heEJ1cnN0IDE1PGJyPiZndDsgSW50
+ZXJmYWNlIERlc2NyaXB0b3I6PGJyPiZndDsgYkxlbmd0aCA5PGJyPiZndDsg
+YkRlc2NyaXB0b3JUeXBlIDQ8YnI+Jmd0OyBiSW50ZXJmYWNlTnVtYmVyIDA8
+YnI+Jmd0OyBiQWx0ZXJuYXRlU2V0dGluZyAxPGJyPiZndDsgYk51bUVuZHBv
+aW50cyA0PGJyPiZndDsgYkludGVyZmFjZUNsYXNzIDggTWFzcyBTdG9yYWdl
+PGJyPiZndDsgYkludGVyZmFjZVN1YkNsYXNzIDYgU0NTSTxicj4mZ3Q7IGJJ
+bnRlcmZhY2VQcm90b2NvbCA5ODxicj4mZ3Q7IGlJbnRlcmZhY2UgMDxicj4m
+Z3Q7IEVuZHBvaW50IERlc2NyaXB0b3I6PGJyPiZndDsgYkxlbmd0aCA3PGJy
+PiZndDsgYkRlc2NyaXB0b3JUeXBlIDU8YnI+Jmd0OyBiRW5kcG9pbnRBZGRy
+ZXNzIDB4ODEgRVAgMSBJTjxicj4mZ3Q7IGJtQXR0cmlidXRlcyAyPGJyPiZn
+dDsgVHJhbnNmZXIgVHlwZSBCdWxrPGJyPiZndDsgU3luY2ggVHlwZSBOb25l
+PGJyPiZndDsgVXNhZ2UgVHlwZSBEYXRhPGJyPiZndDsgd01heFBhY2tldFNp
+emUgMHgwNDAwIDF4IDEwMjQgYnl0ZXM8YnI+Jmd0OyBiSW50ZXJ2YWwgMDxi
+cj4mZ3Q7IGJNYXhCdXJzdCAxNTxicj4mZ3Q7IE1heFN0cmVhbXMgMzI8YnI+
+Jmd0OyBEYXRhLWluIHBpcGUgKDB4MDMpPGJyPiZndDsgRW5kcG9pbnQgRGVz
+Y3JpcHRvcjo8YnI+Jmd0OyBiTGVuZ3RoIDc8YnI+Jmd0OyBiRGVzY3JpcHRv
+clR5cGUgNTxicj4mZ3Q7IGJFbmRwb2ludEFkZHJlc3MgMHgwMiBFUCAyIE9V
+VDxicj4mZ3Q7IGJtQXR0cmlidXRlcyAyPGJyPiZndDsgVHJhbnNmZXIgVHlw
+ZSBCdWxrPGJyPiZndDsgU3luY2ggVHlwZSBOb25lPGJyPiZndDsgVXNhZ2Ug
+VHlwZSBEYXRhPGJyPiZndDsgd01heFBhY2tldFNpemUgMHgwNDAwIDF4IDEw
+MjQgYnl0ZXM8YnI+Jmd0OyBiSW50ZXJ2YWwgMDxicj4mZ3Q7IGJNYXhCdXJz
+dCAxNTxicj4mZ3Q7IE1heFN0cmVhbXMgMzI8YnI+Jmd0OyBEYXRhLW91dCBw
+aXBlICgweDA0KTxicj4mZ3Q7IEVuZHBvaW50IERlc2NyaXB0b3I6PGJyPiZn
+dDsgYkxlbmd0aCA3PGJyPiZndDsgYkRlc2NyaXB0b3JUeXBlIDU8YnI+Jmd0
+OyBiRW5kcG9pbnRBZGRyZXNzIDB4ODMgRVAgMyBJTjxicj4mZ3Q7IGJtQXR0
+cmlidXRlcyAyPGJyPiZndDsgVHJhbnNmZXIgVHlwZSBCdWxrPGJyPiZndDsg
+U3luY2ggVHlwZSBOb25lPGJyPiZndDsgVXNhZ2UgVHlwZSBEYXRhPGJyPiZn
+dDsgd01heFBhY2tldFNpemUgMHgwNDAwIDF4IDEwMjQgYnl0ZXM8YnI+Jmd0
+OyBiSW50ZXJ2YWwgMDxicj4mZ3Q7IGJNYXhCdXJzdCAxNTxicj4mZ3Q7IE1h
+eFN0cmVhbXMgMzI8YnI+Jmd0OyBTdGF0dXMgcGlwZSAoMHgwMik8YnI+Jmd0
+OyBFbmRwb2ludCBEZXNjcmlwdG9yOjxicj4mZ3Q7IGJMZW5ndGggNzxicj4m
+Z3Q7IGJEZXNjcmlwdG9yVHlwZSA1PGJyPiZndDsgYkVuZHBvaW50QWRkcmVz
+cyAweDA0IEVQIDQgT1VUPGJyPiZndDsgYm1BdHRyaWJ1dGVzIDI8YnI+Jmd0
+OyBUcmFuc2ZlciBUeXBlIEJ1bGs8YnI+Jmd0OyBTeW5jaCBUeXBlIE5vbmU8
+YnI+Jmd0OyBVc2FnZSBUeXBlIERhdGE8YnI+Jmd0OyB3TWF4UGFja2V0U2l6
+ZSAweDA0MDAgMXggMTAyNCBieXRlczxicj4mZ3Q7IGJJbnRlcnZhbCAwPGJy
+PiZndDsgYk1heEJ1cnN0IDA8YnI+Jmd0OyBDb21tYW5kIHBpcGUgKDB4MDEp
+PGJyPiZndDsgPGJyPiZndDsgU28gaWdub3JlIFVBUyBkcml2ZXIgZm9yIHRo
+aXMgZGV2aWNlLjxicj4mZ3Q7IDxicj4mZ3Q7IFNpZ25lZC1vZmYtYnk6IEpp
+ZSBEZW5nIDxicj4mZ3Q7IC0tLTxicj4mZ3Q7IHYyOjxicj4mZ3Q7ICogQWNj
+b3JkaW5nIHRvIHRoZSBmaWxlIG1vZGlmaWNhdGlvbiBydWxlcyAoc29ydCBi
+eSBWZW5kb3JJRCA8YnI+Jmd0OyBmaXJzdCwgdGhlbiBieSBQcm9kdWN0SUQu
+KSBBZGQgdGhlIG5ld2x5IGFkZGVkICJVTlVTVUFMX0RFViIgPGJyPiZndDsg
+aW4gdGhlIGNvcnJlY3QgcG9zaXRpb24uPGJyPiZndDsgdjE6PGJyPiZndDsg
+KiBUaGUgbmV3bHkgYWRkZWQgIlVOVVNVQUxfREVWIiB3YXMgZGlyZWN0bHkg
+YWRkZWQgdG8gdGhlIGVuZCA8YnI+Jmd0OyB3aXRob3V0IG1vZGlmeWluZyB0
+aGUgZm9ybWF0IGFjY29yZGluZyB0byB0aGUgZmlsZS48YnI+Jmd0OyA8YnI+
+Jmd0OyAtLS08YnI+Jmd0OyBkcml2ZXJzL3VzYi9zdG9yYWdlL3VudXN1YWxf
+dWFzLmggfCA3ICsrKysrKys8YnI+Jmd0OyAxIGZpbGUgY2hhbmdlZCwgNyBp
+bnNlcnRpb25zKCspPGJyPiZndDsgPGJyPiZndDsgZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvdXNiL3N0b3JhZ2UvdW51c3VhbF91YXMuaCBiL2RyaXZlcnMvdXNi
+L3N0b3JhZ2UvdW51c3VhbF91YXMuaDxicj4mZ3Q7IGluZGV4IDE0NzdlMzFk
+Nzc2My4uNmIxYTA4ZTJlNzI0IDEwMDY0NDxicj4mZ3Q7IC0tLSBhL2RyaXZl
+cnMvdXNiL3N0b3JhZ2UvdW51c3VhbF91YXMuaDxicj4mZ3Q7ICsrKyBiL2Ry
+aXZlcnMvdXNiL3N0b3JhZ2UvdW51c3VhbF91YXMuaDxicj4mZ3Q7IEBAIC01
+Miw2ICs1MiwxMyBAQCBVTlVTVUFMX0RFVigweDA1OWYsIDB4MTA2MSwgMHgw
+MDAwLCAweDk5OTksPGJyPiZndDsgVVNCX1NDX0RFVklDRSwgVVNCX1BSX0RF
+VklDRSwgTlVMTCw8YnI+Jmd0OyBVU19GTF9OT19SRVBPUlRfT1BDT0RFUyB8
+IFVTX0ZMX05PX1NBTUUpLDxicj4mZ3Q7IDxicj4mZ3Q7ICsvKiBSZXBvcnRl
+ZC1ieTogSmllIERlbmcgKi88YnI+Jmd0OyArVU5VU1VBTF9ERVYoMHgwNzgx
+LCAweDU1YWYsIDB4MDAwMCwgMHg5OTk5LDxicj4mZ3Q7ICsgIlNhbkRpc2si
+LDxicj4mZ3Q7ICsgIkV4dHJlbWUgUHJvIDU1QUYiLDxicj4mZ3Q7ICsgVVNC
+X1NDX0RFVklDRSwgVVNCX1BSX0RFVklDRSwgTlVMTCw8YnI+Jmd0OyArIFVT
+X0ZMX0lHTk9SRV9VQVMpLDxicj4mZ3Q7ICs8YnI+Jmd0OyAvKiBSZXBvcnRl
+ZC1ieTogWmhpaG9uZyBaaG91ICovPGJyPiZndDsgVU5VU1VBTF9ERVYoMHgw
+NzgxLCAweDU1ZTgsIDB4MDAwMCwgMHg5OTk5LDxicj4mZ3Q7ICJTYW5EaXNr
+Iiw8YnI+Jmd0OyAtLSA8YnI+Jmd0OyAyLjI1LjE8YnI+PGJyPldoeSBpcyB0
+aGVyZSB0d28gInYyIiBwYXRjaGVzIHNlbnQgaGVyZT8gU2hvdWxkbid0IHRo
+aXMgYmUgInYzIj88YnI+PGJyPmNvbmZ1c2VkLDxicj48YnI+Z3JlZyBrLWg8
+L2Rpdj4KPC9kaXY+CjwvZGl2Pgo8L2Rpdj4KPGRpdj4mbmJzcDs8L2Rpdj4K
+PGRpdj5UaGUgZmlyc3Qgc2VudCBWMiBwYXRjaCB3YXMgbWlzc2luZyB0aGUg
+ZGVzY3JpcHRpb24gb2YgdGhlIGRpZmZlcmVuY2VzPC9kaXY+CjxkaXY+YmV0
+d2VlbiBWMSBhbmQgVjIgcGF0Y2hlcy4gVGhlIFYyIHBhdGNoIHNlbnQgZm9y
+IHRoZSBzZWNvbmQgdGltZSBvbmx5PC9kaXY+CjxkaXY+YWRkcyBhIGRlc2Ny
+aXB0aW9uIG9mIHRoZSBkaWZmZXJlbmNlcyBmcm9tIHRoZSBWMSBwYXRjaCBj
+b21wYXJlZCB0byB0aGU8L2Rpdj4KPGRpdj5WMiBwYXRjaCBzZW50IGZvciB0
+aGUgZmlyc3QgdGltZS4gVGhlcmUgaXMgbm8gbW9kaWZpY2F0aW9uIHRvIHRo
+ZSBjb2RlLjwvZGl2Pgo8ZGl2PlNvIGl0IGlzIHJhc2hseSBiZWxpZXZlZCB0
+aGF0IGl0IGRvZXMgbm90IG5lZWQgdG8gYmUgZGVmaW5lZCBhcyBhIFYzIHBh
+dGNoLjwvZGl2Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8ZGl2IGlkPSJyZSIgc3R5
+bGU9Im1hcmdpbi1sZWZ0OiAwLjVlbTsgcGFkZGluZy1sZWZ0OiAwLjVlbTsg
+Ym9yZGVyLWxlZnQ6IDFweCBzb2xpZCBncmVlbjsiPjwvZGl2Pg==
 
-[    5.592468] cdc_ncm 2-2:2.0 eth0: register 'cdc_ncm' at usb-0000:03:00.3=
--2, CDC NCM (NO ZLP), f8:e4:3b:33:37:71
-[    5.593133] usbcore: registered new interface driver cdc_ncm
-[    5.597944] usbcore: registered new interface driver cdc_wdm
-[    5.600108] usbcore: registered new interface driver cdc_mbim
-[    6.912317] ------------[ cut here ]------------
-[    6.912377] WARNING: drivers/gpu/drm/drm_gem.c:286 at drm_gem_object_han=
-dle_put_unlocked+0xb1/0xf0 [drm], CPU#1: Xorg/629
-[    6.912429] Modules linked in: cdc_mbim(E) cdc_wdm(E) cdc_ncm(E) cdc_eth=
-er(E) amd_atl(E) nls_ascii(E) nls_cp437(E) vfat(E) fat(E) joydev(E) amdgpu(=
-E) edac_mce_amd(E) snd_hda_codec_realtek(E) snd_hda_codec_generic(E) snd_hd=
-a_scodec_component(E) snd_hda_codec_hdmi(E) rtw88_8822ce(E) hid_multitouch(=
-E) amdxcp(E) kvm_amd(E) sha3_generic(E) rtw88_8822c(E) i2c_algo_bit(E) rtw8=
-8_pci(E) drm_client_lib(E) snd_hda_intel(E) drm_ttm_helper(E) rtw88_core(E)=
- jitterentropy_rng(E) hid_generic(E) snd_intel_dspcfg(E) tpm_crb(E) wmi_bmo=
-f(E) drbg(E) ttm(E) kvm(E) snd_hda_codec(E) drm_exec(E) mac80211(E) irqbypa=
-ss(E) snd_hwdep(E) snd_hda_core(E) ghash_clmulni_intel(E) gpu_sched(E) liba=
-rc4(E) aesni_intel(E) snd_pcm(E) drm_suballoc_helper(E) drm_panel_backlight=
-_quirks(E) sp5100_tco(E) rapl(E) cec(E) snd_timer(E) watchdog(E) cfg80211(E=
-) drm_buddy(E) snd_rn_pci_acp3x(E) ucsi_acpi(E) snd_acp_config(E) drm_displ=
-ay_helper(E) pcspkr(E) i2c_piix4(E) xhci_pci(E) snd_soc_acpi(E) acpi_cpufre=
-q(E) snd(E) video(E) typec_ucsi(E) roles(E) drm_kms_helper(E)
-[    6.912495]  ccp(E) soundcore(E) snd_pci_acp3x(E) xhci_hcd(E) k10temp(E)=
- rfkill(E) i2c_smbus(E) typec(E) battery(E) wmi(E) tpm_tis(E) i2c_hid_acpi(=
-E) tpm_tis_core(E) i2c_hid(E) hid(E) ac(E) button(E) fuse(E) drm(E) efi_pst=
-ore(E) tpm(E) libaescfb(E) ecdh_generic(E) ecc(E) rng_core(E) autofs4(E) ev=
-dev(E) serio_raw(E)
-[    6.912538] CPU: 1 UID: 0 PID: 629 Comm: Xorg Tainted: G            E   =
-    6.16.0-rc5+ #1 PREEMPT(voluntary)=20
-[    6.912542] Tainted: [E]=3DUNSIGNED_MODULE
-[    6.912544] Hardware name: HP HP ProBook 635 Aero G7 Notebook PC/8830, B=
-IOS S84 Ver. 01.05.00 05/14/2021
-[    6.912547] RIP: 0010:drm_gem_object_handle_put_unlocked+0xb1/0xf0 [drm]
-[    6.912573] Code: 55 d1 1e f3 48 89 ef e8 fd 22 1e f3 eb d8 48 8b 43 08 =
-48 8d b8 f8 0c 00 00 e8 cb 85 1a f3 c7 83 18 01 00 00 00 00 00 00 eb 98 <0f=
-> 0b 5b 5d e9 26 d1 1e f3 48 8b 83 f8 01 00 00 48 8b 00 48 85 c0
-[    6.912575] RSP: 0018:ffffb5ebc32e3ba0 EFLAGS: 00010246
-[    6.912578] RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffb5ebc32=
-e3b1c
-[    6.912581] RDX: 0000000000000000 RSI: ffff9efb8cb005e8 RDI: ffff9efb861=
-cd448
-[    6.912583] RBP: ffff9efb8cb00010 R08: 0000000000000001 R09: ffff9efb8cb=
-00610
-[    6.912584] R10: 0000000000000000 R11: ffffb5ebc32e3b58 R12: ffff9efb8c2=
-41700
-[    6.912586] R13: 00000000ffffffdd R14: ffffb5ebc32e3c80 R15: ffff9efb8cb=
-00010
-[    6.912588] FS:  00007f320acb2b00(0000) GS:ffff9efcd29b8000(0000) knlGS:=
-0000000000000000
-[    6.912591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    6.912593] CR2: 00005605532d6164 CR3: 000000000bee9000 CR4: 00000000003=
-50ef0
-[    6.912595] Call Trace:
-[    6.912597]  <TASK>
-[    6.912599]  drm_gem_fb_destroy+0x2c/0x50 [drm_kms_helper]
-[    6.912616]  drm_mode_cursor_universal+0x10d/0x2a0 [drm]
-[    6.912647]  drm_mode_cursor_common.part.0+0xb0/0x200 [drm]
-[    6.912676]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
-[    6.912700]  drm_ioctl_kernel+0xa9/0x100 [drm]
-[    6.912728]  drm_ioctl+0x275/0x520 [drm]
-[    6.912752]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
-[    6.912777]  ? lock_release+0xc6/0x290
-[    6.912783]  ? _raw_spin_unlock_irqrestore+0x44/0x60
-[    6.912789]  amdgpu_drm_ioctl+0x4e/0x90 [amdgpu]
-[    6.913114]  __x64_sys_ioctl+0x85/0xd0
-[    6.913120]  do_syscall_64+0x6a/0x2e0
-[    6.913125]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[    6.913128] RIP: 0033:0x7f320b0338db
-[    6.913131] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 =
-00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89=
-> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
-[    6.913134] RSP: 002b:00007ffd66400810 EFLAGS: 00000246 ORIG_RAX: 000000=
-0000000010
-[    6.913137] RAX: ffffffffffffffda RBX: 00007ffd664008a0 RCX: 00007f320b0=
-338db
-[    6.913139] RDX: 00007ffd664008a0 RSI: 00000000c02464bb RDI: 00000000000=
-0000f
-[    6.913141] RBP: 00007ffd664008a0 R08: 00007f320a8cbb20 R09: 00000000000=
-00001
-[    6.913143] R10: 000000000000004b R11: 0000000000000246 R12: 00000000c02=
-464bb
-[    6.913145] R13: 000000000000000f R14: 0000000000000001 R15: 00005605530=
-01d10
-[    6.913152]  </TASK>
-[    6.913153] irq event stamp: 354561
-[    6.913155] hardirqs last  enabled at (354569): [<ffffffffb2b951f2>] __u=
-p_console_sem+0x52/0x60
-[    6.913159] hardirqs last disabled at (354576): [<ffffffffb2b951d7>] __u=
-p_console_sem+0x37/0x60
-[    6.913161] softirqs last  enabled at (352542): [<ffffffffb2aeb586>] __i=
-rq_exit_rcu+0x96/0xc0
-[    6.913165] softirqs last disabled at (352537): [<ffffffffb2aeb586>] __i=
-rq_exit_rcu+0x96/0xc0
-[    6.913167] ---[ end trace 0000000000000000 ]---
-[    6.913288] ------------[ cut here ]------------
-[    6.913290] WARNING: drivers/gpu/drm/drm_gem.c:286 at drm_gem_object_han=
-dle_put_unlocked+0xb1/0xf0 [drm], CPU#1: Xorg/629
-[    6.913318] Modules linked in: cdc_mbim(E) cdc_wdm(E) cdc_ncm(E) cdc_eth=
-er(E) amd_atl(E) nls_ascii(E) nls_cp437(E) vfat(E) fat(E) joydev(E) amdgpu(=
-E) edac_mce_amd(E) snd_hda_codec_realtek(E) snd_hda_codec_generic(E) snd_hd=
-a_scodec_component(E) snd_hda_codec_hdmi(E) rtw88_8822ce(E) hid_multitouch(=
-E) amdxcp(E) kvm_amd(E) sha3_generic(E) rtw88_8822c(E) i2c_algo_bit(E) rtw8=
-8_pci(E) drm_client_lib(E) snd_hda_intel(E) drm_ttm_helper(E) rtw88_core(E)=
- jitterentropy_rng(E) hid_generic(E) snd_intel_dspcfg(E) tpm_crb(E) wmi_bmo=
-f(E) drbg(E) ttm(E) kvm(E) snd_hda_codec(E) drm_exec(E) mac80211(E) irqbypa=
-ss(E) snd_hwdep(E) snd_hda_core(E) ghash_clmulni_intel(E) gpu_sched(E) liba=
-rc4(E) aesni_intel(E) snd_pcm(E) drm_suballoc_helper(E) drm_panel_backlight=
-_quirks(E) sp5100_tco(E) rapl(E) cec(E) snd_timer(E) watchdog(E) cfg80211(E=
-) drm_buddy(E) snd_rn_pci_acp3x(E) ucsi_acpi(E) snd_acp_config(E) drm_displ=
-ay_helper(E) pcspkr(E) i2c_piix4(E) xhci_pci(E) snd_soc_acpi(E) acpi_cpufre=
-q(E) snd(E) video(E) typec_ucsi(E) roles(E) drm_kms_helper(E)
-[    6.913380]  ccp(E) soundcore(E) snd_pci_acp3x(E) xhci_hcd(E) k10temp(E)=
- rfkill(E) i2c_smbus(E) typec(E) battery(E) wmi(E) tpm_tis(E) i2c_hid_acpi(=
-E) tpm_tis_core(E) i2c_hid(E) hid(E) ac(E) button(E) fuse(E) drm(E) efi_pst=
-ore(E) tpm(E) libaescfb(E) ecdh_generic(E) ecc(E) rng_core(E) autofs4(E) ev=
-dev(E) serio_raw(E)
-[    6.913408] CPU: 1 UID: 0 PID: 629 Comm: Xorg Tainted: G        W   E   =
-    6.16.0-rc5+ #1 PREEMPT(voluntary)=20
-[    6.913412] Tainted: [W]=3DWARN, [E]=3DUNSIGNED_MODULE
-[    6.913414] Hardware name: HP HP ProBook 635 Aero G7 Notebook PC/8830, B=
-IOS S84 Ver. 01.05.00 05/14/2021
-[    6.913416] RIP: 0010:drm_gem_object_handle_put_unlocked+0xb1/0xf0 [drm]
-[    6.913438] Code: 55 d1 1e f3 48 89 ef e8 fd 22 1e f3 eb d8 48 8b 43 08 =
-48 8d b8 f8 0c 00 00 e8 cb 85 1a f3 c7 83 18 01 00 00 00 00 00 00 eb 98 <0f=
-> 0b 5b 5d e9 26 d1 1e f3 48 8b 83 f8 01 00 00 48 8b 00 48 85 c0
-[    6.913441] RSP: 0018:ffffb5ebc32e3ba0 EFLAGS: 00010246
-[    6.913443] RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffb5ebc32=
-e3b1c
-[    6.913445] RDX: 0000000000000000 RSI: ffff9efb8cb005e8 RDI: ffff9efb861=
-cd448
-[    6.913447] RBP: ffff9efb8cb00010 R08: 0000000000000001 R09: ffff9efb8cb=
-00610
-[    6.913449] R10: 0000000000000000 R11: ffffb5ebc32e3b58 R12: ffff9efb8c2=
-41700
-[    6.913451] R13: 00000000ffffffdd R14: ffffb5ebc32e3c80 R15: ffff9efb8cb=
-00010
-[    6.913453] FS:  00007f320acb2b00(0000) GS:ffff9efcd29b8000(0000) knlGS:=
-0000000000000000
-[    6.913455] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    6.913457] CR2: 00005605532d6164 CR3: 000000000bee9000 CR4: 00000000003=
-50ef0
-[    6.913459] Call Trace:
-[    6.913461]  <TASK>
-[    6.913464]  drm_gem_fb_destroy+0x2c/0x50 [drm_kms_helper]
-[    6.913477]  drm_mode_cursor_universal+0x10d/0x2a0 [drm]
-[    6.913506]  drm_mode_cursor_common.part.0+0xb0/0x200 [drm]
-[    6.913534]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
-[    6.913557]  drm_ioctl_kernel+0xa9/0x100 [drm]
-[    6.913583]  drm_ioctl+0x275/0x520 [drm]
-[    6.913607]  ? __pfx_drm_mode_cursor2_ioctl+0x10/0x10 [drm]
-[    6.913631]  ? lock_release+0xc6/0x290
-[    6.913637]  ? _raw_spin_unlock_irqrestore+0x44/0x60
-[    6.913642]  amdgpu_drm_ioctl+0x4e/0x90 [amdgpu]
-[    6.913818]  __x64_sys_ioctl+0x85/0xd0
-[    6.913823]  do_syscall_64+0x6a/0x2e0
-[    6.913828]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[    6.913830] RIP: 0033:0x7f320b0338db
-[    6.913832] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 =
-00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89=
-> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
-[    6.913835] RSP: 002b:00007ffd66400810 EFLAGS: 00000246 ORIG_RAX: 000000=
-0000000010
-[    6.913838] RAX: ffffffffffffffda RBX: 00007ffd664008a0 RCX: 00007f320b0=
-338db
-[    6.913839] RDX: 00007ffd664008a0 RSI: 00000000c02464bb RDI: 00000000000=
-0000f
-[    6.913841] RBP: 00007ffd664008a0 R08: 00007f320a8cbb20 R09: 00000000000=
-00001
-[    6.913843] R10: 000000000000004b R11: 0000000000000246 R12: 00000000c02=
-464bb
-[    6.913845] R13: 000000000000000f R14: 0000000000000001 R15: 00005605530=
-01d10
-[    6.913852]  </TASK>
-[    6.913853] irq event stamp: 355561
-[    6.913855] hardirqs last  enabled at (355569): [<ffffffffb2b951f2>] __u=
-p_console_sem+0x52/0x60
-[    6.913858] hardirqs last disabled at (355576): [<ffffffffb2b951d7>] __u=
-p_console_sem+0x37/0x60
-[    6.913861] softirqs last  enabled at (352542): [<ffffffffb2aeb586>] __i=
-rq_exit_rcu+0x96/0xc0
-[    6.913864] softirqs last disabled at (352537): [<ffffffffb2aeb586>] __i=
-rq_exit_rcu+0x96/0xc0
-[    6.913866] ---[ end trace 0000000000000000 ]---
-[   45.744032]     percentage:          78%
-[  225.782261]     percentage:          79%
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--nsmail-249wt0pjjl4-249zcwcdn8p--
