@@ -1,158 +1,151 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE10B2D78A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751C828FFD8
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882396; cv=none; b=DyDHMK6HFLT44JRB7ThxpZ+s7VTHYIgktUOW2ZbmuqGRilPvzt0GTKl8VuW11Q6Mf34Mr01wwUNKvnre7XPJ2ENAe+sGXOTwVK0P3NlJ22rjIT8J6obx3O7qCRAor/GfDjZ5M9RQfI/QAMgGD1Di7omPdBlRM6+MdF7QVjnBAlA=
+	t=1751882402; cv=none; b=gwwn1rPnEctg5HMlxQQNA1kFfukQHrEaPcCYjG5mQPo77mI5MzZvzjYqdP9G7QEshwO/84fVH77Yey0S868BF5H5l5ccYSLEmV6LdNzA5+i/4JxQJdpDQ6WCBH2SP1LSB+X3GfQQ1HBbA8K3ZXbkoG9Z79ErYRhzaJFvJ2vo3rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882396; c=relaxed/simple;
-	bh=7Yz0bjI0WWqTDd5wMmn0BB46jE5RLxxJUDmNLhFW3Qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iz7Jwq+NGfODLdrTqvnxjkbJdJCsxfVzUPMNvx9qghwBWfI8R7OkWpkJt+rs8V+k7ciOw+n/kcxOkuDcya4440MzWChk3M3flNRvAh7bEXqt4M7mpZgAI5HgSvdY8WeSHng04j0Clw+snmWBDzHjh01W8S7XeBgWuMTxU3onQLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eYWwkCgf; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751882402; c=relaxed/simple;
+	bh=OQ34og8I8X3z80o99fbXU1v3ZxqvcPIL2A769bcQgaI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b08aMLI3iJNseZErzDlDn5ZSDSa7Soh4RkIAJLMHzgYsRJvVJ7TJs8GTyXNtQ2XRtlIEXmNzoHALTYcEGA7Vqbe+wyZG7vydq+b7hdR7RMkbEmmCG+peINGdu8E3HzKR4vBb1Ld2f+br+skJCTYRGPLzG62F6+mSW3LsnDsaDB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=desZQQHh; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eYWwkCgf"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453398e90e9so18766055e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:59:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="desZQQHh"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so26168125e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 03:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751882392; x=1752487192; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d82/2ial6v9ccHeZaghL3hLg/dzpt/+BNJIXRihD9fE=;
-        b=eYWwkCgf1Y/w6vxyp+NoMkTUdyBmohRGRfP67QIPZ/bEQRMOVJNmmkJV4uBf5Ze4Yh
-         y2Mx8WDVMAzwwiz3ndyChiSga+RGBDQIVVjRTPCZ7QoXWWLFjd3KVaXmJSghr3NMaEH+
-         99eEbKkNekpPUQI0zGDrc1N3pZNuVmlnNm/ndJd15QihssI97tUVB24T7drju25z85pA
-         sPjWsKjEOaMhxwXVuQo4Tj4gkddxl+xNTMDtYDccw+KwTK5qQ2xkCzNGRqfg26NYf0f6
-         iNWrb5tg5B05IhwKJ34MNQiHOAnS3jNXy0joGLg668meOYfnmtblaJSryT7OgWd6bO+0
-         95Zg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751882399; x=1752487199; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GF8vc1c9D0lLEMqMMZKCgAxa6DKwsWgtBoqT1qS5YRs=;
+        b=desZQQHhqp3mhpyYeupR5QZNaL047znpGYcRsaIDNHT0aCQ3fYlUJZVXTu41/TPm94
+         gSAheh7zv53nzMlaSnWP19iZlOourWHrDpYySkuHtrfveS1XN9rvKYPYUFiqc6+QcZaE
+         7MskhgwNV5gYyDnTIxQhvrBkvTsHxxC2pydo5jeLIQZypE0IlyQPKhOXkWlFldiL5mU0
+         ix7l3nMTmqZYO7Z0bTjYqJh4Ok/oSLkAhGgSqoKLMTl82tAO6S91m1jVj64SWtv7/NR7
+         rTKtG49i0LC+BSKqTGYlI7MTB7OfyoavnJEnFqBu/krWIYy9gbMQo353hC0axZXsAurc
+         PA6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751882392; x=1752487192;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d82/2ial6v9ccHeZaghL3hLg/dzpt/+BNJIXRihD9fE=;
-        b=bq5GRuv7Xk+uk1QUrMiVVQ4xgYAfgE0+BHMYSzkwxM506/T6t5+s8jMtHKnYmrERar
-         bVQFYGddicETzcUx/DeoihwGOPuO6Nh1vXjHP7QEfgOdKlcCdnQotRZHKDRNMJKuz4ox
-         QzE+5shP27aZCaDGiNvEnTXCAF2O34etEjxzlecq1d+rb7vxVKkHNG2eYfN4YJ1ztyrP
-         XtecSG6pPkr8GKU76ww02wLbcKJIq216oBcSVWlZxefB5Q39VSL2P/GWvBk1TjHgGhfM
-         ayvCydDCtTEII+3AAXUspakDJfPdAg0MOmnkPBJsc56RwdTs9kdLbYHu3ZJffC0pM+to
-         fEAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIkckmvYN/aQyTa1ZKev09/rv0o5t6i6DLdOFC784K+6dlas0zD1HffoM4VavZuWNhOPeS/Sxbz/3nJyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1ixKpwjjd6yjiKBR+yforMVIOFyIpPNGVz/ls5kvFXYgSs1Xi
-	M9cpgZKdS1zUjr9BYcoBAIqHY5jPbrwRtQLo9tj9QSvd7MqZf4M2JYs1MdICkcm7fFs=
-X-Gm-Gg: ASbGncurPHrc3J6Wfdq2vEBxd82q5VENdJftAgiPnHZgPhYaM526hdtlKLW8SMyPOeH
-	PH7oK+Ck7uUkCA0ZIGdMg2AYz7are15KDK1jsTDLoIOsVRglOzqQpZSWPVAmwMMNL2uDFxFoJo8
-	r19ZCSxLpGJn4d4Im5Rf8UF4ufdj+xuSmIYWgELyKpo9midXU809evhBlcbIzVDSngXCfBYbpTv
-	LYDDYALXIpBsmANjdPE+quMwDLOv0XgbrHGotxZkixsGSc6vPjsvQNuOB5yIOg3A5uMgut6twKT
-	PDX0hZidF2b+jMLhSOyT7/+wcG9YHapZcSOFBDGUrcN+RiCRgzVHjC0cMPzvNuwG8oaT2ngimYI
-	=
-X-Google-Smtp-Source: AGHT+IHRjy82W3krhF0E3ljOItCoie8HVrp+8y0T7w/WP5rEf/zip2ygctxQu9zwoA/kbRgg/9MwOA==
-X-Received: by 2002:a05:600c:548e:b0:442:ccfa:18c with SMTP id 5b1f17b1804b1-454b318d9c0mr86326645e9.32.1751882392003;
-        Mon, 07 Jul 2025 02:59:52 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969058sm137832675e9.3.2025.07.07.02.59.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 02:59:51 -0700 (PDT)
-Date: Mon, 7 Jul 2025 11:59:49 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: YoungJun Park <youngjun.park@lge.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, shikemeng@huaweicloud.com, 
-	kasong@tencent.com, nphamcs@gmail.com, bhe@redhat.com, baohua@kernel.org, 
-	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, 
-	taejoon.song@lge.com, gunho.lee@lge.com
-Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
- per cgroup swap priority control
-Message-ID: <nyzhn5e5jxk2jscf7rrsrcpgoblppdrbi7odgkwl5elgkln4bq@mdhevtbwp7co>
-References: <20250612103743.3385842-1-youngjun.park@lge.com>
- <20250612103743.3385842-2-youngjun.park@lge.com>
- <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
- <aFIJDQeHmTPJrK57@yjaykim-PowerEdge-T330>
- <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
- <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
- <bhcx37fve7sgyod3bxsky5wb3zixn4o3dwuiknmpy7fsbqgtli@rmrxmvjro4ht>
- <aGPd3hIuEVF2Ykoy@yjaykim-PowerEdge-T330>
+        d=1e100.net; s=20230601; t=1751882399; x=1752487199;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GF8vc1c9D0lLEMqMMZKCgAxa6DKwsWgtBoqT1qS5YRs=;
+        b=G4qafkU6b9f4IF2jbQqbnCUP0PpBsBGgSOOqQbuT8SlEMkzt10LUPRgDO3l489D/1X
+         1IInHsYcqgV21OEXxwYK/5NmRfbblLMMkODSzxC/d0Rr0/Ns0wk62owK9GmBAjih4Ysh
+         1GnkxJC7Y04bft1zKelNISskhmygy7+64hZsqw5RsWBA/+VqdjifbCNkru3V9tkN+Vhb
+         qqolwsmNhG7GNrspoEwqpmBJ5wRG04HsKy1UZr6E0RDYBbNFvcfw9kEnp0PTEFrp6Z4k
+         LeePc17XzKkhEI8ANHL4mtLbyNgqPahAe0RRBd5mx9UZatlGO8/3I8q1Q0lpsbfvlStV
+         HImg==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4haRf+quhNHejj7ZW4gZwl2Gu7tyY6uvMa+P0P8ZESOClDiMUwQmpJjr/MaKQjCZWk373SEeIGNi7NU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgKNiOoldlhf3OkyOX9H7gs2Y/Gw83wKog2tsF9PEgmDRlcWmP
+	zgmLt/D9rZVi9uKORRbg9Dy/kD36IoImTk7jmLfuJLFGvWUJ0Q6zt1sTr3tRgm/QTYM=
+X-Gm-Gg: ASbGncviVQFASOdOTIyRlQAiwwleiQBhQ70yPYfGpxbZBJTI451IfX9mVZsgvoV56Le
+	Smu5MYn12N0z7NmLtor2dzgGZ/+vOYD3rjwefb/6DYMmw5Ewq1ud3jaXRRmjYn02gbgLI0xwu1u
+	QqKZNjU+qU/kZKIHurhxXVYNjVksqLQ9lyPworJDY/IFfVWAtuTgPpjB0RjKF3lslbmKtWPvQKi
+	U8t4Y9qcl7UHLK8pF+vK2wZm2N8oTxiyPxlZtTA8lp4XYC3mqlvjtncmfkuihCpE8VGCNaGkWR+
+	3lU699l3+gicxaQ+r6OaDOBioy+nYZZUN5mCa6ouuM/yEIgNUO0SVPsrmjRRsVbZqg0FDd9nEaX
+	XntazjHEB9KneWva7lFUh/BtuGJNgL9DOGg==
+X-Google-Smtp-Source: AGHT+IHvlmHP0oa9KgbeYWJUl4MCBGVkpFuuQN5yKMcqWRZ/ketGUdB/VWArjJjtYOPvEISWj77cWw==
+X-Received: by 2002:a05:6000:26ca:b0:3a4:eb92:39b6 with SMTP id ffacd0b85a97d-3b497036356mr9229115f8f.54.1751882398533;
+        Mon, 07 Jul 2025 02:59:58 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e50:3860:1a22:119c:5b1d:302e? ([2a01:e0a:e50:3860:1a22:119c:5b1d:302e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47285e241sm9798553f8f.94.2025.07.07.02.59.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 02:59:57 -0700 (PDT)
+Message-ID: <5d179842-12ac-4b5d-b87e-098643e7cfd2@baylibre.com>
+Date: Mon, 7 Jul 2025 11:59:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wdwglhs4zrm53st4"
-Content-Disposition: inline
-In-Reply-To: <aGPd3hIuEVF2Ykoy@yjaykim-PowerEdge-T330>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: Kconfig.platforms: remove useless select for
+ ARCH_K3
+To: Nishanth Menon <nm@ti.com>,
+ Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux@ew.tq-group.com
+References: <20250519-kconfig-v2-1-56c1a0137a0f@baylibre.com>
+ <f44c7074337b79df9ad67f62acbc268acc344a23.camel@ew.tq-group.com>
+ <e0773f0e-8d2f-4918-aaad-aab6345fdb81@baylibre.com>
+ <9042d63de85f7ae8bf73760e9d2d7652c18a738c.camel@ew.tq-group.com>
+ <20250703122813.jh2muwzwe4ok6b6d@process>
+Content-Language: fr
+From: Guillaume La Roque <glaroque@baylibre.com>
+In-Reply-To: <20250703122813.jh2muwzwe4ok6b6d@process>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
---wdwglhs4zrm53st4
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
- per cgroup swap priority control
-MIME-Version: 1.0
+Le 03/07/2025 à 14:28, Nishanth Menon a écrit :
+> On 09:25-20250702, Matthias Schiffer wrote:
+>> On Tue, 2025-07-01 at 20:57 +0200, Guillaume La Roque wrote:
+>>>
+>>> Le 01/07/2025 à 16:36, Matthias Schiffer a écrit :
+>>>> On Mon, 2025-05-19 at 10:20 +0200, Guillaume La Roque wrote:
+>>>>>
+>>>>> After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driver
+>>>>> select on ARCH_K3 are not needed anymore.
+>>>>> Select MAILBOX by default is not needed anymore[3],
+>>>>> PM_GENERIC_DOMAIN if PM was enabled by default so not needed.
+>>>>
+>>>> Hi,
+>>>
+>>> Hi,
+>>>
+>>>>
+>>>> what selects PM_GENERIC_DOMAIN in your configuration? linux-next fails to boot
+>>>> on our AM62x-based TQMa62xx if I don't (partially) revert this patch - I have
+>>>> not found a way to enable PM_GENERIC_DOMAIN and TI_SCI_PM_DOMAINS without
+>>>> enabling other unneeded features to pull it in.
+>>>>
+>>> With master branch if i apply this patch and i do make ARCH=arm64
+>>> defconfig and check in .config  both TI_SCI_PM_DOMAINS and
+>>> PM_GENERIC_DOMAINS are enabled.
+>>> with linux-next it's same. i don't really understand link with  PM part
+>>> in this patch and boot issue on your SOM.
+>>>
+>>> I probably misunderstand something.
+>>>
+>>>
+>>> what is your problem exactly ?
+>>>
+>>> if you can share log or link to jobs
+>>
+>>
+>> Hi Guillaume,
+>>
+>> with arm64_defconfig, this problem doesn't occur, as other CONFIG_ARCH_* symbols
+>> also have "select PM_GENERIC_DOMAINS" (with or without "if PM").
+>>
+>> We are using a smaller config specific to our K3-based SOMs however. I have
+>> attached a defconfig that shows the problem - if you use this as the base for
+>> .config on linux-next, there is no way to enable TI_SCI_PM_DOMAINS, as nothing
+>> selects PM_GENERIC_DOMAINS.
+>>
+>> So unless I'm missing some other configuration that would actually be useful on
+>> the K3 platform and that would pull in PM_GENERIC_DOMAINS, I think that part
+>> needs to be reverted. I can send a patch to that effect later.
+> 
+> Is a better approach to select PM_GENERIC_DOMAINS in
+> drivers/pmdomain/ti/Kconfig instead of depends (similar to what
+> drivers/pmdomain/qcom/Kconfig or drivers/pmdomain/arm/Kconfig does since
+> TI_SCI_PM_DOMAINS requires PM_GENERIC_DOMAINS?
+> 
 
-Hello.
+I send patch to do this :
+https://lore.kernel.org/all/20250704-depspmdomain-v1-1-ef2710556e62@baylibre.com/
 
-On Tue, Jul 01, 2025 at 10:08:46PM +0900, YoungJun Park <youngjun.park@lge.=
-com> wrote:
->   memory.swap.priority
-=2E..
-
->         To assign priorities to swap devices in the current cgroup,
->         write one or more lines in the following format:
->=20
->           <swap_device_unique_id> <priority>
-
-How would the user know this unique_id? (I don't see it in /proc/swaps.)
-
->         Note:
->           A special value of -1 means the swap device is completely
->           excluded from use by this cgroup. Unlike the global swap
->           priority, where negative values simply lower the priority,
->           setting -1 here disables allocation from that device for the
->           current cgroup only.
-
-The divergence from the global semantics is little bit confusing.
-There should better be a special value (like 'disabled') in the interface.
-And possible second special value like 'none' that denotes the default
-(for new (unconfigured) cgroups or when a new swap device is activated).
-
->   memory.swap.priority.effective
->         A read-only file showing the effective swap priority ordering
->         actually applied to this cgroup, after resolving inheritance
->         from ancestors.
-
-Yes, this'd be definitely useful for troubleshooting and understanding
-the configurations.
-
-=2E..
->         In this case:
->           - If no cgroup sets any configuration, the output matches the
->             global `swapon` priority.
->           - If an ancestor has a configuration, the child inherits it
->             and ignores its own setting.
-
-The child's priority could be capped by ancestors' instead of wholy
-overwritten? (So that remains some effect both.)
-
-Thanks,
-Michal
-
---wdwglhs4zrm53st4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGuakwAKCRB+PQLnlNv4
-CPFYAP4ydDKYFygLh14WYhl6pOkLrwj8JkhclU3yKqmmebJVTQD/W+JB5AMQ7qu3
-RqhHDUL/M9s2yFNaz+QmdaSUTCcsNgk=
-=X9yq
------END PGP SIGNATURE-----
-
---wdwglhs4zrm53st4--
+Regards
+Guillaume
