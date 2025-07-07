@@ -1,136 +1,73 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E6D29A9ED;
-	Mon,  7 Jul 2025 12:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D2929AB00
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751890196; cv=none; b=eo0l+OS4cumOQ2YzNKUeIqT7FmYcIhVM9ainxer46MplUEZE06Unat+g2PCMmUl4PGVrrEZoYliZVOAEyDA9jUdJVDm1MKCbvFTG/Q5Awgs+wRgm9A8m7wgNDjNRy08/3WaI3B4glEP5dRCfL9nuPdyl/PwDoYiNNrqw+xxuWPg=
+	t=1751890205; cv=none; b=FNneugLKSa0PKQCaDGQt+iA9Tz9xLOAQHMj4k3ve0tqel+zFYC1jCflL3cwU1UeDOfdZmn7T/cCVfpi7/2Stv+NO30TFhTUK9uvu5GeFMnc5m+6z65wm1PQV/7OxLvqOeKFy6zRmBxzy3M9DU7ke+2IoTK5w3CM05fq/arlZ0J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751890196; c=relaxed/simple;
-	bh=WFhdIKgugKGah05NOZFe35YaFk/IGcydxloP193R58w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uprL78Ff1dbM3LqI4yP335zMEpsK+t3XGFT2fcIIJfR1Lw8PmoLI0hE0QampnzONvzpZAM2FclE9YzO07b/q6eAfgDVoZd5T0KmV2urqe4bQOH4rV7Mlbgqk7Y7fRCduCvcUZfc94KzANoUCVPYEDo1SzkIq+hzZ7sQub4EuKjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iwLNMnL5; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iwLNMnL5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=XEtC+wRhm6PC1IQQS5E7xcerOENVh/DYiOue9pVWljE=; b=iwLNMnL5wcAawTja01YDdDmjju
-	udQ9iDbTRGBFqafLcH1KFnPSPOmA5n9KUFgfmk+QdFye5lpAuhQj984chMKsVeWzW1FWm1zd1bQdm
-	FTxWZjXAbgH+kNi16ZekOrY+C2xE85OD/5YZv2OBMe+ywmI3bu5AUTKE6eqSfC6hD2rY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uYkex-000i4f-TV; Mon, 07 Jul 2025 14:09:23 +0200
-Date: Mon, 7 Jul 2025 14:09:23 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yibo Dong <dong100@mucse.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/15] net: rnpgbe: Add get_capability mbx_fw ops support
-Message-ID: <e0610a11-18fa-42f6-9925-f15dac20643c@lunn.ch>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-5-dong100@mucse.com>
- <57497e14-3f9a-4da8-9892-ed794aadbf47@lunn.ch>
- <CB185D75E8EDC84A+20250707073743.GA164527@nic-Precision-5820-Tower>
+	s=arc-20240116; t=1751890205; c=relaxed/simple;
+	bh=08taAm5wdRzJvzZ1AMVpIBoq9T7ah67A9asFKZwviIA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=KQvNE5Xz0Bouu+eCzbDvUnPkTK1vz6mO/TCc8ar5PaJAKeN4e1dwNAaFCT2CrLb7QZSUePDCtU3FKmUyF9PnzKvJinYdvwvdNbUQlKQmIH2pNQZrRAAHAFKkZWq9iojQSaxL5rbtJ+U9YFDw5TiJN6g7LLbHe6tqF5LPDMdz6mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3df33d97436so35699325ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 05:10:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751890203; x=1752495003;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FPP2c1LwMb3yWT4w/jL//ontQJHJPGGYwvjC1SZODwU=;
+        b=OCJ5dvADumD7Dx9/XvNO+Bf1RV/8QAnf3ipH4dWiaYwULzCm6nWrjbGrLO6q+TEWBZ
+         xuO6BgRNgZnDQYuFtCOM2sYIYQVoW+dg4fhEQdnoti/a6Dm1rl0Y9KQBDYX0Tu5riLj9
+         5eBaIRTN2McIjRDD8G4WXGuauLFFY36d67q1fcD5RWjR2yC83Q4J1DKj7pB4paxAiaAb
+         fPl35AS7Q9FbUeZ3EnIwTn1kOrQ3UnA2ztH6djiGH+UpyzvjLaX5Sk5zF8IjQGIUcSOA
+         wLeTXgaF/tVFXD1zDtgUq9T8FpHzO/T37wcFcYDWgR1vyred2T1k/FtSyJ4skWW10Ohq
+         2GTA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0QFkpzPFnqfcIItF/lZ5GYThUeIwhH8WdAxfPNHq0THYMUMgcHm+5EGSLn2THuHwxIen6SM9vQD0vU28=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdyPvLkzoBB6x+x80/gFB7TZMusQghX1cOXJZ6iLEwX77if+e9
+	+uZbdTsMaHnOgPQhPnQHFSLe6PcSGA0kPM5wxgI0gVMiMnAyqjBpvKsKdxVxhxgdyaypaIT/UdX
+	VTeIAhSA3PQl9elmYChZgaaUy2HhPHyLy/qnIQcvh3J5UdFaLV/28bLENG5c=
+X-Google-Smtp-Source: AGHT+IHPfuuPr2g7bXzQ/IR0eDbNW3RhV9MhLxKAEJGqruOSFC1E/JO6xQ5Q30gHorRadYI+mH5lHBOzx/FO88c1JqfYl+xQmV37
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CB185D75E8EDC84A+20250707073743.GA164527@nic-Precision-5820-Tower>
+X-Received: by 2002:a05:6e02:2613:b0:3dd:bb60:4600 with SMTP id
+ e9e14a558f8ab-3e1347d85c7mr116006125ab.5.1751890203055; Mon, 07 Jul 2025
+ 05:10:03 -0700 (PDT)
+Date: Mon, 07 Jul 2025 05:10:03 -0700
+In-Reply-To: <20250707-tusche-umlaufen-6e96566552d6@brauner>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686bb91b.a00a0220.c7b3.0085.GAE@google.com>
+Subject: Re: [syzbot] [mm?] [fs?] WARNING in path_noexec
+From: syzbot <syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, kees@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 07, 2025 at 03:37:43PM +0800, Yibo Dong wrote:
-> On Fri, Jul 04, 2025 at 08:25:12PM +0200, Andrew Lunn wrote:
-> > > +/**
-> > > + * mucse_fw_send_cmd_wait - Send cmd req and wait for response
-> > > + * @hw: Pointer to the HW structure
-> > > + * @req: Pointer to the cmd req structure
-> > > + * @reply: Pointer to the fw reply structure
-> > > + *
-> > > + * mucse_fw_send_cmd_wait sends req to pf-cm3 mailbox and wait
-> > > + * reply from fw.
-> > > + *
-> > > + * Returns 0 on success, negative on failure
-> > > + **/
-> > > +static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
-> > > +				  struct mbx_fw_cmd_req *req,
-> > > +				  struct mbx_fw_cmd_reply *reply)
-> > > +{
-> > > +	int err;
-> > > +	int retry_cnt = 3;
-> > > +
-> > > +	if (!hw || !req || !reply || !hw->mbx.ops.read_posted)
-> > 
-> > Can this happen?
-> > 
-> > If this is not supposed to happen, it is better the driver opps, so
-> > you get a stack trace and find where the driver is broken.
-> > 
-> Yes, it is not supposed to happen. So, you means I should remove this
-> check in order to get opps when this condition happen?
+Hello,
 
-You should remove all defensive code. Let is explode with an Opps, so
-you can find your bugs.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> > > +		return -EINVAL;
-> > > +
-> > > +	/* if pcie off, nothing todo */
-> > > +	if (pci_channel_offline(hw->pdev))
-> > > +		return -EIO;
-> > 
-> > What can cause it to go offline? Is this to do with PCIe hotplug?
-> > 
-> Yes, I try to get a PCIe hotplug condition by 'pci_channel_offline'.
-> If that happens, driver should never do bar-read/bar-write, so return
-> here.
+Reported-by: syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com
+Tested-by: syzbot+3de83a9efcca3f0412ee@syzkaller.appspotmail.com
 
-I don't know PCI hotplug too well, but i assume the driver core will
-call the .release function. Can this function be called as part of
-release? What actually happens on the PCI bus when you try to access a
-device which no longer exists?
+Tested on:
 
-How have you tested this? Do you have the ability to do a hot{un}plug?
+commit:         98f99394 secretmem: use SB_I_NOEXEC
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.fixes
+console output: https://syzkaller.appspot.com/x/log.txt?x=13829f70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8211a357c817ddc6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3de83a9efcca3f0412ee
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
 
-> > > +	if (mutex_lock_interruptible(&hw->mbx.lock))
-> > > +		return -EAGAIN;
-> > 
-> > mutex_lock_interruptable() returns -EINTR, which is what you should
-> > return, not -EAGAIN.
-> > 
-> Got it, I should return '-EINTR' here.
-
-No, you should return whatever mutex_lock_interruptable()
-returns. Whenever you call a function which returns an error code, you
-should pass that error code up the call stack. Never replace one error
-code with another.
-
-> > > +	if (reply->error_code)
-> > > +		return -reply->error_code;
-> > 
-> > The mbox is using linux error codes? 
-> > 
-> It is used only between driver and fw, yay be just samply like this: 
-> 0     -- no error
-> not 0 -- error
-> So, it is not using linux error codes.
-
-Your functions should always use linux/POSIX error codes. So if your
-firmware says an error has happened, turn it into a linux/POSIX error
-code. EINVAL, TIMEDOUT, EIO, whatever makes the most sense.
-
-	Andrew
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
