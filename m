@@ -1,33 +1,33 @@
-Received: from smtp105.iad3a.emailsrvr.com (smtp105.iad3a.emailsrvr.com [173.203.187.105])
+Received: from smtp123.iad3a.emailsrvr.com (smtp123.iad3a.emailsrvr.com [173.203.187.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F051529994A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD7329992B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751885809; cv=none; b=eHLZWa1I7xajY8Rm839IDagYudhu1m3AH2GSYlHylNXNZh+x0nNy3pZWCZvC7EyI8HHiCSv2zpz3/0gO9/A/CTHvc/LUkPrnTmUxN+Co7GkK+3xR7fAqYrPIHskih20ysuR7h2xI+TeMBe2SxDOtSP6o1NE9IbiFfofAAyFOorI=
+	t=1751885811; cv=none; b=GFKkIUf9kmwwjasf/dIdnRMmmWLyu8JoVZLDGObPcYcoMmTjeiFuanvMrvm5pTqfwTIiwMPAisL31XuNSz+v/sEeOgBkjpUmmvdND2y0x6dgwG0/wE6OK0jBEaUncQsc6LTgcol9aiI4KTwik9WmkYr4wTfMWG1xXFsrT26EoQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751885809; c=relaxed/simple;
-	bh=wgJWxWMLapvbYirmyXMVaOy9YhfIEGHPR7Jwg+CfoSw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PnKhaS3AelpUZUd9B3KODX1xSk/cbVdvU18VPLcXH41aMd9kIfIm0g8q6s8GaSBu0iCXhYNcFuTak6j0gRWX/+3VwTfXkCD/8BlVkvq7HUyR0ERraPzM8dNwqZIf8jTrIYPPmVOyLvriDyFTH9PTjIqb4FaLhqD9rvUrKtbANRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=qc9h0LcY; arc=none smtp.client-ip=173.203.187.105
+	s=arc-20240116; t=1751885811; c=relaxed/simple;
+	bh=cwRok+KTUrDJOrXQjlvnkf1dZllv0LADw0c1pTirA/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CncASY8KLO92wJ+BNxlgcmCAAs55UsmtWOIC+m/F7XpxBfqRvBmbAvTCWQFCQ6F+yB9e6nPyQh1Mdjd2IaO3x22nEzULOwTWKvB9Lp8mYE0+5/tSif6iHhZewZsnlY4T+m6Ar/mcPPITalid5SXTAM6MUQbkE2b2nWopMfsRurE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=HAdJAPh1; arc=none smtp.client-ip=173.203.187.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="qc9h0LcY"
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="HAdJAPh1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1751882517;
-	bh=wgJWxWMLapvbYirmyXMVaOy9YhfIEGHPR7Jwg+CfoSw=;
-	h=Date:Subject:From:To:From;
-	b=qc9h0LcYhdAN9TAYHgPwP9ZTL/iCL0cHLtHoFi91DiR/f3ubjwEXhFSn7pqhug9zj
-	 71iBydEHBMbfMy/cB9MOtByxQNsd7k4P2AcyM93fRFSxwJwygonD+Yfof4Vk/82EPp
-	 7fdalzpCDisTAuicL3VgluRwumQ0OO9pt6dsuIck=
+	s=20221208-6x11dpa4; t=1751883511;
+	bh=cwRok+KTUrDJOrXQjlvnkf1dZllv0LADw0c1pTirA/8=;
+	h=Date:Subject:To:From:From;
+	b=HAdJAPh1CfowWoVpQOANZR1W44/exQ7OiXJa/LngfGoEuP9/S7ZlfkkHud4+Nnpgo
+	 bMVk/EKq8m+J61LZI1pvwO9PmTBYdmr1MILLDXq7N/jyi0rxXpBXaxrSkBHJ/LbGK6
+	 w4JFI0Pb4k6dJiO5BZVy+J0B6GMFozkNzpSmGxis=
 X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp14.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 0A7A32362C;
-	Mon,  7 Jul 2025 06:01:56 -0400 (EDT)
-Message-ID: <bc883c14-95d2-4fb0-b32b-9a46cc0c4acd@mev.co.uk>
-Date: Mon, 7 Jul 2025 11:01:56 +0100
+Received: by smtp32.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id C2EFE5832;
+	Mon,  7 Jul 2025 06:18:30 -0400 (EDT)
+Message-ID: <28fb84a5-f5ee-4882-b823-c533399045f4@mev.co.uk>
+Date: Mon, 7 Jul 2025 11:18:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,91 +35,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] commdi: pcl726: Prevent invalid irq number
-From: Ian Abbott <abbotti@mev.co.uk>
-To: Edward Adam Davis <eadavis@qq.com>,
- syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
+Subject: Re: [syzbot] [kernel?] UBSAN: shift-out-of-bounds in das16m1_attach
+To: Kohei Enju <enjuk@amazon.com>,
+ syzbot+c52293513298e0fd9a94@syzkaller.appspotmail.com
 Cc: hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
  syzkaller-bugs@googlegroups.com
-References: <68690648.a00a0220.c7b3.0037.GAE@google.com>
- <tencent_AAF2ED2ACD1879CE6C5C2C296C349724EA0A@qq.com>
- <d4d22eb4-b227-4da4-a070-370dff5ab90b@mev.co.uk>
+References: <6867ff4d.a70a0220.29cf51.0023.GAE@google.com>
+ <20250704181107.33961-1-enjuk@amazon.com>
 Content-Language: en-GB
+From: Ian Abbott <abbotti@mev.co.uk>
 Organization: MEV Ltd.
-In-Reply-To: <d4d22eb4-b227-4da4-a070-370dff5ab90b@mev.co.uk>
+In-Reply-To: <20250704181107.33961-1-enjuk@amazon.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: f458b3f0-9de5-4a61-92cc-73992f64a4ec-1-1
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 241ee8db-3159-4aeb-bfa7-c78fbff5943d-1-1
 
-On 07/07/2025 10:47, Ian Abbott wrote:
-> On 06/07/2025 03:10, Edward Adam Davis wrote:
+On 04/07/2025 19:10, Kohei Enju wrote:
+> On Fri, 04 Jul 2025 09:20:29 -0700, syzbot wrote:
 > 
-> The "comedi" tag in the subject line is misspelled.
-> 
->> The reproducer passed in an irq number(0x80008000) that was too large,
->> which triggered the oob.
+>> Hello,
 >>
->> Added an interrupt number check to prevent users from passing in an irq
->> number that was too large.
+>> syzbot found the following issue on:
 >>
->> Fixes: fff46207245c ("staging: comedi: pcl726: enable the interrupt 
->> support code")
->> Reported-by: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=5cd373521edd68bebcb3
->> Tested-by: syzbot+5cd373521edd68bebcb3@syzkaller.appspotmail.com
-> 
-> Thanks.
-> 
-> You could add:
-> 
-> Cc: <stable@vger.kernel.org> # 5.13+
-> 
-> to apply it to stable kernels.  (The 5.13+ is because comedi was moved 
-> out of the "staging" directory in 5.13, and a backport would be required 
-> for longterm series < 5.13.)
-> 
-> More comments below...
-> 
->> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
->> ---
->>   drivers/comedi/drivers/pcl726.c | 3 +++
->>   1 file changed, 3 insertions(+)
+>> HEAD commit:    4c06e63b9203 Merge tag 'for-6.16-rc4-tag' of git://git.ker..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=102c73d4580000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=5ba6cef8f153bfeb
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=c52293513298e0fd9a94
+>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166c6c8c580000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142c73d4580000
 >>
->> diff --git a/drivers/comedi/drivers/pcl726.c b/drivers/comedi/drivers/ 
->> pcl726.c
->> index 0430630e6ebb..8802f33f1954 100644
->> --- a/drivers/comedi/drivers/pcl726.c
->> +++ b/drivers/comedi/drivers/pcl726.c
->> @@ -328,6 +328,9 @@ static int pcl726_attach(struct comedi_device *dev,
->>        * Hook up the external trigger source interrupt only if the
->>        * user config option is valid and the board supports interrupts.
->>        */
->> +    if (it->options[1] < 0 || it->options[1] > 31)
->> +        return -EINVAL;
->> +
-
-I missed this one earlier, but returning `-EINVAL` changes the behavior. 
-  The old code would just not attempt to request the IRQ if the 
-`options[1]` value were invalid.  And it would still configure the 
-device without interrupts even if the call to `request_irq` returned an 
-error.  So it would be better to combine this test with the test below.
-
->>       if (it->options[1] && (board->irq_mask & (1 << it->options[1]))) {
->>           ret = request_irq(it->options[1], pcl726_interrupt, 0,
->>                     dev->board_name, dev);
+>> Downloadable assets:
+>> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-4c06e63b.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/15f2393c96b6/vmlinux-4c06e63b.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/44c28e8ae1a0/bzImage-4c06e63b.xz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+c52293513298e0fd9a94@syzkaller.appspotmail.com
+>>
+>> UBSAN: shift-out-of-bounds in drivers/comedi/drivers/das16m1.c:525:9
+>> shift exponent 67108867 is too large for 32-bit type 'int'
+>> CPU: 0 UID: 0 PID: 6101 Comm: syz.0.16 Not tainted 6.16.0-rc4-syzkaller-00123-g4c06e63b9203 #0 PREEMPT(full)
+>> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+>> Call Trace:
+>>   <TASK>
+>>   __dump_stack lib/dump_stack.c:94 [inline]
+>>   dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+>>   ubsan_epilogue lib/ubsan.c:233 [inline]
+>>   __ubsan_handle_shift_out_of_bounds+0x27f/0x420 lib/ubsan.c:494
+>>   das16m1_attach.cold+0x19/0x1e drivers/comedi/drivers/das16m1.c:525
+>>   comedi_device_attach+0x3b3/0x900 drivers/comedi/drivers.c:996
+>>   do_devconfig_ioctl+0x1a7/0x580 drivers/comedi/comedi_fops.c:855
+>>   comedi_unlocked_ioctl+0x15bb/0x2e90 drivers/comedi/comedi_fops.c:2136
+>>   vfs_ioctl fs/ioctl.c:51 [inline]
+>>   __do_sys_ioctl fs/ioctl.c:907 [inline]
+>>   __se_sys_ioctl fs/ioctl.c:893 [inline]
+>>   __x64_sys_ioctl+0x18b/0x210 fs/ioctl.c:893
+>>   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>>   do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+>>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> RIP: 0033:0x7f1d8718e929
+>> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+>> RSP: 002b:00007ffe20aa5098 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>> RAX: ffffffffffffffda RBX: 00007f1d873b5fa0 RCX: 00007f1d8718e929
+>> RDX: 0000200000000080 RSI: 0000000040946400 RDI: 0000000000000003
+>> RBP: 00007f1d87210b39 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+>> R13: 00007f1d873b5fa0 R14: 00007f1d873b5fa0 R15: 0000000000000003
+>>   </TASK>
+>> ---[ end trace ]---
+>>
+>> [...]
 > 
-> If `it->options[1]` is 31, then `1 << it->options[1]` is still invalid 
-> because it shifts a 1-bit into the sign bit (which is UB in C). Possible 
-> solutions include reducing the upper bound on the `it->options[1]` value 
-> to 30 or lower, or using `1U << it->options[1]`.
+> A quick grep found similar patterns that could have the same issue.
+> I think we should validate it->options[1] before shifting, right?
 > 
-
-For example:
-
-	if (it->options[1] > 0 && it->options[1] < 16 &&
-             (board->irq_mask & (1U << it->options[1])) {
+>    $ grep -nrIF "<< it->options[1]" ./drivers/comedi
+>    ./drivers/comedi/drivers/aio_iiro_16.c:180:     if ((1 << it->options[1]) & 0xdcfc) {
+>    ./drivers/comedi/drivers/das16m1.c:526:     (1 << it->options[1]) & 0xdcfc) {
+>    ./drivers/comedi/drivers/das6402.c:570: if ((1 << it->options[1]) & 0x8cec) {
+>    ./drivers/comedi/drivers/pcl726.c:331:  if (it->options[1] && (board->irq_mask & (1 << it->options[1]))) {
+>    ./drivers/comedi/drivers/pcl812.c:1152:         if ((1 << it->options[1]) & board->irq_bits) {
+> 
+> #syz test
+> 
+> diff --git a/drivers/comedi/drivers/das16m1.c b/drivers/comedi/drivers/das16m1.c
+> index b8ea737ad3d1..1b638f5b5a4f 100644
+> --- a/drivers/comedi/drivers/das16m1.c
+> +++ b/drivers/comedi/drivers/das16m1.c
+> @@ -522,7 +522,8 @@ static int das16m1_attach(struct comedi_device *dev,
+>   	devpriv->extra_iobase = dev->iobase + DAS16M1_8255_IOBASE;
+>   
+>   	/* only irqs 2, 3, 4, 5, 6, 7, 10, 11, 12, 14, and 15 are valid */
+> -	if ((1 << it->options[1]) & 0xdcfc) {
+> +	if (it->options[1] >= 2 && it->options[1] <= 15 &&
+> +	    (1 << it->options[1]) & 0xdcfc) {
+>   		ret = request_irq(it->options[1], das16m1_interrupt, 0,
+>   				  dev->board_name, dev);
+>   		if (ret == 0)
 
 Thanks.
+
+That looks fine.  If you plan to submit an official patch, please Cc it 
+to Greg KH because I do not have commit access to any pulled git repos.
+
+The Fixes: line for this is as follows:
+
+Fixes: 729988507680 ("staging: comedi: das16m1: tidy up the irq support 
+in das16m1_attach()"
+
+Can also add:
+
+Cc: <stable@vger.kernel.org> # 5.13+
+
+(Comedi moved out of staging in 5.13, so a backport is required for 
+earlier longterm series.)
+
+If you don't want to deal with it, let me know, and I'll send the patch 
+and credit you with a 'Suggested-by' tag, or something more explicit 
+with your permission.
 
 -- 
 -=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
