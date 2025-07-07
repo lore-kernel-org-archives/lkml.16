@@ -1,172 +1,106 @@
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E651BD9F0;
-	Mon,  7 Jul 2025 10:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.182.222
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7611BD9F0;
+	Mon,  7 Jul 2025 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751883018; cv=none; b=dybJ8nK4u6xQspSRQ5SIYQ58+f7YaE+Lm4OkKY0NriW2gANfWBpzyCUcDzgHFmb6ynnD3XanM9OfuR5QA1K9I8mlhjqotEv0EGkidHqvm8y+msk9xgP2RkGzTKfOi2NgBQFk9cWLQTo99d18mQT3UTgHBO38YbmMUBiTtsZ+UCc=
+	t=1751883029; cv=none; b=DKQ87Glu+DwMLynAS+t1Js0ecw1NZMwl/WHBFa6OeVWaxYNep4JjsWoqj1/alxUFQCQWTTiacq4eMg9sex7NXJhwY8xJuaKMZQo/PH285ZT8o92HYc/YKysAaOciTU8f+2d/b/x5pac0yge5CTNPo0iR0+5CeWmprZB04QE2DXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751883018; c=relaxed/simple;
-	bh=ui+Tqx0GLOCsF0RBfWsJnK7CQFaewHN6GAdS5cq+j78=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=C79d9GR9eLYkbI5pGLSJW1rHiR/GF2nf4XHzUZBmBy152FUVD1p8b1gVDvbe0PgBv2+uC2L7aVZECNdvTw85ToKC9roJefaEwo+AuKbzSdFwBD9ALxnD8t/B+Rf8weZ30M5ZMREtcU2+kWdCo+nZDXxzBZaRWUJUq8erzJoevr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.182.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from lizhi2$eswincomputing.com ( [10.11.96.26] ) by
- ajax-webmail-app1 (Coremail) ; Mon, 7 Jul 2025 18:09:30 +0800 (GMT+08:00)
-Date: Mon, 7 Jul 2025 18:09:30 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?5p2O5b+X?= <lizhi2@eswincomputing.com>
-To: "Andrew Lunn" <andrew@lunn.ch>, "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, rmk+kernel@armlinux.org.uk,
-	yong.liang.choong@linux.intel.com, vladimir.oltean@nxp.com,
-	jszhang@kernel.org, jan.petrous@oss.nxp.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
-	boon.khai.ng@altera.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com
-Subject: Re: Re: [PATCH v3 2/2] ethernet: eswin: Add eic7700 ethernet driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <c212c50e-52ae-4330-8e67-792e83ab29e4@lunn.ch>
-References: <20250703091808.1092-1-weishangjuan@eswincomputing.com>
- <20250703092015.1200-1-weishangjuan@eswincomputing.com>
- <c212c50e-52ae-4330-8e67-792e83ab29e4@lunn.ch>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1751883029; c=relaxed/simple;
+	bh=j/74EfwCut4e9GXyoPFJK6hkdne1vf1ui/JxX20Cg08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HP7NJMrHPBxqV3t2AA9S/DDlzPU634SoejiJpOsg1UDRbYy+hYQm3W0F+BptgVnoPzwUP8ZdfTVPfQJuk5cITQGtcnM3NbMttjH/TES7uTgpGA6ZPRnHJWKLOzOvcuUCXVlOglrLbVwf08byz2VCBzPe17QIU/hIVuxHwT/dwhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n1gWQ1su; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n1gWQ1su"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=I57VkaSapJBkG6/ifvRIJbA8dsl3ex8n0FkR8Qwg0oo=; b=n1gWQ1suNLDJNKLEaSVcpE/Y3w
+	FtbPZFxfG36Bs3zzKQcN1N2Way4NA/P0t4RTiSV9hEwNiq+64AtqjxqfI8A/C2pVr2mplyi5jFjVy
+	gG9xIPkQLC/Rm9smpT4eBihU22tXgI59B71HuZE2P/AP1f9qt7M0874JcHDy9aCpb1CPN/xYXZSl5
+	RiWPRYeCcoH6mNtEAtG1vrx8jIKc4g3wK1RDQHS9wL/NF1LpCqR3bvY1RcysmKeraVKEJtYgRziye
+	WyNezsefN+BqeWqvw3M/VcR0gbHJQ2CeiUco1TQ5hpPlQaEHjj/8znPS697ZoCNhQYo0eAHA4fXpT
+	0lZzL5HQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uYink-0000000CW8r-42Vw;
+	Mon, 07 Jul 2025 10:10:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9A160300399; Mon, 07 Jul 2025 12:10:19 +0200 (CEST)
+Date: Mon, 7 Jul 2025 12:10:19 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: timvp@google.com, Michal Koutn?? <mkoutny@suse.com>, rafael@kernel.org,
+	pavel@kernel.org, tj@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lujialin4@huawei.com,
+	chenridong@huawei.com
+Subject: Re: [PATCH next] sched,freezer: prevent tasks from escaping being
+ frozen
+Message-ID: <20250707101019.GE1613200@noisy.programming.kicks-ass.net>
+References: <20250703133427.3301899-1-chenridong@huaweicloud.com>
+ <n23vsu6y6cjf2vwdbfcjl2mj7venvpzpblncoa7adn3q5r4lph@qsfa3deqtamc>
+ <f4c4f465-72b9-4682-99e6-c249ecab8572@huaweicloud.com>
+ <8dae8006-e63d-467f-bb7c-e8470878e534@huaweicloud.com>
+ <20250704075718.GA2001818@noisy.programming.kicks-ass.net>
+ <85fc85e8-af92-4d58-8271-9bf4aeb0a63d@huaweicloud.com>
+ <bdc5a4d3-6942-4ba2-a13d-35f2e13c0b37@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <6a3684b9.2f79.197e45cb6b9.Coremail.lizhi2@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TAJkCgAHLBLbnGtoDWyqAA--.13334W
-X-CM-SenderInfo: xol2xx2s6h245lqf0zpsxwx03jof0z/1tbiAgEQDGhqpUk+VwABsZ
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bdc5a4d3-6942-4ba2-a13d-35f2e13c0b37@huaweicloud.com>
 
-RGVhciBBbmRyZXcgTHVubiwKVGhhbmsgeW91IGZvciB5b3VyIHByb2Zlc3Npb25hbCBhbmQgdmFs
-dWFibGUgc3VnZ2VzdGlvbnMuCldlIGhhdmUgY2FyZWZ1bGx5IHJldmlld2VkIHlvdXIgY29tbWVu
-dHMgYW5kIG1hZGUgdGhlIGNvcnJlc3BvbmRpbmcgY2hhbmdlcy4gQ291bGQgeW91IHBsZWFzZSBo
-ZWxwIHVzIGV2YWx1YXRlIHdoZXRoZXIgdGhlIHVwZGF0ZXMgd2UgbWVudGlvbmVkIGluIG91ciBw
-cmV2aW91cyBlbWFpbCBwcm9wZXJseSBhZGRyZXNzIHlvdXIgY29uY2VybnMgYW5kIG1lZXQgdGhl
-IGV4cGVjdGVkIHN0YW5kYXJkcz8KQXQgdGhlIHNhbWUgdGltZSwgd2Ugc3RpbGwgaGF2ZSBzb21l
-IHF1ZXN0aW9ucyB0aGF0IG5lZWQgY2xhcmlmaWNhdGlvbi4gV2UgaGF2ZSBpbmNsdWRlZCB0aGVz
-ZSBpbiB0aGUgb3JpZ2luYWwgZW1haWwg4oCUIHdlIHdvdWxkIGFwcHJlY2lhdGUgaXQgaWYgeW91
-IGNvdWxkIGFsc28gdGFrZSBhIG1vbWVudCB0byByZXZpZXcgdGhvc2UgcG9pbnRzLgoKCkBLcnp5
-c3p0b2YgS296bG93c2tpCldlIG5vdGljZWQgeW91ciByZXZpZXcgY29tbWVudCBvbiB0aGUgZm9s
-bG93aW5nIHBhZ2UsIGJ1dCB3ZSBkaWQgbm90IHJlY2VpdmUgaXQgdmlhIGVtYWlsOgrwn5SXIGh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvZjA5NmFmYTEtMjYwZS00ZjhjLTg1OTUtM2I0MTQy
-NWIyOTY0QGtlcm5lbC5vcmcvClRoYW5rIHlvdSBmb3IgeW91ciBwcm9mZXNzaW9uYWwgZmVlZGJh
-Y2sgb24gb3VyIEV0aGVybmV0IGRyaXZlci4KUmVnYXJkaW5nIHRoZSBpc3N1ZSB5b3UgcmFpc2Vk
-OgoiVGhlcmUgaXMgbm8gc3VjaCBwcm9wZXJ0eS4gSSBhbHJlYWR5IHNhaWQgYXQgdjIgeW91IGNh
-bm5vdCBoYXZlIHVuZG9jdW1lbnRlZCBBQkkuIgpVcG9uIHJlY2hlY2tpbmcsIHdlIHJlYWxpemVk
-IHRoYXQgZHVyaW5nIHZlcmlmaWNhdGlvbiwgd2UgbWlzdGFrZW5seSB1c2VkIHVuZGVyc2NvcmUt
-c2VwYXJhdGVkIHByb3BlcnR5IG5hbWVzIGluIHRoZSBkcml2ZXIsIHdoaWxlIGRhc2gtc2VwYXJh
-dGVkIG5hbWVzIHdlcmUgdXNlZCBpbiB0aGUgWUFNTCBiaW5kaW5ncy4gV2UgaGF2ZSBub3cgc3lu
-Y2hyb25pemVkIHRoZSBwcm9wZXJ0eSBuYW1pbmcuCkNvdWxkIHlvdSBwbGVhc2UgY29uZmlybSBp
-ZiB0aGlzIG1pc21hdGNoIHdhcyB0aGUgcm9vdCBjYXVzZSBvZiB5b3VyIGNvbmNlcm4/CgoKQmVz
-dCByZWdhcmRzLAoKTGkgWmhpCkVzd2luIENvbXB1dGluZwoKPiAtLS0tLeWOn+Wni+mCruS7ti0t
-LS0tCj4g5Y+R5Lu25Lq6OiAiQW5kcmV3IEx1bm4iIDxhbmRyZXdAbHVubi5jaD4KPiDlj5HpgIHm
-l7bpl7Q6MjAyNS0wNy0wNCAwMDoxMjoyOSAo5pif5pyf5LqUKQo+IOaUtuS7tuS6ujogd2Vpc2hh
-bmdqdWFuQGVzd2luY29tcHV0aW5nLmNvbQo+IOaKhOmAgTogYW5kcmV3K25ldGRldkBsdW5uLmNo
-LCBkYXZlbUBkYXZlbWxvZnQubmV0LCBlZHVtYXpldEBnb29nbGUuY29tLCBrdWJhQGtlcm5lbC5v
-cmcsIHJvYmhAa2VybmVsLm9yZywga3J6aytkdEBrZXJuZWwub3JnLCBjb25vcitkdEBrZXJuZWwu
-b3JnLCBuZXRkZXZAdmdlci5rZXJuZWwub3JnLCBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZywg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgbWNvcXVlbGluLnN0bTMyQGdtYWlsLmNvbSwg
-YWxleGFuZHJlLnRvcmd1ZUBmb3NzLnN0LmNvbSwgcm1rK2tlcm5lbEBhcm1saW51eC5vcmcudWss
-IHlvbmcubGlhbmcuY2hvb25nQGxpbnV4LmludGVsLmNvbSwgdmxhZGltaXIub2x0ZWFuQG54cC5j
-b20sIGpzemhhbmdAa2VybmVsLm9yZywgamFuLnBldHJvdXNAb3NzLm54cC5jb20sIHByYWJoYWth
-ci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbSwgaW5vY2hpYW1hQGdtYWlsLmNvbSwgYm9v
-bi5raGFpLm5nQGFsdGVyYS5jb20sIGRmdXN0aW5pQHRlbnN0b3JyZW50LmNvbSwgMHgxMjA3QGdt
-YWlsLmNvbSwgbGludXgtc3RtMzJAc3QtbWQtbWFpbG1hbi5zdG9ybXJlcGx5LmNvbSwgbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnLCBuaW5neXVAZXN3aW5jb21wdXRpbmcuY29t
-LCBsaW5taW5AZXN3aW5jb21wdXRpbmcuY29tLCBsaXpoaTJAZXN3aW5jb21wdXRpbmcuY29tCj4g
-5Li76aKYOiBSZTogW1BBVENIIHYzIDIvMl0gZXRoZXJuZXQ6IGVzd2luOiBBZGQgZWljNzcwMCBl
-dGhlcm5ldCBkcml2ZXIKPiAKPiA+ICsvKiBEZWZhdWx0IGRlbGF5IHZhbHVlKi8KPiA+ICsjZGVm
-aW5lIEVJQzc3MDBfREVMQVlfVkFMVUUwIDB4MjAyMDIwMjAKPiA+ICsjZGVmaW5lIEVJQzc3MDBf
-REVMQVlfVkFMVUUxIDB4OTYyMDVBMjAKPiAKPiBXZSBuZWVkIGEgYmV0dGVyIGV4cGxhbmF0aW9u
-IG9mIHdoYXQgaXMgZ29pbmcgb24gaGVyZS4gV2hhdCBkbyB0aGVzZQo+IG51bWJlcnMgbWVhbj8K
-PiAKCkluIHJlc3BvbnNlIHRvIHlvdXIgc3VnZ2VzdGlvbiwgd2UgYWRkZWQgdGhlIGZvbGxvd2lu
-ZyBtb3JlIGRldGFpbGVkIGNvbW1lbnRzIHRvIHRoZSBjb2RlLiBJcyB0aGlzIGFwcHJvcHJpYXRl
-PworLyoKK8KgKiBEZWZhdWx0IGRlbGF5IHJlZ2lzdGVyIHZhbHVlcyBmb3IgZGlmZmVyZW50IHNp
-Z25hbHM6CivCoCoKK8KgKiBFSUM3NzAwX0RFTEFZX1ZBTFVFMDogVXNlZCBmb3IgVFhEIGFuZCBS
-WEQgc2lnbmFscyBkZWxheSBjb25maWd1cmF0aW9uLgorwqAqIEJpdHMgbGF5b3V0OgorwqAqIMKg
-IEJ5dGUgMCAoYml0cyAwLTcpIMKgIDogVFhEMCAvIFJYRDAgZGVsYXkgKDB4MjAgPSAzLjIgbnMp
-CivCoCogwqAgQnl0ZSAxIChiaXRzIDgtMTUpIMKgOiBUWEQxIC8gUlhEMSBkZWxheSAoMHgyMCA9
-IDMuMiBucykKK8KgKiDCoCBCeXRlIDIgKGJpdHMgMTYtMjMpIDogVFhEMiAvIFJYRDIgZGVsYXkg
-KDB4MjAgPSAzLjIgbnMpCivCoCogwqAgQnl0ZSAzIChiaXRzIDI0LTMxKSA6IFRYRDMgLyBSWEQz
-IGRlbGF5ICgweDIwID0gMy4yIG5zKQorwqAqCivCoCogRUlDNzcwMF9ERUxBWV9WQUxVRTE6IFVz
-ZWQgZm9yIGNvbnRyb2wgc2lnbmFscyBkZWxheSBjb25maWd1cmF0aW9uLgorwqAqIEJpdHMgbGF5
-b3V0OgorwqAqIMKgIEJpdHMgMC02IMKgIMKgIDogVFhFTiBkZWxheQorwqAqIMKgIEJpdHMgOC0x
-NCDCoCDCoDogVFhDTEsgZGVsYXkKK8KgKiDCoCBCaXQgwqAxNSDCoCDCoCDCoDogVFhDTEsgaW52
-ZXJ0ICgxID0gaW52ZXJ0KQorwqAqIMKgIEJpdHMgMTYtMjIgwqAgOiBSWERWIGRlbGF5CivCoCog
-wqAgQml0cyAyNC0zMCDCoCA6IFJYQ0xLIGRlbGF5CivCoCogwqAgQml0IMKgMzEgwqAgwqAgwqA6
-IFJYQ0xLIGludmVydCAoMSA9IGludmVydCkKK8KgKi8KKyNkZWZpbmUgRUlDNzcwMF9ERUxBWV9W
-QUxVRTAgMHgyMDIwMjAyMAorI2RlZmluZSBFSUM3NzAwX0RFTEFZX1ZBTFVFMSAweDk2MjA1QTIw
-Cgo+ID4gKwlkd2NfcHJpdi0+ZGx5X3BhcmFtXzEwMDBtWzBdID0gRUlDNzcwMF9ERUxBWV9WQUxV
-RTA7Cj4gPiArCWR3Y19wcml2LT5kbHlfcGFyYW1fMTAwMG1bMV0gPSBFSUM3NzAwX0RFTEFZX1ZB
-TFVFMTsKPiA+ICsJZHdjX3ByaXYtPmRseV9wYXJhbV8xMDAwbVsyXSA9IEVJQzc3MDBfREVMQVlf
-VkFMVUUwOwo+ID4gKwlkd2NfcHJpdi0+ZGx5X3BhcmFtXzEwMG1bMF0gPSBFSUM3NzAwX0RFTEFZ
-X1ZBTFVFMDsKPiA+ICsJZHdjX3ByaXYtPmRseV9wYXJhbV8xMDBtWzFdID0gRUlDNzcwMF9ERUxB
-WV9WQUxVRTE7Cj4gPiArCWR3Y19wcml2LT5kbHlfcGFyYW1fMTAwbVsyXSA9IEVJQzc3MDBfREVM
-QVlfVkFMVUUwOwo+ID4gKwlkd2NfcHJpdi0+ZGx5X3BhcmFtXzEwbVswXSA9IDB4MDsKPiA+ICsJ
-ZHdjX3ByaXYtPmRseV9wYXJhbV8xMG1bMV0gPSAweDA7Cj4gPiArCWR3Y19wcml2LT5kbHlfcGFy
-YW1fMTBtWzJdID0gMHgwOwo+IAo+IFdoYXQgYXJlIHRoZSB0aHJlZSBkaWZmZXJlbnQgdmFsdWVz
-IGZvcj8KCkluIHJlc3BvbnNlIHRvIHlvdXIgcXVlc3Rpb24sIHdlIGhhdmUgYWRkZWQgdGhlIGZv
-bGxvd2luZyBtb3JlIGRldGFpbGVkIGNvbW1lbnRzIHRvIHRoZSBjb2RlLiBJcyB0aGlzIGFwcHJv
-cHJpYXRlPworICAgICAgICAvKiBJbml0aWFsaXplIGRlZmF1bHQgZGVsYXkgcGFyYW1ldGVycyBm
-b3IgMTAwME1icHMgYW5kIDEwME1icHMgc3BlZWRzICovCivCoCDCoCDCoCDCoCBkd2NfcHJpdi0+
-ZGx5X3BhcmFtXzEwMDBtWzBdID0gRUlDNzcwMF9ERUxBWV9WQUxVRTA7IC8qIFRYRCBkZWxheSAq
-LworwqAgwqAgwqAgwqAgZHdjX3ByaXYtPmRseV9wYXJhbV8xMDAwbVsxXSA9IEVJQzc3MDBfREVM
-QVlfVkFMVUUxOyAvKiBDb250cm9sIHNpZ25hbHMgZGVsYXkgKi8KK8KgIMKgIMKgIMKgIGR3Y19w
-cml2LT5kbHlfcGFyYW1fMTAwMG1bMl0gPSBFSUM3NzAwX0RFTEFZX1ZBTFVFMDsgLyogUlhEIGRl
-bGF5ICovCivCoCDCoCDCoCDCoCBkd2NfcHJpdi0+ZGx5X3BhcmFtXzEwMG1bMF0gPSBFSUM3NzAw
-X0RFTEFZX1ZBTFVFMDsKK8KgIMKgIMKgIMKgIGR3Y19wcml2LT5kbHlfcGFyYW1fMTAwbVsxXSA9
-IEVJQzc3MDBfREVMQVlfVkFMVUUxOworwqAgwqAgwqAgwqAgZHdjX3ByaXYtPmRseV9wYXJhbV8x
-MDBtWzJdID0gRUlDNzcwMF9ERUxBWV9WQUxVRTA7CivCoCDCoCDCoCDCoCAvKiBGb3IgMTBNYnBz
-LCBubyBkZWxheSBieSBkZWZhdWx0ICovCivCoCDCoCDCoCDCoCBkd2NfcHJpdi0+ZGx5X3BhcmFt
-XzEwbVswXSA9IDB4MDsKK8KgIMKgIMKgIMKgIGR3Y19wcml2LT5kbHlfcGFyYW1fMTBtWzFdID0g
-MHgwOworwqAgwqAgwqAgwqAgZHdjX3ByaXYtPmRseV9wYXJhbV8xMG1bMl0gPSAweDA7Cgo+IAo+
-ID4gKwo+ID4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihwZGV2LT5kZXYub2Zfbm9kZSwg
-InJ4LWludGVybmFsLWRlbGF5LXBzIiwKPiA+ICsJCQkJICAgJmR3Y19wcml2LT5yeF9kZWxheV9w
-cyk7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJjYW4ndCBnZXQg
-cngtaW50ZXJuYWwtZGVsYXktcHMsIHJldCglZCkuIiwgcmV0KTsKPiA+ICsJZWxzZQo+ID4gKwkJ
-aGFzX3J4X2RseSA9IHRydWU7Cj4gPiArCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMy
-KHBkZXYtPmRldi5vZl9ub2RlLCAidHgtaW50ZXJuYWwtZGVsYXktcHMiLAo+ID4gKwkJCQkgICAm
-ZHdjX3ByaXYtPnR4X2RlbGF5X3BzKTsKPiA+ICsJaWYgKHJldCkKPiA+ICsJCWRldl9kYmcoJnBk
-ZXYtPmRldiwgImNhbid0IGdldCB0eC1pbnRlcm5hbC1kZWxheS1wcywgcmV0KCVkKS4iLCByZXQp
-Owo+ID4gKwllbHNlCj4gPiArCQloYXNfdHhfZGx5ID0gdHJ1ZTsKPiA+ICsJaWYgKGhhc19yeF9k
-bHkgJiYgaGFzX3R4X2RseSkKPiAKPiBXaGF0IGlmIGkgb25seSB0byBzZXQgYSBUWCBkZWxheT8g
-SSB3YW50IHRoZSBSWCBkZWxheSB0byBkZWZhdWx0IHRvCj4gMHBzLgo+IAoKUmVnYXJkaW5nIHlv
-dXIgcXVlc3Rpb24sIHdlIGhhdmUgYWRkZWQgZGVmYXVsdCB2YWx1ZXMg4oCL4oCLZm9yIHR4IGRl
-bGF5IGFuZCByeCBkZWxheSBpbiB0aGUgY29kZSwgYW5kIGFzIGxvbmcgYXMgb25lIG9mIHRoZSB0
-d28gZGVsYXlzIGlzIGNvbmZpZ3VyZWQgaW4gRFRTLCB0aGUgb3JpZ2luYWwgY29uZmlndXJhdGlv
-biBjYW4gYmUgb3ZlcndyaXR0ZW4uIERvZXMgdGhpcyBwcm9jZXNzIG1lZXQgeW91ciBzdWdnZXN0
-aW9uPworICAgICAgICAvKiBEZWZhdWx0IGRlbGF5cyBpbiBwaWNvc2Vjb25kcyAqLworwqAgwqAg
-wqAgwqAgZHdjX3ByaXYtPnJ4X2RlbGF5X3BzID0gMDsKK8KgIMKgIMKgIMKgIGR3Y19wcml2LT50
-eF9kZWxheV9wcyA9IDA7CisKK8KgIMKgIMKgIMKgIGlmIChoYXNfcnhfZGx5IHx8IGhhc190eF9k
-bHkpIHsKCj4gewo+ID4gKwkJZWljNzcwMF9zZXRfZGVsYXkoZHdjX3ByaXYtPnJ4X2RlbGF5X3Bz
-LCBkd2NfcHJpdi0+dHhfZGVsYXlfcHMsCj4gPiArCQkJCSAgJmR3Y19wcml2LT5kbHlfcGFyYW1f
-MTAwMG1bMV0pOwo+ID4gKwkJZWljNzcwMF9zZXRfZGVsYXkoZHdjX3ByaXYtPnJ4X2RlbGF5X3Bz
-LCBkd2NfcHJpdi0+dHhfZGVsYXlfcHMsCj4gPiArCQkJCSAgJmR3Y19wcml2LT5kbHlfcGFyYW1f
-MTAwbVsxXSk7Cj4gPiArCQllaWM3NzAwX3NldF9kZWxheShkd2NfcHJpdi0+cnhfZGVsYXlfcHMs
-IGR3Y19wcml2LT50eF9kZWxheV9wcywKPiA+ICsJCQkJICAmZHdjX3ByaXYtPmRseV9wYXJhbV8x
-MG1bMV0pOwo+ID4gKwl9IGVsc2Ugewo+ID4gKwkJZGV2X2RiZygmcGRldi0+ZGV2LCAiIHVzZSBk
-ZWZhdWx0IGRseVxuIik7Cj4gCj4gV2hhdCBpcyB0aGUgZGVmYXVsdD8gSXQgc2hvdWxkIGJlIDBw
-cy4gU28gdGhlcmUgaXMgbm8gcG9pbnQgcHJpbnRpbmcKPiB0aGlzIG1lc3NhZ2UuCj4gCgpPdXIg
-b3JpZ2luYWwgc3RyYXRlZ3kgd2FzIHRvIHVzZSB0aGUgdmFsdWUgdXNlZCB3aGVuIGluaXRpYWxp
-emluZyBkbHlfcGFyYW1fKm0gYXMgdGhlIGRlZmF1bHQgdmFsdWUsIHNvIHNob3VsZCB3ZSBjb250
-aW51ZSB0byBmb2xsb3cgeW91ciBzdWdnZXN0aW9uIGFuZCB1c2UgMHBzIGFzIHRoZSBkZWZhdWx0
-IHZhbHVlPwoKPiAJQW5kcmV3Cg==
+On Mon, Jul 07, 2025 at 12:02:47PM +0800, Chen Ridong wrote:
+
+> >> And I'm not quite sure I understand this hunk either. If we bail out,
+> >> current->__state is reset to TASK_RUNNING, so what's the problem?
+> > 
+> > The issue occurs in this race scenario:
+> > 
+> > echo FROZEN > freezer.state
+> >   freeze_cgroup()
+> >     freeze_task()
+> >       fake_signal_wake_up() // wakes task to freeze it
+> > 
+> > In task context:
+> > get_signal
+> >   try_to_freeze
+> >     __refrigerator
+> >       WRITE_ONCE(current->__state, TASK_FROZEN); // set TASK_FROZEN
+> >       // race: cgroup state updates to frozen
+
+I suppose this is me not quite knowing how this cgroup freezer works;
+how does it race? what code marks the task frozen?
+
+> >       freezing(current) now return false
+> >       // We bail out, the task is not frozen but it should be frozen.
+> > 
+> > I hope this explanation clarifies the issue I encountered.
+> > 
+> 
+> Hi, Peter, Tim
+> 
+> I was looking at the WARN_ON_ONCE(freezing(p)) check in __thaw_task
+> and started wondering: since we already have !frozen(p) check, is this
+> warning still needed? If we can remove it, maybe reverting commit
+> cff5f49d433f ("cgroup_freezer: cgroup_freezing: Check if not frozen")
+> would be a better approach.
+
+I suppose that is possible; modern sensibilities require we write that
+function something like so:
+
+void __thaw_task(struct task_struct *p)
+{
+	guard(spinlock_irqsave)(&freezer_lock);
+	if (frozen(p) && !task_call_func(p, __restore_freezer_state, NULL))
+		wake_up_state(p, TASK_FROZEN);
+}
