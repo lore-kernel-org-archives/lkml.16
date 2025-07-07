@@ -1,139 +1,138 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A422701DC;
-	Mon,  7 Jul 2025 14:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69542BDC2C;
+	Mon,  7 Jul 2025 14:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898742; cv=none; b=inF3MUsg0L2MkWVrLCI24uf8/BpHJCxwvBnVsp7aAy8xbaYOWDMoxTh7hL9qg6SHWZVrXvdAWz8ZrNXjOyveMDXiTH9Q4qrSNZiw9Ar3vsRl77iYtkpDEQ0BTgjErHvNNDU0v3VUrK630b12qZxgtMl7sxfCxJtXl8SMqF07wOs=
+	t=1751898847; cv=none; b=eRO/GltdNfK9FiAJmeVtsjWIiZfxui01qEytqkb+4NJoJWFGALBJmq5F3P9GfAWUuU7D5zLfU2mGon5KMEy9WsEiWD0+g843GaKWlwEmxk/wZyGfd9lHenGKg+ql42p3AeaHCM8oaXS567L0XzDIhUcy3E9fqCh5ct47/dXyhrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898742; c=relaxed/simple;
-	bh=nhc83eAPy8ZVz/rx/WT9VLQ+rUQ71HcQIgBfRRZQAgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QLegfSwXqk91UiOa2gPcytfpQVP+8SuZ8RD7vwg9DZzaOzexqK5AjbcExydXPFrFmg/TWKjjAQn76Pda/sFkkrAdAyMUn4SCmqm+mPiC8+LWWhE21m3Hj4BkLwgo36+wnpWd9ATsqCDUfc2ZXJol7tBej0O+unCDCkBbSQa39ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4sKF85p; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751898847; c=relaxed/simple;
+	bh=HfEBjhDybxA/lCndKha/gf5kwENN2tgin7s12uZ7/gw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MjKuGXCedRBDpTQIwxDuWG06JRtqHIry3GcxXqr6+nY5nIK9wXbWFRWRVBnc3r4jHLp37lpi7/utWogQmR3+5aod4PO82X3ZR9hIoQWdKo9a8gBFKVbqOJSM5uycB5u+l0bfCHWft3A4mUef2vJmAq70wK7o0MyUXz5QrPEy8Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=a4rIafs7; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4sKF85p"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32b5226e6beso29072671fa.2;
-        Mon, 07 Jul 2025 07:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751898739; x=1752503539; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u/FMSBqJeKFryaW0a1HucMaUdkq/Nt2BLzJLFvyV1UM=;
-        b=B4sKF85pbVUSOvrxAA3mNPU7HF5kg+y4m9dstDwEupLjre9o146xTOK5rm7+uYMp/o
-         682ddnOLjyec23br9CUQJ0GH/qIoXgX7uIKrhwjll+h3p55WkCQ6gFFPrMvMmJpEyCv+
-         NgS0NNcIkvzUmR625n44NLCGFBaSAEPeuXarKRZ6cFRQ/0JiRQA1jA05nNWKBKQrdh9Z
-         IpOWoMAQ/QYk3YVWmbHL8F7uFDKG7mAwOsYen7QeqMa6PUCmzFRtDU9MfDVvxG7pe230
-         7oYUcNvUbQdu3vGysFhG7u+igaPDIysNi2RrcDW0DuQgbxWaqPG+7F976RyBpDk/og9E
-         rYyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751898739; x=1752503539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u/FMSBqJeKFryaW0a1HucMaUdkq/Nt2BLzJLFvyV1UM=;
-        b=u2FSf2oqCvDcIQT+AMgrH0LR8n/jZp1gJWuJj/1zTqghNGuCtp1HKqTdf3NKnONVyJ
-         WLsQDjeqcDXeB6mGgHiHoD28VTUDQ+cbxwwWYiIY6GIJmojo2yI5AMZZ/Nai8+EV1JsR
-         ARljb9z+wL4PvQFTSakTGafkru3BQNnXsHf+TAjqNMWVj8Hm8dnYlmHd2w0h8/TCJZXM
-         tFaYVSETWzwsoTTnABGc70tsYsiGeq2UYqUejh5ZjmwdQGhjEaAc2XxlwhpQJ5waCOk0
-         /cfXgEFTSdmBjfEbI3EEm3XTRQ88ANGY0y9pfFIeK1SpyT1rCjNEGEKorU2to0LxSJCK
-         9Hug==
-X-Forwarded-Encrypted: i=1; AJvYcCWMAVUpln4CvNKw0m+9+8ayRc5hJlASkOpq53Eu8rc/SzIYyyzB5BnwVmhaWm/QgeXcLLWYhr1i7ZcTmI8=@vger.kernel.org, AJvYcCX5XgnLD3VwPkaAW+tFexJOnpVDENPUC1lj0JKmAYfaOc+8Ez6CqXMamgWO0QBMDwtj+FuMmXRSzgHl@vger.kernel.org
-X-Gm-Message-State: AOJu0YytYvkWKOb4Hjn5spGJt9284i6p9qofq9Gath/yXa/tHYgVRspb
-	iRZlWGElW+IXreDWBSRMtPHU+u4RScDyYAF3REXLP7MS50TrRXI87VunYU9pvBhx5YQOMY5fIQP
-	bY2AR5AAK4YDQhnupaxYlbNUF+LnkLi51FPoFlT0=
-X-Gm-Gg: ASbGncvQb/tpyPd0kgn5TyQidKUyHjRKPCWtxIatZtDJPgOoMkMKiTLptJGROoNDFUH
-	X6cFSMVzV2jmE55XydIIzxSFFe9gcv/zyW8vGlNyk6cN32YdmtrA9CjVV9YBK94ImMTCYqCtv3l
-	riO+iEUk/kSHjDQ/gNAkVeeq71tuFXnWgUVKM8Acy1eeDrTwwwo+ZTso7rnQmfYs/0Z/XqRom0O
-	Bwu
-X-Google-Smtp-Source: AGHT+IFULVURJBOVYtWcIZw+X3lh3wL59Axl2kzkDpO3LIcnEioQra3fSYTDbUsjwm8D9OHJl/nvyiF7r3K15zHyCak=
-X-Received: by 2002:a05:651c:221d:b0:32b:4773:7aaf with SMTP id
- 38308e7fff4ca-32f09328c9emr30825051fa.35.1751898738869; Mon, 07 Jul 2025
- 07:32:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="a4rIafs7"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bbRLn36V0z9sqV;
+	Mon,  7 Jul 2025 16:24:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751898241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=24KDo3KRXZxzAB+MpsSNoPOtleVCAJRJx+y6hk41NC4=;
+	b=a4rIafs7ejMCL/CNvTdRuBlYOowXAqIKjXtP4LS8rmCWE0hVIYMqBPxATAFWTzPY7eKHhY
+	vOZHuibUJbYTQF5RkUjg95/WDGjODG+LS2eqsuQTluKkzxuNuGgFY4JdPIusFIDrranKjQ
+	+Flk3LB7JQlfmkzTS8eQkssBRm22SB28a+4UNq+HVGloMpqEQrg84FH5bJu/xRCLtcMQMQ
+	EES7IR7CXKkDkdUeuygNJ7xJ/LWFp9gvhxgm9lO0YIYFIPDEqZvXY7zXpBqHVScIJMQBEK
+	UKInRCqeEpexdwcfpcP1KLRuPlsBXssNB4gpHZpZRpM/92Mill8wrk8sY7dRFg==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Suren Baghdasaryan <surenb@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nico Pache <npache@redhat.com>,
+	Dev Jain <dev.jain@arm.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	mcgrof@kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v2 5/5] block: use largest_zero_folio in __blkdev_issue_zero_pages()
+Date: Mon,  7 Jul 2025 16:23:19 +0200
+Message-ID: <20250707142319.319642-6-kernel@pankajraghav.com>
+In-Reply-To: <20250707142319.319642-1-kernel@pankajraghav.com>
+References: <20250707142319.319642-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <oxpeGQP7AC5GXfnifSYyeW7X_URDJhOvCxTG09iGmuvIXd330ZdXanoBmbUB3wpOcIORP1CakEzevsjtJKynhw==@protonmail.internalid>
- <20250617131446.25551-1-pranav.tyagi03@gmail.com> <huml6d5naz4kf6a3kh5g74dyrtivlaqyzajzwwmyvnpsqhuj3d@7zazaxb3225t>
- <rkCSJQOnZAt9nfcVUrC8gHDWqHhzMThp3xx38GD2BgJZM4iXJfvVgXZwa21-3xikSHHLO-scI4_47aO-O1d5FQ==@protonmail.internalid>
- <CAH4c4j+dhh9uW=GOoxaaefBTWQtbLeWQs1SqrWwpka9R8mwBTg@mail.gmail.com> <aaywkct2isosqxd37njlua4xxxll2vlvv7huhh34ko3ths7iw4@cdgrtvlp3cwh>
-In-Reply-To: <aaywkct2isosqxd37njlua4xxxll2vlvv7huhh34ko3ths7iw4@cdgrtvlp3cwh>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Mon, 7 Jul 2025 20:02:06 +0530
-X-Gm-Features: Ac12FXzf6bQbW208adFb3L3sqINPLXWf5JxB8WTi60gS2v2uT9WkHERIFtfHvtI
-Message-ID: <CAH4c4jKisoACHNOQH5Cusduu-_51_PcevxYJT3k_o6MjBWsVJw@mail.gmail.com>
-Subject: Re: [PATCH] xfs: replace strncpy with memcpy in xattr listing
-To: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: skhan@linuxfoundation.org, linux-xfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4bbRLn36V0z9sqV
 
-On Tue, Jul 1, 2025 at 12:04=E2=80=AFAM Carlos Maiolino <cem@kernel.org> wr=
-ote:
->
-> On Mon, Jun 30, 2025 at 06:18:06PM +0530, Pranav Tyagi wrote:
-> > On Mon, Jun 30, 2025 at 5:49=E2=80=AFPM Carlos Maiolino <cem@kernel.org=
-> wrote:
-> > >
-> > > On Tue, Jun 17, 2025 at 06:44:46PM +0530, Pranav Tyagi wrote:
-> > > > Use memcpy() in place of strncpy() in __xfs_xattr_put_listent().
-> > > > The length is known and a null byte is added manually.
-> > > >
-> > > > No functional change intended.
-> > > >
-> > > > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > > > ---
-> > > >  fs/xfs/xfs_xattr.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
-> > > > index 0f641a9091ec..ac5cecec9aa1 100644
-> > > > --- a/fs/xfs/xfs_xattr.c
-> > > > +++ b/fs/xfs/xfs_xattr.c
-> > > > @@ -243,7 +243,7 @@ __xfs_xattr_put_listent(
-> > > >       offset =3D context->buffer + context->count;
-> > > >       memcpy(offset, prefix, prefix_len);
-> > > >       offset +=3D prefix_len;
-> > > > -     strncpy(offset, (char *)name, namelen);                 /* re=
-al name */
-> > > > +     memcpy(offset, (char *)name, namelen);                  /* re=
-al name */
-> > > >       offset +=3D namelen;
-> > > >       *offset =3D '\0';
-> > >
-> > > What difference does it make?
-> >
-> > I intended this to be a cleanup patch as strncpy()
-> > is deprecated and its use discouraged.
->
-> Fair enough. This is the kind of information that's worth
-> to add to the patch description on your future patches.
->
-> No need to re-send this again.
->
-> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-Thanks Darrick and Carlos for the Reviewed-by tag.
+Use largest_zero_folio() in __blkdev_issue_zero_pages().
 
-I also wanted to ask if this patch has been queued for merging.
+On systems with CONFIG_STATIC_PMD_ZERO_PAGE enabled, we will end up
+sending larger bvecs instead of multiple small ones.
 
-Regards
-Pranav Tyagi
->
-> >
-> > Regards
-> > Pranav Tyagi
-> > >
-> > >
-> > > >
-> > > > --
-> > > > 2.49.0
-> > > >
+Noticed a 4% increase in performance on a commercial NVMe SSD which does
+not support OP_WRITE_ZEROES. The device's MDTS was 128K. The performance
+gains might be bigger if the device supports bigger MDTS.
+
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+ block/blk-lib.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/block/blk-lib.c b/block/blk-lib.c
+index 4c9f20a689f7..70a5700b6717 100644
+--- a/block/blk-lib.c
++++ b/block/blk-lib.c
+@@ -196,6 +196,10 @@ static void __blkdev_issue_zero_pages(struct block_device *bdev,
+ 		sector_t sector, sector_t nr_sects, gfp_t gfp_mask,
+ 		struct bio **biop, unsigned int flags)
+ {
++	struct folio *zero_folio;
++
++	zero_folio = largest_zero_folio();
++
+ 	while (nr_sects) {
+ 		unsigned int nr_vecs = __blkdev_sectors_to_bio_pages(nr_sects);
+ 		struct bio *bio;
+@@ -208,15 +212,14 @@ static void __blkdev_issue_zero_pages(struct block_device *bdev,
+ 			break;
+ 
+ 		do {
+-			unsigned int len, added;
++			unsigned int len;
+ 
+-			len = min_t(sector_t,
+-				PAGE_SIZE, nr_sects << SECTOR_SHIFT);
+-			added = bio_add_page(bio, ZERO_PAGE(0), len, 0);
+-			if (added < len)
++			len = min_t(sector_t, folio_size(zero_folio),
++				    nr_sects << SECTOR_SHIFT);
++			if (!bio_add_folio(bio, zero_folio, len, 0))
+ 				break;
+-			nr_sects -= added >> SECTOR_SHIFT;
+-			sector += added >> SECTOR_SHIFT;
++			nr_sects -= len >> SECTOR_SHIFT;
++			sector += len >> SECTOR_SHIFT;
+ 		} while (nr_sects);
+ 
+ 		*biop = bio_chain_and_submit(*biop, bio);
+-- 
+2.49.0
+
