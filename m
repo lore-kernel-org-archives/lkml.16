@@ -1,242 +1,1009 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37D22874F3;
-	Mon,  7 Jul 2025 06:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B2928642E
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 06:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751871560; cv=none; b=g5Nwkj+rzdpO1CEYiMmGtciiHqBxR+N7BDAvWEpJVrGmVbUU94NCuJn6rTdTAueda4F+mcZttSg9zMIJn+11Pg8QYbKOV4USzjH81rbHsbpmwqW+P2FXGH2Zfsvw3UN1u8ERDXEHdtTE+aSSKQuAGqzjQ0XwR0znnL5iU0yx3F8=
+	t=1751871561; cv=none; b=pOi4j2Lk2TnSSaxlbgFOB0g5FSPmAG6K6sSdkL2WeyxN6/g7P3V6Qr+Z4vBf7gIWGYVPswt9xopSO+zLMHOjg+nk+ftJArWDq2GOpBZX4Y+E6ZL5LrSifuXctfIRRDYOmon7pxUzkgVim1oFug/NqRyxXAq/0R1YFcUm5b5PRnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751871560; c=relaxed/simple;
-	bh=/pX/l5Wc/0xNbeAulJb6lD23yHL76TsKOLIU/5lq8r4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOlqC0qTjdt2sxhoOY625pQ2qqmnWBhcnjGfVYSB0PShoup0qKc351+8yHcU+Knvfbmp6bhPzw2LsSgv+Elgez3gsja8oxZzm8sKvVXGAL/4Ki6RLOXDWKT1tVTv8h2Gr4FtLEN3cNj5o+KB2EHcdbyMSOe9VRUnbYsjXscy/fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=OC3gMEuy; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1751871561; c=relaxed/simple;
+	bh=cVIw7DG8k909QWdsB9kH/sdznxd5qBiNUB8N6PlliCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uHRCPSGw7mr8lzPVZfoNnbK5JN1MLDiuEBmvyIKjwVJgDOtX/SW0yELl0Ehh6OE8Ukq2kUGBEXEnPYoDFp29dcAOqpuYP/vIVKFjz4w4HNZnND3Q/MMOX3Ef+FjbTfTaX4yBv1ZXXJgjx+dEA5PznG9ggWWN2eSCOno9Qj+zA0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=igeh2eyJ; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="OC3gMEuy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1751871532;
-	bh=/pX/l5Wc/0xNbeAulJb6lD23yHL76TsKOLIU/5lq8r4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=OC3gMEuyzu749A0ZiYqYVDBO880qnNHlxVileKZcY9hlqZnZUVLP0xbsamfh2DZIE
-	 yxPrisdl9hPe+78HHzGGfwWdskenH5a6X8798sP2ecWrnfaXP7ohoR+o+eG0dIovYj
-	 gJ+RT7IvzEycecSoqltHa/oBaGdDWBsIRRMFkudA=
-X-QQ-mid: zesmtpip2t1751871495td943d749
-X-QQ-Originating-IP: msbOsRCPf0JID4PpdTPYL8wQtjscG7pzBpPERYJf0XY=
-Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Jul 2025 14:58:13 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 7165771838115011995
-EX-QQ-RecipientCnt: 7
-Message-ID: <9ED003291C66C906+94d03a66-3573-4e3f-aaac-d7c55f750776@uniontech.com>
-Date: Mon, 7 Jul 2025 14:58:12 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="igeh2eyJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751871557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2w2nGFk1hDnrvsbbQ5SBy9X103K4BSARMYUpVA9xvP4=;
+	b=igeh2eyJ+AIGSejaiI4NiqFXPBrcVTIBeRwbVlQ1TQD5xQiD4Y003N+z9WnpMildZ/5ZQJ
+	Ps7v+izxoqV/RQwB6cViPTif5C1OFuJc2rSyCQ0iJN8zb3yx9IiczznfMKyTlEM6P1ufCg
+	v1AW4g6lIv+sIp5B6PROIveLJWZEr1w=
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: mpatocka@redhat.com,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@Huawei.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	dm-devel@lists.linux.dev,
+	Dongsheng Yang <dongsheng.yang@linux.dev>
+Subject: [PATCH v2 08/11] dm-pcache: add cache_key
+Date: Mon,  7 Jul 2025 06:58:06 +0000
+Message-ID: <20250707065809.437589-9-dongsheng.yang@linux.dev>
+In-Reply-To: <20250707065809.437589-1-dongsheng.yang@linux.dev>
+References: <20250707065809.437589-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Gentle ping: [PATCH v2 0/6] MIPS: Resolve build problems on
- decstation_64
-To: tsbogend@alpha.franken.de, macro@orcam.me.uk
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com
-References: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
-Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------6OmAPHmhuwYa09o3Kw770IMo"
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: N8EjZstfjwKXmItYcyjzZvwrpDGXMAiKuLGzdn5nwuEpgLgBQ6VjQ6r/
-	aIEYK8JlLI5MFDwg5h4jqWgPkeD8qZ1V6XXMOqyDZDpXvGydOGEJ5LooM/tZ3daqeehYu5L
-	SEbu4ymg2CQpKHntythzspyMblArqe1JlkLuwmy3/yfMejF8ymy1Tz+renRSI5ODGEvKqNl
-	fHqiRNr2mvc0fkXkmgmXI6X3pHF4z0VBzwE0MF892fjfadHKQgS3bzyra7ccdiJyNNggvDl
-	elyG/HInTr6QjRLwZvM8ton2hMAkJxSDcXBhV/K9ppMQrTBhRhWuj2rasoIh5ySB092zCep
-	wScrCd0YE5R/veXO89NW4nsWWdqLp+jQunZGRw8yNUs4JQ6QUiY0Bia0vi9Io4YUvo1eNfZ
-	pNsc9VKe3zX9fch0Q46VtdJXCpVAhCFb2GgBaGm+QjE1aIZ5rKKabT32yVGAD3H/TXe6qeE
-	wQkAAPQ/t4Cbmr7RQMS/y/kO1t9RA/DTklA6vMvQe/Lz+nc0XrlMEAEafnueQfe+Mj8hbbF
-	pVXfyTcbWOG7jjMfKE+reaalwDq2E4wAJvCh1TMl4UN5U4nhsziTNR70FWDKCbfUeDXO85Z
-	mg2lSEsfvBg8GngHU12abEmMGLdr6HRw3r2IS5hZe8f3D6+Cpv1KimU3ZNuy4YoZL21fWWm
-	SOY8sNnelgkAdPurzVq3am3B9CARjmxShAxtFr6VWenHhm+6BbGnVIYswMra94w6eEPgPH/
-	e/hfzt8U8WVgYZO3PMEVkRwvKtzjyiaW9+Hq+p8oCzMVcvqGLfs9bdJpcDipzcHuw7V5kg5
-	uzkbaWDWbBlCCVf1w3PRWjq5DFMDsn8UVrIlZargusDGAMExRGvzZi2vUsSF6i0StJG5G/8
-	sz65GpdBGM8wqV+6/59QhfeDo2LQU3Mn78rC/amZRXjEj664BoQoVTe/mLc/U1M01Idj3Lg
-	8/mHke4Svjh8ajdwL+Ww44+CpMv6eT9blEnPWS8i/V/ha/fv1n+tlvFNGKnmhLhKLgR5Vci
-	agLn9bttupXh0Zx5OPMG8VmZ50NZBWrMchSpd98hl5Ys5Z0pHzVhpzgrfouf8o7HRavvQ1v
-	97B61dTelrELZIireWLp1D2t4/BZUH6Ew==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------6OmAPHmhuwYa09o3Kw770IMo
-Content-Type: multipart/mixed; boundary="------------RgbllARWsLlZYSThzRw90KaD";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: tsbogend@alpha.franken.de, macro@orcam.me.uk
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com
-Message-ID: <94d03a66-3573-4e3f-aaac-d7c55f750776@uniontech.com>
-Subject: Gentle ping: [PATCH v2 0/6] MIPS: Resolve build problems on
- decstation_64
-References: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
-In-Reply-To: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
+Add *cache_key.c* which becomes the heart of dm-pcache’s
+in-memory index and on-media key-set (“kset”) format.
 
---------------RgbllARWsLlZYSThzRw90KaD
-Content-Type: multipart/mixed; boundary="------------0h1pXDOEcfzHJPxW8vqcdnBv"
+* Key objects (`struct pcache_cache_key`)
+  - Slab-backed allocator & ref-count helpers
+  - `cache_key_encode()/decode()` translate between in-memory keys and
+    their on-disk representation, validating CRC when
+    *cache_data_crc* is enabled.
 
---------------0h1pXDOEcfzHJPxW8vqcdnBv
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+* Kset construction & persistence
+  - Per-kset buffer lives in `struct pcache_cache_kset`; keys are
+    appended until full or *force_close* triggers an immediate flush.
+  - `cache_kset_close()` writes the kset to the *key_head* segment,
+    automatically chaining a *LAST* kset header when rolling over to a
+    freshly allocated segment.
 
-SGkgYWxsLA0KDQpUaGlzIGlzIGEgZ2VudGxlIHBpbmcuDQoNCkkndmUgYWRkcmVzc2VkIGFs
-bCB0aGUgZmVlZGJhY2sgZnJvbSBwcmV2aW91cyBkaXNjdXNzaW9ucyBhbmQgdHJpZWQgDQpy
-ZXNlbmRpbmcgbXVsdGlwbGUgdGltZXMsIGJ1dCBoYXZlbid0IHJlY2VpdmVkIGFueSByZXNw
-b25zZQ0KDQoNCk9uIDIwMjUvNC8yMiAxODoxOCwgV2FuZ1l1bGkgd3JvdGU6DQo+IFsgUGFy
-dCAxIF06IE1JUFM6IGRlYzogT25seSBjaGVjayAtbXN5bTMyIHdoZW4gbmVlZCBjb21waWxl
-cg0KPg0KPiBEdXJpbmcgJ21ha2UgbW9kdWxlc19pbnN0YWxsJywgdGhlIG5lZWQtY29tcGls
-ZXIgdmFyaWFibGUgYmVjb21lcw0KPiBudWxsLCBzbyBNYWtlZmlsZS5jb21waWxlciBpc24n
-dCBpbmNsdWRlZC4NCj4gICAgICANCj4gVGhpcyByZXN1bHRzIGluIGNhbGwgY2Mtb3B0aW9u
-LXluIHJldHVybmluZyBub3RoaW5nLg0KPiAgICAgIA0KPiBGb3IgbW9yZSB0ZWNobmljYWwg
-ZGV0YWlscyBvbiB3aHkgbmVlZC1jb21waWxlciBpcyBudWxsIGR1cmluZw0KPiAnbWFrZSBt
-b2R1bGVzX2luc3RhbGwnIGFuZCB3aHkgbm8gY29tcGlsZXIgaW52b2NhdGlvbiBpcyBhY3R1
-YWxseQ0KPiBuZWVkZWQgYXQgdGhpcyBwb2ludCwgcGxlYXNlIHJlZmVyIHRvIGNvbW1pdCA0
-ZmU0YTYzNzRjNGQgKCJNSVBTOg0KPiBPbmx5IGZpZGRsZSB3aXRoIENIRUNLRkxBR1MgaWYg
-bmVlZC1jb21waWxlciIpIGFuZCBjb21taXQNCj4gODA1YjJlMWQ0MjdhICgia2J1aWxkOiBp
-bmNsdWRlIE1ha2VmaWxlLmNvbXBpbGVyIG9ubHkgd2hlbiBjb21waWxlcg0KPiBpcyBuZWVk
-ZWQiKS4NCj4gICAgICANCj4gQ29tbWl0IGE3OWE0MDRlNmMyMiAoIk1JUFM6IEZpeCBDT05G
-SUdfQ1BVX0RBRERJX1dPUktBUk9VTkRTDQo+IGBtb2R1bGVzX2luc3RhbGwnIHJlZ3Jlc3Np
-b24iKSB0cmllZCB0byBmaXggdGhlIHNhbWUgaXNzdWUgYnV0IGl0DQo+IGNhdXNlZCBhIGNv
-bXBpbGUgZXJyb3Igb24gY2xhbmcgY29tcGlsZXIgYmVjYXVzZSBpdCBkb2Vzbid0IHN1cHBv
-cnQNCj4gJy1tc3ltMzInLiBUaGVuLCBjb21taXQgMThjYTYzYTJlMjNjICgiTUlQUzogUHJv
-YmUgdG9vbGNoYWluIHN1cHBvcnQNCj4gb2YgLW1zeW0zMiIpIGZpeGVkIGl0IGJ1dCByZWlu
-dHJvZHVjZWQgdGhlIENPTkZJR19DUFVfREFERElfV09SS0FST1VORFMNCj4gYG1vZHVsZXNf
-aW5zdGFsbCcgcmVncmVzc2lvbi4NCj4NCj4gV3JhcHBpbmcgdGhpcyBlbnRpcmUgY29kZSBi
-bG9jayB3aXRoICNpZmRlZiBuZWVkLWNvbXBpbGVyIHRvIGF2b2lkDQo+IGFsbCBpc3N1ZXMg
-aXMgdGhlIGJlc3Qgc29sdXRpb24gZm9yIG5vdy4NCj4gICAgICANCj4gVG8gZ2V0IHJpZCBv
-ZiBzcHVyaW91cyAiQ09ORklHX0NQVV9EQURESV9XT1JLQVJPVU5EUyB1bnN1cHBvcnRlZA0K
-PiB3aXRob3V0IC1tc3ltMzIiIGVycm9yLg0KPg0KPiBNb3Jlb3ZlciwgSSBhbHNvIGlkZW50
-aWZpZWQgYW4gdW5uZWNlc3NhcnkgY2hlY2sgZm9yIEtCVUlMRF9TWU0zMg0KPiBpbiB0aGlz
-IE1ha2VmaWxlIHNlY3Rpb24uIEVsaW1pbmF0ZSBpdCBmb3IgY29kZSBzaW1wbGlmaWNhdGlv
-bi4NCj4NCj4gTk9URToNCj4NCj4gSXQgaXMgcGFydGljdWxhcmx5IGltcG9ydGFudCB0byBu
-b3RlIHRoYXQgdGhpcyBjb2RlIGZpeCBkb2VzIG5vdA0KPiBpbXBseSB0aGF0IHdlIGhhdmUg
-cmVzb2x2ZWQgdGhlIHByb2JsZW0gZW50aXJlbHkuDQo+DQo+IEluIGZhY3QsIHRoZSBlbnRp
-cmUgYXBwbGljYXRpb24gb2YgY2Mtb3B0aW9uIGFuZCBpdHMgYXV4aWxpYXJ5DQo+IGNvbW1h
-bmRzIHdpdGhpbiB0aGUga2VybmVsIGNvZGViYXNlIGN1cnJlbnRseSBjYXJyaWVzIHNpZ25p
-ZmljYW50DQo+IHJpc2suDQo+DQo+IFdoZW4gd2UgZXhlY3V0ZSBtYWtlIG1vZHVsZXNfaW5z
-dGFsbCwgdGhlIE1ha2VmaWxlIGZvciB0aGUNCj4gY29ycmVzcG9uZGluZyBhcmNoaXRlY3R1
-cmUgdW5kZXIgYXJjaC9zdWJhcmNoZXMvTWFrZWZpbGUgaXMNCj4gaW52YXJpYWJseSBpbmNs
-dWRlZC4gV2l0aGluIHRoZXNlIGZpbGVzLCB0aGVyZSBhcmUgbnVtZXJvdXMNCj4gdXNhZ2Vz
-IG9mIGNjLW9wdGlvbiBhbmQgaXRzIGF1eGlsaWFyeSBjb21tYW5kcywgYWxsIG9mIHdoaWNo
-IHdpbGwNCj4gcmV0dXJuIGVtcHR5IHN0cmluZ3MuIFRoZSByZWFzb24gb3RoZXIgYXJjaGl0
-ZWN0dXJlcyBjYW4NCj4gc3VjY2Vzc2Z1bGx5IGNvbXBsZXRlIGNvbXBpbGF0aW9uIHVuZGVy
-IHRoZXNlIGNpcmN1bXN0YW5jZXMgaXMNCj4gcHVyZWx5IGJlY2F1c2UgdGhleSBkbyBub3Qs
-IHVubGlrZSBNSVBTLCBjaGVjayB0aGUgcmV0dXJuIHZhbHVlcw0KPiBvZiBjYy1vcHRpb24g
-YW5kIGl0cyBhdXhpbGlhcnkgY29tbWFuZHMgd2l0aGluIHRoZWlyIE1ha2VmaWxlcw0KPiBh
-bmQgaGFsdCB0aGUgY29tcGlsYXRpb24gcHJvY2VzcyB3aGVuIHRoZSBleHBlY3RlZCByZXN1
-bHRzIGFyZQ0KPiBub3QgcmVjZWl2ZWQuDQo+DQo+IEEgZmVhc2libGUgYXBwcm9hY2ggdG8g
-cmVtZWRpYXRpb24gbWlnaHQgYmUgdG8gZW5jYXBzdWxhdGUgYWxsDQo+IHVzYWdlcyBvZiBj
-Yy1vcHRpb24gYW5kIGl0cyBhdXhpbGlhcnkgY29tbWFuZHMgd2l0aGluIGNvbmRpdGlvbmFs
-DQo+IHN0YXRlbWVudHMgYWNyb3NzIGFsbCBhcmNoaXRlY3R1cmUgTWFrZWZpbGVzLCBwcmV2
-ZW50aW5nIHRoZWlyDQo+IGV4ZWN1dGlvbiBlbnRpcmVseSBkdXJpbmcgbWFrZSBtb2R1bGVz
-X2luc3RhbGwuDQo+DQo+IEhvd2V2ZXIsIHRoaXMgd291bGQgbGVhZCB0byBhIG1hc3NpdmUg
-bnVtYmVyIG9mIGluZWxlZ2FudA0KPiBtb2RpZmljYXRpb25zLCBhbmQgdGhlc2UgYnJvYWRl
-ciBpbXBsaWNhdGlvbnMgbWF5IHJlcXVpcmUNCj4gZGVsaWJlcmF0aW9uIGJ5IE1hc2FoaXJv
-IFlhbWFkYS4NCj4NCj4gUmVnYXJkbGVzcywgdGhpcyBkb2VzIG5vdCBwcmVjbHVkZSB1cyBm
-cm9tIGFkZHJlc3NpbmcgdGhlDQo+IGlzc3VlIG9uIE1JUFMgZmlyc3QuDQo+DQo+IExpbms6
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC80MTEwN0U2RDNBMTI1MDQ3KzIwMjUwMjEx
-MTM1NjE2LjE4MDc5NjYtMS13YW5neXVsaUB1bmlvbnRlY2guY29tLw0KPiBMaW5rOiBodHRw
-czovL2xvcmUua2VybmVsLm9yZy9hbGwvRjQ5RjVFRTk5NzVGMjlFQSsyMDI1MDIxNDA5NDc1
-OC4xNzIwNTUtMS13YW5neXVsaUB1bmlvbnRlY2guY29tLw0KPiBMaW5rOiBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9hbGwvOEFCQkYzMjM0MTRBRUY5MysyMDI1MDIxNzE0MjU0MS40ODE0
-OS0xLXdhbmd5dWxpQHVuaW9udGVjaC5jb20vDQo+DQo+DQo+IFsgUGFydCAyIF06IE1JUFM6
-IGRlY3N0YXRpb25fNjRfZGVmY29uZmlnOiBDb21waWxlIHRoZSBrZXJuZWwgd2l0aCB3YXJu
-aW5ncyBhcyBlcnJvcnMNCj4NCj4gUGF0Y2ggKCJNSVBTOiBkZWM6IE9ubHkgY2hlY2sgLW1z
-eW0zMiB3aGVuIG5lZWQgY29tcGlsZXIiKSBhbGxvd3MNCj4gdXMgdG8gY29tcGlsZSBrZXJu
-ZWwgaW1hZ2UgcGFja2FnZXMgd2l0aCBkZWNzdGF0aW9uXzY0X2RlZmNvbmZpZy4NCj4NCj4g
-SG93ZXZlciwgY29tcGlsYXRpb24gd2FybmluZ3MgcmVtYWluIGR1cmluZyB0aGUgYnVpbGQu
-DQo+DQo+IEFkZHJlc3MgdGhlc2Ugd2FybmluZ3MgYW5kIGVuYWJsZSBDT05GSUdfV0VSUk9S
-IGZvciBkZWNzdGF0aW9uXzY0X2RlZmNvbmZpZy4NCj4NCj4gTGluazogaHR0cHM6Ly9sb3Jl
-Lmtlcm5lbC5vcmcvYWxsLzQ4N0NFOEFBOTM3NjIxRTIrMjAyNTAyMTgxMjUxMDEuNjYzOTgw
-LTEtd2FuZ3l1bGlAdW5pb250ZWNoLmNvbS8NCj4gTGluazogaHR0cHM6Ly9sb3JlLmtlcm5l
-bC5vcmcvYWxsL0VBMEFGQjE1RERDRjY1QzErMjAyNTAyMjcxNDE5NDkuMTEyOTUzNi0xLXdh
-bmd5dWxpQHVuaW9udGVjaC5jb20vDQo+IExpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
-L2FsbC8zMDNFRkQ2QkZCREFDN0M4KzIwMjUwMzA1MDMzNDM2LjMxMjE0LTEtd2FuZ3l1bGlA
-dW5pb250ZWNoLmNvbS8NCj4NCj4NCj4gWyBDaGFuZ2Vsb2c6IF0NCj4NCj4gICAqdjEtPnYy
-OiBBZGQgUGhpbGlwcGUgTWF0aGlldS1EYXVkw6kncyAiUmV2aWV3ZWQtYnkiIHRhZyBpbiBw
-YXRjaDMuDQo+IExpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8xMTc0MEIwMUU2
-NTlDQUZGKzIwMjUwNDA3MDczMTU4LjQ5MzE4My0xLXdhbmd5dWxpQHVuaW9udGVjaC5jb20v
-DQo+IExpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC84ZGNiNWM2ZC1iZTRmLTQ4
-OTEtYTk5OS0xMzdkNTNlZGZjMDVAbGluYXJvLm9yZy8NCj4NCj4gV2FuZ1l1bGkgKDYpOg0K
-PiAgICBNSVBTOiBkZWM6IE9ubHkgY2hlY2sgLW1zeW0zMiB3aGVuIG5lZWQgY29tcGlsZXIN
-Cj4gICAgTUlQUzogRWxpbWluYXRlIFJlZHVuZGFudCBLQlVJTERfU1lNMzIgQ2hlY2tzDQo+
-ICAgIE1JUFM6IGRlYzogQ3JlYXRlIHJlc2V0LmgNCj4gICAgTUlQUzogZGVjOiBSZW1vdmUg
-ZGVjX2lycV9kaXNwYXRjaCgpDQo+ICAgIE1JUFM6IGRlY3N0YXRpb25fNjRfZGVmY29uZmln
-OiBVcGRhdGUgY29uZmlncyBkZXBlbmRlbmNpZXMNCj4gICAgTUlQUzogZGVjc3RhdGlvbl82
-NF9kZWZjb25maWc6IENvbXBpbGUgdGhlIGtlcm5lbCB3aXRoIHdhcm5pbmdzIGFzDQo+ICAg
-ICAgZXJyb3JzDQo+DQo+ICAgYXJjaC9taXBzL01ha2VmaWxlICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgNiArKy0tDQo+ICAgYXJjaC9taXBzL2NvbmZpZ3MvZGVjc3RhdGlvbl82NF9k
-ZWZjb25maWcgfCA0MyArKysrKysrKystLS0tLS0tLS0tLS0tLQ0KPiAgIGFyY2gvbWlwcy9k
-ZWMvaW50LWhhbmRsZXIuUyAgICAgICAgICAgICAgIHwgIDIgKy0NCj4gICBhcmNoL21pcHMv
-ZGVjL3Byb20vaW5pdC5jICAgICAgICAgICAgICAgICB8ICAzICstDQo+ICAgYXJjaC9taXBz
-L2RlYy9yZXNldC5jICAgICAgICAgICAgICAgICAgICAgfCAgMiArKw0KPiAgIGFyY2gvbWlw
-cy9kZWMvc2V0dXAuYyAgICAgICAgICAgICAgICAgICAgIHwgMTUgKystLS0tLS0NCj4gICBh
-cmNoL21pcHMvaW5jbHVkZS9hc20vZGVjL3Jlc2V0LmggICAgICAgICB8IDIwICsrKysrKysr
-KysrDQo+ICAgNyBmaWxlcyBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCspLCA0NCBkZWxldGlv
-bnMoLSkNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9taXBzL2luY2x1ZGUvYXNtL2Rl
-Yy9yZXNldC5oDQo+DQotLSANCldhbmdZdWxpDQo=
---------------0h1pXDOEcfzHJPxW8vqcdnBv
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+* Red-black tree with striping
+  - Cache space is divided into *subtrees* to reduce lock
+    contention; each subtree owns its own RB-root + spinlock.
+  - Complex overlap-resolution logic (`cache_insert_fixup()`) ensures
+    newly inserted keys never leave overlapping stale ranges behind
+    (head/tail/contain/contained cases handled).
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+* Replay on start-up
+  - `cache_replay()` walks from *key_tail* to *key_head*, re-hydrates
+    keys, validates CRC/magic, seamlessly
+    skipping placeholder “empty” keys left by read-misses.
 
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
+* Background maintenance
+  - `clean_work` lazily prunes invalidated keys after GC.
+  - `kset_flush_work` background thread to close a kset.
 
---------------0h1pXDOEcfzHJPxW8vqcdnBv--
+With this patch dm-pcache can persistently track cached extents, rebuild
+its index after crash, and guarantee non-overlapping key space – paving
+the way for functional read/write caching.
 
---------------RgbllARWsLlZYSThzRw90KaD--
+Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+---
+ drivers/md/dm-pcache/cache_key.c | 900 +++++++++++++++++++++++++++++++
+ 1 file changed, 900 insertions(+)
+ create mode 100644 drivers/md/dm-pcache/cache_key.c
 
---------------6OmAPHmhuwYa09o3Kw770IMo
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCaGtwBAUDAAAAAAAKCRDF2h8wRvQL7haJ
-AQCImMeUp5U97CUX9OHDlotIOrnmhCfK2I0kpRlJV0HDLAD8DVxY0CYPjuiLz3MKNtOKhFCNOxnI
-U/CGZ+vucIhr1go=
-=Mc5F
------END PGP SIGNATURE-----
-
---------------6OmAPHmhuwYa09o3Kw770IMo--
+diff --git a/drivers/md/dm-pcache/cache_key.c b/drivers/md/dm-pcache/cache_key.c
+new file mode 100644
+index 000000000000..1b0a1ebe92f2
+--- /dev/null
++++ b/drivers/md/dm-pcache/cache_key.c
+@@ -0,0 +1,900 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "cache.h"
++#include "backing_dev.h"
++#include "cache_dev.h"
++#include "dm_pcache.h"
++
++struct pcache_cache_kset_onmedia pcache_empty_kset = { 0 };
++
++void cache_key_init(struct pcache_cache_tree *cache_tree, struct pcache_cache_key *key)
++{
++	kref_init(&key->ref);
++	key->cache_tree = cache_tree;
++	INIT_LIST_HEAD(&key->list_node);
++	RB_CLEAR_NODE(&key->rb_node);
++}
++
++struct pcache_cache_key *cache_key_alloc(struct pcache_cache_tree *cache_tree)
++{
++	struct pcache_cache_key *key;
++
++	key = mempool_alloc(&cache_tree->key_pool, GFP_NOIO);
++	if (!key)
++		return NULL;
++
++	memset(key, 0, sizeof(struct pcache_cache_key));
++	cache_key_init(cache_tree, key);
++
++	return key;
++}
++
++/**
++ * cache_key_get - Increment the reference count of a cache key.
++ * @key: Pointer to the pcache_cache_key structure.
++ *
++ * This function increments the reference count of the specified cache key,
++ * ensuring that it is not freed while still in use.
++ */
++void cache_key_get(struct pcache_cache_key *key)
++{
++	kref_get(&key->ref);
++}
++
++/**
++ * cache_key_destroy - Free a cache key structure when its reference count drops to zero.
++ * @ref: Pointer to the kref structure.
++ *
++ * This function is called when the reference count of the cache key reaches zero.
++ * It frees the allocated cache key back to the slab cache.
++ */
++static void cache_key_destroy(struct kref *ref)
++{
++	struct pcache_cache_key *key = container_of(ref, struct pcache_cache_key, ref);
++	struct pcache_cache_tree *cache_tree = key->cache_tree;
++
++	mempool_free(key, &cache_tree->key_pool);
++}
++
++void cache_key_put(struct pcache_cache_key *key)
++{
++	kref_put(&key->ref, cache_key_destroy);
++}
++
++void cache_pos_advance(struct pcache_cache_pos *pos, u32 len)
++{
++	/* Ensure enough space remains in the current segment */
++	BUG_ON(cache_seg_remain(pos) < len);
++
++	pos->seg_off += len;
++}
++
++static void cache_key_encode(struct pcache_cache *cache,
++			     struct pcache_cache_key_onmedia *key_onmedia,
++			     struct pcache_cache_key *key)
++{
++	key_onmedia->off = key->off;
++	key_onmedia->len = key->len;
++
++	key_onmedia->cache_seg_id = key->cache_pos.cache_seg->cache_seg_id;
++	key_onmedia->cache_seg_off = key->cache_pos.seg_off;
++
++	key_onmedia->seg_gen = key->seg_gen;
++	key_onmedia->flags = key->flags;
++
++	if (cache_data_crc_on(cache))
++		key_onmedia->data_crc = cache_key_data_crc(key);
++}
++
++int cache_key_decode(struct pcache_cache *cache,
++			struct pcache_cache_key_onmedia *key_onmedia,
++			struct pcache_cache_key *key)
++{
++	struct dm_pcache *pcache = CACHE_TO_PCACHE(cache);
++
++	key->off = key_onmedia->off;
++	key->len = key_onmedia->len;
++
++	key->cache_pos.cache_seg = &cache->segments[key_onmedia->cache_seg_id];
++	key->cache_pos.seg_off = key_onmedia->cache_seg_off;
++
++	key->seg_gen = key_onmedia->seg_gen;
++	key->flags = key_onmedia->flags;
++
++	if (cache_data_crc_on(cache) &&
++			key_onmedia->data_crc != cache_key_data_crc(key)) {
++		pcache_dev_err(pcache, "key: %llu:%u seg %u:%u data_crc error: %x, expected: %x\n",
++				key->off, key->len, key->cache_pos.cache_seg->cache_seg_id,
++				key->cache_pos.seg_off, cache_key_data_crc(key), key_onmedia->data_crc);
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static void append_last_kset(struct pcache_cache *cache, u32 next_seg)
++{
++	struct pcache_cache_kset_onmedia kset_onmedia = { 0 };
++
++	kset_onmedia.flags |= PCACHE_KSET_FLAGS_LAST;
++	kset_onmedia.next_cache_seg_id = next_seg;
++	kset_onmedia.magic = PCACHE_KSET_MAGIC;
++	kset_onmedia.crc = cache_kset_crc(&kset_onmedia);
++
++	memcpy_flushcache(get_key_head_addr(cache), &kset_onmedia, sizeof(struct pcache_cache_kset_onmedia));
++	pmem_wmb();
++	cache_pos_advance(&cache->key_head, sizeof(struct pcache_cache_kset_onmedia));
++}
++
++int cache_kset_close(struct pcache_cache *cache, struct pcache_cache_kset *kset)
++{
++	struct pcache_cache_kset_onmedia *kset_onmedia;
++	u32 kset_onmedia_size;
++	int ret;
++
++	kset_onmedia = &kset->kset_onmedia;
++
++	if (!kset_onmedia->key_num)
++		return 0;
++
++	kset_onmedia_size = struct_size(kset_onmedia, data, kset_onmedia->key_num);
++
++	spin_lock(&cache->key_head_lock);
++again:
++	/* Reserve space for the last kset */
++	if (cache_seg_remain(&cache->key_head) < kset_onmedia_size + sizeof(struct pcache_cache_kset_onmedia)) {
++		struct pcache_cache_segment *next_seg;
++
++		next_seg = get_cache_segment(cache);
++		if (!next_seg) {
++			ret = -EBUSY;
++			goto out;
++		}
++
++		/* clear outdated kset in next seg */
++		memcpy_flushcache(next_seg->segment.data, &pcache_empty_kset,
++					sizeof(struct pcache_cache_kset_onmedia));
++		append_last_kset(cache, next_seg->cache_seg_id);
++		cache->key_head.cache_seg = next_seg;
++		cache->key_head.seg_off = 0;
++		goto again;
++	}
++
++	kset_onmedia->magic = PCACHE_KSET_MAGIC;
++	kset_onmedia->crc = cache_kset_crc(kset_onmedia);
++
++	/* clear outdated kset after current kset */
++	memcpy_flushcache(get_key_head_addr(cache) + kset_onmedia_size, &pcache_empty_kset,
++				sizeof(struct pcache_cache_kset_onmedia));
++	/* write current kset into segment */
++	memcpy_flushcache(get_key_head_addr(cache), kset_onmedia, kset_onmedia_size);
++	pmem_wmb();
++
++	/* reset kset_onmedia */
++	memset(kset_onmedia, 0, sizeof(struct pcache_cache_kset_onmedia));
++	cache_pos_advance(&cache->key_head, kset_onmedia_size);
++
++	ret = 0;
++out:
++	spin_unlock(&cache->key_head_lock);
++
++	return ret;
++}
++
++/**
++ * cache_key_append - Append a cache key to the related kset.
++ * @cache: Pointer to the pcache_cache structure.
++ * @key: Pointer to the cache key structure to append.
++ * @force_close: Need to close current kset if true.
++ *
++ * This function appends a cache key to the appropriate kset. If the kset
++ * is full, it closes the kset. If not, it queues a flush work to write
++ * the kset to media.
++ *
++ * Returns 0 on success, or a negative error code on failure.
++ */
++int cache_key_append(struct pcache_cache *cache, struct pcache_cache_key *key, bool force_close)
++{
++	struct pcache_cache_kset *kset;
++	struct pcache_cache_kset_onmedia *kset_onmedia;
++	struct pcache_cache_key_onmedia *key_onmedia;
++	u32 kset_id = get_kset_id(cache, key->off);
++	int ret = 0;
++
++	kset = get_kset(cache, kset_id);
++	kset_onmedia = &kset->kset_onmedia;
++
++	spin_lock(&kset->kset_lock);
++	key_onmedia = &kset_onmedia->data[kset_onmedia->key_num];
++	cache_key_encode(cache, key_onmedia, key);
++
++	/* Check if the current kset has reached the maximum number of keys */
++	if (++kset_onmedia->key_num == PCACHE_KSET_KEYS_MAX || force_close) {
++		/* If full, close the kset */
++		ret = cache_kset_close(cache, kset);
++		if (ret) {
++			kset_onmedia->key_num--;
++			goto out;
++		}
++	} else {
++		/* If not full, queue a delayed work to flush the kset */
++		queue_delayed_work(cache_get_wq(cache), &kset->flush_work, 1 * HZ);
++	}
++out:
++	spin_unlock(&kset->kset_lock);
++
++	return ret;
++}
++
++/**
++ * cache_subtree_walk - Traverse the cache tree.
++ * @ctx: Pointer to the context structure for traversal.
++ *
++ * This function traverses the cache tree starting from the specified node.
++ * It calls the appropriate callback functions based on the relationships
++ * between the keys in the cache tree.
++ *
++ * Returns 0 on success, or a negative error code on failure.
++ */
++int cache_subtree_walk(struct pcache_cache_subtree_walk_ctx *ctx)
++{
++	struct pcache_cache_key *key_tmp, *key;
++	struct rb_node *node_tmp;
++	int ret = SUBTREE_WALK_RET_OK;
++
++	key = ctx->key;
++	node_tmp = ctx->start_node;
++
++	while (node_tmp) {
++		if (ctx->walk_done && ctx->walk_done(ctx))
++			break;
++
++		key_tmp = CACHE_KEY(node_tmp);
++		/*
++		 * If key_tmp ends before the start of key, continue to the next node.
++		 * |----------|
++		 *              |=====|
++		 */
++		if (cache_key_lend(key_tmp) <= cache_key_lstart(key)) {
++			if (ctx->after) {
++				ret = ctx->after(key, key_tmp, ctx);
++				if (ret)
++					goto out;
++			}
++			goto next;
++		}
++
++		/*
++		 * If key_tmp starts after the end of key, stop traversing.
++		 *	  |--------|
++		 * |====|
++		 */
++		if (cache_key_lstart(key_tmp) >= cache_key_lend(key)) {
++			if (ctx->before) {
++				ret = ctx->before(key, key_tmp, ctx);
++				if (ret)
++					goto out;
++			}
++			break;
++		}
++
++		/* Handle overlapping keys */
++		if (cache_key_lstart(key_tmp) >= cache_key_lstart(key)) {
++			/*
++			 * If key_tmp encompasses key.
++			 *     |----------------|	key_tmp
++			 * |===========|		key
++			 */
++			if (cache_key_lend(key_tmp) >= cache_key_lend(key)) {
++				if (ctx->overlap_tail) {
++					ret = ctx->overlap_tail(key, key_tmp, ctx);
++					if (ret)
++						goto out;
++				}
++				break;
++			}
++
++			/*
++			 * If key_tmp is contained within key.
++			 *    |----|		key_tmp
++			 * |==========|		key
++			 */
++			if (ctx->overlap_contain) {
++				ret = ctx->overlap_contain(key, key_tmp, ctx);
++				if (ret)
++					goto out;
++			}
++
++			goto next;
++		}
++
++		/*
++		 * If key_tmp starts before key ends but ends after key.
++		 * |-----------|	key_tmp
++		 *   |====|		key
++		 */
++		if (cache_key_lend(key_tmp) > cache_key_lend(key)) {
++			if (ctx->overlap_contained) {
++				ret = ctx->overlap_contained(key, key_tmp, ctx);
++				if (ret)
++					goto out;
++			}
++			break;
++		}
++
++		/*
++		 * If key_tmp starts before key and ends within key.
++		 * |--------|		key_tmp
++		 *   |==========|	key
++		 */
++		if (ctx->overlap_head) {
++			ret = ctx->overlap_head(key, key_tmp, ctx);
++			if (ret)
++				goto out;
++		}
++next:
++		node_tmp = rb_next(node_tmp);
++	}
++
++out:
++	if (ctx->walk_finally)
++		ret = ctx->walk_finally(ctx, ret);
++
++	return ret;
++}
++
++/**
++ * cache_subtree_search - Search for a key in the cache tree.
++ * @cache_subtree: Pointer to the cache tree structure.
++ * @key: Pointer to the cache key to search for.
++ * @parentp: Pointer to store the parent node of the found node.
++ * @newp: Pointer to store the location where the new node should be inserted.
++ * @delete_key_list: List to collect invalid keys for deletion.
++ *
++ * This function searches the cache tree for a specific key and returns
++ * the node that is the predecessor of the key, or first node if the key is
++ * less than all keys in the tree. If any invalid keys are found during
++ * the search, they are added to the delete_key_list for later cleanup.
++ *
++ * Returns a pointer to the previous node.
++ */
++struct rb_node *cache_subtree_search(struct pcache_cache_subtree *cache_subtree, struct pcache_cache_key *key,
++				  struct rb_node **parentp, struct rb_node ***newp,
++				  struct list_head *delete_key_list)
++{
++	struct rb_node **new, *parent = NULL;
++	struct pcache_cache_key *key_tmp;
++	struct rb_node *prev_node = NULL;
++
++	new = &(cache_subtree->root.rb_node);
++	while (*new) {
++		key_tmp = container_of(*new, struct pcache_cache_key, rb_node);
++		if (cache_key_invalid(key_tmp))
++			list_add(&key_tmp->list_node, delete_key_list);
++
++		parent = *new;
++		if (key_tmp->off >= key->off) {
++			new = &((*new)->rb_left);
++		} else {
++			prev_node = *new;
++			new = &((*new)->rb_right);
++		}
++	}
++
++	if (!prev_node)
++		prev_node = rb_first(&cache_subtree->root);
++
++	if (parentp)
++		*parentp = parent;
++
++	if (newp)
++		*newp = new;
++
++	return prev_node;
++}
++
++/**
++ * fixup_overlap_tail - Adjust the key when it overlaps at the tail.
++ * @key: Pointer to the new cache key being inserted.
++ * @key_tmp: Pointer to the existing key that overlaps.
++ * @ctx: Pointer to the context for walking the cache tree.
++ *
++ * This function modifies the existing key (key_tmp) when there is an
++ * overlap at the tail with the new key. If the modified key becomes
++ * empty, it is deleted.
++ */
++static int fixup_overlap_tail(struct pcache_cache_key *key,
++			       struct pcache_cache_key *key_tmp,
++			       struct pcache_cache_subtree_walk_ctx *ctx)
++{
++	/*
++	 *     |----------------|	key_tmp
++	 * |===========|		key
++	 */
++	BUG_ON(cache_key_empty(key));
++	if (cache_key_empty(key_tmp)) {
++		cache_key_delete(key_tmp);
++		return SUBTREE_WALK_RET_RESEARCH;
++	}
++
++	cache_key_cutfront(key_tmp, cache_key_lend(key) - cache_key_lstart(key_tmp));
++	if (key_tmp->len == 0) {
++		cache_key_delete(key_tmp);
++		return SUBTREE_WALK_RET_RESEARCH;
++	}
++
++	return SUBTREE_WALK_RET_OK;
++}
++
++/**
++ * fixup_overlap_contain - Handle case where new key completely contains an existing key.
++ * @key: Pointer to the new cache key being inserted.
++ * @key_tmp: Pointer to the existing key that is being contained.
++ * @ctx: Pointer to the context for walking the cache tree.
++ *
++ * This function deletes the existing key (key_tmp) when the new key
++ * completely contains it. It returns SUBTREE_WALK_RET_RESEARCH to indicate that the
++ * tree structure may have changed, necessitating a re-insertion of
++ * the new key.
++ */
++static int fixup_overlap_contain(struct pcache_cache_key *key,
++				  struct pcache_cache_key *key_tmp,
++				  struct pcache_cache_subtree_walk_ctx *ctx)
++{
++	/*
++	 *    |----|			key_tmp
++	 * |==========|			key
++	 */
++	BUG_ON(cache_key_empty(key));
++	cache_key_delete(key_tmp);
++
++	return SUBTREE_WALK_RET_RESEARCH;
++}
++
++/**
++ * fixup_overlap_contained - Handle overlap when a new key is contained in an existing key.
++ * @key: The new cache key being inserted.
++ * @key_tmp: The existing cache key that overlaps with the new key.
++ * @ctx: Context for the cache tree walk.
++ *
++ * This function adjusts the existing key if the new key is contained
++ * within it. If the existing key is empty, it indicates a placeholder key
++ * that was inserted during a miss read. This placeholder will later be
++ * updated with real data from the backing_dev, making it no longer an empty key.
++ *
++ * If we delete key or insert a key, the structure of the entire cache tree may change,
++ * requiring a full research of the tree to find a new insertion point.
++ */
++static int fixup_overlap_contained(struct pcache_cache_key *key,
++	struct pcache_cache_key *key_tmp, struct pcache_cache_subtree_walk_ctx *ctx)
++{
++	struct pcache_cache_tree *cache_tree = ctx->cache_tree;
++
++	/*
++	 * |-----------|		key_tmp
++	 *   |====|			key
++	 */
++	BUG_ON(cache_key_empty(key));
++	if (cache_key_empty(key_tmp)) {
++		/* If key_tmp is empty, don't split it;
++		 * it's a placeholder key for miss reads that will be updated later.
++		 */
++		cache_key_cutback(key_tmp, cache_key_lend(key_tmp) - cache_key_lstart(key));
++		if (key_tmp->len == 0) {
++			cache_key_delete(key_tmp);
++			return SUBTREE_WALK_RET_RESEARCH;
++		}
++	} else {
++		struct pcache_cache_key *key_fixup;
++		bool need_research = false;
++
++		if (!ctx->pre_alloc_key)
++			return SUBTREE_WALK_RET_NEED_KEY;
++
++		key_fixup = ctx->pre_alloc_key;
++		ctx->pre_alloc_key = NULL;
++
++		cache_key_copy(key_fixup, key_tmp);
++
++		/* Split key_tmp based on the new key's range */
++		cache_key_cutback(key_tmp, cache_key_lend(key_tmp) - cache_key_lstart(key));
++		if (key_tmp->len == 0) {
++			cache_key_delete(key_tmp);
++			need_research = true;
++		}
++
++		/* Create a new portion for key_fixup */
++		cache_key_cutfront(key_fixup, cache_key_lend(key) - cache_key_lstart(key_tmp));
++		if (key_fixup->len == 0) {
++			cache_key_put(key_fixup);
++		} else {
++			/* Insert the new key into the cache */
++			ctx->ret = cache_key_insert(cache_tree, key_fixup, false);
++			if (ctx->ret)
++				return SUBTREE_WALK_RET_ERR;
++			need_research = true;
++		}
++
++		if (need_research)
++			return SUBTREE_WALK_RET_RESEARCH;
++	}
++
++	return SUBTREE_WALK_RET_OK;
++}
++
++/**
++ * fixup_overlap_head - Handle overlap when a new key overlaps with the head of an existing key.
++ * @key: The new cache key being inserted.
++ * @key_tmp: The existing cache key that overlaps with the new key.
++ * @ctx: Context for the cache tree walk.
++ *
++ * This function adjusts the existing key if the new key overlaps
++ * with the beginning of it. If the resulting key length is zero
++ * after the adjustment, the key is deleted. This indicates that
++ * the key no longer holds valid data and requires the tree to be
++ * re-researched for a new insertion point.
++ */
++static int fixup_overlap_head(struct pcache_cache_key *key,
++	struct pcache_cache_key *key_tmp, struct pcache_cache_subtree_walk_ctx *ctx)
++{
++	/*
++	 * |--------|		key_tmp
++	 *   |==========|	key
++	 */
++	BUG_ON(cache_key_empty(key));
++	/* Adjust key_tmp by cutting back based on the new key's start */
++	cache_key_cutback(key_tmp, cache_key_lend(key_tmp) - cache_key_lstart(key));
++	if (key_tmp->len == 0) {
++		/* If the adjusted key_tmp length is zero, delete it */
++		cache_key_delete(key_tmp);
++		return SUBTREE_WALK_RET_RESEARCH;
++	}
++
++	return SUBTREE_WALK_RET_OK;
++}
++
++/**
++ * cache_key_insert - Insert a new cache key into the cache tree.
++ * @cache_tree: Pointer to the cache_tree structure.
++ * @key: The cache key to insert.
++ * @fixup: Indicates if this is a new key being inserted.
++ *
++ * This function searches for the appropriate location to insert
++ * a new cache key into the cache tree. It handles key overlaps
++ * and ensures any invalid keys are removed before insertion.
++ *
++ * Returns 0 on success or a negative error code on failure.
++ */
++int cache_key_insert(struct pcache_cache_tree *cache_tree, struct pcache_cache_key *key, bool fixup)
++{
++	struct pcache_cache_subtree_walk_ctx walk_ctx = { 0 };
++	struct rb_node **new, *parent = NULL;
++	struct pcache_cache_subtree *cache_subtree;
++	struct pcache_cache_key *key_tmp = NULL, *key_next;
++	struct rb_node *prev_node = NULL;
++	LIST_HEAD(delete_key_list);
++	int ret;
++
++	cache_subtree = get_subtree(cache_tree, key->off);
++	key->cache_subtree = cache_subtree;
++search:
++	prev_node = cache_subtree_search(cache_subtree, key, &parent, &new, &delete_key_list);
++	if (!list_empty(&delete_key_list)) {
++		/* Remove invalid keys from the delete list */
++		list_for_each_entry_safe(key_tmp, key_next, &delete_key_list, list_node) {
++			list_del_init(&key_tmp->list_node);
++			cache_key_delete(key_tmp);
++		}
++		goto search;
++	}
++
++	if (fixup) {
++		/* Set up the context with the cache, start node, and new key */
++		walk_ctx.cache_tree = cache_tree;
++		walk_ctx.start_node = prev_node;
++		walk_ctx.key = key;
++
++		/* Assign overlap handling functions for different scenarios */
++		walk_ctx.overlap_tail = fixup_overlap_tail;
++		walk_ctx.overlap_head = fixup_overlap_head;
++		walk_ctx.overlap_contain = fixup_overlap_contain;
++		walk_ctx.overlap_contained = fixup_overlap_contained;
++
++		ret = cache_subtree_walk(&walk_ctx);
++		switch (ret) {
++		case SUBTREE_WALK_RET_OK:
++			break;
++		case SUBTREE_WALK_RET_RESEARCH:
++			goto search;
++		case SUBTREE_WALK_RET_NEED_KEY:
++			spin_unlock(&cache_subtree->tree_lock);
++			walk_ctx.pre_alloc_key = cache_key_alloc(cache_tree);
++			spin_lock(&cache_subtree->tree_lock);
++
++			if (!walk_ctx.pre_alloc_key) {
++				ret = -ENOMEM;
++				goto out;
++			}
++			goto search;
++		case SUBTREE_WALK_RET_ERR:
++			ret = walk_ctx.ret;
++			goto out;
++		default:
++			BUG();
++		}
++	}
++
++	/* Link and insert the new key into the red-black tree */
++	rb_link_node(&key->rb_node, parent, new);
++	rb_insert_color(&key->rb_node, &cache_subtree->root);
++	ret = 0;
++out:
++	if (walk_ctx.pre_alloc_key)
++		cache_key_put(walk_ctx.pre_alloc_key);
++
++	return ret;
++}
++
++/**
++ * clean_fn - Cleanup function to remove invalid keys from the cache tree.
++ * @work: Pointer to the work_struct associated with the cleanup.
++ *
++ * This function cleans up invalid keys from the cache tree in the background
++ * after a cache segment has been invalidated during cache garbage collection.
++ * It processes a maximum of PCACHE_CLEAN_KEYS_MAX keys per iteration and holds
++ * the tree lock to ensure thread safety.
++ */
++void clean_fn(struct work_struct *work)
++{
++	struct pcache_cache *cache = container_of(work, struct pcache_cache, clean_work);
++	struct pcache_cache_subtree *cache_subtree;
++	struct rb_node *node;
++	struct pcache_cache_key *key;
++	int i, count;
++
++	for (i = 0; i < cache->req_key_tree.n_subtrees; i++) {
++		cache_subtree = &cache->req_key_tree.subtrees[i];
++
++again:
++		if (pcache_is_stopping(CACHE_TO_PCACHE(cache)))
++			return;
++
++		/* Delete up to PCACHE_CLEAN_KEYS_MAX keys in one iteration */
++		count = 0;
++		spin_lock(&cache_subtree->tree_lock);
++		node = rb_first(&cache_subtree->root);
++		while (node) {
++			key = CACHE_KEY(node);
++			node = rb_next(node);
++			if (cache_key_invalid(key)) {
++				count++;
++				cache_key_delete(key);
++			}
++
++			if (count >= PCACHE_CLEAN_KEYS_MAX) {
++				/* Unlock and pause before continuing cleanup */
++				spin_unlock(&cache_subtree->tree_lock);
++				usleep_range(1000, 2000);
++				goto again;
++			}
++		}
++		spin_unlock(&cache_subtree->tree_lock);
++	}
++}
++
++/*
++ * kset_flush_fn - Flush work for a cache kset.
++ *
++ * This function is called when a kset flush work is queued from
++ * cache_key_append(). If the kset is full, it will be closed
++ * immediately. If not, the flush work will be queued for later closure.
++ *
++ * If cache_kset_close detects that a new segment is required to store
++ * the kset and there are no available segments, it will return an error.
++ * In this scenario, a retry will be attempted.
++ */
++void kset_flush_fn(struct work_struct *work)
++{
++	struct pcache_cache_kset *kset = container_of(work, struct pcache_cache_kset, flush_work.work);
++	struct pcache_cache *cache = kset->cache;
++	int ret;
++
++	if (pcache_is_stopping(CACHE_TO_PCACHE(cache)))
++		return;
++
++	spin_lock(&kset->kset_lock);
++	ret = cache_kset_close(cache, kset);
++	spin_unlock(&kset->kset_lock);
++
++	if (ret) {
++		/* Failed to flush kset, schedule a retry. */
++		queue_delayed_work(cache_get_wq(cache), &kset->flush_work, msecs_to_jiffies(100));
++	}
++}
++
++static int kset_replay(struct pcache_cache *cache, struct pcache_cache_kset_onmedia *kset_onmedia)
++{
++	struct pcache_cache_key_onmedia *key_onmedia;
++	struct pcache_cache_subtree *cache_subtree;
++	struct pcache_cache_key *key;
++	int ret;
++	int i;
++
++	for (i = 0; i < kset_onmedia->key_num; i++) {
++		key_onmedia = &kset_onmedia->data[i];
++
++		key = cache_key_alloc(&cache->req_key_tree);
++		if (!key) {
++			ret = -ENOMEM;
++			goto err;
++		}
++
++		ret = cache_key_decode(cache, key_onmedia, key);
++		if (ret) {
++			cache_key_put(key);
++			goto err;
++		}
++
++		/* Mark the segment as used in the segment map. */
++		set_bit(key->cache_pos.cache_seg->cache_seg_id, cache->seg_map);
++
++		/* Check if the segment generation is valid for insertion. */
++		if (key->seg_gen < key->cache_pos.cache_seg->gen) {
++			cache_key_put(key);
++		} else {
++			cache_subtree = get_subtree(&cache->req_key_tree, key->off);
++			spin_lock(&cache_subtree->tree_lock);
++			ret = cache_key_insert(&cache->req_key_tree, key, true);
++			spin_unlock(&cache_subtree->tree_lock);
++			if (ret) {
++				cache_key_put(key);
++				goto err;
++			}
++		}
++
++		cache_seg_get(key->cache_pos.cache_seg);
++	}
++
++	return 0;
++err:
++	return ret;
++}
++
++int cache_replay(struct pcache_cache *cache)
++{
++	struct dm_pcache *pcache = CACHE_TO_PCACHE(cache);
++	struct pcache_cache_pos pos_tail;
++	struct pcache_cache_pos *pos;
++	struct pcache_cache_kset_onmedia *kset_onmedia;
++	u32 to_copy, count = 0;
++	int ret = 0;
++
++	kset_onmedia = kzalloc(PCACHE_KSET_ONMEDIA_SIZE_MAX, GFP_KERNEL);
++	if (!kset_onmedia)
++		return -ENOMEM;
++
++	cache_pos_copy(&pos_tail, &cache->key_tail);
++	pos = &pos_tail;
++
++	/* Mark the segment as used in the segment map. */
++	set_bit(pos->cache_seg->cache_seg_id, cache->seg_map);
++
++	while (true) {
++		to_copy = min(PCACHE_KSET_ONMEDIA_SIZE_MAX, PCACHE_SEG_SIZE - pos->seg_off);
++		ret = copy_mc_to_kernel(kset_onmedia, cache_pos_addr(pos), to_copy);
++		if (ret) {
++			ret = -EIO;
++			goto out;
++		}
++
++		if (kset_onmedia->magic != PCACHE_KSET_MAGIC ||
++				kset_onmedia->crc != cache_kset_crc(kset_onmedia)) {
++			break;
++		}
++
++		/* Process the last kset and prepare for the next segment. */
++		if (kset_onmedia->flags & PCACHE_KSET_FLAGS_LAST) {
++			struct pcache_cache_segment *next_seg;
++
++			pcache_dev_debug(pcache, "last kset replay, next: %u\n", kset_onmedia->next_cache_seg_id);
++
++			next_seg = &cache->segments[kset_onmedia->next_cache_seg_id];
++
++			pos->cache_seg = next_seg;
++			pos->seg_off = 0;
++
++			set_bit(pos->cache_seg->cache_seg_id, cache->seg_map);
++			continue;
++		}
++
++		/* Replay the kset and check for errors. */
++		ret = kset_replay(cache, kset_onmedia);
++		if (ret)
++			goto out;
++
++		/* Advance the position after processing the kset. */
++		cache_pos_advance(pos, get_kset_onmedia_size(kset_onmedia));
++		if (++count > 512) {
++			cond_resched();
++			count = 0;
++		}
++	}
++
++	/* Update the key_head position after replaying. */
++	spin_lock(&cache->key_head_lock);
++	cache_pos_copy(&cache->key_head, pos);
++	spin_unlock(&cache->key_head_lock);
++out:
++	kfree(kset_onmedia);
++	return ret;
++}
++
++int cache_tree_init(struct pcache_cache *cache, struct pcache_cache_tree *cache_tree, u32 n_subtrees)
++{
++	int ret;
++	u32 i;
++
++	cache_tree->cache = cache;
++	cache_tree->n_subtrees = n_subtrees;
++
++	cache_tree->key_cache = KMEM_CACHE(pcache_cache_key, 0);
++	if (!cache_tree->key_cache) {
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	ret = mempool_init_slab_pool(&cache_tree->key_pool, 1024, cache_tree->key_cache);
++	if (ret)
++		goto destroy_key_cache;
++
++	/*
++	 * Allocate and initialize the subtrees array.
++	 * Each element is a cache tree structure that contains
++	 * an RB tree root and a spinlock for protecting its contents.
++	 */
++	cache_tree->subtrees = kvcalloc(cache_tree->n_subtrees, sizeof(struct pcache_cache_subtree), GFP_KERNEL);
++	if (!cache_tree->subtrees) {
++		ret = -ENOMEM;
++		goto key_pool_exit;
++	}
++
++	for (i = 0; i < cache_tree->n_subtrees; i++) {
++		struct pcache_cache_subtree *cache_subtree = &cache_tree->subtrees[i];
++
++		cache_subtree->root = RB_ROOT;
++		spin_lock_init(&cache_subtree->tree_lock);
++	}
++
++	return 0;
++
++key_pool_exit:
++	mempool_exit(&cache_tree->key_pool);
++destroy_key_cache:
++	kmem_cache_destroy(cache_tree->key_cache);
++err:
++	return ret;
++}
++
++void cache_tree_exit(struct pcache_cache_tree *cache_tree)
++{
++	struct pcache_cache_subtree *cache_subtree;
++	struct rb_node *node;
++	struct pcache_cache_key *key;
++	u32 i;
++
++	for (i = 0; i < cache_tree->n_subtrees; i++) {
++		cache_subtree = &cache_tree->subtrees[i];
++
++		spin_lock(&cache_subtree->tree_lock);
++		node = rb_first(&cache_subtree->root);
++		while (node) {
++			key = CACHE_KEY(node);
++			node = rb_next(node);
++
++			cache_key_delete(key);
++		}
++		spin_unlock(&cache_subtree->tree_lock);
++	}
++	kvfree(cache_tree->subtrees);
++	mempool_exit(&cache_tree->key_pool);
++	kmem_cache_destroy(cache_tree->key_cache);
++}
+-- 
+2.43.0
 
