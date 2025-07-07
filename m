@@ -1,96 +1,135 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A871F8755;
-	Mon,  7 Jul 2025 10:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AD021D00A;
+	Mon,  7 Jul 2025 10:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882543; cv=none; b=ZycrrIo1HvS2Dun6heIggJtt71iGQwcbKtvZBva8jYYIcPqd1ByLvznnfSZT0iqctzuR4ZGqEBoh1op/30b0ZIVjjbsYL44c6ZCnNI25EbXCqS5DR8xr1miFxqUbw5OwnGqF1yzJiMaOaaB85pOSeRB3XDqvjEhOvMFKlF8kFSs=
+	t=1751882567; cv=none; b=ZT97D1xU67XXxyF5ZILI4IdtUyTedvEPAu3Mbb3TYhCf1Av8s62roQJbprhCz9bYlIMuaF3xpS17AeQhlYsHyCqRNYLIzmAn5gp43fZAznytXua2Qb/PwXTmeCp8omrmTW1QuLFNV7AJnryPv0sEixO2VjLg17jNzp/tMqOaBZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882543; c=relaxed/simple;
-	bh=vkru9bws1F+ARBeM4YsMUM2st4Em7q8l2KIm2ooe9NA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=THiIMeaxtK/lSh1EA8I52DYrUgTzfFnakGwAWGcLxz1ULv1qgmNNlzndGvStLsvpATh6ou5KQxC9M6tVVbKhfuMK9Vpd8RL191+p0mHBOVeNwnX0yrAsdLUOJwKCytAS9EAlSmIBiAB3z8KNjl6jUfka3XzECl9JtPX8pi4sUk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6fb1be9ba89so31870346d6.2;
-        Mon, 07 Jul 2025 03:02:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751882540; x=1752487340;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kAWVxOChxT99brNRnSRvqsjpYCXonES5TnFSFk+0jU8=;
-        b=OxTgic+7xpS3J5LJ9sST17zo+TGNRUVtjxnEknVzKQQj8NitzZF40RyMaiYkHnTqB7
-         +UdaBI2nhOuQ54tcaLM+K5v+cBph2991JSHfhFMdF/Q3MDxr3t5I4lGj2X+sq2Fsa0dr
-         fQ7u7x54NwK856MvYq/G6rsuzo+gWL+xN0w0knKj0396k36BKGLzWLWadlGYUDyJAx0v
-         uGpbNFE2eOCg8MWELqdyLowRJ7oGECS9drBHwOP0rC+s9m86tAOiLKZtOt/CAOKdXpSS
-         ko5r9CSCXHvJahweEZYFJzmp1eXcVgdSb8XtN/Ai4tpCVnrVGILpidZxx50ZFoHRbUVD
-         2Nfg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2IC3F146/6N32k7eJ7i3bKbgBEmkgR4R5KPHxsXEZrE0Umh8AgIj809/f9x6bQOOGfIZx1683AmUCwQuWeXOMQNk=@vger.kernel.org, AJvYcCVXXSVDQhzhOGJb8KilIJ1GAT16RHJJHcj95rd0JyE8yoMR4cqnc/hQhgQQzcaNSnC5tqC1K0ENvlM=@vger.kernel.org, AJvYcCX2ZhDx1U6MTJ0AwcaeYp9coiOj/5g2rDDDR8NJt/YX8d1AdAeUMJw6Aia0EwsJ9FbZJdN1ldwe6NKmaiLL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz0WU2A7MGd1vChhrmDygDj6carmJ7B3QuGxvo5KcoLwCHQoic
-	AWqLpKUjDYhPR0SpVoBfNWITzj+20i0gMyZWLfbj+1CMO+2+sNVRlL04ee5T1qJw
-X-Gm-Gg: ASbGncscxowaB1WpSgvSD1i83v32vdthH/lEHDaeO10ODeAw9OsxEXijKklFlTYp0Da
-	nhB/L3SeH3t0hDy+A4wh34sSxBZcFdj0SRE+N46o0RLj0dn1xPPxirdrkorL7mE7TLzhTlZ63qA
-	v1LDoZ+7Hljm8hWOhUC4rvfz5FheChHe1wqWqND0VOheONTVrGskdIOwNa+S/xrOGspSzkYT/YL
-	ACZxrEENnl1s8PGXj4Qte4xX02yMypJyBO5Z+EcS9X80mabIIFh+pohuIjaijN8M97blOgARo1G
-	22ml/XGxdVoD8hFrfonUUnMUraiZYP4jjltIfrJAQB5c4dOsGfCp30CAEB5He3f4ImRW8gHj5+D
-	3JrIIyP1P/5pFWoSaqvS0JH/9yCoz
-X-Google-Smtp-Source: AGHT+IFVrEDF48C21dZwzvaqbmDGAzgnNksXEM5UZMq1n8w+O8QIG2ddSEEzWxetxnWnXdrVieTXjg==
-X-Received: by 2002:a05:6214:2b82:b0:704:79e4:aa4a with SMTP id 6a1803df08f44-70479e4aa8bmr3192066d6.18.1751882539362;
-        Mon, 07 Jul 2025 03:02:19 -0700 (PDT)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com. [209.85.222.171])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4d5aac7sm56081876d6.85.2025.07.07.03.02.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 03:02:18 -0700 (PDT)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7d38ddc198eso346403885a.1;
-        Mon, 07 Jul 2025 03:02:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVl8NMpdXTZ6+f/V88vMC+5M1U3l5/ujHRk4dLtC+7aVEmh5omGRI5IM921rZlARzjovrYa648ODHI=@vger.kernel.org, AJvYcCWQQuArJyb//Gp7kUSnQSKlCiw89Z+26tI6gVk2ydc9axbS1eBmR4ShjfZT3C9SeWZmri6zdaML/z4bWntF@vger.kernel.org, AJvYcCXWHmnDVYPjmRlT1jdXmndBG0u1sTE9lZMDCwWKEmUpt7duzpHG0tFsDpLshY3xjvoWsWScl4wv1vdfMJPFKQJfR5A=@vger.kernel.org
-X-Received: by 2002:a05:620a:450c:b0:7d5:dc2a:c5f8 with SMTP id
- af79cd13be357-7d5df102f6bmr1328858485a.12.1751882538289; Mon, 07 Jul 2025
- 03:02:18 -0700 (PDT)
+	s=arc-20240116; t=1751882567; c=relaxed/simple;
+	bh=mEIOfUY2JXpet4vxLmM/SsHUpRzcFXQhLNeexbXH6J0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qmg7GK4qlar29sazG1cSvcpa1QuCJoYBz1KgjOZkojSX9hKrt2CR/SzLHCmXlWCmP7Vc75pttOiBpYDHdOjXWoU1/m4oCYfPJi6MXkwJg5E5iVTi74Z/ueg1+9l72vLwRKGa2hRNqWpHML2R5eJ3gj3qm3oo4FF/24f+Jxkw5CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gb7q9y2c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gb7q9y2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEAB1C4CEE3;
+	Mon,  7 Jul 2025 10:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751882566;
+	bh=mEIOfUY2JXpet4vxLmM/SsHUpRzcFXQhLNeexbXH6J0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Gb7q9y2cTRPJvEoQ/IL+VO9uBApPN9RNkIRh1LzZdLrMCjjdQdCHV9HYqp6C8fsTc
+	 DVEn1dpjwneSpw113egooLKHojkHEMFUx0+34VRTQIiaca8TUulrVJUAvIotpIVKG6
+	 2M+UFRXZCL7ksNCCc/KEXibyp+6zAL9hh6t2+gIH9Y5WpGRUQxWtDJLQE/T+io3l/m
+	 EN8LCsOaCGEbxOk1zMcPtF/u3QWaWsMV2jHV9mwNSPEFQAZkITIln16yjM67Vs/ZRn
+	 AmbY9iwi0Y0TdWW6vUFoMLr3/iJoLd4Iczu3Mwkg1h5u1f+NK1RzDCo0E7QOOWeBu5
+	 0SDI9lv3uA6jQ==
+Message-ID: <78b86f34-6477-436a-b59c-b0ae5371f581@kernel.org>
+Date: Mon, 7 Jul 2025 12:02:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704091009.58821-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20250704091009.58821-1-biju.das.jz@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 7 Jul 2025 12:02:04 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVzYBx-5Wfp4k_wUqO3Np6Sc+DB_2htX5uVNOqXnaRXbg@mail.gmail.com>
-X-Gm-Features: Ac12FXzx50lwWv0KDbni2_rquPePl51mbuS_ixobvgbkXsfenAFeImeuX7GhpcU
-Message-ID: <CAMuHMdVzYBx-5Wfp4k_wUqO3Np6Sc+DB_2htX5uVNOqXnaRXbg@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: r9a09g047: Fix typo
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	John Madieu <john.madieu.xa@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/3] add dma noncoherent API
+To: Xu Yang <xu.yang_2@nxp.com>, ezequiel@vanguardiasur.com.ar,
+ mchehab@kernel.org, laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
+ gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
+ andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
+ thomas.weissschuh@linutronix.de
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
+References: <20250704095751.73765-1-xu.yang_2@nxp.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250704095751.73765-1-xu.yang_2@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Biju,
+Hi all,
 
-On Fri, 4 Jul 2025 at 11:10, Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> Fix the typo et0_rxclk->et0_txclk for smux2_gbe0_txclk.
->
-> Fixes: 17dc02f7d293 ("clk: renesas: r9a09g047: Add clock and reset signals for the GBETH IPs")
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+On 4-Jul-25 11:57, Xu Yang wrote:
+> On architectures where there is no coherent caching such as ARM it's
+> proved that using dma_alloc_noncontiguous API and handling manually
+> the cache flushing will significantly improve performance.
+> 
+> Refer to:
+> commit 20e1dbf2bbe2 ("media: uvcvideo: Use dma_alloc_noncontiguous API")
+> commit 68d0c3311ec1 ("media: stk1160: use dma_alloc_noncontiguous API")
+> 
+> However, it's obvious that there is significant code duplication between
+> these two commits. Besides, a potential user USB Monitor may read outdated
+> data before the driver do DMA sync for CPU which will make the data
+> unreliable.
+> 
+> To reduce code duplication and avoid USB Monitor result unreliable, this
+> series will introduce DMA noncoherent API to USB core. And the USB core
+> layer will manage synchronization itself.
+> 
+> Then the last 2 patches have used the API.
+> 
+> I have tested uvcvideo driver. But I haven't tested stk1160 driver as I
+> don't have such boards. @Ezequiel Garcia, @Dafna Hirschfeld do you have
+> time to test it? Your support on this would be greatly appreciated.
 
-Thanks for your patch!
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-As the bad commit is only present in renesas-clk, I will fold the
-fix into the original commit.
+It seems that patches 1 + 2 are ready for merging now
+(for patch 3 we should probably wait for testing).
 
-Gr{oetje,eeting}s,
+I think that it would be best for both patches 1 + 2 to
+be merged through the USB tree. The changed code in the UVC
+driver is not touched that often so I do not expect any
+conflicts.
 
-                        Geert
+Regards,
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Hans
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
+
+> Changes in v5:
+>  - improve if-else logic as suggested by Andy and Alan.
+>  - add Reviewed-by tag
+> 
+> Changes in v4:
+>  - https://lore.kernel.org/all/20250703103811.4048542-1-xu.yang_2@nxp.com/
+>  - improve if-else logic
+>  - remove uvc_stream_to_dmadev()
+> 
+> Changes in v3:
+>  - https://lore.kernel.org/all/20250702110222.3926355-1-xu.yang_2@nxp.com/
+>  - put Return section at the end of description
+>  - correct some abbreviations
+>  - remove usb_dma_noncoherent_sync_for_cpu() and
+>    usb_dma_noncoherent_sync_for_device()
+>  - do DMA sync in usb_hcd_map_urb_for_dma() and
+>    usb_hcd_unmap_urb_for_dma()
+>  - call flush_kernel_vmap_range() for OUT transfers
+>    and invalidate_kernel_vmap_range() for IN transfers 
+> 
+> Changes in v2:
+>  - https://lore.kernel.org/all/20250627101939.3649295-1-xu.yang_2@nxp.com/
+>  - handle it in USB core
+> 
+> v1:
+>  - https://lore.kernel.org/linux-usb/20250614132446.251218-1-xu.yang_2@nxp.com/
+> 
+> Xu Yang (3):
+>   usb: core: add dma-noncoherent buffer alloc and free API
+>   media: uvcvideo: use usb_alloc_noncoherent/usb_free_noncoherent()
+>   media: stk1160: use usb_alloc_noncoherent/usb_free_noncoherent()
+> 
+>  drivers/media/usb/stk1160/stk1160-v4l.c   |  4 --
+>  drivers/media/usb/stk1160/stk1160-video.c | 43 ++++--------
+>  drivers/media/usb/stk1160/stk1160.h       |  7 --
+>  drivers/media/usb/uvc/uvc_video.c         | 61 ++++-------------
+>  drivers/usb/core/hcd.c                    | 29 +++++---
+>  drivers/usb/core/usb.c                    | 80 +++++++++++++++++++++++
+>  include/linux/usb.h                       | 11 ++++
+>  7 files changed, 137 insertions(+), 98 deletions(-)
+> 
+
