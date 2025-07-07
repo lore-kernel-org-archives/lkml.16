@@ -1,146 +1,189 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69BE2BE045;
-	Mon,  7 Jul 2025 14:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD972E11D6;
+	Mon,  7 Jul 2025 14:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898848; cv=none; b=htwnbbsUCdzUfbsH5LJOoNC6sKm8C/L9Jv7YEwg5avER2rABlPGXLT3aF1BJCJVr/jbWvZfzRDseVbtlVYn6roEL9XQ4JVaQUZsZtn6xXcA9A0l6DZT9licz8F7oHvHanWJsENF1gB0N84eTDKWP6U9K58XwLp8QHAg+wWtaJqs=
+	t=1751898850; cv=none; b=lPgZSTNiJUlE4Fi44Gba6SanA/WcaOnxVsVNZbQ3U/XTHUZNFMZXGB5wsNPSidElC7BlTVdcL77gxpcyU4rxgAsQOTasnw7coouO2UuMC1MtlWhpW6QFUFRsk35TpRC9s2zygGygqLJ7In3KyJrI0Agpwe6PbFtSwJuCMkPK1Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898848; c=relaxed/simple;
-	bh=T9eXTp/Ms48FTz+AjZO1co1eQEeFU0O9d1T8mABx73Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aNDswAvxT1QhuBvZJwyiEqjcFLN5oBwaDtggrrZkj4eO/OkQtmNRxvG98kr183J0yclqwKoqDg1S9Nh1w9DT/FwRlZwDhQ2fTeuFs2TXf9e0R2nwQU2iOlBK43uS5n7I6Wv53czB5682/quKNE4JlKTz8wlq4msNQuF7snyeh0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=uredxrHk; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1751898850; c=relaxed/simple;
+	bh=XqAdyY1Lsj/1Tyt0lFga2IXnnzqd94XvtRHL/gtf9kA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iACjm1xHkVFQ7np4okrec4OaxvVMQzbywdQ88uMo37jz3VQ87/Powg1wbTHI8aWPg3GIg/m0JLsY4TlW1LipCE5rJfM2mXdEXL7q9AVilzzgMcS1184QidKrQCfTlNkQqGoye504nf1P8hfXlO53rwyGdD4CRUda+vmMN0V0RsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KY85rR5t; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="uredxrHk"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bbRLg16kyz9sFB;
-	Mon,  7 Jul 2025 16:23:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1751898235;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJ0ngV7aTWi6Z/gfOczCcU5cXbfqX/K4zPNArN06u9Y=;
-	b=uredxrHk9oyYeoI7h+a4bxQwVTR6dF1NeERNQrzoRqcBvNsGLKUQOwjlRR4zmVu9IOK1wd
-	k44Sac7kd7FQq4ehzXpFgwjiCq7QxzioqS6UPuIeW7+1kq+asKeUgXQ6aYlG+vlw6eXFaK
-	vJ9ZlRYwJt6Wb1IVwumM0k57a8AE0f9Fe1FVCIpSyPG3dSGsKFnXrdne+Ox6UChfucdIgb
-	Nh40REFiXGI6K0SEfMOQYlbPHr4mO6iaOXbQeT7SArQubEBC3y8Ol3a3Kt8h6O264z/3Bg
-	I5+/W+wBp3RdcfHeeanWPoa22RNznXWCAtmz0SoI+UxEItMNupceL6g3LMgrzg==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v2 4/5] mm: add largest_zero_folio() routine
-Date: Mon,  7 Jul 2025 16:23:18 +0200
-Message-ID: <20250707142319.319642-5-kernel@pankajraghav.com>
-In-Reply-To: <20250707142319.319642-1-kernel@pankajraghav.com>
-References: <20250707142319.319642-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KY85rR5t"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-453608ed113so35636075e9.0;
+        Mon, 07 Jul 2025 07:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751898847; x=1752503647; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5pUnpX1P/g0fthzxnXBY5ainr9edvbgssHZPwN6SPvQ=;
+        b=KY85rR5t28rykeYQv0xixxU8d47YnTNdIICXm8vWL/L1wakCZiZEdpDLI74PZwKGGg
+         gmC5c46VHRmnnS8rvkEtuZMbEJ+WoJ/FEaCGehOIYzyQ55gbEWH4AK1uzR5ZL8lXc3bN
+         gDuGCQQephOOTYk7W5ZK2fQeRTx+oSjY/9zPzenWhjOnF53CN2rhC6pbKylBC3sRv0Vw
+         09CrkNRMzDjHGShiaMA2chWq2PYrhnkiqCiku/IKhlx/AKKa4A6UrXFXz4QmiyYQanyf
+         u6CR5SjX1o4cEwPKspy29pVJDFXSFHMkGNZWRywSEUYU77CiOTOEt3CxoYYrPkvD8rpY
+         C+zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751898847; x=1752503647;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pUnpX1P/g0fthzxnXBY5ainr9edvbgssHZPwN6SPvQ=;
+        b=lqN+9vHNe+MJXucA+EVWomZUvE84gw5y1uuZUVuFTcAUsmGE9b01fnM3PBOEXBl0bG
+         7dRKMDqr7vYjOObgJ1zymqCmVIm13WAL+jhOpId5E8rU6ublrcmXdCGt3CgYwQSwgcA8
+         y+jbnBbAVDnkARbt69tm2H2S56xYqhcCnSzkEGblcGBHgLBBfyk1lWg2iJLtyRWiXvMc
+         cIzcimb3t/R4YLf5w25en87EU1AlQibvsrUf9Rdw0qxmFg233/qAD10eUF0YFwU5ANCv
+         q5rxM/fJfuyWjQ0Ky1mqEj7SG9Ab36ETiBVHET89k/Wz6EoFeZdZ098c34N/2LyxH0Nb
+         b20w==
+X-Forwarded-Encrypted: i=1; AJvYcCUWP9fTr6Zl7z1pmir4spmElvC7YMaXWA3ZAS7aownoXTzxPiLuIYb8R5ubgytC1Dua3kXahfqC96tsLcj6urA=@vger.kernel.org, AJvYcCVGPYjtdf6Uu/fVEYcbQuQwgKiqX3XO+7elcBPev35h280Z5VXTm+VwQwNzoWWnEiI2NDHac9QVX7oftswb@vger.kernel.org, AJvYcCWRSbLAvhUdf9SW2pvuSkKLOi6okC73879QTKrhus2a7knoiEkPbo8psUq3Aycj5fxV7Z6g8If/GS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1BFhNDDEOw2HiTGCv+NRnKOS7JRgmkx3TDXD3+Wwk6nuyS6mm
+	5ys5rgLHe66dXlx0FiICfKSawwdkubRHd11k8+YtYuG7ydb2Qj4hfTkl
+X-Gm-Gg: ASbGnctghGDKvvCmJxJXh8kDAai/3G5fm6OjxguUaQUMHLF7W/RG6bNw4N6hEHk3IQm
+	lRpzHvHIrUMRKjpVou61c6VWK7Civx6m0zoDu3Ag639lc4CeHZdJ1balIjNFzFe8dPfJq8g1Mbi
+	m7u8qMEEiEOsw2pSajOrUgg/5EhzClcMpLOy5s6cYBqHgnbtZqTfmXCjskjt1BMcxfzOTkYs2K8
+	v2WV/EKSBUeubSmpNB/eyV99F19ORvtxoPQ5zt3jeHMXFrVIL513nUOgcmIO9q5iktOg/XGWIDx
+	iVBHgSvXNyzF47IKSd4yEtwC3bKTE5bfSjO+YucJL83M8iuBkLvioKZi+SXaO0ejFpe52/KpIv8
+	wwCY=
+X-Google-Smtp-Source: AGHT+IHoDMY8wbul5is1dz7DmZViTlbVxhnNBIfc3rpUO+h3Y9Iw0U8xnv997VFlA99JKUxfNJpPhg==
+X-Received: by 2002:a05:600c:6745:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-454b3069f2cmr113934215e9.6.1751898846040;
+        Mon, 07 Jul 2025 07:34:06 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a998a47dsm140081935e9.18.2025.07.07.07.34.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 07:34:04 -0700 (PDT)
+Message-ID: <0ae470c0-49c3-4ee9-913c-19e58a505b13@gmail.com>
+Date: Mon, 7 Jul 2025 15:31:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] rust: i2c: add manual I2C device creation
+ abstractions
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Asahi Lina <lina+kernel@asahilina.net>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Hung <alex.hung@amd.com>,
+ Tamir Duberstein <tamird@gmail.com>,
+ Xiangfei Ding <dingxiangfei2009@gmail.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20250704153332.1193214-1-igor.korotin.linux@gmail.com>
+ <20250704153912.1197034-1-igor.korotin.linux@gmail.com>
+ <aGgxfNh-sgkJls_h@cassiopeiae>
+ <954a40a4-2f5a-4ef8-84ea-3d2ba2c85cfe@gmail.com> <aGu3O8QzboCQiKSL@pollux>
+Content-Language: en-US
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+In-Reply-To: <aGu3O8QzboCQiKSL@pollux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Pankaj Raghav <p.raghav@samsung.com>
 
-Add largest_zero_folio() routine so that huge_zero_folio can be
-used without the need to pass any mm struct. This will return ZERO_PAGE
-folio if CONFIG_STATIC_PMD_ZERO_PAGE is disabled or if we failed to
-allocate a PMD page from memblock.
 
-This routine can also be called even if THP is disabled.
+On 7/7/25 13:02, Danilo Krummrich wrote:
+> On Mon, Jul 07, 2025 at 12:20:15PM +0100, Igor Korotin wrote:
+>>
+>>
+>> On 7/4/25 20:54, Danilo Krummrich wrote:
+>>> On Fri, Jul 04, 2025 at 04:39:12PM +0100, Igor Korotin wrote:
+>>>> -pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+>>>> +pub struct Device<Ctx: device::DeviceContext = device::Normal, State: DeviceState = state::Borrowed>(
+>>>>      Opaque<bindings::i2c_client>,
+>>>>      PhantomData<Ctx>,
+>>>> +    PhantomData<State>,
+>>>>  );
+>>>
+>>> I see what you're doing here, but I think you're thinking this way too
+>>> complicated.
+>>>
+>>> I recommend not to reuse the Device type to register a new I2C client device,
+>>> it's adding too much complexity without any real value.
+>>>
+>>> You also don't want the DeviceContext types for a device registration, since the
+>>> registration will never have any other DeviceContext than device::Normal (see
+>>> also my comment on the sample module).
+>>>
+>>> DeviceContext types are only useful for &Device (i.e. references) given out for
+>>> a specific scope, such as probe(), remove(), etc.
+>>>
+>>> The only thing you really want to do is to register a new I2C client device, get
+>>> a i2c::Registration instance and call i2c_unregister_device() when the
+>>> i2c::Registration is dropped.
+>>>
+>>> This is exactly the same use-case as we have in the auxiliary bus. I highly
+>>> recommend looking at what auxiliary::Registration does [1].
+>>>
+>>> Also note that if you want a reference to the device in the i2c::Registration,
+>>> you can also add a i2c::Registration::device() method that returns an
+>>> &i2c::Device, which through into() you can obtain an ARef<i2c::Device> from.
+>>>
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/auxiliary.rs?h=v6.16-rc4#n299
+>>
+>> I took a quick look at the auxiliary Registration abstraction and I see
+>> that it is not applicable for I2C subsystem. The issue here is that I2C
+>> C code doesn't provide with an API that can registers an I2C client from
+>> already existing `struct i2c_client`.
+> 
+> I don't see why the following wouldn't work:
+> 
+> 	struct Registration(NonNull<bindings::i2c_client>);
+> 
+> 	impl Registration {
+> 	   pub fn new(adp: &I2cAdapterRef, info: &I2cBoardInfo) -> Result<Self> {
+> 	      // SAFETY: [...]
+> 	      let cli = unsafe { bindings::i2c_new_client_device(adp.as_raw(), info.as_raw()) };
+> 	
+> 	      // Handle ERR_PTR()
+> 	
+> 	      Self(NonNull::new(cli))
+> 	   }
+> 	}
+> 	
+> 	impl Drop for Registration {
+> 	   fn drop(&mut self) {
+> 	      // SAFETY: [...]
+> 	      unsafe { bindings::i2c_unregister_device(self.as_ptr()) };
+> 	   }
+> 	}
+> 
+> And in you sample driver you can still the exactly the same as you did before:
+> 
+> 	struct SampleDriver {
+> 	   _reg: i2c::Registration,
+> 	}
+> 	
+> 	impl kernel::Module for SampleDriver {
+> 	    fn init(_module: &'static ThisModule) -> Result<Self> {
+> 	        let adapter = i2c::I2cAdapterRef::get(0).ok_or(EINVAL)?;
+> 	
+> 	        let reg = i2c::Registration::new(&adapter, &BOARD_INFO)?;
+> 	
+> 	        Ok(Self { _reg: reg })
+> 	    }
+> 	}
+> 
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- include/linux/mm.h | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 428fe6d36b3c..d5543cf7b8e9 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4018,17 +4018,41 @@ static inline bool vma_is_special_huge(const struct vm_area_struct *vma)
- 
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_HUGETLBFS */
- 
-+extern struct folio *huge_zero_folio;
-+extern unsigned long huge_zero_pfn;
-+
- #ifdef CONFIG_STATIC_PMD_ZERO_PAGE
- extern void __init static_pmd_zero_init(void);
-+
-+/*
-+ * largest_zero_folio - Get the largest zero size folio available
-+ *
-+ * This function will return a PMD sized zero folio if CONFIG_STATIC_PMD_ZERO_PAGE
-+ * is enabled. Otherwise, a ZERO_PAGE folio is returned.
-+ *
-+ * Deduce the size of the folio with folio_size instead of assuming the
-+ * folio size.
-+ */
-+static inline struct folio *largest_zero_folio(void)
-+{
-+	if(!huge_zero_folio)
-+		return page_folio(ZERO_PAGE(0));
-+
-+	return READ_ONCE(huge_zero_folio);
-+}
-+
- #else
- static inline void __init static_pmd_zero_init(void)
- {
- 	return;
- }
-+
-+static inline struct folio *largest_zero_folio(void)
-+{
-+	return page_folio(ZERO_PAGE(0));
-+}
- #endif
- 
--extern struct folio *huge_zero_folio;
--extern unsigned long huge_zero_pfn;
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- static inline bool is_huge_zero_folio(const struct folio *folio)
--- 
-2.49.0
-
+Ok, I think I've caught the idea. In general I worried that if one has
+link to an i2c::Device which is a transparent representation of `struct
+i2c_client` he could somehow cast that `i2c::Device` to
+`Registration(NonNull<bindings::i2c_client>)`. After some experiments, I
+found out that this is not possible due to scope of the
+`i2c::Device::as_raw()`. So the simple NonNull implementation is as safe
+as my "super-puper secured" DeviceOwned implementation.
+Thanks
+Igor
