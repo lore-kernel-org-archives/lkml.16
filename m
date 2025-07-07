@@ -1,121 +1,84 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp105.iad3a.emailsrvr.com (smtp105.iad3a.emailsrvr.com [173.203.187.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBE017A31B;
-	Mon,  7 Jul 2025 14:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFB62BD588
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897172; cv=none; b=CCGn9LGR9B4nc4O5L9T8s5Hjo6bbxZ1l4PUeiaAoViKyKJAKQ5I8sM015zbHCnTZUPt/gPsCOhjiFYh+K1Z+/wiBvy4iV9HKFaO8GLB01ZKsnZlf2muA186Ae++f8ynRsxiDQNJJEi64022fyHO2YSzT+jiZZd7L25om4yKl0hM=
+	t=1751897210; cv=none; b=YqN2jt+rwLZR9XKmqHfPtSoqGZF2s6UKF9YRcrUFVIc01UdeXo/57wrM1+5R4Z903dW71BstV3zTW2pnibhMAtsSJoS9XqSXzPD7JDxLa8fQdcHXzVyGonvKUyegSejFDxkgUCrpVX/3IpcSYfoS5I95FVn//U3QpGCczGenns0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897172; c=relaxed/simple;
-	bh=WjLJQ8DJG9dk9LY4/WcdTGq2agiZKN8nJ1UypqgJtcU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XIaJQ3u4u+rNDwt4hNzqTIRzbdNL/5Ulg80vCHHIAEW9tIkT4VXsLIxDdkI2+/cIScBK7rg849UJknjZugBgRc1mCEIQNlhDG+DE+X/lzdEyAb0YnSqXvB54iNJUPFprqYgmY1LsA3lyTNjiVrgwws2DXNCXEB2T6XhZ82zUJrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kru11H6h; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751897210; c=relaxed/simple;
+	bh=JHkCVKeT8xiLSJmkc3nLiDElL7x78P/9DwQm8Z2ai3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dglv/O5Lm9N0HR0gFRQBVoRqf8mYnDtcll6TAlWXCKOfzHmsw+hUsq0OsogR7uhyYEQ9ExMfEXEp1U2l0kCyXS5pCYm+5qeLf5zJuhqDPJVrX1dhvbCfDmIM1PIMDo8cgS7UGOh9odPYrFwTFn3WAoUUKHtv+vrlw0XLJFHHlbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=kGmV4Niz; arc=none smtp.client-ip=173.203.187.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kru11H6h"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-31306794b30so710729a91.2;
-        Mon, 07 Jul 2025 07:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751897170; x=1752501970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z5eHXbB0tLWoYkJp+N7tByAI0f211iSmpcNJkEa+CDI=;
-        b=kru11H6h65fP6wlHsnsE0kR+r+VHP4n16TjURr6Vf6VtgFplwNVRH760k4/eZk9VYe
-         TXQDrvNh/xVo5OFrO1BaCviV9zvmNpogJTJi3J/wN/oi7NR9jXbZPLtbOZ5XXGqtzrT+
-         7VQTrX+xF9gfzswtG4fXnmREzgD6AIuvlmVtUYJJb9SZtNLZcZh8jbL91jvwjYgdEb1K
-         5TBmoY+VX6Ir4rnrFbU164lCPH+CLF/1U7ddQAosuWEW5WYUiv40lZ/oXv9nA2CljDua
-         xna0K8q+86zU8dV6Mg9Y6xLtgHG2sE4r3srXCjHOPfYhWSR1DxLChYysxSmp3n2t56/w
-         Rw3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751897170; x=1752501970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z5eHXbB0tLWoYkJp+N7tByAI0f211iSmpcNJkEa+CDI=;
-        b=BXhBSMQOoFcFLEAwt18h5RZa23l4weZyz3x/EZcmCa+HdKLZjLeQzR190QsNVWgg/7
-         PnNEUEMr7+0pChfUW456bROklETSgRTB7+QryE0V7qQgHYOCnhl1x6Q++Js0itBgRmBb
-         52QZ8YilPbdhkdZiWf0DXbV0Oe8j36GWWzQA9dpt1oSLvUn1iuOJucDDaEJ4he+IGQ2h
-         0d3khZw4uMtIPLJsoHPx+fdtbMY4ViDdgch+LNCvoUG0KkYBmKT6y7hpzPd5mRBNLQmo
-         nBapW2jB5s2mWd8pt0iD5Qp8pHzonZJFRW00f3mAxS+OcefulP78W1qkYBjJlPuQH31O
-         Syow==
-X-Forwarded-Encrypted: i=1; AJvYcCUA+zJx1pvuzcwigIhLrQ2DOTwN7tYAWqyXZy3WsEuKZeAmrnWoHYfP7kBEa4RsMr3d762Uzrnnn2byCnwvb5I=@vger.kernel.org, AJvYcCWAfRtwQf7i6xa8QPrGFO68iw5fP1FT6lLNoKJbydKD4iV6g+dWVN+20wNUaaUNXvTXnC/Y7ewqdxOuT9DZTw==@vger.kernel.org, AJvYcCWb7xr7ok02SkUnfJ6sMAF9Awvw8ipLypxYnMuQTul5OreU3egBzDWZvB+HEC6EK9y9E0Ra/l1Ewv0m3sk=@vger.kernel.org, AJvYcCWhW73cbkYSU1ij/FtZaI5NOUIRmCtVhXx64N0X9a/1BcbbUSG3BInPrA8vxHMNOivQO2ludn6aHRuFiL3I@vger.kernel.org
-X-Gm-Message-State: AOJu0YxElf4xE0sWYAGQSS19qlj4kY7FppN1ZE+A8uEP+fe0M6paWxgk
-	7pzIshnRliYWA9lbHo+6FfZZR/N4bzqkiP8X8tuiSJN5qWOJpc4k7FFNFkDKSmVZ+Cg65lc+d8R
-	9pnJpvYGIircw6gWOKX+Bd0pBoS+3eWE=
-X-Gm-Gg: ASbGncuUcyiNDCHWhYQar0IHhWFOP0pEU1QTIzUJ0z7lQSo6l2zNVJ0QpfanG3im5G/
-	NL70T5xKNIAwvUqhZ+k6LlE4iLZrkSGKo2B874P7IS2oKd06tbziVtYVw6AeX+vQ2O8kdksKqQp
-	RvkGvT0Lyr5k95/qwer3zfBnWsahAZ7lC6pCA3OoWgyrL57tXvg+zy4U8=
-X-Google-Smtp-Source: AGHT+IHYDP2ItVDS65gAYycZ9ux53Zh85xSymAbd42Tqj326gWzFunD0tX8YRk4m/jajtZi6K8fatKyug2zlraKKOWU=
-X-Received: by 2002:a17:90b:5408:b0:2ff:7970:d2b6 with SMTP id
- 98e67ed59e1d1-31aac545128mr7024651a91.5.1751897170250; Mon, 07 Jul 2025
- 07:06:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="kGmV4Niz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1751896667;
+	bh=JHkCVKeT8xiLSJmkc3nLiDElL7x78P/9DwQm8Z2ai3c=;
+	h=From:To:Subject:Date:From;
+	b=kGmV4NizXKuRVCb7ts8mbJmDjhkQtwxz67EayJB1ML9bSzh9LsSDbqgrcYSry+gQQ
+	 sbkLe5/yrlWYq74S0B9/s9ZIHJ+sJL9qOQ49GYJGC3dP9FxXGhuUqWHZHbSF1FSx+t
+	 dtstMO/kNEqvru+W7sbgcCvn6ULejuQaRLQ+p4QU=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp22.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 70B0D1982;
+	Mon,  7 Jul 2025 09:57:46 -0400 (EDT)
+From: Ian Abbott <abbotti@mev.co.uk>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] comedi: das6402: Fix bit shift out of bounds
+Date: Mon,  7 Jul 2025 14:57:37 +0100
+Message-ID: <20250707135737.77448-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250707-module-params-v3-v15-0-c1f4269a57b9@kernel.org>
-In-Reply-To: <20250707-module-params-v3-v15-0-c1f4269a57b9@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 7 Jul 2025 16:05:56 +0200
-X-Gm-Features: Ac12FXx9s4CqlK2pHGTaw_tDQW6E2_Qdww9gpUjj8n34vHnupqPLYoqsVo1mv7E
-Message-ID: <CANiq72k5mU7cACFh8TZC1+NfUQpdrZBToZ-jd75DfCNTfMU1fA@mail.gmail.com>
-Subject: Re: [PATCH v15 0/7] rust: extend `module!` macro with integer
- parameter support
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
-	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: 5066d715-a91c-4619-9ca4-c855c2d9a7dc-1-1
 
-On Mon, Jul 7, 2025 at 3:31=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
-org> wrote:
->
-> Based on code by Adam Bratschi-Kaye lifted from the original `rust` branc=
-h [1].
+When checking for a supported IRQ number, the following test is used:
 
-I would suggest adding this sort of note to the commit messages,
-especially since the commits have no Co-developed-by/Link tags
-otherwise.
+	/* IRQs 2,3,5,6,7, 10,11,15 are valid for "enhanced" mode */
+	if ((1 << it->options[1]) & 0x8cec) {
 
-From our discussion in Zulip: the code itself is older than that the
-merge above. I think you wanted an example sentence for this --
-something simple could be e.g.
+However, `it->options[i]` is an unchecked `int` value from userspace, so
+the shift amount could be negative or out of bounds.  Fix the test by
+requiring `it->options[1]` to be within bounds before proceeding with
+the original test.  Valid `it->options[1]` values that select the IRQ
+will be in the range [1,15]. The value 0 explicitly disables the use of
+interrupts.
 
-    Based on the original module parameter support by Miguel [1],
-later extended and generalized by Adam for more types [2][3].
-Originally tracked at [4].
+Fixes: 79e5e6addbb1 ("staging: comedi: das6402: rewrite broken driver")
+Cc: <stable@vger.kernel.org> # 5.13+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+---
+Patch does not apply cleanly to longterm kernels 5.4.x and 5.10.x.
+---
+ drivers/comedi/drivers/das6402.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-    Link: https://github.com/Rust-for-Linux/linux/pull/7 [1]
-    Link: https://github.com/Rust-for-Linux/linux/pull/82 [2]
-    Link: https://github.com/Rust-for-Linux/linux/pull/87 [3]
-    Link: https://github.com/Rust-for-Linux/linux/issues/11 [4]
+diff --git a/drivers/comedi/drivers/das6402.c b/drivers/comedi/drivers/das6402.c
+index 68f95330de45..7660487e563c 100644
+--- a/drivers/comedi/drivers/das6402.c
++++ b/drivers/comedi/drivers/das6402.c
+@@ -567,7 +567,8 @@ static int das6402_attach(struct comedi_device *dev,
+ 	das6402_reset(dev);
+ 
+ 	/* IRQs 2,3,5,6,7, 10,11,15 are valid for "enhanced" mode */
+-	if ((1 << it->options[1]) & 0x8cec) {
++	if (it->options[1] > 0 && it->options[1] < 16 &&
++	    (1 << it->options[1]) & 0x8cec) {
+ 		ret = request_irq(it->options[1], das6402_interrupt, 0,
+ 				  dev->board_name, dev);
+ 		if (ret == 0) {
+-- 
+2.47.2
 
-By the way, I guess you should inherit that issue in the last link :)
-It had some details about things we may or may not want to support
-etc. that I looked up back then. If you prefer that we close it or
-that we create sub-issues, that is fine -- up to you!
-
-Finally, if you end up adding strings, please link to Adam's
-https://github.com/Rust-for-Linux/linux/pull/110.
-
-Thanks!
-
-Cheers,
-Miguel
