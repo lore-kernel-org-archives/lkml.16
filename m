@@ -1,54 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D6D2750FD;
-	Mon,  7 Jul 2025 06:33:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE86BEEAB;
+	Mon,  7 Jul 2025 06:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751870019; cv=none; b=C7dfWE7XI0Y7giVSqqmZPJ0OVHJ3jed1XiLnWtd0IbRu6IfIFBBtxdsXKj6Li1xpcERUROom5cCX1YvjlF+pUYeexeEm+yb0PiI6hdrQ96NfdzG3FPaMuzgnVHCKjD6FeX+pYXkz0K5Dsp2di5nN/AtT/jV9PeXWw/CVi/H+l7U=
+	t=1751870173; cv=none; b=j2DsMuytO8Cwyuq8kNGdhHZuFR7bobsuF1AMTvlXGaOVmhzuNZ0nhooGQacjRjmjq0S3uA9UPWDPoXoRpweZ75xNpWu8arDrWJgganeXhD5HiptT1vi66ZCUN6vfAVECUNZeid7/vSfejoTcwRXD6qffmK2pMONen72Uzw8rrlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751870019; c=relaxed/simple;
-	bh=h24qSJ8Oi8rLBWzEyRk9kWuH5HysbbgpfVyMwQU3sDQ=;
+	s=arc-20240116; t=1751870173; c=relaxed/simple;
+	bh=dc209bSSOMZyBL/UHG3HiH6AvU5ec3DCsBGBA0MD8OA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1kK0gtTi0r03806iiyDluklv42l6uTMxUYmsO7duins8BmjN3GxuxjOhokJGu+0PrUUDBj8ub+uIC3RZvqsEDpOLbsWQn0W1Q6EI6r/rbfnLL3Xr6Mnk8bDVq2Fu9S7yOVrEzJcjLrwACPpcULTlGHA9xVeeFCtmczejY+ZYCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNVts38q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/ObWtVjSv7acXfU/swaFJO2Pul8BPT9kN2PgfOfiA+D2plfxG6gIEMqSMJPVHQYNw9rd8JPhlZoRIjPgRTPn2vvg4v0QLSyQvkLtCyJhXTSlsDnsEkB3tD0eL58qC0mUJ/IO8tMM8nrMkRZsGOq2e9zIZkD1k6IHbKEmpT0mDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgDAmbZ3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNVts38q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E327C4CEE3;
-	Mon,  7 Jul 2025 06:33:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgDAmbZ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC70EC4CEE3;
+	Mon,  7 Jul 2025 06:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751870018;
-	bh=h24qSJ8Oi8rLBWzEyRk9kWuH5HysbbgpfVyMwQU3sDQ=;
+	s=k20201202; t=1751870172;
+	bh=dc209bSSOMZyBL/UHG3HiH6AvU5ec3DCsBGBA0MD8OA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PNVts38qKFiTktRXWRXh6+TlqSdyDKDvCa2/ImWYK0/XxpNZsykfGB7JAQ20u1kRV
-	 5EP+uNwiFYIFBVDX8fo6U5cWii2AKx0S9qBMhTmAc6QUsjnEv+vr4kYn4Bqi4ZkzlT
-	 MH3efX8fVmTsr6/tqCPYnxOv8vyuW4zBZZPO1Th3LSd9pbceYxdgmkLIlrtPDjxBne
-	 oxuosy7fbK1EragWHWFY2PNmm0zpGs88gg8mIRTabCuDkqvGRLnaW2Fi+NxCQ+m96W
-	 jPrKdtxC7rgg7cl9C1pOQX/LcFJSgM1tsQNoEXmYw87DfUgxr0iNri7SeOk19+aGGi
-	 raLJ94KvYDJDw==
-Date: Mon, 7 Jul 2025 08:33:36 +0200
+	b=WgDAmbZ3f9Aqqwkljq5jHe8OaKHd8qTEvKsZj/eNsQ/Wl/Bz1ykWcyzsrwomDXV6B
+	 aYDH/g4K/oBR6eg4WVcYY7gnsb5YQ07RQBK0hxwXAluwwe8DwCCe8FU7bTsY+h1O8+
+	 P4/NYZFy9Yi8j2zEdiiEIdOiq8SXV3t452Seh+/sOCH8sqJHDy/tcsiPaT6BOoTYh6
+	 e9yYTtn1Pj5LAy6LvdfgPGv0bvYNhEVwedJSRNJ6+TWBRWWkh++2BatUpmG8zFmmRS
+	 SYqKsvNHTE4+iwSiC4DGCEJQp7AWLB3pwvsMIE0FJ00gwPJ65nYQubayx5OziXcMeF
+	 vgMmFHKDEmKaA==
+Date: Mon, 7 Jul 2025 08:36:09 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
-	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Johnson Wang <johnson.wang@mediatek.com>, 
-	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>, Landen Chao <Landen.Chao@mediatek.com>, 
-	DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Daniel Golle <daniel@makrotopia.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Felix Fietkau <nbd@nbd.name>, Frank Wunderlich <frank-w@public-files.de>, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v8 04/16] dt-bindings: net: mediatek,net: add sram
- property
-Message-ID: <20250707-masked-ambrosial-pegasus-2ff8fc@krzk-bin>
-References: <20250706132213.20412-1-linux@fw-web.de>
- <20250706132213.20412-5-linux@fw-web.de>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Inki Dae <inki.dae@samsung.com>, 
+	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Ajay Kumar <ajaykumar.rs@samsung.com>, Akshu Agrawal <akshua@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: display: samsung,exynos7-decon:
+ document iommus, memory-region, and ports
+Message-ID: <20250707-silent-authentic-trogon-cca34d@krzk-bin>
+References: <20250706-exynosdrm-decon-v4-0-735fd215f4b3@disroot.org>
+ <20250706-exynosdrm-decon-v4-1-735fd215f4b3@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,14 +52,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250706132213.20412-5-linux@fw-web.de>
+In-Reply-To: <20250706-exynosdrm-decon-v4-1-735fd215f4b3@disroot.org>
 
-On Sun, Jul 06, 2025 at 03:21:59PM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
+On Sun, Jul 06, 2025 at 10:59:45PM +0530, Kaustabh Chakraborty wrote:
+> Similar to FIMD and Exynos5433's DECON, the Exynos7 DECON hardware:
+> - May optionally require an IOMMU to initialize a display region.
+> - Outputs image data to another block, say an MIC or a DSI master.
 > 
-> Meditak Filogic SoCs (MT798x) have dedicated MMIO-SRAM for dma operations.
+> If an IOMMU is present, it may also require to access the reserved
+> framebuffer region.
+> 
+> Document these bindings in the devicetree schema.
+> 
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  .../display/samsung/samsung,exynos7-decon.yaml      | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 
-You need "sram: false" for other variants.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
