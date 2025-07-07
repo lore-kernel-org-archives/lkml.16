@@ -1,63 +1,66 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349692798E3
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 06:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98902263889;
+	Mon,  7 Jul 2025 06:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751870527; cv=none; b=uO9dTOOXMFB++bSt91VgQKFRWwAPGEwGn61QwiOBk+pCVF6WwbIuWo0Bn9OJdizWrLFWnHMFBRofVxZG8VIgDV+A3QKJUX4+hrm7XkEdbxr4IFdVvgtgdgFtVrihyaRFUAfAvocJBvbVOBTMcnvO3/SHiAK2qBiHs2JF3eTDSjg=
+	t=1751870666; cv=none; b=iO0yPY5wQC/tgfVwYqHBbVLbAKV9ba7hQiz2rYSFe9O1azsXwIDtK+sPN4Zuj/ZpPF26YcPHBWNZaZGGbfrOzdFAxsTc3HyQbUVai8pZoy43v3n2ilUiOab13BoHraW98vf4YtgqWkG4UjeBQj+tNNa7IJ7If894cKrolzOe63w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751870527; c=relaxed/simple;
-	bh=IiLGpE2uyMrqtwvy9R1BT98d8U7KS311154swWkBZBE=;
+	s=arc-20240116; t=1751870666; c=relaxed/simple;
+	bh=SJ8/47tbP+hzfpsBFEyc7qON0FE+gBuhowLxlpL7PCI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ph+HBw9CG0l4YABDiHMSCXQ23VABfd2lICqT0YvXCfn+q0VIpPTp0pDwpzDgAvaTMYrzHuROfhmimVZbqdl/M2weUd17RftN4E0/mV2OH5N746hJN7j85/4bpNmzL3+gL81IJsYFNe5wxP7ixYP2mQc2oW3ojYD4aHUH5IG9PaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FyAGP6pq; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HKK06lEUeZsJ4JRNMRpbXZ1Pji3/gzTEqL1gd3rJyNGHy+txvBQr7xDlbCDB6V6tmRp3v2ay0kTlJ8U7h+HAZB3cwtI7IQYXQ03IhwPowAKZqo2x7T4lA8VLKw7jOTgHFfRy+d1njRkX7m23nC+jMt4IlbqDTA3P2Ri23xPATc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paua9nDR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FyAGP6pq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=IiLG
-	pE2uyMrqtwvy9R1BT98d8U7KS311154swWkBZBE=; b=FyAGP6pqhTWS7vDw7fmX
-	dh2+VKzogPqkT8l7OQ1SW8LDBGl0c9nIu6jysu18SXB9FsJPMPzaJW8ZSogJ5CAt
-	tsVx1qQ+muSk3FGUEJ6A3+jI1vwzUI3S2cI4aSzKrP64vLyAZcnl90oQKOcNHJ/D
-	I2DWu8fyMtmzt44cX/vikJV29JXkajR/DGpWjWOdbYnuwqJjj1TXF7gK2SLSG0DM
-	mwQ1DwVrlk4iW4W5qmJHxyacHR9cCLsY/PftOZoEqrtRZ/ngo+MwF/m53uNEni/2
-	ADhtJUZKvOLguYSRG2ejY+PvgRo3kGuxXRBXRTCa/78msA45BA0exJJV63W1F6lf
-	zA==
-Received: (qmail 1127800 invoked from network); 7 Jul 2025 08:41:55 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jul 2025 08:41:55 +0200
-X-UD-Smtp-Session: l3s3148p1@I6XGI1E5huogAwDPXxVOAFK6vZd9m4LR
-Date: Mon, 7 Jul 2025 08:41:55 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
-	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v3 0/9] PCI: rzg3s-host: Add PCIe driver for Renesas
- RZ/G3S SoC
-Message-ID: <aGtsM22QYqekuiQA@shikoro>
-References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paua9nDR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A38BC4CEE3;
+	Mon,  7 Jul 2025 06:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751870666;
+	bh=SJ8/47tbP+hzfpsBFEyc7qON0FE+gBuhowLxlpL7PCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=paua9nDRJNTPwe+tg/mKW34+Qh5THlW+i+LW7ilwSjGod4oTZ7J8Abnlhefoq14li
+	 c9EPbTFNfULQLpYijxRXWgrjWAPszmO1G0cGiw1xXePyje1m2p3zArUCoi/Ekql/Iu
+	 R3Gfln2XV98dpDBw1CzvIU1mVGRODJabr4xi9d+ipN4RyA5xq5PaMmjFoHIzuu3tdy
+	 CoxULU0Tt76XT/Gsfk09hDthBnGTvWHumNAWCrEWg399Qh5q91juzzvj1sZ2XXEAej
+	 r5MwMGhG7pbBwG5qwNAw4S8xpTjArI8X5AamccLHnPcj0tqPqcjcqTk0qazWTfuCYT
+	 yjq8IfEczfKNQ==
+Date: Mon, 7 Jul 2025 08:44:23 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Waqar Hameed <waqar.hameed@axis.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, kernel@axis.com, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: proximity: Add Nicera D3-323-AA
+ PIR sensor
+Message-ID: <20250707-curvy-fat-ostrich-00bc6a@krzk-bin>
+References: <cover.1751636734.git.waqar.hameed@axis.com>
+ <19a2744cebaee57fe5349986094168524baa9838.1751636734.git.waqar.hameed@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <19a2744cebaee57fe5349986094168524baa9838.1751636734.git.waqar.hameed@axis.com>
 
+On Fri, Jul 04, 2025 at 06:14:38PM +0200, Waqar Hameed wrote:
+> Nicera D3-323-AA is a PIR sensor for human detection. It has two GPIOs
+> for detection and data communication.
+> 
+> Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
+> ---
+>  .../iio/proximity/nicera,d3323aa.yaml         | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/nicera,d3323aa.yaml
 
-> Please provide your feedback.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-What is this based on? I tried v6.16-rc4 and renesas-driver/master. Or
-is there a branch I could pull?
+Best regards,
+Krzysztof
 
