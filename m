@@ -1,76 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA470944F;
-	Mon,  7 Jul 2025 09:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9B428B511;
+	Mon,  7 Jul 2025 09:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751878993; cv=none; b=XIvn5IbBPJEpnVLg1Hp8s5SSI9QKfGyrDp6qi8k3X6C8TnGfkZGoo742emcXh8MxYD2nPYyrbN0XD0mInIAnp9ydDh5pSIIU/dmEBsqlvzvRwUn6FPplCgy9LDTd+Mi9y9l0aIaa21oJURSOQYS8gnFVGxzbS2U8Lb3QYtBjNeU=
+	t=1751879172; cv=none; b=praQgSDwzoCWLtxOObMd47LYhAwBLtWdNuDSRJHBfgPYkRLlbxidjGkhszkkk3Y42yBElbMVUpQuE+Rs+jXX0n05PLv04xPaawgWUNm9kZf2Fd6blm7dRwv34AKS/hSJUfKDqcADK4bNOWWUMblkPz6a2KiggqBIeILQCW8P8X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751878993; c=relaxed/simple;
-	bh=JoUNvgk0Indgh9IQjsCN1n80NHUme0ZNNFbwUw6oGJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMNIjNzCbuRAFItQSsAExaTEv0tfJe0Sp8QtPOrbtdLtXsKttSlvTzhaZvCSLB1aUZ6/etpDd5jeqPDREAd8Trsx8W8/Yt2oNIo6TrkFZTQPsV0tJKpOm4dFtak2jAnUTZgmDoWfyUUisPJylO2xnFAduTNFwrXv1FpLOC0q5+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC8A168F;
-	Mon,  7 Jul 2025 02:02:58 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8E2B3F694;
-	Mon,  7 Jul 2025 02:03:10 -0700 (PDT)
-Date: Mon, 7 Jul 2025 10:03:08 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 6.6 000/139] 6.6.96-rc1 review
-Message-ID: <20250707090308.GA2182465@e132581.arm.com>
-References: <20250703143941.182414597@linuxfoundation.org>
- <CA+G9fYu=JdHJdZo0aO+kK-TBNMv3dy-cLyO7KF4RMB20KyDuAg@mail.gmail.com>
- <CA+G9fYv4UUmNpoJ77q7F5K20XGiNcO+ZfOzYNLQ=h7S3uTEc8g@mail.gmail.com>
- <2025070605-stuffy-pointy-fd64@gregkh>
+	s=arc-20240116; t=1751879172; c=relaxed/simple;
+	bh=qk6AFaouc956CSAvxZJyCinyntTHr5dXIoYc9dCfJrg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=haDW4SVNEK/Cm7oSbgSnfaIRk0CQAmaPmGSaZHRlL0RuR7vrbm8JUO/p2a7gHLSmXktFM7ZP/2s391EFfouvCVmHzcRh1SoCFFp2WiXCkOITS41JziKMLQcusThFHxKwOEumpn6iVtg1/A9xDMK1XdQnt99JixrlxfsLEKSUUXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NPrJRWXz; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NPrJRWXz"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 56795iag817152;
+	Mon, 7 Jul 2025 04:05:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751879144;
+	bh=w8PTfQBhZTHmoOcNsBY2FL7mzH3JijfsAWMnMuG1KUI=;
+	h=From:To:CC:Subject:Date;
+	b=NPrJRWXzA70HtT7+HHDJEncLjdLonQdHBcZAfChT5exFzl4ilXyxW3kVDQAdAUwha
+	 EITz68DGd1tMEMK3x1nv69OclAyqN1cbRSfrZa2v4eBtn9gRhyEbtaP/Xck6nUR1px
+	 ZH65Rx3FLOvvNvq4PLka27njEIoAfO3O6+LANImQ=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 56795ioX282160
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 7 Jul 2025 04:05:44 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 7
+ Jul 2025 04:05:43 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 7 Jul 2025 04:05:43 -0500
+Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 56795c8o3787182;
+	Mon, 7 Jul 2025 04:05:38 -0500
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>
+CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <shenghao-ding@ti.com>, <navada@ti.com>,
+        <13916275206@139.com>, <v-hampiholi@ti.com>, <v-po@ti.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>
+Subject: [PATCH v2] ALSA: hda/tas2781: Fix calibration data parser issue
+Date: Mon, 7 Jul 2025 17:05:13 +0800
+Message-ID: <20250707090513.1462-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025070605-stuffy-pointy-fd64@gregkh>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sun, Jul 06, 2025 at 08:55:32AM +0200, Greg Kroah-Hartman wrote:
+We will copy calibration data from position behind to front.
+We has created a variable (tmp_val) point on top of calibration data
+buffer, and tmp_val[1] is max of node number in original calibration
+data structure, it will be overwritten after first data copy,
+so can't be used as max node number check in for loop.
+So we create a new variable to save max of node number (tmp_val[1]),
+used to check if max node number was reached in for loop.
+And a point need to be increased to point at calibration data in node.
+Data saved position also need to be increased one byte.
 
-[...]
+Fixes: 4fe238513407 ("ALSA: hda/tas2781: Move and unified the calibrated-data getting function for SPI and I2C into the tas2781_hda lib")
 
-> > Bisection results pointing to,
-> > 
-> >     coresight: Only check bottom two claim bits
-> >      [ Upstream commit a4e65842e1142aa18ef36113fbd81d614eaefe5a ]
-> > 
-> > The following patch needs to be back ported ?
-> >    b36e78b216e6 ("ARM: 9354/1: ptrace: Use bitfield helpers")
-> 
-> Thanks, that makes sense, and is easier than me fixing this up by hand
-> like I had tried to in one of the branches :)
-> 
-> Now queued up.
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
 
-I built for the Arm target in my local environment and confirmed that
-the build failure has been fixed on the linux-6.6.y branch.
+---
+Change in v2:
+ - Add more description about this fix.
+---
+ sound/pci/hda/tas2781_hda.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Thanks for reporting and resolving the issue.
+diff --git a/sound/pci/hda/tas2781_hda.c b/sound/pci/hda/tas2781_hda.c
+index 5f1d4b3e9688..34217ce9f28e 100644
+--- a/sound/pci/hda/tas2781_hda.c
++++ b/sound/pci/hda/tas2781_hda.c
+@@ -44,7 +44,7 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 		TASDEVICE_REG(0, 0x13, 0x70),
+ 		TASDEVICE_REG(0, 0x18, 0x7c),
+ 	};
+-	unsigned int crc, oft;
++	unsigned int crc, oft, node_num;
+ 	unsigned char *buf;
+ 	int i, j, k, l;
+ 
+@@ -80,8 +80,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 			dev_err(p->dev, "%s: CRC error\n", __func__);
+ 			return;
+ 		}
++		node_num = tmp_val[1];
+ 
+-		for (j = 0, k = 0; j < tmp_val[1]; j++) {
++		for (j = 0, k = 0; j < node_num; j++) {
+ 			oft = j * 6 + 3;
+ 			if (tmp_val[oft] == TASDEV_UEFI_CALI_REG_ADDR_FLG) {
+ 				for (i = 0; i < TASDEV_CALIB_N; i++) {
+@@ -99,8 +100,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *p)
+ 				}
+ 
+ 				data[l] = k;
++				oft++;
+ 				for (i = 0; i < TASDEV_CALIB_N * 4; i++)
+-					data[l + i] = data[4 * oft + i];
++					data[l + i + 1] = data[4 * oft + i];
+ 				k++;
+ 			}
+ 		}
+-- 
+2.43.0
 
-Leo
