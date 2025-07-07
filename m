@@ -1,97 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD4E286400;
-	Mon,  7 Jul 2025 09:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB2E28DB69;
+	Mon,  7 Jul 2025 09:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880425; cv=none; b=PTWCWYpCXtCjIB42QIxmOSfjQBSZ1xUbs5NXkWKhauQexoJDUgdkBZea/Ll7yFskQA8Qae0CQrLtd+HUNSGoSrjlG4N9d3nGfsFowTYLglDs9fupFTqYSwUjZq22LEsQKNlCn1c190pSr+/MH0UGc8jltajslU+HHHVh0UBAm0c=
+	t=1751880445; cv=none; b=BrB2vQW7I6AG44cNnXt1aNbTZKqf0m2G/46uIjlstMyy6lZnCquaXGIEvS9jUQRTCMzeEXOQablntUEAWeXOFf3B24GibbhhZcb9s6MovxrJ0UC1EKi2KwUCcwt2JbZlvnHB1OSKOcVQf0wrGIA8MEjarak7Y8AYivBqvwxuhFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880425; c=relaxed/simple;
-	bh=w/nIczC0CHU2lOferxIYR9rPDkBASc32aog85VVzma4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ViQtoALT07pupNz5Mf5t0TWVvK81CvSJFq9mIB8vo2ZqR9zxD+uKJtEqKP4nBmqKTaf/7T1ll3pk1T8ddcbAIb1l61r1JHqNfeVF2KOm75nn+CQtWKg/oY/8ii8l1h1KlYVslFb9br0ZzCdoO2qD25ZAkuHT6iJlFW/+YMdbee4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVIoFOLV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751880445; c=relaxed/simple;
+	bh=3N+dxJ/pYp0RztBAu4k2bBGj9JOro7842A4Q2y3OIW8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Bdoh0TwywHma+gOdgpMS5cf7YtIj8QQCeJMznQYGxCZGh5m4D5sHx9ccmMxLEGYMCHT7lbGg/22tkQA034F2gXNkXWG2sYWtSYWxChoefanf5EAxAGzGnmkN7JtDKdK9KWH1m1wxWBxTne7oFL3r7uppUnf9zIq7/zs6ZeXa9p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPbXu681; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVIoFOLV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F11C8C4CEE3;
-	Mon,  7 Jul 2025 09:27:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPbXu681"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57438C4CEE3;
+	Mon,  7 Jul 2025 09:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751880424;
-	bh=w/nIczC0CHU2lOferxIYR9rPDkBASc32aog85VVzma4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kVIoFOLVbfYNR4ufJNomPZS0t9nYFn0B000dn34oEweWJPYZFeqfHex27G1EaBm4E
-	 lvQGGmi511zQZVKC+IcWeLkHU8wARN5dtEe7ZChmO7DbRD+76Vvr23r/InTuwIsh07
-	 elKM5ieLTwSIJ2VfWeuq0seCA5ZuEfQCBb7awllht3UxopERsUkNnGt68DWCiz3sAs
-	 BGt06S41/Fk6aQbFCgo4VUOhGcUMXZCSOb941xaiF3n09vRd8cmNYqV1r1pDwotDHU
-	 y+PokWmsUNpiX3fdTrEFNwpYUEhrGxq93Xj3/eFI2YDoaA2GAvNStDibRFRI1gC7Bc
-	 NWfcUuJ+kIFOA==
-Date: Mon, 7 Jul 2025 11:26:58 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, rafael@kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
-	kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/8] Device: generic accessors for drvdata +
- Driver::unbind()
-Message-ID: <aGuS4k4Dp1BdAP8Q@pollux>
-References: <20250621195118.124245-1-dakr@kernel.org>
- <2025070142-difficult-lucid-d949@gregkh>
- <aGO7BP1t-A_CQ700@pollux>
- <DB5N1F62UP4U.2XQ69N3FE1HWP@nvidia.com>
+	s=k20201202; t=1751880445;
+	bh=3N+dxJ/pYp0RztBAu4k2bBGj9JOro7842A4Q2y3OIW8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=QPbXu681niYrGCdH6O4zB1oOc3IRT2lXTf09EACqLHRM4iWd/vkCxj6R9GQ+3HRUT
+	 tHf3ygnS86/OwVZ6k25Itrlq18y7x3dpaHJFbHTIImd6E/isRIZVw8Io9oYnMjHLZg
+	 M7Oak+mrM0vJ/jOGjrJ+fysJXUOzHW3satj8lQve0PcffeE6bqPZ0/Yc4c2OTtMMtZ
+	 QXBFi3ZYHrraDH7kr3bGbr2E2PLAFFFGT8j6juZfvhjDIXwBZUg4GUpadU1fSoPT9/
+	 i+IbnQIs+XO7ILpR4Z46yb8v0UGNTymnCmeOfttGjFw1gTcYyVaDKM9FR2yJPSf0Fq
+	 2+QB0eUr7wb5g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB5N1F62UP4U.2XQ69N3FE1HWP@nvidia.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 07 Jul 2025 11:27:21 +0200
+Message-Id: <DB5PSCBJA3YW.29RU3J2CT4ZPM@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Asahi Lina" <lina+kernel@asahilina.net>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 2/4] rust: Split `AlwaysRefCounted` into two traits
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+X-Mailer: aerc 0.20.1
+References: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me>
+ <20250618-unique-ref-v11-2-49eadcdc0aa6@pm.me>
+ <DB1J4UQLG76V.69HKATSZZVNO@kernel.org> <aGt6U2jCDnU7dzRA@mango>
+In-Reply-To: <aGt6U2jCDnU7dzRA@mango>
 
-On Mon, Jul 07, 2025 at 04:18:09PM +0900, Alexandre Courbot wrote:
-> On Tue Jul 1, 2025 at 7:40 PM JST, Danilo Krummrich wrote:
-> >> > This makes it inefficient (but not impossible) to access device
-> >> > resources, e.g. to write device registers, and impossible to call device
-> >> > methods, which are only accessible under the Core device context.
-> >> > 
-> >> > In order to solve this, add an additional callback for (1), which we
-> >> > call unbind().
-> >> > 
-> >> > The reason for calling it unbind() is that, unlike remove(), it is *only*
-> >> > meant to be used to perform teardown operations on the device (1), but
-> >> > *not* to release resources (2).
-> >> 
-> >> Ick.  I get the idea, but unbind() is going to get confusing fast.
-> >> Determining what is, and is not, a "resource" is going to be hard over
-> >> time.  In fact, how would you define it?  :)
-> >
-> > I think the definition is simple: All teardown operations a driver needs a
-> > &Device<Core> for go into unbind().
-> >
-> > Whereas drop() really only is the destructor of the driver's private data.
-> >
-> >> Is "teardown" only allowed to write to resources, but not free them?
-> >
-> > "Teardown" is everything that involves interaction with the device when the
-> > driver is unbound.
-> >
-> > However, we can't free things there, that happens in the automatically when the
-> > destructor of the driver's private data is called, i.e. in drop().
-> 
-> Can't we somehow make a (renamed) `unbind` receive full ownership of the
-> driver's private data, such that it will be freed (and its `drop`
-> implementation called) before `unbind` returns? Or do we necessarily
-> need to free that data later?
+On Mon Jul 7, 2025 at 9:42 AM CEST, Oliver Mangold wrote:
+> On 250702 1323, Benno Lossin wrote:
+>> On Wed Jun 18, 2025 at 2:27 PM CEST, Oliver Mangold wrote:
+>> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>> > index c12ff4d2a3f2d79b760c34c0b84a51b507d0cfb1..40c0138bd336057e7d3a83=
+5a9e81391baa2fd2b1 100644
+>> > --- a/rust/kernel/types.rs
+>> > +++ b/rust/kernel/types.rs
+>> > @@ -418,11 +418,9 @@ pub const fn raw_get(this: *const Self) -> *mut T=
+ {
+>> >      }
+>> >  }
+>> >
+>> > -/// Types that are _always_ reference counted.
+>> > +/// Types that are internally reference counted.
+>> >  ///
+>> >  /// It allows such types to define their own custom ref increment and=
+ decrement functions.
+>> > -/// Additionally, it allows users to convert from a shared reference =
+`&T` to an owned reference
+>> > -/// [`ARef<T>`].
+>> >  ///
+>> >  /// This is usually implemented by wrappers to existing structures on=
+ the C side of the code. For
+>> >  /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc)=
+ to create reference-counted
+>> > @@ -438,9 +436,8 @@ pub const fn raw_get(this: *const Self) -> *mut T =
+{
+>> >  /// at least until matching decrements are performed.
+>> >  ///
+>> >  /// Implementers must also ensure that all instances are reference-co=
+unted. (Otherwise they
+>> > -/// won't be able to honour the requirement that [`AlwaysRefCounted::=
+inc_ref`] keep the object
+>> > -/// alive.)
+>> > -pub unsafe trait AlwaysRefCounted {
+>> > +/// won't be able to honour the requirement that [`RefCounted::inc_re=
+f`] keep the object alive.)
+>> > +pub unsafe trait RefCounted {
+>> >      /// Increments the reference count on the object.
+>> >      fn inc_ref(&self);
+>>=20
+>> This seems a bit problematic for `Owned`, since now I can do:
+>>=20
+>>     fn bad<T: Ownable + RefCounted>(t: &Owned<T>) {
+>>         t.inc_ref();
+>>     }
+>>=20
+>> And now the `Owned<T>` is no longer "unique" in the sense that the
+>> refcount is 1...
+>
+> Yes, that is clear. But that isn't a soundness issue or is it? It just
+> means the `T` can be leaked, but that cannot be prevented anyway.
 
-No, we could do that. And I thought about this as well, but I really want to
-bind the lifetime of the driver's private data stored in a device to the
-lifetime of this driver being bound to the device.
+Yeah that is true.
 
-I don't think there is a valid use-case to allow this data as a whole to
-out-live driver unbind arbitrarily.
+>> Similarly, we should probably make this an associated function, such
+>> that people don't accidentally call `.inc_ref()` on `ARef<T>`.
+
+Filed https://github.com/Rust-for-Linux/linux/issues/1177
+
+---
+Cheers,
+Benno
