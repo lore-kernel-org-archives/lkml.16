@@ -1,116 +1,200 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FED35949;
-	Mon,  7 Jul 2025 09:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B1628C2C4;
+	Mon,  7 Jul 2025 09:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880194; cv=none; b=pWxnk/INvxGKlwtuXga4VRQati+ns3hecsFgxuhoK8RRfpo/TjsGw4TThX3EeToVdtEGogDWe6537326qIV1y346gDpGmuMF/EqW5mU+xK8fx4hx79iAyPzUlPd7hb3Z4weh1axfxh/r6lzcKe7JeoPTAwXkIgTbQuk5XlGw944=
+	t=1751880221; cv=none; b=DX6E0U65ZQpgd1MYzngqMJoGlC+cjEzvaueCzQ9OukIUEKQWQsvDfItAxM9/OtIcvt/Q7k6+s+Bb1UDCSyef9lrCS0jRMwNMuecDDx7V1J7VMhkNKoamWRQh+I0gTaZwa8Ss+i2EKQg0zrPVULCxG+DByFt7uDa2JNk89+zxMRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880194; c=relaxed/simple;
-	bh=RbxFgpIxXrfafCP6i22oEUkI/RIpYVuECfRa8OxdDjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Sdrk3jxH95FteSpYonPWXH/PSD6C2JFEr/Z0SY7YvQf4pEB0OLXEYTt7fxcyITsBeN4Lp58j760PAvbhPIkB2+/ndjyCWQ2d6PR5qIYOkGsz2MRLIgu9Ws88DMXlmubqgLEbBC2kd5kILzon1GM+bDf4TG3QtHj7nGCVAviJ9ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAhay+Pu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751880221; c=relaxed/simple;
+	bh=+KASChTcoQ47phcIh1NySTu90by2mpX9tu57u3X7ooU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=HLCGvQUuCf4iFnDkfQotKatNU7mYpazCPzCIxGs1aRMxLuBQNL6Cg9eGOGQGn/4nUzvmuX+WkWLGeaf3mDqNsE8Ag1PWitwuLNuq+h7mOt1KPJDP6VQnudSE0UM5yqH7rhEMEZJ+oBVAAANTShFKYJ+4hh2Wk+/I8RZF+uuLoq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/CslROb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAhay+Pu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CABEC4CEE3;
-	Mon,  7 Jul 2025 09:23:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/CslROb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025A5C4CEEF;
+	Mon,  7 Jul 2025 09:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751880193;
-	bh=RbxFgpIxXrfafCP6i22oEUkI/RIpYVuECfRa8OxdDjI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=JAhay+PuU3zrEqQR5yZbH19YArapVD+FeG2ljrXb5m5ROj5NGPTArQBmH7x5ycfOy
-	 LIPUCzuX128X7eE/peBSebV3mS3iiochl+RirD6dfvCdwPpb4K1tnf8wHS8algGM+7
-	 EYFyHHJwQbpwInkjpbsB26NKNFPTygAK8zNRRZ8GGl08Hr4NnGpPqCO/A6v3PdFDNY
-	 CQWroJyESwTQNlrVlA1+/UMSmay91kpzczxpsvtt0xTglmOO2kj7td4wz5A1fFTkke
-	 M6K1FPcHBiOrs1wSz5xX0OkrVi9pPBP1VPszos7c2CmWURlY6mD6HFJmRcQevlXGPN
-	 L9efGblZQgGAg==
-Message-ID: <46fb0a9d-be33-46c6-98d1-501970ec8e7a@kernel.org>
-Date: Mon, 7 Jul 2025 11:23:09 +0200
+	s=k20201202; t=1751880221;
+	bh=+KASChTcoQ47phcIh1NySTu90by2mpX9tu57u3X7ooU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=l/CslROb7rGL35egZyGWsLNJpI5SCrfUDMugo/7qtHcvfOKRScNLjuvz6qTEMzYJP
+	 E/U8FKRhdr5HEPCQ3I+GMqbA8WNEWXBj9PRZQ0vFpEWcgln9urPCJY0uizaz7RIdYY
+	 4Zb64bQve25oFeabYa7wNm9jq9unOgSoAN7NUanHd55zgdJGuFZXHdNLoT6cGE7+Eq
+	 XPpr79GyZ0b0du8UC0IaYV2F9rjScuwCLoWGTJfntpJczVsdlAasYQCZ+/oXGmjzsK
+	 erLmeiqPcxsJqYAnHEhFT/4wveqLsCkU9w0XduFHZCMQzWjzE9chcLLr5GK272PN+u
+	 mE3pxt8UzSFRg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: exynosautov9: add RTC DT node
-To: Devang Tailor <dev.tailor@samsung.com>, alexandre.belloni@bootlin.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, linux-rtc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- inux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- faraz.ata@samsung.com
-References: <20250702052426.2404256-1-dev.tailor@samsung.com>
- <CGME20250702051533epcas5p28698c81b7ec141938f8808393c498cb7@epcas5p2.samsung.com>
- <20250702052426.2404256-4-dev.tailor@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250702052426.2404256-4-dev.tailor@samsung.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Mon, 07 Jul 2025 11:23:35 +0200
+Message-Id: <DB5PPGOWNW4K.2C5A4UE9V9IEF@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Asahi Lina" <lina+kernel@asahilina.net>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 1/4] rust: types: Add Ownable/Owned types
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+X-Mailer: aerc 0.20.1
+References: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me>
+ <20250618-unique-ref-v11-1-49eadcdc0aa6@pm.me>
+ <DB1IPFNLFDWV.2V5O73DOB2RV6@kernel.org> <aGtv9qs682gTyQWX@mango>
+In-Reply-To: <aGtv9qs682gTyQWX@mango>
 
-On 02/07/2025 07:24, Devang Tailor wrote:
-> --- a/arch/arm64/boot/dts/exynos/exynosautov9.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynosautov9.dtsi
-> @@ -1633,6 +1633,16 @@ pwm: pwm@103f0000 {
->  			clock-names = "timers";
->  			status = "disabled";
->  		};
-> +
-> +		rtc: rtc@10540000 {
-> +			compatible = "samsung,exynosautov9-rtc";
-> +			reg = <0x10540000 0x100>;
-> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+On Mon Jul 7, 2025 at 8:58 AM CEST, Oliver Mangold wrote:
+> On 250702 1303, Benno Lossin wrote:
+>> On Wed Jun 18, 2025 at 2:27 PM CEST, Oliver Mangold wrote:
+>> > From: Asahi Lina <lina+kernel@asahilina.net>
+>> >
+>> > By analogy to `AlwaysRefCounted` and `ARef`, an `Ownable` type is a
+>> > (typically C FFI) type that *may* be owned by Rust, but need not be. U=
+nlike
+>> > `AlwaysRefCounted`, this mechanism expects the reference to be unique
+>> > within Rust, and does not allow cloning.
+>> >
+>> > Conceptually, this is similar to a `KBox<T>`, except that it delegates
+>> > resource management to the `T` instead of using a generic allocator.
+>> >
+>> > Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e=
+@asahilina.net/
+>> > Signed-off-by: Asahi Lina <lina@asahilina.net>
+>> > [ om:
+>> >   - split code into separate file and `pub use` it from types.rs
+>> >   - make from_raw() and into_raw() public
+>> >   - fixes to documentation and commit message
+>> > ]
+>> > Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+>> > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+>> > ---
+>> >  rust/kernel/types.rs         |   7 +++
+>> >  rust/kernel/types/ownable.rs | 134 ++++++++++++++++++++++++++++++++++=
++++++++++
+>>=20
+>> I think we should name this file `owned.rs` instead. It's also what
+>> we'll have for `ARef` when that is moved to `sync/`.
+>>=20
+>> Also, I do wonder does this really belong into the `types` module? I
+>> feel like it's becoming our `utils` module and while it does fit, I
+>> think we should just make this a top level module. So
+>> `rust/kernel/owned.rs`. Thoughts?
+>
+> I don't have much of an opinion on on that. But maybe refactoring types.r=
+s
+> should be an independent task?
 
+But you're adding the new file there? Just add it under
+`rust/kernel/owned.rs` instead.
 
-Misaligned. Should match earlier '<'.
+>> > +/// - It is safe to call [`core::mem::swap`] on the [`Ownable`]. This=
+ excludes pinned types
+>> > +///   (i.e. most kernel types).
+>>=20
+>> Can't we implicitly pin `Owned`?
+>
+> I have been thinking about that. But this would mean that the blanket
+> implementation for `Deref` would conflict with the one for `OwnableMut`.
 
+Yeah we could not implement `DerefMut` in that case (or only for `T:
+Unpin`).
 
-Best regards,
-Krzysztof
+>> > +/// - The kernel will never access the underlying object (excluding i=
+nternal mutability that follows
+>> > +///   the usual rules) while Rust owns it.
+>> > +pub unsafe trait OwnableMut: Ownable {}
+>> > +
+>> > +/// An owned reference to an ownable kernel object.
+>>=20
+>> How about
+>>=20
+>>     An owned `T`.
+>
+>     A wrapper around `T`.
+>
+> maybe?
+
+"wrapper" seems wrong, since a wrapper in my mind is a newtype. So it
+would be `struct Owned(T)` which is wrong. The `T` is stored elsewhere.
+
+>> > +///
+>> > +/// The object is automatically freed or released when an instance of=
+ [`Owned`] is
+>> > +/// dropped.
+>>=20
+>> I don't think we need to say this, I always assume this for all Rust
+>> types except they document otherwise (eg `ManuallyDrop`, `MaybeUninit`
+>> and thus also `Opaque`.)
+>
+> Hmm, it is an important feature of the wrapper that it turns the `*Ownabl=
+e`
+> into an object that is automatically dropped. So shouldn't that be
+> mentioned here?
+
+I would expect that that happens, but sure we can leave it here.
+
+>> How about we provide some examples here?
+>>=20
+>> > +///
+>> > +/// # Invariants
+>> > +///
+>> > +/// The pointer stored in `ptr` can be considered owned by the [`Owne=
+d`] instance.
+>>=20
+>> What exactly is "owned" supposed to mean? It depends on the concrete `T`
+>> and that isn't well-defined (since it's a generic)...
+>
+> "owned" means that access to the `T` is exclusive through the `Owned<T>`,
+> so normal Rust semantics can be applied.
+
+Okay, in that case just say that `ptr` has exclusive access.
+
+>> Maybe we should give `Ownable` the task to document the exact ownership
+>> semantics of `T`?
+>>=20
+>> > +pub struct Owned<T: Ownable> {
+>> > +    ptr: NonNull<T>,
+>> > +    _p: PhantomData<T>,
+>> > +}
+>> > +
+>> > +// SAFETY: It is safe to send `Owned<T>` to another thread when the u=
+nderlying `T` is `Send` because
+>> > +// it effectively means sending a `&mut T` (which is safe because `T`=
+ is `Send`).
+>>=20
+>> How does this amount to sending a `&mut T`?
+>
+> Good point. That documentation hasn't been updated since `&mut T` access
+> has been split out into `OwnableMut`. Not sure how to phrase it now.
+
+I'm also unsure, also for the correct trait bounds on this impl.
+
+---
+Cheers,
+Benno
+
+>> I guess this also needs to be guaranteed by `Owned::from_raw`... ah the
+>> list grows...
+>>=20
+>> I'll try to come up with something to simplify this design a bit wrt the
+>> safety docs.
+>>=20
+>> > +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
+>> > +
+>> > +// SAFETY: It is safe to send `&Owned<T>` to another thread when the =
+underlying `T` is `Sync`
+>> > +// because it effectively means sharing `&T` (which is safe because `=
+T` is `Sync`).
+>>=20
+>> Same here.
+>>=20
+>> > +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
