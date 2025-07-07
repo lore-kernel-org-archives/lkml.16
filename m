@@ -1,135 +1,194 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9519A288C2F;
-	Mon,  7 Jul 2025 13:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100A128934D;
+	Mon,  7 Jul 2025 13:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894650; cv=none; b=TIPwS8rsdJuCk3/jhZLHL+Uw63L1LTX76Me6mRkUmlhlsu/9G2ld0Jy//8N1eQIaUfNUVOG+vc045lJvY5dP3fLz4uYdKDM1/JIZ1SnG2GPma4vLJI+bCED8aViazqGxGtHh7CW3xP2Qk+1yaweOmgkx/zWQPXRSl3XlkWbIfWg=
+	t=1751894681; cv=none; b=FBzgzRfICgwRHV651WTOKAz0DeYiFYEaSWWijpHFM+vedAjE1ptASJLwE4V0B/NNEcD+pS5sJAGcInp1ADva+cpmdRpjKMEwrueCaP8Yj+HGajHkHpX9wAeT1R9pvV8GQO4vvjQKU/lcjOEmh6p+IUoxoKcxQMMlVya1Hmwo/4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894650; c=relaxed/simple;
-	bh=8RjyTvSuow44Pogbmx4RVAaPQM0w6Xn4O6nez3/oVO8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bOOHwFJ+ZGC29n1KcgCprZ6CJNhEQZfAAUuRhlMFVhrOiFbvLcnCfMpq6OV9YcxBaSalMj5LtJ+hpBszS/+QReSi7Bx6ypc18nBqknXLqHKEMkMXZr7fe1f8MysXtVyg7bmhvrWX0bmVW8nuv3DQoL/cuSnpCS2Ocqaz8Z+WnSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B5twk7yd; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751894681; c=relaxed/simple;
+	bh=HQ8ugpKvFicWAFnFH6pCynQtxCYEUf91MRmd69HRp1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Sgy0TWM4P/FSEpxOyKU96jHY4DsM8AGaw4ojJ5/VthFiIBOW7ailQVxATlDfY4qnjN78u1vL6Pqvb5z4YY06nPt2gtbvMC1rIgEdw+MxkcgSEJkb5bl+NBnJjo5E/0Kff+pGIWeiStwnLgXXtpfypNcm0SHV1yn4eDzORvBohfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UQCbAwFr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5twk7yd"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so2646120f8f.1;
-        Mon, 07 Jul 2025 06:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751894647; x=1752499447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GHwATOF4+CjMS6IdiNe2EhFIMS0JQ1rdlybp9oGNmTE=;
-        b=B5twk7ydaKGsCAJZhjS9tq5YpaStwL+ejITJbB+VG6viur9W+Kpf5kKvuMCihl4rQ/
-         rdIODzt7DFyaQlg41TIU/p9Ntxc9CAIloz2PFW2sQgvyc2E4EQCC+bgNw/AfAD8XPa5V
-         yj9jPH2hthRXUI9GcJsMfRlBrQJNwX00qlMURMpxYZMX4CRfixdkt2zy9C+/tDPZy/6W
-         PI4sTaSiLAxD5HgXi11pabQXlFcbnrc9DCoYkvd4rXyJG7rnP9B/m2QaXRn8s9b543up
-         xVhVGWWZI5pHkOPqje4+pWa5kLIC7WMyjAN6UK6l1khHhAsnLHV4Cz6ZAwjpe1/ucd2I
-         TzTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751894647; x=1752499447;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GHwATOF4+CjMS6IdiNe2EhFIMS0JQ1rdlybp9oGNmTE=;
-        b=qmD/06EYoDRcZIWcBgtNXWQNVp245qpMFOfTIlFf6LZBrAulIJydFcoEBH8gMLg3i+
-         SNMqmCyhrlWQIYaFrA2368mGOWben0wQYPypSDFfilDoA+TPecSS4FwZGzO4GMo4fcLN
-         9zQTZyXYwEwwKD+Dh/51NxUvAKTi7CeIJGyRVbJFKp11qyuV7XqScvfWJztFJR0AS8TK
-         bW6Ii+YVT6xsSQjEqWumKdfFTN+L/eqlbMN+5mKepYTOcw44EqHD8AYsHWORSZTadFtg
-         kbudrC87LTuDegJ2OHiVYGEFadsmOcCndcVfmDo58FqCpd3z6WeiE1Tn8uyiHXvTPyNq
-         gDWg==
-X-Forwarded-Encrypted: i=1; AJvYcCV82Ma/T4gl/Z3nS9+fY6vhbj90v2/d3gcZrRz74tGSmODCXrUMGfRaZVxWYqG1+6Yv8sDCt3kfkc0VfkJRTu8=@vger.kernel.org, AJvYcCX0mNQApTE4AqKN91NTDnqMbOy+kVmXerH249jaRCZnl7eq1AwzhUdNXYkUSIJ8518QGGnjNTQAqa3QOYFB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwngWvJfoX8DK2w5nQ/FFuXmzJhU3+DXIv7bUtmrFh0RXa5TQyR
-	f9vlWpRnq1nxj+fHTWGowecWzLeVS59myzWOd4tsj46+Ppq9EQYmPajy
-X-Gm-Gg: ASbGncsYlaYnByoj84u+8E5ufxd0E4riwozvzGCKA7SnZvjJkcYkQXpg3lOdbsMqE2F
-	tdpBcji0wfQIJkKD2wAfS96aGjb0ib2nXQu/HagHteN3tS6miIoX9/Bgr517E6YuH1h9k0jQ2FC
-	kj5V/XAGmgJKxmTPQSLeXqrA5YTzaTVVotvqMzLtkm8WXjBoVnwFZ/jk7YASTgoxa/+dbonrf9f
-	rxwM62Vckdbe8bAsxE+VsjkbfxLVR40jd0sfoKzso9TZW8ARzILX9CBzJzfAOMtnbGc+AaD2Lmu
-	4n58luBZHW/VoLPH8HM5OU7wrvDmn/4sClix3AiPzN0ZMyWAMMsxhkYJXRTp
-X-Google-Smtp-Source: AGHT+IGtt8GxutZ5uOUaaH2YD0KB42AdE6oIi6ARJQVqLaHmKYYqZ3ZDw7TY0JnpeUWDARtw9Y2XMA==
-X-Received: by 2002:a5d:6f02:0:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3b495b9446amr12338612f8f.9.1751894646658;
-        Mon, 07 Jul 2025 06:24:06 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b47225a720sm10198472f8f.77.2025.07.07.06.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 06:24:06 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	linux-hardening@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] fortify: add branch hints on unlikely fortify_panic paths
-Date: Mon,  7 Jul 2025 14:23:40 +0100
-Message-ID: <20250707132340.1768807-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UQCbAwFr"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56798hkr023655;
+	Mon, 7 Jul 2025 13:24:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sua7USQNBjanjipk7bMSQOIKdbetUUl77PdhQGmFdZs=; b=UQCbAwFrUYvJa9lx
+	yy9slGKxK3EJqejQtO2h94psf0cOvBwXtrbGBQJ4p2QCi18Mwwt0NoPa857S1be4
+	x0+TKASm9cY1P9lTiqcFTk8qb+dDS7dF+F4ejR/TWMXI2/pxaPdvTZhe2p3db8Js
+	HE5037IbBnSYWJKr4fK+RHDNdvWrqB+zz8+NnUVdgedqU1IC/2093bal1KZ104Dh
+	pBdm6lSYIOfS63BK8TS9j/KuK7zKXYBo1yOcVMpJhmRQSHP+Y3h48sUefuZKLReq
+	XBSAXha5XGT2+Rlpvo4ttHy8HVF49CaQgqZjWWwBsOdgLaXU5gAhNI4CXpWHElQ8
+	TwWXgQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47pu0w5cxv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 13:24:30 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 567DOT3Z014871
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 7 Jul 2025 13:24:29 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 7 Jul
+ 2025 06:24:26 -0700
+Message-ID: <6980c961-9f95-4471-9f8e-658f5c7f1648@quicinc.com>
+Date: Mon, 7 Jul 2025 18:54:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] phy: qcom-qmp-ufs: Fix HS-G4 PHY init table for sc7280
+To: Xilin Wu <sophon@radxa.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manish Pandey <quic_mapa@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250613-sc7280-ufsphy-g4-fix-v1-1-1bf60744f5ac@radxa.com>
+ <o2chuy22dls3y3bsjke34z7pnyzap6m4m34tjxswueshulii4d@d5lbcragrbjb>
+ <9588D2722C1F010D+51f41c36-856d-4dda-9f30-226c2f772f2c@radxa.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <9588D2722C1F010D+51f41c36-856d-4dda-9f30-226c2f772f2c@radxa.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: SmUYIJv14QmIff6cJmkl0QlZ6jnrqTxc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA3OCBTYWx0ZWRfX7ceLMJ0dSRLM
+ TuZvOf+W7HKKpeCUj0GkiJBaZNXjQnqL7ISsGXF6hqLoGKosf4jUnnzpgRaraZSnjlq0SVFDzZ6
+ QZ1WVxqFzF4PYiL0LTZ0QpRtwIF81hdzuWALRl+6I4dJqWcvMz/3hHQpTypjh8yfmfKFID1pY+S
+ Li9QPBmDx/g8WWxxfx7BKhQltBtKKn+6TW8SgtQZddiFAlyOHsNgaI3Qzm3BSWjm0TY2spEDXKy
+ hMNmoOfHLVHGYpV/Q37kPk3CBVIl4G5VypIe7EfjXaEAiIgqzrL14g55DyKGds8e6TZ+QXl3Afq
+ JJzq43QcP3Zg3pfW8cz0Cqv05W0cvA16ogqLU2yRRFYbJqm7G/kRZ/e6FIkQI7296DuL6iSMxUV
+ KeYaS0DWs+n2P9gwXw5s1iyowO7PrQdIjELsgoVB0NKCRjxP7pbwAAghYs41a4s+6eqv0sO/
+X-Authority-Analysis: v=2.4 cv=Rd2QC0tv c=1 sm=1 tr=0 ts=686bca8e cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=ksxQWNrZAAAA:8 a=oqyW6cpqeoKVbJuktMwA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=l7WU34MJF0Z5EO9KEJC3:22
+X-Proofpoint-GUID: SmUYIJv14QmIff6cJmkl0QlZ6jnrqTxc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_03,2025-07-07_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 suspectscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ adultscore=0 clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070078
 
-Analysis with gcov while running the stress-ng urandom stressor
-shows that there are a couple of fortify panic paths that are highly
-unlikely to be executed for well-behaving code. Adding appropriate
-branch hints improves the stress-ng urandom stressor my a small
-but statistically measureable amount. Ran 100 x 1 minute tests and
-measured the stressor bogo-op rates on a Debian based Intel(R)
-Core(TM) Ultra 9 285K with a 6.15 kernel with turbo disabled to
-reduce jitter.
 
-Results based on a Geometic Mean of 100 tests:
 
-Without patch: 50512.95 bogo-ops/sec
-With patch:    50819.58 bogo-ops/sec
+On 7/5/2025 6:56 PM, Xilin Wu wrote:
+> On 2025/7/5 21:06:56, Dmitry Baryshkov wrote:
+>> On Fri, Jun 13, 2025 at 10:41:48PM +0800, Xilin Wu wrote:
+>>> The PHY is limited to operating in HS-G3 mode during the initial PCS
+>>> registers initialization. Extra PHY init sequence is required to allow
+>>> HS-G4 mode to work when needed.
+>>
+>> I can't find corresponding settings in either of HPGs.
+>>
+> 
+> I believe there was a mistake when initially adding support for sc7280 
+> UFS PHY based on downstream code. In downstream [1] the 
+> HSGEAR_CAPABILITY registers are programmed to 0x3 **only** when Gear 4 
+> is not needed, while the current upstream driver always writes to this 
+> register regardless of the UFS Gear. [2]
 
-%Std.Deviation of ~0.18%, so low jitter in results, improvement of ~0.6%
 
-Branch hints can only be enabled if CONFIG_TRACE_BRANCH_PROFILING due
-to a static variable being declared in __branch_check__ when using
-trace branch profiling in the unlikely macro causing build issues.
+Hi Xilin, Dmitry
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
-V2: add fortify_unlikely macro wrapper for CONFIG_TRACE_BRANCH_PROFILING
-    build config.
----
- include/linux/fortify-string.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+The SC7280 is based on the SM8150 for gear 3 and the SM8250 for gear 4. 
+The sm8150_ufsphy_hs_g4_pcs table is identical for both the SM8250 and 
+SM8150, and is used for gear 4 settings for sc7180, SM8250 and SM8150.
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index e4ce1cae03bf..c740114bcbf8 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -10,6 +10,12 @@
- #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
- #define __RENAME(x) __asm__(#x)
- 
-+#if defined(CONFIG_TRACE_BRANCH_PROFILING)
-+#define fortify_unlikely(x)		(x)
-+#else
-+#define fortify_unlikely(x)		unlikely(x)
-+#endif
-+
- #define FORTIFY_REASON_DIR(r)		FIELD_GET(BIT(0), r)
- #define FORTIFY_REASON_FUNC(r)		FIELD_GET(GENMASK(7, 1), r)
- #define FORTIFY_REASON(func, write)	(FIELD_PREP(BIT(0), write) | \
-@@ -593,9 +599,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
- 	 * (The SIZE_MAX test is to optimize away checks where the buffer
- 	 * lengths are unknown.)
- 	 */
--	if (p_size != SIZE_MAX && p_size < size)
-+	if (fortify_unlikely(p_size != SIZE_MAX && p_size < size))
- 		fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
--	else if (q_size != SIZE_MAX && q_size < size)
-+	else if (fortify_unlikely(q_size != SIZE_MAX && q_size < size))
- 		fortify_panic(func, FORTIFY_READ, p_size, size, true);
- 
- 	/*
--- 
-2.50.0
+Additionally, the current code applies tbls table by default for all 
+gears. We need a separate overlay table for gear3 similar to overlay 
+tables 0 and 1 for gear 4 and gear 5, respectively.
+
+For settings specific to gear 3, such as 
+QPHY_V4_PCS_UFS_TX_PWM_GEAR_BAND and 
+QPHY_V4_PCS_UFS_RX_HSGEAR_CAPABILITY, we can include them in the overlay 
+table for gear 3.
+
+
+
+
+
+> 
+> I don't have access to the HPGs. The Gear4 specific init sequence is 
+> found in the Qualcomm proprietary UEFI driver code.
+> 
+> [1]:https://github.com/NothingOSS/android_kernel_msm-5.4_nothing_sm7325/ 
+> blob/sm7325/s/drivers/phy/qualcomm/phy-qcom-ufs-qmp-v4-yupik.h#L355
+> 
+> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux- 
+> next.git/tree/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c#n215
+> 
+>>>
+>>> Fixes: 8abe9792d1ff ("phy: qcom-qmp-ufs: Add Phy Configuration 
+>>> support for SC7280")
+>>> Signed-off-by: Xilin Wu <sophon@radxa.com>
+>>> ---
+>>> This might need testing on sm8150, sm8250 and sc8180x as well.
+>>> ---
+>>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 7 +++++++
+>>>   1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ 
+>>> qualcomm/phy-qcom-qmp-ufs.c
+>>> index 
+>>> b33e2e2b5014d3ca8f19b623ba080887f53e616d..7797be329d75f95c80863e05351d0cf55fdf38c2 100644
+>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>>> @@ -570,6 +570,13 @@ static const struct qmp_phy_init_tbl 
+>>> sm8150_ufsphy_pcs[] = {
+>>>   static const struct qmp_phy_init_tbl sm8150_ufsphy_hs_g4_pcs[] = {
+>>>       QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL, 0x10),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_PLL_CNTL, 0x0b),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB, 
+>>> 0x2d),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB, 
+>>> 0xb0),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_PWM_GEAR_BAND, 0xff),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_HS_GEAR_BAND, 0x1b),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_HSGEAR_CAPABILITY, 0x04),
+>>> +    QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_RX_HSGEAR_CAPABILITY, 0x04),
+>>>       QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_BIST_FIXED_PAT_CTRL, 0x0a),
+
+There setting are not mention in UFS PHY HPG.
+
+Regards,
+Nitin
+
+>>>   };
+>>>
+>>> ---
+>>> base-commit: bc6e0ba6c9bafa6241b05524b9829808056ac4ad
+>>> change-id: 20250613-sc7280-ufsphy-g4-fix-024542f31fac
+>>>
+>>> Best regards,
+>>> -- 
+>>> Xilin Wu <sophon@radxa.com>
+>>>
+>>
+> 
+> 
 
