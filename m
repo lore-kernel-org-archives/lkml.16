@@ -1,50 +1,73 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48732D9EFA;
-	Mon,  7 Jul 2025 14:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ABD2D8DBC;
+	Mon,  7 Jul 2025 14:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898186; cv=none; b=msg0FRedzVIlI75jLaJuqUs9GpE5cUs3PITvysnBHnTfSANewVpoZJxWlW+RO06bPJGO6uRbetJs3sB9S+1GLOceODvbjGvJdll/aH+WluTPYjIYIqhaE1flGBCz5B3092Hu4iarVz1jLX53Umw29Rbq3Jwy1oKZs+Vg5H8kIG8=
+	t=1751898221; cv=none; b=HAkqDM0PuDLv9dw2E9L51ysYpNzUB5rxm7p083SAzIAmkk81jr4WWAzs8pW/rmZlEcJzhwHKzAgVXmmpZpBFdG2Y1hJwiuKmiXvWJAmo2nBSFTRBVjsXOupORirV9hwX5aqzioSsEr+GzpKXA/2U0wa6RU+XTElR4ro8UKhDUEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898186; c=relaxed/simple;
-	bh=+U2My+Aqn5Ydqp5DcchuYsZosyjraV8IFJkLWCd/550=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hGGZZvjh3OK8ST0kbrFMiokq7kIPYFkP2d3IUDPgdJJFEYckEtTg9/Ot4CtaBNB8RU4Qg2K3SqYs09Fvo5d8ER0cAud8Ee6koelF49snn2s64tktXk1PezuuvXjilHl1mEJKMnJW1HYPqNL0IVmeWRMVhSimdEhvBvW71KfWUjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bbRKd6F5jzYQv6N;
-	Mon,  7 Jul 2025 22:23:01 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id AA03A1A1301;
-	Mon,  7 Jul 2025 22:23:00 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP3 (Coremail) with SMTP id _Ch0CgBnxyQ22GtoNazLAw--.46745S13;
-	Mon, 07 Jul 2025 22:23:00 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ojaswin@linux.ibm.com,
-	sashal@kernel.org,
-	naresh.kamboju@linaro.org,
-	jiangqi903@gmail.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	libaokun1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v4 09/11] ext4: replace ext4_writepage_trans_blocks()
-Date: Mon,  7 Jul 2025 22:08:12 +0800
-Message-ID: <20250707140814.542883-10-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250707140814.542883-1-yi.zhang@huaweicloud.com>
-References: <20250707140814.542883-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1751898221; c=relaxed/simple;
+	bh=RUjQXbCJnwboPtEi0gct+9fAzyg2mYvrTnWVxKHKEYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pr8aMhXvmm8enlGbTHtvojMDfxThmUP1u17J7r+0Amq4ZMIPFj21MqD+j1PtZlcCeVRsimrgRfJdavxmMXDcAB8WmC+MzWpRJGW08nEud0og4aw6hcjRwNAlA63XrsZytnpCsxx5b5GBmq1s5YRNZRSaA0h7ff+NC1oBPKegdJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=MehnIVD/; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="MehnIVD/"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bbRLB14fvz9tCk;
+	Mon,  7 Jul 2025 16:23:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751898210;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s4EZdHf+U3R+v43lcZijWizNqsqKvK4IRVcr5nu5cj0=;
+	b=MehnIVD/KloRf9rrD61bo8uVvO5mi99kSgMuUHeUYXOq1A2yxGunRzTwFMljMjGdO3rsq4
+	k78IzmiGbP2h2P76t6xsZOb4fGQgYFde80jo21p6JNNwqoTMjKQw/sZW2ykSSNq7su0VrS
+	3JObETkyU/36rBzUEKeXhn3//bturtQRiYGi/g2CeeEIL6XfqDdADkRFgSjuhQBhd01HlL
+	fD0+wRlqHp9eWWZBEkUgNgwTfd1vUi2VbSQEpXffRiw5zX6Am92eIxHm6snQlXBeylxkOk
+	aUR/7HreJ2iBQWDgQYtNyQRLg83nDzPRFd5YzQeNMcwJRPe1BN/UrM54QIfV9g==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Suren Baghdasaryan <surenb@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nico Pache <npache@redhat.com>,
+	Dev Jain <dev.jain@arm.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	mcgrof@kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v2 0/5] add static PMD zero page support
+Date: Mon,  7 Jul 2025 16:23:14 +0200
+Message-ID: <20250707142319.319642-1-kernel@pankajraghav.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,230 +75,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBnxyQ22GtoNazLAw--.46745S13
-X-Coremail-Antispam: 1UD129KBjvJXoWxtry3tF48Gr4Dtw43tr4kXrb_yoW3ZF1kpa
-	sxCF1rKr15W34kuFWI9r47Zr4Sg3W8Cr4UXrySkrnYgayDJw1IgFn0v3WFyFy5trW8Wws0
-	vF4Yk34UWa1ak37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0JUWMKtUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-From: Zhang Yi <yi.zhang@huawei.com>
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-After ext4 supports large folios, the semantics of reserving credits in
-pages is no longer applicable. In most scenarios, reserving credits in
-extents is sufficient. Therefore, introduce ext4_chunk_trans_extent()
-to replace ext4_writepage_trans_blocks(). move_extent_per_page() is the
-only remaining location where we are still processing extents in pages.
+There are many places in the kernel where we need to zeroout larger
+chunks but the maximum segment we can zeroout at a time by ZERO_PAGE
+is limited by PAGE_SIZE.
 
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- fs/ext4/ext4.h        |  2 +-
- fs/ext4/extents.c     |  6 +++---
- fs/ext4/inline.c      |  6 +++---
- fs/ext4/inode.c       | 33 +++++++++++++++------------------
- fs/ext4/move_extent.c |  3 ++-
- fs/ext4/xattr.c       |  2 +-
- 6 files changed, 25 insertions(+), 27 deletions(-)
+This concern was raised during the review of adding Large Block Size support
+to XFS[1][2].
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 18373de980f2..f705046ba6c6 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -3064,9 +3064,9 @@ extern int ext4_punch_hole(struct file *file, loff_t offset, loff_t length);
- extern void ext4_set_inode_flags(struct inode *, bool init);
- extern int ext4_alloc_da_blocks(struct inode *inode);
- extern void ext4_set_aops(struct inode *inode);
--extern int ext4_writepage_trans_blocks(struct inode *);
- extern int ext4_normal_submit_inode_data_buffers(struct jbd2_inode *jinode);
- extern int ext4_chunk_trans_blocks(struct inode *, int nrblocks);
-+extern int ext4_chunk_trans_extent(struct inode *inode, int nrblocks);
- extern int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
- 				  int pextents);
- extern int ext4_zero_partial_blocks(handle_t *handle, struct inode *inode,
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index b543a46fc809..f0f155458697 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -5171,7 +5171,7 @@ ext4_ext_shift_path_extents(struct ext4_ext_path *path, ext4_lblk_t shift,
- 				credits = depth + 2;
- 			}
- 
--			restart_credits = ext4_writepage_trans_blocks(inode);
-+			restart_credits = ext4_chunk_trans_extent(inode, 0);
- 			err = ext4_datasem_ensure_credits(handle, inode, credits,
- 					restart_credits, 0);
- 			if (err) {
-@@ -5431,7 +5431,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
- 
- 	truncate_pagecache(inode, start);
- 
--	credits = ext4_writepage_trans_blocks(inode);
-+	credits = ext4_chunk_trans_extent(inode, 0);
- 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
- 	if (IS_ERR(handle))
- 		return PTR_ERR(handle);
-@@ -5527,7 +5527,7 @@ static int ext4_insert_range(struct file *file, loff_t offset, loff_t len)
- 
- 	truncate_pagecache(inode, start);
- 
--	credits = ext4_writepage_trans_blocks(inode);
-+	credits = ext4_chunk_trans_extent(inode, 0);
- 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
- 	if (IS_ERR(handle))
- 		return PTR_ERR(handle);
-diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
-index a1bbcdf40824..d5b32d242495 100644
---- a/fs/ext4/inline.c
-+++ b/fs/ext4/inline.c
-@@ -562,7 +562,7 @@ static int ext4_convert_inline_data_to_extent(struct address_space *mapping,
- 		return 0;
- 	}
- 
--	needed_blocks = ext4_writepage_trans_blocks(inode);
-+	needed_blocks = ext4_chunk_trans_extent(inode, 1);
- 
- 	ret = ext4_get_inode_loc(inode, &iloc);
- 	if (ret)
-@@ -1864,7 +1864,7 @@ int ext4_inline_data_truncate(struct inode *inode, int *has_inline)
- 	};
- 
- 
--	needed_blocks = ext4_writepage_trans_blocks(inode);
-+	needed_blocks = ext4_chunk_trans_extent(inode, 1);
- 	handle = ext4_journal_start(inode, EXT4_HT_INODE, needed_blocks);
- 	if (IS_ERR(handle))
- 		return PTR_ERR(handle);
-@@ -1979,7 +1979,7 @@ int ext4_convert_inline_data(struct inode *inode)
- 			return 0;
- 	}
- 
--	needed_blocks = ext4_writepage_trans_blocks(inode);
-+	needed_blocks = ext4_chunk_trans_extent(inode, 1);
- 
- 	iloc.bh = NULL;
- 	error = ext4_get_inode_loc(inode, &iloc);
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index d9d12529b7fc..85ad14451b26 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1296,7 +1296,8 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
- 	 * Reserve one block more for addition to orphan list in case
- 	 * we allocate blocks but write fails for some reason
- 	 */
--	needed_blocks = ext4_writepage_trans_blocks(inode) + 1;
-+	needed_blocks = ext4_chunk_trans_extent(inode,
-+			ext4_journal_blocks_per_folio(inode)) + 1;
- 	index = pos >> PAGE_SHIFT;
- 
- 	if (ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA)) {
-@@ -4463,7 +4464,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
- 		return ret;
- 
- 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
--		credits = ext4_writepage_trans_blocks(inode);
-+		credits = ext4_chunk_trans_extent(inode, 2);
- 	else
- 		credits = ext4_blocks_for_truncate(inode);
- 	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
-@@ -4612,7 +4613,7 @@ int ext4_truncate(struct inode *inode)
- 	}
- 
- 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
--		credits = ext4_writepage_trans_blocks(inode);
-+		credits = ext4_chunk_trans_extent(inode, 1);
- 	else
- 		credits = ext4_blocks_for_truncate(inode);
- 
-@@ -6239,25 +6240,19 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
- }
- 
- /*
-- * Calculate the total number of credits to reserve to fit
-- * the modification of a single pages into a single transaction,
-- * which may include multiple chunks of block allocations.
-- *
-- * This could be called via ext4_write_begin()
-- *
-- * We need to consider the worse case, when
-- * one new block per extent.
-+ * Calculate the journal credits for modifying the number of blocks
-+ * in a single extent within one transaction. 'nrblocks' is used only
-+ * for non-extent inodes. For extent type inodes, 'nrblocks' can be
-+ * zero if the exact number of blocks is unknown.
-  */
--int ext4_writepage_trans_blocks(struct inode *inode)
-+int ext4_chunk_trans_extent(struct inode *inode, int nrblocks)
- {
--	int bpp = ext4_journal_blocks_per_folio(inode);
- 	int ret;
- 
--	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
--
-+	ret = ext4_meta_trans_blocks(inode, nrblocks, 1);
- 	/* Account for data blocks for journalled mode */
- 	if (ext4_should_journal_data(inode))
--		ret += bpp;
-+		ret += nrblocks;
- 	return ret;
- }
- 
-@@ -6635,10 +6630,12 @@ static int ext4_block_page_mkwrite(struct inode *inode, struct folio *folio,
- 	handle_t *handle;
- 	loff_t size;
- 	unsigned long len;
-+	int credits;
- 	int ret;
- 
--	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE,
--				    ext4_writepage_trans_blocks(inode));
-+	credits = ext4_chunk_trans_extent(inode,
-+			ext4_journal_blocks_per_folio(inode));
-+	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE, credits);
- 	if (IS_ERR(handle))
- 		return PTR_ERR(handle);
- 
-diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
-index 1f8493a56e8f..adae3caf175a 100644
---- a/fs/ext4/move_extent.c
-+++ b/fs/ext4/move_extent.c
-@@ -280,7 +280,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
- 	 */
- again:
- 	*err = 0;
--	jblocks = ext4_writepage_trans_blocks(orig_inode) * 2;
-+	jblocks = ext4_meta_trans_blocks(orig_inode, block_len_in_page,
-+					 block_len_in_page) * 2;
- 	handle = ext4_journal_start(orig_inode, EXT4_HT_MOVE_EXTENTS, jblocks);
- 	if (IS_ERR(handle)) {
- 		*err = PTR_ERR(handle);
-diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-index 8d15acbacc20..3fb93247330d 100644
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -962,7 +962,7 @@ int __ext4_xattr_set_credits(struct super_block *sb, struct inode *inode,
- 	 * so we need to reserve credits for this eventuality
- 	 */
- 	if (inode && ext4_has_inline_data(inode))
--		credits += ext4_writepage_trans_blocks(inode) + 1;
-+		credits += ext4_chunk_trans_extent(inode, 1) + 1;
- 
- 	/* We are done if ea_inode feature is not enabled. */
- 	if (!ext4_has_feature_ea_inode(sb))
+This is especially annoying in block devices and filesystems where we
+attach multiple ZERO_PAGEs to the bio in different bvecs. With multipage
+bvec support in block layer, it is much more efficient to send out
+larger zero pages as a part of a single bvec.
+
+Some examples of places in the kernel where this could be useful:
+- blkdev_issue_zero_pages()
+- iomap_dio_zero()
+- vmalloc.c:zero_iter()
+- rxperf_process_call()
+- fscrypt_zeroout_range_inline_crypt()
+- bch2_checksum_update()
+...
+
+We already have huge_zero_folio that is allocated on demand, and it will be
+deallocated by the shrinker if there are no users of it left.
+
+At moment, huge_zero_folio infrastructure refcount is tied to the process
+lifetime that created it. This might not work for bio layer as the completions
+can be async and the process that created the huge_zero_folio might no
+longer be alive.
+
+Add a config option STATIC_PMD_ZERO_PAGE that will always allocate
+the huge_zero_folio via memblock, and it will never be freed.
+
+I have converted blkdev_issue_zero_pages() as an example as a part of
+this series.
+
+I will send patches to individual subsystems using the huge_zero_folio
+once this gets upstreamed.
+
+Looking forward to some feedback.
+
+[1] https://lore.kernel.org/linux-xfs/20231027051847.GA7885@lst.de/
+[2] https://lore.kernel.org/linux-xfs/ZitIK5OnR7ZNY0IG@infradead.org/
+
+Changes since v1:
+- Move from .bss to allocating it through memblock(David)
+
+Changes since RFC:
+- Added the config option based on the feedback from David.
+- Encode more info in the header to avoid dead code (Dave hansen
+  feedback)
+- The static part of huge_zero_folio in memory.c and the dynamic part
+  stays in huge_memory.c
+- Split the patches to make it easy for review.
+
+Pankaj Raghav (5):
+  mm: move huge_zero_page declaration from huge_mm.h to mm.h
+  huge_memory: add huge_zero_page_shrinker_(init|exit) function
+  mm: add static PMD zero page
+  mm: add largest_zero_folio() routine
+  block: use largest_zero_folio in __blkdev_issue_zero_pages()
+
+ block/blk-lib.c         | 17 +++++----
+ include/linux/huge_mm.h | 31 ----------------
+ include/linux/mm.h      | 81 +++++++++++++++++++++++++++++++++++++++++
+ mm/Kconfig              |  9 +++++
+ mm/huge_memory.c        | 62 +++++++++++++++++++++++--------
+ mm/memory.c             | 25 +++++++++++++
+ mm/mm_init.c            |  1 +
+ 7 files changed, 173 insertions(+), 53 deletions(-)
+
+
+base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
 -- 
-2.46.1
+2.49.0
 
