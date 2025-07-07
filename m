@@ -1,203 +1,90 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3D229AB07;
-	Mon,  7 Jul 2025 12:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08AC275AF8;
+	Mon,  7 Jul 2025 12:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751890672; cv=none; b=cEHbzAxB5C6u1uWMHaJHDYmwZTRmEpCproHhBtf9bVu+xWJclxjDnIvILnudK/VpHioElwWIJB8bO14993FVeltTr32aaHqTdBoQEkNYJUStwjr6uZ6Wkt6OFU3dyT+41y1sUtVuI9yeT0q/tu+s7Q122iwdDyl7lNkOdZvCC/c=
+	t=1751890770; cv=none; b=CxIzARMKlgcVCZw8isbasmqUsiFrBiWp1S+FEOodVWcgDiac26Pa/BRjG/+JyAVQIxjJt8IHaBDRhz+YXCdMNhbllXNwi1C+wNZCWlulJFR2nXDfa9jfm0pB8LxhxTZmnGBLa+njAAkJFsDm3NzIIzK6Y0+yNu3GPKGkjXPgK4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751890672; c=relaxed/simple;
-	bh=GHP2t4XYotp+4m74VTLoM0og2PSMiBPuSglV7gkwuzo=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=i/qYENgHId2Fj0yy2jMv4Wa+Vp0oyr6Sd99qhNGsap/SK19/Ec6A9iySR884WlgsXa/s4laNFuHUxQn9oqwN2r8acFZRypUelbX2bHw3a67IoEKhhwV7rt+ZLwK2ccSOpVQ96BRLtc5ZhyKGx/s5wzcgmqwhFcfdcvAgsXw5wYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bbNXj4wqdz4x5pp;
-	Mon,  7 Jul 2025 20:17:25 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl1.zte.com.cn with SMTP id 567CHOTs040120;
-	Mon, 7 Jul 2025 20:17:24 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 7 Jul 2025 20:17:27 +0800 (CST)
-Date: Mon, 7 Jul 2025 20:17:27 +0800 (CST)
-X-Zmail-TransId: 2afa686bbad7fffffffffe8-248e9
-X-Mailer: Zmail v1.0
-Message-ID: <20250707201727549ObAZpoScxRwGsruRnQQCP@zte.com.cn>
+	s=arc-20240116; t=1751890770; c=relaxed/simple;
+	bh=+UwwoB4PbjenD/PmjKn1gPCPu9Ps4pWn8AtgJo3xjtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpEJJl8OGgITGhSC3yDD3OuXKU6qt9p4Dv6Q6Cv8JDYbNGp1BZ6MzeL98YsAJdgn4GVI91lSfXnXynjIJqjE7wPI1Fq4gXgPYxw8pCt8WVDNG13izkGnm82Ql6fzUucRA9oH3bRRGzCBUHpnlrzwJw4ma2p3TOEpNGL5LqDA83c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AsqE5vsS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AsqE5vsS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C379C4CEE3;
+	Mon,  7 Jul 2025 12:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751890770;
+	bh=+UwwoB4PbjenD/PmjKn1gPCPu9Ps4pWn8AtgJo3xjtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AsqE5vsSQmvtD1fuyZBm4xPCu8gPp4e2v7n7T6kf7o7L6hWV2JkUOkY0SnyND9XHc
+	 jlWbxpJaBrgbdehcgRP8oLKQL5xhRWLymt36lzXwceVTzEG/M/reAmwD1ek2bCyUMs
+	 1fZ1vjsNZ4a1P0uV3pi2PkheBopuYzAjcrjDTslibWXVXG7SBH0jKfJq+OEPJN0lZy
+	 jnMCswisWKLhJiAHaTR4dpC5IY0LI0YM8YOrLgtkJK6FWCLSHsXrbdFoMxAsxw3FP0
+	 w+jhMEv4zHkpD+cpIvyYYBtp/UvhLyf4TIVnEt0KlhaXVizw3Vh+LIADaE6Njwvvh3
+	 1u6RlDRtr4trg==
+Date: Mon, 7 Jul 2025 14:19:25 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Jan Kara <jack@suse.cz>, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 0/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250707-alben-kaffee-da62c14bb5c3@brauner>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250701-quittung-garnieren-ceaf58dcb762@brauner>
+ <uzx3pdg2hz44n7qej5rlxejdmb25jny6tbv43as7dos4dit5nv@fyyvminolae6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <geert+renesas@glider.be>
-Cc: <changhuang.liang@starfivetech.com>, <geert+renesas@glider.be>,
-        <magnus.damm@gmail.com>, <heiko@sntech.de>, <alim.akhtar@samsung.com>,
-        <walker.chen@starfivetech.com>, <sebastian.reichel@collabora.com>,
-        <detlev.casanova@collabora.com>, <finley.xiao@rock-chips.com>,
-        <shawn.lin@rock-chips.com>, <pgwipeout@gmail.com>,
-        <shao.mingyin@zte.com.cn>, <linux-pm@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHY0XSBwbWRvbWFpbjogVXNlIHN0cl9lbmFibGVfZGlzYWJsZSgpIGFuZCBzdHJfb25fb2ZmKCkgaGVscGVycw==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 567CHOTs040120
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 686BBAD5.000/4bbNXj4wqdz4x5pp
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <uzx3pdg2hz44n7qej5rlxejdmb25jny6tbv43as7dos4dit5nv@fyyvminolae6>
 
-From: Shao Mingyin <shao.mingyin@zte.com.cn>
+On Mon, Jul 07, 2025 at 02:05:10PM +0200, Andrey Albershteyn wrote:
+> On 2025-07-01 14:29:42, Christian Brauner wrote:
+> > On Mon, Jun 30, 2025 at 06:20:10PM +0200, Andrey Albershteyn wrote:
+> > > This patchset introduced two new syscalls file_getattr() and
+> > > file_setattr(). These syscalls are similar to FS_IOC_FSSETXATTR ioctl()
+> > > except they use *at() semantics. Therefore, there's no need to open the
+> > > file to get a fd.
+> > > 
+> > > These syscalls allow userspace to set filesystem inode attributes on
+> > > special files. One of the usage examples is XFS quota projects.
+> > > 
+> > > XFS has project quotas which could be attached to a directory. All
+> > > new inodes in these directories inherit project ID set on parent
+> > > directory.
+> > > 
+> > > The project is created from userspace by opening and calling
+> > > FS_IOC_FSSETXATTR on each inode. This is not possible for special
+> > > files such as FIFO, SOCK, BLK etc. Therefore, some inodes are left
+> > > with empty project ID. Those inodes then are not shown in the quota
+> > > accounting but still exist in the directory. This is not critical but in
+> > > the case when special files are created in the directory with already
+> > > existing project quota, these new inodes inherit extended attributes.
+> > > This creates a mix of special files with and without attributes.
+> > > Moreover, special files with attributes don't have a possibility to
+> > > become clear or change the attributes. This, in turn, prevents userspace
+> > > from re-creating quota project on these existing files.
+> > 
+> > Only small nits I'm going to comment on that I can fix myself.
+> > Otherwise looks great.
+> > 
+> 
+> Hi Christian,
+> 
+> Let me know if you would like a new revision with all the comments
+> included (and your patch on file_kattr rename) or you good with
+> applying them while commit
 
-Use str_enable_disable() and str_on_off() helper instead of open
-coding the same.
-
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-Reviewed-by: Changhuang Liang <changhuang.liang@starfivetech.com>
----
-v4:
-insert new includes alphabetically
- drivers/pmdomain/renesas/rcar-gen4-sysc.c    | 3 ++-
- drivers/pmdomain/renesas/rcar-sysc.c         | 3 ++-
- drivers/pmdomain/rockchip/pm-domains.c       | 3 ++-
- drivers/pmdomain/samsung/exynos-pm-domains.c | 6 +++---
- drivers/pmdomain/starfive/jh71xx-pmu.c       | 7 ++++---
- 5 files changed, 13 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-index e001b5c25bed..d93caae5bed5 100644
---- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-@@ -17,6 +17,7 @@
- #include <linux/pm_domain.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/string_choices.h>
- #include <linux/types.h>
-
- #include "rcar-gen4-sysc.h"
-@@ -171,7 +172,7 @@ static int rcar_gen4_sysc_power(u8 pdr, bool on)
-  out:
- 	spin_unlock_irqrestore(&rcar_gen4_sysc_lock, flags);
-
--	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
-+	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
- 		 pdr, ioread32(rcar_gen4_sysc_base + SYSCISCR(reg_idx)), ret);
- 	return ret;
- }
-diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
-index 047495f54e8a..38406414035a 100644
---- a/drivers/pmdomain/renesas/rcar-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-sysc.c
-@@ -14,6 +14,7 @@
- #include <linux/pm_domain.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/string_choices.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/soc/renesas/rcar-sysc.h>
-@@ -162,7 +163,7 @@ static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
-
- 	spin_unlock_irqrestore(&rcar_sysc_lock, flags);
-
--	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
-+	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
- 		 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
- 	return ret;
- }
-diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
-index 242570c505fb..a7abbb67ae70 100644
---- a/drivers/pmdomain/rockchip/pm-domains.c
-+++ b/drivers/pmdomain/rockchip/pm-domains.c
-@@ -21,6 +21,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/string_choices.h>
- #include <soc/rockchip/pm_domains.h>
- #include <soc/rockchip/rockchip_sip.h>
- #include <dt-bindings/power/px30-power.h>
-@@ -599,7 +600,7 @@ static int rockchip_do_pmu_set_power_domain(struct rockchip_pm_domain *pd,
- 					is_on == on, 0, 10000);
- 	if (ret) {
- 		dev_err(pmu->dev, "failed to set domain '%s' %s, val=%d\n",
--			genpd->name, on ? "on" : "off", is_on);
-+			genpd->name, str_on_off(on), is_on);
- 		return ret;
- 	}
-
-diff --git a/drivers/pmdomain/samsung/exynos-pm-domains.c b/drivers/pmdomain/samsung/exynos-pm-domains.c
-index 9b502e8751d1..1a892c611dad 100644
---- a/drivers/pmdomain/samsung/exynos-pm-domains.c
-+++ b/drivers/pmdomain/samsung/exynos-pm-domains.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
- #include <linux/pm_domain.h>
- #include <linux/delay.h>
- #include <linux/of.h>
-@@ -38,7 +39,6 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
- 	struct exynos_pm_domain *pd;
- 	void __iomem *base;
- 	u32 timeout, pwr;
--	char *op;
-
- 	pd = container_of(domain, struct exynos_pm_domain, pd);
- 	base = pd->base;
-@@ -51,8 +51,8 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
-
- 	while ((readl_relaxed(base + 0x4) & pd->local_pwr_cfg) != pwr) {
- 		if (!timeout) {
--			op = (power_on) ? "enable" : "disable";
--			pr_err("Power domain %s %s failed\n", domain->name, op);
-+			pr_err("Power domain %s %s failed\n", domain->name,
-+			       str_enable_disable(power_on));
- 			return -ETIMEDOUT;
- 		}
- 		timeout--;
-diff --git a/drivers/pmdomain/starfive/jh71xx-pmu.c b/drivers/pmdomain/starfive/jh71xx-pmu.c
-index 74720c09a6e3..dc3e109e273a 100644
---- a/drivers/pmdomain/starfive/jh71xx-pmu.c
-+++ b/drivers/pmdomain/starfive/jh71xx-pmu.c
-@@ -12,6 +12,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/string_choices.h>
- #include <dt-bindings/power/starfive,jh7110-pmu.h>
-
- /* register offset */
-@@ -155,7 +156,7 @@ static int jh7110_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
-
- 	if (ret) {
- 		dev_err(pmu->dev, "%s: failed to power %s\n",
--			pmd->genpd.name, on ? "on" : "off");
-+			pmd->genpd.name, str_on_off(on));
- 		return -ETIMEDOUT;
- 	}
-
-@@ -197,8 +198,8 @@ static int jh71xx_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
- 	}
-
- 	if (is_on == on) {
--		dev_dbg(pmu->dev, "pm domain [%s] is already %sable status.\n",
--			pmd->genpd.name, on ? "en" : "dis");
-+		dev_dbg(pmu->dev, "pm domain [%s] is already %s status.\n",
-+			pmd->genpd.name, str_enable_disable(on));
- 		return 0;
- 	}
-
--- 
-2.25.1
+It's all been in -next for a few days already. :)
