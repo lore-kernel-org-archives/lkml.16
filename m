@@ -1,113 +1,231 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028F029B782
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969C42BDC1D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897602; cv=none; b=XBODALj7V2DHHByZu0VNq8sCYNeiMSFRl+R4STaAUhN/PpR0k8aVVt4AOx5hd5vQHbJwflOpLLT3adlvWhlJsSZJ8fYq7aKdmKtVM2hYtjIHCkYOiRdp8Iy4TgHwvQS9UHVTWepr5BK8tSuBEoeb0p8MdhwyfQYmPRcRrD/MK0w=
+	t=1751897672; cv=none; b=KH1lqDUT3zUzqpNWuhg+4x3igKQTYoSRhJi29WP5TJMScDBtNXZk72BJ3jqS14LbW0OYIq8zqxt5D/yOQ/CXrK8dB/niVyTSsuSlFZiOrEzSG4F+4k9b2FeTanQm3djehstjdBVxp+2dAYNhnKOxgwSUFL9CNB76TV5/b5a3S5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897602; c=relaxed/simple;
-	bh=6QVie9epf7DQUA+KY0cAKJiPyJXVBSPrBDVruRHiee8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mpS0DN0qM0TV/04hTffLhmjVjaiwaTmf+6Y8v1WTeJNzK5GdOr0g5KOdG6n/A4pq6YlZ594dsAG1HS18tThmmR6w0A6/rhYbnfRs/cAH0Ejl85I2MkV+A2z01ZBBPf9/XFURRIdv7Xr+Q8HWUt6XHw7lsipOGFVdzooJFSVJT4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=noqxNW+9; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751897672; c=relaxed/simple;
+	bh=wyyuJDrRfoNJOmcanbvB4+TVaoG0zMMIZkVOHnDpIVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LRRxWRXj1cluiVWtdu18RRCxbf40NK0/SWCc92isXmW3CyxncvULLPJPnCK/W0QJ0LLyBv5+6vPgttfKzXQGQIliEWK+RY3VncXZvOMarUfmduiYajQq8X1wUdOBpbUb/pJLqR573MzDJfT35pFmk+Gkcf/S2G4ADzsuCh6n1fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2376GiWL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9pC5qqvz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2376GiWL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9pC5qqvz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="noqxNW+9"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-453608ed113so35268315e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 07:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751897599; x=1752502399; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tUQUb0cdytPcEYjL71jupPDYAPz94y/HVGU9AuIPXok=;
-        b=noqxNW+9V7iFfWt+Uvva8a232/ODI6fHvKhjn1yT/Tye+ZenR4s3CZCnXVOLOi/0VS
-         E6Ok9va4M3bYJcY5PexfJerf366fq7Q5mehzKwG1nropt7Wn44/4s21n4hzBiHB7S+6I
-         vN0aDC4Fi4lbL2N1NCN8OX+xPBDdc5R4ntNUzACCoBpEMEsxRBM9qYf99Cnjzujjkx8o
-         EF+TN1LI4Ktw0d1VceERvYjAu20nOiDkruAF+uZxfGVASboyh97a05Bsx6bqeXlqFbxh
-         pndAGgyHC//8pgLh/VM69TRgZClNal/u/RHVSbq9vCLkKcJCH49R6Xk5vt0dH6yN+7Je
-         BuxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751897599; x=1752502399;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tUQUb0cdytPcEYjL71jupPDYAPz94y/HVGU9AuIPXok=;
-        b=Tr3Wk53DC7katZp8a57wiSG0hxOuhBSjN9xdxgPdkB2fVnwt0OQcprIdqJQHwyixcE
-         mfrgcUwzl6/7yVDssZdhr5Nlqb9vxWVgnny46zZgNxpIJZwKeSk7kZxmOQjkkEpPuTz2
-         rJESMApBrVi/qfuQ09UhsW6XuVTuviC6J+LfDSN9WWsgOwTqXkYWSwNWlQiMGwMALMet
-         +1MS1HSA/VtcjBeYX4glFFpZRjrqpbo/aw1xv/iCT1uOzGnF5FUOdXtc1HWwWTo2zfxB
-         eZ17hBMk2Hf+BnHvnXpmqtrQZopuZF0r83VN3N/JohONH/FU6Iocb1+bFTf+vQX29PY1
-         Lu6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUm6IpUKMbLFE93K1I3gcsj53EpQQ9NGoNhQpws2vYruhZEnUT80B+GS50x+ahNOFxHqtxaNA/OrcXCDGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydVxLJkKRuhPVm909J36Yz4xSYPLUoGfumvsfMMVS+1xoZQ5hv
-	MqRv89jmdjnMXtwSTPS6Yrylcc7VfTJpYPNsOPakPTi5B2ZKtM1cDNBY6Fv2BpL1NxI=
-X-Gm-Gg: ASbGncvddB6BguTCIfb2p5mlUILqvoTImDPEI/+5+It/1xONNdVpOwwh+NjssnGwhaS
-	mD1szMnWW3L+XPWOb5W5ncyhLuO46SE0QCJCVkDmAYqz0aAhvJzWS5guxtXLHt88H8bYZmfnTVF
-	iECDio/my4EQBu6T5dGgjsK+a0Yo4iFVKGPmJtVypp+1YuvVgBknqvywkfYNMjlCY9ONuEM1n2E
-	M5wz8sKTJmhOV77abSEXNTU9SjCrUj/gZyk1j0VQBw2dh7AmOPNxjKENb2F5+PswEQ8OF3qQDtz
-	YWsLpPjQFHm7hYc0IWPP52oP0YcQBExd3Q7irMHbN1IWqQSR86ygXVVwFpAQWuY=
-X-Google-Smtp-Source: AGHT+IHCBHtw21niIsxOw8o5fZDzoZwsU6HTQSFKd59x1lgdKTm6Vg2cYVrpiS4hyCnwCJl2y8x3PQ==
-X-Received: by 2002:a05:600c:64ca:b0:44d:a244:4983 with SMTP id 5b1f17b1804b1-454b306a15fmr133174785e9.3.1751897599170;
-        Mon, 07 Jul 2025 07:13:19 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3cf3:a61f:85ed:69db])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454adc71aadsm131670845e9.25.2025.07.07.07.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 07:13:18 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: don't use GPIO global numbers in debugfs output
-Date: Mon,  7 Jul 2025 16:13:13 +0200
-Message-ID: <20250707141313.73169-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2376GiWL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9pC5qqvz";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2376GiWL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9pC5qqvz"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D2AD721169;
+	Mon,  7 Jul 2025 14:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751897668; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
+	b=2376GiWLhZkC3nXDMVhHeSl9tiJUIEhuBiE+AbRhrCcb7D/K+WVvEZvJ2z6T+ZmGCsmJvV
+	4NCGQkajTub7LNOJzXebfdHBygrWfI9SY8BlJA3/jyRwFYvbu4khy8oDxdqFgvBBE+TSHR
+	R6aTJxvFl63iOPh2TTFoSyGBAp5Z4y0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751897668;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
+	b=9pC5qqvzGMg0wh3oWA4ItU4tK4Lw3GisfGVzcsaiExKo6Z67zng4/gBWQJ/9GkXrCZ7uWR
+	WEYqGD0/6EqjFKBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751897668; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
+	b=2376GiWLhZkC3nXDMVhHeSl9tiJUIEhuBiE+AbRhrCcb7D/K+WVvEZvJ2z6T+ZmGCsmJvV
+	4NCGQkajTub7LNOJzXebfdHBygrWfI9SY8BlJA3/jyRwFYvbu4khy8oDxdqFgvBBE+TSHR
+	R6aTJxvFl63iOPh2TTFoSyGBAp5Z4y0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751897668;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
+	b=9pC5qqvzGMg0wh3oWA4ItU4tK4Lw3GisfGVzcsaiExKo6Z67zng4/gBWQJ/9GkXrCZ7uWR
+	WEYqGD0/6EqjFKBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A190A13757;
+	Mon,  7 Jul 2025 14:14:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rz6eJUTWa2iOKgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 07 Jul 2025 14:14:28 +0000
+Message-ID: <5a848e15-6a57-4ecb-a015-d4f358b8a5d3@suse.cz>
+Date: Mon, 7 Jul 2025 16:14:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm, vmstat: remove the NR_WRITEBACK_TEMP node_stat_item
+ counter
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>, Maxim Patlasov <mpatlasov@parallels.com>,
+ Jan Kara <jack@suse.cz>, Zach O'Keefe <zokeefe@google.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>, Joanne Koong <joannelkoong@gmail.com>,
+ Jingbo Xu <jefflexu@linux.alibaba.com>, Jeff Layton <jlayton@kernel.org>,
+ Miklos Szeredi <mszeredi@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
+References: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,parallels.com,suse.cz,google.com,lwn.net,linuxfoundation.org,suse.com,linux.intel.com,cmpxchg.org,nvidia.com,gmail.com,linux.alibaba.com,redhat.com,vger.kernel.org,kvack.org,kernel.dk];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -4.30
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 6/25/25 17:51, Vlastimil Babka wrote:
+> The only user of the counter (FUSE) was removed in commit 0c58a97f919c
+> ("fuse: remove tmp folio for writebacks and internal rb tree") so follow
+> the established pattern of removing the counter and hardcoding 0 in
+> meminfo output, as done recently with NR_BOUNCE. Update documentation
+> for procfs, including for the value for Bounce that was missed when
+> removing its counter.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+> The removal of the counter is straightforward. The reason for the large
+> Cc list is that there is a comment in mm/page-writeback.c function
+> wb_position_ratio() that mentions NR_WRITEBACK_TEMP, and just deleting
+> the sentence feels to me it could be the wrong thing to do - maybe the
+> strictlimit feature itself is now obsolete? It sure does mention FUSE
+> as the main reason to exist, but commit 5a53748568f79 that introduced it
+> also mentions slow USB sticks as a possibile scenario. Has that
+> happened? I'm not familiar enough with this so I'd rather highlight this
+> and ask for input here than make "git grep NR_WRITEBACK_TEMP" return
+> nothing.
 
-One of the users of global GPIO numbers in the kernel are the debugfs
-callbacks in GPIO drivers. Before converting any custom .dbg_show()
-callbacks in individual modules, let's first make GPIO core stop using
-GPIO base in debugfs output. Use hardware offsets instead.
+Thanks all for the input. Andrew, please squash in this fixup. The changelog
+of that can be appended to the changelog of the original patch. Thanks.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+----8<----
+From 55d9070995010991abc0c6dbd68a8a53b5d622bc Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Mon, 7 Jul 2025 16:09:31 +0200
+Subject: [PATCH] mm, vmstat: remove the NR_WRITEBACK_TEMP node_stat_item
+ counter-fix
+
+Also remove the mention of NR_WRITEBACK_TEMP implications from a comment
+in wb_position_ratio(). The rest of the comment there about fuse setting
+bdi->max_ratio to 1% is still correct.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- drivers/gpio/gpiolib.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ mm/page-writeback.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 7b2174b10219..62694ec12a0c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -5234,8 +5234,8 @@ core_initcall(gpiolib_dev_init);
- static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
- {
- 	bool active_low, is_irq, is_out;
--	unsigned int gpio = gdev->base;
- 	struct gpio_desc *desc;
-+	unsigned int gpio = 0;
- 	struct gpio_chip *gc;
- 	unsigned long flags;
- 	int value;
-@@ -5339,8 +5339,7 @@ static int gpiolib_seq_show(struct seq_file *s, void *v)
- 		return 0;
- 	}
- 
--	seq_printf(s, "%s: GPIOs %u-%u", dev_name(&gdev->dev), gdev->base,
--		   gdev->base + gdev->ngpio - 1);
-+	seq_printf(s, "%s: %u GPIOs", dev_name(&gdev->dev), gdev->ngpio);
- 	parent = gc->parent;
- 	if (parent)
- 		seq_printf(s, ", parent: %s/%s",
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 72b0ff0d4bae..3e248d1c3969 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1101,9 +1101,7 @@ static void wb_position_ratio(struct dirty_throttle_control *dtc)
+ 	 * such filesystems balance_dirty_pages always checks wb counters
+ 	 * against wb limits. Even if global "nr_dirty" is under "freerun".
+ 	 * This is especially important for fuse which sets bdi->max_ratio to
+-	 * 1% by default. Without strictlimit feature, fuse writeback may
+-	 * consume arbitrary amount of RAM because it is accounted in
+-	 * NR_WRITEBACK_TEMP which is not involved in calculating "nr_dirty".
++	 * 1% by default.
+ 	 *
+ 	 * Here, in wb_position_ratio(), we calculate pos_ratio based on
+ 	 * two values: wb_dirty and wb_thresh. Let's consider an example:
 -- 
-2.48.1
+2.50.0
+
+
 
