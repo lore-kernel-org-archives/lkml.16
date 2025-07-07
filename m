@@ -1,132 +1,157 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6AF289371
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875EB28A1D5
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874127; cv=none; b=r88PqfZ29UFZ8lz9mpHSS1KNlAZM37cmze2a1+l1/eQ1sBgewa+KPpSqEYEa82eWNBPcY99eqYLW6Kp/amL5Mhajv6ReKHqyZzCEaKeUySgWJVnuMUs4+EXtU12iQqlXXCUgyOw/RHEOJ07xjWDBvZr+EeD7v1esrK8NSY7iqzQ=
+	t=1751874143; cv=none; b=pY/yFA8dcyzavptl3Nqlwlbtvzc9NcBg0eGSt5rtu/v8P6RP+7yZZTzcrSgvYdqTLla/0DMPqzadhozcnSe3Zkb3I3qR25ObWCqOfh8zoDmhOKik+yngRyb1fugPDGckToGvHmU1dg0zv0lb3my64L9yVci3YG17IOgS30nPZXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874127; c=relaxed/simple;
-	bh=2oKgQpwQgsPL+7EXCiATOc+S0pR2sm/0S4sqSSqcejc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WTNkgpSgdvTxDWtP1vnXyp4lb7kgxdpdfGZa0yu9jZrUygWq0AueQqkL5cA+j1k/2gIeV1QmiO4sfcNX7FHRNtEW6fwpIc/z87Nf3zueLQ0YkFETIhHP5tVYAPVcRM582WfTsh31M8FeyDahXHjhGr1mYgJnrihinD+exUTGDbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=aiNFnkaw; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751874143; c=relaxed/simple;
+	bh=yVwJr8aTR432s0rBM+n7RBaGuFfXXDj39+PJzBsRSa8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SOrSFqn+n6JsUHsi4MoNcjtkay/wqRwi216EXOSEbHKMJOfKcKIbenK9oDQv82JP23tQF7XdbuWaB4ASHg3WHsWtghwTHBmBdQmpK9t6f6/fG5xMfkJ5n48XWPaRz6CnTO2DunszTLz8yYuS6tkcWwvxDBuOSSCnzd8wPhjmLl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=aKSXO0BV; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="aiNFnkaw"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d7b50815so21765065e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751874124; x=1752478924; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bDb2QDDbYI7e1da4zOCjqVkWLKFqFwWgy3CDKFih7gw=;
-        b=aiNFnkaw0vNoS/Da3dzKI9kHaHzL9yx2Jwg9BguUOThYgoDU+tXR5H36aPt6TozXPd
-         iaLtNjb3ArE0V/+cmOQHxTJOzqaaUdgmErsAT8BKmM5e+HKyf3X/ieWmG7n6HBbcyT3g
-         yF7Cqf2Bo7bvS1NUs1JTWGwh1HoC32grNomSS473pgRrVBH5ANKHmoTfvU5T+ys91Kik
-         1FwTqftf5bHf/6o0xeNR/J/fTjrUd9y9TQdGseGJhDn+1vE/d7AOZmwVtioA85q5qzRC
-         jX6YSeeebndDo+nDMbcmQDFyd3UPvPsZM1jztt3c0/xdv+AqhywEuW9XELBeuKijMzua
-         VVWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874124; x=1752478924;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bDb2QDDbYI7e1da4zOCjqVkWLKFqFwWgy3CDKFih7gw=;
-        b=Pm/dXX2DnKn7WdPBqI08twPZEB+Oz8/C2geJ4RNLFj5GFI+j32bdYVugts8aO3mmvp
-         LvAtxLBYUENA/rju6jKnNWpg21aHIL6ptfElZ+l2Rs3KXABPYMUGRW5lDOkAbvnC1DSE
-         LzZEGmUV8vi+7nR5hzszeSXyjMq7oELwNL37gkQNVLnIZtvd7ld3+FM3U/Db1hJ1zG21
-         Zv6iVo3pYa8irjXRDWsKkHFmhLGwT8T1hDa2rQBVuGHY333jrRUEX6rucv8dbDNf3Hiq
-         N6JyC9P9QTR+H5nsPOqoFj13EynG/dlUrvdBqje0ueY72yp9Ua/L/ehB3umeOs4HkVph
-         79GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViRnYiUJ1REAeYOuyCkSHNMaOVUjYZU3Rf+bBpgUkbFVx/SMOqBsaSZzVoMBoaHTA6sO2cO2Tq4I+TLWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBltOwBCO5s7hPVPtQhzdiQk9ARiwKOFiRdTzYHqKqA/npXVjN
-	LnpqLmcnpTKFM0XYt6D6S8GUAe0A6fEWzXnxueBnPoBCP/d2Xi2nLqWHfPBPx8W8WAc=
-X-Gm-Gg: ASbGncsYytwkGDWllZ3vzsG0JGot3VzxZ2Dl//yPH4PYtXElMmKszYlkAqnQUX46L2d
-	vnSrOKNLXMmPQiD1lacuA7VR6WaMpvZCoffDmNYeAvunTkXPhmpw6k3P6C1wSUcsTsRzvSzI9DY
-	y3jZRKysmEiaHAfkkILr0vVauk4QaeYeePRyoQbUNYtNBgMTvqi1OX/ocaU2HXuxTpZaq2EVJrp
-	3llNjmMdhHSkomv+ZILNSkHPsrTQnEIdYpFOEd4+H9k61KqHkqxoeKgRbhuVWOZ/occQU59sdXd
-	tsvc7GAjW1EszFOWRIGtn9qZ0RcxRtlI2jeWLxDtWbYKosqOfFFd7IUyTJEb1RA=
-X-Google-Smtp-Source: AGHT+IEWekPleecTkqzHnxj/5d4ocJg6iJ2GS+S28dD/Gu1BHihs4HNC2F49+o22Hs0t3Y/zfvGdYQ==
-X-Received: by 2002:a05:600c:4755:b0:453:6ca:16a6 with SMTP id 5b1f17b1804b1-454b3116236mr125103245e9.10.1751874123696;
-        Mon, 07 Jul 2025 00:42:03 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3cf3:a61f:85ed:69db])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b10b8c89sm107026185e9.38.2025.07.07.00.42.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 00:42:03 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Lee Jones <lee@kernel.org>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-omap@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-samsung-soc@vger.kernel.org,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] Immutable branch between GPIO, MFD and ARM-SoC for v6.17-rc1
-Date: Mon,  7 Jul 2025 09:41:49 +0200
-Message-ID: <20250707074149.11000-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="aKSXO0BV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1751874137; x=1752133337;
+	bh=B36w5AqVLdS7ID+Qou3MMKc+btIXvIpkpVMniRAbSVI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=aKSXO0BVIPGBLR0xuo/P5yD6wONOOrOk5VIoSJOTk/euuMIX4CNTH9Yt5klyEO5dJ
+	 tvVLRClKLPMcAA906aUSHa1gcb81S7EJz+ET8sEnwRN0vhVtjz/f+y86gikaIZIfTS
+	 17VBIRxTH6x+5BZhzc7HDbbqOTcGPK931GHjaZ/NN0QeGMyfA5TMRH12wTp2GMNCxY
+	 8YV5bI4MnAtIeX6hUULo/r9J05gHOH9Sb4JI/KzSrn31h61tYqQoAXgfugHVwBsk8R
+	 3Nclmi9FylU051GeWrEWtTscNGrMnVkA+l3x7oo6pdpqA59F87+skc3/C7dEqnct+/
+	 LUKi3Y5ZnftMw==
+Date: Mon, 07 Jul 2025 07:42:14 +0000
+To: Benno Lossin <lossin@kernel.org>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina+kernel@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 2/4] rust: Split `AlwaysRefCounted` into two traits
+Message-ID: <aGt6U2jCDnU7dzRA@mango>
+In-Reply-To: <DB1J4UQLG76V.69HKATSZZVNO@kernel.org>
+References: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me> <20250618-unique-ref-v11-2-49eadcdc0aa6@pm.me> <DB1J4UQLG76V.69HKATSZZVNO@kernel.org>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 7f80a12fdc11ce419642d5cb2b1a3f748f0744db
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 250702 1323, Benno Lossin wrote:
+> On Wed Jun 18, 2025 at 2:27 PM CEST, Oliver Mangold wrote:
+> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> > index c12ff4d2a3f2d79b760c34c0b84a51b507d0cfb1..40c0138bd336057e7d3a835=
+a9e81391baa2fd2b1 100644
+> > --- a/rust/kernel/types.rs
+> > +++ b/rust/kernel/types.rs
+> > @@ -418,11 +418,9 @@ pub const fn raw_get(this: *const Self) -> *mut T =
+{
+> >      }
+> >  }
+> >
+> > -/// Types that are _always_ reference counted.
+> > +/// Types that are internally reference counted.
+> >  ///
+> >  /// It allows such types to define their own custom ref increment and =
+decrement functions.
+> > -/// Additionally, it allows users to convert from a shared reference `=
+&T` to an owned reference
+> > -/// [`ARef<T>`].
+> >  ///
+> >  /// This is usually implemented by wrappers to existing structures on =
+the C side of the code. For
+> >  /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) =
+to create reference-counted
+> > @@ -438,9 +436,8 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+> >  /// at least until matching decrements are performed.
+> >  ///
+> >  /// Implementers must also ensure that all instances are reference-cou=
+nted. (Otherwise they
+> > -/// won't be able to honour the requirement that [`AlwaysRefCounted::i=
+nc_ref`] keep the object
+> > -/// alive.)
+> > -pub unsafe trait AlwaysRefCounted {
+> > +/// won't be able to honour the requirement that [`RefCounted::inc_ref=
+`] keep the object alive.)
+> > +pub unsafe trait RefCounted {
+> >      /// Increments the reference count on the object.
+> >      fn inc_ref(&self);
+>=20
+> This seems a bit problematic for `Owned`, since now I can do:
+>=20
+>     fn bad<T: Ownable + RefCounted>(t: &Owned<T>) {
+>         t.inc_ref();
+>     }
+>=20
+> And now the `Owned<T>` is no longer "unique" in the sense that the
+> refcount is 1...
 
-Hi!
+Yes, that is clear. But that isn't a soundness issue or is it? It just
+means the `T` can be leaked, but that cannot be prevented anyway.
 
-Please pull the following cross-tree changes for the next merge window.
+> Similarly, we should probably make this an associated function, such
+> that people don't accidentally call `.inc_ref()` on `ARef<T>`.
+>=20
+> > @@ -453,11 +450,21 @@ pub unsafe trait AlwaysRefCounted {
+> >      /// Callers must ensure that there was a previous matching increme=
+nt to the reference count,
+> >      /// and that the object is no longer used after its reference coun=
+t is decremented (as it may
+> >      /// result in the object being freed), unless the caller owns anot=
+her increment on the refcount
+> > -    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then call=
+s
+> > -    /// [`AlwaysRefCounted::dec_ref`] once).
+> > +    /// (e.g., it calls [`RefCounted::inc_ref`] twice, then calls [`Re=
+fCounted::dec_ref`] once).
+> >      unsafe fn dec_ref(obj: NonNull<Self>);
+> >  }
+> >
+> > +/// An extension to RefCounted, which declares that it is allowed to c=
+onvert from a shared reference
+> > +/// `&T` to an owned reference [`ARef<T>`].
+>=20
+> This is a bit too long for the first sentence... How about
+>=20
+>     Always reference counted type.
+>=20
+>     Allows the creation of `ARef<T>` from `&T`.
+>=20
+> Feel free to add more information.
 
-Thanks,
-Bartosz
+Yes, should be okay.
 
-The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+> > +///
+> > +/// # Safety
+> > +///
+> > +/// Implementers must ensure that no safety invariants are violated by=
+ upgrading an `&T` to an
+> > +/// [`ARef<T>`]. In particular that implies [`AlwaysRefCounted`] and [=
+`Ownable`] cannot be
+> > +/// implemented for the same type, as this would allow to violate the =
+uniqueness guarantee of
+> > +/// [`Owned<T>`] by derefencing it into an `&T` and obtaining an [`ARe=
+f`] from that.
+> > +pub unsafe trait AlwaysRefCounted: RefCounted {}
+>=20
+> It's a bit sad that we can't just say `: !Ownable` (or rather a
+> blanket-implemented marker trait, since that might land earlier). Anyone
+> aware of progress in this area?
 
-  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+Yes. But as far as I am aware negative constraints are considered to be
+deeply problematic because of combinatoric explosion in binary logic.
 
-are available in the Git repository at:
+Best,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-mmio-remove-bgpio-pdata-for-v6.17-rc1
+Oliver
 
-for you to fetch changes up to 9bad4bec5daddbb296481af759f9d56c849ba96f:
-
-  gpio: mmio: remove struct bgpio_pdata (2025-07-07 09:31:08 +0200)
-
-----------------------------------------------------------------
-Immutable branch between GPIO, MFD and ARM-SoC for v6.17-rc1
-
-Remove struct bgpio_pdata after converting its users to generic device
-properties.
-
-----------------------------------------------------------------
-Bartosz Golaszewski (6):
-      gpio: mmio: drop the big-endian platform device variant
-      gpio: mmio: get chip label and GPIO base from device properties
-      mfd: vexpress-sysreg: set-up software nodes for gpio-mmio
-      ARM: omap1: ams-delta: use generic device properties for gpio-mmio
-      ARM: s3c: crag6410: use generic device properties for gpio-mmio
-      gpio: mmio: remove struct bgpio_pdata
-
- arch/arm/mach-omap1/board-ams-delta.c | 42 ++++++++++++------------
- arch/arm/mach-s3c/mach-crag6410.c     | 17 ++++++----
- drivers/gpio/gpio-mmio.c              | 61 +++++++++++------------------------
- drivers/mfd/vexpress-sysreg.c         | 46 +++++++++++++++-----------
- include/linux/gpio/driver.h           |  6 ----
- 5 files changed, 77 insertions(+), 95 deletions(-)
