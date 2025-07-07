@@ -1,125 +1,134 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0B71C4A0A;
-	Mon,  7 Jul 2025 11:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9DF295517
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751886682; cv=none; b=fiv4ZD5grJiX8UpD1rM/zNMGuZr+m9kRlI93IoktaBatD2KElh2/dG7vZXC66pHD7OfN5E3TBdU+X3ZQYThxK+H2snZKWaWGe4NYMA9ZSmRwnel89RWlmja4f8bH7+V3kpKAqoc8PPySWoJe4yYzq7nvQMiynxwwPI4RvreHy5Y=
+	t=1751886697; cv=none; b=BEfTGcArdpHq9kwBLfUETOMGWTBXC+4FPMC5c2pVtkGzvWhqXpSx5sfCvFlcmN80ku4b5XIyyAM074x2h5yU9mQwo1/vaq7Nhs5fq38YQxiWBGnHIYdTYkL0qgstm0Lh39k2v4Jji3XNM4vOHzm+s1QAvKpAYqs21pEcG8fXk7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751886682; c=relaxed/simple;
-	bh=Z0DzFa6Ck8MY9mheY3wDTdFe9/hvBRhpNbyrSmBtew8=;
+	s=arc-20240116; t=1751886697; c=relaxed/simple;
+	bh=eUElEPwoOvyaNjTOTv3WX7sLQxh41JrdSfFl1EEMg74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R5ZbY1RMs0XvGrT4iQfWrEkHrM9HQm7ThTurLy/V9eAolRh8OkgfEdqp1hD2g5eeHtDkG+9Ox526BpE6yEk9QMq212R1mpjXoZgQ6hSNFG7oem8JJ6AvHw3pzbW8EKEz3zwKERVGu++Qc6WnZxBRb6CYQlFeFx1pYN0SvncizUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qezQPJ3w; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRPUzfHCQjxWZmzxJbJ/PWJUk1DIaypvnRrQEcIydheNnYGLEd5Dpj+Kj7tigUbucasdQ/PTnc8NQP22dr+ZVhA7jUD5UnMdDue+SN2WR7qXwvWeEPtzi0EKYvoVfNa8XlxiG2qJDN/G4ALXOoc51yOzmz6j1FiuQHNm8ZKWg44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3fPu0hy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qezQPJ3w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Y28+p4hX9PEUMHUlBkI77beYKGWjbFcITsIbtfbTURs=; b=qezQPJ3wjgMr442XMPlt9n2Ksu
-	W9LQMhSj5LhBqQ8d/2ilKfw/Xh5faImKUfSTZdYh6ljTF4E3OLJydHHiIcupLMTP05tFfBEQA0sbF
-	gT9oR+Zh2Lsy+lTfffMLvfmMsqqNYxllbjKHnDUdez6wLV57ImIeAnx4b3JGg5NzFTB5cd+EEHjWr
-	IoomUVw1wsJXd7cyIvpG1vJkS/D5iUI7eec0+9Y72SE9cAIOPaVWikrOH6Zyy4lMd93gJUhMjMSoq
-	X0hpjXyRXFPvq88lj2eojs0O3NityG+y9vwZDjbcWWLq8S52H1vlmG52cXp6QfWtjxl1HwrQPnkWo
-	1XK13jmw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYjkV-00000008TRB-2rx3;
-	Mon, 07 Jul 2025 11:11:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id ACA4C300399; Mon, 07 Jul 2025 13:11:02 +0200 (CEST)
-Date: Mon, 7 Jul 2025 13:11:02 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/8] execmem: rework execmem_cache_free()
-Message-ID: <20250707111102.GF1613200@noisy.programming.kicks-ass.net>
-References: <20250704134943.3524829-1-rppt@kernel.org>
- <20250704134943.3524829-4-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3fPu0hy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71AEC4CEE3;
+	Mon,  7 Jul 2025 11:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751886697;
+	bh=eUElEPwoOvyaNjTOTv3WX7sLQxh41JrdSfFl1EEMg74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z3fPu0hyhYB+YrvfW5e+eFQTvlukO6QVmYR04vnTfUADN46+b/O8FxDHFjoBpwo2V
+	 ToXsUkUdFemzd7exumn2p5wt45KHBLR+G37HjqYYi07geKq0pUMpryCm0OEK6sDfN2
+	 4RjbfD7aINbvIyNou4Lzf/Ogn2hpZ1sMuIihIl61QzX5r0RB6+y6LhWXNbAQdmKVVC
+	 HDP9M8Sy41tZzJ/Osb3W3oAK3lMY0L/fkpXxpiuOiZV0MFY9Hq+wJpDSoCcDrRu/CA
+	 FEIWHcciemxU2aVp4sC/42tCWpGWRSZxEr3GjZxbGw1y41cmzZPf3TVcyZxmGrwLbs
+	 8oidEKIpmntjQ==
+Date: Mon, 7 Jul 2025 13:11:34 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v7 2/7] timers: Add the available mask in timer migration
+Message-ID: <aGurZkPohjZ0pRwX@localhost.localdomain>
+References: <20250626114900.106061-1-gmonaco@redhat.com>
+ <20250626114900.106061-3-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250704134943.3524829-4-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250626114900.106061-3-gmonaco@redhat.com>
 
-On Fri, Jul 04, 2025 at 04:49:38PM +0300, Mike Rapoport wrote:
->  static bool execmem_cache_free(void *ptr)
->  {
->  	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
->  	unsigned long addr = (unsigned long)ptr;
->  	MA_STATE(mas, busy_areas, addr, addr);
->  	void *area;
-> +	int err;
+Le Thu, Jun 26, 2025 at 01:48:55PM +0200, Gabriele Monaco a écrit :
+> Keep track of the CPUs available for timer migration in a cpumask. This
+> prepares the ground to generalise the concept of unavailable CPUs.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  kernel/time/timer_migration.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+> index 2c2c8810b8137..2ec003c2bbbea 100644
+> --- a/kernel/time/timer_migration.c
+> +++ b/kernel/time/timer_migration.c
+> @@ -422,6 +422,9 @@ static unsigned int tmigr_crossnode_level __read_mostly;
+>  
+>  static DEFINE_PER_CPU(struct tmigr_cpu, tmigr_cpu);
+>  
+> +/* CPUs available for timer migration */
+> +static cpumask_var_t tmigr_available_cpumask;
 > +
-> +	guard(mutex)(&execmem_cache.mutex);
+>  #define TMIGR_NONE	0xFF
+>  #define BIT_CNT		8
 >  
->  	area = mas_walk(&mas);
-> +	if (!area)
->  		return false;
+> @@ -1449,6 +1452,7 @@ static int tmigr_clear_cpu_available(unsigned int cpu)
+>  	raw_spin_lock_irq(&tmc->lock);
+>  	tmc->available = false;
+>  	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
+> +	cpumask_clear_cpu(cpu, tmigr_available_cpumask);
+
+This is under the tmc lock.
+
 >  
-> +	err = __execmem_cache_free(&mas, ptr, GFP_KERNEL | __GFP_NORETRY);
-> +	if (err)
-> +		goto err_slowpath;
+>  	/*
+>  	 * CPU has to handle the local events on his own, when on the way to
+> @@ -1459,7 +1463,7 @@ static int tmigr_clear_cpu_available(unsigned int cpu)
+>  	raw_spin_unlock_irq(&tmc->lock);
 >  
->  	schedule_work(&execmem_cache_clean_work);
+>  	if (firstexp != KTIME_MAX) {
+> -		migrator = cpumask_any_but(cpu_online_mask, cpu);
+> +		migrator = cpumask_any(tmigr_available_cpumask);
+
+But this is not.
+
+We should make it clear what synchronizes the accesses to
+tmigr_available_cpumask.
+
+ie: we expect that either the cpu_hotplug_lock is write-held, or
+it's read-held and cpuset_mutex is held.
+
+But tmc->lock is not helpful. So the cpumask should be outside that
+lock to avoid confusion.
+
+Thanks.
+
+>  		work_on_cpu(migrator, tmigr_trigger_active, NULL);
+>  	}
 >  
->  	return true;
-> +
-> +err_slowpath:
-> +	mas_store_gfp(&mas, pending_free_set(ptr), GFP_KERNEL);
-> +	execmem_cache.pending_free_cnt++;
-> +	schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
-> +	return true;
+> @@ -1480,6 +1484,7 @@ static int tmigr_set_cpu_available(unsigned int cpu)
+>  	if (!tmc->idle)
+>  		__tmigr_cpu_activate(tmc);
+>  	tmc->available = true;
+> +	cpumask_set_cpu(cpu, tmigr_available_cpumask);
+>  	raw_spin_unlock_irq(&tmc->lock);
+>  	return 0;
 >  }
+> @@ -1801,6 +1806,11 @@ static int __init tmigr_init(void)
+>  	if (ncpus == 1)
+>  		return 0;
+>  
+> +	if (!zalloc_cpumask_var(&tmigr_available_cpumask, GFP_KERNEL)) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+>  	/*
+>  	 * Calculate the required hierarchy levels. Unfortunately there is no
+>  	 * reliable information available, unless all possible CPUs have been
+> -- 
+> 2.49.0
+> 
 
-This is a bit if an anti-pattern, using guard() and error goto. Since
-there is only the one site, its best to write it like so:
-
-static bool execmem_cache_free(void *ptr)
-{
-	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
-	unsigned long addr = (unsigned long)ptr;
-	MA_STATE(mas, busy_areas, addr, addr);
-	void *area;
-	int err;
-
-	guard(mutex)(&execmem_cache.mutex);
-
-	area = mas_walk(&mas);
-	if (!area)
-		return false;
-
-	err = __execmem_cache_free(&mas, ptr, GFP_KERNEL | __GFP_NORETRY);
-	if (err) {
-		mas_store_gfp(&mas, pending_free_set(ptr), GFP_KERNEL);
-		execmem_cache.pending_free_cnt++;
-		schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
-		return true;
-	}
-
-	schedule_work(&execmem_cache_clean_work);
-	return true;
-}
-
-And now I have to ask what happens if mas_store_gfp() returns an error?
+-- 
+Frederic Weisbecker
+SUSE Labs
