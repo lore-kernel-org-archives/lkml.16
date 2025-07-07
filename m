@@ -1,155 +1,91 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ABD2D8DBC;
-	Mon,  7 Jul 2025 14:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357032D94AE;
+	Mon,  7 Jul 2025 14:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898221; cv=none; b=HAkqDM0PuDLv9dw2E9L51ysYpNzUB5rxm7p083SAzIAmkk81jr4WWAzs8pW/rmZlEcJzhwHKzAgVXmmpZpBFdG2Y1hJwiuKmiXvWJAmo2nBSFTRBVjsXOupORirV9hwX5aqzioSsEr+GzpKXA/2U0wa6RU+XTElR4ro8UKhDUEo=
+	t=1751898227; cv=none; b=hEeE+dCTVWtUQ/WaluYcZweKg7O6Y96oPL1KaNfAfHYDu9D4TlBdjaafbJ94cKLG3lwgUa37PKYODBUjvaz22+ThmmrL1Et7A0AVi9eBQSurAVwWkHjRgSNeJqaNTeR424koTi6OxqCVdOneRQS3rXVCbznwWRKOVLjOgfUGDUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898221; c=relaxed/simple;
-	bh=RUjQXbCJnwboPtEi0gct+9fAzyg2mYvrTnWVxKHKEYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pr8aMhXvmm8enlGbTHtvojMDfxThmUP1u17J7r+0Amq4ZMIPFj21MqD+j1PtZlcCeVRsimrgRfJdavxmMXDcAB8WmC+MzWpRJGW08nEud0og4aw6hcjRwNAlA63XrsZytnpCsxx5b5GBmq1s5YRNZRSaA0h7ff+NC1oBPKegdJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=MehnIVD/; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1751898227; c=relaxed/simple;
+	bh=EayZOtBL90f6QFOcAGcEUumSQBoNWVZo7dcWx+htwY0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=t7NGYxYd5eFALAfvcjfisB1oFKw47YztrMBCsKTnYHS4KJtYX1+q2Pn94gcl9B8l75uBGvdpo9xHUw1QpFijITGLsTO9g9UPcFrnAKDR+w8ug/DNZOGh3uH7+GtzwU2QGAol1kE1/xedkKPW/Sb6UuO40yegtJpt4q+XqbX2zyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X7JIP9j0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oLdQj7w6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="MehnIVD/"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bbRLB14fvz9tCk;
-	Mon,  7 Jul 2025 16:23:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1751898210;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X7JIP9j0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oLdQj7w6"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751898224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=s4EZdHf+U3R+v43lcZijWizNqsqKvK4IRVcr5nu5cj0=;
-	b=MehnIVD/KloRf9rrD61bo8uVvO5mi99kSgMuUHeUYXOq1A2yxGunRzTwFMljMjGdO3rsq4
-	k78IzmiGbP2h2P76t6xsZOb4fGQgYFde80jo21p6JNNwqoTMjKQw/sZW2ykSSNq7su0VrS
-	3JObETkyU/36rBzUEKeXhn3//bturtQRiYGi/g2CeeEIL6XfqDdADkRFgSjuhQBhd01HlL
-	fD0+wRlqHp9eWWZBEkUgNgwTfd1vUi2VbSQEpXffRiw5zX6Am92eIxHm6snQlXBeylxkOk
-	aUR/7HreJ2iBQWDgQYtNyQRLg83nDzPRFd5YzQeNMcwJRPe1BN/UrM54QIfV9g==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v2 0/5] add static PMD zero page support
-Date: Mon,  7 Jul 2025 16:23:14 +0200
-Message-ID: <20250707142319.319642-1-kernel@pankajraghav.com>
-Content-Type: text/plain; charset="utf-8"
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ka2koAAO3+tROI+op1wD/ECrnjtB2oeDRijPzGbM22I=;
+	b=X7JIP9j0JXEqr2WXcQj/pmMMbEfiYfpmt96lOlw37C9QQokGDo/1ev3o+Ez+XuczcyWBsA
+	DIGjLHRpS1uD9Mu2xgF5Ue4yZuyRVB5BH4NcIua2JTZOO+LBZ71CiszJOwDJfJBQj589a8
+	LGmPCHhOGdZ27FkkXQwqwfD5IEmA8ANVMOMZ5UT4f+fLtJ8xfZzur16mmUL6bgLpKgo8kc
+	G3OxrdY37C5yRjOkacib3T0cDv12yG5qzJkDaVGVVNKVQSX+yh8r9oNYWzg3HoqIz7zW6l
+	bKLuAFVMRTs93cAQ+QPdjF4+Z1898JFl6XaQTEjRiskKeWAx0IebDVTnx8/laQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751898224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ka2koAAO3+tROI+op1wD/ECrnjtB2oeDRijPzGbM22I=;
+	b=oLdQj7w6rp2lEFRFkMh+ONSpzZtd5/N2PkjQgXRAbk1ek4rE7upMlj9n/6EtqgvuUbze/N
+	UZEfKwD/mzFUeJBA==
+Date: Mon, 07 Jul 2025 16:23:39 +0200
+Subject: [PATCH 1/5] selftests: vDSO: vdso_test_abi: Use ksft_finished()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250707-vdso-tests-fixes-v1-1-545be9781b0c@linutronix.de>
+References: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
+In-Reply-To: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751898221; l=781;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=EayZOtBL90f6QFOcAGcEUumSQBoNWVZo7dcWx+htwY0=;
+ b=4Fv5mHOXtXabazVRNfTKCITGj26jMVQ5H7pNwRmgfmbTrClLmSx5R9vQiztpknw+28XdHnegz
+ MB1dH+1wXlEBZU+/Jv+LnTDb+A86dXXw0GcBGmsvqjebrNmVPU1CdSC
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+The existing logic is just an open-coded ksft_finished().
+Replace it with the real thing.
 
-There are many places in the kernel where we need to zeroout larger
-chunks but the maximum segment we can zeroout at a time by ZERO_PAGE
-is limited by PAGE_SIZE.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ tools/testing/selftests/vDSO/vdso_test_abi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-This concern was raised during the review of adding Large Block Size support
-to XFS[1][2].
+diff --git a/tools/testing/selftests/vDSO/vdso_test_abi.c b/tools/testing/selftests/vDSO/vdso_test_abi.c
+index a54424e2336f4597e67668052b62cd7d6c0531ff..63eafb5ac0bfa407a527343f4d587e5098454f1f 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_abi.c
++++ b/tools/testing/selftests/vDSO/vdso_test_abi.c
+@@ -232,6 +232,5 @@ int main(int argc, char **argv)
+ 
+ 	vdso_test_time();
+ 
+-	ksft_print_cnts();
+-	return ksft_get_fail_cnt() == 0 ? KSFT_PASS : KSFT_FAIL;
++	ksft_finished();
+ }
 
-This is especially annoying in block devices and filesystems where we
-attach multiple ZERO_PAGEs to the bio in different bvecs. With multipage
-bvec support in block layer, it is much more efficient to send out
-larger zero pages as a part of a single bvec.
-
-Some examples of places in the kernel where this could be useful:
-- blkdev_issue_zero_pages()
-- iomap_dio_zero()
-- vmalloc.c:zero_iter()
-- rxperf_process_call()
-- fscrypt_zeroout_range_inline_crypt()
-- bch2_checksum_update()
-...
-
-We already have huge_zero_folio that is allocated on demand, and it will be
-deallocated by the shrinker if there are no users of it left.
-
-At moment, huge_zero_folio infrastructure refcount is tied to the process
-lifetime that created it. This might not work for bio layer as the completions
-can be async and the process that created the huge_zero_folio might no
-longer be alive.
-
-Add a config option STATIC_PMD_ZERO_PAGE that will always allocate
-the huge_zero_folio via memblock, and it will never be freed.
-
-I have converted blkdev_issue_zero_pages() as an example as a part of
-this series.
-
-I will send patches to individual subsystems using the huge_zero_folio
-once this gets upstreamed.
-
-Looking forward to some feedback.
-
-[1] https://lore.kernel.org/linux-xfs/20231027051847.GA7885@lst.de/
-[2] https://lore.kernel.org/linux-xfs/ZitIK5OnR7ZNY0IG@infradead.org/
-
-Changes since v1:
-- Move from .bss to allocating it through memblock(David)
-
-Changes since RFC:
-- Added the config option based on the feedback from David.
-- Encode more info in the header to avoid dead code (Dave hansen
-  feedback)
-- The static part of huge_zero_folio in memory.c and the dynamic part
-  stays in huge_memory.c
-- Split the patches to make it easy for review.
-
-Pankaj Raghav (5):
-  mm: move huge_zero_page declaration from huge_mm.h to mm.h
-  huge_memory: add huge_zero_page_shrinker_(init|exit) function
-  mm: add static PMD zero page
-  mm: add largest_zero_folio() routine
-  block: use largest_zero_folio in __blkdev_issue_zero_pages()
-
- block/blk-lib.c         | 17 +++++----
- include/linux/huge_mm.h | 31 ----------------
- include/linux/mm.h      | 81 +++++++++++++++++++++++++++++++++++++++++
- mm/Kconfig              |  9 +++++
- mm/huge_memory.c        | 62 +++++++++++++++++++++++--------
- mm/memory.c             | 25 +++++++++++++
- mm/mm_init.c            |  1 +
- 7 files changed, 173 insertions(+), 53 deletions(-)
-
-
-base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
 -- 
-2.49.0
+2.50.0
 
