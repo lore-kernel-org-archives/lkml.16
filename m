@@ -1,83 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D803597A;
-	Mon,  7 Jul 2025 05:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5207727146F;
+	Mon,  7 Jul 2025 05:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751867403; cv=none; b=n4aR2S2BPdnZLKQmqRgUQVl+I0N7wmngk4Nugvjv8YmNVJ7r+gQwZ1nBpSk0smvG3/ksjNwte2qxrJTyCOgZBfrVIj0HaSp7dXbU+wGRZzRMT79D34caMoAMw8Ng3kbuC/28I3KbBbe//NYKHuOALovrja9Zt7i2hK3nZ1pX6HI=
+	t=1751867727; cv=none; b=JL14Soof0v08ilGZegbQAPFQP0OHq7QY+oZuL2bBH1aHk+WNIrvI1+CwyHoAa/JtdJq8KbpEzQCRi+H6z4znKqk0n/oeQKmO5vYPRE40aWtuMAcncTq28zwAAwxatoVbg+ziC01H5LPuDwd1d9k5o6B0n4pvOQfZMiEcRyigtTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751867403; c=relaxed/simple;
-	bh=H1uS+lRJDdIKeULrbOYxVDA++ia5TLO7SuOj0M3uK/w=;
+	s=arc-20240116; t=1751867727; c=relaxed/simple;
+	bh=QpKNSzW+kob0sT0+NIZZdNQuw+iVTZlH+/8pMSZzof0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OSfH3abOuT753hEDeQyUSTdOM6RCAKl8WYb6lTjZwMYfmEHWfoyinVrXitqoq8OZpfyC33F3ss3X2Czlcgu80gvlTe4MpI2vLbibVE7p9Gw+TB1ITEbTBX+jJwiJpzGOg7et0uyX01528Zs9W6fzrbo+Wfcy8pLv6IQXhw45aRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIut4TWp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D0GprOn5DeDC1tNAe4CQpx9bHEQFEDonGgKzVtOiZXwH6pBJujdbeQkMrhcEVtN2OwIUtsOH2calgxnSRhngBHG8y6TnXSk84xGN6ZG4ceBDM8UBysMiisPwQleHHJzPxMwScRxcGgygmsEwbiB95lS2LpViofPPDTBSpOdDIHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J4hHcLE0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIut4TWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4264AC4CEE3;
-	Mon,  7 Jul 2025 05:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751867402;
-	bh=H1uS+lRJDdIKeULrbOYxVDA++ia5TLO7SuOj0M3uK/w=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J4hHcLE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D17C4CEF1;
+	Mon,  7 Jul 2025 05:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751867726;
+	bh=QpKNSzW+kob0sT0+NIZZdNQuw+iVTZlH+/8pMSZzof0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dIut4TWp53JwMnw9mex2FsExLGQGUavwebot/I3b/t4xvw0IIJk3dPFPV3CAF+0eq
-	 /fWy9f3vAMXBRl4DZFFWTEuIWnztk0EYLXmHR3yWtFoTjDrL+EKH6KC5VKtTKLMm6T
-	 HP7sP9REben2i/iLwmdN5Qt5BypVMEu1SN6VYzgZ1Dn+nTCNc06wbkdX5xi3iyD8wd
-	 KVDuiaTyKjYQIfrZ9ag5OZ+5a13QrodgbuReDEqA61toH6f8R2zvMn++eQwxLnlfUu
-	 UGa9GPrt5QIX3IBMjkFIrXeLdRFN093xAIhwUFsbAO6t32olgE2lR6y0d46f5wBZys
-	 +9khuLgxKw+6w==
-Date: Mon, 7 Jul 2025 07:50:00 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: shangyao lin <shangyao.lin@mediatek.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v2 05/13] media: platform: mediatek: add isp_7x seninf
- unit
-Message-ID: <20250707-lavender-peacock-of-patience-fdc712@krzk-bin>
-References: <20250707013154.4055874-1-shangyao.lin@mediatek.com>
- <20250707013154.4055874-6-shangyao.lin@mediatek.com>
+	b=J4hHcLE0vILN73maLb1CoUl0lljdFfa4t0KCFSGNzAU3QGeZyK7hoZfXFD8E6W7XZ
+	 aE6HuPowk3R5HZ459wiUZl8yZVhAf4mJ7PhPwTFWDok2IxXjYRMb8UM0cjqyZHAAAt
+	 JguxlfQUWYsLBub/ofS3LQ4INYzb46PxFDgF6D4g=
+Date: Mon, 7 Jul 2025 07:55:23 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Peter Jung <ptr1337@cachyos.org>
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+	torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+	jslaby@suse.cz
+Subject: Re: Linux 6.15.5
+Message-ID: <2025070706-skydiver-surcharge-0f97@gregkh>
+References: <2025070646-unopposed-nutrient-8e1c@gregkh>
+ <44281bb6-d5c3-4523-9079-e526bd684913@cachyos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250707013154.4055874-6-shangyao.lin@mediatek.com>
+In-Reply-To: <44281bb6-d5c3-4523-9079-e526bd684913@cachyos.org>
 
-On Mon, Jul 07, 2025 at 09:31:46AM +0800, shangyao lin wrote:
-> From: "shangyao.lin" <shangyao.lin@mediatek.com>
-
-My most frequent comment last year to Mediatek. I even asked to come
-with some internal procedure so you will not keep repating the same
-mistake in author's name.
-
-Any success?
-
+On Sun, Jul 06, 2025 at 06:47:49PM +0200, Peter Jung wrote:
+> Hi Greg,
 > 
-> Introduce support for the MediaTek sensor interface (seninf) in the SoC camera
-
-...
-
+> We have updated on CachyOS to 6.15.5 and one user is reporting, that the
+> secondary drive gets "dissapeared" and dmesg posts repeatedly:
 > 
-> ---
+> > sd 5:0:0:0: [sda] access beyond end of device and BTRFS error messages,
+> followed by the device going readonly
 > 
-> Note:
-> The PHY operations have been refactored and separated from the seninf driver,
-> but there are still some issues to confirm with reviewers in this v2 patch
-> (dt-bindings: media: mediatek: add seninf-core binding). The PHY part will be
-> moved to drivers/phy/mediatek/ in v3.
-> 
-> Signed-off-by: shangyao.lin <shangyao.lin@mediatek.com>
+> Downgrading to 6.15.4 does fix the issue.
 
-and here the same.
+Any chance someone can use 'git bisect' to find the offending change?
 
-Best regards,
-Krzysztof
+thanks,
 
+greg k-h
