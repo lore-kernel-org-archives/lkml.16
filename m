@@ -1,212 +1,121 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2065.outbound.protection.outlook.com [40.107.236.65])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EFD2A1BA;
-	Mon,  7 Jul 2025 05:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751865811; cv=fail; b=uR9knSGBB2iB4gdHnG5tESCZElXwE2++RLm+HWo7FGZGWW4iHHjj995ydZSZsQ/zq3+VwWSpPrxLg61H6jiXuCTP6tB3/F459bK5khk235fo7/igk/tVG00HXFrP1qCxcpqJjRBx8OIQUWjUICaLTGxDx2h+Bre+MVBfvQUtqTA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751865811; c=relaxed/simple;
-	bh=hGXom290rh+8M3MrO5Z0EDlclEET163u1uvEKJy6xp8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ta+7vNQNu0pDvQPZBGxwlCm+3G797rZyUxWPuNChZmKttzpfpcMdYd33Ig/P1Xz+J2YwdprHwK+rAt6N1UlrYDMrrU7y5s2VAa8K83CnUGal3xXJjvK8YyWEOHMb/f2bd3A7M8CpN2kHo0MQh4r7spA++abTJCZ4Wo4M0XS254s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0kS8j36e; arc=fail smtp.client-ip=40.107.236.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39232E3716;
+	Mon,  7 Jul 2025 05:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751865883; cv=none; b=Buqq6hlRhfR7Jq1m/5cTdMG1IadOE3r8KQM1lkzoW6GqWwZW/JTCTjR+7MQYRFpHEazl2hntzJgNC1IUddhwdXLtCGqddRS/H1OzW24HBRHqBdYKIOAVXiq7s+RFeGNnXuoEpYtmWwySnkaQcG0d2mAPRjCSM/o9sc4T2cfnCWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751865883; c=relaxed/simple;
+	bh=rx6pHyen/TGfkdYHa02N353prfXsh5go8davgnfU6Po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LalzHSsuppbhI8QyUP1WM/uFIh1tlFD3LNpuJkC4sQHZCRIxbwMbf7dociT957b83NHpZir2KkOxdhI6sxzTzKHBG+nRSw4w6JFjneu7+yZ1T+vwwcAisvwFdhObomnBUe+O3qBuVr5GozQyJtR2UYoOjUSOfBeg4mtK4i4TIKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=id5gyGtr; arc=none smtp.client-ip=212.227.126.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0kS8j36e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qspsn82H98x2knTBUUiIPbI1htoU9AHuEaJV26mb0sI99mJtZAKeD2pAvQNcCGF4KjJtJCTHRk90ofRG/Pl/BLh4+DXFJnmO+T+WyjH5HvzeIn6r8sh+bIP7s3OdzoAdxhx5GPorWLgEMWEHUspYwqI1IGXjBJ1n4RuPl4kJAfs1xt9WTzX0P+nMCyrGTADDxkFgylxrsoyqO+EWPDiJX7uixM7wBgpNOavH19oaoJq8uOQ0eOF+WmwQb2Yjt7BxteeasPfa6PsJpTggpjO9J8ziw6hYHUKFiFYVnOy+8VNocz4nt+a6MGL1s8ALQUNpLE9SshHTUOYpppwYOp/uUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S+DJLPpvuaSt3bbjhhtEGoPfmhrfQv06BxuVWTPWLzo=;
- b=Eu3I+T7Bdweux2XG9SBCUF+gBumKGCbPPMm6IeTPHwSR9f8M9Gs47l3/50S2YVyyCdveFgu1V8T/1BkuwFRzxnqB+iGachB+6dKV9hY2C9ahNyXyVOCm6rro6SicjvoeHXgep91L7LRGImj4NTdONw0hDjU1C30k2JEOVCG5al6PzYtXJ24HZuopKM1yvvpLh6trKlNay2yzuG1oThCW6c/bGqqv6TjVSZ6YYU1jdpR9adJRuik/mCjkMBpY6sUrrWzPj1kjPjS4e7iuDJJtYar5es+wIiFyMZHdj9p18jutTFbCbr9ova86mbVl6q2rLkJLE45Bb8H+WjZ86bMIGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S+DJLPpvuaSt3bbjhhtEGoPfmhrfQv06BxuVWTPWLzo=;
- b=0kS8j36ejD2drG+zmcCsU5cCurWQh4MTTDXbQrtG1mVVB1II1AaTEqc0TxGxeCEHF/mlBB2Dw/1MKzFt5RcW4rajRCKZ5nhSnLJqV5nyyklynj/qVYNA55fDWZIINgKOm3OBFUfZ86PdcfuLUcGoByHfMDntcVcuV7y9CGE45Sg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa) by IA0PR12MB8894.namprd12.prod.outlook.com
- (2603:10b6:208:483::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Mon, 7 Jul
- 2025 05:23:27 +0000
-Received: from SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf]) by SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- ([fe80::40bb:ae48:4c30:c3bf%8]) with mapi id 15.20.8722.031; Mon, 7 Jul 2025
- 05:23:26 +0000
-Message-ID: <1ab3381b-1620-485d-8e1b-fff2c48d45c3@amd.com>
-Date: Mon, 7 Jul 2025 10:53:16 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] fs: generalize anon_inode_make_secure_inode() and fix
- secretmem LSM bypass
-To: Christian Brauner <brauner@kernel.org>
-Cc: seanjc@google.com, vbabka@suse.cz, willy@infradead.org,
- pbonzini@redhat.com, tabba@google.com, afranji@google.com,
- ackerleytng@google.com, jack@suse.cz, hch@infradead.org,
- cgzones@googlemail.com, ira.weiny@intel.com, roypat@amazon.co.uk,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- david@redhat.com, akpm@linux-foundation.org, paul@paul-moore.com,
- rppt@kernel.org, viro@zeniv.linux.org.uk, sashal@kernel.org
-References: <20250626191425.9645-5-shivankg@amd.com>
- <20250701-liberal-geklebt-4c929903fc02@brauner>
-Content-Language: en-US
-From: Shivank Garg <shivankg@amd.com>
-In-Reply-To: <20250701-liberal-geklebt-4c929903fc02@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0019.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::24) To SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
- (2603:10b6:a0f:fc02::9aa)
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="id5gyGtr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1751865864; x=1752470664;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=rx6pHyen/TGfkdYHa02N353prfXsh5go8davgnfU6Po=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=id5gyGtrHH1e0azmQj4qX2mehB0bZ209QPfA8kg54dZSlkUrxvZEv6Oh5Uvt7VU2
+	 z90mtbJEPzWbAGsrh+j16JwbHAIm88nePQlFxf/Uw/YbHjvgKRFtDqXH1GTZMgZUW
+	 YAVBsRIlfkaQvbA8M/HsuhXnwBimUTirEYfOMfrX9Y1CJsyPJBuQJt27ix3zL7FbG
+	 tTRghFark/wXaDU4eIsfdmkPjfUu8q9Nqyo2jsuaY1/6DCGZUqkD5AL77vofEGNnX
+	 UcJpPA+IBpj/S3Kay6eNXjz+ROWY6H5d17pokmC0eJScRf47NCVllmVSy12uggdD/
+	 atwnTvCxVpezeH2UTg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.174] ([62.226.41.123]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MvKGv-1uq2nW3wvZ-00ybJH; Mon, 07 Jul 2025 07:24:24 +0200
+Message-ID: <8e72641d-77e6-4d10-998f-669de30ae495@oldschoolsolutions.biz>
+Date: Mon, 7 Jul 2025 07:24:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPFF6E64BC2C:EE_|IA0PR12MB8894:EE_
-X-MS-Office365-Filtering-Correlation-Id: c92cf473-bc6a-4b80-0e5a-08ddbd166681
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Wk9mSmsxV1JvYjlBcmVOK0NtVzE5ZVB1bjNiNGlqYXpENFFFM05RRW55dnZi?=
- =?utf-8?B?enJMNG5lZEphWmVRcnFWVG8vZlFBQ29OaTdTWXh4cnJXYnMrWTBkR0xYeGRZ?=
- =?utf-8?B?VlMrOWZEalZxckpDVytHSFdYZ1ZzMldDWmVjb042NHE3SHRNaThwUnd4UnRi?=
- =?utf-8?B?aEZLWVo5czlKaVV4dU8vOWpMeVc3NDBlNmRDK2JISy9PMkxaOWh2Zkw1QkRv?=
- =?utf-8?B?OWhva3lmOU5VbDdNMVdRcjZZa2oxdW1OUCtZcTZ6akZ4a0p0U3BwYjlnTXF3?=
- =?utf-8?B?UE0xQzdlYkFiWU5Ncnd6UGFMcXFrMTBWb1RDZmE3ZmxwRjMyUllyRjJIM2Q4?=
- =?utf-8?B?Qk5yMnJMZ2dJaUZpUGNyYjM0MlQxZ1RNWnVENXdwRHRTYUdSR1J1Vk1pb2VS?=
- =?utf-8?B?c1A5QWZWMVFyZTFiSmJFN2VBWTdaS3VyQUN6MStmSXNrNEJkK2hIRnp1cmVF?=
- =?utf-8?B?ZWRqaFJlWDhCY0Z2QUJBNXRvc2FMUFd4V0Q2QmRGYzk4NW9UYnUyVzNQcHUr?=
- =?utf-8?B?UmZZTWJXL3FDU2kwY2lyRUhJV3RFcFRUNEI0N3RhTy9FZlZCd3luN2p0Smdi?=
- =?utf-8?B?SmNKczhYZUpiaUl6UGEwblI1a3BaODR0TCtkUHJucVEyZy9ITXNSdjdlUHA4?=
- =?utf-8?B?ZDUrVkpmN3hwd0x5RGVLeEVpU2FYVUR0aGlhY0JHRzFUUkVjdFB5aEpDcFFU?=
- =?utf-8?B?NDd5aTNxSzRna2QrSUhmNnF4bUZFOUZ0elFleXRGZVVwL0xUVy84K0MvQzBU?=
- =?utf-8?B?Rmtva3ZrbmFRbHAzU3B6WWJFWnJiUjc2TXExR28yMnVOa0xJZkdVT0VwVy9S?=
- =?utf-8?B?VUg4SnhqRFowMFcyZzFSOHJneng0VGJsRUtKNkZtRlQzR08veWpkRW9NZFRx?=
- =?utf-8?B?S0VHb1VvV3g4UEVFOWFkeU9IQjVSY3RKelVGNm8yREhvN0dRRW13V09VQVRD?=
- =?utf-8?B?cjU2RjBLVi9BbXIyeGFiM2twdmJ0a1NiK2hTMEZUNEVva3BhR3ZtMzBjaUVM?=
- =?utf-8?B?cjdrdll6VlpZMk1DeVF2Nkc0cDZMVWV2VG80UjBjYUNsUHBMSTFvZ0EwVGlI?=
- =?utf-8?B?MXRKVmpSenFsTHdDU3ZZOU1NTjRSdlk5MCs3WC91RnY3dko3bWNtenlGSERz?=
- =?utf-8?B?Mk5PZHJhTXlLR1BjLytuUEF2UFlNNDk5WUZKKzFDK2Z5M0ZjN0VTb0k5VVN6?=
- =?utf-8?B?OVdsRlppVUZSSEVPSW9KV25LWndtOVNVUnJhckdBd1F4Q1ZubnBiVW12SnRv?=
- =?utf-8?B?dkFXYURyS0lzSG15enlCaHBodkpYVkFTQTJvaXJRUU4vREN6dHJXL3RZeHJL?=
- =?utf-8?B?UW8xaUEwQzhaUnFReTJvcXVLRHZOU0NGbjJtSEZKYS8vTzFCWWd6YkNEV3U1?=
- =?utf-8?B?MTlwcEtBN3FDcEVremUvTGVsL3hnRmdNeE5SRDlIRXFLVlRucWpzTlBsdkhI?=
- =?utf-8?B?VCt4TzQ5citDZzhieFlvS2dzcmZrQ2tieTBiMjZDOEY1THBudmQxRzdnUGMr?=
- =?utf-8?B?SjM2dUZSN21EbkJsalJuTm5JMkNML2tyNWcvOVlkd0lqRy9LWlNuK2lvMHlV?=
- =?utf-8?B?emxwQjBHR05wS3BqdW04MW5Gd2VvMzNMM3kyYUhGRCs4UFd3S0dGWGlIVXJs?=
- =?utf-8?B?cU05SExFUlp0RUlqZG5rNitnN0xSa2VWZ0FPelhqS3hrbnhuNkhtZmhlTndR?=
- =?utf-8?B?emRtbW5XYXduNjcyNUg0Zi82WVNuc3BTQWJLc2JnZ2Q1STNhRUlKUlBQOTdN?=
- =?utf-8?B?RVpwRFNxaFA2REZQYktIWjRxMnZnWHJpRzFTaTE5TlFNc1VyK3c3dExNc2M0?=
- =?utf-8?B?RERUWC9PMnA3cXlLUmVaeVZ4WDhNUTBLZDVpbUVTVW9yYXMwblFlQ2lPaTJM?=
- =?utf-8?B?MzJPNE9vM0ExL2lvQkVxZkVPdk1iR2psdDBRQVNya01oR09mUVJZOG9vYlJ2?=
- =?utf-8?Q?J8qMIIe1ePc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPFF6E64BC2C.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VU9xQXRqa1NmZURnMlNFRUdNT09IeU9lSGNOc3FGQkp5b3lpMkdOYzhzRG95?=
- =?utf-8?B?SHpqZW1tMGxRd2gwS1NWemlXOXhnUnFVWnJUVk1ISDlrcHNRbk5kTWRsZ2Qx?=
- =?utf-8?B?enRIelRVN3d6VzhiSFpYSGVpWksyYnU2bzJuSUhXNEIzaUxsa0w2VURYdFJM?=
- =?utf-8?B?MDhKQWpQbG5jbzRmNURZaU95N0trdnZEeXhWWjY0VFlBd3dqWXhuZmxmVVB0?=
- =?utf-8?B?a3lTWEFGQlBJalhkR0R2UGovR1ovVHFGTmxnd2FQWnpuU3JuSWlhTmFzWUhM?=
- =?utf-8?B?dlJrajJqSU1icDV4N1A1MmZNWmJuQ1paYWlMdTJSbHZhaGNJRXduTWtMTDVY?=
- =?utf-8?B?eG8rNzZ2S0R2Qm5PQjdXb2tlYmFwTEZVRWt4cHIvYUdxUzJIR3BYckdBQit5?=
- =?utf-8?B?Y0tCc3NKbGRXMkVVYmRPR1BGVnE0enVhd0dBVk80NC9OczFnQlpJUU9WZUlq?=
- =?utf-8?B?ZjdteVVMeWk1Z09zSGZQdUd5a1Rsb0RTNnJCZTI1UWJ3am50bEdnVTU5andP?=
- =?utf-8?B?TE13MkpUaU5iMHdtbC90TE9WdTRwQ3llQjJOZWhMcDJ1Nmk5dUdvTFhERXdU?=
- =?utf-8?B?WHltMGpaMGUwS1Fyck9vZjB0Q2xocmVvQnJkT0dZK3NiOHcwTFU5aEtIdWh1?=
- =?utf-8?B?aWJSdzc0Q21NWnl6Q0FGTWpYckIxSUJxY25pK1VSV3NvUXpBNnYzWGJkOXVt?=
- =?utf-8?B?Q2Y0RWhjZFkwK1Iva1o4YUJKcklKWUsxa3ZIYjlwRmpTSmJ2ay82UHZRVEpy?=
- =?utf-8?B?SkdOelZDMUNYTHpSaDJta2pXOFR4R3RpRlEyMW1KNzl6UVlXSUVmU0FVaTln?=
- =?utf-8?B?Z2l1QkZXaDZaK1lock8vM0JkTWtadVV5RkQxeWNLejJrUnJ4NUZ3V3F1YkNW?=
- =?utf-8?B?aGZvUmwyNlpteHozUWZGRnQzUkVWV3VYQ21vWDJXYXhCNzhPSHRVa21QN3oz?=
- =?utf-8?B?T1ZMYW1Oa1ZTa2dhMjBQN3ZZWHNCeUVjYzZYVEQvRWpKdGJ6cm1VVEFUYlox?=
- =?utf-8?B?WHUwa2syRGN2NENiTUNBc0c1cFdLRXFXSXFUU1QzZ0d4Qk12aWRJT0krUVcv?=
- =?utf-8?B?dU5sT2dUcWlqWHkvUExZVVpES09QMmZQYkw4RnY3Z2Z5Q3A2TlBmVy84eFRI?=
- =?utf-8?B?a1dFMURYK1R3Nm9Vc2hZREswd0w0QzVsTjBNektqeDVOVG1xSUsydzdRdU5V?=
- =?utf-8?B?cmg3NlFhdk9qSnozcjdDS205MnNEbmpPM0NjM1djTGQrdlZjN2cwSGU5cWlN?=
- =?utf-8?B?dkM4VEVxbGdYUXh0SzVmUU9hUnp6eUFoODdUakFLb3pEMC9ady81Rm1NSVYy?=
- =?utf-8?B?anMyTFJ3cEdiQlIrR3Q5MW5uajg5cWtFNlRhS2JsNWpYOHZ3QmpMSXpNNEtH?=
- =?utf-8?B?eEgySFo4TVNRZmFFT2QyU0QrbEd2SWVsREtpVUtZdysyNGl2RStnQUFyQ3ZX?=
- =?utf-8?B?NlZsMERJeFhuc01tVUNTZkF2aTI2b2tsbzQzRVg4eDkyWXRGY042dWFlc1Z4?=
- =?utf-8?B?T0QyRU1pV0R3RE5OVlVQa0xoVkdKVTdpRmsyN0d6bzdDc3JudVUyVU1mTjV5?=
- =?utf-8?B?aXJZR3h6L0ZOSUhORFBQbkM1Mm5iaWhpZTZpaVhMSkV2VmhuVkNGdGJIa3Q5?=
- =?utf-8?B?RXRpU2w1RDlZdnpaRUtoRklJd05ab2V4b2VkbC9TcDBuTzdNOG5HcXAvWktD?=
- =?utf-8?B?Z0h4b1BacitLaURvRnpJUXRqRzdZSDJjQ1loV00zNklwU0FHaHJZVlM1MGt4?=
- =?utf-8?B?ZE1pSWJiNXRuSXU5eXpnRGhDK2RMbkRocUZqL1hLSzhwSnVvTzZINXZGejVN?=
- =?utf-8?B?Y3l5bWVHZnhhZnU5TmtnVVdVNDJDN1l1bGNncy9DUDVuYXRZeC93a3RLdC9F?=
- =?utf-8?B?MVk2YlpqSSt2TkJtQlN3TnJaOFpja3F5RmN6eHNONnJheXNQd05kVlU3amJ5?=
- =?utf-8?B?RXdJM2pyMitidTBqSlJoMHp4NTVvY0V4U1pLVUZHMnMxOUZXYnFnejNXd0Vu?=
- =?utf-8?B?WS9maEwzaC9aNEhDNkdQS25FclFoeDU3VWJiNWNBUTZzbjhOdWhTVkJnZS9j?=
- =?utf-8?B?bldnN05RVEZneURpTkpBVEVlUE9EcWRmdzdnejcvR2pNK0JiaHZPRmRkanla?=
- =?utf-8?Q?eGb9dT5IFYoi2jMHLlzy20O9e?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c92cf473-bc6a-4b80-0e5a-08ddbd166681
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPFF6E64BC2C.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 05:23:26.7633
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jXy5aN7ZvL6it53TnkjoH83IOD8jairimbFpZg9hvfwOfHMpdhE8h3V6ZYQepRYfsa9QCqOEEg/mqxJ8+EEbxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8894
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 0/3] Support for Adreno X1-85 Speedbin along with new
+ OPP levels
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+ Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+ Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250701-x1e-speedbin-b4-v2-0-a8a7e06d39fb@oss.qualcomm.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <20250701-x1e-speedbin-b4-v2-0-a8a7e06d39fb@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:qLMGZZwoM6+ldmd7++Vubj4ab/6aDcgFW3bvzM71bBx9kFSjlpO
+ Kdt0vlIOT2EVbwzMG+OUxcL8mafr4n75Bv0dti8oCoASS46v+fFcIsT8RBYtLuQJ62Wp5ng
+ K6BrU1BHmCfUSAPpXgrYYybMM6XS/v6Z3NeRN17tdzYkmP+D/d/c03/HXRQdzBewxbx3n4Q
+ sBrnAqN3krBwD4BTUAZHg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wxN9Od9Yqn0=;HVU3PIrdxRkHBrsGN5YDaBNptv+
+ QCMgc3Oj7rxaSfhMVKtkiZeqeEOxZ5pchTBt4F3i4Tp/lRJart/bRSx4L2b0qbpKmuFZpCATJ
+ ofngEvNQRaI07zcgFqwEfouuQuy8Azr3jirzuwQd0YjkLrkFGr8udf8LWnLnAA3IJFla/7XQF
+ 1v5u5R/F6K7p1CI5PrZvyUdNp8A6giGE61GgUNdTJz37U13U5iL/xNCiKc07qvPrXjK7/1NhK
+ R3Y2V4BUsaTUiY87J3jPFaTIscgt3TWf868gXIpVIZx9ALmsFB15tnNJrD91N2LjxHvGfcyks
+ wt2X/40wZyguV1uF3d+VkT09yDz2j5h60WgWBSguIbhlujder+Q7wct6uHBSYOV1UrsvyF0Fy
+ RX4z4ikZQa+ld+KfrStx4IDrSskNJ4BqllgcQOxsGx8MDEt+XWKLlNuBz/2b/Sx3L6gvusIe3
+ 8Lc5b4YXdWVKWpptISgOp5k5dxWukUCjDhaKCk51oO4GSvWDVfCoiNBGOTHjR2pKaXPA/6gjy
+ Ck7YrrEFzjCg9Hi5v5Nt80dzwsM6zOqFAfRpbXD+BX1GYJUp+M/myULaSgpppdaHUXE6bLl8R
+ qoQb4F+CXxPwpoIYfRo600nBqA+rHjxb86NaQobftPg3YLmFaTrVRR5ZbQeQrs76xxn52rABx
+ QPQ1qNgCUg+oUPuC5AhYBt3rVUhW3JNea9UtXjRamGGddGYdvgcCwbC9mmOclp/tgx4Gk4kW8
+ 7TnDwwqmakib1u+R09EtpTTGm/HG+wgISTa5p/z8cglNk5/v82y8J7lhrPytEZfRJeJ6LzYXf
+ 0UOElHz8NMWA94DvVO29C0txHkmc81um6COhPlr7D4Tl1jH7x2NlRnxPnrT1lbJR4BxxjZPNf
+ EsvFs3BllBCwGPgBQYYl3tBxZFbt+g5wZn5uU8SMa6TJgjyU2OciwRr5M9oHWzN2SUcPAIPmx
+ +8S9MCfbV6B5tFKUE4pLO5vvaDA9HiTjAXmJh8eTZ0Qu1g9vPzCwswhGINdsA3edmV1Efn02V
+ xcBEk5D78sLQE/ejkR9ykfMhgyJM8Ug+yDr53IoAml3I/rKsxQIcmLz9xCrfB7KC0ZsfqDo6f
+ uxll58h1tPM7GgMluiZA1KzUpbLHbQLEWYl+gHNhdRVzUWrabIkAMRhtLLALhW5pA9uN9gWD+
+ yQXBB0ZH0UI6TJbcXfmooO83H0mVllftEfOJJwp0DnPAWHL6awNyT+AQocmLjFSk6Kq/bafcp
+ rU3LEs9dkzhGGhU0p5jUXns4NNQeLqq9j5KMyq9cJVXPImbW7EwFAFqZfh5713egyD7KJ+pHY
+ pJK92dLBawv5krtIz2MknciGZ5Ps0te3wYwL7n6nxBypSff3iL6GGsOjVZm10fvc/47Ws9KVw
+ sNIbyuz4SBtYnk5KsJBiP5LJ9suU5VewPKA3w8aegaSsy9nHc/SFibnW9xUDLcDSmFwr9Y/m+
+ TEnxsHA3UdwdthA9OsNei8u+W7oRf38ztaKfPmaHxWXYg9KWGSFo45LKt0ZE1EkbZrFzP8847
+ JwTnyQlPZ8jBBougN+42ULxX90y0TmqE0ZlL8Fpaapx4kG4PTKk3GkCjx+DOCp4xWbpEjwBox
+ kjXjbpC1nma55CcL41KwN8vdcwpUXi/
+
+On 01.07.25 18:20, Akhil P Oommen wrote:
+
+> This series adds gpu speedbin support for Adreno X1-85 GPU along with
+> additional OPP levels. Because the higher OPPs require GPU ACD feature,
+> this series has dependency on the GPU ACD support series [1] which is
+> now available in v6.16-rc1.
+>
+Hi Akhil, thank you for the patch. I just tested this on the HP Omnibook=
+=20
+X14, which - with the matching dtb loaded - shows the same max frequency=
+=20
+as I can reach during benchmark tests on Windows (1250MHz).
+
+jglathe@x14-jg:~$ cat /sys/class/devfreq/*gpu*/available_frequencies
+300000000 390000000 550000000 687000000 744000000 800000000 925000000=20
+1000000000 1100000000 1175000000 1250000000
+
+Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+
+with best regards
+
+Jens
 
 
-
-On 7/1/2025 2:03 PM, Christian Brauner wrote:
-> On Thu, 26 Jun 2025 19:14:29 +0000, Shivank Garg wrote:
->> Extend anon_inode_make_secure_inode() to take superblock parameter and
->> make it available via fs.h. This allows other subsystems to create
->> anonymous inodes with proper security context.
->>
->> Use this function in secretmem to fix a security regression, where
->> S_PRIVATE flag wasn't cleared after alloc_anon_inode(), causing
->> LSM/SELinux checks to be skipped.
->>
->> [...]
-> 
-> Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
-> Patches in the vfs-6.17.misc branch should appear in linux-next soon.
-> 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-> 
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-> 
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs-6.17.misc
-> 
-> [1/1] fs: generalize anon_inode_make_secure_inode() and fix secretmem LSM bypass
->       https://git.kernel.org/vfs/vfs/c/4dc65f072c2b
-
-
-Hi Christian,
-
-I think there may have been a mix-up with the patch versions that got merged.
-
-We had agreed to use V3 of the patch (without EXPORT), which appears to be 
-correctly merged in the vfs tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=vfs.all&id=4dc65f072c2b30ae3653b76208a926f767c402a0
-
-However, it looks like V2 (with EXPORT_SYMBOL_GPL_FOR_MODULES) was merged into 
-Linus's tree instead:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cbe4134ea4bc493239786220bd69cb8a13493190
-
-Thanks,
-Shivank
