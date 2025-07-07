@@ -1,106 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49194.qiye.163.com (mail-m49194.qiye.163.com [45.254.49.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C59C293B55;
-	Mon,  7 Jul 2025 10:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996B2156C6F;
+	Mon,  7 Jul 2025 10:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751884122; cv=none; b=srlUQv2nG5T/FDVh9Y/6KnOPLOYxOhLW+5F1uhVR7fOuzc+idjtk1A+16CzXoyfdOufJMQW3DUAkH8EBKauHuSV/mxequ9rOedWRrjSWgX9X/uOkMFFKrxWc9zI4nlH9Cw4HLW1szFM8xXgZ2GJlpLtPOKtWcdV8rHhbWJ/x148=
+	t=1751884231; cv=none; b=HalU1hb4e+ITqUO8R5JYNNKIyeD8uxPpUyVNBAOrrsTDgoKQ7bc2FfhaBUyJTcxh1EnkZyrHrUkMmyAkK9C38vyXxrLT/uOA4av1PZjaisqQlBLtHDc64/ArCqaxqJJIQsq98MdiYwScVDyvdeKllUnMwDjTxsmFP0MU2Ti2/bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751884122; c=relaxed/simple;
-	bh=3c9wlvp7eERnk97turEd450KUJTVOWkZyEo3KsQKb4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8kazLLmtkn7oj0sq2HkX1YQBDxmGBkHgK+5I0pyTQS9z9g8NjDkxBcuheFhRXwggtWVW+6zo2fjWkBCj/eOWtfUo2Hxg3xoOG65qCnW0uCVG2Leut+3UQFp3LVuTPUKpXzmXfWIgTaQLv1pUUjTPRV0wPybOwdv1lv0zyGra3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njVAsFN8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njVAsFN8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E9FC4CEE3;
-	Mon,  7 Jul 2025 10:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751884122;
-	bh=3c9wlvp7eERnk97turEd450KUJTVOWkZyEo3KsQKb4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=njVAsFN8O6TSHsg1XYrh10kzgdmIkh1PduKj7UeFxCYIU+7Lh/jFCNzVaOAu/wzow
-	 /qGsWXSrlh/v9idhEttS+aPJ6xL/mmCdOcBG//YwVGVjI0inHKSEjMT8T9jZ7+kqf3
-	 C3P4b+l+Dx6T/GJY+5tl7jObCYMXXrCZfZlBXyAJzTbOVPsrF0ezEcKFNtrgr1cFy2
-	 FONE/3k5ZBDdSOVokyp34cDk7kWvw2bGP/JxYICa3hNqqPFkSSSdGTYbfylyb32Eq2
-	 qz1KxRUBH4seRbwhG+goOWIKgLXAomu23NxhEkI9ITKEmRlQfT5qgdwd0HNfq/Y9v9
-	 5bBpONAh1c6eg==
-Date: Mon, 7 Jul 2025 12:28:35 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Song Liu <songliubraving@meta.com>, Song Liu <song@kernel.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
-	"martin.lau@linux.dev" <martin.lau@linux.dev>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
-	"jack@suse.cz" <jack@suse.cz>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"mattbobrowski@google.com" <mattbobrowski@google.com>, "m@maowtm.org" <m@maowtm.org>, 
-	"neil@brown.name" <neil@brown.name>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v5 bpf-next 2/5] landlock: Use path_walk_parent()
-Message-ID: <20250707-gehemmt-bezeugen-e065ae6a0283@brauner>
-References: <20250617061116.3681325-1-song@kernel.org>
- <20250617061116.3681325-3-song@kernel.org>
- <20250703.ogh0eis8Ahxu@digikod.net>
- <C62BF1A0-8A3C-4B58-8CC8-5BD1A17B1BDB@meta.com>
- <20250704.quio1ceil4Xi@digikod.net>
+	s=arc-20240116; t=1751884231; c=relaxed/simple;
+	bh=wzvySkfSkJ4e8dwMvyxg2jF5Ke08l5dP7TDvrD6QV24=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X1oLQaLGMAptKG14K7XCs0rtJ4i88rdszk4rEBErJtPKWAjXLhBJe347giO7TtYqAEDEg1BkXHQXHj571yKITMVn1tHbV3IjEbo5X/qf1drS1Az9un4AtOSp5o1wW1RMTyHcF9MWJO06h6bH3pwUv6GnSQ80nir1pLQB5lPtp7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=45.254.49.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
+Received: from localhost.localdomain (unknown [122.224.147.158])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1b2c5dbcb;
+	Mon, 7 Jul 2025 18:30:16 +0800 (GMT+08:00)
+From: Andy Xu <andy.xu@hj-micro.com>
+To: bhelgaas@google.com,
+	lukas@wunner.de
+Cc: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jemma.zhang@hj-micro.com,
+	peter.du@hj-micro.com,
+	Hongbo Yao <andy.xu@hj-micro.com>
+Subject: [PATCH] PCI/DPC: Extend DPC recovery timeout
+Date: Mon,  7 Jul 2025 18:30:14 +0800
+Message-ID: <20250707103014.1279262-1-andy.xu@hj-micro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250704.quio1ceil4Xi@digikod.net>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUsfVk4YShhOGRpCTExKHlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSENVSk
+	tLVUpCS0tZBg++
+X-HM-Tid: 0a97e46fb83003afkunmcba88557e5ad6a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PU06LBw6PTErETcvUUtKCTYI
+	IwgaCiNVSlVKTE5KQ0NPSUpMSEJCVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
+	SklJVUlJT1VKT0xVSk5DWVdZCAFZQU1OT0k3Bg++
 
-On Fri, Jul 04, 2025 at 11:00:37AM +0200, Mickaël Salaün wrote:
-> On Thu, Jul 03, 2025 at 10:27:02PM +0000, Song Liu wrote:
-> > Hi Mickaël,
-> > 
-> > > On Jul 3, 2025, at 11:29 AM, Mickaël Salaün <mic@digikod.net> wrote:
-> > > 
-> > > On Mon, Jun 16, 2025 at 11:11:13PM -0700, Song Liu wrote:
-> > >> Use path_walk_parent() to walk a path up to its parent.
-> > >> 
-> > >> No functional changes intended.
-> > > 
-> > > Using this helper actualy fixes the issue highlighted by Al.  Even if it
-> > > was reported after the first version of this patch series, the issue
-> > > should be explained in the commit message and these tags should be
-> > > added:
-> > > 
-> > > Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-> > > Closes: https://lore.kernel.org/r/20250529231018.GP2023217@ZenIV 
-> > > Fixes: cb2c7d1a1776 ("landlock: Support filesystem access-control")
-> > > 
-> > > I like this new helper but we should have a clear plan to be able to
-> > > call such helper in a RCU read-side critical section before we merge
-> > > this series.  We're still waiting for Christian.
-> > > 
-> > > I sent a patch to fix the handling of disconnected directories for
-> > > Landlock, and it will need to be backported:
-> > > https://lore.kernel.org/all/20250701183812.3201231-1-mic@digikod.net/
-> > > Unfortunately a rebase would be needed for the path_walk_parent patch,
-> > > but I can take it in my tree if everyone is OK.
-> > 
-> > The fix above also touches VFS code (makes path_connected available 
-> > out of namei.c. It probably should also go through VFS tree? 
-> > 
-> > Maybe you can send 1/5 and 2/5 of this set (with necessary changes) 
-> > and your fix together to VFS tree. Then, I will see how to route the
-> > BPF side patches. 
-> 
-> That could work, but because it would be much more Landlock-specific
-> code than VFS-specific code, and there will probably be a few versions
-> of my fixes, I'd prefer to keep this into my tree if VFS folks are OK.
-> BTW, my fixes already touch the VFS subsystem a bit.
+From: Hongbo Yao <andy.xu@hj-micro.com>
 
-Under specific circumstances we will accept very minor changes to VFS
-code to go through selected other trees depending on the amount of trust
-between the respective trees. Afaict, your series just exports a
-function. I'll take a look at it.
+Extend the DPC recovery timeout from 4 seconds to 7 seconds to
+support Mellanox ConnectX series network adapters.
+
+My environment:
+  - Platform: arm64 N2 based server
+  - Endpoint1: Mellanox Technologies MT27800 Family [ConnectX-5]
+  - Endpoint2: Mellanox Technologies MT2910 Family [ConnectX-7]
+
+With the original 4s timeout, hotplug would still be triggered:
+
+[ 81.012463] pcieport 0004:00:00.0: DPC: containment event, status:0x1f01 source:0x0000
+[ 81.014536] pcieport 0004:00:00.0: DPC: unmasked uncorrectable error detected
+[ 81.029598] pcieport 0004:00:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
+[ 81.040830] pcieport 0004:00:00.0: device [0823:0110] error status/mask=00008000/04d40000
+[ 81.049870] pcieport 0004:00:00.0: [ 0] ERCR (First)
+[ 81.053520] pcieport 0004:00:00.0: AER: TLP Header: 60008010 010000ff 00001000 9c4c0000
+[ 81.065793] mlx5_core 0004:01:00.0: mlx5_pci_err_detected Device state = 1 health sensors: 1 pci_status: 1. Enter, pci channel state = 2
+[ 81.076183] mlx5_core 0004:01:00.0: mlx5_error_sw_reset:231:(pid 1618): start
+[ 81.083307] mlx5_core 0004:01:00.0: mlx5_error_sw_reset:252:(pid 1618): PCI channel offline, stop waiting for NIC IFC
+[ 81.077428] mlx5_core 0004:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
+[ 81.486693] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
+[ 81.496965] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
+[ 82.395040] mlx5_core 0004:01:00.1: print_health:819:(pid 0): Fatal error detected
+[ 82.395493] mlx5_core 0004:01:00.1: print_health_info:423:(pid 0): PCI slot 1 is unavailable
+[ 83.431094] mlx5_core 0004:01:00.0: mlx5_pci_err_detected Device state = 2 pci_status: 0. Exit, result = 3, need reset
+[ 83.442100] mlx5_core 0004:01:00.1: mlx5_pci_err_detected Device state = 2 health sensors: 1 pci_status: 1. Enter, pci channel state = 2
+[ 83.441801] mlx5_core 0004:01:00.0: mlx5_crdump_collect:50:(pid 2239): crdump: failed to lock gw status -13
+[ 83.454050] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:231:(pid 1618): start
+[ 83.454050] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:252:(pid 1618): PCI channel offline, stop waiting for NIC IFC
+[ 83.849429] mlx5_core 0004:01:00.1: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
+[ 83.858892] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
+[ 83.869464] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
+[ 85.201433] pcieport 0004:00:00.0: pciehp: Slot(41): Link Down
+[ 85.815016] mlx5_core 0004:01:00.1: mlx5_health_try_recover:335:(pid 2239): handling bad device here
+[ 85.824164] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:231:(pid 2239): start
+[ 85.831283] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:252:(pid 2239): PCI channel offline, stop waiting for NIC IFC
+[ 85.841899] mlx5_core 0004:01:00.1: mlx5_unload_one_dev_locked:1612:(pid 2239): mlx5_unload_one_dev_locked: interface is down, NOP
+[ 85.853799] mlx5_core 0004:01:00.1: mlx5_health_wait_pci_up:325:(pid 2239): PCI channel offline, stop waiting for PCI
+[ 85.863494] mlx5_core 0004:01:00.1: mlx5_health_try_recover:338:(pid 2239): health recovery flow aborted, PCI reads still not working
+[ 85.873231] mlx5_core 0004:01:00.1: mlx5_pci_err_detected Device state = 2 pci_status: 0. Exit, result = 3, need reset
+[ 85.879899] mlx5_core 0004:01:00.1: E-Switch: Unload vfs: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
+[ 85.921428] mlx5_core 0004:01:00.1: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
+[ 85.930491] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
+[ 85.940849] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
+[ 85.949971] mlx5_core 0004:01:00.1: mlx5_uninit_one:1528:(pid 1617): mlx5_uninit_one: interface is down, NOP
+[ 85.959944] mlx5_core 0004:01:00.1: E-Switch: cleanup
+[ 86.035541] mlx5_core 0004:01:00.0: E-Switch: Unload vfs: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
+[ 86.077568] mlx5_core 0004:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
+[ 86.071727] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
+[ 86.096577] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
+[ 86.106909] mlx5_core 0004:01:00.0: mlx5_uninit_one:1528:(pid 1617): mlx5_uninit_one: interface is down, NOP
+[ 86.115940] pcieport 0004:00:00.0: AER: subordinate device reset failed
+[ 86.122557] pcieport 0004:00:00.0: AER: device recovery failed
+[ 86.128571] mlx5_core 0004:01:00.0: E-Switch: cleanup
+
+I added some prints and found that:
+ - ConnectX-5 requires >5s for full recovery
+ - ConnectX-7 requires >6s for full recovery
+
+Setting timeout to 7s covers both devices with safety margin.
+
+Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
+---
+ drivers/pci/pcie/dpc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index fc18349614d7..35a37fd86dcd 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -118,10 +118,10 @@ bool pci_dpc_recovered(struct pci_dev *pdev)
+ 	/*
+ 	 * Need a timeout in case DPC never completes due to failure of
+ 	 * dpc_wait_rp_inactive().  The spec doesn't mandate a time limit,
+-	 * but reports indicate that DPC completes within 4 seconds.
++	 * but reports indicate that DPC completes within 7 seconds.
+ 	 */
+ 	wait_event_timeout(dpc_completed_waitqueue, dpc_completed(pdev),
+-			   msecs_to_jiffies(4000));
++			   msecs_to_jiffies(7000));
+ 
+ 	return test_and_clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+ }
+-- 
+2.43.0
+
