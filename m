@@ -1,231 +1,319 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CAC2D97B0;
-	Mon,  7 Jul 2025 14:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7D52DFA44;
+	Mon,  7 Jul 2025 14:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898231; cv=none; b=RgfZyG5P0dbvoSKDwY5uqwgDaNRhQbmBG8ct/qQHKOthYssFynD8O20UNt3Bob+/HEAlvZpXxcYrGAc0ipiFw2AVeda88MIEBQnrgP290GrM4ZJBsBvVg2lcScl6yT5mS+C3RyDov23oFou0eZFAju7nlvog5AYqss8vIt0rmGY=
+	t=1751898235; cv=none; b=IBTD/R34BvbnXcKu8ZG7d2lFyF+bPhzGMOy0Ii0MH0Np1olj7eXiDPNM2sj96lDJpDC89zYhYQFQJFrvPT2ufNweD7hssRmgGNDZDFC8i73UnU1HAL5ahqbu5km5xMUNNj8cOgVlumnMzbTikVbAbqgk93pIa/e8xXxlxmjb1hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898231; c=relaxed/simple;
-	bh=s4skLLJfopoH2TWuLw68jE7DlOUR1hAhAHbxjOf1rD4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tM330s0PSn8nSDt5KMZqaD08XkbYjF8qYMnKBdHLRgkaBZiupGkvifEPpC2aXZx7WQxu32dIOKPV6cQ0N2i65n6tc5L+xseXalv+tGP4r7tkqJNSLTa/8xPMJ4ZYM+ZyIke+5KOvkUIM8ljyR1RrwLXhkYIjtKMxrN7vehD2FXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mpRJDZPO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cPt4+3lu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751898235; c=relaxed/simple;
+	bh=DRCKQK856vY/XhqC271b6reyPd1XmuXWY0VkCfRxp/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rmtPBsjTBJ5ZodW1/Z+wDKPClIc4WWkeFa1Rcpt63tw5CPMD3qUFURYcKjyqLNJTl46B0U9AyEpagxKyBupBm8VctvKWEK95oe+lDEEB2wC2QwSb4AqAMOZDhF8uBlK8bbaT4wzPW2o8+TtnkQHqoUb+pZGzrAczTKSN1lOpTCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=iZsZqnCv; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mpRJDZPO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cPt4+3lu"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751898226;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="iZsZqnCv"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bbRLY0CMSz9tGx;
+	Mon,  7 Jul 2025 16:23:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751898229;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Pq7ctUq5bHh87KWv51A0aETgmBc6Ve8Sl/O21M03X6U=;
-	b=mpRJDZPO50o4vLQGEJyB0M8/8hdc6gStYxDq1KdA04K6AQHDrLHTnnQKVppcDr2koFm9b8
-	4BUf04l313w1JWbKQSi+QHn6p3V84rkJu7yBaf7aAWJa2OMcLgCK+o78ginBdrcuN4sMCa
-	+m2Qluu1Se+KsaRz0Oh1QmazSi6n4lySVYstE+u9r4jRYcbxTJi4mRHzPulmiVFC1baksn
-	i1Ljq95JE3+di26R1TmYMee30QZBvtXnBQ38GBe7JvlNUyu34bMYCiNE1Ly4NkR3h82uXH
-	FIslPyJfrvbM/zWwPc4f0jq2Bu8kVQvffuX5xyM5snwM+l8UqYYrjg6+GvVTvQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751898226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pq7ctUq5bHh87KWv51A0aETgmBc6Ve8Sl/O21M03X6U=;
-	b=cPt4+3luq/Srfd+rPwnvWKZEYrbFquBBeM2BftCIaCESBpai6SNgXxZQxKTMpCdo5jouLx
-	MJ4ev5xiGTJYUZDA==
-Date: Mon, 07 Jul 2025 16:23:43 +0200
-Subject: [PATCH 5/5] selftests: vDSO: Drop vdso_test_clock_getres
+	bh=dioc976QRUw5bLt02/DkSyYspIHpJxyFl5YdOlbtU3Y=;
+	b=iZsZqnCvOLftVzN22H/zGurFF1wZNHMczIdkygQCJEd73NIfq19mZQOw2buUf8ZOB+l9DD
+	3+VKM3RZy1Uwkfx6NLJj4xUt+wfX8tBMN8TqVxUe/4nvqz8+nO63NDGZECYNPV0f62MM5e
+	0SszRUpsSD18v6VAsrpMdeT9dpNkLXC4ZgB15DnLbcvsaJLwg3cEmKq7jkDOSaE5CUdc4b
+	5mZGOPtBUjdj5kB8M7mujrQm1CC9sB/njlYbGTr0vHhNmySrw626BXHizNDjdkhrXSDJzB
+	7Qvc/7rvhNyx3qyevTice33nVlvjV0NdkdvieOYiVD+dLl6G4mH6Anv0UvV/qQ==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Suren Baghdasaryan <surenb@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nico Pache <npache@redhat.com>,
+	Dev Jain <dev.jain@arm.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	x86@kernel.org,
+	linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	mcgrof@kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v2 3/5] mm: add static PMD zero page
+Date: Mon,  7 Jul 2025 16:23:17 +0200
+Message-ID: <20250707142319.319642-4-kernel@pankajraghav.com>
+In-Reply-To: <20250707142319.319642-1-kernel@pankajraghav.com>
+References: <20250707142319.319642-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250707-vdso-tests-fixes-v1-5-545be9781b0c@linutronix.de>
-References: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
-In-Reply-To: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751898221; l=4660;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=s4skLLJfopoH2TWuLw68jE7DlOUR1hAhAHbxjOf1rD4=;
- b=BdSEX7GiS3a04xCqvPsN2BEpFMTb2uoea9+n6lt+PyQCcqFtumBOIJrIZh7r1fqniCZ5KyXij
- 4BbEnAPPc6xDkmGGN+F17nyHXQERyHu02GVXCnQpCCipzklH9DgWs1z
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-vdso_test_abi provides the exact same functionality, properly uses
-kselftest.h and explicitly calls into the vDSO without relying on the libc.
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-Drop the pointless testcase.
+There are many places in the kernel where we need to zeroout larger
+chunks but the maximum segment we can zeroout at a time by ZERO_PAGE
+is limited by PAGE_SIZE.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+This is especially annoying in block devices and filesystems where we
+attach multiple ZERO_PAGEs to the bio in different bvecs. With multipage
+bvec support in block layer, it is much more efficient to send out
+larger zero pages as a part of single bvec.
+
+This concern was raised during the review of adding LBS support to
+XFS[1][2].
+
+Usually huge_zero_folio is allocated on demand, and it will be
+deallocated by the shrinker if there are no users of it left. At moment,
+huge_zero_folio infrastructure refcount is tied to the process lifetime
+that created it. This might not work for bio layer as the completitions
+can be async and the process that created the huge_zero_folio might no
+longer be alive.
+
+Add a config option STATIC_PMD_ZERO_PAGE that will always allocate
+the huge_zero_folio, and it will never be freed. This makes using the
+huge_zero_folio without having to pass any mm struct and does not tie
+the lifetime of the zero folio to anything.
+
+memblock is used to allocated this PMD zero page during early boot.
+
+If STATIC_PMD_ZERO_PAGE config option is enabled, then
+mm_get_huge_zero_folio() will simply return this page instead of
+dynamically allocating a new PMD page.
+
+As STATIC_PMD_ZERO_PAGE does not depend on THP, declare huge_zero_folio
+and huge_zero_pfn outside the THP config.
+
+[1] https://lore.kernel.org/linux-xfs/20231027051847.GA7885@lst.de/
+[2] https://lore.kernel.org/linux-xfs/ZitIK5OnR7ZNY0IG@infradead.org/
+
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
- tools/testing/selftests/vDSO/Makefile              |   2 -
- .../selftests/vDSO/vdso_test_clock_getres.c        | 123 ---------------------
- 2 files changed, 125 deletions(-)
+ include/linux/mm.h | 25 ++++++++++++++++++++++++-
+ mm/Kconfig         |  9 +++++++++
+ mm/huge_memory.c   | 24 ++++++++++++++++++++----
+ mm/memory.c        | 25 +++++++++++++++++++++++++
+ mm/mm_init.c       |  1 +
+ 5 files changed, 79 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index 918a2caa070ebc681a9525f0518afffcf10f5ae3..e361aca22a74dc5c279ab1aa16f308b7e6e85bf1 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -4,7 +4,6 @@ include ../../../scripts/Makefile.arch
- TEST_GEN_PROGS := vdso_test_gettimeofday
- TEST_GEN_PROGS += vdso_test_getcpu
- TEST_GEN_PROGS += vdso_test_abi
--TEST_GEN_PROGS += vdso_test_clock_getres
- ifeq ($(ARCH),$(filter $(ARCH),x86 x86_64))
- TEST_GEN_PROGS += vdso_standalone_test_x86
- endif
-@@ -29,7 +28,6 @@ CFLAGS_NOLIBC := -nostdlib -nostdinc -ffreestanding -fno-asynchronous-unwind-tab
- $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
- $(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
- $(OUTPUT)/vdso_test_abi: parse_vdso.c vdso_test_abi.c
--$(OUTPUT)/vdso_test_clock_getres: vdso_test_clock_getres.c
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index c8fbeaacf896..428fe6d36b3c 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -4018,10 +4018,19 @@ static inline bool vma_is_special_huge(const struct vm_area_struct *vma)
  
- $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c | headers
- $(OUTPUT)/vdso_standalone_test_x86: CFLAGS:=$(CFLAGS_NOLIBC) $(CFLAGS)
-diff --git a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-deleted file mode 100644
-index b5d5f59f725a703c357dfca91bfe170aaaeb42fa..0000000000000000000000000000000000000000
---- a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-+++ /dev/null
-@@ -1,123 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
--/*
-- * vdso_clock_getres.c: Sample code to test clock_getres.
-- * Copyright (c) 2019 Arm Ltd.
-- *
-- * Compile with:
-- * gcc -std=gnu99 vdso_clock_getres.c
-- *
-- * Tested on ARM, ARM64, MIPS32, x86 (32-bit and 64-bit),
-- * Power (32-bit and 64-bit), S390x (32-bit and 64-bit).
-- * Might work on other architectures.
-- */
--
--#define _GNU_SOURCE
--#include <elf.h>
--#include <fcntl.h>
--#include <stdint.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <time.h>
--#include <sys/auxv.h>
--#include <sys/mman.h>
--#include <sys/time.h>
--#include <unistd.h>
--#include <sys/syscall.h>
--
--#include "../kselftest.h"
--
--static long syscall_clock_getres(clockid_t _clkid, struct timespec *_ts)
--{
--	long ret;
--
--	ret = syscall(SYS_clock_getres, _clkid, _ts);
--
--	return ret;
--}
--
--const char *vdso_clock_name[12] = {
--	"CLOCK_REALTIME",
--	"CLOCK_MONOTONIC",
--	"CLOCK_PROCESS_CPUTIME_ID",
--	"CLOCK_THREAD_CPUTIME_ID",
--	"CLOCK_MONOTONIC_RAW",
--	"CLOCK_REALTIME_COARSE",
--	"CLOCK_MONOTONIC_COARSE",
--	"CLOCK_BOOTTIME",
--	"CLOCK_REALTIME_ALARM",
--	"CLOCK_BOOTTIME_ALARM",
--	"CLOCK_SGI_CYCLE",
--	"CLOCK_TAI",
--};
--
--/*
-- * This function calls clock_getres in vdso and by system call
-- * with different values for clock_id.
-- *
-- * Example of output:
-- *
-- * clock_id: CLOCK_REALTIME [PASS]
-- * clock_id: CLOCK_BOOTTIME [PASS]
-- * clock_id: CLOCK_TAI [PASS]
-- * clock_id: CLOCK_REALTIME_COARSE [PASS]
-- * clock_id: CLOCK_MONOTONIC [PASS]
-- * clock_id: CLOCK_MONOTONIC_RAW [PASS]
-- * clock_id: CLOCK_MONOTONIC_COARSE [PASS]
-- */
--static inline int vdso_test_clock(unsigned int clock_id)
--{
--	struct timespec x, y;
--
--	printf("clock_id: %s", vdso_clock_name[clock_id]);
--	clock_getres(clock_id, &x);
--	syscall_clock_getres(clock_id, &y);
--
--	if ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)) {
--		printf(" [FAIL]\n");
--		return KSFT_FAIL;
--	}
--
--	printf(" [PASS]\n");
--	return KSFT_PASS;
--}
--
--int main(int argc, char **argv)
--{
--	int ret = 0;
--
--#if _POSIX_TIMERS > 0
--
--#ifdef CLOCK_REALTIME
--	ret += vdso_test_clock(CLOCK_REALTIME);
--#endif
--
--#ifdef CLOCK_BOOTTIME
--	ret += vdso_test_clock(CLOCK_BOOTTIME);
--#endif
--
--#ifdef CLOCK_TAI
--	ret += vdso_test_clock(CLOCK_TAI);
--#endif
--
--#ifdef CLOCK_REALTIME_COARSE
--	ret += vdso_test_clock(CLOCK_REALTIME_COARSE);
--#endif
--
--#ifdef CLOCK_MONOTONIC
--	ret += vdso_test_clock(CLOCK_MONOTONIC);
--#endif
--
--#ifdef CLOCK_MONOTONIC_RAW
--	ret += vdso_test_clock(CLOCK_MONOTONIC_RAW);
--#endif
--
--#ifdef CLOCK_MONOTONIC_COARSE
--	ret += vdso_test_clock(CLOCK_MONOTONIC_COARSE);
--#endif
--
--#endif
--	if (ret > 0)
--		return KSFT_FAIL;
--
--	return KSFT_PASS;
--}
-
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_HUGETLBFS */
+ 
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
++extern void __init static_pmd_zero_init(void);
++#else
++static inline void __init static_pmd_zero_init(void)
++{
++	return;
++}
++#endif
++
+ extern struct folio *huge_zero_folio;
+ extern unsigned long huge_zero_pfn;
+ 
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ static inline bool is_huge_zero_folio(const struct folio *folio)
+ {
+ 	return READ_ONCE(huge_zero_folio) == folio;
+@@ -4032,9 +4041,23 @@ static inline bool is_huge_zero_pmd(pmd_t pmd)
+ 	return pmd_present(pmd) && READ_ONCE(huge_zero_pfn) == pmd_pfn(pmd);
+ }
+ 
++#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
++static inline struct folio *mm_get_huge_zero_folio(struct mm_struct *mm)
++{
++	return READ_ONCE(huge_zero_folio);
++}
++
++static inline void mm_put_huge_zero_folio(struct mm_struct *mm)
++{
++	return;
++}
++
++#else
+ struct folio *mm_get_huge_zero_folio(struct mm_struct *mm);
+ void mm_put_huge_zero_folio(struct mm_struct *mm);
+ 
++#endif /* CONFIG_STATIC_PMD_ZERO_PAGE */
++
+ #else
+ static inline bool is_huge_zero_folio(const struct folio *folio)
+ {
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 781be3240e21..89d5971cf180 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -826,6 +826,15 @@ config ARCH_WANTS_THP_SWAP
+ config MM_ID
+ 	def_bool n
+ 
++config STATIC_PMD_ZERO_PAGE
++	bool "Allocate a PMD page for zeroing"
++	help
++	  Typically huge_zero_folio, which is a PMD page of zeroes, is allocated
++	  on demand and deallocated when not in use. This option will
++	  allocate a PMD sized zero page during early boot and huge_zero_folio will
++	  use it instead allocating dynamically.
++	  Not suitable for memory constrained systems.
++
+ menuconfig TRANSPARENT_HUGEPAGE
+ 	bool "Transparent Hugepage Support"
+ 	depends on HAVE_ARCH_TRANSPARENT_HUGEPAGE && !PREEMPT_RT
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 101b67ab2eb6..c12ca7134e88 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -75,9 +75,6 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 					 struct shrink_control *sc);
+ static bool split_underused_thp = true;
+ 
+-static atomic_t huge_zero_refcount;
+-struct folio *huge_zero_folio __read_mostly;
+-unsigned long huge_zero_pfn __read_mostly = ~0UL;
+ unsigned long huge_anon_orders_always __read_mostly;
+ unsigned long huge_anon_orders_madvise __read_mostly;
+ unsigned long huge_anon_orders_inherit __read_mostly;
+@@ -208,6 +205,23 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	return orders;
+ }
+ 
++#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
++static int huge_zero_page_shrinker_init(void)
++{
++	return 0;
++}
++
++static void huge_zero_page_shrinker_exit(void)
++{
++	return;
++}
++#else
++
++static struct shrinker *huge_zero_page_shrinker;
++static atomic_t huge_zero_refcount;
++struct folio *huge_zero_folio __read_mostly;
++unsigned long huge_zero_pfn __read_mostly = ~0UL;
++
+ static bool get_huge_zero_page(void)
+ {
+ 	struct folio *zero_folio;
+@@ -288,7 +302,6 @@ static unsigned long shrink_huge_zero_page_scan(struct shrinker *shrink,
+ 	return 0;
+ }
+ 
+-static struct shrinker *huge_zero_page_shrinker;
+ static int huge_zero_page_shrinker_init(void)
+ {
+ 	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
+@@ -307,6 +320,7 @@ static void huge_zero_page_shrinker_exit(void)
+ 	return;
+ }
+ 
++#endif
+ 
+ #ifdef CONFIG_SYSFS
+ static ssize_t enabled_show(struct kobject *kobj,
+@@ -2843,6 +2857,8 @@ static void __split_huge_zero_page_pmd(struct vm_area_struct *vma,
+ 	pte_t *pte;
+ 	int i;
+ 
++	// FIXME: can this be called with static zero page?
++	VM_BUG_ON(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE));
+ 	/*
+ 	 * Leave pmd empty until pte is filled note that it is fine to delay
+ 	 * notification until mmu_notifier_invalidate_range_end() as we are
+diff --git a/mm/memory.c b/mm/memory.c
+index b0cda5aab398..42c4c31ad14c 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -42,6 +42,7 @@
+ #include <linux/kernel_stat.h>
+ #include <linux/mm.h>
+ #include <linux/mm_inline.h>
++#include <linux/memblock.h>
+ #include <linux/sched/mm.h>
+ #include <linux/sched/numa_balancing.h>
+ #include <linux/sched/task.h>
+@@ -159,6 +160,30 @@ static int __init init_zero_pfn(void)
+ }
+ early_initcall(init_zero_pfn);
+ 
++#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
++struct folio *huge_zero_folio __read_mostly = NULL;
++unsigned long huge_zero_pfn __read_mostly = ~0UL;
++
++void __init static_pmd_zero_init(void)
++{
++	void *alloc = memblock_alloc(PMD_SIZE, PAGE_SIZE);
++
++	if (!alloc)
++		return;
++
++	huge_zero_folio = virt_to_folio(alloc);
++	huge_zero_pfn = page_to_pfn(virt_to_page(alloc));
++
++	__folio_set_head(huge_zero_folio);
++	prep_compound_head((struct page *)huge_zero_folio, PMD_ORDER);
++	/* Ensure zero folio won't have large_rmappable flag set. */
++	folio_clear_large_rmappable(huge_zero_folio);
++	folio_zero_range(huge_zero_folio, 0, PMD_SIZE);
++
++	return;
++}
++#endif
++
+ void mm_trace_rss_stat(struct mm_struct *mm, int member)
+ {
+ 	trace_rss_stat(mm, member);
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index f2944748f526..56d7ec372af1 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2765,6 +2765,7 @@ void __init mm_core_init(void)
+ 	 */
+ 	kho_memory_init();
+ 
++	static_pmd_zero_init();
+ 	memblock_free_all();
+ 	mem_init();
+ 	kmem_cache_init();
 -- 
-2.50.0
+2.49.0
 
