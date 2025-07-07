@@ -1,200 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B1628C2C4;
-	Mon,  7 Jul 2025 09:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3473428C2C4
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880221; cv=none; b=DX6E0U65ZQpgd1MYzngqMJoGlC+cjEzvaueCzQ9OukIUEKQWQsvDfItAxM9/OtIcvt/Q7k6+s+Bb1UDCSyef9lrCS0jRMwNMuecDDx7V1J7VMhkNKoamWRQh+I0gTaZwa8Ss+i2EKQg0zrPVULCxG+DByFt7uDa2JNk89+zxMRs=
+	t=1751880235; cv=none; b=YwNhZdvRCTLNh9Rj5OHIdtBeDnp3XlvoWDDEuBNTKEOce3ORANnqmeAcUaHE3FhYp8zLev+Vfgp1z79sPqYUQoZkEQRRCo6rzFLuHWblxgR5kLSfmoqi7bengn6A26/4O/IXJ6tKTQrSvbLQTl0tWvfQS2SD46chq+/hepqM0hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880221; c=relaxed/simple;
-	bh=+KASChTcoQ47phcIh1NySTu90by2mpX9tu57u3X7ooU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=HLCGvQUuCf4iFnDkfQotKatNU7mYpazCPzCIxGs1aRMxLuBQNL6Cg9eGOGQGn/4nUzvmuX+WkWLGeaf3mDqNsE8Ag1PWitwuLNuq+h7mOt1KPJDP6VQnudSE0UM5yqH7rhEMEZJ+oBVAAANTShFKYJ+4hh2Wk+/I8RZF+uuLoq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/CslROb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751880235; c=relaxed/simple;
+	bh=k486wDDxfr0bcvDQG60f8tWDcYoRzeaxKBRKmoxQRu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZGa/prUVIqCCwskX21ikwXrOlOalxLIaO4AvDsBB96ZcPwDe1i5aKtY3xhk/v1J0JyCQcVyQLlOf9hDVyZww/Ex+UUr1wqLirPs0CNXmq7t9TEzN04kMnkyzu4TM2D0JwkdL1NcVF4S/ZD4ppL3pt/GmB2VE6xPXxBK0zPuIdYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JJvAdifd; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/CslROb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025A5C4CEEF;
-	Mon,  7 Jul 2025 09:23:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751880221;
-	bh=+KASChTcoQ47phcIh1NySTu90by2mpX9tu57u3X7ooU=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=l/CslROb7rGL35egZyGWsLNJpI5SCrfUDMugo/7qtHcvfOKRScNLjuvz6qTEMzYJP
-	 E/U8FKRhdr5HEPCQ3I+GMqbA8WNEWXBj9PRZQ0vFpEWcgln9urPCJY0uizaz7RIdYY
-	 4Zb64bQve25oFeabYa7wNm9jq9unOgSoAN7NUanHd55zgdJGuFZXHdNLoT6cGE7+Eq
-	 XPpr79GyZ0b0du8UC0IaYV2F9rjScuwCLoWGTJfntpJczVsdlAasYQCZ+/oXGmjzsK
-	 erLmeiqPcxsJqYAnHEhFT/4wveqLsCkU9w0XduFHZCMQzWjzE9chcLLr5GK272PN+u
-	 mE3pxt8UzSFRg==
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JJvAdifd"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so2445746f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751880231; x=1752485031; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FqKblBf6CUsGl/mCy2pm5G2S6HLKhv5qOw5Xqk6h5bI=;
+        b=JJvAdifdCJS8gaL4vnr6imCCvgawj16Stw7XK8qBuYbfT99MQBe7p4BHiWKDnr7jAU
+         fKtc7FxmolHHrPDRy7wLHcNMmkX54UJONHvILH+dPRLkDyHa/knZhK867UiCE2h/ou0i
+         UdZeOL/hIDGzRyzCN4lumh+Oqsp9LGUIKXsY2S9e/XESLVXc3BghXI6zuMh+JhXcbXd5
+         Ou8G5M+rfmLnOcVcgF9vGGp1RydnCvJKQDc/J0sv8ifWNkcjQQmmziMCs8YI19ZBuaxZ
+         oJ1dT5rDy9dUuVx39HOzPY7wWdA5QLZxy+/KsVZhmfnJ0uCby85TLXrcM9CR3fIFrHvW
+         +F7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751880231; x=1752485031;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FqKblBf6CUsGl/mCy2pm5G2S6HLKhv5qOw5Xqk6h5bI=;
+        b=IDyxA5AugwjpEUdgdEhk+yenBhn8Mjv4dfs3g6g7DY7PakvipjgXj/d1ibEJXmredv
+         nmwjFLBoVz4f+7bqyVpgxwxPfunF/MmXG9ce8fWU4a3+4sNo0tpX1DDJbyRL/9L1kcnx
+         tcX0Rt5PAl7rOTrysHUaTYfhJXG1lzdoDvPSx0YpmLxy9OJm6B2Bd1glXk2js4VZ0Fb1
+         2wj1BlA1kAZIiD2c3kzZIhLhFHMGzo7dUGYBKgayj1cgQnOImHY23aP7ktfsA25oAjGe
+         jo6Z06phy57clgjHgHIbWiv+0y26feyAlzbg+4OCL+5d31y2E0T9QKG3YzQLf1GyIPrR
+         xhFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDogXrdVP8xBBiq805UvZ6Gdf2ykgkxlTDF/ynqqABb3xltLQBDJHkMreOc10/W/KtXdy+1X0qEX5hcYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVT+ANNjkTeYeIK+qEe4228AulQ3O21so+d9eM+mwde4KCpS/v
+	J3nQZ7IUMaCheY4fYDnhJUHCP7UbMyBDlMHuJdDeIwqv+TelS4B0QsvqysCvJkqMqJ4=
+X-Gm-Gg: ASbGncv8rGPjIDpCXy4v0m8k/qxHzQNnj6OFxMZ5QVtZF2+FGNF9M5a270mWA58zxWM
+	/4nt+nCEzVz2/XPwrd8fRrWav5cQlMmA4chrXazHzBmqY2hpq12Xa0GDo09pdYm/1r/E83pFrH2
+	ipUQJ3Nq4ts3B1Y/DBK8sqPVVpMtXXMlocNGgeJEiN6xV0OaK05f4sL680Ri8l7Q6/NEQoZdsrK
+	PmIIG0Sw82xIEsLFSgojfij16uZ1pUVSYDg4fI+ltA8WdzFYSuG9D63RPnJ6TsFDiUgVs6Ni443
+	VGitXKxCXhia2KQ8drGnNZK73XyHGIo91hj+CNHNYsWVSoP3mqXLKLamki+OzwVEwqGsZfbv4wo
+	=
+X-Google-Smtp-Source: AGHT+IHJrPNVBlcjf/0VEyIW2RxUb2n+reYTnzi8FGJY00p2BdD7RT52urYWmFfuCMqVzbeCW5Zitg==
+X-Received: by 2002:a05:6000:2386:b0:3a5:8977:e0fd with SMTP id ffacd0b85a97d-3b48f763f20mr9641920f8f.0.1751880231361;
+        Mon, 07 Jul 2025 02:23:51 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1698e24sm105561945e9.34.2025.07.07.02.23.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:23:50 -0700 (PDT)
+Date: Mon, 7 Jul 2025 11:23:49 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, JP Kobryn <inwardvessel@gmail.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Ying Huang <huang.ying.caritas@gmail.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Alexei Starovoitov <ast@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH v3] cgroup: llist: avoid memory tears for llist_node
+Message-ID: <6isu4w3ri66t7kli43hpw4mehjvhipzndktbxrar3ttccap6jy@q2f2xdimxpga>
+References: <20250704180804.3598503-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 07 Jul 2025 11:23:35 +0200
-Message-Id: <DB5PPGOWNW4K.2C5A4UE9V9IEF@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Asahi Lina" <lina+kernel@asahilina.net>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 1/4] rust: types: Add Ownable/Owned types
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Oliver Mangold" <oliver.mangold@pm.me>
-X-Mailer: aerc 0.20.1
-References: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me>
- <20250618-unique-ref-v11-1-49eadcdc0aa6@pm.me>
- <DB1IPFNLFDWV.2V5O73DOB2RV6@kernel.org> <aGtv9qs682gTyQWX@mango>
-In-Reply-To: <aGtv9qs682gTyQWX@mango>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gsl2hznmnpg6a4vg"
+Content-Disposition: inline
+In-Reply-To: <20250704180804.3598503-1-shakeel.butt@linux.dev>
 
-On Mon Jul 7, 2025 at 8:58 AM CEST, Oliver Mangold wrote:
-> On 250702 1303, Benno Lossin wrote:
->> On Wed Jun 18, 2025 at 2:27 PM CEST, Oliver Mangold wrote:
->> > From: Asahi Lina <lina+kernel@asahilina.net>
->> >
->> > By analogy to `AlwaysRefCounted` and `ARef`, an `Ownable` type is a
->> > (typically C FFI) type that *may* be owned by Rust, but need not be. U=
-nlike
->> > `AlwaysRefCounted`, this mechanism expects the reference to be unique
->> > within Rust, and does not allow cloning.
->> >
->> > Conceptually, this is similar to a `KBox<T>`, except that it delegates
->> > resource management to the `T` instead of using a generic allocator.
->> >
->> > Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e=
-@asahilina.net/
->> > Signed-off-by: Asahi Lina <lina@asahilina.net>
->> > [ om:
->> >   - split code into separate file and `pub use` it from types.rs
->> >   - make from_raw() and into_raw() public
->> >   - fixes to documentation and commit message
->> > ]
->> > Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
->> > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
->> > ---
->> >  rust/kernel/types.rs         |   7 +++
->> >  rust/kernel/types/ownable.rs | 134 ++++++++++++++++++++++++++++++++++=
-+++++++++
->>=20
->> I think we should name this file `owned.rs` instead. It's also what
->> we'll have for `ARef` when that is moved to `sync/`.
->>=20
->> Also, I do wonder does this really belong into the `types` module? I
->> feel like it's becoming our `utils` module and while it does fit, I
->> think we should just make this a top level module. So
->> `rust/kernel/owned.rs`. Thoughts?
->
-> I don't have much of an opinion on on that. But maybe refactoring types.r=
-s
-> should be an independent task?
 
-But you're adding the new file there? Just add it under
-`rust/kernel/owned.rs` instead.
+--gsl2hznmnpg6a4vg
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v3] cgroup: llist: avoid memory tears for llist_node
+MIME-Version: 1.0
 
->> > +/// - It is safe to call [`core::mem::swap`] on the [`Ownable`]. This=
- excludes pinned types
->> > +///   (i.e. most kernel types).
->>=20
->> Can't we implicitly pin `Owned`?
->
-> I have been thinking about that. But this would mean that the blanket
-> implementation for `Deref` would conflict with the one for `OwnableMut`.
+On Fri, Jul 04, 2025 at 11:08:04AM -0700, Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> More specifically the rstat updater and the flusher can race and cause
+> a scenario where the stats updater skips adding the css to the
+> lockless list but the flusher might not see those updates done by the
+> skipped updater.  This is benign race and the subsequent flusher will
+> flush those stats and at the moment there aren't any rstat users which
+> are not fine with this kind of race.
 
-Yeah we could not implement `DerefMut` in that case (or only for `T:
-Unpin`).
+Yes, the updaters and flushers has always been in a race.
 
->> > +/// - The kernel will never access the underlying object (excluding i=
-nternal mutability that follows
->> > +///   the usual rules) while Rust owns it.
->> > +pub unsafe trait OwnableMut: Ownable {}
->> > +
->> > +/// An owned reference to an ownable kernel object.
->>=20
->> How about
->>=20
->>     An owned `T`.
->
->     A wrapper around `T`.
->
-> maybe?
+> However some future user might want more stricter guarantee, so let's
+> add appropriate comments to ease the job of future users.
 
-"wrapper" seems wrong, since a wrapper in my mind is a newtype. So it
-would be `struct Owned(T)` which is wrong. The `T` is stored elsewhere.
+I believe there should never be such (external) users as updaters
+shouldn't be excluded by flushers in principle. (There is the exclusion
+for bookkeeping the updated tree paths correctly though.)
 
->> > +///
->> > +/// The object is automatically freed or released when an instance of=
- [`Owned`] is
->> > +/// dropped.
->>=20
->> I don't think we need to say this, I always assume this for all Rust
->> types except they document otherwise (eg `ManuallyDrop`, `MaybeUninit`
->> and thus also `Opaque`.)
->
-> Hmm, it is an important feature of the wrapper that it turns the `*Ownabl=
-e`
-> into an object that is automatically dropped. So shouldn't that be
-> mentioned here?
+So, thanks for the comments, one should be wary of them when considering
+the update updated subtree.
 
-I would expect that that happens, but sure we can leave it here.
+Michal
 
->> How about we provide some examples here?
->>=20
->> > +///
->> > +/// # Invariants
->> > +///
->> > +/// The pointer stored in `ptr` can be considered owned by the [`Owne=
-d`] instance.
->>=20
->> What exactly is "owned" supposed to mean? It depends on the concrete `T`
->> and that isn't well-defined (since it's a generic)...
->
-> "owned" means that access to the `T` is exclusive through the `Owned<T>`,
-> so normal Rust semantics can be applied.
+--gsl2hznmnpg6a4vg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Okay, in that case just say that `ptr` has exclusive access.
+-----BEGIN PGP SIGNATURE-----
 
->> Maybe we should give `Ownable` the task to document the exact ownership
->> semantics of `T`?
->>=20
->> > +pub struct Owned<T: Ownable> {
->> > +    ptr: NonNull<T>,
->> > +    _p: PhantomData<T>,
->> > +}
->> > +
->> > +// SAFETY: It is safe to send `Owned<T>` to another thread when the u=
-nderlying `T` is `Send` because
->> > +// it effectively means sending a `&mut T` (which is safe because `T`=
- is `Send`).
->>=20
->> How does this amount to sending a `&mut T`?
->
-> Good point. That documentation hasn't been updated since `&mut T` access
-> has been split out into `OwnableMut`. Not sure how to phrase it now.
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGuSIgAKCRB+PQLnlNv4
+CI7wAP4u/qgZyNwgTwsnKQhklrdWHI6kyPoLqOFcM+dj1w9SpwD+IdhdgkfQ/WaU
+LR0OIEBPOfWPYJAbpSSCgzEVBHFm8gc=
+=Rpm6
+-----END PGP SIGNATURE-----
 
-I'm also unsure, also for the correct trait bounds on this impl.
-
----
-Cheers,
-Benno
-
->> I guess this also needs to be guaranteed by `Owned::from_raw`... ah the
->> list grows...
->>=20
->> I'll try to come up with something to simplify this design a bit wrt the
->> safety docs.
->>=20
->> > +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
->> > +
->> > +// SAFETY: It is safe to send `&Owned<T>` to another thread when the =
-underlying `T` is `Sync`
->> > +// because it effectively means sharing `&T` (which is safe because `=
-T` is `Sync`).
->>=20
->> Same here.
->>=20
->> > +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
+--gsl2hznmnpg6a4vg--
