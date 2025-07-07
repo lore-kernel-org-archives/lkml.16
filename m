@@ -1,213 +1,153 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EFF299A85;
-	Mon,  7 Jul 2025 11:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276CA1D6188
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751888451; cv=none; b=jIjBMl/tO4Z0M3w6XLlg19yaDG+6G2/RFqW8Hic5N0tlS6CSsnHeLZ4vY2RfTmmOhGHAFQC+qq0vMYn8jso0dUhtJc1vfHPxFhtkTK5/BXgRbkwRuBWgflYHEVj3O6iYCCa5q038WAcK3ULn2Xjk+dP93bAHJaAA+tByGm+0abQ=
+	t=1751888541; cv=none; b=iRyd+5vBDBW9uMQlgr21jQnRb8lFa6oIMk+KOqOQwH1VRIh4qQLFRE+eoLRjAgXaaerHV4ukpvGpDB4d+lUDKkRymQUr6QYjE/JKGKZoNSNeQrgmusRhg3eM42VsoBRCbrsPPsFj6oB9kV9xZ+fnt5uAvQK73iHYwkplga4/UlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751888451; c=relaxed/simple;
-	bh=TBB5VKm8Ip2OBXmBLCzsvp4tYv+QIET8QncFz4GIo4M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kTAOvd+IgDz31awHMr2yrHdYK5NOcrkPn3lsElBkLaZDlaOK13elJ6n33eCJNjPWhlh3vZbCLu/z5CD31PZCCgSOeVWeYj3gBUib0URwc6H25riO+3La5C5MlW9W2j4YvHHeT+2Gd0RBkxTIY8gsxhpn5A33pdXQMfIQ/gnmEHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0JtoiJd; arc=none smtp.client-ip=209.85.210.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751888541; c=relaxed/simple;
+	bh=SO2cOz0w28nDjmz/4KCVUhyYuZcYpM+EdXuWAg+c+MU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QcceA2BPL/G26imM1AS62Ogdf0EOCPOKxPAXOWxsGYEAebHnqv0ba3Wkt4JAkdAZY+TvXfrO9sZgx/PDl+qwn90DGS9I2ufxk/UsnHoR1ryWspNg0a5onG/7FX1Dvj/PnYiEsHAH+hi8vsNnhpj9wZPlAXpETYqiEcQUOkZKads=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kCak27oe; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0JtoiJd"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-7490702fc7cso1728258b3a.1;
-        Mon, 07 Jul 2025 04:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751888449; x=1752493249; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6N2lwFDeBxpdj+xu2gSGUcRobXnUkCGs6+LBZY90J9E=;
-        b=Q0JtoiJd0lJngrySzUL65qINyf4ydtpuMnWzjMpsiWeoAunVNKVjnSMADLyRM10iXQ
-         f2+cEWkudHq/or384C03X65zf/UpCOjFZfina3VON12nNAigivd8Kp06AOK5B8XSwu8/
-         vUlP1DwHwYs87ias5bwbC1uSWHAOuE5+23dLPFAg5qAQt1TPR9yB73a8+27/SqtUbZKM
-         38GjULi558dDkxbQY7pHwM6UWq5LT+wh+eOf4HhS+ovQXyzMnA926fJH2z8VkWnyIxaq
-         g0u8+JSkSWDRDWG1JARq0CTxWHckhbdZFJAKjzNd304nTgOL1L11POf2AOatU7J2S363
-         0JWw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kCak27oe"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5676p3iA013839
+	for <linux-kernel@vger.kernel.org>; Mon, 7 Jul 2025 11:42:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EPmD/mqlIvExS85dVMv30F8Iy5Y5MWP3RJHR3V0RmEk=; b=kCak27oehArBQbs7
+	HuVS7QtbLw98lQGjXAIM1ZQbi91QEOJl470Erw1CPSFwbmpWoZJI8AhTW1ARWoHH
+	VuLIiIr7gorBBzRs0Kf782/QHJZlApOyMg3563oHtd44/n5kw9VLPcaoSIrF9E/1
+	sanKnuyOHFwzwft4XmBKJvDvkPh26v8obbfB8PIPOIPEsMPPhsvgOAlT3RCKYX7s
+	RRKK85e9Y+B24cFwrPOIg9QpqL5p8ggllBIiE5df4ZHVvt+tzYKmmbPmYz0lFhWN
+	YKe60w5hw/GScJNjYP84trOui3F/UQA5Dnc1Ik9sIV+Kt/utpy8D2CM6erN0ITQ6
+	W8KgiQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47r9b0j6ym-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 11:42:19 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d097083cc3so41805085a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 04:42:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751888449; x=1752493249;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6N2lwFDeBxpdj+xu2gSGUcRobXnUkCGs6+LBZY90J9E=;
-        b=AYm0d/xTm6nA2JwoTQMhsHXcQwDLivo8XZ7FRwvTanhroplaRnaENCiBwsmEBrmIQD
-         pkxwYfoOq9XOoiD67IknopXdM4MdXDlzT6ThE6w8mAOYIGrKWd1xM3Zei1g9JThwi022
-         d1sh9l/eYmdot+87nTaCxJ+Z9jENCoZn2Ai+vghPn0aFdKQ5T9WO5S1QUQzKBotxhm4D
-         gwzAPhYV8ZqMBr3xTlb6954jPTB4hXDJ+0z6hyZuk6XHSKgtX6UzwwtYTsj47lwcLQen
-         +OwY2SuYAf1eb0UFVYOxMqQsSNPm5C4l0lhthPo2UT+BYOSf+mZRwPTPbhHw/FZEKsM4
-         LHfw==
-X-Forwarded-Encrypted: i=1; AJvYcCW155L1R2WhS1U3SA5hGwziXTa4GkH8cNa/js7SLm6OKS1vsBgX95zG1uEdqkqWqCbi+tggkVfehaML4Lub@vger.kernel.org, AJvYcCWizKwXdbsmg3FrBjf+SDASdNIVI4zBqpgeObyOgFPMniNraFttAumrtNyr+Ox/P9h7Ais=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUp9nPvSR6/ZvvTt6FvkCrXGwjfLQ1wmCpjgZSNU+2wM6qQ2lU
-	nhfREuRY1WWfk4bEObUggVYIrblc+EA8MEkBqq9wSiCgH5Wx9cym4Vki
-X-Gm-Gg: ASbGncvjZ6JZs+22KFHPGMw2NgMBkxUWSB2s0ERbxROc6yj1wugqCHnkE1wolWnG3R+
-	EbJOmp4s55L8ZcXSmxM7sUjPqWY40+VThQvKOKdswr41ggZahWcIVdLm6CF6jViucpe9FvYXNSP
-	gNNRR7D3TukHIVnrtbcPSO8WTIk4xPaVXV14QBOueLd/YufH8XsUwYPWEmV+c38cR7wNfk6NPce
-	8jqMzVcqO6dG0PNSUY8tsxfryNvQJvmKKkf7pS3rtggx93IqIMil1VvnJm3MjZ+LlZFe6SBVzoV
-	t6QsSwOvRd6zFYt6Qkvae3ORJbm3RjwI5GauVs8BcspdxsqC8M+oanaAsQ29Mq+C5egPCd9kBq7
-	RwXI=
-X-Google-Smtp-Source: AGHT+IG2205mR589RM3rlU4Ix7jntnifujjs2m6SK4wtKGTVyIiDeqwIh0ptTSeUNUU9kn3mPfuzCA==
-X-Received: by 2002:a05:6a00:140f:b0:742:aecc:c46b with SMTP id d2e1a72fcca58-74cf6fb8582mr11492344b3a.15.1751888448644;
-        Mon, 07 Jul 2025 04:40:48 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce35cdaaasm8793211b3a.61.2025.07.07.04.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 04:40:48 -0700 (PDT)
-From: Menglong Dong <menglong8.dong@gmail.com>
-X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
-To: ast@kernel.org
-Cc: daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>
-Subject: [PATCH bpf-next] bpf: make the attach target more accurate
-Date: Mon,  7 Jul 2025 19:35:28 +0800
-Message-Id: <20250707113528.378303-1-dongml2@chinatelecom.cn>
-X-Mailer: git-send-email 2.39.5
+        d=1e100.net; s=20230601; t=1751888538; x=1752493338;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EPmD/mqlIvExS85dVMv30F8Iy5Y5MWP3RJHR3V0RmEk=;
+        b=VHna2eFq0o2T+C4Nyoln+nKyFkZxFVHMl8UIYCEV3F7OHf14Jqa6fuG/nAElO9sWv0
+         EC/OUW6EBvPMrIl19fYfb0Y6lexHy7Ks82R9/Tql9MnfpBy9nhBNA5sle4L+w0+vLKTN
+         u7DJtT/mDb5CaKbbi6rQGokp5zXiN5hL40Ekj75dQmG31jmN7wdLv3HyFYEM3RVMKSvS
+         XYNaV4kQAh6IP+0+mjSju9sCkVe9UuHZKiFCkvqMvtoYl6PiHwQsf6X3+xVQFa3qaV/T
+         ++u0sFe5e2NFpt6U+ooNH7haPjPatdi7Mz9vUtEvrRmC8Bm7tC5OKCWKD+tPbYS4dV20
+         IJPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWh/YOj3Prix0/lU9eHZXeU5N/xU1gs0cR6hOUvxMJ5P2BQ5TYa8EJKNjqShrR9YdXwyZj5cKhcudjdZ8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd6togEhUuyprdgEq9cNd5xgWGbj8m4MavmLjaFjkxq4OTIG6F
+	W6XWwhs4AiRA63q4g+UQ06scydtC5EGTm4h+LBephASjBsfsrwSEmXoGiCYrIzr3eg++L1AQxfv
+	b07VnMCfdj6hrkPMmR3JMjOKkg2Y9DmRmAxHk54Cnn0sAzWwN4Dw5c3b8BOFV9DPmRCM=
+X-Gm-Gg: ASbGncso0YMhXjmKiKrLYfg0iih+KKMlRM5jQ3zoWAT/VJUcRHmjkqOILgMQ8t+xHui
+	6jIwFiLFASZz8ce4p6+/lcC4gtQsXs4U//bB5DrKNuk3cWudV7Mp5t5rILgteqiSnvH6Wj9sfn+
+	0AV9YGKkBHCQSiVCDMo+xTMW4+BJ5hpdSQ//62eFYHCreKIso51TeSFyWBcZkBKQY0LY5WUNt+n
+	4qleqIY5mwfYsJEGdVlyheWw81KLdKu5EWQXIQPIdJlF/UD1mcnh6cxNiC9yuolkFTDh9Z+ibSy
+	gdLomlymkni7JWQYx9LGahXGB4vpx5I0adFpmR5gI5TTh2W8QmcBiDUXlLZ2R3GNEIBnfAEIgeG
+	qI2c=
+X-Received: by 2002:a05:620a:198e:b0:7d5:d1b8:e02c with SMTP id af79cd13be357-7d5ddc509abmr651649585a.10.1751888537765;
+        Mon, 07 Jul 2025 04:42:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9KOzB4zGkVpZwJx25vMl/UErrpqlqNGh0xSPchsvbG7/JV9ArfFw0uRjlumUIiFyMTjX47A==
+X-Received: by 2002:a05:620a:198e:b0:7d5:d1b8:e02c with SMTP id af79cd13be357-7d5ddc509abmr651646885a.10.1751888537272;
+        Mon, 07 Jul 2025 04:42:17 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b5e6fcsm695212066b.146.2025.07.07.04.42.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 04:42:16 -0700 (PDT)
+Message-ID: <6579c65c-877d-44fe-aa81-5b0e602b33f5@oss.qualcomm.com>
+Date: Mon, 7 Jul 2025 13:42:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] drm/msm: Clean up split driver features
+To: Rob Clark <robin.clark@oss.qualcomm.com>, dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar
+ <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20250705145242.781821-1-robin.clark@oss.qualcomm.com>
+ <20250705145242.781821-2-robin.clark@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250705145242.781821-2-robin.clark@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=dYuA3WXe c=1 sm=1 tr=0 ts=686bb29b cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=By577mDeuySOoy4OwVYA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA2OCBTYWx0ZWRfX2sd0liwjjCTx
+ BU5FfA9ALR85Q81ZxagLdHnNXgKLzOi4oTUwetHhlaubNT6lymPvud/6V1OQWwMSj/MVQxYidBg
+ uUiMcD/atSeA8hP2L4ViOCzrNQ5sdRXeAO9oiWvmIK24W2SAHQGhnujV4KzeclkrjjVO4wMapCj
+ 9tauBHO/avOEHh2GptQKlC1nzFV4rr1YCbfgkbXnVPv+Zg1Ef9gzMFsX9fQaF2XEWbTiIKiOIvu
+ XSZnfpR/ZD3Fb5dsJ+3q78pJuyluYy2sTFkNJD+fZnvhBdLRBalDue3GoUisCN+wccRURS/wVSy
+ e/2JcvirshDxLekkCx1/VitewTuOHAn2c3ADE6/XgYAIZSthvdjEUpjhm2Vlftl7Avj1TYmDzsW
+ GaztSJNDetZX/Bmnm8pWXa29AgVwSHQiiolpJoYJQL5EFAXvuRk4HZYfGmD9ZU+DHtOpUe2H
+X-Proofpoint-GUID: i_CnJyq0jj-dHzi4D7fdmv_nfcO0go6P
+X-Proofpoint-ORIG-GUID: i_CnJyq0jj-dHzi4D7fdmv_nfcO0go6P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_03,2025-07-07_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 suspectscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070068
 
-For now, we lookup the address of the attach target in
-bpf_check_attach_target() with find_kallsyms_symbol_value or
-kallsyms_lookup_name, which is not accurate in some cases.
+On 7/5/25 4:52 PM, Rob Clark wrote:
+> Avoid the possibility of missing features between the split and unified
+> drm driver cases by defining DRIVER_FEATURES_GPU / KMS and using those
+> in the drm_driver initializations.
+> 
+> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/msm_drv.c | 31 ++++++++++++++++---------------
+>  1 file changed, 16 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index b6efc5b9933b..5695de1bbae2 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -816,14 +816,21 @@ static const struct file_operations fops = {
+>  	.show_fdinfo = drm_show_fdinfo,
+>  };
+>  
+> +#define DRIVER_FEATURES_GPU ( \
+> +		DRIVER_GEM | \
+> +		DRIVER_GEM_GPUVA | \
+> +		DRIVER_RENDER | \
+> +		DRIVER_SYNCOBJ_TIMELINE | \
+> +		0 )
+> +
+> +#define DRIVER_FEATURES_KMS ( \
+> +		DRIVER_GEM | \
+> +		DRIVER_ATOMIC | \
+> +		DRIVER_MODESET | \
+> +		0 )
 
-For example, we want to attach to the target "t_next", but there are
-multiple symbols with the name "t_next" exist in the kallsyms. The one
-that kallsyms_lookup_name() returned may have no ftrace record, which
-makes the attach target not available. So we want the one that has ftrace
-record to be returned.
+Perhaps I'm missing some C lore, but do we need the "| 0"?
 
-Meanwhile, there may be multiple symbols with the name "t_next" in ftrace
-record. In this case, the attach target is ambiguous, so the attach should
-fail.
-
-Introduce the function bpf_lookup_attach_addr() to do the address lookup,
-which is able to solve this problem.
-
-Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
----
- kernel/bpf/verifier.c | 76 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 71 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 0f6cc2275695..9a7128da6d13 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -23436,6 +23436,72 @@ static int check_non_sleepable_error_inject(u32 btf_id)
- 	return btf_id_set_contains(&btf_non_sleepable_error_inject, btf_id);
- }
- 
-+struct symbol_lookup_ctx {
-+	const char *name;
-+	unsigned long addr;
-+};
-+
-+static int symbol_callback(void *data, unsigned long addr)
-+{
-+	struct symbol_lookup_ctx *ctx = data;
-+
-+	if (!ftrace_location(addr))
-+		return 0;
-+
-+	if (ctx->addr)
-+		return -EADDRNOTAVAIL;
-+
-+	ctx->addr = addr;
-+
-+	return 0;
-+}
-+
-+static int symbol_mod_callback(void *data, const char *name, unsigned long addr)
-+{
-+	if (strcmp(((struct symbol_lookup_ctx *)data)->name, name) != 0)
-+		return 0;
-+
-+	return symbol_callback(data, addr);
-+}
-+
-+/**
-+ * bpf_lookup_attach_addr: Lookup address for a symbol
-+ *
-+ * @mod: kernel module to lookup the symbol, NULL means to lookup the kernel
-+ * symbols
-+ * @sym: the symbol to resolve
-+ * @addr: pointer to store the result
-+ *
-+ * Lookup the address of the symbol @sym, and the address should has
-+ * corresponding ftrace location. If multiple symbols with the name @sym
-+ * exist, the one that has ftrace location will be returned. If more than
-+ * 1 has ftrace location, -EADDRNOTAVAIL will be returned.
-+ *
-+ * Returns: 0 on success, -errno otherwise.
-+ */
-+static int bpf_lookup_attach_addr(const struct module *mod, const char *sym,
-+				  unsigned long *addr)
-+{
-+	struct symbol_lookup_ctx ctx = { .addr = 0, .name = sym };
-+	int err;
-+
-+	if (!mod)
-+		err = kallsyms_on_each_match_symbol(symbol_callback, sym, &ctx);
-+	else
-+		err = module_kallsyms_on_each_symbol(mod->name, symbol_mod_callback,
-+						     &ctx);
-+
-+	if (!ctx.addr)
-+		return -ENOENT;
-+
-+	if (err)
-+		return err;
-+
-+	*addr = ctx.addr;
-+
-+	return 0;
-+}
-+
- int bpf_check_attach_target(struct bpf_verifier_log *log,
- 			    const struct bpf_prog *prog,
- 			    const struct bpf_prog *tgt_prog,
-@@ -23689,18 +23755,18 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
- 			if (btf_is_module(btf)) {
- 				mod = btf_try_get_module(btf);
- 				if (mod)
--					addr = find_kallsyms_symbol_value(mod, tname);
-+					ret = bpf_lookup_attach_addr(mod, tname, &addr);
- 				else
--					addr = 0;
-+					ret = -ENOENT;
- 			} else {
--				addr = kallsyms_lookup_name(tname);
-+				ret = bpf_lookup_attach_addr(NULL, tname, &addr);
- 			}
--			if (!addr) {
-+			if (ret) {
- 				module_put(mod);
- 				bpf_log(log,
- 					"The address of function %s cannot be found\n",
- 					tname);
--				return -ENOENT;
-+				return ret;
- 			}
- 		}
- 
--- 
-2.39.5
-
+Konrad
