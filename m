@@ -1,78 +1,114 @@
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215AA298CB1;
-	Mon,  7 Jul 2025 13:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618201E22FC;
+	Mon,  7 Jul 2025 13:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894747; cv=none; b=kGlL8xTNChNtNrYjypvXHdTsgW0I0bTM/WYVdSq4DMII33qHG0SYhzmqK3/u9RlsjqNjS3Nzc3cwsqKPvmd+rCqI3b0CLdTVQbZqtz1m4wEdDls3UnffjImkI854CjMBFemTuFj1br79T77qVuiPhsbX5MkDYui9u5jM0njTLTs=
+	t=1751894812; cv=none; b=ogzTwLApgM2WcIkl8TLaLn3mPSIRTUBEMX4BWWbJhsmuHnGrA4ylW6QNZjROLrD4BCWNRroOMp/y1v99dSHogTd0vh4rX9GmDt5bTGLLX3xAT9472SkukEDGOOcCqZF8XbdnUqL2LkV7fAkGMeK8D0ONn2kzN7OZO6MCeGJkjyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894747; c=relaxed/simple;
-	bh=DmqcSYSjwJ1ngk4ooV07QfYE0CJwwndzGHvqhjZ4jbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d8AMC2oUwPDY2KqjnoWUkWN71faW+0wiPyu6yyRbaqBhrS7AwpsbuF4XX73hcFtfqoDffa2E6AAoC51IUnZkH8ix18sOuen9aZYzOClhGKtN06PgHoIQ8Bna/MDYru7hVvXEK+/txVlGCIosJD4QBE9YyykNbpf41N9aCNvuaXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 4C7E38385E;
-	Mon,  7 Jul 2025 15:19:06 +0200 (CEST)
-From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- soc@lists.linux.dev, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v15 0/4] Initial Marvell PXA1908 support
-Date: Mon, 07 Jul 2025 15:15:55 +0200
-Message-ID: <5038617.31r3eYUQgx@radijator>
-In-Reply-To: <89072b80-09c0-418d-b104-668f7fdeae82@app.fastmail.com>
-References:
- <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
- <89072b80-09c0-418d-b104-668f7fdeae82@app.fastmail.com>
+	s=arc-20240116; t=1751894812; c=relaxed/simple;
+	bh=+eDQoI7Ih5xCp1XC5oM2SFOUr5/BpsbWEEV8qr+fx7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jGdzFVp9Jwdpw/L0RrJDqcqMnzDq9SLxrVgkmjMxVc6oBRA4VvqqPk9jw5Knk9cuTRjU8i0xiQOM3bZiKz2OcQxdyRg1A4dHZ4PsXfJe5eayn+lJt4cMFPEab8zoA3gNvf+gzZ+YqCINK4slsMXRt340Bj3MPdsfBrQwzeypUK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jUGrLI0G; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUGrLI0G"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e81881bdd55so350285276.0;
+        Mon, 07 Jul 2025 06:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751894810; x=1752499610; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+eDQoI7Ih5xCp1XC5oM2SFOUr5/BpsbWEEV8qr+fx7s=;
+        b=jUGrLI0G21ULBTd6mLvIvoCLEDDgfzrvHlqU52K4SsaQZUZ9pVzeSl0CmvHeUhOUNL
+         kza4xQUl9AK9Byh7BCnhKQDP+ncm6WjPJ240HJx8YGq9iQVh3/sGDd0IkJCp5rptvpzK
+         ZF8E28HM6xYeq0MjkT20eSz94WWL8H2d0LLob3sAoxiBbzIhtxlKF2wgX10R6mLthC0p
+         cnn2JLa9FtrbPBTJwzp9jOef/FaVdwauXywf/+VUndVP391Qk9TatS6PdTL2r3eNbmRS
+         cNuF0G4Og4B1keCtk/WmjG/Kb2OWVrBv93xtjuebwLzQ3VhJEVpWtRTuDPi/8tNu1rub
+         gPEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751894810; x=1752499610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+eDQoI7Ih5xCp1XC5oM2SFOUr5/BpsbWEEV8qr+fx7s=;
+        b=Dtxx+yPqvH93k0ccULKskPl05o/iX05R6/VqKGUi29+Pv31FHdy4xSbqEuOIukaRLJ
+         sMXgAFQ+9XuwK8SpxObQLxtFIvH82UJOQ0K/0ZdU6slGJxgyOWAnzbJAiPjidhvntaV/
+         Jg5xcR+Q/4jeEvVN9a1+IvshzZ7VjwU3NwEtQ1EjOmXtVLfTqGRartn8kcGLiV9cafGF
+         gzqEhMQ7kAhB38XisArPIiUT6BLwzd0TAwO5BvBCZzPnSrrVIh5V74zPluSb8hOEmSBG
+         /eMG+4i97lnejchOXsXvU9ia83yYDFWM5IR4s9zMnghSTH6oUDCvTroJEw1Rz7U2lehi
+         qzVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVO4KIeBP8q7sw9uulh8OPOstWB+FoK4YLCXWIe8orykNtdidRcJZb6n90xt+rDySXzQEW5hwlwl6GA6Co=@vger.kernel.org, AJvYcCWeiRhgIBIJ+LCT7Dormz53T9vO2dBSkKV4zcHVR8Yl+geeXxV6aNmpJyYEbtjZhF5+Jj1wn701680XDPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyogY6r3am+0Cg5epPzUtmRioUIO7T/aW7QghEP8lj/MntWfbfc
+	wQ4L5qENPkrpEUqusaY34UDTSQX6H4MmMDRi3Y1jYzBvklX1+6HTuz/bVWDNviMCoe/cb31JXuq
+	be5k/s68jRQu4+bTlpnf1HdiyVwFHvxs=
+X-Gm-Gg: ASbGnct5qJYIQgs7V4/huGV5XYBVt6XT3PKg4lHZS9fruXdGJ3tkns0KCI9Jl7h0rlS
+	hlRRFO512M7zOqBdmE88ySPFvdsYU36U0EBJj08i+Oz9ktNZMe8OStsduI5MOWHpSFWloegWxck
+	bWRqggNlKKS7v3A1KTZAnFe/sAriQ9L2tHDwrP1U6tyQM=
+X-Google-Smtp-Source: AGHT+IEsKVW5JtW0RfRAq3tfnMDl8JVZLWNsI8dc7R+PLM4F6s/NZqeVQ76z6bAd0IbxM3Q0haEdHbKUvGerwwkKP3s=
+X-Received: by 2002:a05:690c:6713:b0:714:305:7c74 with SMTP id
+ 00721157ae682-71669ed6b45mr81445977b3.3.1751894810104; Mon, 07 Jul 2025
+ 06:26:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Autocrypt: addr=duje.mihanovic@skole.hr;
- keydata=
- mDMEZokhzhYJKwYBBAHaRw8BAQdAWJZ0hsI/ytTqHGFV8x6tzd5sB596cTeeDB4CQsTf+wC0KER
- 1amUgTWloYW5vdmnEhyA8ZHVqZUBkdWplbWloYW5vdmljLnh5ej6ImQQTFgoAQRYhBG3/QdYN8x
- S1t2umMK0xk1JFj60DBQJmiSHOAhsDBQkJZgGABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAA
- AoJEK0xk1JFj60D1GABAJVSorZdMOlrp/oQtCSH/G53NE56x/JHA8VX+ZQBd/H3AP4/EcUf6eef
- DUxVMh2bdkmuQKsVZGgOGiXpMksrVntWBrQpRHVqZSBNaWhhbm92acSHIDxkdWplLm1paGFub3Z
- pY0Bza29sZS5ocj6ImQQTFgoAQRYhBG3/QdYN8xS1t2umMK0xk1JFj60DBQJmiSH/AhsDBQkJZg
- GABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEK0xk1JFj60Dlw8A/i4lPOL7NaYoYePDq
- l8MaJaR9qoUi+D+HtD3t0Koi7ztAQCdizXbuqP3AVNxy5Gpb1ozgp9Xqh2MRcNmJCHA1YhWAbg4
- BGaJIc4SCisGAQQBl1UBBQEBB0DEc9JeA55OlZfWKgvmRgw6a/EpBQ8mDl6nQTBmnd1XHAMBCAe
- IfgQYFgoAJhYhBG3/QdYN8xS1t2umMK0xk1JFj60DBQJmiSHOAhsMBQkJZgGAAAoJEK0xk1JFj6
- 0DG5MA/iuo4l2GDEZ1Zf+XaS//8FwdXDO9nHkfbV2MHjF4NZXwAQDroMzBdMcqVvc8GABFlTTgG
- j7KrRDz2HwWNyF8ZeprAQ==
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
+ <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
+ <CAGn2d8OMRaeozOMxj1Ry8i9T3sJ5J1QqA_Jpk7wYO8KiUbpKBA@mail.gmail.com>
+ <aGPYZhK65LaD0wVO@smile.fi.intel.com> <836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org>
+ <CAGn2d8NBEwWm0mQ0YQ3KZ+V1Zon84zusfsQQV2foVmUTBAzEAQ@mail.gmail.com> <fbfbd0e5-2c27-4f32-a3d7-9cf57fde5098@kernel.org>
+In-Reply-To: <fbfbd0e5-2c27-4f32-a3d7-9cf57fde5098@kernel.org>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Mon, 7 Jul 2025 16:26:38 +0300
+X-Gm-Features: Ac12FXzBqmNuWj7ejiaKXMMV8TVKT4LYL9tFZe6Npx2f8doOsoH6QUPVop8Pawo
+Message-ID: <CAGn2d8M5+5ErZd0YF_hQ75j5FWEFC60qCPX6U7G5j2HgDmz1PA@mail.gmail.com>
+Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
+ HMM_BO_DEVICE_INITED flag
+To: Hans de Goede <hansg@kernel.org>, hdegoede@redhat.com, andy@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
+	skhan@linuxfoundation.com, dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Arnd,
+Hi Hans, Andy
 
-On Friday, 4 July 2025 17:24:13 Central European Summer Time Arnd Bergmann 
-wrote:
-> I see you last posted this a few months ago and there was only
-> a small warning that Rob reported. Are you planning to send
-> an updated v16 of the series for it?
+On Sun, Jul 6, 2025 at 9:25=E2=80=AFPM Hans de Goede <hansg@kernel.org> wro=
+te:
+>
+> Hi, Abdelrahman
+>
+> On 1-Jul-25 5:45 PM, Abdelrahman Fekry wrote:
+> > Hi Hans,
+> >
+> > On Tue, Jul 1, 2025 at 4:54=E2=80=AFPM Hans de Goede <hansg@kernel.org>=
+ wrote:
 
-Yes, I have fixed those warnings and will send v16 shortly.
+> * And maybe you'll find more possible cleanups while working on this
 
-Regards,
--- 
-Duje
+I was working on some cleanups and i found something that i really
+don't understand.
+how is the error checking of hmm_alloc is handled , some functions are
+checking the
+returning value of it using mmgr_NULL and other use mmgr_EXCEPTION
+while in fact, when __hm_alloc fails it doesn't return either
+mmgr_EXCEPTION or mmgr_NULL in
+most cases.
 
-
-
+> Regards,
+>
+> Hans
+>
+>
+Best,
+Abdelrhaman Fekry
