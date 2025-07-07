@@ -1,251 +1,114 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2078.outbound.protection.outlook.com [40.107.223.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8718525A353;
-	Mon,  7 Jul 2025 05:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751866452; cv=fail; b=Mt8EbgPI2W0N1qKXzllZH6LrRDLBFdlq9BcoqHxmOImD7DVRTGoDFhAfxBs/Ns6//tMcvT2Tsr7K4trNXAcjVYUG/w592Ha3onOlOvqIiilbYYnzxBkCfuj5Jwh89nMayfy74aHZqWbp2ekrLfTVnP0AAXQtWbZjlgbVy3nskgk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751866452; c=relaxed/simple;
-	bh=F51P3JZTHNqqqGp2u4HH32yVAWWiEAtF2vNmta35ONo=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kwitLRoz+rUlhZTlEpS8cxwfL3116kqpcoG/DL6Bu9Q6YokIimo83NWHNmJmf/yd8iyVhk+pvF9IPdt76KU3RN27C3fTLieIEaYAA2eSL/ZMkG2ycayuCJYzAt6mDkJ9DPTFU4yasbYEdnq4u4Bu0a6Gj0QFTqLT/9Uiwcv4OlE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pi16vUvQ; arc=fail smtp.client-ip=40.107.223.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE26C1D7E54;
+	Mon,  7 Jul 2025 05:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751866600; cv=none; b=rC5c7j8HJmWZVlw+wZ+5BY2w2E8InZvVerMmE2v5ELvjg1ur6JguGHJ5LZQud+PPRsy8GwKmlAv0pUSJA5FgwlBa4LwiCF/CgsqbuUnG8nhbQE6YzEKjdyeIPWgOVrSiPMZzCrZRstcQE3viyCTL+SX4gbbbUfViCFIJPScWMn8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751866600; c=relaxed/simple;
+	bh=5BuEx7FjNvzA4MkaeuqXw6TJ9QqlYqB7xZMann9iXqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nVbO8dWkJWM2VMCK2A3SJvGawPxc21YjK4rAPWxB15p8JjXJqQ4DiW9WhksVk3tG2lQtEjHB5S6pvqyFGlXKr3btVeg2wZfdhgldlOiDQK/fAEEnrSARVU70/RCiiR6mCzRDp+TT4tOfmunwR0HXWVNOIAoUuHkcKvgl3N6p1ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUcj/OLk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pi16vUvQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mhls1bCCa6qmwfJfP+UCnXlbDMvdevmKohsZ796xlNUZ94wY0oPuxmh/vzU3LnuwptO5TGmf4FOyn9HLjpVft0xtUzsg60Pc8mmR6xHPD+85FKqnPzFzEt7OrL2NE6JxusZxDu7CAoUJIMwOMSjy8LTu0VYRraHdxYa5VbUnYnoCNRZWsGVLxnszy5syXIcbSIusLi4eHIZ7+gzI9jNPtJSOTm+VMMT1HCFXhVbkQIG4fWrUMlpW79vTlOI05a4OAZCgppH6YNHpav9m++uIeNqXddglEMWYxK9/qO0i1cuj5djBSnu8D1HaMtxOCv989A2uIjzH2on1c5OVkA6i1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rFYs6phsJXYk26yKTPuOm0vvkC9Oc5hbt14qeyXmbtU=;
- b=njQp/bySC5TruqjKmIGHPzcmx2El7Wg3N1GwA93+8oCx8sxLgxuih5RRePqOTaSkmzx4G/s+jaRJia37kaFjyCfEqWGD/OQf1UwE7RMgyecvgzHULJ94/nATIfZW/ctpfmt+BDatrY6jhIhnoyr//oDJp8t+XleXSnAbHHUXwvu3LzKhhC5U2tL3SmXx7Y1RJ50g3YAGOzwy4ihkx55aIcD+m3AcdRayZ3ondRd1apAlxZ6WOuiM443Zt2s73QWK8fi4Ol2qwSlQXwwjzHvgf6QSCW+Nb/h8XQUyjuGrEOFdpjZq+jFD3yDf3Vh1oTQGxuyf9kU655CMgKphnov2yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rFYs6phsJXYk26yKTPuOm0vvkC9Oc5hbt14qeyXmbtU=;
- b=pi16vUvQRwqyHi5QmnYc97kTPAWh+1m8RbK5LAdBEaKuElgyX5oqv+dXgrZh/XCjf6T9pakdYyfN4ynhttIgxpqg5Es8AobXzQBcBMAv7P7dnhaPp4xD770f1mmLp52HdDrYNyViLjWr4Q6jVvIexznUmrYRaZW7L2oCXbdvK5Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
- by CY1PR12MB9560.namprd12.prod.outlook.com (2603:10b6:930:fd::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.25; Mon, 7 Jul
- 2025 05:34:08 +0000
-Received: from CH3PR12MB8658.namprd12.prod.outlook.com
- ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
- ([fe80::d5cc:cc84:5e00:2f42%4]) with mapi id 15.20.8901.021; Mon, 7 Jul 2025
- 05:34:07 +0000
-Message-ID: <f391491d-f886-4579-9b40-78a57f2ed1b5@amd.com>
-Date: Mon, 7 Jul 2025 11:03:53 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] smpboot: introduce SDTL() helper to tidy sched
- topology setup
-To: Li Chen <me@linux.beauty>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Sohil Mehta <sohil.mehta@intel.com>,
- Brian Gerst <brgerst@gmail.com>,
- Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
- linux-kernel@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Bibo Mao <maobibo@loongson.cn>, Li Chen <chenl311@chinatelecom.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Tobias Huschle <huschle@linux.ibm.com>,
- Mete Durlu <meted@linux.ibm.com>, Joel Granados <joel.granados@kernel.org>,
- Guo Weikang <guoweikang.kernel@gmail.com>,
- Swapnil Sapkal <swapnil.sapkal@amd.com>, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
-References: <20250706030636.397197-1-me@linux.beauty>
- <20250706030636.397197-2-me@linux.beauty>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250706030636.397197-2-me@linux.beauty>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0058.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:99::17) To CH3PR12MB8658.namprd12.prod.outlook.com
- (2603:10b6:610:175::8)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUcj/OLk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 744ABC4CEE3;
+	Mon,  7 Jul 2025 05:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751866599;
+	bh=5BuEx7FjNvzA4MkaeuqXw6TJ9QqlYqB7xZMann9iXqE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fUcj/OLkUVBRZaWGrqyYX8XJcF9kWqCcHG/wV7+I0LRgo4cBSZ4X7aS51I2SMDG+6
+	 nRXvJAG0Dj3p/iD7rQK/hpH3kGS7TAQgUo63tsOGB+b7SzbmwlefvweMLq6YVWE/Ax
+	 sHw4YsSPqagWTxTAm2NaIsecNXkwq0TTdMt6ymNOkJ3n4Dgx4/whezlZ35AQwwhKGR
+	 O9aunO+JDK+Ls/NlhtbSUQHjCBXC1ZVYDTZb+a7MU6kf3oeICXY0G5E+J7xtl3QDtg
+	 n5Yk0FQplNPU402+H38nGkf++z56FtUtUnk9rokCEgog6CK9dKSh3a1UGwk0QC1neT
+	 f8vBFtlHFP7iA==
+Message-ID: <06a6dfbe-92b1-42e8-8b65-b16ff861ad59@kernel.org>
+Date: Mon, 7 Jul 2025 07:36:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|CY1PR12MB9560:EE_
-X-MS-Office365-Filtering-Correlation-Id: 482da397-a9b0-4c11-bc8a-08ddbd17e482
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bFhIYnJzd2M1ZEdkNExBaEllcEFUUjdRRGdwaXZRWTZMcysrdHQ2RUpPNVF5?=
- =?utf-8?B?MXlVTGVSdEM4eWdrOE5nVFVTOTBzTHRHOTZab0UxWWRNWE5RT3U4Rk9yaERi?=
- =?utf-8?B?MFNDM0g2Z0JCVmpzU1dkR2lNMTBHSzZnSnh6cWthT2diektuYm0yZ0s1VFRM?=
- =?utf-8?B?cHJiRFA3dTM5TzVoN0JpekQ3UjNLeDcraW9VVEs2Um12cVdJcXR3VjI2SnpJ?=
- =?utf-8?B?dWxzKzFLUDl1SVlmZXMvbzFMY2hGM3EvOGF2RldMNUo5dGhrRHlXcGJKUkZ6?=
- =?utf-8?B?aUliVTNJVThleDZ2MVR6VG5nOWhJMHMwT3oySE1pMVluT013eHlwMjk5ZE81?=
- =?utf-8?B?NGp0NVBQMDdONWpxWEVsakxVdmJJZXFVQlhVT0pzTnhNTzBWSXVTOGRSZ3V5?=
- =?utf-8?B?MitUS2k2Tks4T3NmbTQ2d3NNOVJqTDlHelRBR3Znc3Vod2xScnVzMVQxUjNP?=
- =?utf-8?B?SDJmd25RQ2xVa3lHcCtxcDByMDFXV2wrK25zRkZ2TWRoNlM5NEdLbU0xZ2Fm?=
- =?utf-8?B?d1ZMR24xMStGRkpGczg4SkZOUjVSUXFsRlpDM1kyUUFybmNSYTE0QXg3UTA5?=
- =?utf-8?B?N1lwREp0cjJOOTBBdnJQMmtKQVFLZU92L0lXWmxMNWlZTytTbzZKU0NjWlRv?=
- =?utf-8?B?bXBqVFFSbGZoWncyNEUzck9IUEVEcXg4NWFvS0VYUTR6Vm5OcTA3RDUxalpj?=
- =?utf-8?B?WTMrNyt6U1hVNkI0VndYZHkyNjl1NnFBMEIzOWN2NXFwZlF0VDJRSWZxVXQy?=
- =?utf-8?B?aGkwRTRHeUJkeEZtaWxwcUNmaE8xMkR1ejIwVHp4anVsMU1zSlpIVzB0cVdS?=
- =?utf-8?B?Yi9YMXNmT2RWN1lLQ2dDdi9GbzJ1c2xEbXNUZ2ZpazMwam1sTHF1K2hmTGo1?=
- =?utf-8?B?ZzI0R1oyaGxydHBGS2xpZEozTm1qdkRETHUzUUtYYXd2V25JZWpRdFR1elRp?=
- =?utf-8?B?N1VCVzVaZlBtMDBwZHNyMlVOcTA2aEJCeVVxaThqSm8vR3N5VWg0S2FkbFNj?=
- =?utf-8?B?ZFpVYzV0R09GaDlqYmF1UU5CaWk1YWRUNWw1YitGVFVBd1J5bjM0c0NZZ2RR?=
- =?utf-8?B?VmgvaUdmRjN6OWxBNzJsTTBUUVJNZkFTSHNFbktWd0pFaW1jaFZwNjJldWMy?=
- =?utf-8?B?T2pwQlI2QWROU0hKUzJyaGNMZXVPd0pmZ3N3cVVZSmMrNE1ycXZmTERmRXQ0?=
- =?utf-8?B?aEJQTmxtL0hTVm1XR25Zc29naTdkV01QMEpOcFZCVHg0eWxrT0tJWGROakFz?=
- =?utf-8?B?V3ZGTUFLQjY1eHV3YnJaVis2V08vQVZDK3p2TVV0d0ZBZXZ5V1NoU1dvU1ZB?=
- =?utf-8?B?L0NnK3FQNnhYTjQxVkxxOXluTnFIY2p1K010SGk2Q1ljRDVKaUNLUm1qMVNr?=
- =?utf-8?B?Ny9iZHBzMFlrbXo4UW1aQ0FZK2JHOTJkdk5wUGlkdFBHelVLOS8xeDdMSWNQ?=
- =?utf-8?B?Z3g3S2dnWWRZRWJMOWRFazRLOGVsOWxXTE9rLzZTM3J4aW5nRkFHWWh6WjV6?=
- =?utf-8?B?elM0NklDbExCSEl1UzJyejRZVXF6a3pjM0xGb2U1VVVPWUh6QWdWNmI5aUh2?=
- =?utf-8?B?S1IyaGw3RFZ5Z3lyLzRUczVFMDlsNTU0TS90TTg4YW0zanYvMGkzTVlBV29R?=
- =?utf-8?B?R2w3WHJJQlNxaTQ2MUlMT3FmbHFLS1Q4WmIrdmRGcnlFVGg0dnREbXNKMXp4?=
- =?utf-8?B?bEI1b2U4TDRYVlkzK21TZmg4RkxVdUZKMERMN0NBRkd5QjRwQk5YRjMxWmpx?=
- =?utf-8?B?UzFiSVUyZjIyZTdpaStzN3Fwd2FvTHloYlZXbGFSREk3Mm9TSTlTU1pxbEc2?=
- =?utf-8?B?WG1lanpPR1BoSERZUU9WNjBZTDc2VUdseHFpS1BqTk1VUXpveWhmWjlrS0Zt?=
- =?utf-8?B?Zk1QVXNkWHFlNFFPSDkyS0xUMUwvTU9rcmE0ZFNtZ2FMak1qYnVVNUVObTdY?=
- =?utf-8?Q?h688Es4hoTQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q01wMFA5V05XaUVHaHVhQTg4WXVKSkFrYk41OHNMeE9vN1VBU3U3amcxN3JC?=
- =?utf-8?B?SHp6aHVkRGJaSWxNTjF6OHI4c2l1dDNxMGM0RGFMU0hTakVOR2hwYVhkM1JH?=
- =?utf-8?B?cVFQM0hVRHVjZjlLTERxNndHY1pRR3R2UW9EWDB2bW5zQ3ZKU25kb25FS2c1?=
- =?utf-8?B?Znd1YzBvSWxaRjdZYVZ3QW1kMCt2bVQ2Q0o2K1FhRWRvL1h6V285aTdmOGdk?=
- =?utf-8?B?QTc3ZnE3SDJqQmZIM2orL0tQV3MxMnlRY3dDSWwrYTNYWHNjYURGUkt2UFhX?=
- =?utf-8?B?TUM1eUVVcWRYT3B5T1B6NzVaV3hJbURnb2RteUlHeXJSTjZNWk5iNGE3dmor?=
- =?utf-8?B?Z2xTQTE0S1doUUJSUFc0d3VyanZ1V3JrUEowcldhQS9WQVVkZHNOOVMyWTZZ?=
- =?utf-8?B?U0FNZFpaeUFtMWw1SVNuZjM3b3ZydmVOME1rVlA3MDJhdVNCNTJMNUJobUJi?=
- =?utf-8?B?UVcwSzFaYUs0UTMrdGI2dU5GbmM1dHB6YjAzZUttbkYxeWhnQUhxRnV1US9t?=
- =?utf-8?B?NmtmNDMwVTVoQ1VTczZienB5WGpsY0h3YytpSnBEUUhRaGhFQk9Va3dMb0I0?=
- =?utf-8?B?MGhZcHBpQWI2ZVNSS1N1VUwzN0lsajlud0h6UkFQWGNzd2VIT2lvR2VoTkFU?=
- =?utf-8?B?WFlKMHgrRmkzWmtZMEdSYXVTWkEva0lDbGlvWldYNkdXcG1MS1VER0xKUXk1?=
- =?utf-8?B?WGIwM3VXR1BVNmlLdlk4RUVmR1U1WFgyU3NINVQrQng5MDRVOGdKQmlaS1Rt?=
- =?utf-8?B?V2RxMXV1OUZVd1hneXc2bzlZbTZEdEt3OUU0N3VHaVg5azNSQk8wdlZIN0Qx?=
- =?utf-8?B?dzgvVTV1ZGNobHhLVlI3RS80RHlCMGc1SUNiZ3Mrck5NZ09Rbm5pcHl2WlNs?=
- =?utf-8?B?TWMyN3NxM09KUHdnbnZxQkJzYXFGb3haL3J3TUpXbVdmd1FVOHByRXQ4SDNZ?=
- =?utf-8?B?NDNHV3NBd0FkM1VPTEp0MEF2UzVNRW5sMmMvNHBnU2FCRTNHN1o0RU9sWTBj?=
- =?utf-8?B?Q1RqTm9sOGZrZnpZcm5WVTVDWnhYeWJXZkZwbkZHejZsZ0JrQ0VPZVd5TDl1?=
- =?utf-8?B?MEVqWmxiT1Y5UW05YkJXTHUrR1E3THArME51MjBvMmU5bXovcXp1UlVGb1Zk?=
- =?utf-8?B?Vkc5UmJFeDYwS1hRM0JHTGlpN3FuUXgyMWxXM3BhbUNZT2gydnVuUDQ5VmZL?=
- =?utf-8?B?anpIMUk3NDdJdU9Oam9QSTRpVTV1bWJ6NXB2Y2t2QmliUFYxanVIUDllcWtF?=
- =?utf-8?B?ZVJHdldVZldmM3pqZ2lycXpvUERUV282OWtOWElpK05HZnFJVVNsSTVrNFh2?=
- =?utf-8?B?alBSZ3BKdEFQNFZBYTFLWmhiSmpXMUV6NThVenVWK2VNL2RGSFBjTkhTdGlD?=
- =?utf-8?B?T2c4OHlqaFk4L3RHKzJQay90Yk1XQzhpLzlmSzdNNXlNS282a000dnMzMWMz?=
- =?utf-8?B?dU5aWWpNSjVKR1JEaFk0eXRQa2NDUkFOVGI1R3VwR0dHWi8ybXhUNXo1MDRF?=
- =?utf-8?B?OWM4bnZLZ0Y4QTJHNElOQXlZcVNpTXk0MXJBUzJyRUQvSmxhV0k2MVI1ZnZP?=
- =?utf-8?B?YU5oTDVHQ0Z1VjI1Y2xVSC9TTmVtNm9GcmdoS2ROSVU3WXdnck5zNk9sbG1j?=
- =?utf-8?B?TldHOEc1c2diNUNneHhlY1Z6TS9Fc0VGdEJtbm1UNTdIckFSL3QvdVh1K2RE?=
- =?utf-8?B?V1padVRTK0E1U1ZCQnQ0TjJiN05uRFZlSG1JamdDK1YvaEFKK2pqWGE5R3N0?=
- =?utf-8?B?bGFCa2dyZDRDSExhUEsrTVVsaTlmT0F1cUEwZnpsb2pYaUNwazJzU3p0dzFL?=
- =?utf-8?B?MnVRTEEvYzFqL3ZCa3UwVUVJQW9VWEUrTE5aa0E2aVFXMWFEM3I5THhoVVln?=
- =?utf-8?B?VTJ6dlUrV1VyQUExaWZjd2xRNEtYR2taQ3Ixd2ZUblh3NXB3Q3dISVhrYjdU?=
- =?utf-8?B?NmMwTUZRKzU1N0dva0ptdEgyZlVaempWZmVXZUFIbFlkUkN0dWQwQVBYWU1D?=
- =?utf-8?B?ZWV2S3l3TC8zMUZQVWRVckEraU1yVVZDUUtsVlAzc0lEYmV1THdzYmZycC83?=
- =?utf-8?B?K1lINmF5SlpJYURpNWhRS01QWHg5b3J1amd4M0JOUEpMTEdCYk8zWitEN2NS?=
- =?utf-8?Q?7/VKHI99OEHcZf3Zm09nVvV6W?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 482da397-a9b0-4c11-bc8a-08ddbd17e482
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 05:34:07.7189
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J/97Mv9opq+Ls57ZA4NnMT0xWPrz90t1MWsUrdibDB5VGPilDTMVY3st/nFZllxUMC0T+bnQb8W5jW2rcrpesg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9560
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/6] dt-bindings: clock: Add support for i.MX94
+ LVDS/DISPLAY CSR
+To: Peng Fan <peng.fan@nxp.com>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
+ Frank Li <frank.li@nxp.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+References: <20250707-imx95-blk-ctl-7-1-v3-0-c1b676ec13be@nxp.com>
+ <20250707-imx95-blk-ctl-7-1-v3-1-c1b676ec13be@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250707-imx95-blk-ctl-7-1-v3-1-c1b676ec13be@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Li,
+On 07/07/2025 04:24, Peng Fan wrote:
+> Add i.MX94 LVDS/DISPLAY CSR compatible string.
+> 
+> Add clock index for the two CSRs.
+> 
+> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
 
-Apart from few comments inline below, feel free to include:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
-for the entire series.
-
-On 7/6/2025 8:36 AM, Li Chen wrote:
-> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-> index 198bb5cc1774b..0b53e372c445c 100644
-> --- a/include/linux/sched/topology.h
-> +++ b/include/linux/sched/topology.h
-> @@ -197,9 +197,9 @@ struct sched_domain_topology_level {
->  extern void __init set_sched_topology(struct sched_domain_topology_level *tl);
->  extern void sched_update_asym_prefer_cpu(int cpu, int old_prio, int new_prio);
->  
-> -
-> -# define SD_INIT_NAME(type)		.name = #type
-> -
-> +#define SDTL(maskfn, flagsfn, dname) \
-> +	((struct sched_domain_topology_level) \
-> +	    { .mask = maskfn, .sd_flags = flagsfn, .name = #dname, .numa_level = 0 })
-
-I prefer the following alignment:
-
-#define SDTL(maskfn, flagsfn, dname) ((struct sched_domain_topology_level) \
-	{ .mask = maskfn, .sd_flags = flagsfn, .name = #dname })
-
-instead of having 3 lines. "numa_level" is 0 by default so I don't think
-we need to explicitly specify it again.
-
-Also perhaps the macro can be named "SDTL_INIT()" to keep consistent
-with the naming convention.
-
->  #else /* CONFIG_SMP */
-
-A bunch of the CONFIG_SMP related ifdeffry is being removed for the
-next cycle. You can perhaps rebase the series on top of the tip tree
-(git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git)
-
->  
->  struct sched_domain_attr;
-
-[..snip..]
-
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index b958fe48e0205..e6ec65ae4b75d 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -2025,7 +2021,7 @@ void sched_init_numa(int offline_node)
->  			.sd_flags = cpu_numa_flags,
->  			.flags = SDTL_OVERLAP,
->  			.numa_level = j,
-> -			SD_INIT_NAME(NUMA)
-> +			.name = "NUMA",
-
-This can use SDTL() macro too. Just explicitly set "tl[i].numa_level" to
-"j" after.
-
->  		};
->  	}
->  
-
--- 
-Thanks and Regards,
-Prateek
-
+Best regards,
+Krzysztof
