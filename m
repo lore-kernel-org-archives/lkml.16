@@ -1,106 +1,116 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070C826059D;
-	Mon,  7 Jul 2025 10:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF52294A0A;
+	Mon,  7 Jul 2025 10:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751885049; cv=none; b=Uxs6et6vJ5pFsi0l/QQsxm4N8LavTcsdGFn7WEpSmG4fVL1Any7MS5EGbK/L59zo+or4UkRnQfUujeQiCzJQ2P0q7Eh46JpSKV+Q8pLclzbGyzv8iRKb7D64ctTsHq5z4RqjYwY0AxFcD3al1Vm5LVCQ8gcL98pBqm0R/cCnD+M=
+	t=1751885055; cv=none; b=eUfPi94Qop6KFgsSP20gcgHRIx2IBaLRGcHo601zb0GivzF8V7vXRGXxbJZCTD1EBQ/A0J7fNgNSbpPN1iJ1FoBFq9IOwukZob5c1BUXgzW+9YfAuyT0zLbXCgNCVsZMLfXxnsuxWInPKCle1fRqkxxL851MjsCoQaFiILIFwOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751885049; c=relaxed/simple;
-	bh=SjYXX7ZDI39EwB3CpttIlw1Vl4E8XtC1XpyQv46bDcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KjyJOC/MoPOKPnHyOFeE5CkLhCW3q23LfD4fQo+ERWqd3SZRnRZQOeSnja5tgyJmC1Hhsri9Q6SNnjFuFJ4o49+3r3573IPUD7Nu+rgh1SiQbaLBn4pZCJ5d0Ox712WANBun3e9QqHUka/hFz01rbuICeH+SbKpspVPKj0ZRsWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MLpkOaTA; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MLpkOaTA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751885046;
-	bh=SjYXX7ZDI39EwB3CpttIlw1Vl4E8XtC1XpyQv46bDcs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MLpkOaTAJLq4MlrgIGANDFNa+JH58OcI6UYNWz/PJEFtQcnmTL/RIx8x27u3R/myf
-	 jZMJyaM26Ev9l5IitO46i1LH/ENLfRMgk9batqZ8+o/RlOqpnl4t+a522dY6kyY1ZS
-	 tI4r0mziRd2JgKo/oZIP1/oLouUSQeWebAMEVYdxNT3Kf80lzK+HLofHTgTGKdIn1l
-	 slcINFRYB82/9SfjGD3s9Nxs2pDgs2XHC0R5dBhjVMiXKEwZtjvl+H4T1JAwvRLieK
-	 cNKSbM+nzmOYeTEyE7vv9qBtcud49x8Wvv/atmaSumhHGWzR2RP1XLvaZh1sRjvkMf
-	 9xMdydt8MqLDQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	s=arc-20240116; t=1751885055; c=relaxed/simple;
+	bh=c5yRczUDFSdAdgPbN6dY3TNT3pnHLBR0hx9+hGQJrKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WKTBCaixYPNXxAwuw3EtrHoMo/KTLehoSM8NeBA55uskeBgNC4rafwwPj/lff5Jb+ExqpN6PDiwzRhXfM8Q2aJAFQDHh+GDQbe/UGnxboElPStP2oMblOnQebHOEzhtX3rvawM53Rx0dKOngPykm+WVLfFBe2vWl5a2fHql2Zqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.48.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6ABA517E06BF;
-	Mon,  7 Jul 2025 12:44:05 +0200 (CEST)
-Message-ID: <5a196563-9589-4d00-a042-1dbb0295b0a5@collabora.com>
-Date: Mon, 7 Jul 2025 12:44:04 +0200
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id CCFDA3410B7;
+	Mon, 07 Jul 2025 10:44:12 +0000 (UTC)
+Date: Mon, 7 Jul 2025 10:44:03 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Stephen Boyd <sboyd@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Alex Elder <elder@riscstar.com>, linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Immutable tag between SpacemiT's reset and clock
+ trees for v6.17
+Message-ID: <20250707104403-GYA312629@gentoo>
+References: <20250703151823-GYA312602@gentoo>
+ <daf9ddad1aa24ee18abdc11a9b26ef03bdcbae16.camel@pengutronix.de>
+ <20250706040646-GYA408198@gentoo>
+ <3732050b6b756868543012c1a1cebbe7cce74d61.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/6] iio: Add support for MT6363/6373 Auxiliary ADC
-To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <noname.nuno@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- kernel@collabora.com
-References: <20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
- <ab0a407412c705e409d9d26591543713a092c13f.camel@gmail.com>
- <20250706114455.26748e20@jic23-huawei>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250706114455.26748e20@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3732050b6b756868543012c1a1cebbe7cce74d61.camel@pengutronix.de>
 
-Il 06/07/25 12:44, Jonathan Cameron ha scritto:
-> On Fri, 04 Jul 2025 13:39:56 +0100
-> Nuno Sá <noname.nuno@gmail.com> wrote:
+Hi Philipp,
+
+On 11:46 Mon 07 Jul     , Philipp Zabel wrote:
+> On So, 2025-07-06 at 04:06 +0000, Yixun Lan wrote:
+> > Hi Philipp,
+> > 
+> > On 12:02 Fri 04 Jul     , Philipp Zabel wrote:
+> > > On Do, 2025-07-03 at 15:18 +0000, Yixun Lan wrote:
+> > > > Hi Philipp,
+> > > > 
+> > > > Please pull the following change into the reset tree. This
+> > > > allows you to apply the patch 5 of the SpacemiT reset driver [1].
+> > > > 
+> > > > Thanks,
+> > > > Yixun Lan
+> > > > 
+> > > > Link: https://lore.kernel.org/r/20250702113709.291748-6-elder@riscstar.com [1]
+> > > 
+> > > Sorry I didn't notice before, this is missing k1-syscon.h from Patch 2.
+> > > �
+> > no problem
+> > 
+> > > Can we get a clock maintainer ack to place patch 2 in the shared tag as
+> > > well? Otherwise you could split patch 2 into soc and clk parts.
+> > for the ack, I'd assume Stephen have no objection (Cc him explicitly)
+> > 
+> > technically, there is no problem to place more patches in the shared
+> > tag, since the tag will be both sent(by me) to clock and reset tree,
+> > so no conflicts in the end.
+> > 
+> > if you expect to at least pass compiling test with patch 5 in reset
+> > branch only, then patch 1, 2, 3 should be included, otherwise need to
+> > pull clk branch for additional dependency patches.
 > 
->> On Thu, 2025-07-03 at 16:11 +0200, AngeloGioacchino Del Regno wrote:
->>> Changes in v2:
->>>   - Added error checks to all regmap r/w operations
->>>   - Moved adc_vref addition to different commit
->>>   - Various other fixes
->>>
->>> This series adds support for the Auxiliary ADC IP found on the new
->>> MediaTek MT6363 and MT6373 PMICs, found on board designs featuring
->>> the MT8196 Chromebook SoC or the MT6991 Dimensity 9400 Smartphone SoC.
->>>
->>> AngeloGioacchino Del Regno (6):
->>>    dt-bindings: iio: adc: mt6359: Add MT6363 PMIC AuxADC
->>>    dt-bindings: iio: adc: mt6359: Add MT6373 PMIC AuxADC
->>>    iio: adc: mt6359: Add ready register index and mask to channel data
->>>    iio: adc: mt6359: Move reference voltage to platform data
->>>    iio: adc: mt6359: Add support for MediaTek MT6363 PMIC AUXADC
->>>    iio: adc: mt6359: Add support for MediaTek MT6373 PMIC AUXADC
->>>
->>>   .../iio/adc/mediatek,mt6359-auxadc.yaml       |   2 +
->>>   drivers/iio/adc/mt6359-auxadc.c               | 440 +++++++++++++++---
->>>   .../iio/adc/mediatek,mt6363-auxadc.h          |  24 +
->>>   .../iio/adc/mediatek,mt6373-auxadc.h          |  19 +
->>>   4 files changed, 416 insertions(+), 69 deletions(-)
->>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6363-auxadc.h
->>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6373-auxadc.h
->>
->>
->> LGTM,
->>
->> Reviewed-by: Nuno Sá <nuno.sa@analog.com>
->>
-> Applied to the togreg branch of iio.git.  Initially pushed out as testing
-> for 0-day to take a first look and see if we missed anything.
-> Jonathan
+> 3 as well? Oh, that's for struct spacemit_ccu_adev. IMHO this patch
+> series is not well structured for applying across trees. This should
+> have been a single patch that adds include/soc/spacemit/k1-syscon.h, to
+> be shared by both clk and reset trees, and no other dependencies
+> between clk and reset patches for this to work well.
+
+I feel this is much difficult, e.g. the patch 2 touches both drivers/clk
+and include/soc/spacemit/k1-syscon.h - moving definitions, and splitting
+into two patches sounds weird
+
 > 
+> > I would propose to have shared tag to include patch 1-4, then you can
+> > pick patch 5, in this way, it should both pass all tests (both
+> > compile-time and run-time)would would 
+> 
+> Since this is a new driver, passing run-time tests is not a concern.
+> Compile-time is, since that would break bisectability for everyone.
+> 
+make sense
 
-Thanks for that!
+> > what do you think?
+> 
+> I feel like it's easier and safer for the whole series to be merged via
+> the clk tree. Since this adds a new reset driver, the only possible
+> merge conflicts are trivial ones in drivers/reset/{Kconfig,Makefile}.
+> 
+ok, I agree, then let's route the whole series via clk tree, and I assume 
+Stephen is fine with this, since it's indeed much simple.
 
-Cheers,
-Angelo
+thanks
+
+-- 
+Yixun Lan (dlan)
