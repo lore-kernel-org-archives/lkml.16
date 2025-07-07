@@ -1,171 +1,109 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE111E5B88;
-	Mon,  7 Jul 2025 07:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE91F4CB2;
+	Mon,  7 Jul 2025 07:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873977; cv=none; b=EgSyf15KDSfYIelH+g/zV/sc3cV9N3bFFoMlXxmSrtMYOEcOizQ09shACfBVhP5fPLCeJBdELqpqvUvqIrDYD2NM4D6273sDAQLZKm0H1S+6BauWjW1EXTFl5qGtAv6Wr9KfDZ2Oh8Z2AQqqE3kzQNCfLHsb4Wm+UK8+FWPOBMc=
+	t=1751874040; cv=none; b=mPdKrE80bAE5qC70UGKLDRX6IrJzQ9xeiZAjV/WCeJEVNwDFbWoej5KRlFwsmgbv1vsG81KLI0rPGtfkWQPLMFMBPVvTuOhAwH7ysv0t2JXCDVJhbN0LWELgjjdWNN+3cnOe2VGp/Kj2DqPyRoy4aqExWbe4KZ0lf8b1Kt4kr/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873977; c=relaxed/simple;
-	bh=itVQ6V0Mr9OovVSe2MWKuCPuJjDkX6YRyGMqSSgLTOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fa19oG0O1RVJcZi227x1Vbdo/dw/RmKyLFEyDK6p3N0gg7SPBCAD8mGkM8xaRnrtqA5DarqoFwML9vyn6u/ZFr7YJzFmXFmMLqrXFrSh5oUEtyeE/NhOLKmQd19MqNYxd7nkm6oCFspFTbCEqYQeqSF+C2/9lrvCXxq05Up6r9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=114.132.62.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: zesmtpsz7t1751873865tf5aee820
-X-QQ-Originating-IP: mJw/heq6b2Ta6GtlIIN+F3vmI3qSS3RNqcxng9NIU/M=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Jul 2025 15:37:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3322818785866076011
-Date: Mon, 7 Jul 2025 15:37:43 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/15] net: rnpgbe: Add get_capability mbx_fw ops support
-Message-ID: <CB185D75E8EDC84A+20250707073743.GA164527@nic-Precision-5820-Tower>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-5-dong100@mucse.com>
- <57497e14-3f9a-4da8-9892-ed794aadbf47@lunn.ch>
+	s=arc-20240116; t=1751874040; c=relaxed/simple;
+	bh=4gqhnQEkJDF6bHtp4rmW9Ksife78gMcwUkAdVum2gUs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=czhVOvDmdE0qbVFebHHLiU9vNqHnn8+PLRIAWR72oVfYpdF860ifw68t5flFjH7Xu70yHFnV8rI5gc5LVJo/QHv7qmMswTFMLe+n5YXPbGEXEgr2xlPEoT+3a030otbPPP/mexd4D7hIZsVuAR6d9k8JcbhfJk6JnKF+K++kbTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AyW4sbvD; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyW4sbvD"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso453725f8f.2;
+        Mon, 07 Jul 2025 00:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751874036; x=1752478836; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nrm1zhsxweRW1Vz623z7OAal5eScBLTdY72cStBJEjY=;
+        b=AyW4sbvDlVFhCrWVWTFXKO/NJohrZ70nu3ko+FEfi4i8ngQwf3w7/QQm537q6OOp8k
+         ismOcbPCJRSpMC17n1VaYAJwFK4PEMe9FEazL1sgA+mVy3f7N8KdRRYAfRfrMgSgfcBr
+         MBDCGz0jEY0E/ZSbN5KJ1jiDNccpln3RRx+oiM3o2kNlbB2FqrD5PF1onnTLDrTbR0J7
+         r1p9sj9Shp9Y2KTGs6kwzEebeQeIiv/bJPY/LsR9ad/ulhdArqaf9k6utZ5h2j9d68+r
+         wKV90NiU3VtBWZX6uBAP+RUTBiaUI3qzC7k5NaRve9wI7bBw86fWM3gZT5MyksFZsBmr
+         sl9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751874036; x=1752478836;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nrm1zhsxweRW1Vz623z7OAal5eScBLTdY72cStBJEjY=;
+        b=iVzxAJ+TQ36oG9sUosxF8VInbSMmIIyIL/e2p2JdV2Jr8VWuyuYP/eTstLCBLx3v4r
+         PqJrX35+bfbsb+028+wglY7SHzcssIP9AAe6cu3fZHG/bxx+n17WrHu7ZZaCqU63O49s
+         DiAGkjk2+S9S1J7isGJj+luetZW9j7rCOh6hR0bnEaHRm3DHYp7dPF/IQiwhY4rUcbuL
+         EDK60bImd40hA5MDeehHSLuOn03H8R7IuZVB1NK4+7ksZBQH2u6bJIijXj2E1aEozlMw
+         D6e4NoyexMyQ2YMI80AqqO0Cp01HVbzebbNdc1/d6WQoaVcscu7GO8oxsQpG7eJIpuxG
+         ZK4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCULZO0fMg+DbqySYCb/zzjBlq+aDJl6/DjZahseHBve5fDQ9eEcIfOmKEwzZHKPoCkLQxENQ1fy9zTRyxY=@vger.kernel.org, AJvYcCUqnHRLsiYO+q1YtK21Z3MAQPDV66ez4cM6UhfN1wSivvEv0q1rF/7tgk+m6fcVmp8nzNFDweOj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNZHU0Rh24XnBwzS05uytEjz+2x6Xm6S0SlYyyl3eZVUeU37iy
+	dOvgHL78DlS9/gxgRR91G/Mr69cavRlrj8nRMAq8S21gQwa5Uhul67W1
+X-Gm-Gg: ASbGncvmXwuEGYF1qNv2vvikCqQ1el2Bk80gP9BWQOk9sJwEZbREACNVj/WVJVYLepJ
+	htqPC6VU7o+0zWCnbEXrQg1PQWohvh3IvBGZYKMttMGK3z/dC5NiLbpqvESQauM3sBzRPl5NfbD
+	cf5Nny2+pNFWWrUJPpPOGDeP4TTSIruE9MROmR9ooC3CBUUCbAqyRM/uWQu02T9/0Zt1YL8Kpfd
+	acv/xNC5ydhLSQRDWHIFHpOxk66hazjvpeNsiCjaW3xHMo31Rve9Ky+Hy63E+YRPDO8kl1bZWys
+	J2o5/4DFfQFVHEeWz2AoQj5I75m0YSAUOj5CHlOPDqIk2NwoD+IvlNyUI76xJYP/m5iqIfqxu1T
+	IGCKEyXH21f32Gz0=
+X-Google-Smtp-Source: AGHT+IF3n+flLeuVI/pFKTChluG9p2jOYqIX7r6WUuLRebZdYWS2Stumfh3b9JF7lRWIWCNv81GN4A==
+X-Received: by 2002:a05:600c:a21c:b0:453:4376:8f48 with SMTP id 5b1f17b1804b1-454b3a7bdfcmr21353395e9.6.1751874036109;
+        Mon, 07 Jul 2025 00:40:36 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:ef01:c9dd:1349:ddcf])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-454a9bcececsm132671305e9.23.2025.07.07.00.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 00:40:35 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	stable@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	Vipin Kumar <vipin.kumar@st.com>,
+	David Woodhouse <David.Woodhouse@intel.com>,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] mtd: rawnand: fsmc: Add missing check after DMA map
+Date: Mon,  7 Jul 2025 09:39:37 +0200
+Message-ID: <20250707073941.22407-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57497e14-3f9a-4da8-9892-ed794aadbf47@lunn.ch>
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Nc4Sv39/e83Wv/xSPCBI764BfkQBkT4hm9ezADdd7z/A2YTleb4RHIdg
-	X6CL3Xr8IsxwzEwNlqkt+2PM/L7tdj7omGDntaKG4PGMcYtYGAdxolutctGPTY4cDgbwjto
-	uN1cYczd8CIiri6UCfAdXOxjtggxEfnoHW0KJgPpbPmAEo2jwkNXNC7kvMOGUP8tyZ8xdVy
-	AOO8WFGJof2vSX+Msy/OcsP4F7dbaT0CMUOffiPgH0OzaHn2JusoWh/bH0JdGsxhvxiBCiz
-	Z1y+Bgtp/Zio9ppkib3X3iageHfK+etYLMwDdPnO2AY4pIIoc1hEd+sG8EldLT6H7swlnr8
-	mltF1PmFD5RCjVXFPc0yuzuRPBCeCUMdkL94jtFr0hYpZi3N+JLHpJq78OBelnJaRdBo8cP
-	tw7OgQaSv4HvrjqgzTPTh0mBlfGoBcgpKd93ItcbgXlFM/HrrNfFhu/6tgIz2caykgH0Wzx
-	7YUjx/0GSy73zNM8mBAROngRplUKDPLaG7PT3K10uPdOuh10s2C7J8EqT6uv8X7zLQWjtwB
-	a/3aRBTXhNKOhWANHug3puXbTyMDEi/+KCWSfl01IV7w1xWyX0c3j+0wa77IIEBSSD2BhfT
-	yHJ8KO4yelDhwb9SRas6pf/nS6M5mG6Ktpnb9Pm+8EMVxFi7RygSgD12SIkuseGFTYeLC0y
-	S/FpN5AwRlVoMY49IvMzerRc5x0Gm5ofdFMEsBu1lRF+5dg4pHt9vltW8zNTHuqGnWGSAHm
-	8aqCT/obbwKJvEvW4uzh6Ivwx4AErVu/FV+hzxpA0z9AgNtOrXGFfET3l6OOknTrtdh2X8P
-	0dF6JWn004Mz3jWydAomGKzY1ynVBdIp4eVjN303P+Tc+g8lXASgQRT5hA0tWSTFrIj52Sv
-	mymuDIrHW6pUPKbfc0uBodRH2fNszFzdpLYwfMfqToff/HoGUcrCSOAv20u2VxT3AaHrF7A
-	xSqmTwEp8D/2Sc6cgwE0cOOyaXcId2TUMmnEbETRszNoAnoGv/TlB8XSB
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 04, 2025 at 08:25:12PM +0200, Andrew Lunn wrote:
-> > +/**
-> > + * mucse_fw_send_cmd_wait - Send cmd req and wait for response
-> > + * @hw: Pointer to the HW structure
-> > + * @req: Pointer to the cmd req structure
-> > + * @reply: Pointer to the fw reply structure
-> > + *
-> > + * mucse_fw_send_cmd_wait sends req to pf-cm3 mailbox and wait
-> > + * reply from fw.
-> > + *
-> > + * Returns 0 on success, negative on failure
-> > + **/
-> > +static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
-> > +				  struct mbx_fw_cmd_req *req,
-> > +				  struct mbx_fw_cmd_reply *reply)
-> > +{
-> > +	int err;
-> > +	int retry_cnt = 3;
-> > +
-> > +	if (!hw || !req || !reply || !hw->mbx.ops.read_posted)
-> 
-> Can this happen?
-> 
-> If this is not supposed to happen, it is better the driver opps, so
-> you get a stack trace and find where the driver is broken.
-> 
-Yes, it is not supposed to happen. So, you means I should remove this
-check in order to get opps when this condition happen?
-> > +		return -EINVAL;
-> > +
-> > +	/* if pcie off, nothing todo */
-> > +	if (pci_channel_offline(hw->pdev))
-> > +		return -EIO;
-> 
-> What can cause it to go offline? Is this to do with PCIe hotplug?
-> 
-Yes, I try to get a PCIe hotplug condition by 'pci_channel_offline'.
-If that happens, driver should never do bar-read/bar-write, so return
-here.
-> > +
-> > +	if (mutex_lock_interruptible(&hw->mbx.lock))
-> > +		return -EAGAIN;
-> 
-> mutex_lock_interruptable() returns -EINTR, which is what you should
-> return, not -EAGAIN.
-> 
-Got it, I should return '-EINTR' here.
-> > +
-> > +	err = hw->mbx.ops.write_posted(hw, (u32 *)req,
-> > +				       L_WD(req->datalen + MBX_REQ_HDR_LEN),
-> > +				       MBX_FW);
-> > +	if (err) {
-> > +		mutex_unlock(&hw->mbx.lock);
-> > +		return err;
-> > +	}
-> > +
-> > +retry:
-> > +	retry_cnt--;
-> > +	if (retry_cnt < 0)
-> > +		return -EIO;
-> > +
-> > +	err = hw->mbx.ops.read_posted(hw, (u32 *)reply,
-> > +				      L_WD(sizeof(*reply)),
-> > +				      MBX_FW);
-> > +	if (err) {
-> > +		mutex_unlock(&hw->mbx.lock);
-> > +		return err;
-> > +	}
-> > +
-> > +	if (reply->opcode != req->opcode)
-> > +		goto retry;
-> > +
-> > +	mutex_unlock(&hw->mbx.lock);
-> > +
-> > +	if (reply->error_code)
-> > +		return -reply->error_code;
-> 
-> The mbox is using linux error codes? 
-> 
-It is used only between driver and fw, yay be just samply like this: 
-0     -- no error
-not 0 -- error
-So, it is not using linux error codes.
-> > +#define FLAGS_DD BIT(0) /* driver clear 0, FW must set 1 */
-> > +/* driver clear 0, FW must set only if it reporting an error */
-> > +#define FLAGS_ERR BIT(2)
-> > +
-> > +/* req is little endian. bigendian should be conserened */
-> > +struct mbx_fw_cmd_req {
-> > +	u16 flags; /* 0-1 */
-> > +	u16 opcode; /* 2-3 enum GENERIC_CMD */
-> > +	u16 datalen; /* 4-5 */
-> > +	u16 ret_value; /* 6-7 */
-> 
-> If this is little endian, please use __le16, __le32 etc, so that the
-> static analysers will tell you if you are missing cpu_to_le32 etc.
-> 
-> 	Andrew
-> 
-Got it, I will fix it.
+The DMA map functions can fail and should be tested for errors.
 
-Thanks for your feedback.
+Fixes: 4774fb0a48aa ("mtd: nand/fsmc: Add DMA support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/mtd/nand/raw/fsmc_nand.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/mtd/nand/raw/fsmc_nand.c b/drivers/mtd/nand/raw/fsmc_nand.c
+index d579d5dd60d6..df61db8ce466 100644
+--- a/drivers/mtd/nand/raw/fsmc_nand.c
++++ b/drivers/mtd/nand/raw/fsmc_nand.c
+@@ -503,6 +503,8 @@ static int dma_xfer(struct fsmc_nand_data *host, void *buffer, int len,
+ 
+ 	dma_dev = chan->device;
+ 	dma_addr = dma_map_single(dma_dev->dev, buffer, len, direction);
++	if (dma_mapping_error(dma_dev->dev, dma_addr))
++		return -EINVAL;
+ 
+ 	if (direction == DMA_TO_DEVICE) {
+ 		dma_src = dma_addr;
+-- 
+2.43.0
+
