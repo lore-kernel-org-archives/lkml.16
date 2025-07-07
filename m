@@ -1,145 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC35800;
-	Mon,  7 Jul 2025 08:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652EC28A1D8;
+	Mon,  7 Jul 2025 08:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875343; cv=none; b=i0wQH9UPaZm5R/v9SHkqfcrQ9sfg7knojD8aejwm9qaTf3pQ5RmhwM7OYxlUiN0gcsdd/+mhC2XtrCamg07SfS2UvTWL6eJ08xcI5patqUUfGTKrtcqRkZuxzSAZGXd2agLi1R/IWye5N92WS2WpCN5jD8tbMYUy4R1RgtYmUi8=
+	t=1751875345; cv=none; b=nYEOjhGtnmssPemhxehUADJQhiMIobM1v18gXklpZHAuh7qJdVKU8e/+LY6V3S3B432rtIDcchOD23505O+LWKk2LNJLY7UF2tQ0Sc82VyJHUHKfvamHSCqBDP1jpNSJT1+nT6nAzBCo8BYy9jtHFzJA2PlyrcG72ZCOW89rC2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875343; c=relaxed/simple;
-	bh=N7TeHc8uA+dRWRGg8sis7a69LSQxgrglsAuwm+wt4Co=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXsNl2PuIEtl0yywpBQ9uKrqcbT7xo6B5zCd0z3XXDvtCvFbLkNQTFE6jhPRvARuFVap9lAPGBOvNFRgzPyobLbgmuKhAPp4oWXVMU1e41F8UpevN/QPbVh5BUiTD3YTn943tYbTvNBYDrqTy7N+OmSnLnmF3QLsXqw4QTVX8bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2dBAFzd; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751875345; c=relaxed/simple;
+	bh=x67h+fn9KV5svOBBZgGZNkWxKG8AD5u95P4//EPtBt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KtSKSlez8LW1LC0R+UwjKGtThP8i7ikuBE+ZLn+4s9i8q4LkfHtIfx8oujkAvKJh4x8EKjHOvhXQsvegrsV4lxRfq/drmsZzq1Rr4HRhaVPUql96RGtjr2tpc7R8aVT2cGU4PC1ZcDC3PdJ7tmwwA7Pnr7GofioXcio7V0GxYU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pLuAaR5S; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2dBAFzd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751875342; x=1783411342;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N7TeHc8uA+dRWRGg8sis7a69LSQxgrglsAuwm+wt4Co=;
-  b=h2dBAFzdP+kHxLVQp+unNgq7+D3QAN2iM9LHf4IuSV9qNAwotP3ngKfN
-   dnVBw+OO4LYD1KmREHARwnV9w1MozMXeOuxARev/OfUS6zKc5CF7wUMvP
-   QNdN6Nw4yfSO+/t/7Ol3jl/MP6vh6LjG/uAErdIpMfx4ytyFXvc5tDZxN
-   6Dnh+2V6h9qLXM8bhTi7v98XdBysIaX+gfNV5/+i+IVt1HQZJrHOnba9I
-   +6e1HURkeT5IqiFVrobqq1XvAvJJiN/okFhvt6YpQZn8ucfgJOH1F/PlI
-   N+mFc6DqvWticLjhkds+9tJ6LxXWxtJvZoAX0SXwVlJYRsg9FeYakTYFJ
-   w==;
-X-CSE-ConnectionGUID: K0UdxFVbQhmxICk1YI54yQ==
-X-CSE-MsgGUID: zcbVEhLyScmp8ulTSWSS4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65541986"
-X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="65541986"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 01:02:20 -0700
-X-CSE-ConnectionGUID: VSf3HB/2Qi+d4IAoxJBfJg==
-X-CSE-MsgGUID: rAXXNYSFSwmLSxUNL/u5dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="154565268"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 07 Jul 2025 01:02:08 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 5DB11182; Mon, 07 Jul 2025 11:02:06 +0300 (EEST)
-Date: Mon, 7 Jul 2025 11:02:06 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ingo Molnar <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv8 02/17] x86/asm: Introduce inline memcpy and memset
-Message-ID: <eq5h4a5dvlkncthg3lic3go22op2docbhdaolpfwrq2ieai3qo@j3b26mmhf52q>
-References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
- <20250701095849.2360685-3-kirill.shutemov@linux.intel.com>
- <49f7c370-1e28-494b-96a9-f45e06ed4631@intel.com>
- <20250706101342.069b5068@pumpkin>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pLuAaR5S"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566JlFRa010272;
+	Mon, 7 Jul 2025 08:02:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=tKWYCfPshKqHVRIfkFm7djL1GZKcjaFXrRskb/zgN
+	e8=; b=pLuAaR5SIy75wFqc0I+aClZ0xBe4W4Cq9RonfjssW4fX0PTmWtV/hHurl
+	6Q+21ZCWzk6h0yNrdU2cc9nDx1eGq9yyNL63Zh34wrHJ0kCm3fzOcKt+hRNp68e3
+	jE2s6B+X73gp4tcu9C6ODX8b6icaYduGBSnQzL29YZLTSVvciPHeFudwIom54Z0E
+	MYTlHvcpP6OBcA/yJbZKu8QCr+DCFyxp9IA5/m0JidUcMxs0VFc9oSfMaJpPi/ql
+	UMoL8Vg1dIX6MgHU1pzNKHhqD/Ppj31My/cylwXBNmdJq6WUVhtvOys2eacf6VCY
+	jG/+5v/HiAoXHr/BZ3AgYqGEowQhA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puk3r9t2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 08:02:08 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5677qCN3000458;
+	Mon, 7 Jul 2025 08:02:07 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puk3r9sv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 08:02:07 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5677kPXQ021581;
+	Mon, 7 Jul 2025 08:02:06 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47qectd9jt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 08:02:06 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5678222f38797694
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Jul 2025 08:02:02 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AF8B72004E;
+	Mon,  7 Jul 2025 08:02:02 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 900DE20043;
+	Mon,  7 Jul 2025 08:02:00 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.94.242])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  7 Jul 2025 08:02:00 +0000 (GMT)
+From: Aditya Bodkhe <adityab1@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, Aditya Bodkhe <adityab1@linux.ibm.com>
+Subject: [PATCH] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+Date: Mon,  7 Jul 2025 13:31:55 +0530
+Message-ID: <20250707080156.64874-1-adityab1@linux.ibm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250706101342.069b5068@pumpkin>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA0NCBTYWx0ZWRfX5X4Bxx/DP4/V jGo8DWLNLNWj42YO0PoFDeQ37Ckyta9V3X+ZgTd5GsEFtdjmDzSC0Mn8QnSGD+enIi4uHn+rLRK S+Au+bCB5FHYivNAAQiU/C1xzdf4h7x+CdqyQjJuBBA7unCUIYYLHXfwjGwko17LMPbhK3+Hug6
+ T6SoiJk9rjbTx1gTTQtK5n5weXSa5JVjvRmAVBCfbNMvMaT9lY2+PmhyHC15MTzxmj0xkBlTFsS yT6vrBD5uvbp4aS466D613YV8NmKPH+j6HzlHeEZm4ozXXHC6HuEOeNZ2X5XYZ0YL59nTmja1Wg EIA9ss6SMR9vo+dA+8QogEf3ZpiSHxOuYtMpbVQQCbC+puJYRCNk45/v3XFNmCT6da7LNSd+vXB
+ gXq2FZfovAALZa+idRFsxIba3pM6XLkkLVwkNH5zTGmU17TYbu4hqiOOWW/4PT6+21hot69E
+X-Authority-Analysis: v=2.4 cv=XYeJzJ55 c=1 sm=1 tr=0 ts=686b7f00 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=f-JPSP1mq3vSRxYuwIAA:9
+X-Proofpoint-ORIG-GUID: dDceL51tWHTZW1IQbCIc_86ShS54Sn2C
+X-Proofpoint-GUID: G0HZppdmp8lVGANPy9y5UhT2-TduYhxf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_01,2025-07-07_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 impostorscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ spamscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070044
 
-On Sun, Jul 06, 2025 at 10:13:42AM +0100, David Laight wrote:
-> On Thu, 3 Jul 2025 10:13:44 -0700
-> Dave Hansen <dave.hansen@intel.com> wrote:
-> 
-> > On 7/1/25 02:58, Kirill A. Shutemov wrote:
-> > > Extract memcpy and memset functions from copy_user_generic() and
-> > > __clear_user().
-> > > 
-> > > They can be used as inline memcpy and memset instead of the GCC builtins
-> > > whenever necessary. LASS requires them to handle text_poke.  
-> > 
-> > Why are we messing with the normal user copy functions? Code reuse is
-> > great, but as you're discovering, the user copy code is highly
-> > specialized and not that easy to reuse for other things.
-> > 
-> > Don't we just need a dirt simple chunk of code that does (logically):
-> > 
-> > 	stac();
-> > 	asm("rep stosq...");
-> > 	clac();
-> > 
-> > Performance doesn't matter for text poking, right? It could be stosq or
-> > anything else that you can inline. It could be a for() loop for all I
-> > care as long as the compiler doesn't transform it into some out-of-line
-> > memset. Right?
-> > 
-> 
-> It doesn't even really matter if there is an out-of-line memset.
-> All you need to do is 'teach' objtool it isn't a problem.
+commit a1be9ccc57f0 ("function_graph: Support recording and printing the
+return value of function") introduced support for function graph return
+value tracing.
 
-PeterZ was not fan of the idead;
+Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
+ftrace_regs") further refactored and optimized the implementation,
+making `struct fgraph_ret_regs` unnecessary.
 
-https://lore.kernel.org/all/20241029113611.GS14555@noisy.programming.kicks-ass.net/
+This patch enables the above modifications for powerpc all, ensuring that
+function graph return value tracing is available on this architecture.
 
-> Is this for the boot-time asm-alternatives?
+In this patch we have redefined two functions:
+- 'ftrace_regs_get_return_value()' - the existing implementation on
+ppc returns -ve of return value based on some conditions not
+relevant to our patch.
+- 'trace_regs_get_frame_pointer()' - always returns 0 in current code .
 
-Not only boot-time. static_branches are switchable at runtime.
+We also allocate stack space to equivalent of 'SWITCH_FRAME_SIZE',
+allowing us to directly use predefined offsets like 'GPR3' and 'GPR4'
+this keeps code clean and consistent with already defined offsets .
 
-> In that case I wonder why a 'low' address is being used?
-> With LASS enabled using a low address on a life kernel would make it
-> harder for another cpu to leverage the writable code page, but
-> that isn't a requirement of LASS.
+After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
+but there are a few other build and runtime dependencies for FPROBE to
+work properly. The next patch addresses them.
 
-Because kernel side of address space is shared across all CPU and we don't
-want kernel code to be writable to all CPUs
+Signed-off-by: Aditya Bodkhe <adityab1@linux.ibm.com>
+---
+ arch/powerpc/Kconfig                     |  1 +
+ arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
+ arch/powerpc/kernel/trace/ftrace_entry.S | 42 ++++++++++++++----------
+ 3 files changed, 41 insertions(+), 17 deletions(-)
 
-> If it is being used for later instruction patching you need the
-> very careful instruction sequences and cpu synchronisation.
-> In that case I suspect you need to add conditional stac/clac
-> to the existing patching code (and teach objtool it is all ok).
-
-STAC/CLAC is conditional in text poke on LASS presence on the machine.
-
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c3e0cc83f120..9163521bc4b9 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -250,6 +250,7 @@ config PPC
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
+ 	select HAVE_FUNCTION_ERROR_INJECTION
++	select HAVE_FUNCTION_GRAPH_FREGS
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
+ 	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
+diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
+index 82da7c7a1d12..6ffc9c9cf4e3 100644
+--- a/arch/powerpc/include/asm/ftrace.h
++++ b/arch/powerpc/include/asm/ftrace.h
+@@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+ 		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
+ 	} while (0)
+ 
++#undef ftrace_regs_get_return_value
++static __always_inline unsigned long
++ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
++{
++	return arch_ftrace_regs(fregs)->regs.gpr[3];
++}
++#define ftrace_regs_get_return_value ftrace_regs_get_return_value
++
++#undef ftrace_regs_get_frame_pointer
++static __always_inline unsigned long
++ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
++{
++	return arch_ftrace_regs(fregs)->regs.gpr[1];
++}
++
+ static __always_inline void
+ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+ 				    unsigned long ip)
+diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+index 3565c67fc638..d00272099add 100644
+--- a/arch/powerpc/kernel/trace/ftrace_entry.S
++++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+@@ -409,23 +409,31 @@ EXPORT_SYMBOL(_mcount)
+ _GLOBAL(return_to_handler)
+ 	/* need to save return values */
+ #ifdef CONFIG_PPC64
+-	std	r4,  -32(r1)
+-	std	r3,  -24(r1)
++	stdu	r1, -SWITCH_FRAME_SIZE(r1)
++	std	r4, GPR4(r1)
++	std	r3, GPR3(r1)
++  /* Save previous stack pointer (r1) */
++	addi	r3, r1, SWITCH_FRAME_SIZE
++	std	r3, GPR1(r1)
+ 	/* save TOC */
+-	std	r2,  -16(r1)
+-	std	r31, -8(r1)
++	std	r2,  24(r1)
++	std	r31, 32(r1)
+ 	mr	r31, r1
+-	stdu	r1, -112(r1)
+-
++  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
++	addi	r3,  r1, STACK_INT_FRAME_REGS
+ 	/*
+ 	 * We might be called from a module.
+ 	 * Switch to our TOC to run inside the core kernel.
+ 	 */
+ 	LOAD_PACA_TOC()
+ #else
+-	stwu	r1, -16(r1)
+-	stw	r3, 8(r1)
+-	stw	r4, 12(r1)
++	stwu	r1, -SWITCH_FRAME_SIZE(r1)
++	stw	r4, GPR4(r1)
++	stw	r3, GPR3(r1)
++	addi	r3, r1, SWITCH_FRAME_SIZE
++	stw	r3, GPR1(r1)
++  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
++  addi	r3, r1, STACK_INT_FRAME_REGS
+ #endif
+ 
+ 	bl	ftrace_return_to_handler
+@@ -435,15 +443,15 @@ _GLOBAL(return_to_handler)
+ 	mtlr	r3
+ 
+ #ifdef CONFIG_PPC64
+-	ld	r1, 0(r1)
+-	ld	r4,  -32(r1)
+-	ld	r3,  -24(r1)
+-	ld	r2,  -16(r1)
+-	ld	r31, -8(r1)
++	ld	r4,  GPR4(r1)
++	ld	r3,  GPR3(r1)
++	ld	r2,  24(r1)
++	ld	r31, 32(r1)
++	ld	r1,  0(r1)
+ #else
+-	lwz	r3, 8(r1)
+-	lwz	r4, 12(r1)
+-	addi	r1, r1, 16
++	lwz	r3, GPR3(r1)
++	lwz	r4, GPR4(r1)
++	addi	r1, r1, SWITCH_FRAME_SIZE
+ #endif
+ 
+ 	/* Jump back to real return address */
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.50.0
+
