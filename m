@@ -1,250 +1,133 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7BB2BE7C8
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2313C2D0C8E;
+	Mon,  7 Jul 2025 14:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897696; cv=none; b=gjqiNOeaHlm4FXbbXpku8kzRtSanH+iUYubOZFyxcyxvSCufIX5RRcP7hRtLsL1fDJSdIwJqO72dyqf27P+5/IxkipVysQCZYYkfRYlpMUGwiJR4/FR9UIUkvfJTSW++dXs/62NZzV083fKAEgTPuCLw4jU+ABv8usbfWQqlES4=
+	t=1751897734; cv=none; b=o9XPey+gDh1e0xw1pMhA4gKv343GPvVMuuOYlnMHzIGlvSiV6sZwXTESw46R+UObU4HnATF2YC/NpwjjiyOsJTzMnQEa/20NWQJsLDU/Gy3R6ovTtksysabLHWZMB4Qbhg0f7CtNiIJ5w7S44gtCOZnrWNxAyZuop9oxkccmkjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897696; c=relaxed/simple;
-	bh=f3vDGUfr/K0NLAPPU4VKw2rDAEi3+ik8Sta91v9w8N8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FW0q0000FVm2RB/dOwzKO4P/BKVxSxn7iqqyqhXN438E6PGdYOHfTEK4VKoXPMLmUWYKeOaYpjco2wdpI9Pkl5NPmJF5ihP1jiifWCMnCLZHLMn2kDip2cM7mOHR5l/Kh5u97MGNTuvZAAtweXBf4+pf+MM89EACBFJF2hZuq14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xr88XP5t; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751897734; c=relaxed/simple;
+	bh=3LfLU8OtGsYshHZLrDfPMhhXu/3AExSDQWcIRL1i2oI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TX65lpaL/tn4FBXC3ZG/ZUgLHGI2s/tU9bLhXPn/gQpLh6w2K6zBgmaPcCj39zjf0yzvYPb2jVpq63P7yLr7sW4i8v3oZSixUcWpe882SuPZZDvaLzneRcoJHrAOt8VC6YAQLC9EIFnbnBbI4bW3Z1739VihcJVv/3n9Vk7qs4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CfwNYHDw; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xr88XP5t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PzRBiyK/Tja7fxyCyCvByclVfaFZRVub5SyjZCkEFu8=; b=Xr88XP5t/iax+NIJ49j8OCX0w4
-	sCNUgwDE3qB3i88Jl4UwNJn32bZvMiJlPFJ8mrH+QoflDXbnkSTTnEku4sr1z8c0jd0y5mENMnZL2
-	D2gkOvU65YfGheMFi2ByFzGmoj+095Q/EHLV3hyvatD6CXEr+dZgwcCuzkO6KcEZqLB+ds2uyqIme
-	qDPryBmNS8rU+sFl7LeEE6wfCc4yulsIbaZmw78v+PWPdUMopGQwzyd1iHlDG3hoR3kfbFNX/Q8Ws
-	Vz8VOCACwIbahf5MQFfBqiyBETrP3fBt1Q03+o7JtsJZHLSts4roZCSy4HoElr6vAfswCZ57SSSJ8
-	e9kOvAdw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYmcF-0000000DN0k-01S6;
-	Mon, 07 Jul 2025 14:14:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C7449300399; Mon, 07 Jul 2025 16:14:41 +0200 (CEST)
-Date: Mon, 7 Jul 2025 16:14:41 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, dhaval@gianis.ca, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] sched/fair: Manage lag and run to parity with
- different slices
-Message-ID: <20250707141441.GG1613200@noisy.programming.kicks-ass.net>
-References: <20250704143612.998419-1-vincent.guittot@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfwNYHDw"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7150af9d35cso1574097b3.2;
+        Mon, 07 Jul 2025 07:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751897732; x=1752502532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AErYOjPJpnpZ+PP+YqlZmcpAxpjfggGYTXiGQfIvip8=;
+        b=CfwNYHDwhpDvMr6tciQRtmtR7Uokk1hAB92Ywm06IZHWCdkyG96qotIz/lm7gUJbH6
+         L58UhMMt6euenBWUjqG9HiDGefFqwC3NvemcZ1jCpQ9PyNjZszfitTr87LPewPqx/YAI
+         Bn0QCIP5AAKQI7YkQu+eVJ2ihoLB3Uj8jDcYfheeigy1zIfVg2Mmbi3skHkZgSDO/No5
+         DSIFrt3FjKiVe18uQNOWrqgO3UYrrzQsctMXG2qTFnKvAcBbnsJ6s7fwSC2AVt6J3peB
+         aCEsediiJzuRAzz05QUB26oAj9Lu3texCGxO/NL9ZTGxwlxkreCyz5IOJxkVMb5yLs9o
+         e2ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751897732; x=1752502532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AErYOjPJpnpZ+PP+YqlZmcpAxpjfggGYTXiGQfIvip8=;
+        b=BjXAu3pbFs6+gjzTTZrbbgpBumrPyPi/RHC2a8WXLMOsdR7VD9AZXV1p4xGCTOFg+D
+         l7UmZ86L5nrjBU0u21y3uCX0xxvVgvjQMGIxl3zQbMVoLKVbr1GUwPFRZ8q/RJJQDLUx
+         qq96dlDg79sHKEXn1jKXk8jx/GPC0/t71Gj9msTh9kZQVHE+Z/VYXNrG2ovK9wtptuGk
+         ury74quG77S8m2RmkndJ3I4pgBWlsE2EuyVo4MJP/WOTkvmG3De5273/tVDlVld4PKTt
+         eD9u1HoaAmpw3PDNAq7KOCA2QrcKaLipL4PJkGrtqafNomrXEDsynmDrS5FD3PWgOSvc
+         UpGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQD538LcVFOxWLTJYIqo8fNLJQPVdNa1dlAcaVzRdjMo3/BOaOxIzVeWAcaGVKTtvLFC/nIVZzAfcIM48=@vger.kernel.org, AJvYcCWgLhHQ3PJwsKn2YAjCDecF5Y7BopDMYijkw3FihYfwIcbwfnH5S7zzrWcyHyhuTerzMsT6m+5hmBF/mmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVX4377uHtQLFHvaxC5wICG1AFQzwG+VueQCFeZKaroWOPxwqa
+	Jqfdu9ocnJrpbHzGWwflCMPcIIUhBiLg6o8TEedXyvu0jPmEi35LS+dz03Ve/ctnl7chLPPCkCh
+	v6clkIcX0a1w/vCcinkamd51o1aU6RPzuvOcm
+X-Gm-Gg: ASbGncutoPqGOTSAtI0uXXIRE6PuHtF1otkTPf+zhH3kYKcy/rNVFWzO97VhQr2A3Yw
+	/ixev0jw+88s7wX09NygjU4kfhoJGhpnXTg/VpOedB6f1nXQoz14sPFPbzF9p9RgPBWM8F6YqDF
+	zLFmTuHCrdcAeV45neOQkg4mAHhqrvVCygX4CsQ3amnU1BB+sfI01Oew==
+X-Google-Smtp-Source: AGHT+IHnDuLvLfejqboRjI3Nimbpls7hnKoDbyNe7W42pgoxHL6wBP7zDxd/XlXHmJNNt9Ix9KPSr9YZn5dvzzlvalc=
+X-Received: by 2002:a05:690c:6485:b0:712:c295:d023 with SMTP id
+ 00721157ae682-7166a18c8e1mr83477087b3.6.1751897731678; Mon, 07 Jul 2025
+ 07:15:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704143612.998419-1-vincent.guittot@linaro.org>
+References: <20250707140923.58935-1-abdelrahmanfekry375@gmail.com>
+ <20250707140923.58935-2-abdelrahmanfekry375@gmail.com> <00673c30-8233-417a-9f8b-2ab91381fa4d@kernel.org>
+In-Reply-To: <00673c30-8233-417a-9f8b-2ab91381fa4d@kernel.org>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Mon, 7 Jul 2025 17:15:20 +0300
+X-Gm-Features: Ac12FXzR3h8Pxd-1k676hKF77K5klKtgO3uH2HtIeCoP5FJR4Aai-4e9y3wGygk
+Message-ID: <CAGn2d8PjT+gE2EH0+YT_-ivfcXBuBM1OxTLEAvy+sFctpc66Aw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] staging: media: atomisp: return early on
+ hmm_bo_device_init() failure
+To: Hans de Goede <hansg@kernel.org>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.org, andy@kernel.org, 
+	gregkh@linuxfoundation.org, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org, 
+	dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 04, 2025 at 04:36:06PM +0200, Vincent Guittot wrote:
-> This follows the attempt to better track maximum lag of tasks in presence
-> of different slices duration:
-> [1]  https://lore.kernel.org/all/20250418151225.3006867-1-vincent.guittot@linaro.org/
-> 
-> Since v1, tracking of the max slice has been removed from the patchset
-> because we now ensure that the lag of an entity remains in the range of:
->    
->   [-(slice + tick) : (slice + tick)] with run_to_parity
-> and
->   [max(-slice, -(0.7+tick) : max(slice , (0.7+tick)] without run to parity
->   
-> As a result, there is no need the max slice of enqueued entities anymore.
-> 
-> Patch 1 is a simple cleanup to ease following changes.
-> 
-> Patch 2 fixes the lag for NO_RUN_TO_PARITY. It has been put 1st because of
-> its simplicity. The running task has a minimum protection of 0.7ms before
-> eevdf looks for another task.
+Hi Hans.
+On Mon, Jul 7, 2025 at 5:12=E2=80=AFPM Hans de Goede <hansg@kernel.org> wro=
+te:
+>
+> Hi Abdelrahman,
+>
+> On 7-Jul-25 16:09, Abdelrahman Fekry wrote:
+> > hmm_init() would continue execution even if hmm_bo_device_init() failed=
+,
+> > potentially leading to bad behaviour when calling hmm_alloc().
+> >
+> > - returns the error immediately if hmm_bo_device_init() fails.
+> >
+> > Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+> > ---
+> >  drivers/staging/media/atomisp/pci/hmm/hmm.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/stag=
+ing/media/atomisp/pci/hmm/hmm.c
+> > index f998b57f90c4..c2ee9d2ec0d5 100644
+> > --- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
+> > +++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+> > @@ -36,6 +36,7 @@ int hmm_init(void)
+> >                                ISP_VM_START, ISP_VM_SIZE);
+> >       if (ret)
+> >               dev_err(atomisp_dev, "hmm_bo_device_init failed.\n");
+> > +             return ret;
+>
+> You need to add { } here otherwise the "return ret;" will
+> always get executed since it is not part of the code block
+> guarded by the if (despite the indentation).
+>
+Yes , sorry for this dumb mistake. I will send v2.
 
-The usage of min() on vruntimes is broken; it doesn't work right in the
-face of wrapping; use min_vruntime().
-
-Also, perhaps it is time to better document this vlag abuse.
-
-> Patch 3 ensures that the protection is canceled only if the waking task
-> will be selected by pick_task_fair. This case has been mentionned by Peter
-> will reviewing v1.
-> 
-> Patch 4 modifes the duration of the protection to take into account the
-> shortest slice of enqueued tasks instead of the slice of the running task.
-> 
-> Patch 5 fixes the case of tasks not being eligible at wakeup or after
-> migrating  but with a shorter slice. We need to update the duration of the
-> protection to not exceed the lag.
-
-This has issues with non-determinism; specifically,
-update_protected_slice() will use the current ->vruntime, and as such
-can unduly push forward the protection window.
-
-> Patch 6 fixes the case of tasks still being eligible after the protected
-> period but others must run to no exceed lag limit. This has been
-> highlighted in a test with delayed entities being dequeued with a positive
-> lag larger than their slice but it can happen for delayed dequeue entity
-> too.
-
-At this point resched_next_quantum() becomes !protec_slice() and can be
-removed.
-
-How about something like so? I've probably wrecked the whole
-!RUN_TO_PARITY thing -- so that needs to be put back in.
-
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -579,7 +579,15 @@ struct sched_entity {
- 	u64				sum_exec_runtime;
- 	u64				prev_sum_exec_runtime;
- 	u64				vruntime;
--	s64				vlag;
-+	union {
-+		/*
-+		 * When !@on_rq this field is vlag.
-+		 * When cfs_rq->curr == se (which implies @on_rq)
-+		 * this field is vprot. See protect_slice().
-+		 */
-+		s64			vlag;
-+		u64			vprot;
-+	};
- 	u64				slice;
- 
- 	u64				nr_migrations;
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -882,45 +882,36 @@ struct sched_entity *__pick_first_entity
- }
- 
- /*
-- * HACK, Set the vruntime up to which an entity can run before picking another
-- * one, in vlag, which isn't used until dequeue.
-- * In case of run to parity, we use the shortest slice of the enqueued entities
-- * to define the longest runtime.
-- * When run to parity is disabled, we give a minimum quantum to the running
-- * entity to ensure progress.
-+ * Take a snapshot of the vruntime at the point the task gets scheduled.
-  */
- static inline void set_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
--	u64 quantum;
--
--	if (sched_feat(RUN_TO_PARITY))
--		quantum = cfs_rq_min_slice(cfs_rq);
--	else
--		quantum = normalized_sysctl_sched_base_slice;
--	quantum = min(quantum, se->slice);
--
--	if (quantum != se->slice)
--		se->vlag = min(se->deadline, se->vruntime + calc_delta_fair(quantum, se));
--	else
--		se->vlag = se->deadline;
-+	se->vprot = se->vruntime;
- }
- 
--static inline void update_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
-+/*
-+ * Should we still run @se? It is allowed to run until either se->deadline or
-+ * until se->vprot + min_vslice, whichever comes first.
-+ */
-+static inline bool protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
--	u64 quantum = cfs_rq_min_slice(cfs_rq);
-+	u64 min_vslice, deadline = se->deadline;
-+	u64 min_slice = cfs_rq_min_slice(cfs_rq);
- 
--	se->vlag = min(se->vlag, (s64)(se->vruntime + calc_delta_fair(quantum, se)));
--}
-+	if (min_slice != se->slice) {
-+		min_vslice = calc_delta_fair(min_slice, se);
-+		deadline = min_vruntime(se->deadline, se->vprot + min_vslice);
-+	}
- 
--static inline bool protect_slice(struct sched_entity *se)
--{
--	return ((s64)(se->vlag - se->vruntime) > 0);
-+	WARN_ON_ONCE(!se->on_rq);
-+
-+	return ((s64)(deadline - se->vruntime) > 0);
- }
- 
--static inline void cancel_protect_slice(struct sched_entity *se)
-+static inline void cancel_protect_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
--	if (protect_slice(se))
--		se->vlag = se->vruntime;
-+	if (protect_slice(cfs_rq, se))
-+		se->vprot = se->vruntime - calc_delta_fair(NSEC_PER_SEC, se);
- }
- 
- /*
-@@ -959,7 +950,7 @@ static struct sched_entity *__pick_eevdf
- 	if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
- 		curr = NULL;
- 
--	if (curr && protect && protect_slice(curr))
-+	if (curr && protect && protect_slice(cfs_rq, curr))
- 		return curr;
- 
- 	/* Pick the leftmost entity if it's eligible */
-@@ -1183,14 +1174,6 @@ static inline void update_curr_task(stru
- 	cgroup_account_cputime(p, delta_exec);
- }
- 
--static inline bool resched_next_quantum(struct cfs_rq *cfs_rq, struct sched_entity *curr)
--{
--	if (protect_slice(curr))
--		return false;
--
--	return true;
--}
--
- /*
-  * Used by other classes to account runtime.
-  */
-@@ -1251,7 +1234,7 @@ static void update_curr(struct cfs_rq *c
- 	if (cfs_rq->nr_queued == 1)
- 		return;
- 
--	if (resched || resched_next_quantum(cfs_rq, curr)) {
-+	if (resched || !protect_slice(cfs_rq, curr)) {
- 		resched_curr_lazy(rq);
- 		clear_buddies(cfs_rq, curr);
- 	}
-@@ -8729,7 +8712,7 @@ static void check_preempt_wakeup_fair(st
- 	 * If @p has a shorter slice than current and @p is eligible, override
- 	 * current's slice protection in order to allow preemption.
- 	 */
--	 do_preempt_short = sched_feat(PREEMPT_SHORT) && (pse->slice < se->slice);
-+	do_preempt_short = sched_feat(PREEMPT_SHORT) && (pse->slice < se->slice);
- 
- 	/*
- 	 * If @p has become the most eligible task, force preemption.
-@@ -8737,14 +8720,11 @@ static void check_preempt_wakeup_fair(st
- 	if (__pick_eevdf(cfs_rq, !do_preempt_short) == pse)
- 		goto preempt;
- 
--	if (sched_feat(RUN_TO_PARITY) && do_preempt_short)
--		update_protect_slice(cfs_rq, se);
--
- 	return;
- 
- preempt:
- 	if (do_preempt_short)
--		cancel_protect_slice(se);
-+		cancel_protect_slice(cfs_rq, se);
- 
- 	resched_curr_lazy(rq);
- }
+> Regards,
+>
+> Hans
+>
+>
+>
+> >
+> >       hmm_initialized =3D true;
+> >
+> > @@ -48,7 +49,7 @@ int hmm_init(void)
+> >        */
+> >       dummy_ptr =3D hmm_alloc(1);
+> >
+> > -     return ret;
+> > +     return 0;
+> >  }
+> >
+> >  void hmm_cleanup(void)
+>
