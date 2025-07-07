@@ -1,115 +1,178 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859281BC3F;
-	Mon,  7 Jul 2025 01:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BEB10E4;
+	Mon,  7 Jul 2025 01:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751850334; cv=none; b=aaSCf3XVbWKXwiexetOJBeSk99tB12rr5kVQwLzrsy+WVLOJmUcYLzXwT3NsXNRJ18shs/uPZ7/DdROJW0dOdkTtfGXYBkfbvrDBcvAa4/1Ae9NloIsT+PlEmimXQFQgxOusMVAqUWmu+MaxNYVrCpfCDXjnA1YO2aMxbGEE9AA=
+	t=1751851119; cv=none; b=Tn47S87XJx8YsfgrLJpc0kWnsVH6OJ9nrUdQiVM95IjOEnUE0eN+xZLfrE+eFJmJ5sbO4SiT8s2/72AHNs8EVNiI/WRhsHWQDTG3m0KJGbMPaXCXXlznjE0oaHQprqsRAcF5QZS5VdR0LRfsNozhU0t0gGskVVZ334RjKkEL2/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751850334; c=relaxed/simple;
-	bh=lFtl0/KhCyGQtSvdjpdRV3oo3TI3vyWSr89jtNIGjYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TX0Wy23Za2DOjiGOVqYpuIdH5uaGscpeJc+e0JvkKGX4p+frSzpX3QC/8oGrEInuZLqBCDUojYjvWeFLPSkXdzIdM7iRFz4RxKFwE4kg5+rRDieA83lVQebN8KpYHMGU0UDdFjD/7XhItEClTLf9iplJ19RUOkpnUHg/tOqL3Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: bd5d76905acd11f0b29709d653e92f7d-20250707
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:b540f768-9daa-4551-9621-e99882fbf9a8,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:6493067,CLOUDID:721bd41f0dd6331f36630ea02494de61,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|83|102,TC:nil,Content:0|52,EDM:-3,
-	IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
-X-UUID: bd5d76905acd11f0b29709d653e92f7d-20250707
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 80701485; Mon, 07 Jul 2025 09:00:14 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id CCCECE008FA2;
-	Mon,  7 Jul 2025 09:00:13 +0800 (CST)
-X-ns-mid: postfix-686B1C1D-73792946
-Received: from [172.25.120.24] (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id AF560E008FAA;
-	Mon,  7 Jul 2025 09:00:12 +0800 (CST)
-Message-ID: <de7e327a-202c-4b28-b372-2d648c680dbe@kylinos.cn>
-Date: Mon, 7 Jul 2025 09:00:12 +0800
+	s=arc-20240116; t=1751851119; c=relaxed/simple;
+	bh=nYmHBfKC1In8qDW3GIo2UwVe9MvCXebLZr99Zm4j1bM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GtYHOW0HZoYMzxkGQ5JcwFEO+55nSH43GNGRhAvArbOEqBOPgOzL1YwkLzd6XW1VIuA9yteTDsZ6iSj/K/3WFwaK1ffO6kMHz0CuqxfdE7Olw93u6ElyMzPgRwxhohYBkbfLj/WUoVikkU/sFc5Gku5wFpwJnl7GiMuQnwuY/vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 7 Jul
+ 2025 09:18:26 +0800
+Received: from twmbx02.aspeed.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 7 Jul 2025 09:18:26 +0800
+From: Ryan Chen <ryan_chen@aspeedtech.com>
+To: ryan_chen <ryan_chen@aspeedtech.com>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+	<andrew@codeconstruct.com.au>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	<linux-clk@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Mo Elbadry <elbadrym@google.com>, "Rom
+ Lemarchand" <romlem@google.com>, William Kennington <wak@google.com>, "Yuxiao
+ Zhang" <yuxiaozhang@google.com>, <wthai@nvidia.com>, <leohu@nvidia.com>,
+	<dkodihalli@nvidia.com>, <spuranik@nvidia.com>
+Subject: [PATCH v11 0/3] Add support for AST2700 clk driver
+Date: Mon, 7 Jul 2025 09:18:23 +0800
+Message-ID: <20250707011826.3719229-1-ryan_chen@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] PM / Freezer: Skip zombie/dead processes to
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, pavel@kernel.org,
- len.brown@intel.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Oleg Nesterov <oleg@redhat.com>
-References: <20250611101247.15522-1-zhangzihuan@kylinos.cn>
- <20250611101247.15522-2-zhangzihuan@kylinos.cn>
- <CAJZ5v0jpuUVM73M=Gzq36je=K_7zEkvVd8bxohi6N5OYgxgUug@mail.gmail.com>
- <20250703164021.GY1613200@noisy.programming.kicks-ass.net>
- <CAJZ5v0j29Nu2nitmj6tPhOQYuSaHBtXQVR21ikDtrxpejPdW8A@mail.gmail.com>
- <20250704081941.GC2001818@noisy.programming.kicks-ass.net>
- <67997bdd-d00a-413a-a565-188c4b06f385@kylinos.cn>
- <20250704092144.GH2001818@noisy.programming.kicks-ass.net>
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-In-Reply-To: <20250704092144.GH2001818@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+This patch series is add clk driver for AST2700.
 
-=E5=9C=A8 2025/7/4 17:21, Peter Zijlstra =E5=86=99=E9=81=93:
-> You're missing the obvious. How about we 'fix' the PF_NOFREEZE handling
-> and help all cases that set that and not only zombies?=E3=80=80=E3=80=80=
-=E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=E3=80=80 =E3=80=80 =E3=80=80 =E3=80=
-=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80 =E3=80=80=
-=E3=80=80
+AST2700 is the 8th generation of Integrated Remote Management Processor
+introduced by ASPEED Technology Inc. Which is Board Management controller
+(BMC) SoC family. AST2700 have two SoC connected, one is SoC0, another
+is SoC1, it has it's own scu, this driver inlcude SCU0 and SCU1 driver.
 
-It sounds like a good idea, but there=E2=80=99s a potential risk in relyi=
-ng=20
-solely on PF_NOFREEZE: it=E2=80=99s a mutable flag that can be set or cle=
-ared=20
-dynamically during runtime, even within the freeze window.
-If a task changes its PF_NOFREEZE state after passing the early check in=20
-try_to_freeze_task(), we might skip freezing it incorrectly, leading to=20
-inconsistent behavior or unexpected task escapes. This is particularly=20
-tricky for some kernel threads or exit paths where PF_NOFREEZE is=20
-manipulated as part of cleanup or teardown.
-In contrast, checking exit_state for EXIT_ZOMBIE or EXIT_DEAD is fully=20
-stable and irreversible =E2=80=94 once a task becomes a zombie, it's no l=
-onger=20
-schedulable and doesn=E2=80=99t require freezing. That makes the conditio=
-n both=20
-safe and predictable, without risk of races or missed transitions.
-Currently, the safest way to skip tasks based on PF_NOFREEZE would be:
-*if (!(p->flags & PF_KTHREAD) && (p->flags & PF_NOFREEZE))*
-to avoid skipping kernel threads that may dynamically toggle this flag.=20
-But this increases code complexity compared to simply checking
-*if (p->exit_state)*
+v11:
+-update patch(1/3) commit message subject prefix dt-binding: to dt-bindings:
 
-which is more straightforward.
-Importantly, exit_state is set earlier and more reliably than PF_NOFREEZE=
-,
-So while improving PF_NOFREEZE handling is a worthwhile direction (and=20
-I=E2=80=99d be happy to explore that in a separate patch RFC=20
-[1]<https://lore.kernel.org/all/20250624115244.19260-1-zhangzihuan@kylino=
-s.cn/>),=20
-this small patch keeps the logic minimal and avoids subtle corner cases.=20
-It also reduces unnecessary locking for zombie tasks, which can help=20
-when there are lots of them around.
-[1]:=20
-https://lore.kernel.org/all/20250624115244.19260-1-zhangzihuan@kylinos.cn=
-/
-Thanks again for your insightful feedback =E2=80=94 much appreciated.
+v10:
+-aspeed,ast2700-scu.h:
+-add SOC0_CLK_AHBMUX, SOC0_CLK_MPHYSRC, SOC0_CLK_U2PHY_REFCLKSRC,
+ SOC1_CLK_I3C.
+-clk-ast2700.c
+-add #include <linux/auxiliary_bus.h>
+-remove #include <soc/aspeed/reset-aspeed.h>
+-use devm_auxiliary_device_create replace aspeed_reset_controller_register
+-reset-aspeed.c:
+-remove aspeed_reset_unregister_adev, aspeed_reset_adev_release,
+ aspeed_reset_controller_register.
+-compatible name change reset_aspeed.reset0/1 -> clk_ast2700.reset0/1
+-remove reset-aspeed.h
 
-Best regards,
-Zihuan Zhang
+v9:
+-aspeed,ast2700-scu.h: no change.
+add more clear commit description.
+-clk-ast2700.c:
+add inlcude bitfield.h
+remove redundant clk_parent_data soc0_mpll_div8/soc0_ahb/uart13clk/
+uart14clk/uart15clk/uart16clk/soc1_ahb/d_clk_sels
+
+v8:
+-aspeed,ast2700-scu.h: remove no use soc0 clock, add new clock
+-clk-ast2700.c: remove include <linux/auxiliary_bus.h>,
+include <linux/clk-provider.h>, include <linux/of_address.h>
+-clk-ast2700.c: add include <linux/mod_devicetable.h>
+-clk-ast2700.c: modify include <soc/aspeed/reset-aspeed.h> order before
+dt-bindings
+-clk-ast2700.c: modify define to be tabbed out space
+-clk-ast2700.c: add union struct for each clk type
+	union {
+		struct ast2700_clk_fixed_factor_data factor;
+		struct ast2700_clk_fixed_rate_data rate;
+		struct ast2700_clk_gate_data gate;
+		struct ast2700_clk_div_data div;
+		struct ast2700_clk_pll_data pll;
+		struct ast2700_clk_mux_data mux;
+	} data;
+-clk-ast2700.c: modify clk_data = device_get_match_data(dev);
+-clk-ast2700.c: modify builtin_platform_driver_probe to 
+arch_initcall(clk_ast2700_init)
+-clk-ast2700.c: ast2700_clk_hw_register_hpll explain: scu010[4:2],
+scu010[4:2] = 010, hpll force 1.8Ghz
+scu010[4:2] = 011, hpll force 1.7Ghz
+scu010[4:2] = 110, hpll force 1.2Ghz
+scu010[4:2] = 111, hpll force 800Mhz
+others depend on hpll parameter register setting.
+
+v7:
+-reset-aspeed.h: fix declare static inline aspeed_reset_controller_register
+if the function is not used.
+
+v6:
+-patch-2: add reset-aspeed.h
+-reset-aspeed: add include cleanup.h for guard()
+-reset-aspeed: change ids name clk_aspeed to reset_aspeed
+-reset-aspeed: move aspeed_reset_controller_register,
+aspeed_reset_adev_release, aspeed_reset_unregister_adev from clk-ast2700.c
+-reset-aspeed: drop base check, since it check in clk-ast2700.c
+-clk-ast2700: sync each gate name from *clk to *clk-gate name.
+-clk-ast2700: add CLK_GATE_ASPEED to diff clk_hw_register_gate and
+ast2700_clk_hw_register_gate.
+
+v5:
+-patch-2 Kconfig: add select AUXILIARY_BUS
+-reset-aspeed: #define to_aspeed_reset(p) turn into static inline function.
+-reset-aspeed: modify spin_lock_irqsave to guard(spinlock_irqsave)
+-reset-aspeed: remove unnecessary parentheses.
+-clk-ast2700: use <linux/units.h> and refrain from define clk
+
+v4:
+-yaml: keep size-cells=<1>.
+-merge clk,reset dt binding header with yaml the same patch.
+-rename clk,reset dt binding header to aspeed,ast2700-scu.h
+-reset-aspeed: update tables tabs sapces to consistent spaces.
+-reset-aspeed: remove no use dev_set_drvdata.
+-clk-ast2700: modify reset_name to const int scu in struct clk_data.
+-clk-ast2700: use scu number in clk_data generate reset_name for reset
+ driver register.
+-clk-ast2700: fix pll number mix up scu0,scu1.
+-clk-ast2700: update dt-binding clock include file.
+
+v3:
+-yaml: v2 missing send yaml patch, v3 add.
+-yaml: drop 64bits address example.
+-yaml: add discription about soc0 and soc1
+-dt-bindings: remove (), *_NUMS, reserved.
+-dt-bindings: remove dulipated define number.
+-dt-bindings: merge clk and reset to be one patch.
+-reset-aspeed: add auxiliary device for reset driver.
+-clk-ast2700: modify reset to be auxiliary add.
+-clk-ast2700: modify to be platform driver.
+-clk-ast2700: modify each clk to const clk array.
+
+v2:
+-yaml: drop 64bits address example.
+-yaml: add discription about soc0 and soc1
+-dt-bindings: remove (), *_NUMS, reserved.
+-dt-bindings: remove dulipated define number
+-clk-ast2700: drop WARN_ON, weird comment.
+
+Ryan Chen (3):
+  dt-bindings: clock: ast2700: modify soc0/1 clock define
+  reset: aspeed: register AST2700 reset auxiliary bus device
+  clk: aspeed: add AST2700 clock driver
+
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-ast2700.c                     | 1138 +++++++++++++++++
+ drivers/reset/Kconfig                         |    7 +
+ drivers/reset/Makefile                        |    1 +
+ drivers/reset/reset-aspeed.c                  |  253 ++++
+ .../dt-bindings/clock/aspeed,ast2700-scu.h    |    4 +
+ 7 files changed, 1412 insertions(+)
+ create mode 100644 drivers/clk/clk-ast2700.c
+ create mode 100644 drivers/reset/reset-aspeed.c
+
+-- 
+2.34.1
 
