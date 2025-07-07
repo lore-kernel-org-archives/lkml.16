@@ -1,142 +1,127 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354372BE04A;
-	Mon,  7 Jul 2025 14:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897799; cv=pass; b=P+iuMJJHzK8F1t2k/+n30oR0uqC75BOWq/ForWnzs6lVZbFsF8K3wbSp+gsyFS0W/EUt9uKfIakNoaDLZj0UUeM84PJwJDPHFGVnyXkqtCNtWw8j5bXbLOh4vh90fAKTybZh3lR0BYXzc7KxFUYgsqJ7fxQyt5GM+qqg1C7KIcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897799; c=relaxed/simple;
-	bh=HcEEtqzs0J9vcZHnd/EnWkrk4jMkCBGtgE6WuEhiDRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eq5PScUdfft5MBz8FYDzQLUDtCkqLzuf11UnEp3uc52Wf0yCuSdJLM0n+LjBIiQ6aUdj+2kPbnzgYu5rQn3jl2w+fQeiT9bznGxoUHNYVT19ReAc6rucCG1GAza1iuBU0t3wc3qDDDzfJ5oSke65tOwO+f+nQ4NJBuGGkvL0gTE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=McipYCfc; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7822A28A1CC;
+	Mon,  7 Jul 2025 14:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751897907; cv=none; b=EF2EIe6dfJfSkeblaAzIjV7UwEo/vi0egjsOLcOSSVfdw9uoL5zRzHetwxc4jqSFe4dCOBS8Y52IhNz46pJENHuOrmNm5x5kcd3eANHWDIXPh16Obbn83fXKTjypvtkD4i8XRsVLLnCWZHn60eLkg17sfYKA99M9GI9MtZ56pLg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751897907; c=relaxed/simple;
+	bh=ZzPU7nKD83hJqr6oUnbAcbugCf3QBocAmZl8G0iXqFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EQlwtETdBFIptAtPiO/z78eYMC0UZQpdynd08fvhog2Y81/syXy3Z0uLkfEkspOmO5IB+zA9gj0hiYfEvvslf2nEsXl32mLLzmoIIUBhTsFgM4azGL9GUZu+osMwkJ3LJVhqxp51jeR4KICBJ92g2LXwmqR3J3n/F/H5Gvj5gQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FCwVPyLb; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="McipYCfc"
-ARC-Seal: i=1; a=rsa-sha256; t=1751897762; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=J2jG+zTdhJ8/5GEz+wjzqoR2q7qvi5wWHpZpDNhgtqx4dt1zSUcnJIadlWbinzGzxAkQkKzY2ASlxmYh6cUlE8MlcBNJRdzJmkstMxELUTAENjZRvpBZd7APRf4syRDSAdd8J+lyORg7JuQzrHEhl18VIJYbFsv8bQ7mb4PuyA8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751897762; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dCDf+69VVJbWwI60MQY/tACqoX7jn/Ra0BXrlDPz350=; 
-	b=LLp+sgF86fInUrVtQBoOSSwneLI9klvjyH7k36AqjWrwjpbKH4HC67sNhFUMnYobiuHVc/cWWH2UYmO+9yR+czKoeQlzZBN/LMXQ57TEf0SyEkZZM6teSlJT7hFnMatvc4KGKXIh7xbMx4LVxa4n8Kk4IEvhUDTmLV9x/IACzg8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
-	dmarc=pass header.from=<detlev.casanova@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751897762;
-	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=dCDf+69VVJbWwI60MQY/tACqoX7jn/Ra0BXrlDPz350=;
-	b=McipYCfcY5qa+hK0qeBb+BGseJ0429upHDFTaRQliWM1mfF7/sD2EsWap8yDCus9
-	16y722EeboxrZhX7P1RX1hfgjZP+R/6+Y9OF1h7Qp0mkpcqL+/0w6OIq/OQHA2PcENX
-	X4OI94CQ948+9bEBC2+pkAKx5J4z069oKe0fH6TM=
-Received: by mx.zohomail.com with SMTPS id 1751897759190607.3834386194047;
-	Mon, 7 Jul 2025 07:15:59 -0700 (PDT)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH net] net: phy: realtek: Reset after clock enable
-Date: Mon, 07 Jul 2025 10:15:57 -0400
-Message-ID: <12698483.O9o76ZdvQC@earth>
-In-Reply-To: <5xjp2k3b4rggbmjgchg6vlusotoqoqmxi54zzer3ioxv274vtx@22tzjjcs7s3z>
-References:
- <20250704-phy-realtek-clock-fix-v1-1-63b33d204537@kernel.org>
- <0310186d-dfc5-406f-8cd1-c393a7c620e8@gmail.com>
- <5xjp2k3b4rggbmjgchg6vlusotoqoqmxi54zzer3ioxv274vtx@22tzjjcs7s3z>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCwVPyLb"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-313862d48e7so382045a91.1;
+        Mon, 07 Jul 2025 07:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751897906; x=1752502706; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tDhq5tJp38pifNdFdLn+IZDqsYz/V7C3KPTvDZYsKVM=;
+        b=FCwVPyLb/fsViBy0e9RnoqhFWxMTPYiRjtkRM+wdl/4yhJKl2xMJSTX+IWonGUNYcd
+         qf3qHUuGhcH9scFp5q1EdVK/ukx3uJ99Dn8wQtdCKQaJ4xYjYRz/gUhWsF6wP4TEaCgy
+         ot7hz+bodd5ofjRnaCtg4uiC3dNsxB+vq1Dl+LirA/St2U+vmOJjtAvMYPJ5WUBUmkoc
+         6fL4mJp70mPcvGCCxK/PfTYiTaAlKKcXrnuEEXW7Oa1BNyRsvN2U2BtU8ITZIpzOwhTs
+         KKoqnx+ChfXZjA2CQme/pwUyskLCeXjeDcuYsuu4RjEKoOeVWp6Q6K1YXuoZzN2uRzEm
+         Qx8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751897906; x=1752502706;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tDhq5tJp38pifNdFdLn+IZDqsYz/V7C3KPTvDZYsKVM=;
+        b=SjePVTJmVDAfj3Iu4m3fsDe1JG2zwfoQ4nNV3kJytireps5PNIM/nPFbCpdvZJ5EUi
+         /sPU4zI2FOkZcdoMHsHEbSWhfUqoDw/KFQWbTCZmh2mVujFewCV+BPYU8wH4Upm9fVh0
+         zTGn8VXBIshvUXy1LxDzsyMtzIvmhDmwS6pNkbzgMz4ylFvEnbTjA8Rdl9rcgXG9S0db
+         eL28gYOxoxpNjXgI8yMqA91NuITmBFIIp/1I9qiieiysTgu2LwhYhPU7EGiCejCTghSR
+         4lmY0MCkzxZ/rU67GP7e22sJ2U803puYq9neUQ8xsmHvTKzkT6tGRa/4BJxC6nKbDn52
+         4oeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4LECDaijAOgiRZu9kCARsUKHHrAQJuqez8VAtzBGFnRSshGW4igv9B5l3gHM6k5s+X85nrYfG2TXEscIa@vger.kernel.org, AJvYcCVNo4Cft6BLC8mpf7ctAW78z4llTbHpOybCmKZLElQC9tFhTxvxkX/XAYyJCiNtAWGJqSUDkiXsNoCwQVXPcko=@vger.kernel.org, AJvYcCXGMPsEgX0dPcIUCMy8kArdo0VYQzppXVcOptCdZDC4MDbQAoYnNd2Qw/7oB8xQQuw9jltqQNtFglB6NA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaaDWhVOEqxPdlZGCwplBNF3Fmp7wzuaoig3gyVOu9mt0FsfQW
+	VCS+aHTWt74nU+7bXw574fqdaSrdC81ileWlPEEEaMU/Ra6/wjKPdcCZNmW1PlAqlDxp4UNNi6O
+	XsnAmapCfkdYxkXt3XrGhCdFAf/t49eY=
+X-Gm-Gg: ASbGncuxbyr46h1wv8+KyYhJfxmoDXZp04tJX290cKtGr7Hmm4kUonN2I1rl7qZLg9D
+	jSHuDnVqgG+NLovOvufTXN2xOj3/h+hvbOn25L3/Agxw6YicQIPh0ldiW4Oy5eQDlgb+JHmS4dX
+	IFdHDphkDHOfShwO/13Y5SbRBO/+UFssK1CVY/VBB7dZbD
+X-Google-Smtp-Source: AGHT+IHAxcdHSvyUsVlFBpHwsf17uHOZg0CQLk/OV/XY6LSq29SMgei/X3IhAe70aY2jm1LaXV/ED94sv1WYzGJybkk=
+X-Received: by 2002:a17:90b:258c:b0:312:1ae9:1537 with SMTP id
+ 98e67ed59e1d1-31aaca78f48mr7550410a91.0.1751897905613; Mon, 07 Jul 2025
+ 07:18:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-ZohoMailClient: External
+References: <20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org> <20250616-rnull-up-v6-16-v1-3-a4168b8e76b2@kernel.org>
+In-Reply-To: <20250616-rnull-up-v6-16-v1-3-a4168b8e76b2@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 7 Jul 2025 16:18:13 +0200
+X-Gm-Features: Ac12FXyViA2EM_gr9Jy94geyDutwc-rsdqO6_vtaKhCNfIo6OT6mYXIAxbpVpzE
+Message-ID: <CANiq72nfeGwm17kp8OsmpgO-U6xMsuL9KBNwX34Rt1xz-Nxa1Q@mail.gmail.com>
+Subject: Re: [PATCH 3/9] rust: block,core: rename `RawWriter` to `BufferWriter`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sebastian,
+On Mon, Jun 16, 2025 at 3:26=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> Rename the `RawWriter` to `BufferWriter`, wihich is a more suitable name.
+> Also move the module from `block` to `str`.
 
-On Friday, 4 July 2025 16:35:00 EDT Sebastian Reichel wrote:
-> Hi,
-> 
-> On Fri, Jul 04, 2025 at 10:18:29PM +0200, Heiner Kallweit wrote:
-> > On 04.07.2025 19:48, Sebastian Reichel wrote:
-> > > On Radxa ROCK 4D boards we are seeing some issues with PHY detection and
-> > > stability (e.g. link loss, or not capable of transceiving packages)
-> > > after new board revisions switched from a dedicated crystal to providing
-> > > the 25 MHz PHY input clock from the SoC instead.
-> > > 
-> > > This board is using a RTL8211F PHY, which is connected to an always-on
-> > > regulator. Unfortunately the datasheet does not explicitly mention the
-> > > power-up sequence regarding the clock, but it seems to assume that the
-> > > clock is always-on (i.e. dedicated crystal).
-> > > 
-> > > By doing an explicit reset after enabling the clock, the issue on the
-> > > boards could no longer be observed.
-> > 
-> > Is the SoC clock always on after boot? Or may it be disabled e.g.
-> > during system suspend? Then you would have to do the PHY reset also
-> > on resume from suspend.
-> 
-> Upstream kernel does not yet support suspend/resume on Rockchip RK3576
-> (the SoC used by the ROCK 4D) and I missed, that the clock is disabled
-> in the PHY's suspend routine.
-> 
-> Detlev: You added the initial clock support to the driver. If I add
-> the reset in the resume routine, can you do regression testing on
-> the board you originally added the clock handling for?
+The prefix should probably be "rust: block,str", or just "rust:".
 
-No regression for me on the pre-release board. I can't really give you a 
-Tested-by as this is a fix for a board I don't have.
+(This patch would be ideally first in the series rather than in the
+middle, by the way)
 
-Regards,
-Detlev
+> -pub(crate) struct RawWriter<'a> {
+> +pub struct BufferWriter<'a> {
 
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 7300c9b574cc ("net: phy: realtek: Add optional external PHY
-> > > clock")
-> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > > ---
-> > > 
-> > >  drivers/net/phy/realtek/realtek_main.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/drivers/net/phy/realtek/realtek_main.c
-> > > b/drivers/net/phy/realtek/realtek_main.c index
-> > > c3dcb62574303374666b46a454cd4e10de455d24..3a783f0c3b4f2a4f6aa63a16ad309
-> > > e3471b0932a 100644 --- a/drivers/net/phy/realtek/realtek_main.c
-> > > +++ b/drivers/net/phy/realtek/realtek_main.c
-> > > @@ -231,6 +231,10 @@ static int rtl821x_probe(struct phy_device *phydev)
-> > > 
-> > >  		return dev_err_probe(dev, PTR_ERR(priv->clk),
-> > >  		
-> > >  				     "failed to get phy clock\n");
-> > > 
-> > > +	/* enabling the clock might produce glitches, so hard-reset the PHY 
-*/
-> > > +	phy_device_reset(phydev, 1);
-> > > +	phy_device_reset(phydev, 0);
-> > > +
-> > > 
-> > >  	ret = phy_read_paged(phydev, RTL8211F_PHYCR_PAGE, RTL8211F_PHYCR1);
-> > >  	if (ret < 0)
-> > >  	
-> > >  		return ret;
-> > > 
-> > > ---
-> > > base-commit: 4c06e63b92038fadb566b652ec3ec04e228931e8
-> > > change-id: 20250704-phy-realtek-clock-fix-6cd393e8cb2a
-> > > 
-> > > Best regards,
+Since you are re-exporting, can this be kept for the crate?
 
+> +    /// Create a new [`Self`] instance.
 
+It is not a big deal here, but when you have a "move" commit, please
+try to keep changes to the minimum, e.g. type renaming could be done
+before or after.
 
+> +    /// Return the position of the write pointer in the underlying buffe=
+r.
+> +    pub fn pos(&self) -> usize {
+> +        self.pos
+> +    }
 
+This is not mentioned in the commit message (and should have been a
+different patch too).
+
+By the way, cannot you use `{Raw,}Formatter`? You could add a
+formatter that null-terminates automatically and/or that tracks the
+lifetime, but we add the null manually elsewhere.
+
+Speaking of which, aren't you null-terminating manually anyway in `gen_disk=
+.rs`?
+
+Ah, no, you are adding two nulls -- one at the end of the buffer, and
+one in the middle. So the current code will fail if it needs one final
+byte (i.e. when the last null would have been enough).
+
+Given all that, I would say just drop this one, and use the one we
+have. Then we can add a fancier formatter later on independently if
+needed.
+
+Cheers,
+Miguel
