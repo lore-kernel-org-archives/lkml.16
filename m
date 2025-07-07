@@ -1,155 +1,125 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36A419DF48;
-	Mon,  7 Jul 2025 07:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73822273D89
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872751; cv=none; b=ipvVMlwKuJ81SNpKufde0BeueOVmXBkPnIJKKRIZ+6GOQBPLoZ3k6J0zjQwGcvz0NqSbwZjLqkdl9KqGRjUTwP64BzKDXomQC5dsj0yaPmKmFADT73GP7S+5LZbf8F0+MJfREByjKSZuY7Zkq6K84OAh9k7KukDwrbRjJ3AeTGM=
+	t=1751872768; cv=none; b=IV81oDQYbZpRNGtS0sVwsfL43p45EdoYZ62bXtWu05KfVzLOiUOKp6B3h4fUb/ZZHhboDrCg1RMhTAk3KFy4Kp5RWmOYTKvfTNUVLP/UvmV8KcCNcMUqJi4QeQ2XDsuHp03LJHS5zflCM9P86esTZVuCGuj6cUk4ulpD4723xPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751872751; c=relaxed/simple;
-	bh=lARdiQiADgYgkEt5lX0u1z/fVTK6JG75XBExtSpj7e8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gzNdqMd9Iyq65hEqjrV1XfkyH6URlDTIIVDpSHsoyj48n7BLako2pSrcw7MGrTJKIhBZMa9lMQ4X3+DMYwG/VOS48vwNi7A750yexMZ1fihecn2Uyqvs3fqZaYveLEOcowx3YfaavGCYnFfFWJgrwGubxDLkjznW/qbVPOL5cIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KOguK/hh; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751872768; c=relaxed/simple;
+	bh=htJZpPOj4gZZRU0I+jiYOIF5YRNV0fn3GX0M2AlliDQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cWZO/Fqj5VEwXM6MI+pZYe2r84+WBsMZozfW8Npo9evi5No1uhRedO1adz8pdRnM6lNuFJz1skMMHRVtD3VcgG4ZkS1m7enAREN61Zl5v/tdMmpgGzlGMj1J5rw/Rn27X7GIJUy3oS5YpuB/AUMskaCQRURYBS+H3Skd+EFyFSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaIoVQBT; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KOguK/hh"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5671viqg005853;
-	Mon, 7 Jul 2025 07:18:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=vmhU+FR2k26av2hIZ
-	iV+NNFmRQFDTiIkuVxAjb0IsSQ=; b=KOguK/hhV7beF5WHCKuHYdwqsx0xNzVEn
-	M3iOkRnzwgIZwZ+fqFoc0sqOZrdV5DCNCs9byC5AAw3OvCK5abfo9xeElI1g5S7b
-	DYcqaZfxu1rgTsAAOBgY4gmOS+RO5CLmUy516L0Lb5igSlkfXvs8k6royznM7cJH
-	tAhf6CYS84i9rcET1uQjsOEICSns4qnIc0NzeCLq++r3sOPobXw/2z/8rUhBaGyn
-	+UDTvs1pCvO0S/YlfRqNt58RDfDZtiWU51OhEgR6B08p1Yq0I4l5aWl9Aj91Hr6N
-	iEjmzcrLZJZWuY6dEeGUCrRu0w1GjjEdJYEpU480uyBlTHyafS1vw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47ptjqqs1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 07:18:52 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5677HAsm028374;
-	Mon, 7 Jul 2025 07:18:52 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47ptjqqs17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 07:18:52 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5673quZP010918;
-	Mon, 7 Jul 2025 07:18:51 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qeryw3rr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 07:18:51 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5677Ilvh49283496
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Jul 2025 07:18:47 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7A0982004D;
-	Mon,  7 Jul 2025 07:18:47 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4583C2004B;
-	Mon,  7 Jul 2025 07:18:45 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.94.242])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Jul 2025 07:18:45 +0000 (GMT)
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, Hari Bathini <hbathini@linux.ibm.com>,
-        Aditya Bodkhe <adityab1@linux.ibm.com>
-Subject: [PATCH 2/2] powerpc/fprobe: fix updated fprobe for function-graph tracer
-Date: Mon,  7 Jul 2025 12:48:37 +0530
-Message-ID: <20250707071837.59753-2-adityab1@linux.ibm.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250707071837.59753-1-adityab1@linux.ibm.com>
-References: <20250707071837.59753-1-adityab1@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaIoVQBT"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a7a8c2b7b9so42270501cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751872765; x=1752477565; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zTVfC4cPTOGFHouVuim000ml3X3p9Az99Bki20NcXwY=;
+        b=oaIoVQBTwC1tHoM7er1y3GzkdMZXtjLOFvV5P9BLDyFA502cxxz8LC1SSynprtri+Y
+         KpCdGIcxVmLc05OMITGAJfXmayHqPZFept6SxGYm+m0AsZzFDmkJAhdezuwkP4tFKDD0
+         WTzAxzpyvByFpYOWbxEz//cHeOZegaWkag7xkGpSL/cSNbiLvERC9fxeLj3Jq8uMuIAw
+         cVEtIQaJzBvoyb2qeBNVdR6tNgK2scOrKlgbKMR3+xkJ8XINWVl6tPnQRyDaHG5Yqm3s
+         zRxAP6wHOlm4XxAq1RmSfOxjm45Fe8NiO1gafPpDdTK77wEVqJ5C7wn+lvksJMNPV9Ta
+         uo7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751872765; x=1752477565;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zTVfC4cPTOGFHouVuim000ml3X3p9Az99Bki20NcXwY=;
+        b=JFKYev4Ta8CHasl1L77RoyUkBJOJUG0Ejovc7AN08Olj5cQviKcgymy3FwOlu+fByc
+         PBOmg59FxgtLpWsAmLxyXj9b0BfiCelKIoXMrir90TsvqZ0jIADRXBsd4mzd9ECTsR4W
+         9mxg+NHNwKtsRZfDSLC82YONRPsX4CzSzU0PV/z72DAQWQGCtQ5PHMvCsrkNY1Mm10tF
+         QVU3irMr8gDcMYPkG4dvklzM8+sLGdQrWy+A//vtdeeyTb05X3XFFIrLzIP1dshv15nt
+         aueCdLG0nt0CW6Q/KKk1fVsw4I85OHX5urBR+QyNG6iv+EJdhfIp0wauyKrbqZ8KjTa4
+         qK5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWf0XgBjOA1ZaASuiqsjDI7Jn2GPtlBv1Fat70NwQcfM2tAph1B4SE6pgA3czi7KC7AYGcR6mWiZQQsyes=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv0w+O4HLBtgBjWPK+4NYlZalEIVgED7OEm19eTOlwdXj+cBet
+	CGf3rQGg18NA6qPnxhA7Xs3gfZSmXJbTyz2Gt8/XQ2x1pTGkaJd0Hld6i9L3N8ptrRficshGX6F
+	NO7M/WUQEgck934rCDsZw5B3elidwsPUce0wM5BC8
+X-Gm-Gg: ASbGncuVQkv55l8qjWUeMDl+oe9g2xblOSbmz4rd/QgDWvOidjBE1RcF6Kfp8T9AKqM
+	pISsBHSyBsISH/ZBUUwPhcAhvYquzZzDDoNv0T1gufyhUCTG+y9xAl+Ni9Aev6KjtlwjUjpXsBE
+	mLeITCt4fVEhpPiD1vbRGhkuki7ggkSWGSLCkYxOOckQ==
+X-Google-Smtp-Source: AGHT+IEYyJhquDhXJu2A8CjIMcrkTyNJiyOZCUfQrqQPO5fEMO//qsgPpSXFGCGxLZ6mkwnM1V3ab9TFgsOoAydVU/I=
+X-Received: by 2002:ac8:5fcf:0:b0:4a4:3d6e:57d4 with SMTP id
+ d75a77b69052e-4a99883ca50mr157286881cf.46.1751872765053; Mon, 07 Jul 2025
+ 00:19:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=GL8IEvNK c=1 sm=1 tr=0 ts=686b74dc cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=eJdZZeSqwtc_5qrUTOUA:9
-X-Proofpoint-ORIG-GUID: rSGRk3kl0fZ0FeTzlLgvd7xDo42pBiA2
-X-Proofpoint-GUID: E8xp5ao3WglrIsD1bmqhqvgHIAOPqvCh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA0MSBTYWx0ZWRfX2BK1ml4nEek3 woN8RTVus9mXktBP5ZuLcrIFKyl1SgO6wH8UDMdbQ7v9ySrIq4r/TM2vZlHiFhpT61bAReeCc6f vHl5UU5ebUeSFWyd8LEGBxJ9VTmTISKpnqnghtlY1s6eYcZkWt6fvCmf1zUgLvu3ilD3lgXPVlf
- hNPFiMKnKji0O4uy7lrVroBXCFez9JgLSq7lvOo4vaVxI2hlvE07cjMxj72ypacUku1VMx1ZvxT /MTMrYDtoQWlFCTETbGpsMirOINYOP0P12C5qtNq3ZZkt8WccLDzaGfBVoz9BSYsKv3D7rpWXop olTZcsVait1y2l+wzNWMs7nZHa1x5sYU2MD5a5kA2qBHPNuUlktQe/4U9I1D4e6DOaQr+lHaG1P
- 94SAgyNI7Hxyw4l2CR0Tkv7o4bepfJyv3jisCDjT63aZg7gjlc83bmgEvMLqYBXsva6X5NH2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_01,2025-07-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 mlxlogscore=606
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070041
+References: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com> <20250707061707.74848-1-yangfeng59949@163.com>
+In-Reply-To: <20250707061707.74848-1-yangfeng59949@163.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 7 Jul 2025 00:19:13 -0700
+X-Gm-Features: Ac12FXz9Oflp4WxYHT8N81vIRj_r3KU6iZACjxfFM-KEdW2Z-wtBpQlqG96pyAg
+Message-ID: <CANn89iLPYTArYRBKQmXF7TkcUxQCK53SJuAwmZY0GCxdFL7iNQ@mail.gmail.com>
+Subject: Re: [PATCH v3] skbuff: Add MSG_MORE flag to optimize large packet transmission
+To: Feng Yang <yangfeng59949@163.com>
+Cc: pabeni@redhat.com, aleksander.lobakin@intel.com, almasrymina@google.com, 
+	asml.silence@gmail.com, davem@davemloft.net, david.laight.linux@gmail.com, 
+	ebiggers@google.com, horms@kernel.org, kerneljasonxing@gmail.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	stfomichev@gmail.com, willemb@google.com, yangfeng@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hari Bathini <hbathini@linux.ibm.com>
+On Sun, Jul 6, 2025 at 11:17=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
+rote:
 
-Since commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
-tracer"), FPROBE depends on HAVE_FUNCTION_GRAPH_FREGS. With previous
-patch adding HAVE_FUNCTION_GRAPH_FREGS for powerpc, FPROBE can be
-enabled on powerpc. But with the commit b5fa903b7f7c ("fprobe: Add
-fprobe_header encoding feature"), asm/fprobe.h header is needed to
-define arch dependent encode/decode macros. The fprobe header MSB
-pattern on powerpc is not 0xf. So, define FPROBE_HEADER_MSB_PATTERN
-expected on powerpc.
+>
+> So do I need to resend the v2 version again (https://lore.kernel.org/all/=
+20250627094406.100919-1-yangfeng59949@163.com/),
+> or is this version also inapplicable in some cases?
 
-Also, commit 762abbc0d09f ("fprobe: Use ftrace_regs in fprobe exit
-handler") introduced HAVE_FTRACE_REGS_HAVING_PT_REGS for archs that
-have pt_regs in ftrace_regs. Advertise that on powerpc to reuse
-common definitions like ftrace_partial_regs().
+Or a V3 perhaps, limiting MSG_MORE hint to TCP sockets where it is
+definitely safe.
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Aditya Bodkhe <adityab1@linux.ibm.com>
----
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/fprobe.h | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
- create mode 100644 arch/powerpc/include/asm/fprobe.h
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index d6420b74ea9c6a9c53a7c16634cce82a1cd1bbd3..dc440252a68e5e7bb0588ab230f=
+bc5b7a656e220
+100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -3235,6 +3235,7 @@ typedef int (*sendmsg_func)(struct sock *sk,
+struct msghdr *msg);
+ static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offse=
+t,
+                           int len, sendmsg_func sendmsg, int flags)
+ {
++       int more_hint =3D sk_is_tcp(sk) ? MSG_MORE : 0;
+        unsigned int orig_len =3D len;
+        struct sk_buff *head =3D skb;
+        unsigned short fragidx;
+@@ -3252,7 +3253,8 @@ static int __skb_send_sock(struct sock *sk,
+struct sk_buff *skb, int offset,
+                kv.iov_len =3D slen;
+                memset(&msg, 0, sizeof(msg));
+                msg.msg_flags =3D MSG_DONTWAIT | flags;
+-
++               if (slen < len)
++                       msg.msg_flags |=3D more_hint;
+                iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
+                ret =3D INDIRECT_CALL_2(sendmsg, sendmsg_locked,
+                                      sendmsg_unlocked, sk, &msg);
+@@ -3292,6 +3294,8 @@ static int __skb_send_sock(struct sock *sk,
+struct sk_buff *skb, int offset,
+                                             flags,
+                        };
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9163521bc4b9..2203e4fb64c1 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -246,6 +246,7 @@ config PPC
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_GUP_FAST
- 	select HAVE_FTRACE_GRAPH_FUNC
-+	select HAVE_FTRACE_REGS_HAVING_PT_REGS
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
-diff --git a/arch/powerpc/include/asm/fprobe.h b/arch/powerpc/include/asm/fprobe.h
-new file mode 100644
-index 000000000000..d64bc28fb3d3
---- /dev/null
-+++ b/arch/powerpc/include/asm/fprobe.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_PPC_FPROBE_H
-+#define _ASM_PPC_FPROBE_H
-+
-+#include <asm-generic/fprobe.h>
-+
-+#ifdef CONFIG_64BIT
-+#undef FPROBE_HEADER_MSB_PATTERN
-+#define FPROBE_HEADER_MSB_PATTERN	(PAGE_OFFSET & ~FPROBE_HEADER_MSB_MASK)
-+#endif
-+
-+#endif /* _ASM_PPC_FPROBE_H */
--- 
-2.50.0
-
++                       if (slen < len)
++                               msg.msg_flags |=3D more_hint;
+                        bvec_set_page(&bvec, skb_frag_page(frag), slen,
+                                      skb_frag_off(frag) + offset);
+                        iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1,
