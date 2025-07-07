@@ -1,69 +1,103 @@
-Received: from proxy41133.mail.163.com (proxy25213.mail.163.com [103.129.252.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07EBDDA9;
-	Mon,  7 Jul 2025 07:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.129.252.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384CC1E5B88
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873037; cv=none; b=bVKF+M9NU8KJRMooV0u00XAi4LPRTpH/2TXa39ns/qLwWkwpZj/1GbeXPuBd1fg/KR1kD8TNdyH2Pa2oTasdQGGu3+5IDp0hwmSP78QGdjPM5RcI+4GyU0Sif6VrgEHxY07RJ6A81P3m8ReJX9lHVNZcy/uOKTz8hOctBQb8Ql4=
+	t=1751873097; cv=none; b=S3FzNt9feCjVRTggWV96ZaG/L+fRDaqKMoYx+Rb30DJU6+ucBj6akTjzvs+mQwO7FUKYZv5Zt+sNx0i8WOFQEA0f3O3FVwd7O743efIUrnHqqH5jHE+x42fBzEqVHXAkFjmUeYMXCLspdlxweVCZU+Xy0IqUtZ/481VhkEEnXfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873037; c=relaxed/simple;
-	bh=vVY6bNBoR2kMJrILPjPUebf8haHIjqKvbb3MU8rQylM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QvqxxkgsxF9Pa2LYMxVDgj/jlqVKwQa0dKJ47VVL/BkTeemwlDCvUYyehh+qLaTwT56xiR602RDnZgGQFLlRU1uDN6blaTTH8CuUc3/bt2NlZslXUiKVEIN7H8h+8y22IChS+LZ9FiCxEgumAKnFJ5cxctd0XP2Z4ADSdjIxY7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=TmdpZtYx; arc=none smtp.client-ip=103.129.252.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1751873097; c=relaxed/simple;
+	bh=fvVzeo6IQZIpSPlKSAZ0tGPC0aYZb7s8ofOa7vniBoc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=umhh1pmH09GYJMOF0FAjlUtSi3aOe5huaMmVCx33nTdpb6iUrKFnv2utAxkIHy3RxtnNOcMYg7RMPdl0zqPAQdEe7yaBbYcbEnyrvKeb8KGlmfBRXKYEUMGSiTPMe1YEyOreReXoJSS7nbOCUwYsD+1NVSUCLeLEB3KYB4GM/hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=COwB6KVc; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="TmdpZtYx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=4ng1wQtLHFug7kmO6H2Kb5UP1OF3WN7eVo9JKF8DKI8=;
-	b=TmdpZtYxUI6+Dyd4c3TPrIw9Msyab+CBv2ECUfNf+/fvFrtmKMa9ubBnIKgUnH
-	yMFRTHNAebhBcv2NFPfImyxFteMXGdJGQu2e1ODRiReKoNSQYM4CDQBBd90/OGte
-	WU5zL6m5Ou6hECCCIP0XoaMB7D1ZdwkK//oUwVIylUnV0=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgD3t5TDdWtov8w7AA--.42463S3;
-	Mon, 07 Jul 2025 15:22:45 +0800 (CST)
-Date: Mon, 7 Jul 2025 15:22:43 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-beacon: Fix HS400 USDHC clock
- speed
-Message-ID: <aGt1wwcRD1gF53g_@dragon>
-References: <20250620213447.56392-1-aford173@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="COwB6KVc"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a1701so1830829a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751873094; x=1752477894; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SvJI1o291o0y9hg9fSTTIh6LqrrJuB1n13xDu6ZRR8k=;
+        b=COwB6KVcTHL12ZXoSuHYjvc6727nLHVtaxVGUVN7h9EYLB4cGj+pKZR4hu9dnrBpqf
+         ooFc9HMJ+TQc3UkTQgSBLufH3W8Ng7EeRaXUI3T2xhF0IS9fa1RVM8oyyJsUywjyLSCT
+         VSbNmvwGem2zB3Av+0f5JrsTuiltqmkom4ASoWXLlUeiCra4UrJ1bZmclj10Y7FUYg5p
+         0sBScOT65iFe6/hpqLnYdhaKFU3ZU22HMX4oYtVU1DbXoY79WVtGKVwUaP05MruAUU8P
+         Ifug6KMoTfbMoW7fmbw7g7v6AVlxRTE6CAalPwCC5dPYAY5e9kDPJfCMvg5kmCmuBw6C
+         D3MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751873094; x=1752477894;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SvJI1o291o0y9hg9fSTTIh6LqrrJuB1n13xDu6ZRR8k=;
+        b=rLQICySDbT7BU+XAHs4DHJVltHdjGEPBTo4boqbCpemlLiv5aMEFwXvbJTBuTUK2s8
+         DPAsse6EJbjX0A1Q0g37c7A1Ftv3lJAsnHTDqPySjul7yejWWwyMdmb2S4crDRdqdacb
+         EuoEwwunRpHrMqc0+BkV7kg51tvlhaIwS1kK0g7K3inH2fulXsZG4O4kHow0ADxLtXup
+         xlt8JB18SmMnorkV6fEeDHk/n6+VSNonc+FX/SvET1GkaeXzAh+n1qej+7vwivtCfF87
+         RYMl/1jsOAk/CqeQsXC9q7EZ1b2kfY87M36heVeLCW7sMJsVJnciW0pWaEr0Ypz8kvaA
+         6SRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqHdQvRxMB3z4FigJ5xK+Q1xhngzT5eVwiLG3dycpY4+naZdB+iGF/BVW9g+7GtHRdz5rjttzOV55Ryq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8ioldmy3mQf8YU6p9NbRN5+u95s5rK15F/jC37aBhvK/tCNCR
+	/UxIGuuxdWe5dACW00ComyJ81hwOI/iNUQdsd/fl1xP7hKms8bRN4w70g19FB8V2FdAyp8JXJHq
+	RJ32TC99Xm11NlzQg9g==
+X-Google-Smtp-Source: AGHT+IHZiNXHW0/3U3AvcbCxIvAS005jvt1rcbTpYXGYvrOvaPApBUdvcqAMu45z4xOzWcCZ0ChJRFxmV0RzqsM=
+X-Received: from edr4.prod.google.com ([2002:a05:6402:44c4:b0:608:ab44:efff])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:906:ba85:b0:ad8:8efe:3205 with SMTP id a640c23a62f3a-ae3fbd93053mr866013466b.55.1751873094657;
+ Mon, 07 Jul 2025 00:24:54 -0700 (PDT)
+Date: Mon, 7 Jul 2025 07:24:53 +0000
+In-Reply-To: <20250705-miscdevice-maintainers-v1-1-9a6b67f7602f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620213447.56392-1-aford173@gmail.com>
-X-CM-TRANSID:M88vCgD3t5TDdWtov8w7AA--.42463S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU0b18UUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCwWDZWhrVSl45gAAsJ
+Mime-Version: 1.0
+References: <20250705-miscdevice-maintainers-v1-1-9a6b67f7602f@gmail.com>
+Message-ID: <aGt2Rern5PFQBRYN@google.com>
+Subject: Re: [PATCH] MAINTAINERS: add miscdevice Rust abstractions
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Jun 20, 2025 at 04:34:45PM -0500, Adam Ford wrote:
-> The reference manual for the i.MX8MM states the clock rate in
-> MMC mode is 1/2 of the input clock, therefore to properly run
-> at HS400 rates, the input clock must be 400MHz to operate at
-> 200MHz.  Currently the clock is set to 200MHz which is half the
-> rate it should be, so the throughput is half of what it should be
-> for HS400 operation.
+On Sat, Jul 05, 2025 at 11:45:56AM -0400, Tamir Duberstein wrote:
+> Add rust abstractions to miscdevice MAINTAINERS entry.
 > 
-> Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development kit")
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Applied both, thanks!
+Acked-by: Alice Ryhl <aliceryhl@google.com>
 
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c3f7fbd0d67a..a9a094e2c914 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5568,6 +5568,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+>  F:	drivers/char/
+>  F:	drivers/misc/
+>  F:	include/linux/miscdevice.h
+> +F:	rust/kernel/miscdevice.rs
+>  F:	samples/rust/rust_misc_device.rs
+>  X:	drivers/char/agp/
+>  X:	drivers/char/hw_random/
+> 
+> ---
+> base-commit: 2009a2d5696944d85c34d75e691a6f3884e787c0
+> change-id: 20250705-miscdevice-maintainers-2aca6f19fa0a
+> 
+> Best regards,
+> --  
+> Tamir Duberstein <tamird@gmail.com>
+> 
