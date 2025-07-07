@@ -1,134 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9DF295517
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A3291C0D;
+	Mon,  7 Jul 2025 11:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751886697; cv=none; b=BEfTGcArdpHq9kwBLfUETOMGWTBXC+4FPMC5c2pVtkGzvWhqXpSx5sfCvFlcmN80ku4b5XIyyAM074x2h5yU9mQwo1/vaq7Nhs5fq38YQxiWBGnHIYdTYkL0qgstm0Lh39k2v4Jji3XNM4vOHzm+s1QAvKpAYqs21pEcG8fXk7U=
+	t=1751886734; cv=none; b=NXYI6hGdnZWExNaoxIcD1ApyPJvoB8JzW/OI5GRFlHx7kiLpPIZKB74yZSXU/IH5B2bNmwXqtIi1zwqybLmcytVIVKnyhHKof+Ig0aocg8oBLOBQyyxdEBPS+AYrf32mv3xlKM0XF4psNhizA6lscmoTCjbnbzlQy/e5C1SdmC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751886697; c=relaxed/simple;
-	bh=eUElEPwoOvyaNjTOTv3WX7sLQxh41JrdSfFl1EEMg74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GRPUzfHCQjxWZmzxJbJ/PWJUk1DIaypvnRrQEcIydheNnYGLEd5Dpj+Kj7tigUbucasdQ/PTnc8NQP22dr+ZVhA7jUD5UnMdDue+SN2WR7qXwvWeEPtzi0EKYvoVfNa8XlxiG2qJDN/G4ALXOoc51yOzmz6j1FiuQHNm8ZKWg44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3fPu0hy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751886734; c=relaxed/simple;
+	bh=RHdoYq7iuuJpVddk5TIX2AFHoby0iT8ppcZVUu6DUQA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=R2UBsW8OqtQpPGmwOej0QP7h5Y8rnJa3WBwm+9BZQ5JqMBsJiIiFGGIVU/XdQNGYjVA6F+fHxCvwm993cGAfozIm2B/CHDZfduVverho8ML8cY8z3CA+l1O7tKeY95UFYSWzoI/HtMBHT/SF13DhzKymK8+4vq+3RAh9IBjBh0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IMzbot9a; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3fPu0hy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71AEC4CEE3;
-	Mon,  7 Jul 2025 11:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751886697;
-	bh=eUElEPwoOvyaNjTOTv3WX7sLQxh41JrdSfFl1EEMg74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3fPu0hyhYB+YrvfW5e+eFQTvlukO6QVmYR04vnTfUADN46+b/O8FxDHFjoBpwo2V
-	 ToXsUkUdFemzd7exumn2p5wt45KHBLR+G37HjqYYi07geKq0pUMpryCm0OEK6sDfN2
-	 4RjbfD7aINbvIyNou4Lzf/Ogn2hpZ1sMuIihIl61QzX5r0RB6+y6LhWXNbAQdmKVVC
-	 HDP9M8Sy41tZzJ/Osb3W3oAK3lMY0L/fkpXxpiuOiZV0MFY9Hq+wJpDSoCcDrRu/CA
-	 FEIWHcciemxU2aVp4sC/42tCWpGWRSZxEr3GjZxbGw1y41cmzZPf3TVcyZxmGrwLbs
-	 8oidEKIpmntjQ==
-Date: Mon, 7 Jul 2025 13:11:34 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v7 2/7] timers: Add the available mask in timer migration
-Message-ID: <aGurZkPohjZ0pRwX@localhost.localdomain>
-References: <20250626114900.106061-1-gmonaco@redhat.com>
- <20250626114900.106061-3-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IMzbot9a"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8C065204CA;
+	Mon,  7 Jul 2025 11:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751886730;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R2IuGLoN2z6uUxTC0PrzTB7ZmiLrMY5Ne3GgAeVwppg=;
+	b=IMzbot9aBAhY+A1it6LpZpCDyjxBoQIEZACu8HSiFtwHItU4PwlkuJ2jMdd3nFYTVyqrQ7
+	g58FUCdJhatxHJwhIByjBcT8m1wZowSJzo107blG5b5DB2bimuNIiUEi1sNRZDZdwb6kWp
+	0lzJB2OZyDTuhKH/989quxd98EclsS8hpjf+OCBMQ4UzFP03vc9iNzg+xZ4gi7vjTgVMtE
+	3diL1I5cvtehD9HFWbk/zakM6rw2dN9U7BtoRVIV0mNHaEKzfusG7E/HhatCo9cS2zuOS8
+	G4nVxrThkkntyGQMBUXKrvTNtrh10EzzaVp5Rrmzeg2YX6W2RHaALEOuRc/FSw==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Colin King (gmail)" <colin.i.king@gmail.com>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20250704-drm-bridge-alloc-fix-tc358767-regression-v2-1-ec0e511bedd0@bootlin.com>
+References: <20250704-drm-bridge-alloc-fix-tc358767-regression-v2-1-ec0e511bedd0@bootlin.com>
+Subject: Re: [PATCH v2] drm/bridge: tc358767: fix uninitialized variable
+ regression
+Message-Id: <175188670931.81272.9699272605011757855.b4-ty@bootlin.com>
+Date: Mon, 07 Jul 2025 13:11:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250626114900.106061-3-gmonaco@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefudeigecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieefvdehvedvgeeftedugeetudevuedvffekhedvfeetkeduleelgeevudffieeinecukfhppeekjedruddvtddrvddukedrvddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekjedruddvtddrvddukedrvddtjedphhgvlhhopegludelvddrudeikedruddrudefngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopegtohhlihhnrdhirdhkihhnghesghhmrghilhdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhov
+ hesohhsshdrqhhurghltghomhhmrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Le Thu, Jun 26, 2025 at 01:48:55PM +0200, Gabriele Monaco a écrit :
-> Keep track of the CPUs available for timer migration in a cpumask. This
-> prepares the ground to generalise the concept of unavailable CPUs.
+
+On Fri, 04 Jul 2025 01:30:18 +0200, Luca Ceresoli wrote:
+> Commit a59a27176914 ("drm/bridge: tc358767: convert to
+> devm_drm_bridge_alloc() API") split tc_probe_bridge_endpoint() in two
+> functions, thus duplicating the loop over the endpoints in each of those
+> functions. However it missed duplicating the of_graph_parse_endpoint() call
+> which initializes the struct of_endpoint, resulting in an uninitialized
+> read.
 > 
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
->  kernel/time/timer_migration.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-> index 2c2c8810b8137..2ec003c2bbbea 100644
-> --- a/kernel/time/timer_migration.c
-> +++ b/kernel/time/timer_migration.c
-> @@ -422,6 +422,9 @@ static unsigned int tmigr_crossnode_level __read_mostly;
->  
->  static DEFINE_PER_CPU(struct tmigr_cpu, tmigr_cpu);
->  
-> +/* CPUs available for timer migration */
-> +static cpumask_var_t tmigr_available_cpumask;
-> +
->  #define TMIGR_NONE	0xFF
->  #define BIT_CNT		8
->  
-> @@ -1449,6 +1452,7 @@ static int tmigr_clear_cpu_available(unsigned int cpu)
->  	raw_spin_lock_irq(&tmc->lock);
->  	tmc->available = false;
->  	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
-> +	cpumask_clear_cpu(cpu, tmigr_available_cpumask);
+> [...]
 
-This is under the tmc lock.
+Applied, thanks!
 
->  
->  	/*
->  	 * CPU has to handle the local events on his own, when on the way to
-> @@ -1459,7 +1463,7 @@ static int tmigr_clear_cpu_available(unsigned int cpu)
->  	raw_spin_unlock_irq(&tmc->lock);
->  
->  	if (firstexp != KTIME_MAX) {
-> -		migrator = cpumask_any_but(cpu_online_mask, cpu);
-> +		migrator = cpumask_any(tmigr_available_cpumask);
+[1/1] drm/bridge: tc358767: fix uninitialized variable regression
+      commit: cb863540e7c756abe7e709673a3e073c6a7aa8c0
 
-But this is not.
-
-We should make it clear what synchronizes the accesses to
-tmigr_available_cpumask.
-
-ie: we expect that either the cpu_hotplug_lock is write-held, or
-it's read-held and cpuset_mutex is held.
-
-But tmc->lock is not helpful. So the cpumask should be outside that
-lock to avoid confusion.
-
-Thanks.
-
->  		work_on_cpu(migrator, tmigr_trigger_active, NULL);
->  	}
->  
-> @@ -1480,6 +1484,7 @@ static int tmigr_set_cpu_available(unsigned int cpu)
->  	if (!tmc->idle)
->  		__tmigr_cpu_activate(tmc);
->  	tmc->available = true;
-> +	cpumask_set_cpu(cpu, tmigr_available_cpumask);
->  	raw_spin_unlock_irq(&tmc->lock);
->  	return 0;
->  }
-> @@ -1801,6 +1806,11 @@ static int __init tmigr_init(void)
->  	if (ncpus == 1)
->  		return 0;
->  
-> +	if (!zalloc_cpumask_var(&tmigr_available_cpumask, GFP_KERNEL)) {
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
->  	/*
->  	 * Calculate the required hierarchy levels. Unfortunately there is no
->  	 * reliable information available, unless all possible CPUs have been
-> -- 
-> 2.49.0
-> 
-
+Best regards,
 -- 
-Frederic Weisbecker
-SUSE Labs
+Luca Ceresoli <luca.ceresoli@bootlin.com>
+
