@@ -1,281 +1,285 @@
-Received: from mx-relay06-hz2.antispameurope.com (mx-relay06-hz2.antispameurope.com [83.246.65.92])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75A91F872D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=83.246.65.92
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873587; cv=fail; b=MmzGDwD5UHoNKoEoI/wd5HDkHlVmApPL1FxP0cHZlug39ADJTTCrQgWi1qVjPekMab3peyvL21kf4iPWz2Q83JErdfadexAlLLoQKWAC8E+KrWbbYIEHaKwMj+lqGZJxVQ3+jRtoEkCnj0Rob4uJNPHNob7O/5AStez9md/VHfM=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873587; c=relaxed/simple;
-	bh=E+ZVpI87qa5fzJBR7LSm1D7Dp52JItz4URXqmeXju0c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nKq7Bqbj6fvIYGwqpvvkJwUI6nMg7RpptR5xexAUXaIS546E0djGRfRccIzIgT0T1xQBSbjHj30Xg5VjpkU0HUo1zx5Lj7b0v/THR8LgONAOVP77XFXC1cs0rMxOzUcsC/z2oiGheP1tRk/Yos4lweJKlQyqLMVhf4vkjfkI+OU=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bruker.com; spf=pass smtp.mailfrom=bruker.com; dkim=pass (1024-bit key) header.d=Bruker.onmicrosoft.com header.i=@Bruker.onmicrosoft.com header.b=SrmaTv+Y; dkim=pass (2048-bit key) header.d=bruker.com header.i=@bruker.com header.b=aTaAUARK; arc=fail smtp.client-ip=83.246.65.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bruker.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bruker.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6C421FF5C;
+	Mon,  7 Jul 2025 07:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751873638; cv=pass; b=kIi36ws2BC6cHrhg0FC42UniDIoiUdcZ17Rtp1kpKH7oZbpSTBa9iR/stDG1d2++JM5OTeD7T09UBgRz7z03toXaLiiUtuahluw7/ArdBagw+tZKODb5NVtbwST2s9qiZeObKJ4b7d+iWudC57d2JN8DSMpiJwPNtPfIcEGYsA8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751873638; c=relaxed/simple;
+	bh=wXsTWyd4yYlOsiktiqaiTuUm1qucpLijYl3bq49V17w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZILTz21rYqEtwppwi670Th+QQutZuTREtY2wviqtPy82izQ9Z3DbMD5LDDrf0RQVPUBHF7/5vM3YAYFcYXUbXkdiTXAXogdu/4nBzZ27ry3uEIPihJtpeilZyCCIDaS28webEriT22XW0dl54yGuSJfHzOBuOTY0i0DcdttaI50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=aJlh81gn; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=Bruker.onmicrosoft.com header.i=@Bruker.onmicrosoft.com header.b="SrmaTv+Y";
-	dkim=pass (2048-bit key) header.d=bruker.com header.i=@bruker.com header.b="aTaAUARK"
-ARC-Authentication-Results: i=2; mx-gate06-hz2.hornetsecurity.com 1; spf=fail
- reason=mailfrom (ip=91.229.168.76, headerfrom=bruker.com)
- smtp.mailfrom=bruker.com smtp.helo=bruexc108.brumgt.local; dkim=pass
- header.d=bruker.onmicrosoft.com header.s=selector2-bruker-onmicrosoft-com
- header.a=rsa-sha256; dmarc=fail header.from=bruker.com
- orig.disposition=quarantine
-ARC-Message-Signature: a=rsa-sha256;
- bh=Sn7hR5IAkLoT5L0BGiQ64n/XZOG+FPwZnnF3/oBo/wQ=; c=relaxed/relaxed;
- d=hornetsecurity.com; h=from:to:date:subject:mime-version:; i=2; s=hse1;
- t=1751873497;
- b=Ej3AawHwa4VZqGYdyKpyNI0aYAmrT3loYYerWPae/dWU+AoNEx55P60dGnhLc7KOzmcHfb6r
- a6cm24iJ8TgEzh8R4xESpslfcWMDd65NPqfiqiANQHyr98kJWfIIGFJc0RuBDDCqhKH2OPrbnTI
- hnHFIfecufak0kQ5BVtC2bjbeWMIPvwezbyrQskaEqR0wQwuaCz9F1xPXHoGYwxQgKq7KYMMDSa
- jx+71whCLRo4RvZ5+I08cWcXMU+O1JAgmC6zvEODs0K7GRGH2LrkPKctv9kyoC+sqUpOdWFGEzL
- 2MNlJPfcvpsxTfqa90tclRYdMtvdppP/MBINcc08wog7g==
-ARC-Seal: a=rsa-sha256; cv=pass; d=hornetsecurity.com; i=2; s=hse1;
- t=1751873497;
- b=Oq3cAzbY1TJD7UGuRo0qzLHeVn9RrVZZVfQ8S1Fe/jm4TRLE8olpYntS8XPOeC42xy7JwEy4
- mMVk6TcocfEn6Duo9HrQhXT12V0ORRlrUYgcVSvLMPF3reNdZWu2izxBYlMdMFCp0qleUuA1W+Q
- eT33IlZVh3St/BKHdVVGYDcBJj00rsEiMUzBHPxo2hBo/GVf1tWCjMG5oqOtfwzXPdEN03P4I5y
- jz7DLJo51jVX1bbH+Csx1u9mGXrhch1cV0crj4KgtNq4J+HdTqr+r2i7zf2ezmvoEMtGb4rHx41
- BgIaeOpZ4npkEQVD87XfUg7hH2IJun7xTUZtgcV3RcZEg==
-Received: from smtp-out.all-for-one.com ([91.229.168.76]) by mx-relay06-hz2.antispameurope.com;
- Mon, 07 Jul 2025 09:31:37 +0200
-Received: from bruexc108.brumgt.local (10.251.3.84) by bruexc108.brumgt.local
- (10.251.3.84) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 7 Jul
- 2025 09:30:38 +0200
-Received: from FR6P281CU001.outbound.protection.outlook.com (10.251.3.124) by
- bruexc108.brumgt.local (10.251.3.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10 via Frontend Transport; Mon, 7 Jul 2025 09:30:38 +0200
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W5ia1EASy6btja8sAhpKm77MdIaGY4uaw2PoJrzORZjWPgu7x4qzPwcXSjdghfqiYsT0s/BCDkwrc5VG6EGyYVVWhXJ/VBxHDh7AlhX6NDxOxV1BkWnEmsukK2zeIC4OERyZlkdBP3fRF0SF6c+ssEehEeQOTnAcWRKwn+R0syOsYsrIw0wQjtisCYyeQVuh40mk1kjuWrsZTC83xPWNm7ko3Wwp6zY+j3eBOQvctIr5dVHdWcdvLi5zcVjeAKMqtZPG3xOH3uyiK5iRoQUA3NrIrVvFm8vIaxsYWlUxI+96THpTzBEBnrtfaFDqdXCcC/gD5CVX3VbkhiyMz5plOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Sn7hR5IAkLoT5L0BGiQ64n/XZOG+FPwZnnF3/oBo/wQ=;
- b=t9xt62sd8qSka0gFGc8X+rZar/Fesz5B0ftgapy2iJTY7ehnDU2uX30Cq30SBuLnkCHVUBXSjvVQ+6+H3QY/xfyn7YmlChipOVk+xJNf+mu4yJeewbPbh3osUxN3A5pBkFiux20feoY8Wz3gp6re+TWuwieA1dHN5sun4PLvkvu2hcQQ3iCU8bbHozmafLEn6gvYtnMzBh0gh4ANP6XWIguMRc6O3xxw049XcuEvOl8yZ/fP2AOeA4mITJmw+7ZnAwGq1VPK95dBGv4sPHeplZUyMogaUZB+BDYF7XZtvkFPK6VE1Jlbg+GZccYfsBcJ2XUsrXdKt/vdEs3uuAwkOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bruker.com; dmarc=pass action=none header.from=bruker.com;
- dkim=pass header.d=bruker.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Bruker.onmicrosoft.com; s=selector2-Bruker-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sn7hR5IAkLoT5L0BGiQ64n/XZOG+FPwZnnF3/oBo/wQ=;
- b=SrmaTv+Y//HLvMjVVl7CkG9Rt6apbJOJCQoYyp4M+F4JvVkRJoVShj3DQU/X6Qyf6DXIyvJhTak4dFk6KkKpirPXL5uYN6mRcEyw/LNRrkVleaSndLOrfvDZxFEa47Tf0TrIXbHDH10Og4I+Nn8VJO+tsOLZdXg4r1r7/UOz0l4=
-Received: from FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:d3::6) by
- FR3PPFEF176FF63.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d18:2::1a7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.22; Mon, 7 Jul
- 2025 07:30:30 +0000
-Received: from FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM
- ([fe80::9d0e:acae:7d6d:f567]) by FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM
- ([fe80::9d0e:acae:7d6d:f567%4]) with mapi id 15.20.8901.024; Mon, 7 Jul 2025
- 07:30:29 +0000
-From: "Hohn, Torben" <Torben.Hohn@bruker.com>
-To: Mark Brown <broonie@kernel.org>
-CC: "amit.kumar-mahapatra@amd.com" <amit.kumar-mahapatra@amd.com>,
-	"frogger@hardanger.blackshift.org" <frogger@hardanger.blackshift.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux@roeck-us.net"
-	<linux@roeck-us.net>
-Subject: AW: [PATCH v2] spi: Raise limit on number of chip selects
-Thread-Topic: [PATCH v2] spi: Raise limit on number of chip selects
-Thread-Index: AQHb5rZPfQusim3qPkGfN64hDqfGqLQW2AgAgATR8EU=
-Date: Mon, 7 Jul 2025 07:30:29 +0000
-Message-ID: <FR4P281MB34343BD0D260C127866768298346A@FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM>
-References: <FR4P281MB343441EB901D3DD286B923D6837AA@FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM>
- <aF553GU_btT81_b_@finisterre.sirena.org.uk>
-In-Reply-To: <aF553GU_btT81_b_@finisterre.sirena.org.uk>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels: MSIP_Label_e340eb20-1c5f-4409-b1a4-85adc943d5d7_Enabled=True;MSIP_Label_e340eb20-1c5f-4409-b1a4-85adc943d5d7_SiteId=375ce1b8-8db1-479b-a12c-06fa9d2a2eaf;MSIP_Label_e340eb20-1c5f-4409-b1a4-85adc943d5d7_SetDate=2025-07-07T07:30:29.2230000Z;MSIP_Label_e340eb20-1c5f-4409-b1a4-85adc943d5d7_Name=-Bruker
- Confidential-;MSIP_Label_e340eb20-1c5f-4409-b1a4-85adc943d5d7_ContentBits=3;MSIP_Label_e340eb20-1c5f-4409-b1a4-85adc943d5d7_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bruker.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: FR4P281MB3434:EE_|FR3PPFEF176FF63:EE_
-x-ms-office365-filtering-correlation-id: 5914eeb3-8bfb-4921-cb8d-08ddbd28266d
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-7?B?SHVMWHVSTUF3eHljUmQyUCstTWVIcXNEOWpIZnBtNFhvT2tHcFdJWDlvTncy?=
- =?utf-7?B?RElxR0s2RWNNU0tpa3l3UXltaXkwWDQ4NVJ0bjFrUFVPVCstcWxNNUtjajFN?=
- =?utf-7?B?YkdyQ3pPaUttMUtNT3RRWmhHU0xUM0RnUkM0M2phQThhVEEvUCstQ3BaS3c=?=
- =?utf-7?B?Ky1CVFY4V21QZHY1RUx3d0hLUWYvRVZ0RGU1UU9PM3VHbmkwMXIrLVNXbyst?=
- =?utf-7?B?c01KZ3E4STU5cGRuQXNpQWtHYkM3WHQ0eWlZa3dhNWNOWkJGd3dQVzlCRFVZ?=
- =?utf-7?B?eXAvbjNlTzRzZ1lPOW9USm4zR241OVIzcHlld29NL1BnV010c0VUMXFNR1h2?=
- =?utf-7?B?dUhkVFRMcystSmxMMGd5SzdhKy1ReEZwelFFZzVtZ3JwTTQ3allrS2t3b1l2?=
- =?utf-7?B?UW5ucXFRdEZFM1gxR2Z6YTBnSSstUzE1OTM2QWxPZUV2VHY5TmVUNGl6NGpz?=
- =?utf-7?B?alozREx0TWVqQ0dFalVNenhoeXZITm9oUUk5RWJDbkZpLzdydVB0OER1aVpR?=
- =?utf-7?B?OHBVZ3FZUlhBdVZ6eER4dWZsZzBSR2hmRGRGNGZBaXRVMFZXOFQ5RWhRNkJx?=
- =?utf-7?B?Zm9wOVUwd1FDd3lJRHRobTFsaDVxaGpxSDFydlRxUjlUKy1oejFLSXY5dnlY?=
- =?utf-7?B?clVhb0lUcmFSM090dnFpY2ZBMm1qTktGenN2Ym5aMmZFZUk3bnY1Smo2WWU4?=
- =?utf-7?B?L2dSSzFGUnkwV1dPWXYzSTh2c1dCbFBzalIzSlZPcVlZREcxMVBUUTExd1Fw?=
- =?utf-7?B?Z0xzT2xmalRac0F2bTlNRVZrZ2Zsa29GQzY1clBQclhuR1BZb243Vk9YVnkw?=
- =?utf-7?B?OUNnYXlJUXBlcHhTNmU3TWttaXZHU0pubExyU1BQSTJQak5idFJFbk51Ky16?=
- =?utf-7?B?N3FYYTNrMUNrTDE3RTcydWUwS2wwTjNxWVhwVll6QllVNGZjNE1CZSstYktK?=
- =?utf-7?B?aCstKy1OdncrLWp4czYvZWNXbEl0OW9zNTBsZXpnZExTdks5M0l5WEtQMU8v?=
- =?utf-7?B?dDVVeldiYlErLXlLQkJNeElrTjhscVgwM3Zab1o4WE1uekhiSnU1cE52cnkv?=
- =?utf-7?B?b3c2WVNhZGNjRlpCQVUzSDJkQXRNS2hXWG43c1JIR01nZHVmZlhkVkdBZUxU?=
- =?utf-7?B?VUJEZDUwdWltNmtRSjl5dVQya01PL3NvV09yakp2OWQ5TlQyUnhqUGlaelRu?=
- =?utf-7?B?NzBnRjNTSk1oNkIrLU56cDUyRGZlQmViRWJDb2FqUzQzbjJFOGNXT3NuQ1M3?=
- =?utf-7?B?NXhhUXN5QkxEV29DVFBNci9wZVdKZXFCWWZoWk1DZ1FXaDlubE5sSmFCbUpV?=
- =?utf-7?B?enkrLXdRNmx1cVAyU3RlRVIxOVI0MFgyU0s3Y0lGbEw2UEZGWVN3SGpCcktj?=
- =?utf-7?B?andaS2lOZWI5TUF3WngrLXVRaDhTdmVpZnVKZTdzMjBxcERZeFFaYVY0ODIw?=
- =?utf-7?B?NVh4UXdzclo2MXllTjFYNUZIZkZVdnNUR3hUejJTMGRnYmVHc1Jqb1lpYjgv?=
- =?utf-7?B?dzRLVURvbWNvWGt6VHc1dm5yL0w3VDBEREUrLUFlMDhlanIyd3EwSDlEVkJS?=
- =?utf-7?B?eGVEbnFtMUNxc2pkYkZKQzl2bEx5RUhkcGNOT3I5d0Y2VkpaMzlYdkRKSnJR?=
- =?utf-7?B?QTdmSEMxVUpteG96RUR4SE83ZFJWcGZxNmh2WlFZZXJLdE9EY1BWSTIxZURH?=
- =?utf-7?B?c1g1SDdLcmlaYTRSdFhqZFNMSzI2VkluR01naE5hckNaWE0rLVJqbThvSjB6?=
- =?utf-7?B?TjAxbzFDcm5vWVN6ZUJpRmZSVXhGaWVHdmtoaXpnVXpPRElUay9rdDZtOHlU?=
- =?utf-7?B?OVh1VjREZ2lzUG53c3pPQTcvVUZXQ3VNNmtrbWNKVDU4SnhETndhS0hnUzA1?=
- =?utf-7?B?SWhGRFJhWXFOTkdWMXd0TzhzRWV3aVYwOHl6Y2lremJ3YmhwVEtiVVlsNDNo?=
- =?utf-7?B?R3prQlhRbHppN3JaMUVmSWVGTDlsZ2Z2b05yYjRVaVdnK0FEMC0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-7?B?bG1nTWg4c21lV1d3NVJsaUFwZFRYSystbTBOQnBtMlovOCstNDNBaUdWUkRu?=
- =?utf-7?B?bFNjV1BUMVBHVHJVY1JKSmdkZzlEWEY2RG1Jc0hOL0tFRFFOOUZUS3BaZVhh?=
- =?utf-7?B?YWtyOTkxV3F0Tmo1VmswZEJ3VmIrLVd4WURITDh1bHdwMURBZmFpdHR1b2F0?=
- =?utf-7?B?Q29RNystUnQvSHdLRWllbk1DM0I1ekRoNHZORVFDKy1FUlQxdWNyTTBqVVI=?=
- =?utf-7?B?bystWjZtTlhnQkpra0tWc2NuSU9DVGxyNTVTVjdicGJ4cFFlSkx0anE5OTdK?=
- =?utf-7?B?dTd3OHNVbVFzWmJQQ1VNZ0NtSFJha3JKQTBBKy13NS9KKy04MGRQc2xVaVNG?=
- =?utf-7?B?S2swVHRCN0U5Q3BBcS9uKy1Pa05NKy1BV3VyTVJ1UUxKN0tzT0dTaHI0RVNC?=
- =?utf-7?B?eGc3dExzZlVUTnRQRHJIdTdVMzczSEJoZ05wU3BPUHl3aWM4Snh4Sm1kSjRp?=
- =?utf-7?B?TjEvbnRGYlJnYlVmN1l0a21jNVdmTkVJWVlyczlwc1JpV2pndnJBekk4SXFx?=
- =?utf-7?B?emhIUHl0bHRodllSY3d6c1NBaEliZHhPVkhDRGlYd3p4bU5ZSndnUEFoTXZ1?=
- =?utf-7?B?bDFtYms0NHFCbjhzNjFZaWpoV2pRM2d6ZFVXb3paa0VPZE5Rb2N1Y1ViOW1a?=
- =?utf-7?B?czhCL3BmWTZvU1ZFWXVmeE05WkcxQ0NaSjMxbHpJa1k4d0gvZ1RXVFg1dU9H?=
- =?utf-7?B?YWs3b1F1bWFTTU9ua1crLUZaV3JHRzZpUHFlelZ3bUlvWGlFNTNlR21hVlYv?=
- =?utf-7?B?WTVZOWlCbGdiN2tqb3BuUENkY0lMd0ozRTFSRGtIb0FVWUY4N1YzNmxhSFY5?=
- =?utf-7?B?YjlYWVltaXdmczhtT3dPMVoyRFl2QldQVHNiRElxZElYa2QzdkRFKy1sTm0=?=
- =?utf-7?B?MistRE8zTWVjZjRPSFNEbUpUUVpXeVhNaDZYSnJEZFp0a0ZhM1V0emczQ2Fh?=
- =?utf-7?B?WURGalF2N3pXYXlBT1hIa2NjbHJqYU1Fb0VKZ2YyTDVRSTUwUDV5TmxxZ0dj?=
- =?utf-7?B?T3BDMmtxYmRVUElPaFZaaDhYdkFoMjBwNWFQZHEyMWo4dlpHVTlBdFk3MnhU?=
- =?utf-7?B?YnNmRlZyS2RRc0wrLUdPdnpuWkQxZUFyUHF2ZHl1TklKZC9BY2dEWjVLNWZV?=
- =?utf-7?B?QzNPZUxkeEQ4NVdhODc3enBxeVJQbEg1ZnVUWEQ0dTJyZDdhdkgyL1htbVNG?=
- =?utf-7?B?bFc0L2p6NHdOUWxmMjhWNUpCbC8vckIrLTM2YU5ISzdVMWxVdFFHMFd0ajJL?=
- =?utf-7?B?S2ZNTzYwR05RN01JMm9saS9EdVpPMHVPYUw1RFJBVE5ieFQzYWpNVHhxemt0?=
- =?utf-7?B?V25Tclc0YURtWmZMeDZ6ekg3SWwzSHNpaWdScHNrejR5aTM5c2lPTjgwTTdE?=
- =?utf-7?B?YzlJeTVMTWFUczE0WFZYUXV3em5PMnVWU2I4UWxnYktuTDlNUjBIazdFbWVP?=
- =?utf-7?B?WE1Ma0xSamJZcDRLb2hPMi9yMm1GSE4ydXJLd1VKRURlbUhqOTBnbVJGS2d1?=
- =?utf-7?B?M2N1cllTSmFXM0dINXFRcWh6Vlh5N1NpSy9RNUtaemM4YSstVlFhNkdNT0Qv?=
- =?utf-7?B?b3ZqYmFYVmlKY0JGOHN4b0ZFM3l4UFY2NzAzRDZHazZCWU8wN0g2Si9wZ2Uy?=
- =?utf-7?B?MEEwdjV6RnU4WFlTdTUrLTJxQzY4a080MGhSU1ZYVXFqTW90SzNJVCstU2Q4?=
- =?utf-7?B?djZkUm03bGJjY1g4MXRWeVZyOUl4VzRQeWVEbm94VHV1ZUlGcFFwU1FsaUhX?=
- =?utf-7?B?TjhSY0NrdVVneWc1VGh2TGlMeEpUZXdtSjhvdkZWbTJSTlVyR3QyelB3QWtE?=
- =?utf-7?B?eC9Fbk9QYmFuRVdvanZwcmo3dURzU3RaZHhGUC9GWS9BeWQweWY1cFUzYUVK?=
- =?utf-7?B?c2JDcmZGWnZOdHVGVEh6S214YU4yVVdwanlMdll6MFkrLUc5WE5YM1VGUlMv?=
- =?utf-7?B?WDVFNG1jKy1WcFlhRHNLYTg5Y1ZYbU4rLSstYldXMnF3a0JYUVIxYzQ1bHBr?=
- =?utf-7?B?aGlwRC9LWVl3VS9XV0NaQk8vdjNRYldIMUhESFMzQ3pjL0tWR2V1bistL2d3?=
- =?utf-7?B?ZnJMeXM5aU1HUG1vODFUKy02TTMyRXNuNm51Y05NNVRUdHRUN0VPQm53eXA=?=
- =?utf-7?B?Ky1IMk5zUkpwb0tvYlA2MEE2bldJUXdNWHk3bE9FaUFkcDFhcnU1NkhLY0pk?=
- =?utf-7?B?cUU3NFN4Y1c=?=
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="aJlh81gn"
+ARC-Seal: i=1; a=rsa-sha256; t=1751873620; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=HTCku5Z4eE+HXVPl3u6T2Czgb3E8BG0hU0FVn/GpZjxuDiW5YetXJMhHfh95kfzxvgNsyN09pPJe0boWmoD0NxCGIfiJD8sfNEDZ82lARDwuG3n9a9X2wwBIVMXry4hfk4pL2iGKt6LAS99IEujqwYdZBmfAZD1N0o1b7Ipv4m8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751873620; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=BdU2n3YWpibKbpwCxOh1ePuw+qQOxSR0HU9wfR6gAUw=; 
+	b=UUtocAbeWAI9mnkKNCOlVjqWdsytG9HMeedJ9kKrctqq7KJ7JkyEu8zd6+ZCVsVoPRUolbhlLonFfNxnXfgI7JoICALTx6KEjDlQnoH9EgwIgNIKjGQmmfhTziS/wEI0anJWqdrK41eEvGD9ggnABvzLtTLp9fYdBbNPPo8LZhE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751873620;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=BdU2n3YWpibKbpwCxOh1ePuw+qQOxSR0HU9wfR6gAUw=;
+	b=aJlh81gnwv0G1WDmGbMUDQMTGB7/sBHhRZLQ/LdDsTfMlJSrQlsII+HOS4H4R+pC
+	+3PxtlCvu3Y0bXGRyk3u09OWv3tMp8ZfX2PPh6zmdtFpmGGufya6lLwCL5EgMZV8zCv
+	XwCHvyPXvLIpvlBqF73giMgeFOZKnBr6oXA06TlY=
+Received: by mx.zohomail.com with SMTPS id 1751873617320882.1477553147479;
+	Mon, 7 Jul 2025 00:33:37 -0700 (PDT)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] selftests/mm: pagemap_scan ioctl: add PFN ZERO test cases
+Date: Mon,  7 Jul 2025 12:33:20 +0500
+Message-ID: <20250707073321.106431-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: FR4P281MB3434.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5914eeb3-8bfb-4921-cb8d-08ddbd28266d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2025 07:30:29.7154
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 375ce1b8-8db1-479b-a12c-06fa9d2a2eaf
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8ztet97MxPteoYHcO4lfJz1PTWUcAqEUEgQu2akDPIWtWzkJJAnKDcVT7iMZXNe5itDk+7HV+SMlXQ3rjW3D8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR3PPFEF176FF63
-X-OriginatorOrg: bruker.com
-X-cloud-security-sender:torben.hohn@bruker.com
-X-cloud-security-recipient:linux-kernel@vger.kernel.org
-X-cloud-security-crypt: load encryption module
-X-cloud-security-Virusscan:CLEAN
-X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay06-hz2.antispameurope.com with 4bbGBh4qljznlLB
-X-cloud-security-connect: smtp-out.all-for-one.com[91.229.168.76], TLS=1, IP=91.229.168.76
-X-cloud-security-Digest:994187259b4a24605fb67b77ea2b7b5b
-X-cloud-security:scantime:2.276
-DKIM-Signature: a=rsa-sha256;
- bh=Sn7hR5IAkLoT5L0BGiQ64n/XZOG+FPwZnnF3/oBo/wQ=; c=relaxed/relaxed;
- d=bruker.com; h=content-type:mime-version:subject:from:to:message-id:date;
- s=hse1; t=1751873497; v=1;
- b=aTaAUARK6FXnr/zGf49ZapiUsOX83MBdEDnHokNcqyEtTamnct60N6B2dGkyU6js90pVhlOw
- TFXjWlsl6me/5ZY2PizCRo6C0IeDJYufq7FuVWaYHE22smQ4AkibbMw8UZXXhdu/aw7UgyZzgM0
- ov2WvaPRIwamN4Q3n5JN2rVQdRyVChCLMETjK01puowv0CLikqUkvaz4K10wiQbxi3zQtgHm4Sv
- oQrIqGFgjhzsY9WH1WIxdHvZioPP0EUiKYCTngmTXu0pEPGsiOsqJboueUbqX2CtVGjfjt84xBi
- +NjxIQUjJzPCy3GROYCS5VPnonfSzA8AvhyKKB0lwYXRg==
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hello Mark,
+Add test cases to test the correctness of PFN ZERO flag of pagemap_scan
+ioctl. Test with normal pages backed memory and huge pages backed
+memory.
 
+Cc: David Hildenbrand <david@redhat.com>
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+The bug has been fixed [1].
 
--Bruker Confidential-
-+AD4- On Thu, Jun 26, 2025 at 04:58:20PM +-0000, Hohn, Torben wrote:
-+AD4- +AD4- Hello Marc,
-+AD4-
-+AD4- That isn't my name...
+[1] https://lore.kernel.org/all/20250617143532.2375383-1-david@redhat.com
+Changes since v1:
+- Skip if madvise() fails
+- Skip test if use_zero_page isn't set to 1
+- Keep on using memalign()+free() to allocate huge pages
 
-Sorry for that. I was also communicating with Marc Kleine-Budde and got con=
-fused.
+Changes sice v2:
+- Move zero page detection code out to vm_util and use that
+- Use mmap instead of memalign to allocate hugepage
+---
+ tools/testing/selftests/mm/cow.c           | 27 +-------
+ tools/testing/selftests/mm/pagemap_ioctl.c | 72 +++++++++++++++++++++-
+ tools/testing/selftests/mm/vm_util.c       | 23 +++++++
+ tools/testing/selftests/mm/vm_util.h       |  2 +
+ 4 files changed, 95 insertions(+), 29 deletions(-)
 
-+AD4-
-+AD4- +AD4- +-+ACM-define SPI+AF8-CS+AF8-CNT+AF8-MAX 16
-+AD4-
-+AD4- +AD4- If this is increased to 24 now, we need to carry another patch =
-on top of mainline again once we add another Chipselect
-+AD4- +AD4- into our FPGA, or into the next iteration of our hardware. We w=
-ould really prefer that a Kconfig value is used.
-+AD4- +AD4- We have handed a patch to pengutronix, because they can send pr=
-oper emails.
-
-+AD4- +AD4- In the IIO framework there is a Konfig Value for something simi=
-lar:
-+AD4- +AD4- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git/tree/include/linux/iio/trigger.h+ACM-n74
-+AD4-
-+AD4- This doesn't really work, we're supposed to support single kernel ima=
-ge
-+AD4- so putting per platform configuration in Kconfig ends up being at bes=
-t a
-+AD4- usability problem.  At some point it's better to just bite the bullet
-+AD4- and make things dynamic.
-
-After looking a bit more throughly at the code, i dont think it is necessar=
-y to make this dynamic.
-The Value at hand is actually the number of Chipselects a Device might have=
- and not the the maximum number
-of Chipselects a Controller might have.
-
-However, the check that is failing is this one:
-
-if (ctlr-+AD4-num+AF8-chipselect +AD4- SPI+AF8-CS+AF8-CNT+AF8-MAX) +AHs-
-                dev+AF8-err(+ACY-ctlr-+AD4-dev, +ACI-No. of CS is more than=
- max. no. of supported CS+AFw-n+ACI-)+ADs-
-                return -EINVAL+ADs-
-+AH0-
-
-I do now believe, that the proper fix is to remove this check, and then red=
-uce SPI+AF8-CS+AF8-CNT+AF8-MAX to 4 again.
-Because it was increased to 16 only to satify this condition here. The code=
- however does not depend on ctrl-+AD4-num+AF8-chipselects being smaller
-than SPI+AF8-CS+AF8-CNT+AF8-MAX. The only occurence of this in struct spi+A=
-F8-controller is the last+AF8-cs stuff, which just requires array sizes of =
-the maximum
-number a device might have.
-
-I guess the define should get a better name that makes this relationship mo=
-re clear. like SPI+AF8-CS+AF8-CNT+AF8-MAX+AF8-PER+AF8-DEV or something ?
-We have discovered the b4 web submit and are now able to post proper patche=
-s. Will do that once we have tested this here.
-
-Regards,
-Torben
-
-
+diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
+index b6cfe0a4b7dfd..b26bbf6ec4617 100644
+--- a/tools/testing/selftests/mm/cow.c
++++ b/tools/testing/selftests/mm/cow.c
+@@ -72,31 +72,6 @@ static int detect_thp_sizes(size_t sizes[], int max)
+ 	return count;
+ }
+ 
+-static void detect_huge_zeropage(void)
+-{
+-	int fd = open("/sys/kernel/mm/transparent_hugepage/use_zero_page",
+-		      O_RDONLY);
+-	size_t enabled = 0;
+-	char buf[15];
+-	int ret;
+-
+-	if (fd < 0)
+-		return;
+-
+-	ret = pread(fd, buf, sizeof(buf), 0);
+-	if (ret > 0 && ret < sizeof(buf)) {
+-		buf[ret] = 0;
+-
+-		enabled = strtoul(buf, NULL, 10);
+-		if (enabled == 1) {
+-			has_huge_zeropage = true;
+-			ksft_print_msg("[INFO] huge zeropage is enabled\n");
+-		}
+-	}
+-
+-	close(fd);
+-}
+-
+ static bool range_is_swapped(void *addr, size_t size)
+ {
+ 	for (; size; addr += pagesize, size -= pagesize)
+@@ -1791,7 +1766,7 @@ int main(int argc, char **argv)
+ 	}
+ 	nr_hugetlbsizes = detect_hugetlb_page_sizes(hugetlbsizes,
+ 						    ARRAY_SIZE(hugetlbsizes));
+-	detect_huge_zeropage();
++	has_huge_zeropage = detect_huge_zeropage();
+ 
+ 	ksft_set_plan(ARRAY_SIZE(anon_test_cases) * tests_per_anon_test_case() +
+ 		      ARRAY_SIZE(anon_thp_test_cases) * tests_per_anon_thp_test_case() +
+diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
+index 57b4bba2b45f3..059c6d5f971e7 100644
+--- a/tools/testing/selftests/mm/pagemap_ioctl.c
++++ b/tools/testing/selftests/mm/pagemap_ioctl.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++
+ #define _GNU_SOURCE
+ #include <stdio.h>
+ #include <fcntl.h>
+@@ -34,8 +35,8 @@
+ #define PAGEMAP "/proc/self/pagemap"
+ int pagemap_fd;
+ int uffd;
+-unsigned int page_size;
+-unsigned int hpage_size;
++size_t page_size;
++size_t hpage_size;
+ const char *progname;
+ 
+ #define LEN(region)	((region.end - region.start)/page_size)
+@@ -1480,6 +1481,68 @@ static void transact_test(int page_size)
+ 			      extra_thread_faults);
+ }
+ 
++void zeropfn_tests(void)
++{
++	unsigned long long mem_size;
++	struct page_region vec;
++	int i, ret;
++	char *mmap_mem, *mem;
++
++	/* Test with normal memory */
++	mem_size = 10 * page_size;
++	mem = mmap(NULL, mem_size, PROT_READ, MAP_PRIVATE | MAP_ANON, -1, 0);
++	if (mem == MAP_FAILED)
++		ksft_exit_fail_msg("error nomem\n");
++
++	/* Touch each page to ensure it's mapped */
++	for (i = 0; i < mem_size; i += page_size)
++		(void)((volatile char *)mem)[i];
++
++	ret = pagemap_ioctl(mem, mem_size, &vec, 1, 0,
++			    (mem_size / page_size), PAGE_IS_PFNZERO, 0, 0, PAGE_IS_PFNZERO);
++	if (ret < 0)
++		ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
++
++	ksft_test_result(ret == 1 && LEN(vec) == (mem_size / page_size),
++			 "%s all pages must have PFNZERO set\n", __func__);
++
++	munmap(mem, mem_size);
++
++	/* Test with huge page if user_zero_page is set to 1 */
++	if (!detect_huge_zeropage()) {
++		ksft_test_result_skip("%s use_zero_page not supported or set to 1\n", __func__);
++		return;
++	}
++
++	mem_size = 2 * hpage_size;
++	mmap_mem = mmap(NULL, mem_size, PROT_READ | PROT_WRITE,
++			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
++	if (mmap_mem == MAP_FAILED)
++		ksft_exit_fail_msg("error nomem\n");
++
++	/* We need a THP-aligned memory area. */
++	mem = (char *)(((uintptr_t)mmap_mem + hpage_size) & ~(hpage_size - 1));
++
++	ret = madvise(mem, hpage_size, MADV_HUGEPAGE);
++	if (!ret) {
++		char tmp = *mem;
++
++		asm volatile("" : "+r" (tmp));
++
++		ret = pagemap_ioctl(mem, hpage_size, &vec, 1, 0,
++				    0, PAGE_IS_PFNZERO, 0, 0, PAGE_IS_PFNZERO);
++		if (ret < 0)
++			ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
++
++		ksft_test_result(ret == 1 && LEN(vec) == (hpage_size / page_size),
++				 "%s all huge pages must have PFNZERO set\n", __func__);
++	} else {
++		ksft_test_result_skip("%s huge page not supported\n", __func__);
++	}
++
++	munmap(mmap_mem, mem_size);
++}
++
+ int main(int __attribute__((unused)) argc, char *argv[])
+ {
+ 	int shmid, buf_size, fd, i, ret;
+@@ -1494,7 +1557,7 @@ int main(int __attribute__((unused)) argc, char *argv[])
+ 	if (init_uffd())
+ 		ksft_exit_pass();
+ 
+-	ksft_set_plan(115);
++	ksft_set_plan(117);
+ 
+ 	page_size = getpagesize();
+ 	hpage_size = read_pmd_pagesize();
+@@ -1669,6 +1732,9 @@ int main(int __attribute__((unused)) argc, char *argv[])
+ 	/* 16. Userfaultfd tests */
+ 	userfaultfd_tests();
+ 
++	/* 17. ZEROPFN tests */
++	zeropfn_tests();
++
+ 	close(pagemap_fd);
+ 	ksft_exit_pass();
+ }
+diff --git a/tools/testing/selftests/mm/vm_util.c b/tools/testing/selftests/mm/vm_util.c
+index a36734fb62f38..dde9e8ab4dc46 100644
+--- a/tools/testing/selftests/mm/vm_util.c
++++ b/tools/testing/selftests/mm/vm_util.c
+@@ -424,3 +424,26 @@ bool check_vmflag_io(void *addr)
+ 		flags += flaglen;
+ 	}
+ }
++
++bool detect_huge_zeropage(void)
++{
++	int fd = open("/sys/kernel/mm/transparent_hugepage/use_zero_page",
++		      O_RDONLY);
++	bool enabled = 0;
++	char buf[15];
++	int ret;
++
++	if (fd < 0)
++		return 0;
++
++	ret = pread(fd, buf, sizeof(buf), 0);
++	if (ret > 0 && ret < sizeof(buf)) {
++		buf[ret] = 0;
++
++		if (strtoul(buf, NULL, 10) == 1)
++			enabled = 1;
++	}
++
++	close(fd);
++	return enabled;
++}
+diff --git a/tools/testing/selftests/mm/vm_util.h b/tools/testing/selftests/mm/vm_util.h
+index 6effafdc4d8a2..ca4c1f78ce18c 100644
+--- a/tools/testing/selftests/mm/vm_util.h
++++ b/tools/testing/selftests/mm/vm_util.h
+@@ -74,6 +74,8 @@ int uffd_register_with_ioctls(int uffd, void *addr, uint64_t len,
+ unsigned long get_free_hugepages(void);
+ bool check_vmflag_io(void *addr);
+ 
++bool detect_huge_zeropage(void);
++
+ /*
+  * On ppc64 this will only work with radix 2M hugepage size
+  */
+-- 
+2.43.0
 
