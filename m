@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288C4219EB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 02:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA26219EB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 02:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751855462; cv=none; b=Ri2Q7wrxyORki7sKs5dGhGhJghTeR5OqF5ZXWvT39zSoWuqzHtsGKiHhUJBNL7ENLriobvB1dFxZeBtNnlO2cqoNQNQX1+xEX8UfmqyaA+TVaQILp1zAB1uGb0jPvYZQJ43cKgaozB1ZjZCYS+WmesvK7aM9gld1TvfZSIpqoH8=
+	t=1751855469; cv=none; b=qKczaEapWaMHyocqbeGtA/iXOIpjdqsfTYFxBF82I153blw30aTpc6NEcw8VHtfqIqrgHTb88BPMfEvQ2anLkCgY90oBZU7nlc8x6Bd8M5cXMKpRspRmaDIT+wS7MNilNn0JGl8UnF7ApsXYFWyDdHM3vFs2DM0mDf4WZgCrffs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751855462; c=relaxed/simple;
-	bh=+FmKbdGqKKJjQjR99VcYD+sfcZZdqxfqEH658C1uJOQ=;
+	s=arc-20240116; t=1751855469; c=relaxed/simple;
+	bh=INsrMXxJaR4TYSiTwWFZ+ZgC7VSJVkTzbnSQstrPyNQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UVEzs9Spnngjhtz+akKAE3Wl6GdQP0GGHzOd1zLmPtVdklrOK1Xfv/jdiIibHX8jWz8YJJmRshvcX1zLeCO/RJpq60FJd1zEc4rF+CC8b6M5UN1+duo9qyA6PU1tl72oRe95lGiIy99V6vEZMoB0SYyIIwthin+T5y5IJVBtaOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4qRma1+; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=hMFqUcKjpHFv7hddciq4xtAgSHWpluHT2Ecw7RiQj5pZYauwhdap8QPjPGAeImsdHYM93ruwLCvXYN1ngRrXkrOJ1UPPLjvEricEWJYtOMNI7ngDMnZE1/SflHGxn44b54/2IpT+eh58eS6gsSowSrUnnKEBrbtL1zF3UYgeMGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZkPV5Cdb; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4qRma1+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZkPV5Cdb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751855461; x=1783391461;
+  t=1751855467; x=1783391467;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+FmKbdGqKKJjQjR99VcYD+sfcZZdqxfqEH658C1uJOQ=;
-  b=N4qRma1+zWvIbxeaMWKq/WNzcI1PyaJZOso/9e7XqrIjLSySTC1hGjbm
-   84zwN7xodpblCpKsO4zN8YQ4tNUTip1Q0XtXNO9/wkAxznIrJr2jx9Qdo
-   GP/jQGric7Z7VGVkQedC78sSHKwKX4pAKVg4ivW9TH4STa9WLS0Ci5t2i
-   RR+5YmsCw/7OjJAm30uDqFF5qfVNQC62R0zdZI+WpoHu2vgFirhOsRS+b
-   lsmybAVQ7CV6WcKVo0SKmahodyZksj1EKzbfNfDDcT4gk9HirQgc33LPY
-   HqqZZSCmHlX0pfxSuwMnmvaEDmmI3IMxDVuZDWKto0x4HH6LBbdk5iKk0
+  bh=INsrMXxJaR4TYSiTwWFZ+ZgC7VSJVkTzbnSQstrPyNQ=;
+  b=ZkPV5CdbEsXP5Qjzz20rQPo42OF70jGb2DxLXpjzTh1ULRVZIMnMFPG7
+   7VIvkZpZdDWiXoqb/2eSLSOfmgqAJeiR8W31549jWhMcY8+7D1c4Av9vZ
+   e4g6fG6DWQbPRPK6Dy3qsQq0LECGc3e4Q+hShuZvipoytFDY7+Sikpt3v
+   OdpYLmUHtRZoLfPFCfg224rT/5WkcsnZ8g9fe6xx+Gk12NpVyVZ4p8MBG
+   Keti2p1t1IkrHZIHovv4OtwDo7qZKBxhNtfvYD6OoAqEFenmdUo2Nn0S7
+   i1YeNGZgBw3QfP4X/p2vusJaE0wGkW9LKY6t6jeDs9jXrpiQyegp6Anr1
    g==;
-X-CSE-ConnectionGUID: oViLwanLRQ6cxtC9GfUfaw==
-X-CSE-MsgGUID: 6cXIN2RVQ7u8ZoF1fhF3rQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="64756915"
+X-CSE-ConnectionGUID: zaOhaQ3sRjip49ZgPupyxg==
+X-CSE-MsgGUID: wP3IqZbITxuBwcKhCBTq0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="64756921"
 X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="64756915"
+   d="scan'208";a="64756921"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 19:31:00 -0700
-X-CSE-ConnectionGUID: hayDqQuATk2cmyKadK4uDg==
-X-CSE-MsgGUID: aO9VYv9SRpm0kCAO/F/6hQ==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 19:31:07 -0700
+X-CSE-ConnectionGUID: yXTzLmzGSXSLUYwwIJ5NKg==
+X-CSE-MsgGUID: QgCODDMjR/Kod+Pdm7caXQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
-   d="scan'208";a="159361632"
+   d="scan'208";a="159361642"
 Received: from linux-pnp-server-17.sh.intel.com ([10.239.166.49])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Jul 2025 19:30:58 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 06 Jul 2025 19:31:05 -0700
 From: Pan Deng <pan.deng@intel.com>
 To: peterz@infradead.org,
 	mingo@kernel.org
@@ -51,9 +51,9 @@ Cc: linux-kernel@vger.kernel.org,
 	tim.c.chen@linux.intel.com,
 	yu.c.chen@intel.com,
 	pan.deng@intel.com
-Subject: [PATCH 1/4] sched/rt: Optimize cpupri_vec layout to mitigate cache line contention
-Date: Mon,  7 Jul 2025 10:35:25 +0800
-Message-ID: <c3fa01bed2f875293ac65425c75a322e8e70e1d3.1751852370.git.pan.deng@intel.com>
+Subject: [PATCH 2/4] sched/rt: Restructure root_domain to reduce cacheline contention
+Date: Mon,  7 Jul 2025 10:35:26 +0800
+Message-ID: <55013ca7954e4e7309f56bec7f62b62561162e19.1751852370.git.pan.deng@intel.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1751852370.git.pan.deng@intel.com>
 References: <cover.1751852370.git.pan.deng@intel.com>
@@ -65,51 +65,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When running a multi-instance FFmpeg workload on an HCC system, significant
-cache line contention is observed around `cpupri_vec->count` and `mask` in
-struct root_domain.
+When running a multi-instance FFmpeg workload on HCC system, significant
+contention is observed in root_domain cacheline 1 and 3.
 
 The SUT is a 2-socket machine with 240 physical cores and 480 logical
 CPUs. 60 FFmpeg instances are launched, each pinned to 4 physical cores
 (8 logical CPUs) for transcoding tasks. Sub-threads use RT priority 99
 with FIFO scheduling. FPS is used as score.
 
-perf c2c tool reveals:
+perf c2c tool reveals (sorted by contention severity):
 root_domain cache line 3:
-- `cpupri->pri_to_cpu[0].count` (offset 0x38) is heavily loaded/stored
-   and contends with other fields, since counts[0] is more frequently
-   updated than others along with a rt task enqueues an empty runq or
-   dequeues from a non-overloaded runq.
+- `cpupri->pri_to_cpu[0].count` (offset 0x38) is heavily loaded/stored,
+   since counts[0] is more frequently updated than others along with a
+   rt task enqueues an empty runq or dequeues from a non-overloaded runq.
+- `rto_mask` (0x30) is heavily loaded
+- `rto_loop_next` (0x24) and `rto_loop_start` (0x28) are frequently stored
+- `rto_push_work` (0x0) and `rto_lock` (0x18) are lightly accessed
 - cycles per load: ~10K to 59K
 
-cpupri's last cache line:
-- `cpupri_vec->count` and `mask` contends. The transcoding threads use
-  rt pri 99, so that the contention occurs in the end.
-- cycles per load: ~1.5K to 10.5K
+root_domain cache line 1:
+- `rto_count` (0x4) is frequently loaded/stored
+- `overloaded` (0x28) is heavily loaded
+- cycles per load: ~2.8K to 44K:
 
-This change mitigates `cpupri_vec->count`, `mask` related contentions by
-separating each count and mask into different cache lines.
+This change adjusts the layout of `root_domain` to isolate these contended
+fields across separate cache lines:
+1. `rto_count` remains in the 1st cache line; `overloaded` and
+   `overutilized` are moved to the last cache line
+2. `rto_push_work` is placed in the 2nd cache line
+3. `rto_loop_start`, `rto_loop_next`, and `rto_lock` remain in the 3rd
+   cache line; `rto_mask` is moved near `pd` in the penultimate cache line
+4. `cpupri` starts at the 4th cache line to prevent `pri_to_cpu[0].count`
+   contending with fields in cache line 3.
 
-As a result:
-- FPS improves by ~11%
-- Kernel cycles% drops from ~20% to ~11%
-- `count` and `mask` related cache line contention is mitigated, perf c2c
-  shows root_domain cache line 3 `cycles per load` drops from ~10K-59K
-  to ~0.5K-8K, cpupri's last cache line no longer appears in the report.
+With this change:
+- FPS improves by ~5%
+- Kernel cycles% drops from ~20% to ~17.7%
+- root_domain cache line 3 no longer appears in perf-c2c report
+- cycles per load of root_domain cache line 1 is reduced to from
+  ~2.8K-44K to ~2.1K-2.7K
 
-Note: The side effect of this change is that struct cpupri size is
-increased from 26 cache lines to 203 cache lines.
+According to the nature of the change, to my understanding, it doesn`t
+introduce any negative impact in other scenario.
 
-An alternative approach could be separating `counts` and `masks` into 2
-vectors in cpupri_vec (counts[] and masks[]), and add two paddings:
-1. Between counts[0] and counts[1], since counts[0] is more frequently
-   updated than others.
-2. Between the two vectors, since counts[] is read-write access  while
-   masks[] is read access when it stores pointers.
-
-The alternative approach introduces the complexity of 31+/21- LoC changes,
-it achieves almost the same performance, at the same time, struct cpupri
-size is reduced from 26 cache lines to 21 cache lines.
+Note: This change increases the size of `root_domain` from 29 to 31 cache
+lines, it's considered acceptable since `root_domain` is a single global
+object.
 
 Appendix:
 1. Current layout of contended data structures:
@@ -202,41 +203,120 @@ Hitm%    Hitm%   L1 Hit%  offset  cycles  records
  1.42%    2.27%   19.35%  0x38    31110   211   cpupri_set
  1.42%    0.00%    1.61%  0x38    45035   31    cpupri_set
 
-3. Perf c2c report of cpupri's last cache line
+3. Perf c2c report of root_domain cache line 1:
 -------  -------  ------  ------  ------  ------  ------------------------
  Rmt      Lcl     Store   Data    Load    Total    Symbol
 Hitm%    Hitm%   L1 Hit%  offset  cycles  records
 -------  -------  ------  ------  ------  ------  ------------------------
- 149       43       41    0xff14d42c400e3ec0
+ 231       43       48    0xff14d42c400e3800
 -------  -------  ------  ------  ------  ------  ------------------------
- 8.72%   11.63%    0.00%  0x8     2001    165   cpupri_find_fitness
- 1.34%    2.33%    0.00%  0x18    1456    151   cpupri_find_fitness
- 8.72%    9.30%   58.54%  0x28    1744    263   cpupri_set
- 2.01%    4.65%   41.46%  0x28    1958    301   cpupri_set
- 1.34%    0.00%    0.00%  0x28    10580   6     cpupri_set
-69.80%   67.44%    0.00%  0x30    1754    347   cpupri_set
- 8.05%    4.65%    0.00%  0x30    2144    256   cpupri_set
+22.51%   18.60%    0.00%  0x4     5041    247   pull_rt_task
+ 5.63%    2.33%   45.83%  0x4     6995    315   dequeue_pushable_task
+ 3.90%    4.65%   54.17%  0x4     6587    370   enqueue_pushable_task
+ 0.43%    0.00%    0.00%  0x4     17111   4     enqueue_pushable_task
+ 0.43%    0.00%    0.00%  0x4     44062   4     dequeue_pushable_task
+32.03%   27.91%    0.00%  0x28    6393    285   enqueue_task_rt
+16.45%   27.91%    0.00%  0x28    5534    139   sched_balance_newidle
+14.72%   18.60%    0.00%  0x28    5287    110   dequeue_task_rt
+ 3.46%    0.00%    0.00%  0x28    2820    25    enqueue_task_fair
+ 0.43%    0.00%    0.00%  0x28    220     3     enqueue_task_stop
 
 Signed-off-by: Pan Deng <pan.deng@intel.com>
-Signed-off-by: Tianyou Li <tianyou.li@intel.com>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+Reviewed-by: Tianyou Li <tianyou.li@intel.com>
+Reviewed-by: Chen Yu <yu.c.chen@intel.com>
 ---
- kernel/sched/cpupri.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/sched.h | 52 +++++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
-index d6cba0020064..245b0fa626be 100644
---- a/kernel/sched/cpupri.h
-+++ b/kernel/sched/cpupri.h
-@@ -9,7 +9,7 @@
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 475bb5998295..dd3c79470bfc 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -968,24 +968,29 @@ struct root_domain {
+ 	cpumask_var_t		span;
+ 	cpumask_var_t		online;
  
- struct cpupri_vec {
- 	atomic_t		count;
--	cpumask_var_t		mask;
-+	cpumask_var_t		mask	____cacheline_aligned;
++	atomic_t		dlo_count;
++	struct dl_bw		dl_bw;
++	struct cpudl		cpudl;
++
++#ifdef HAVE_RT_PUSH_IPI
+ 	/*
+-	 * Indicate pullable load on at least one CPU, e.g:
+-	 * - More than one runnable task
+-	 * - Running task is misfit
++	 * For IPI pull requests, loop across the rto_mask.
+ 	 */
+-	bool			overloaded;
+-
+-	/* Indicate one or more CPUs over-utilized (tipping point) */
+-	bool			overutilized;
++	struct irq_work		rto_push_work;
++	raw_spinlock_t		rto_lock;
++	/* These are only updated and read within rto_lock */
++	int			rto_loop;
++	int			rto_cpu;
++	/* These atomics are updated outside of a lock */
++	atomic_t		rto_loop_next;
++	atomic_t		rto_loop_start;
++#endif
+ 
+ 	/*
+ 	 * The bit corresponding to a CPU gets set here if such CPU has more
+ 	 * than one runnable -deadline task (as it is below for RT tasks).
+ 	 */
+ 	cpumask_var_t		dlo_mask;
+-	atomic_t		dlo_count;
+-	struct dl_bw		dl_bw;
+-	struct cpudl		cpudl;
+ 
+ 	/*
+ 	 * Indicate whether a root_domain's dl_bw has been checked or
+@@ -995,32 +1000,29 @@ struct root_domain {
+ 	 * that u64 is 'big enough'. So that shouldn't be a concern.
+ 	 */
+ 	u64 visit_cookie;
++	struct cpupri		cpupri	____cacheline_aligned;
+ 
+-#ifdef HAVE_RT_PUSH_IPI
+ 	/*
+-	 * For IPI pull requests, loop across the rto_mask.
++	 * NULL-terminated list of performance domains intersecting with the
++	 * CPUs of the rd. Protected by RCU.
+ 	 */
+-	struct irq_work		rto_push_work;
+-	raw_spinlock_t		rto_lock;
+-	/* These are only updated and read within rto_lock */
+-	int			rto_loop;
+-	int			rto_cpu;
+-	/* These atomics are updated outside of a lock */
+-	atomic_t		rto_loop_next;
+-	atomic_t		rto_loop_start;
+-#endif
++	struct perf_domain __rcu *pd	____cacheline_aligned;
++
+ 	/*
+ 	 * The "RT overload" flag: it gets set if a CPU has more than
+ 	 * one runnable RT task.
+ 	 */
+ 	cpumask_var_t		rto_mask;
+-	struct cpupri		cpupri;
+ 
+ 	/*
+-	 * NULL-terminated list of performance domains intersecting with the
+-	 * CPUs of the rd. Protected by RCU.
++	 * Indicate pullable load on at least one CPU, e.g:
++	 * - More than one runnable task
++	 * - Running task is misfit
+ 	 */
+-	struct perf_domain __rcu *pd;
++	bool			overloaded	____cacheline_aligned;
++
++	/* Indicate one or more CPUs over-utilized (tipping point) */
++	bool			overutilized;
  };
  
- struct cpupri {
+ extern void init_defrootdomain(void);
 -- 
 2.43.5
 
