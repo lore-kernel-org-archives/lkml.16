@@ -1,117 +1,86 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp72.iad3b.emailsrvr.com (smtp72.iad3b.emailsrvr.com [146.20.161.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A030B29CB3E;
-	Mon,  7 Jul 2025 13:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D329C346
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751895649; cv=none; b=dVpCe4ZshQ8TylUGYbieDVZ07OEqEbH3rWzH2ltsAXQBB0tZkruM1T8QKlqnIzmD6ynl+m+enOPrVBGJtBK/yjLDtRtbkiw1okO6J0TSl2eSpiN2hpuTJ/TSdzQnMniijX8jNZYgVHdXDEnh/czVxmsviOBYl4SW9uuVFNysxcE=
+	t=1751895702; cv=none; b=VacjoCkTnmd5fRjXA+C7joIMQIX3d1VS2BQz4w9dlH2qti+XZqxq3XpbUC9sUjnyiURMrCgcAjFUXdmIXuiTzEY+ekP0uVoaBV1izhaA8cKMWymJTiq7N7nHWaBW/ngZqLFkEb6IdKgi1t5nmY13xB826ZmezlYQ0u0g6u7f2b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751895649; c=relaxed/simple;
-	bh=/X0ZP+cNnh5Q8n+OcF4lzhTGTx9HqGR+OxusKrEL+7E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pp8BVQe6v7OkfXzIC/4FcRGqQ3BVERsEXxMzJO/HCk8GnwAPgjBDRK7NE3mhnSI0vBqMZDtCAT2vF6+mf0eqmaAmTa/xRWF5KDjnSA3C5wTrZkz3R6l+MAKxTSycxjIYlu7Naj3Su3Darl9ZjNhCsdrDWI8/tCucHkW5KOKg8Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NAxQ9PCN; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751895702; c=relaxed/simple;
+	bh=F6TLP7RxSLc86v4OJcnDbSakXy8hmn4QJph5g43BHPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZbB3NBU7khZU/Cul0aMHEBnr/gsrfo0OmO/Xw13IobWYZiaueDtJOA6cTjBOSdyWsUxSxrFcYRLT/xFS9RFCcFevP7K3HoqxfFU1Otg1xGUUW+3roFDOVL/MTVMSZiMHeFF+zZo5ObjEW661dn23MEGB5duEd+MIyF0MAyFzVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=HeYnO4Dm; arc=none smtp.client-ip=146.20.161.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NAxQ9PCN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 598DC204CF;
-	Mon,  7 Jul 2025 13:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751895644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/X0ZP+cNnh5Q8n+OcF4lzhTGTx9HqGR+OxusKrEL+7E=;
-	b=NAxQ9PCNCt+QtxEXrgd1O3wUw/F9QcI/7qcGtmXqHkgJvGK0feOXHk4eXpW9bi9vEsS2y8
-	F0223UncwuuKPJnsJbdF60c63avxGrUbg3rLtHlzyrRkt4bkVtJ7nDFJDZw5j/NlcFkbU5
-	rxVxCgepMpR/hIR2NyCxFqEMBIARPsxyEi50UG4Hbt+vk+GpntHM1DpWW1ZFY3xLkaaXK5
-	AQqF2JnyNfiZ/GMRqXULtlAkTnK4aozssp1RSfEsYmwabK6ABBZQuzD1hWjX1eBzvRIFY7
-	YSnXVPKOsLFDKqI8L7rRIq4w5PvcFrMMfLvHlXLpn0tbYTUEjvwOac03DRDYvg==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th?=
- =?utf-8?Q?=C3=A9o?= Lebrun
- <theo.lebrun@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] MIPS: CPS: Improve
- mips_cps_first_online_in_cluster()
-In-Reply-To: <b3b3d5f5-e62f-4081-9fb0-a176a91361f2@app.fastmail.com>
-References: <20250704-smp_calib-v2-0-bade7e9c0463@bootlin.com>
- <20250704-smp_calib-v2-1-bade7e9c0463@bootlin.com>
- <b3b3d5f5-e62f-4081-9fb0-a176a91361f2@app.fastmail.com>
-Date: Mon, 07 Jul 2025 15:40:43 +0200
-Message-ID: <8734b8glus.fsf@BLaptop.bootlin.com>
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="HeYnO4Dm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1751895279;
+	bh=F6TLP7RxSLc86v4OJcnDbSakXy8hmn4QJph5g43BHPY=;
+	h=From:To:Subject:Date:From;
+	b=HeYnO4Dm8Xhd+Bbh2iV34+oBhCqFY7iPzGPb0/ucHQoNVAAaXyxYYOJVmeAzXS/ih
+	 vTT4TX2T5gElT0fbOouzTBgKv2xCMEcSkSv2e289FFQh6PiqtlTE/nRumK+WX/nNu2
+	 xcwusHP1gmY1YCAoYvE3vvtHU9cxeNnvyb1kL75I=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp18.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 11B5AE021F;
+	Mon,  7 Jul 2025 09:34:38 -0400 (EDT)
+From: Ian Abbott <abbotti@mev.co.uk>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH] comedi: pcl812: Fix bit shift out of bounds
+Date: Mon,  7 Jul 2025 14:34:29 +0100
+Message-ID: <20250707133429.73202-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefudelgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffffkgggtgfesthhqredttddtjeenucfhrhhomhepifhrvghgohhrhicuvefngffogffpvfcuoehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefghfegvdehgfdtjedvtefhvdeikefgteeuhfeukeettefgvdeuueettddtkeegveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeduudgujeemkeefieejmeeitgdtvdemsghfieejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeduudgujeemkeefieejmeeitgdtvdemsghfieejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepvhhlrggui
- hhmihhrrdhkohhnughrrghtihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtrgiffhhikhdrsggrhihouhhksehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: 1e8ffcc9-0a2f-41b8-877b-4512870c96d1-1-1
 
-Hello Jiaxun,
+When checking for a supported IRQ number, the following test is used:
 
-> =E5=9C=A82025=E5=B9=B47=E6=9C=884=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=
-=8D=884:13=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
->> The initial implementation of this function goes through all the CPUs
->> in a cluster to determine if the current CPU is the only one
->> running. This process occurs every time the function is called.
->>
->> However, during boot, we already perform this task, so let's take
->> advantage of this opportunity to create and fill a CPU bitmask that
->> can be easily and efficiently used later.
->>
->> This requires creating a single CPU bitmask per cluster, which is why
->> it's essential to know how many clusters can be utilized. The default
->> setting is 4 clusters, but this value can be changed when configuring
->> the kernel or even customized for a given SoC family.
->
-> Hmm, I think we should avoid this sort of random limitation.
+	if ((1 << it->options[1]) & board->irq_bits) {
 
-It's not great, but it seemed like the best approach to keep optimized
-boot times and memory consumption.
+However, `it->options[i]` is an unchecked `int` value from userspace, so
+the shift amount could be negative or out of bounds.  Fix the test by
+requiring `it->options[1]` to be within bounds before proceeding with
+the original test.  Valid `it->options[1]` values that select the IRQ
+will be in the range [1,15]. The value 0 explicitly disables the use of
+interrupts.
 
->
-> You can actually store per cluster cpumask_var_t into `mips_cps_cluster_b=
-ootcfg`,
-> which is allocated in cps_prepare_cpus(), and generate cpumask just
-> there.
->
-> It should be pretty straightforward to handle.
->
+Reported-by: syzbot+32de323b0addb9e114ff@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=32de323b0addb9e114ff
+Fixes: fcdb427bc7cf ("Staging: comedi: add pcl821 driver")
+Cc: <stable@vger.kernel.org> # 5.13+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+---
+Patch does not apply cleanly to longterm kernels 5.4.x and 5.10.x.
+---
+ drivers/comedi/drivers/pcl812.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The drawback of this option is that cps_prepare_cpus() is called after
-the building of the topology. However, I am trying to see how to insert
-this in the loop already used in cps_prepare_cpus().
+diff --git a/drivers/comedi/drivers/pcl812.c b/drivers/comedi/drivers/pcl812.c
+index 0df639c6a595..abca61a72cf7 100644
+--- a/drivers/comedi/drivers/pcl812.c
++++ b/drivers/comedi/drivers/pcl812.c
+@@ -1149,7 +1149,8 @@ static int pcl812_attach(struct comedi_device *dev, struct comedi_devconfig *it)
+ 		if (IS_ERR(dev->pacer))
+ 			return PTR_ERR(dev->pacer);
+ 
+-		if ((1 << it->options[1]) & board->irq_bits) {
++		if (it->options[1] > 0 && it->options[1] < 16 &&
++		    (1 << it->options[1]) & board->irq_bits) {
+ 			ret = request_irq(it->options[1], pcl812_interrupt, 0,
+ 					  dev->board_name, dev);
+ 			if (ret == 0)
+-- 
+2.47.2
 
-Gregory
-
-> Thanks!
->
->>
->> This patch modifies the function to allow providing the first
->> available online CPU when one already exists, which is necessary for
->> delay CPU calibration optimization.
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
-> [...]
-> --=20
-> - Jiaxun
-
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
