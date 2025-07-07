@@ -1,319 +1,88 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7D52DFA44;
-	Mon,  7 Jul 2025 14:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF30A2D838C;
+	Mon,  7 Jul 2025 14:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898235; cv=none; b=IBTD/R34BvbnXcKu8ZG7d2lFyF+bPhzGMOy0Ii0MH0Np1olj7eXiDPNM2sj96lDJpDC89zYhYQFQJFrvPT2ufNweD7hssRmgGNDZDFC8i73UnU1HAL5ahqbu5km5xMUNNj8cOgVlumnMzbTikVbAbqgk93pIa/e8xXxlxmjb1hg=
+	t=1751898366; cv=none; b=I/ovZabVZok7Jlv9KBdx8cu0rusAoUEAgOFlzr4ieggz0mmyDSG+o6Pyh3aNlOipq1gByg5E+PHRPxteZfrvIiu6tWoOtDGyWEpVWhj1UIhB5SVpH7Pyw8SH2Mr1smr9vpTY+lzxDXAALhlAtB0Tk78d16KtyHese69yQCNkrDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898235; c=relaxed/simple;
-	bh=DRCKQK856vY/XhqC271b6reyPd1XmuXWY0VkCfRxp/o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rmtPBsjTBJ5ZodW1/Z+wDKPClIc4WWkeFa1Rcpt63tw5CPMD3qUFURYcKjyqLNJTl46B0U9AyEpagxKyBupBm8VctvKWEK95oe+lDEEB2wC2QwSb4AqAMOZDhF8uBlK8bbaT4wzPW2o8+TtnkQHqoUb+pZGzrAczTKSN1lOpTCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=iZsZqnCv; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1751898366; c=relaxed/simple;
+	bh=OBRjOpjOD3WykltUSQMBZISNgt5fgN/t8xYyHJ16hjA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lEgW+oV+yh6pNHGzUnwg0zwsk2iyHeuRQ5gHJuk/XRpwCf1A/Qo5FCSmR/FHGsvOW54h7uwMzfo4FmmNo5dr8hmpCMIzXP/+4QZ4a3jLCNHxFSGlEm5999miWSaz3lGjjyh57nJjz4n7zNV34hhHtsVJzf3vqTG5bsTBy9PQssg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtrrWXCw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="iZsZqnCv"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bbRLY0CMSz9tGx;
-	Mon,  7 Jul 2025 16:23:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1751898229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dioc976QRUw5bLt02/DkSyYspIHpJxyFl5YdOlbtU3Y=;
-	b=iZsZqnCvOLftVzN22H/zGurFF1wZNHMczIdkygQCJEd73NIfq19mZQOw2buUf8ZOB+l9DD
-	3+VKM3RZy1Uwkfx6NLJj4xUt+wfX8tBMN8TqVxUe/4nvqz8+nO63NDGZECYNPV0f62MM5e
-	0SszRUpsSD18v6VAsrpMdeT9dpNkLXC4ZgB15DnLbcvsaJLwg3cEmKq7jkDOSaE5CUdc4b
-	5mZGOPtBUjdj5kB8M7mujrQm1CC9sB/njlYbGTr0vHhNmySrw626BXHizNDjdkhrXSDJzB
-	7Qvc/7rvhNyx3qyevTice33nVlvjV0NdkdvieOYiVD+dLl6G4mH6Anv0UvV/qQ==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v2 3/5] mm: add static PMD zero page
-Date: Mon,  7 Jul 2025 16:23:17 +0200
-Message-ID: <20250707142319.319642-4-kernel@pankajraghav.com>
-In-Reply-To: <20250707142319.319642-1-kernel@pankajraghav.com>
-References: <20250707142319.319642-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtrrWXCw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426CBC4CEE3;
+	Mon,  7 Jul 2025 14:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751898365;
+	bh=OBRjOpjOD3WykltUSQMBZISNgt5fgN/t8xYyHJ16hjA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FtrrWXCwihQc4HhxP+7uIfFuqgZkW/OrkvocN04uMru1qFolF8COfcG8n9z/7HEu4
+	 k1YNKAH+obsa5iDJU39RlkYvJYkhg08KPQC6u3/O3CM1+P+UPNIBKaqPCDtZXJNgIo
+	 Ih+9l7xLkH3dXl2QchCsdE9z9HR8PSENbtwZ4jBs1VUdf7VJ2tWbMAEvUIPuJHzFNn
+	 T9K7x61OmwJW8pNrYTbukg9jEh3faZkkvUdI9RKAjwwMxESEBMZGmg+mU0b/5ScHOL
+	 0wtjO2m1kt7vOnsb78t0dP0InmhzIcfsu3o3/iWZC+6yCTzBDrn0I4n13PNyZMdT3F
+	 P9Kxc/F81DxWg==
+Message-ID: <b78fbad7-b7e3-454d-be67-03777ba3daa4@kernel.org>
+Date: Mon, 7 Jul 2025 16:26:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] drm/nouveau: Remove waitque for sched teardown
+To: phasta@kernel.org
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250707134221.34291-2-phasta@kernel.org>
+ <20250707134221.34291-9-phasta@kernel.org>
+ <89b0a4bf-2a66-4610-93d2-8f2f096592a3@kernel.org>
+ <7d5137a8c71c525c4e806f8ff06102d2e3a47ccc.camel@mailbox.org>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <7d5137a8c71c525c4e806f8ff06102d2e3a47ccc.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+On 7/7/25 3:54 PM, Philipp Stanner wrote:
+> On Mon, 2025-07-07 at 15:47 +0200, Danilo Krummrich wrote:
+>> On 7/7/25 3:42 PM, Philipp Stanner wrote:
+>>> struct nouveau_sched contains a waitque needed to prevent
+>>> drm_sched_fini() from being called while there are still jobs
+>>> pending.
+>>> Doing so so far would have caused memory leaks.
+>>>
+>>> With the new memleak-free mode of operation switched on in
+>>> drm_sched_fini() by providing the callback
+>>> nouveau_sched_fence_context_kill() the waitque is not necessary
+>>> anymore.
+>>>
+>>> Remove the waitque.
+>>>
+>>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>>
+>> Doesn't this break the driver until fixed up by the subsequent patch?
+>>
+> 
+> Did you mean to answer to patch 6?
+> 
+> Patch 6 implements the cancel_job() callback for nouveau, which makes
+> sure the (still existing) waitque will never block. The, now redundant,
+> waitque then gets removed in patch 7.
 
-There are many places in the kernel where we need to zeroout larger
-chunks but the maximum segment we can zeroout at a time by ZERO_PAGE
-is limited by PAGE_SIZE.
+Yup, I mixed up the order on my end.
 
-This is especially annoying in block devices and filesystems where we
-attach multiple ZERO_PAGEs to the bio in different bvecs. With multipage
-bvec support in block layer, it is much more efficient to send out
-larger zero pages as a part of single bvec.
-
-This concern was raised during the review of adding LBS support to
-XFS[1][2].
-
-Usually huge_zero_folio is allocated on demand, and it will be
-deallocated by the shrinker if there are no users of it left. At moment,
-huge_zero_folio infrastructure refcount is tied to the process lifetime
-that created it. This might not work for bio layer as the completitions
-can be async and the process that created the huge_zero_folio might no
-longer be alive.
-
-Add a config option STATIC_PMD_ZERO_PAGE that will always allocate
-the huge_zero_folio, and it will never be freed. This makes using the
-huge_zero_folio without having to pass any mm struct and does not tie
-the lifetime of the zero folio to anything.
-
-memblock is used to allocated this PMD zero page during early boot.
-
-If STATIC_PMD_ZERO_PAGE config option is enabled, then
-mm_get_huge_zero_folio() will simply return this page instead of
-dynamically allocating a new PMD page.
-
-As STATIC_PMD_ZERO_PAGE does not depend on THP, declare huge_zero_folio
-and huge_zero_pfn outside the THP config.
-
-[1] https://lore.kernel.org/linux-xfs/20231027051847.GA7885@lst.de/
-[2] https://lore.kernel.org/linux-xfs/ZitIK5OnR7ZNY0IG@infradead.org/
-
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- include/linux/mm.h | 25 ++++++++++++++++++++++++-
- mm/Kconfig         |  9 +++++++++
- mm/huge_memory.c   | 24 ++++++++++++++++++++----
- mm/memory.c        | 25 +++++++++++++++++++++++++
- mm/mm_init.c       |  1 +
- 5 files changed, 79 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c8fbeaacf896..428fe6d36b3c 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4018,10 +4018,19 @@ static inline bool vma_is_special_huge(const struct vm_area_struct *vma)
- 
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_HUGETLBFS */
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
-+extern void __init static_pmd_zero_init(void);
-+#else
-+static inline void __init static_pmd_zero_init(void)
-+{
-+	return;
-+}
-+#endif
-+
- extern struct folio *huge_zero_folio;
- extern unsigned long huge_zero_pfn;
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- static inline bool is_huge_zero_folio(const struct folio *folio)
- {
- 	return READ_ONCE(huge_zero_folio) == folio;
-@@ -4032,9 +4041,23 @@ static inline bool is_huge_zero_pmd(pmd_t pmd)
- 	return pmd_present(pmd) && READ_ONCE(huge_zero_pfn) == pmd_pfn(pmd);
- }
- 
-+#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
-+static inline struct folio *mm_get_huge_zero_folio(struct mm_struct *mm)
-+{
-+	return READ_ONCE(huge_zero_folio);
-+}
-+
-+static inline void mm_put_huge_zero_folio(struct mm_struct *mm)
-+{
-+	return;
-+}
-+
-+#else
- struct folio *mm_get_huge_zero_folio(struct mm_struct *mm);
- void mm_put_huge_zero_folio(struct mm_struct *mm);
- 
-+#endif /* CONFIG_STATIC_PMD_ZERO_PAGE */
-+
- #else
- static inline bool is_huge_zero_folio(const struct folio *folio)
- {
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 781be3240e21..89d5971cf180 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -826,6 +826,15 @@ config ARCH_WANTS_THP_SWAP
- config MM_ID
- 	def_bool n
- 
-+config STATIC_PMD_ZERO_PAGE
-+	bool "Allocate a PMD page for zeroing"
-+	help
-+	  Typically huge_zero_folio, which is a PMD page of zeroes, is allocated
-+	  on demand and deallocated when not in use. This option will
-+	  allocate a PMD sized zero page during early boot and huge_zero_folio will
-+	  use it instead allocating dynamically.
-+	  Not suitable for memory constrained systems.
-+
- menuconfig TRANSPARENT_HUGEPAGE
- 	bool "Transparent Hugepage Support"
- 	depends on HAVE_ARCH_TRANSPARENT_HUGEPAGE && !PREEMPT_RT
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 101b67ab2eb6..c12ca7134e88 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -75,9 +75,6 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
- 					 struct shrink_control *sc);
- static bool split_underused_thp = true;
- 
--static atomic_t huge_zero_refcount;
--struct folio *huge_zero_folio __read_mostly;
--unsigned long huge_zero_pfn __read_mostly = ~0UL;
- unsigned long huge_anon_orders_always __read_mostly;
- unsigned long huge_anon_orders_madvise __read_mostly;
- unsigned long huge_anon_orders_inherit __read_mostly;
-@@ -208,6 +205,23 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
- 	return orders;
- }
- 
-+#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
-+static int huge_zero_page_shrinker_init(void)
-+{
-+	return 0;
-+}
-+
-+static void huge_zero_page_shrinker_exit(void)
-+{
-+	return;
-+}
-+#else
-+
-+static struct shrinker *huge_zero_page_shrinker;
-+static atomic_t huge_zero_refcount;
-+struct folio *huge_zero_folio __read_mostly;
-+unsigned long huge_zero_pfn __read_mostly = ~0UL;
-+
- static bool get_huge_zero_page(void)
- {
- 	struct folio *zero_folio;
-@@ -288,7 +302,6 @@ static unsigned long shrink_huge_zero_page_scan(struct shrinker *shrink,
- 	return 0;
- }
- 
--static struct shrinker *huge_zero_page_shrinker;
- static int huge_zero_page_shrinker_init(void)
- {
- 	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
-@@ -307,6 +320,7 @@ static void huge_zero_page_shrinker_exit(void)
- 	return;
- }
- 
-+#endif
- 
- #ifdef CONFIG_SYSFS
- static ssize_t enabled_show(struct kobject *kobj,
-@@ -2843,6 +2857,8 @@ static void __split_huge_zero_page_pmd(struct vm_area_struct *vma,
- 	pte_t *pte;
- 	int i;
- 
-+	// FIXME: can this be called with static zero page?
-+	VM_BUG_ON(IS_ENABLED(CONFIG_STATIC_PMD_ZERO_PAGE));
- 	/*
- 	 * Leave pmd empty until pte is filled note that it is fine to delay
- 	 * notification until mmu_notifier_invalidate_range_end() as we are
-diff --git a/mm/memory.c b/mm/memory.c
-index b0cda5aab398..42c4c31ad14c 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -42,6 +42,7 @@
- #include <linux/kernel_stat.h>
- #include <linux/mm.h>
- #include <linux/mm_inline.h>
-+#include <linux/memblock.h>
- #include <linux/sched/mm.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/sched/task.h>
-@@ -159,6 +160,30 @@ static int __init init_zero_pfn(void)
- }
- early_initcall(init_zero_pfn);
- 
-+#ifdef CONFIG_STATIC_PMD_ZERO_PAGE
-+struct folio *huge_zero_folio __read_mostly = NULL;
-+unsigned long huge_zero_pfn __read_mostly = ~0UL;
-+
-+void __init static_pmd_zero_init(void)
-+{
-+	void *alloc = memblock_alloc(PMD_SIZE, PAGE_SIZE);
-+
-+	if (!alloc)
-+		return;
-+
-+	huge_zero_folio = virt_to_folio(alloc);
-+	huge_zero_pfn = page_to_pfn(virt_to_page(alloc));
-+
-+	__folio_set_head(huge_zero_folio);
-+	prep_compound_head((struct page *)huge_zero_folio, PMD_ORDER);
-+	/* Ensure zero folio won't have large_rmappable flag set. */
-+	folio_clear_large_rmappable(huge_zero_folio);
-+	folio_zero_range(huge_zero_folio, 0, PMD_SIZE);
-+
-+	return;
-+}
-+#endif
-+
- void mm_trace_rss_stat(struct mm_struct *mm, int member)
- {
- 	trace_rss_stat(mm, member);
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index f2944748f526..56d7ec372af1 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -2765,6 +2765,7 @@ void __init mm_core_init(void)
- 	 */
- 	kho_memory_init();
- 
-+	static_pmd_zero_init();
- 	memblock_free_all();
- 	mem_init();
- 	kmem_cache_init();
--- 
-2.49.0
-
+Acked-by: Danilo Krummrich <dakr@kernel.org>
