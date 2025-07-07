@@ -1,161 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492C4194124;
-	Mon,  7 Jul 2025 13:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2631A1E22FC;
+	Mon,  7 Jul 2025 13:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751895336; cv=none; b=NHdIEWR1VMNTg/U6xPPkicbjJqffj1ID54H+g1IqTOPT4fKV5+TTw6nyx9rP5DqA424kdFsCXkNawvPovlTv3nauA5et2kSv1nprYtxqDdufKOvymh/26ZKoBtVwVZXmUk/rVGYlnQgtQRQDRHINHvzB3YKMpj6M+CCj29yhyS0=
+	t=1751895374; cv=none; b=fCUSl2eZeOBInNaQiL/r8j9liHyMUu3ykyEbuwSyul/IdBsg91OtbEo6ZNLbIc8KEyAY4m3B/0FiLAFudxNFVnVINz3+H8Z4hsOQcX4bO+TazE473hrxJF5fzAPPvJ+JHm5VLf9kJCQ+1rCRthbJh8YuZzzMDSqKLpS2uSZR5ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751895336; c=relaxed/simple;
-	bh=D92G0xCOQXWhfbZv1YtPKsB7cSPH0M+0cxUpw0TZ+vw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=E/0pq+H+1a2xRkhSx+2SrZxQccC78eClUkkjcz/VAVgwKJWSxZa6Bp5flh0DnfUlOHyHQi5bakP/b7XyNfDEJyEgHg5NSY/fCVDuSqWLU4KClMaoopuEg/JE1PZpyZN/9peT0e/Rk+juGIT7e8ZHsAR2Qp9TN4irIAPujO/HhRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjqnIHLf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751895374; c=relaxed/simple;
+	bh=O377eaO+Jlj86ZSB2RpCzQcB8R9z4Xe0q5jCGof+Qtk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rR6TrOD5QMBG62B5+w0TVDPhVdiakKBs3YgR+xwbQ6RUkMi32dkTOJhYdNWMXE+jg9BL6F/cY+lW67tFcYNDnf7R4VUaZstpOskNzFjmrXVcIiODv9IR7J3FNZUyzH6YX2sNlePwdVg3IKP3y1unKf630tDNF1IF10yQyw8o188=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAwxzTh1; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjqnIHLf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F34C4CEE3;
-	Mon,  7 Jul 2025 13:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751895335;
-	bh=D92G0xCOQXWhfbZv1YtPKsB7cSPH0M+0cxUpw0TZ+vw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=tjqnIHLfO2zMRNVEqE6UzccDAzmhXKnynBa0P0cDpTRiyvXE2Cvt1Trgkmj3gVXed
-	 4FJs1Gioht57QKHJKXoP47WzPAhvG3pkmvv3Aptvi4B616HwUAT2Tg8eWZgZvv4GZd
-	 Ph94s/Rx87gR3SBl9ct0Dep9ipYKrEtvNXV//Q0BYPPzqPBRVSAbXVcdTqRiA9qsbp
-	 /CkwZni+RkpioI3pNUPbeI4281ipK5xH5SUZUwo0fyFgtt29HCs/i7c5bFqWbZWsEg
-	 F/qWwhbUFzJyU0Tb6CfUEL8H87rZaT5ienE9P+rbuPV1k5iWYu333+ufgIMP39KSbI
-	 Xuk6gK6P9EHtQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,
-  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  Alice Ryhl <aliceryhl@google.com>,  Masahiro Yamada
- <masahiroy@kernel.org>,  Nathan Chancellor <nathan@kernel.org>,  Luis
- Chamberlain <mcgrof@kernel.org>,  Danilo Krummrich <dakr@kernel.org>,
-  Benno Lossin <lossin@kernel.org>,  Nicolas Schier
- <nicolas.schier@linux.dev>,  Trevor Gross <tmgross@umich.edu>,  Adam
- Bratschi-Kaye <ark.email@gmail.com>,  rust-for-linux@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-kbuild@vger.kernel.org,  Petr Pavlu
- <petr.pavlu@suse.com>,  Sami Tolvanen <samitolvanen@google.com>,  Daniel
- Gomez <da.gomez@samsung.com>,  Simona Vetter <simona.vetter@ffwll.ch>,
-  Greg KH <gregkh@linuxfoundation.org>,  Fiona Behrens <me@kloenk.dev>,
-  Daniel Almeida <daniel.almeida@collabora.com>,
-  linux-modules@vger.kernel.org
-Subject: Re: [PATCH v15 1/7] rust: sync: add `SetOnce`
-In-Reply-To: <20250707-module-params-v3-v15-1-c1f4269a57b9@kernel.org>
-	(Andreas Hindborg's message of "Mon, 07 Jul 2025 15:29:05 +0200")
-References: <20250707-module-params-v3-v15-0-c1f4269a57b9@kernel.org>
-	<20250707-module-params-v3-v15-1-c1f4269a57b9@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Mon, 07 Jul 2025 15:35:25 +0200
-Message-ID: <87tt3op1ia.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAwxzTh1"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso6028987a12.1;
+        Mon, 07 Jul 2025 06:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751895371; x=1752500171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B67QLvyHZDkG3dCW4xDkICWa2oqhwCHUYXHYCu0rbCU=;
+        b=EAwxzTh1Xn7XfEbAzHaOZtxe9G1IpVeZvi/qJGpYaHjmG7h4w9qeNeUrFt4RW/g7+y
+         KNkq1WceyAM2kjZL4evwjw70CnG9GQNyUBM7GW1/U+ukrzDC5DXKwFkVna/JssTmZnT9
+         zLeyoxE2XQxI3ACksvdGowUIskhdPol+hZenepBHd0Q6DMhBh3pQeGWQcBtvzRTWmYsk
+         67aU5xrRf7wqHLS9An70b+7ALQRHFFzgWyBxNsIb9J4QzC13mLgoyTbIz6UgUzQXloip
+         ZSNcjYRHgN8zA26kSF/kVZXTjD5WCSx074ihrjPMxog9WcrWKZiGA54g+VKQF7aA8sxJ
+         3EEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751895371; x=1752500171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B67QLvyHZDkG3dCW4xDkICWa2oqhwCHUYXHYCu0rbCU=;
+        b=Cml52tiOyH5yAr09JQR11baxE6QAz7aoZ+ywlCkgIX2s2S4XITCxbGI21rI8/amapB
+         1zhcyQoQ5ZS7G3z1ZG6BmFKPQJfqMke5F7loj6TUgx94zZlO9FMM+tk7Xh+XCERLZZRa
+         NP/nG1Wnz6MbFY2uICmSrKS2Rj352BlBCArcfj1ypaaL1fgLgaaLiWjfMy7gssdYKNvk
+         GL+n5fW9Vi8hUOgUZZwWNBiJE+bqHLoVM0j3qIbwwyDPA/Us1xKBkuf2389JJm/mtbtC
+         TuB7glrPnzQxnHyV5jhlsEzXN/E+eEhQGHhn50X+/PdAVX9vtSwD+2PJBZI14tojq+RC
+         7bfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwgvkFOPhZodGrA61+zlqxfvn4+Gnu59SlaYVMxtUO884W8JJ2DdD6xBk2tcskKwlTiECGkEXu+S4NOqRu@vger.kernel.org, AJvYcCXdejgPR5oCjdsJnUjv+Dxdzz2tny9LuO3EmJPcSt22zdk/dM6ykXszD6Tcc6njS7sxIC4N84T2FHRYcvq/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhI4KK0P442SJE2/vfaMLIB7DyhTh6CIslMlzcNEKzCX4vlinD
+	8l/yGPh5PYiv5WP5A0T+XHG9n2SRhcQClzn5w1GEIGE4oBxUi6DJthOV5rw5IzduLZWGs8s108+
+	cYXY1RFS5hRU+JFAFgBa6OK5YFiO3+2fKg6Fv
+X-Gm-Gg: ASbGnct4LP3g6lGUc+abrHbA3xBPkCzmerH0BQ+7ivn69fkqAxyZdzFY+VQ1TEDb+UH
+	5slBbarU6ik8tTOCY3+qAUws/xKUR59wOYcFUCczI+K8vykXv1rsQLww0l8QcUzIf+aCyr6N3o/
+	B2ITnCLwfX303Ff9SucKMfSGpGxedcflcfvkahj+4Lq7VGpFUA4/2J1mDzR7mxyqbzkawhZBIPo
+	Hb5x8JzJk97
+X-Google-Smtp-Source: AGHT+IE3xKDRxiceWfgDhOqdfWXtjxPAUKmvoHmxd7No4ahz6Uels53hHP1g6tE+28lVM037geC6nzs3mFbTA+YYN6U=
+X-Received: by 2002:a05:6402:280d:b0:607:19a6:9f1d with SMTP id
+ 4fb4d7f45d1cf-60ff388d517mr7405843a12.14.1751895371254; Mon, 07 Jul 2025
+ 06:36:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250703064738.2631-1-lirongqing@baidu.com>
+In-Reply-To: <20250703064738.2631-1-lirongqing@baidu.com>
+From: Stefan Hajnoczi <stefanha@gmail.com>
+Date: Mon, 7 Jul 2025 09:35:58 -0400
+X-Gm-Features: Ac12FXwqf0z-MDIQB81h2vm6zchf-sItAwZG0CkAA6vlslCY0d5FQLuB129JRRE
+Message-ID: <CAJSP0QUcOr=1SZiMSaFXP=kh5RpAYjduy6D73QEQu9JnV1ua+Q@mail.gmail.com>
+Subject: Re: [PATCH] virtio_fs: fix the hash table using in virtio_fs_enqueue_req()
+To: lirongqing <lirongqing@baidu.com>
+Cc: vgoyal@redhat.com, stefanha@redhat.com, miklos@szeredi.hu, 
+	eperezma@redhat.com, virtualization@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fushuai Wang <wangfushuai@baidu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Andreas Hindborg <a.hindborg@kernel.org> writes:
-
-> Introduce the `SetOnce` type, a container that can only be written once.
-> The container uses an internal atomic to synchronize writes to the internal
-> value.
+On Thu, Jul 3, 2025 at 2:48=E2=80=AFAM lirongqing <lirongqing@baidu.com> wr=
+ote:
 >
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> From: Li RongQing <lirongqing@baidu.com>
+>
+> The original commit be2ff42c5d6e ("fuse: Use hash table to link
+> processing request") converted fuse_pqueue->processing to a hash table,
+> but virtio_fs_enqueue_req() was not updated to use it correctly.
+> So use fuse_pqueue->processing as a hash table, this make the code
+> more coherent
+>
+> Co-developed-by: Fushuai Wang <wangfushuai@baidu.com>
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 > ---
->  rust/kernel/sync.rs          |   2 +
->  rust/kernel/sync/set_once.rs | 125 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 127 insertions(+)
+>  fs/fuse/dev.c       | 1 +
+>  fs/fuse/virtio_fs.c | 6 ++++--
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
 >
-> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-> index 81e3a806e57e2..13e6bc7fa87ac 100644
-> --- a/rust/kernel/sync.rs
-> +++ b/rust/kernel/sync.rs
-> @@ -18,6 +18,7 @@
->  mod locked_by;
->  pub mod poll;
->  pub mod rcu;
-> +mod set_once;
->  
->  pub use arc::{Arc, ArcBorrow, UniqueArc};
->  pub use completion::Completion;
-> @@ -26,6 +27,7 @@
->  pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
->  pub use lock::spinlock::{new_spinlock, SpinLock, SpinLockGuard};
->  pub use locked_by::LockedBy;
-> +pub use set_once::SetOnce;
->  
->  /// Represents a lockdep class. It's a wrapper around C's `lock_class_key`.
->  #[repr(transparent)]
-> diff --git a/rust/kernel/sync/set_once.rs b/rust/kernel/sync/set_once.rs
-> new file mode 100644
-> index 0000000000000..e1e31f5faed09
-> --- /dev/null
-> +++ b/rust/kernel/sync/set_once.rs
-> @@ -0,0 +1,125 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! A container that can be initialized at most once.
-> +
-> +use super::atomic::ordering::Acquire;
-> +use super::atomic::ordering::Relaxed;
-> +use super::atomic::ordering::Release;
-> +use super::atomic::Atomic;
-> +use core::ptr::drop_in_place;
-> +use kernel::types::Opaque;
-> +
-> +/// A container that can be populated at most once. Thread safe.
-> +///
-> +/// Once the a [`SetOnce`] is populated, it remains populated by the same object for the
-> +/// lifetime `Self`.
-> +///
-> +/// # Invariants
-> +///
-> +/// - `init` may only increase in value.
-> +/// - `init` may only assume values in the range `0..=2`.
-> +/// - `init == 0` if and only if the container is empty.
-> +/// - `init == 1` if and only if being initialized.
-> +/// - `init == 2` if and only if the container is populated and valid for shared access.
-> +///
-> +/// # Example
-> +///
-> +/// ```
-> +/// # use kernel::sync::SetOnce;
-> +/// let value = SetOnce::new();
-> +/// assert_eq!(None, value.as_ref());
-> +///
-> +/// let status = value.populate(42u8);
-> +/// assert_eq!(true, status);
-> +/// assert_eq!(Some(&42u8), value.as_ref());
-> +/// assert_eq!(Some(42u8), value.copy());
-> +///
-> +/// let status = value.populate(101u8);
-> +/// assert_eq!(false, status);
-> +/// assert_eq!(Some(&42u8), value.as_ref());
-> +/// assert_eq!(Some(42u8), value.copy());
-> +/// ```
-> +pub struct SetOnce<T> {
-> +    init: Atomic<u32>,
-> +    value: Opaque<T>,
-> +}
-> +
-> +impl<T> Default for SetOnce<T> {
-> +    fn default() -> Self {
-> +        Self::new()
-> +    }
-> +}
-> +
-> +// TODO: change names
-
-I just saw that this line decided to stick around, that was obviously
-not intentional. Just disregard this line.
-
-
-Best regards,
-Andreas Hindborg
-
-
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index e80cd8f..4659bc8 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -322,6 +322,7 @@ unsigned int fuse_req_hash(u64 unique)
+>  {
+>         return hash_long(unique & ~FUSE_INT_REQ_BIT, FUSE_PQ_HASH_BITS);
+>  }
+> +EXPORT_SYMBOL_GPL(fuse_req_hash);
+>
+>  /*
+>   * A new request is available, wake fiq->waitq
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index b8a99d3..d050470 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/cleanup.h>
+>  #include <linux/uio.h>
+>  #include "fuse_i.h"
+> +#include "fuse_dev_i.h"
+>
+>  /* Used to help calculate the FUSE connection's max_pages limit for a re=
+quest's
+>   * size. Parts of the struct fuse_req are sliced into scattergather list=
+s in
+> @@ -1382,7 +1383,7 @@ static int virtio_fs_enqueue_req(struct virtio_fs_v=
+q *fsvq,
+>         unsigned int out_sgs =3D 0;
+>         unsigned int in_sgs =3D 0;
+>         unsigned int total_sgs;
+> -       unsigned int i;
+> +       unsigned int i, hash;
+>         int ret;
+>         bool notify;
+>         struct fuse_pqueue *fpq;
+> @@ -1442,8 +1443,9 @@ static int virtio_fs_enqueue_req(struct virtio_fs_v=
+q *fsvq,
+>
+>         /* Request successfully sent. */
+>         fpq =3D &fsvq->fud->pq;
+> +       hash =3D fuse_req_hash(req->in.h.unique);
+>         spin_lock(&fpq->lock);
+> -       list_add_tail(&req->list, fpq->processing);
+> +       list_add_tail(&req->list, &fpq->processing[hash]);
+>         spin_unlock(&fpq->lock);
+>         set_bit(FR_SENT, &req->flags);
+>         /* matches barrier in request_wait_answer() */
+> --
+> 2.9.4
+>
+>
