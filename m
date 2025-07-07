@@ -1,205 +1,325 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012030.outbound.protection.outlook.com [52.101.126.30])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7EE1E22FC;
-	Mon,  7 Jul 2025 14:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898178; cv=fail; b=e5PMO/QJ/qh4hzRApbimWIibbXLKXgtsu2LkKIBKEkt3y7ToAGVzXXWqLWgeOPrF8u7rIjTSf+O/GdiEZq1i2aLUPiO0ZVbzyNL2M+nDmxSn4x/y2k6T2sy8NoqSVTQ9AHaq/VD104hiumMgjDC1K4Fd7p+rPibeTsifxWDdgBo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898178; c=relaxed/simple;
-	bh=3BabiXKC12eD3Ujx9vWvlgoFyHWbfIHq0D5na9Btb5U=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qkSRRuwVck8/nwgnbGXjg3TiI9LmRib/Wg74gUnGIMOlermWYcrzDa7/k+Q72BUUipPxJ4JU844txtSrF3XwGmXI1cOE4OEBAsh5m4vWk/vNf2WKZ90n0XCB9NtAjPv1cGOsXG5fRuWM++cRWWjeSr0kHFXS1ChvWJYBvKrwypU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=mB24d1qT; arc=fail smtp.client-ip=52.101.126.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="mB24d1qT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aAAJR6kFRARPxhTXx6SBfm7qzVvPt+4A5Gt0nxSFk9rvN9OpyTYXjF/Tm/M6DFMEG3+nYAtl/RZ0glpi5tnUokWrSc1SgPtlkJQaPATuekesFJMMzPThpGn1zWa09naNFz0+uYHgpQ+GKTpmFcJl7NU7kMbH7gOAR94coR2ynJHZ0yWJWEPPJ7FHr5OGzu77ymzmAzMuOyu7dsZOUo3Bo9YQwBzdadFCX20O0+IJifprvwKkQptDY/ySq8oOdIQzt7DHg91GnrCUikMKYwbso5tvjaCBt7nR0s3Irz+J3DTKHnJ/7FTB/KJCPvs+awsrXuSkxh1Mvk/jKI0cGgk06A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kGeF/QDQM6kOU7Z88PLGGb7evzXP40VihY8cK2RUYP8=;
- b=bkI3ZGGKTwAK44WA2go/NmDbvRiT/YWy/KCCDIyzsNRbaJ7qkZvA4ov9OnHh1xeR2dgTtqQDe5A+odC3vkBNJrmbd/FNMkBViW0Nua0VgqYWLeIVLjAvVv/6GJM1G481DbpcSHRxc+Qwbqq7h+CkMYBTYh0vAAqHRn8lba+gQ0y/gWoCuOJA/l+wRjS5pKl7COaLlXpbivhtLBXwWqu1agcx+PxHFJn8rp5XmVXUVDP2m/HuDIgVx7G0uAMhxdAhekY3WDB5xIhBulNm4a6JxeX7Bty0bzdL05bEVKvkcDDQff5cilBtsYPLisPLQzOYh2HLw1lmYCAohD58WqHrnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kGeF/QDQM6kOU7Z88PLGGb7evzXP40VihY8cK2RUYP8=;
- b=mB24d1qT3oE+i2XptD73qUmHHNhcpOz/RzoKETiyFJ2QX9qPkaGdQebWBhhrpKMtxZWE/OObZvQMZnrKeb1qJBqYrkJq1gtqOb0QXE4rRoK1HMV682ATo/0aXgug2huzUNCd3qPCSx0i/uD/ARD/iIgWkZqe07bHOiyvb5YHtFytxs6S9IKlyIAym5F577bH8VPK5ULpevMDNoe4nmoUb0uakqv4F9u4WyOrnjsZQcI7XxH3evsdNwGzWOTPsowncia7PZt8htuo8bPbXk7Lqn0Pq1XXEfzAIk4x28d+SLERfgvOKxRIhCvYqEvWLAmnNvPaiYTjgU6dbqbVKMlnhA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by SEYPR06MB6902.apcprd06.prod.outlook.com (2603:1096:101:1da::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Mon, 7 Jul
- 2025 14:22:48 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535%7]) with mapi id 15.20.8901.023; Mon, 7 Jul 2025
- 14:22:48 +0000
-Message-ID: <72c9d0c2-773c-4508-9d2d-e24703ff26e1@vivo.com>
-Date: Mon, 7 Jul 2025 22:22:44 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hfsplus: don't use BUG_ON() in
- hfsplus_create_attributes_file()
-To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
- "glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>,
- "penguin-kernel@I-love.SAKURA.ne.jp" <penguin-kernel@I-love.SAKURA.ne.jp>,
- "slava@dubeyko.com" <slava@dubeyko.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <54358ab7-4525-48ba-a1e5-595f6b107cc6@I-love.SAKURA.ne.jp>
- <4ce5a57c7b00bbd77d7ad6c23f0dcc55f99c3d1a.camel@ibm.com>
-Content-Language: en-US
-From: Yangtao Li <frank.li@vivo.com>
-In-Reply-To: <4ce5a57c7b00bbd77d7ad6c23f0dcc55f99c3d1a.camel@ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR04CA0008.apcprd04.prod.outlook.com
- (2603:1096:4:197::20) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307392D8376;
+	Mon,  7 Jul 2025 14:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751898180; cv=none; b=YgvyCtXy5/OKvabADNSVK1gq4wV+W0AYQexr/y13JqUbp2yPrhH9b6bUtR73bRjHnWXMWrXt4w6iqjxzbmssPH2lpTMzZ3SOQJ+RJW7BNn2e/cXkspuBpoUF2acuQqaolBjcWmfNmwT3hSmurCOJYIJ2VlbjyZTzge1z6vOAG3I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751898180; c=relaxed/simple;
+	bh=oBN5eFrvEABn1oFRHoJu9B/rIsmCrQeRltbh5GGJFMQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tBB/IGAKFKkGZyM4NXWSZAaI5/XFrV63LSYQQWyinmiIyntYN0Tg8w46XyG72mmmDWx8QSbDkjIRCsOnGtKZFo2rmRacwCRqIidPjOBNlqTTdt60m/aReKVVK+Hv7eeUuvQWmW1l/UxznqVl55sc9mWJGKbgBh7mpFZmEOFTqQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bbRKY1nRLzYQtsh;
+	Mon,  7 Jul 2025 22:22:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 11D901A09E9;
+	Mon,  7 Jul 2025 22:22:56 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP3 (Coremail) with SMTP id _Ch0CgBnxyQ22GtoNazLAw--.46745S5;
+	Mon, 07 Jul 2025 22:22:55 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	ojaswin@linux.ibm.com,
+	sashal@kernel.org,
+	naresh.kamboju@linaro.org,
+	jiangqi903@gmail.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	libaokun1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v4 01/11] ext4: process folios writeback in bytes
+Date: Mon,  7 Jul 2025 22:08:04 +0800
+Message-ID: <20250707140814.542883-2-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
+In-Reply-To: <20250707140814.542883-1-yi.zhang@huaweicloud.com>
+References: <20250707140814.542883-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEYPR06MB6902:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75ed1d8b-a352-45b4-cd9a-08ddbd61bf49
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aERVUHBNaGhLaHNmZXUyd1prQ3NuZHNsNUx0dUV1eE1DVEpqTE1yeVBDWmQ0?=
- =?utf-8?B?YlNZQTEvMnp4ZlR2NS9zYjBFZ0g4aTJUendkVFJ1TzJWYi9YU3VPYTJFVlFz?=
- =?utf-8?B?TmxJcHd1TzUrRCtWWG9NdXRaTXYra1Zqb3A4Z0FzVnNVSkY0SEdneERhKzJq?=
- =?utf-8?B?R0k0WkJQdVNFSW9YRHFFUnlsdjJmblpDV1VqRWpuZ2VPYzhjV0t2Ym11and6?=
- =?utf-8?B?N09LRDZKRHpiYVl3UWJwYVZXZ0NQSVFZMU9pb0RhMzBYcy9FMGtwSmZTckFG?=
- =?utf-8?B?d3VKUFJ1WUpwRldqd0FmdEtobHZsS3pKcmVnVUlzVVZZRTVHOXRuVWxZR3Ay?=
- =?utf-8?B?VnpWS1I4cWp1UGdGaGFGZWE5cHhCRFR4cmVzQXRTMjZTanNWRTFQeEo3Mm4y?=
- =?utf-8?B?dFBabnVIWVkyOHg0K1hBNzRKWVZDYWwybDR2RzVBQTJKMGU2bHF3TVRNalls?=
- =?utf-8?B?WlNzeStDR2VxSlNOYi9wWXFjMFpDN2V4WXVpVC9sMVc2WnAwRnJtRXMzVHFk?=
- =?utf-8?B?aU5OUXZZam5pVDRrVFpISzdnMmRWUWNKdGtIVWY4c3JZUWsrYzdseG5jQjJU?=
- =?utf-8?B?OFViL2lJbnB6cjAxdWdOT2plbnY2YlpBdXF4NTFWSWRyVjVXcEowU25HTkVG?=
- =?utf-8?B?QzRuditoSC9pbnJkQktEdmtubWdKTnVlcFFlS3VPWE5XV29UV3BoamNlc09Q?=
- =?utf-8?B?YVZNZ1YxYUQwaDN4MWhnVUY2N2ZYT2puMll5em80cVlXMmFKdzY0cldrMCtB?=
- =?utf-8?B?VmpZYzkwQnVwUXZyVFVsaU9UNWtyMmhHL0I0WGhyVUdObGJ0VC9JajNZZVF2?=
- =?utf-8?B?ME1qVU56dHdDY0QxbEI0ZDdBQ2hxaDBqRXZwd2VkRlVOWGRXR2ttUHpUNHVJ?=
- =?utf-8?B?VGgwWEdQbEZxYTZGSDhWWVBBMEpMMmtyNkxUdy9UeEhERUdDMmtYWUVQc1hF?=
- =?utf-8?B?d2NFd21IWXQ5bTZlbWx5dXh5Yms5UThFRjNuemNrMnFRSm9zSkxOelVGU1kr?=
- =?utf-8?B?MSszSFkwUE1qU01EUU5OZUNqcUUyb3VEcE9aUnE0dkxlbi9wYzBMQkJOMTRh?=
- =?utf-8?B?VE9jYXRnUXd5V09oYkxOK01aZURhWm5kTWs5RWdyUlE2UGt2cXRwUG9hK3Vl?=
- =?utf-8?B?eTd5VGFnYWZQeEFDNVFqVmdIazErREs2dGRSMkJjT3Uwa3daTElGSjRNNmZG?=
- =?utf-8?B?Wndvc1lxME1YaGFFMWdQVjdVUEgrcDVUU1VPMGtCRklTL2E3c0grKzVoency?=
- =?utf-8?B?alRJdDVTYTFXVzBkWFQ0VVBhL09xNERpUVhrQ1MzVnd3Z2dvc3B3S25nclcw?=
- =?utf-8?B?KzJSaExXZUN5TmJSbFJhZnhHMEsrTGc2aDF5WFVVbWRVR0VtZUdGRU50cmFk?=
- =?utf-8?B?dUVSZHJBSzRDZTRzTnBlZHpIN3doYmZNdG45TSs0R1M4QWVHRGhTZkpnVzVl?=
- =?utf-8?B?MnR1QVJaRVdvdzBVUVhuMVYrMmFCSjlTVnVmbGtxSmFVbDZrMzZmeGhjZzdV?=
- =?utf-8?B?Q2RkSW9ZWklUYVkrVnYySmdncmd6aVdOalRyYkVnUGkxMmpkN1VqZjVMbTFF?=
- =?utf-8?B?M1RISStOUThKTkxWci9MTXFacmZJbklvNzR0cWtLVDlFdzdtd3Rpcy9TRStC?=
- =?utf-8?B?VkpmUGh1alNLZCt3M3VaSWhmTCtSQ2RxbU00c2llWlBYZFMzeVJQRGwxYWZC?=
- =?utf-8?B?S0pBTTJvYlNLa3h4VzJFVmRxQ2daTHFXamlCMkxHeUdpL1FoRHZ5cmdxMGJi?=
- =?utf-8?B?MG1MVXNWZExsUm9IN1dCZmZKRzdXb0QyTVIyS2FWMkxjUjZQeHlIYThscy9s?=
- =?utf-8?Q?2ZTbMk5s1eKiwVSNJaeTn2j/u6FkDtO6ZlOGs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RFp0bncvc21DeUlIM2JsUENqbndvakUxekY1ek5NOS85V0xmOG0wREd1eEJx?=
- =?utf-8?B?VWQ1bHB6M1pmQ3BjUS94QmduNmJzaWkwd3RJbGZncUkwRUtPdGRCaUc0cmMw?=
- =?utf-8?B?N0E2bFBrKzAzVVdqNVEwRGFxMi9UUERzUVVMc3ZJbXRzWVYvdDgyRklCZ0ph?=
- =?utf-8?B?VStsSGVoL29oK2NReDk1ZDJZeiszYVMwTkxFYzl1aWVBK2FYSFpnRGZldkV6?=
- =?utf-8?B?cE9mUGNleUdMOWVnM0FHSkRnbGNrMnBaK3BMWXBUZDg3V1dDWGNPeDNMNTM2?=
- =?utf-8?B?dTNoT01mZTZLYTZYWmt1clFMbXVhMVVwc05zakVrZjJvcUVuamxVZThEaHBG?=
- =?utf-8?B?U2I5eXpkN05ucU1NODhiRkEyWVhwSHdKZERjSE05NDV2YXowcWxKWGZFa1Zm?=
- =?utf-8?B?YVd4ZzNiVWRucWZ1eHRJeVgweXhFU2Uyb3dTazBDR2FuMWJWcHY1S2lyaDNs?=
- =?utf-8?B?bzZ1NWdDS1krV04wc0sxK0hxYlF4ZkJmWlFHSFY0TVNRMG9FOENwTDZIQnJv?=
- =?utf-8?B?TW5qUzRsMzl2aHBmM2F6NncyZVZIUWY4TU5YaDFMMTdLYzdlajgrNUs3V1li?=
- =?utf-8?B?SjVWRzVrMTNRU1Y2eGxMWG9lZUIxMkNwNC9IQmlMaTIwMHdNR0Fpd1d1NEtP?=
- =?utf-8?B?OE9jbXp0VW5JOVpoeld0TStna3N1VElMdjVoMXlFUHUxNnY5Sk0wUFdZN2t0?=
- =?utf-8?B?ZkNsVmUrdCtRUTQ2cGhIMGh5S1RlOFRldU44V2NaZkVMZ2pvVndDMUhWNnp4?=
- =?utf-8?B?M1pCd3IrT2R0Y2xxK3ZGTC90WjBUdHVudThETlVDSVZkTEs1NFBoUWVCUmFh?=
- =?utf-8?B?Rlh0SFVLRThRU3ZGeDdvMmVaVXpmWjNIYnAvODJ5d0hSak4xTDNHa095UjlS?=
- =?utf-8?B?TFBGdTk3bVI0aU1yZ0t4bkNXTDRSWVRqODN5WittTlY2NTR6ZkVZUE1FVnpL?=
- =?utf-8?B?K05EUXd2OFNRRHo5VWRQSVFNQjc2WTZCRytaQ2gydmJqWS9vTU9vT2REUHZF?=
- =?utf-8?B?U3p3bWgxTUpzNkhnQnRTTFhyeEkxekkvVlZ1VzR4VWtUdUplRnkzd011U01T?=
- =?utf-8?B?YkVMWGNKOWtCL1FJa0JQank5dE0vSU0xTjQxWGVSV2hrdlpOVVkwSzFQQUNX?=
- =?utf-8?B?ZEtCNlBHUXIzcDlTeVlWME1xclE1cXZtVENMYmRmVHdLd2toT3J4ZjA4VThE?=
- =?utf-8?B?UXpWU00xOHhLYlpiMFVxOVB2VEVyS0l6bmZ0eVNiVHRWTkhkMllwNU9TTHNC?=
- =?utf-8?B?b0ZpT1NXMXFkbTZnZnpVbW5qTktlV3VBb3ZjRXhIK3BrcG9PZkg4V1BFZTZ3?=
- =?utf-8?B?UlZMQW9Qa2l0SDlwTXRWTlJwN1Rrb3JWajNtbnNiWFlmUXVyTW9rby9DV3da?=
- =?utf-8?B?WFZrSC9sOFB5S3JtWEo3dUtXMHBETFdnQjc0WjV0Nk4xU05tdHJuR1BlODU0?=
- =?utf-8?B?K20xVjREOHJ4Q3lsUzBBbU52cTJpSXkyQXdjK1IrbWFJWTJ0cDBWcHBWR1o2?=
- =?utf-8?B?MWZmVTZZN1RhMzRieVdEYy9hYUZKQ055Y2h3OXZ6ZlJuK0Z6SzJvT3d0bWEy?=
- =?utf-8?B?THl5Vjc2cGdRVjdtMVdic21tV01lV2w4bVJ4ZkpScysvZjFucitjSkRqUXdk?=
- =?utf-8?B?VTliVkxXNXVRYXlNa01OeTltQXJnS3o2aVQzQnRwaXVrMWNCWCtXckRJYjJD?=
- =?utf-8?B?ZHV4VmNPdEtzV3ZmbkptYUs5NnVOMTdvNFE5V3BOWVE3OWRuTlVOR1VFclFz?=
- =?utf-8?B?aGhUeU1SVkhQRUNicDgxZCtFemhVNVpGcElSMk9EMytqZTUvaEV6K25hUkZF?=
- =?utf-8?B?T3k1U081YmRsbHduYnEwSVdHS2l2aG5nWkNzTll5OGZ0V2tNR1NnYUZaY0k0?=
- =?utf-8?B?RjJCd2VjVjlESmZmVjRtUlRKUm9ocExjOGp5RTdkRlNnREZDL1BvUnl3SlBU?=
- =?utf-8?B?VmFlblA5STVBTTZ4VjI5ZkxmaEExbzVpQU5nUWVSbUlZak5HZ202TGZMWmdL?=
- =?utf-8?B?NjlwUVFSYUEyeEd5SURPdUJsMDc2U1hiMVUxaXo2SFRqdjJFZ0c4enZHem42?=
- =?utf-8?B?RHRyVjZ2K2p6ZkRrV2Y3TEZxSzE4K2Mwalo5QndCR015UnN1c0QvVzRnQWRn?=
- =?utf-8?Q?ZtumP3HVoIMieMMCJQr5thhmV?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75ed1d8b-a352-45b4-cd9a-08ddbd61bf49
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 14:22:47.9184
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 72qey+VtT4JWD9ifJcMjhZc+J6s9TCKKunf8iwTiEqsxGYQcWUbtI8zXz9C/XyJJtaWFD3LpW6c+SGjiZZKLWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6902
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgBnxyQ22GtoNazLAw--.46745S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxtryfuFy5Ar4kWw17tFWxCrg_yoWfXry7pF
+	WUKF909r4kX3yjgFn3ZFZrZr10k34xAr48tFy3WanIqF1Ykr18KFyjqFyqvF15KrZ2vrWx
+	XF4Yyry8WF1xJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x0JUfKs8UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-在 2025/7/1 01:18, Viacheslav Dubeyko 写道:
-> On Wed, 2025-06-25 at 19:10 +0900, Tetsuo Handa wrote:
->> syzkaller can mount crafted filesystem images.
->> Don't crash the kernel when we can continue.
->>
->> Reported-by: syzbot <syzbot+1107451c16b9eb9d29e6@syzkaller.appspotmail.com>
->> Closes: https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
->> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
->> ---
->>   fs/hfsplus/xattr.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
->> index 9a1a93e3888b..191767d4cf78 100644
->> --- a/fs/hfsplus/xattr.c
->> +++ b/fs/hfsplus/xattr.c
->> @@ -172,7 +172,11 @@ static int hfsplus_create_attributes_file(struct super_block *sb)
->>   		return PTR_ERR(attr_file);
->>   	}
->>   
->> -	BUG_ON(i_size_read(attr_file) != 0);
-> 
-> So, it's something like unexpected situation here. Why do we have
-> i_size_read(attr_file) != 0 here? It looks like hfsplus_create_attributes_file()
-> was called in incorrect context. Probably, it's not the whole fix. Any ideas?
+From: Zhang Yi <yi.zhang@huawei.com>
 
-161         case HFSPLUS_VALID_ATTR_TREE:
-162                 return 0;
-163         case HFSPLUS_FAILED_ATTR_TREE:
-164                 return -EOPNOTSUPP;
-165         default:
-166                 BUG();
-167         }
+Since ext4 supports large folios, processing writebacks in pages is no
+longer appropriate, it can be modified to process writebacks in bytes.
 
-I haven't delved into the implementation details of xattr yet, but there 
-is a bug in this function. It seems that we should convert the bug to 
-return EIO in another patch?
+Suggested-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ fs/ext4/inode.c             | 70 +++++++++++++++++++------------------
+ include/trace/events/ext4.h | 13 ++++---
+ 2 files changed, 42 insertions(+), 41 deletions(-)
 
-Otherwise LGTM.
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index be9a4cba35fd..39d59274649c 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -1667,11 +1667,12 @@ struct mpage_da_data {
+ 	unsigned int can_map:1;	/* Can writepages call map blocks? */
+ 
+ 	/* These are internal state of ext4_do_writepages() */
+-	pgoff_t first_page;	/* The first page to write */
+-	pgoff_t next_page;	/* Current page to examine */
+-	pgoff_t last_page;	/* Last page to examine */
++	loff_t start_pos;	/* The start pos to write */
++	loff_t next_pos;	/* Current pos to examine */
++	loff_t end_pos;		/* Last pos to examine */
++
+ 	/*
+-	 * Extent to map - this can be after first_page because that can be
++	 * Extent to map - this can be after start_pos because that can be
+ 	 * fully mapped. We somewhat abuse m_flags to store whether the extent
+ 	 * is delalloc or unwritten.
+ 	 */
+@@ -1691,38 +1692,38 @@ static void mpage_release_unused_pages(struct mpage_da_data *mpd,
+ 	struct inode *inode = mpd->inode;
+ 	struct address_space *mapping = inode->i_mapping;
+ 
+-	/* This is necessary when next_page == 0. */
+-	if (mpd->first_page >= mpd->next_page)
++	/* This is necessary when next_pos == 0. */
++	if (mpd->start_pos >= mpd->next_pos)
+ 		return;
+ 
+ 	mpd->scanned_until_end = 0;
+-	index = mpd->first_page;
+-	end   = mpd->next_page - 1;
+ 	if (invalidate) {
+ 		ext4_lblk_t start, last;
+-		start = index << (PAGE_SHIFT - inode->i_blkbits);
+-		last = end << (PAGE_SHIFT - inode->i_blkbits);
++		start = EXT4_B_TO_LBLK(inode, mpd->start_pos);
++		last = mpd->next_pos >> inode->i_blkbits;
+ 
+ 		/*
+ 		 * avoid racing with extent status tree scans made by
+ 		 * ext4_insert_delayed_block()
+ 		 */
+ 		down_write(&EXT4_I(inode)->i_data_sem);
+-		ext4_es_remove_extent(inode, start, last - start + 1);
++		ext4_es_remove_extent(inode, start, last - start);
+ 		up_write(&EXT4_I(inode)->i_data_sem);
+ 	}
+ 
+ 	folio_batch_init(&fbatch);
+-	while (index <= end) {
+-		nr = filemap_get_folios(mapping, &index, end, &fbatch);
++	index = mpd->start_pos >> PAGE_SHIFT;
++	end = mpd->next_pos >> PAGE_SHIFT;
++	while (index < end) {
++		nr = filemap_get_folios(mapping, &index, end - 1, &fbatch);
+ 		if (nr == 0)
+ 			break;
+ 		for (i = 0; i < nr; i++) {
+ 			struct folio *folio = fbatch.folios[i];
+ 
+-			if (folio->index < mpd->first_page)
++			if (folio_pos(folio) < mpd->start_pos)
+ 				continue;
+-			if (folio_next_index(folio) - 1 > end)
++			if (folio_next_index(folio) > end)
+ 				continue;
+ 			BUG_ON(!folio_test_locked(folio));
+ 			BUG_ON(folio_test_writeback(folio));
+@@ -2024,7 +2025,7 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
+ 
+ static void mpage_folio_done(struct mpage_da_data *mpd, struct folio *folio)
+ {
+-	mpd->first_page += folio_nr_pages(folio);
++	mpd->start_pos += folio_size(folio);
+ 	folio_unlock(folio);
+ }
+ 
+@@ -2034,7 +2035,7 @@ static int mpage_submit_folio(struct mpage_da_data *mpd, struct folio *folio)
+ 	loff_t size;
+ 	int err;
+ 
+-	BUG_ON(folio->index != mpd->first_page);
++	WARN_ON_ONCE(folio_pos(folio) != mpd->start_pos);
+ 	folio_clear_dirty_for_io(folio);
+ 	/*
+ 	 * We have to be very careful here!  Nothing protects writeback path
+@@ -2446,7 +2447,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+ 	 * Update on-disk size after IO is submitted.  Races with
+ 	 * truncate are avoided by checking i_size under i_data_sem.
+ 	 */
+-	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
++	disksize = mpd->start_pos;
+ 	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+ 		int err2;
+ 		loff_t i_size;
+@@ -2549,8 +2550,8 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+ 	struct address_space *mapping = mpd->inode->i_mapping;
+ 	struct folio_batch fbatch;
+ 	unsigned int nr_folios;
+-	pgoff_t index = mpd->first_page;
+-	pgoff_t end = mpd->last_page;
++	pgoff_t index = mpd->start_pos >> PAGE_SHIFT;
++	pgoff_t end = mpd->end_pos >> PAGE_SHIFT;
+ 	xa_mark_t tag;
+ 	int i, err = 0;
+ 	int blkbits = mpd->inode->i_blkbits;
+@@ -2565,7 +2566,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+ 		tag = PAGECACHE_TAG_DIRTY;
+ 
+ 	mpd->map.m_len = 0;
+-	mpd->next_page = index;
++	mpd->next_pos = mpd->start_pos;
+ 	if (ext4_should_journal_data(mpd->inode)) {
+ 		handle = ext4_journal_start(mpd->inode, EXT4_HT_WRITE_PAGE,
+ 					    bpp);
+@@ -2596,7 +2597,8 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+ 				goto out;
+ 
+ 			/* If we can't merge this page, we are done. */
+-			if (mpd->map.m_len > 0 && mpd->next_page != folio->index)
++			if (mpd->map.m_len > 0 &&
++			    mpd->next_pos != folio_pos(folio))
+ 				goto out;
+ 
+ 			if (handle) {
+@@ -2642,8 +2644,8 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+ 			}
+ 
+ 			if (mpd->map.m_len == 0)
+-				mpd->first_page = folio->index;
+-			mpd->next_page = folio_next_index(folio);
++				mpd->start_pos = folio_pos(folio);
++			mpd->next_pos = folio_pos(folio) + folio_size(folio);
+ 			/*
+ 			 * Writeout when we cannot modify metadata is simple.
+ 			 * Just submit the page. For data=journal mode we
+@@ -2786,18 +2788,18 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 		writeback_index = mapping->writeback_index;
+ 		if (writeback_index)
+ 			cycled = 0;
+-		mpd->first_page = writeback_index;
+-		mpd->last_page = -1;
++		mpd->start_pos = writeback_index << PAGE_SHIFT;
++		mpd->end_pos = LLONG_MAX;
+ 	} else {
+-		mpd->first_page = wbc->range_start >> PAGE_SHIFT;
+-		mpd->last_page = wbc->range_end >> PAGE_SHIFT;
++		mpd->start_pos = wbc->range_start;
++		mpd->end_pos = wbc->range_end;
+ 	}
+ 
+ 	ext4_io_submit_init(&mpd->io_submit, wbc);
+ retry:
+ 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
+-		tag_pages_for_writeback(mapping, mpd->first_page,
+-					mpd->last_page);
++		tag_pages_for_writeback(mapping, mpd->start_pos >> PAGE_SHIFT,
++					mpd->end_pos >> PAGE_SHIFT);
+ 	blk_start_plug(&plug);
+ 
+ 	/*
+@@ -2857,7 +2859,7 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 		}
+ 		mpd->do_map = 1;
+ 
+-		trace_ext4_da_write_pages(inode, mpd->first_page, wbc);
++		trace_ext4_da_write_pages(inode, mpd->start_pos, wbc);
+ 		ret = mpage_prepare_extent_to_map(mpd);
+ 		if (!ret && mpd->map.m_len)
+ 			ret = mpage_map_and_submit_extent(handle, mpd,
+@@ -2914,8 +2916,8 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 	blk_finish_plug(&plug);
+ 	if (!ret && !cycled && wbc->nr_to_write > 0) {
+ 		cycled = 1;
+-		mpd->last_page = writeback_index - 1;
+-		mpd->first_page = 0;
++		mpd->end_pos = (writeback_index << PAGE_SHIFT) - 1;
++		mpd->start_pos = 0;
+ 		goto retry;
+ 	}
+ 
+@@ -2925,7 +2927,7 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
+ 		 * Set the writeback_index so that range_cyclic
+ 		 * mode will write it back later
+ 		 */
+-		mapping->writeback_index = mpd->first_page;
++		mapping->writeback_index = mpd->start_pos >> PAGE_SHIFT;
+ 
+ out_writepages:
+ 	trace_ext4_writepages_result(inode, wbc, ret,
+diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
+index 156908641e68..62d52997b5c6 100644
+--- a/include/trace/events/ext4.h
++++ b/include/trace/events/ext4.h
+@@ -483,15 +483,15 @@ TRACE_EVENT(ext4_writepages,
+ );
+ 
+ TRACE_EVENT(ext4_da_write_pages,
+-	TP_PROTO(struct inode *inode, pgoff_t first_page,
++	TP_PROTO(struct inode *inode, loff_t start_pos,
+ 		 struct writeback_control *wbc),
+ 
+-	TP_ARGS(inode, first_page, wbc),
++	TP_ARGS(inode, start_pos, wbc),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	dev_t,	dev			)
+ 		__field(	ino_t,	ino			)
+-		__field(      pgoff_t,	first_page		)
++		__field(       loff_t,	start_pos		)
+ 		__field(	 long,	nr_to_write		)
+ 		__field(	  int,	sync_mode		)
+ 	),
+@@ -499,15 +499,14 @@ TRACE_EVENT(ext4_da_write_pages,
+ 	TP_fast_assign(
+ 		__entry->dev		= inode->i_sb->s_dev;
+ 		__entry->ino		= inode->i_ino;
+-		__entry->first_page	= first_page;
++		__entry->start_pos	= start_pos;
+ 		__entry->nr_to_write	= wbc->nr_to_write;
+ 		__entry->sync_mode	= wbc->sync_mode;
+ 	),
+ 
+-	TP_printk("dev %d,%d ino %lu first_page %lu nr_to_write %ld "
+-		  "sync_mode %d",
++	TP_printk("dev %d,%d ino %lu start_pos 0x%llx nr_to_write %ld sync_mode %d",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+-		  (unsigned long) __entry->ino, __entry->first_page,
++		  (unsigned long) __entry->ino, __entry->start_pos,
+ 		  __entry->nr_to_write, __entry->sync_mode)
+ );
+ 
+-- 
+2.46.1
 
-Reviewed-by: Yangtao Li <frank.li@vivo.com>
-
-Thx,
-Yangtao
