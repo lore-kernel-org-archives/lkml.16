@@ -1,122 +1,461 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD638279DA7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB911279DA7
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874264; cv=none; b=LbayZgwBv7ihrAVVD/JuvoiXhpiWstnCTONdw3rB14YfDkSeW6sPfPm6k8f2g9FIPiGm/X66IdXkSKdVR0qMTl3VgyHtijy7wuqCVftDYHDTvpT0SGCu2PaV/2N5ymx1YtjiM4Ob024+9EYCTN5AetCpiMZqc/dz0tRoayceRvI=
+	t=1751874288; cv=none; b=R62FDhPQNe/6jg6ObgF16WQRO96XH3iLk/c3/Lsg81rcPZu0d7j5q+ev81b1LEwbA0d01Rrt1rluruj5HEkasEPJJ35xvASQJ/qZKg7xzsyyFn8VuFB0rTtGy61vR+7VTj6sebI2rlsyb3dnfoGazfRajZkSzcKsUzGu/K64DSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874264; c=relaxed/simple;
-	bh=a/aBuw6eSYxUiqduVM8v7MQHhm9JI8Hc4Nzy/q2H5zk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vk51ZGD96OFmOoDvCpfWXZ8uzVl8HXXgQwPs88PddKNz0Bi/CD7Q40+t9qeFyKrSbzj0fKhRjkq2M/wu1oWMvuCgKd7EvEZzr1UZP9oAcmiBibmpxAn5xYWzLIuXMBGowg5ORIbw7nEfRCRhvyY25sKwiINN3lMYUSQPsMaoHdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3AtB7+I/; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751874288; c=relaxed/simple;
+	bh=u5yQjn97FQyxCA5Rf/s6af1BEkVTXiTX2mtz/LxYpBQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dg37z8pmkajqRX/U7rxEpq+BdeEa1FgY8KEsTTmHpTgxqoAj9g2XUDbyYZ1V4DCupn8uMEuzC17n0Bx3KJvWv9EDj3WYG0cGqxTMQDq9m73pks+Eo2kySYemDeI7k01dCgrq0H1zwpF8scMStjB+2M0uF4z2utjwYS11jYKHba0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mOYjZyJ0; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3AtB7+I/"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4531e146a24so18514265e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:44:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mOYjZyJ0"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-315c1b0623cso3273617a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751874261; x=1752479061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ywzRjmVlyGLID/ZIJbfZI0O4b8LZWe/3Tlbj+llTQg=;
-        b=3AtB7+I/2vBd3XJtjUqcnEZeY/7Ep8EcsHPb0GJEwE6DMknouoyHueJ6jhaEf/SwpT
-         inNkFRVHj3wRIGJAG80M9wEBt3+sbOyjLrg29Lmwr/0MP+Klcb1uYQn/apm9ZESu2PzE
-         GPEiaaun9a0ZMKBgp3JQ9kEAzW6Dve6rqffBUmJBluvG840QyF2M0Vm9+1ssUQO+WVoe
-         +KvOsYB0SaMKLfJKrq8Hfa8kN9M1vi/xi6kOxlj9/oU7TaC6kztKWQ/J8d2EZGtvARal
-         URjFYpV9AiVd/Ziz5EGsmDr/kdpuFSdn3C/9uI6dcXli2Lh2wNZlJy2AB+e87HexoOyL
-         AZyA==
+        d=google.com; s=20230601; t=1751874286; x=1752479086; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RfbbtwUrlcYhOTf/0LYdK2gX0smrrnEPCZ4bjlr3z90=;
+        b=mOYjZyJ0VHdZMa9SV4JMUJAc0gI0pvfZboKbwFgkFOBY8zdEqSx+3xsxqjmGGbyVoZ
+         nHj9z+xS9Y3GWEHWGDFgdy0HAwN/gDqRQwuR/fHC99yHaBglXGMJD2h565nwu0anL5st
+         vZuqG/iXo0bX/xvL/rNxgCzMMIC1oWsrrwJ8vjqY5SJm4ykGhJYqv3oqDXBRK+pt5vlp
+         gHD1AjQPseM4z9ZOYw49QVcti2c1BBG3/tK2lgLFt8sr35iBprNcoX9GxzBos9eZs/A7
+         LU/sa40iQWv0+9CyUgjDVZFg0fDhAzW7PQiH4GCcf7fuc4cksoH16HA/1act2R3+Xr7Y
+         ffRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874261; x=1752479061;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9ywzRjmVlyGLID/ZIJbfZI0O4b8LZWe/3Tlbj+llTQg=;
-        b=DDSEffKonkEDBJqeMJHzJQhntQsCSmRZDRUBrDIUB+TCQmld+Nk3t22Cwg9dEP7960
-         RAXlKD33O8QvD1fpYtcmYKDqS8Yby1Crkb6PVbMSc7SJuFsaLBQ4mGsvWVp3zr1E79h2
-         8Z3LHqknUgkjyRD7XC5U5PYNVqrR6ohi4/b1AMJNGLlCVEkfBfXrgzlDRvJuF5dg3SyX
-         eg8sHlYqFOvhRYMfgiIexnWfjNTypYe6MhhlKGWYoMvPamlU4A3erQwGpo8ZTMVqEOmn
-         ljZndUxjad5czUDXQWWGgrmUZC25CRALuN3SIhAySi1IUB0Dt764CE9iclKtgEl2HqaU
-         z+NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzCfhPgKsl9Ylcm/QQxv8EB4Yhc9ljgXE/Zbs5HYq1xPSLHG0hlrVIDktAXRm1uFXnjungySN6gRx6F/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8+/cYB96n158y51LHDOT836S4kKqIogZF1m+2Ap9N/D5JhKsg
-	wiX4zV3ilReBhcJXZsDHZh3oyqYtS6roex18Z91d4t/qNt2rMexe1FzQykWZ+N/rU72kjUtPvuH
-	JxH4qGqU=
-X-Gm-Gg: ASbGncu87pd4IPHCuJZStYvsIHCjNJtUGV9cn6mfu3/6ysrzfwu17HOua42e9nQbeG2
-	2/4duy3LYVhD5oeIPV8xzRJ4CzYGGecHSJqy7SHE2YCkHdh87oA9jl/ix/pE17c86TaYZvBG5Nb
-	F9NPA3izdDTGEqLqWKHJtQ1nIC5kS+nQ2S3rw46/SZDk9DsrGSotPn0glNgLiQFFD5AAq9ivl5R
-	eta9jrn0lIbxV6hk8qu1S/3gdv1DYpOc8FETRrwvjZgn2dEpJ2cJ6MhDrVMwMnxWiVcm7Uq56fG
-	dg+W/EsArpK60lZhpbIglP7b8qGBSHgeOOVvng7O08fGjJEO2+xIbec1+ySgSoU=
-X-Google-Smtp-Source: AGHT+IHTukiObLm9v3Qws0DGAdo+R1EltNu3P4uRttEma+tA+Aqku3e4Jro5pb0JFOVJRpGK9M86QQ==
-X-Received: by 2002:a05:600c:c109:b0:442:f482:c421 with SMTP id 5b1f17b1804b1-454bc5c2fbcmr36096125e9.22.1751874260966;
-        Mon, 07 Jul 2025 00:44:20 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3cf3:a61f:85ed:69db])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1628d60sm102884855e9.13.2025.07.07.00.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 00:44:20 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/8] gpio: move generic GPIO chip fields out of the top-level gpio_chip struct
-Date: Mon,  7 Jul 2025 09:44:17 +0200
-Message-ID: <175187425322.11592.10235201169353837001.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250702-gpio-mmio-rework-v2-0-6b77aab684d8@linaro.org>
-References: <20250702-gpio-mmio-rework-v2-0-6b77aab684d8@linaro.org>
+        d=1e100.net; s=20230601; t=1751874286; x=1752479086;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RfbbtwUrlcYhOTf/0LYdK2gX0smrrnEPCZ4bjlr3z90=;
+        b=Xf2HQH/IZBxrxB9WOCVpjaw/ZjqAMUfo6i/riPLDXVi+RKKG/DO0Yo4Og+wkcVqfDQ
+         E4lJXo6ZzxHlBsI7CG8zeHUCCGoROUrrNJKCC5jxoouq+VMuG8IylRjQLS71RrQ/jmSW
+         SmgF8n/2vxUlhWUAoZ2GSRq51al8dGOJEkpO0XAcLVwYL0pD1i5fSicwaJKRMYOlM8eO
+         tOPHDtZ0OuvZN5UXkBL2DPrLaP/+Fs85jR7FhZegTWFmhuw1gMvW+FbtVhaFLXggLDmd
+         VvvfJYWruTLDLObjEsTcLIOdrH+1eXULxq+dv9gK0OhPet6IAZ8qyVlzkIGOorWdiery
+         4ipg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6axKqwerpD1KuKZYLOoe3ZsQPKryjYp0v5MpMuJRnbV1kCU0FWtTyI+ORluEvBRlkHA6PIxMwGZb/mj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8I7W5fet08EFh34VESOsnOkAGl6aQMKf+f6I2y95DXllnY5Er
+	SU1R/aWXKw9E4SaoU4G4Q7p0c4/EetULVqrhNp/lJV/mMnVL/brhnEKwhaidPSsdT0/FacqeHYR
+	BYDh7P00h+VxUSo4uj7oYrCFPA2nT4vFe03mHTxcQ
+X-Gm-Gg: ASbGncvDaE+PlGG+U+/XUhs2RLtGGENpIxe9N+pcGjnxSiEX6VYx5zjsXn1sCk5SsxC
+	A9v/yYznxm4QiE+NbIZ0Ty6c6P5jOJx8WrhuzIJWNc9S5xRF2sWg0X98OXxD+bkxmSdAeQAupgy
+	5WJwsy31VVYwDT0fOFU0k3zJO2uRTJa9Yf7D0o4BQm9bi2kqGoO3iWOjlfy8rI6vs9n7FIodmep
+	w==
+X-Google-Smtp-Source: AGHT+IHNLRemPPcfJkKtdtD5tzMXU5ZhmsEJlcDSKEDS39nlCrJFwHeow3kpZanRdDtNT5hMHeVhL8pPmTkFzltxP1E=
+X-Received: by 2002:a17:90b:1a8d:b0:312:1b53:5e9f with SMTP id
+ 98e67ed59e1d1-31aaddb6cb4mr16827244a91.24.1751874285808; Mon, 07 Jul 2025
+ 00:44:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <cover.1751862634.git.alx@kernel.org> <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+In-Reply-To: <033bf00f1fcf808245ae150346019aa7b997ea11.1751862634.git.alx@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Mon, 7 Jul 2025 09:44:09 +0200
+X-Gm-Features: Ac12FXzv2-oPeEX56Hh2E61FEUd4lH0DkpiQCIi8_un7sJzh52udAzGZo6YFXNo
+Message-ID: <CANpmjNMPWWdushTvUqYJzqQJz4SJLgPggH9cs4KPob_9=1T-nw@mail.gmail.com>
+Subject: Re: [RFC v3 3/7] mm: Use seprintf() instead of less ergonomic APIs
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <kees@kernel.org>, Christopher Bazley <chris.bazley.wg14@gmail.com>, 
+	shadow <~hallyn/shadow@lists.sr.ht>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, kasan-dev@googlegroups.com, 
+	Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
+	Andrew Clayton <andrew@digital-domain.net>, Sven Schnelle <svens@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, 
+	"Huang, Ying" <ying.huang@intel.com>, Lee Schermerhorn <lee.schermerhorn@hp.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Chao Yu <chao.yu@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, 7 Jul 2025 at 07:06, Alejandro Colomar <alx@kernel.org> wrote:
+>
+> While doing this, I detected some anomalies in the existing code:
+>
+> mm/kfence/kfence_test.c:
+>
+>         -  The last call to scnprintf() did increment 'cur', but it's
+>            unused after that, so it was dead code.  I've removed the dead
+>            code in this patch.
+
+That was done to be consistent with the other code for readability,
+and to be clear where the next bytes should be appended (if someone
+decides to append more). There is no runtime dead code, the compiler
+optimizes away the assignment. But I'm indifferent, so removing the
+assignment is fine if you prefer that.
+
+Did you run the tests? Do they pass?
 
 
-On Wed, 02 Jul 2025 11:22:07 +0200, Bartosz Golaszewski wrote:
-> The conversion of GPIO drivers to using the new line value setters is
-> moving nicely along and we're on track to have all the existing
-> providers converted upstream after the next merge window. There's
-> another piece of technical debt that bothers me - the fact that struct
-> gpio_chip contains a bunch of fields that are only relevant to the
-> generic GPIO chip implementation from gpio-mmio.c.
-> 
-> [...]
+>         -  'end' is calculated as
+>
+>                 end = &expect[0][sizeof(expect[0] - 1)];
+>
+>            However, the '-1' doesn't seem to be necessary.  When passing
+>            $2 to scnprintf(), the size was specified as 'end - cur'.
+>            And scnprintf() --just like snprintf(3)--, won't write more
+>            than $2 bytes (including the null byte).  That means that
+>            scnprintf() wouldn't write more than
+>
+>                 &expect[0][sizeof(expect[0]) - 1] - expect[0]
+>
+>            which simplifies to
+>
+>                 sizeof(expect[0]) - 1
+>
+>            bytes.  But we have sizeof(expect[0]) bytes available, so
+>            we're wasting one byte entirely.  This is a benign off-by-one
+>            bug.  The two occurrences of this bug will be fixed in a
+>            following patch in this series.
+>
+> mm/kmsan/kmsan_test.c:
+>
+>         The same benign off-by-one bug calculating the remaining size.
 
-Applied, thanks!
 
-[1/8] gpio: generic: add new generic GPIO chip API
-      https://git.kernel.org/brgl/linux/c/8595375e4fded27de24b189c692c2c50051a7b3b
-[2/8] gpio: mxc: use lock guards for the generic GPIO chip lock
-      https://git.kernel.org/brgl/linux/c/ba441322c7aac4735d78fc6781e497a01fb8eac7
-[3/8] gpio: mxc: use new generic GPIO chip API
-      https://git.kernel.org/brgl/linux/c/1f129b15c2dea84ce12ee3120c7fffdb7bfc7395
-[4/8] gpio: clps711x: use new generic GPIO chip API
-      https://git.kernel.org/brgl/linux/c/fd0f0d1a1e71d736deed3593470b3b03f8e76df7
-[5/8] gpio: cadence: use lock guards
-      https://git.kernel.org/brgl/linux/c/76045e90400b7ecc60a33526a505124b0cce1d7a
-[6/8] gpio: cadence: use new generic GPIO chip API
-      https://git.kernel.org/brgl/linux/c/47ecff3839cac71c6b7f89b7860f6f76a4c07b65
-[7/8] gpio: 74xx-mmio: use new generic GPIO chip API
-      https://git.kernel.org/brgl/linux/c/bd9a0dec2d49836e7d186642600e0f668fab33ed
-[8/8] gpio: en7523: use new generic GPIO chip API
-      https://git.kernel.org/brgl/linux/c/34c029c20300b9b3072f40875b899ef9c40e69cc
+Same - does the test pass?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> mm/mempolicy.c:
+>
+>         This file uses the 'p += snprintf()' anti-pattern.  That will
+>         overflow the pointer on truncation, which has undefined
+>         behavior.  Using seprintf(), this bug is fixed.
+>
+>         As in the previous file, here there was also dead code in the
+>         last scnprintf() call, by incrementing a pointer that is not
+>         used after the call.  I've removed the dead code.
+>
+> mm/page_owner.c:
+>
+>         Within print_page_owner(), there are some calls to scnprintf(),
+>         which do report truncation.  And then there are other calls to
+>         snprintf(), where we handle errors (there are two 'goto err').
+>
+>         I've kept the existing error handling, as I trust it's there for
+>         a good reason (i.e., we may want to avoid calling
+>         print_page_owner_memcg() if we truncated before).  Please review
+>         if this amount of error handling is the right one, or if we want
+>         to add or remove some.  For seprintf(), a single test for null
+>         after the last call is enough to detect truncation.
+>
+> mm/slub.c:
+>
+>         Again, the 'p += snprintf()' anti-pattern.  This is UB, and by
+>         using seprintf() we've fixed the bug.
+>
+> Fixes: f99e12b21b84 (2021-07-30; "kfence: add function to mask address bits")
+> [alx: that commit introduced dead code]
+> Fixes: af649773fb25 (2024-07-17; "mm/numa_balancing: teach mpol_to_str about the balancing mode")
+> [alx: that commit added p+=snprintf() calls, which are UB]
+> Fixes: 2291990ab36b (2008-04-28; "mempolicy: clean-up mpol-to-str() mempolicy formatting")
+> [alx: that commit changed p+=sprintf() into p+=snprintf(), which is still UB]
+> Fixes: 948927ee9e4f (2013-11-13; "mm, mempolicy: make mpol_to_str robust and always succeed")
+> [alx: that commit changes old code into p+=snprintf(), which is still UB]
+> [alx: that commit also produced dead code by leaving the last 'p+=...']
+> Fixes: d65360f22406 (2022-09-26; "mm/slub: clean up create_unique_id()")
+> [alx: that commit changed p+=sprintf() into p+=snprintf(), which is still UB]
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Christopher Bazley <chris.bazley.wg14@gmail.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: Chao Yu <chao.yu@oppo.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Alejandro Colomar <alx@kernel.org>
+> ---
+>  mm/kfence/kfence_test.c | 24 ++++++++++++------------
+>  mm/kmsan/kmsan_test.c   |  4 ++--
+>  mm/mempolicy.c          | 18 +++++++++---------
+>  mm/page_owner.c         | 32 +++++++++++++++++---------------
+>  mm/slub.c               |  5 +++--
+>  5 files changed, 43 insertions(+), 40 deletions(-)
+>
+> diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
+> index 00034e37bc9f..ff734c514c03 100644
+> --- a/mm/kfence/kfence_test.c
+> +++ b/mm/kfence/kfence_test.c
+> @@ -113,26 +113,26 @@ static bool report_matches(const struct expect_report *r)
+>         end = &expect[0][sizeof(expect[0]) - 1];
+>         switch (r->type) {
+>         case KFENCE_ERROR_OOB:
+> -               cur += scnprintf(cur, end - cur, "BUG: KFENCE: out-of-bounds %s",
+> +               cur = seprintf(cur, end, "BUG: KFENCE: out-of-bounds %s",
+>                                  get_access_type(r));
+>                 break;
+>         case KFENCE_ERROR_UAF:
+> -               cur += scnprintf(cur, end - cur, "BUG: KFENCE: use-after-free %s",
+> +               cur = seprintf(cur, end, "BUG: KFENCE: use-after-free %s",
+>                                  get_access_type(r));
+>                 break;
+>         case KFENCE_ERROR_CORRUPTION:
+> -               cur += scnprintf(cur, end - cur, "BUG: KFENCE: memory corruption");
+> +               cur = seprintf(cur, end, "BUG: KFENCE: memory corruption");
+>                 break;
+>         case KFENCE_ERROR_INVALID:
+> -               cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid %s",
+> +               cur = seprintf(cur, end, "BUG: KFENCE: invalid %s",
+>                                  get_access_type(r));
+>                 break;
+>         case KFENCE_ERROR_INVALID_FREE:
+> -               cur += scnprintf(cur, end - cur, "BUG: KFENCE: invalid free");
+> +               cur = seprintf(cur, end, "BUG: KFENCE: invalid free");
+>                 break;
+>         }
+>
+> -       scnprintf(cur, end - cur, " in %pS", r->fn);
+> +       seprintf(cur, end, " in %pS", r->fn);
+>         /* The exact offset won't match, remove it; also strip module name. */
+>         cur = strchr(expect[0], '+');
+>         if (cur)
+> @@ -144,26 +144,26 @@ static bool report_matches(const struct expect_report *r)
+>
+>         switch (r->type) {
+>         case KFENCE_ERROR_OOB:
+> -               cur += scnprintf(cur, end - cur, "Out-of-bounds %s at", get_access_type(r));
+> +               cur = seprintf(cur, end, "Out-of-bounds %s at", get_access_type(r));
+>                 addr = arch_kfence_test_address(addr);
+>                 break;
+>         case KFENCE_ERROR_UAF:
+> -               cur += scnprintf(cur, end - cur, "Use-after-free %s at", get_access_type(r));
+> +               cur = seprintf(cur, end, "Use-after-free %s at", get_access_type(r));
+>                 addr = arch_kfence_test_address(addr);
+>                 break;
+>         case KFENCE_ERROR_CORRUPTION:
+> -               cur += scnprintf(cur, end - cur, "Corrupted memory at");
+> +               cur = seprintf(cur, end, "Corrupted memory at");
+>                 break;
+>         case KFENCE_ERROR_INVALID:
+> -               cur += scnprintf(cur, end - cur, "Invalid %s at", get_access_type(r));
+> +               cur = seprintf(cur, end, "Invalid %s at", get_access_type(r));
+>                 addr = arch_kfence_test_address(addr);
+>                 break;
+>         case KFENCE_ERROR_INVALID_FREE:
+> -               cur += scnprintf(cur, end - cur, "Invalid free of");
+> +               cur = seprintf(cur, end, "Invalid free of");
+>                 break;
+>         }
+>
+> -       cur += scnprintf(cur, end - cur, " 0x%p", (void *)addr);
+> +       seprintf(cur, end, " 0x%p", (void *)addr);
+>
+>         spin_lock_irqsave(&observed.lock, flags);
+>         if (!report_available())
+> diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
+> index 9733a22c46c1..a062a46b2d24 100644
+> --- a/mm/kmsan/kmsan_test.c
+> +++ b/mm/kmsan/kmsan_test.c
+> @@ -107,9 +107,9 @@ static bool report_matches(const struct expect_report *r)
+>         cur = expected_header;
+>         end = &expected_header[sizeof(expected_header) - 1];
+>
+> -       cur += scnprintf(cur, end - cur, "BUG: KMSAN: %s", r->error_type);
+> +       cur = seprintf(cur, end, "BUG: KMSAN: %s", r->error_type);
+>
+> -       scnprintf(cur, end - cur, " in %s", r->symbol);
+> +       seprintf(cur, end, " in %s", r->symbol);
+>         /* The exact offset won't match, remove it; also strip module name. */
+>         cur = strchr(expected_header, '+');
+>         if (cur)
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index b28a1e6ae096..c696e4a6f4c2 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3359,6 +3359,7 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
+>  void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
+>  {
+>         char *p = buffer;
+> +       char *e = buffer + maxlen;
+>         nodemask_t nodes = NODE_MASK_NONE;
+>         unsigned short mode = MPOL_DEFAULT;
+>         unsigned short flags = 0;
+> @@ -3384,33 +3385,32 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
+>                 break;
+>         default:
+>                 WARN_ON_ONCE(1);
+> -               snprintf(p, maxlen, "unknown");
+> +               seprintf(p, e, "unknown");
+>                 return;
+>         }
+>
+> -       p += snprintf(p, maxlen, "%s", policy_modes[mode]);
+> +       p = seprintf(p, e, "%s", policy_modes[mode]);
+>
+>         if (flags & MPOL_MODE_FLAGS) {
+> -               p += snprintf(p, buffer + maxlen - p, "=");
+> +               p = seprintf(p, e, "=");
+>
+>                 /*
+>                  * Static and relative are mutually exclusive.
+>                  */
+>                 if (flags & MPOL_F_STATIC_NODES)
+> -                       p += snprintf(p, buffer + maxlen - p, "static");
+> +                       p = seprintf(p, e, "static");
+>                 else if (flags & MPOL_F_RELATIVE_NODES)
+> -                       p += snprintf(p, buffer + maxlen - p, "relative");
+> +                       p = seprintf(p, e, "relative");
+>
+>                 if (flags & MPOL_F_NUMA_BALANCING) {
+>                         if (!is_power_of_2(flags & MPOL_MODE_FLAGS))
+> -                               p += snprintf(p, buffer + maxlen - p, "|");
+> -                       p += snprintf(p, buffer + maxlen - p, "balancing");
+> +                               p = seprintf(p, e, "|");
+> +                       p = seprintf(p, e, "balancing");
+>                 }
+>         }
+>
+>         if (!nodes_empty(nodes))
+> -               p += scnprintf(p, buffer + maxlen - p, ":%*pbl",
+> -                              nodemask_pr_args(&nodes));
+> +               seprintf(p, e, ":%*pbl", nodemask_pr_args(&nodes));
+>  }
+>
+>  #ifdef CONFIG_SYSFS
+> diff --git a/mm/page_owner.c b/mm/page_owner.c
+> index cc4a6916eec6..5811738e3320 100644
+> --- a/mm/page_owner.c
+> +++ b/mm/page_owner.c
+> @@ -496,7 +496,7 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
+>  /*
+>   * Looking for memcg information and print it out
+>   */
+> -static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
+> +static inline char *print_page_owner_memcg(char *p, const char end[0],
+>                                          struct page *page)
+>  {
+>  #ifdef CONFIG_MEMCG
+> @@ -511,8 +511,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
+>                 goto out_unlock;
+>
+>         if (memcg_data & MEMCG_DATA_OBJEXTS)
+> -               ret += scnprintf(kbuf + ret, count - ret,
+> -                               "Slab cache page\n");
+> +               p = seprintf(p, end, "Slab cache page\n");
+>
+>         memcg = page_memcg_check(page);
+>         if (!memcg)
+> @@ -520,7 +519,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
+>
+>         online = (memcg->css.flags & CSS_ONLINE);
+>         cgroup_name(memcg->css.cgroup, name, sizeof(name));
+> -       ret += scnprintf(kbuf + ret, count - ret,
+> +       p = seprintf(p, end,
+>                         "Charged %sto %smemcg %s\n",
+>                         PageMemcgKmem(page) ? "(via objcg) " : "",
+>                         online ? "" : "offline ",
+> @@ -529,7 +528,7 @@ static inline int print_page_owner_memcg(char *kbuf, size_t count, int ret,
+>         rcu_read_unlock();
+>  #endif /* CONFIG_MEMCG */
+>
+> -       return ret;
+> +       return p;
+>  }
+>
+>  static ssize_t
+> @@ -538,14 +537,16 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+>                 depot_stack_handle_t handle)
+>  {
+>         int ret, pageblock_mt, page_mt;
+> -       char *kbuf;
+> +       char *kbuf, *p, *e;
+>
+>         count = min_t(size_t, count, PAGE_SIZE);
+>         kbuf = kmalloc(count, GFP_KERNEL);
+>         if (!kbuf)
+>                 return -ENOMEM;
+>
+> -       ret = scnprintf(kbuf, count,
+> +       p = kbuf;
+> +       e = kbuf + count;
+> +       p = seprintf(p, e,
+>                         "Page allocated via order %u, mask %#x(%pGg), pid %d, tgid %d (%s), ts %llu ns\n",
+>                         page_owner->order, page_owner->gfp_mask,
+>                         &page_owner->gfp_mask, page_owner->pid,
+> @@ -555,7 +556,7 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+>         /* Print information relevant to grouping pages by mobility */
+>         pageblock_mt = get_pageblock_migratetype(page);
+>         page_mt  = gfp_migratetype(page_owner->gfp_mask);
+> -       ret += scnprintf(kbuf + ret, count - ret,
+> +       p = seprintf(p, e,
+>                         "PFN 0x%lx type %s Block %lu type %s Flags %pGp\n",
+>                         pfn,
+>                         migratetype_names[page_mt],
+> @@ -563,22 +564,23 @@ print_page_owner(char __user *buf, size_t count, unsigned long pfn,
+>                         migratetype_names[pageblock_mt],
+>                         &page->flags);
+>
+> -       ret += stack_depot_snprint(handle, kbuf + ret, count - ret, 0);
+> -       if (ret >= count)
+> -               goto err;
+> +       p = stack_depot_seprint(handle, p, e, 0);
+> +       if (p == NULL)
+> +               goto err;  // XXX: Should we remove this error handling?
+>
+>         if (page_owner->last_migrate_reason != -1) {
+> -               ret += scnprintf(kbuf + ret, count - ret,
+> +               p = seprintf(p, e,
+>                         "Page has been migrated, last migrate reason: %s\n",
+>                         migrate_reason_names[page_owner->last_migrate_reason]);
+>         }
+>
+> -       ret = print_page_owner_memcg(kbuf, count, ret, page);
+> +       p = print_page_owner_memcg(p, e, page);
+>
+> -       ret += snprintf(kbuf + ret, count - ret, "\n");
+> -       if (ret >= count)
+> +       p = seprintf(p, e, "\n");
+> +       if (p == NULL)
+>                 goto err;
+>
+> +       ret = p - kbuf;
+>         if (copy_to_user(buf, kbuf, ret))
+>                 ret = -EFAULT;
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index be8b09e09d30..b67c6ca0d0f7 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -7451,6 +7451,7 @@ static char *create_unique_id(struct kmem_cache *s)
+>  {
+>         char *name = kmalloc(ID_STR_LENGTH, GFP_KERNEL);
+>         char *p = name;
+> +       char *e = name + ID_STR_LENGTH;
+>
+>         if (!name)
+>                 return ERR_PTR(-ENOMEM);
+> @@ -7475,9 +7476,9 @@ static char *create_unique_id(struct kmem_cache *s)
+>                 *p++ = 'A';
+>         if (p != name + 1)
+>                 *p++ = '-';
+> -       p += snprintf(p, ID_STR_LENGTH - (p - name), "%07u", s->size);
+> +       p = seprintf(p, e, "%07u", s->size);
+>
+> -       if (WARN_ON(p > name + ID_STR_LENGTH - 1)) {
+> +       if (WARN_ON(p == NULL)) {
+>                 kfree(name);
+>                 return ERR_PTR(-EINVAL);
+>         }
+> --
+> 2.50.0
+>
