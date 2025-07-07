@@ -1,147 +1,150 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A15286D49
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420441096F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751877527; cv=none; b=LFF4oL4PxHIUNdSU0dsc2Vzd0M+ga1HGq0rlMc8eIuEjv0IR5c3tOqpi+CfLNcZqrWknbpDSJIEhbYhwaHGK0DJTFbzERvEHFQKY2YhzFe10qI2JL8Ds8jJfonaY7tXOvnZa8YCxyI8+AoLJWusSUnY7s7E/ANF0IGO1lnYLywU=
+	t=1751877670; cv=none; b=cvrnNUWyUhXYnmGwN3zGhCXFWOruSvl4avYjDR6tufneKT3rP/Fxhmr2WznrCReCIUcbG/JDsCP7cJ/sniPYUb4andeiDW8achH2al62/IeQnMZ4eft9YPoY0kERIoGrVJMV3E4CvLH9J5I3zw2b02AqRQj+B1w2DHGbgNTahSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751877527; c=relaxed/simple;
-	bh=9xBalXmnJgD4RmmIV/V6wnjZTZ9oSv6heR/g4f/2kZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W8l/9fYCWDuEuj5c151YhuvQQbJBy4S3MqMNbJ7pVLosmHEsqPkM1o0/cWLQQ3yMvkDBTzhF6LsqZENeMZrUsKv0iWOfDo0XYKd/AxucDW94Xdtbc1D32Jx8JXMvhCKheyTbLY2+agLvjcN5OcQTPQb12U4MFL3pmfV6chAj6hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=M9HPD12S; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1751877670; c=relaxed/simple;
+	bh=HKns79cZKbgw1Ijaw8npP7c4PLViVmBrtOVBmRo3pDk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hevf5YKchpEvmZYre/dnYSLyfr0Ysc6wRevqzfyJoV++tZZoVwpihwpOkRBA5l2H2zGiW8+6uf0MXwaWbUazvtXlBf8GuqGgX4SuqBRVpBHn44kcH/5jh1QYczltnTrH+i+qKJIPzmYG/FcbLWvr1heDyFWUG7wm2xSnkHtB5ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vFtvqEFJ; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="M9HPD12S"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so2151261f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 01:38:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vFtvqEFJ"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55516abe02cso2930568e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 01:41:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1751877524; x=1752482324; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7aL18uBiZMw/FWxoKoVSvm/jRO6BDbywt1DvLbU3XB8=;
-        b=M9HPD12SaZJS9ElrYZwvnTw1s9jInt7WNp/e8hYRFlSnM4NDnrHzWfQYvbvlxkqqVN
-         0FJtHpS55fXWw2A57xnWoo+lTBHYbEqOpjHuxsz6RZHbP/F8Kqjsfu30EyciP0XVnJG3
-         q80/A3D/4XrbljezffxiAYrodcZFgGgJ5JkT60z1COEcD11IjPPyrvrfLmJau/RFsT30
-         f3IQlO5uw4QMS2FwYvp32AThq4nf3Ll/qhA+zjecWJnjD8P4f68JenX0qZI2Jw6aFZg8
-         Tk62dIhYC8n/ZEAIfPmKKUgxgh8/9IkW54z8hViYhdqcNzGT9B7Rg32g6s8CogXw2xiH
-         rWPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751877524; x=1752482324;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751877666; x=1752482466; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7aL18uBiZMw/FWxoKoVSvm/jRO6BDbywt1DvLbU3XB8=;
-        b=m4e9FygtscCABq3EZXWs/hFfAwRY1nvyOTdNbnMjaF9E+dEzFeYVig9DqJDxh0aEz6
-         wF+ZybGslhD1KMnK25btzFzmIjvAS3bZN43q/dvfEya2iEY7mxgnZHDhWZMUjUWcEIAF
-         urbaFgpl9NMrn4KXp9TjetNtNmKDdGVqjynncF2m61lFXMpzJVGrkQh+Kdsqu79+mNDJ
-         +4sb+AYoRi9xl8rsZglIXLA+rC1sWdoZQNfDUUezG+ix08ccXFmq86zTZtpwYAL6pogj
-         g3st4FNgELL+VyxiMCfeq0jNWA0giFoiuPeuz5Qlo9YOT6fzQ+3smeOXB2rCJHc9XkVN
-         V7bA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4+3cc7EatLAu2CKzIGb718Hi3jyWdXrfOpzpfHJX9Ov9oakx589iNrw2JoOVRhgr9JPzBTtqdvy0Bds4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyza2IEc3fJzDYO39YECAZdUNfnqXbZ3nbZa06QL7ztlkHleWfM
-	O8AmEGJwdqk0VdaWBMFQs0gLPJMdnSYRR0tFhmOWETbZHD7tq62z5AHWLp83q3JAAFw=
-X-Gm-Gg: ASbGncuzC6IxIV2+RPDRp+vk3TuxBBiAcPjUfoaZt8N4zc8t8ACy/BvJtSe9ex6i1b5
-	mXgQsXlK2ckXiCjZx/8y437eJ+VBye3ZPe4U7FhORVjl9+d/qMaWiVkv+1S98uK+XfH1ZvUjMI5
-	fKifYReSszf+rUSTmxdJKP4CqvHUp54BWw83ewD3CHmZW3vp4eKvLeZzC+FceAtiMhw8zL7UOlk
-	or8hOK/aLf6ZEA9WbtpQ0curOac2cuWdDmVvIouz8M7hzhYrORNyYc87Chrg9VK51/MPQc535AT
-	Hsb6A36Od+uzRC6vnibq+7cvLvQrwvJSZWWxuycsf7N2PzXpJ/a+6jVX36yTxJ4=
-X-Google-Smtp-Source: AGHT+IHOL134zxv2M5TIxjn1JcbIuqigNn/BoslUPqMt07/pkuCY3NvzphTd4fkc6LrVVlovNM0TJQ==
-X-Received: by 2002:a05:6000:24c9:b0:3a5:541c:b40f with SMTP id ffacd0b85a97d-3b49700c57cmr9041350f8f.9.1751877523572;
-        Mon, 07 Jul 2025 01:38:43 -0700 (PDT)
-Received: from jiri-mlt ([85.163.81.98])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1696ca8sm106595425e9.28.2025.07.07.01.38.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 01:38:43 -0700 (PDT)
-Date: Mon, 7 Jul 2025 10:38:41 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>, 
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v13 00/12] Add Microchip ZL3073x support (part 1)
-Message-ID: <cuqmu4cy52vj3njjltr3uf3ozsnmnhmo7v4lzzztftvupnf5wu@eekmg4a2wkla>
-References: <20250704182202.1641943-1-ivecera@redhat.com>
+        bh=M2ty42UaDUqlMkiP5xE2a1tdArjdzwbm7ssbtaWE4oU=;
+        b=vFtvqEFJzcZEReFV3StKrJWMyFTySw8qEAF8K3rGcKFJ0iKpKv5weHgXfN4kdQGivc
+         80h1pSpUGgWD5EWnQO/0jYACMi1I+XUIbaqzwKB72OitSicVwaPc4KfhUFj0Ocl4zvft
+         0QhPGD3OyI9544xzLxIST1Lh/kDymloAH1zLMP89furWUlKaz4WmnkhD7VhDPMXNoqtV
+         oCDadgIpSYCPNWASbDlK3ejR6VA/yu/hWOXAM3OdJ2YFvc7WRPoUoSRvWeZNtZrVslNH
+         kv4wWgtXx/2ZumLswYPeWjvh/h+1+2d5J73zWufxi++0g6ud40Q9miAbzaBLaZ48S4hP
+         LQjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751877666; x=1752482466;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M2ty42UaDUqlMkiP5xE2a1tdArjdzwbm7ssbtaWE4oU=;
+        b=BaZGfeZqDJ52r3FHWJFsdGlB9psAjzFx/ssUWuxJtZnkFKznlT0D5ob4J1O7m5QdKf
+         5VVxehipdz48YC65K1okuUskYLlNWjRqe9zSxlrqbPXZfBC87iB21e0uy0JX3xPHp+mN
+         DciiVnnp+uNSRmEwDrLXuoZL4iYILB9GDKZRUTFGHIgbXDo5Up+CFHr6nG2VnKzWCSmh
+         wfpqjtelepkGIr5CI58vOEdXW7r22kzWz/JjO3uCUtoaXcDtq+nV5a+iaY6r4iWvBBNE
+         CWG5kr+VMc0MgTWGWCyLBFZaGOALudJYsFMjQdww2c3+yYVfV58TwLpRCvBDlb2O8QEK
+         pXqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ61y6eqEc0tlhaJ++T61//P72iVN+/7s3UEBbVlJ4JSENZ0pSB5+CcNT5YdPBGKlRR8xTYEgMjJLsE0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQJCY4JQCL07Jg5rbmSYttULhV9KoNhGBSI6M3P5k8B3u/tZag
+	N7SLsHEjKdwJ6DltTi0Hw0MISC7+gjDxyToyAn1TaNq4YM+cvK1Ug0ektwUGVrvjZ/mCOsnNDXu
+	tSidfYkXGdlHxzgasmuRGEMqGATwL1xLtJJJXRi9QBQ==
+X-Gm-Gg: ASbGncs3uS/lJA08Ary4OD+8hj7z5Ecjwy4LoHI2WtMRqH3RG8fdGUkvh9igo8x7PRC
+	pHPQQu0sy/mFYjGzGFHUxQPHxfvvodAUtXrhomdJEy94/xS9iVTLgf2IzRV7j7eDLvmzP+omLJN
+	HuGgbjWrgdHsM3thcweRshI/BfEFGlXZI4jP74cW5jXBZVb0IYJ1q43IaajEsrr1cplkVf9bPoM
+	0o=
+X-Google-Smtp-Source: AGHT+IEBQJMgjjxGPUxNMZyf6ChFNk5EekGKfeAHU3z/3d2roa2tlgeHgq/aGpK6K+cYyFTqaK6iHRGTmDCxnni6ogY=
+X-Received: by 2002:a05:6512:b24:b0:554:f82f:181a with SMTP id
+ 2adb3069b0e04-55658402866mr3009050e87.2.1751877666314; Mon, 07 Jul 2025
+ 01:41:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704182202.1641943-1-ivecera@redhat.com>
+References: <20250610-gpiochip-set-rv-soc-v1-0-1a0c36c9deed@linaro.org>
+ <CAMRc=McVV=VBw0DRiz-4tTjh7ZtRLWg=N_LQ2-7O1sKyW30rxw@mail.gmail.com>
+ <c6eece57-8767-4435-beda-c9f399e3fa80@csgroup.eu> <CAMRc=MdYuk_O3P1QtepvF-6m01jn3xpDP4YxttQSp1-J-J2GvA@mail.gmail.com>
+ <f527c6a8-faf2-45b8-81f5-03def802e485@csgroup.eu>
+In-Reply-To: <f527c6a8-faf2-45b8-81f5-03def802e485@csgroup.eu>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 7 Jul 2025 10:40:55 +0200
+X-Gm-Features: Ac12FXzfvvERymQK11WeRhKmee48-1A3WRn820qRFk7sl4RxseqyIge4xppkQTw
+Message-ID: <CAMRc=McCu=VdHAEaYwdD5OLTy9MrFO=Mqq-drU1Dnr=-KfJHJw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] soc: use new GPIO line value setter callbacks
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fri, Jul 04, 2025 at 08:21:50PM +0200, ivecera@redhat.com wrote:
->Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
->provides DPLL and PTP functionality. This series bring first part
->that adds the core functionality and basic DPLL support.
+On Mon, Jun 23, 2025 at 12:05=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
 >
->The next part of the series will bring additional DPLL functionality
->like eSync support, phase offset and frequency offset reporting and
->phase adjustments.
 >
->Testing was done by myself and by Prathosh Satish on Microchip EDS2
->development board with ZL30732 DPLL chip connected over I2C bus.
 >
->---
->Changelog:
->v13:
->* added support for u64 devlink parameters
->* added support for generic devlink parameter 'clock_id'
->* several patches squashed into one per @jpirko's advice
->* renamed devlink version 'cfg.custom_ver' to 'custom_cfg'
->* per discussion with @jpirko, the clock_id is now generated randomly
->  and user have an option to change it via devlink
->* implemented devlink reload to apply clock_id change
+> Le 23/06/2025 =C3=A0 11:55, Bartosz Golaszewski a =C3=A9crit :
+> > On Mon, Jun 23, 2025 at 11:54=E2=80=AFAM Christophe Leroy
+> > <christophe.leroy@csgroup.eu> wrote:
+> >>
+> >> Hi,
+> >>
+> >>
+> >> Le 23/06/2025 =C3=A0 09:33, Bartosz Golaszewski a =C3=A9crit :
+> >>> On Tue, Jun 10, 2025 at 2:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgd=
+ev.pl> wrote:
+> >>>>
+> >>>> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that ret=
+urn
+> >>>> values") added new line setter callbacks to struct gpio_chip. They a=
+llow
+> >>>> to indicate failures to callers. We're in the process of converting =
+all
+> >>>> GPIO controllers to using them before removing the old ones. This se=
+ries
+> >>>> converts all GPIO chips implemented under drivers/soc/.
+> >>>>
+> >>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>> ---
+> >>>> Bartosz Golaszewski (2):
+> >>>>         soc: fsl: qe: use new GPIO line value setter callbacks
+> >>>>         soc: renesas: pwc-rzv2m: use new GPIO line value setter call=
+backs
+> >>>>
+> >>>>    drivers/soc/fsl/qe/gpio.c       | 6 ++++--
+> >>>>    drivers/soc/renesas/pwc-rzv2m.c | 8 +++++---
+> >>>>    2 files changed, 9 insertions(+), 5 deletions(-)
+> >>>> ---
+> >>>> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> >>>> change-id: 20250523-gpiochip-set-rv-soc-14e1d9414f70
+> >>>>
+> >>>> Best regards,
+> >>>> --
+> >>>> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>>
+> >>>
+> >>> I see Geert queued patch 2/2, who would take patch 1/2?
+> >>
+> >>
+> >> It is in my pipe for v6.17 but if someone else wants to take it I can
+> >> Ack it instead.
+> >>
+> >> Christophe
+> >
+> > No, that's alright, I just didn't get any notification nor is it in
+> > linux-next yet.
 >
->v12:
->* Using 'return dev_err_probe()'
->* Separate zl3073x_chip_info structures instead of array
->* Use mul_u64_u32_div() to compute input reference frequency to avoid
->  potential overflow
->* Removed superfluous check in zl3073x_dpll_output_pin_frequency_set()
->
->v11:
->* Fixed uninitialized 'rc' in error-path in patch 9
->
->v10:
->* Usage of str_enabled_disabled() where possible.
->
->v9:
->After discussion with Jakub Kicinski we agreed that it would be better
->to implement whole functionality in a single driver without touching
->MFD sub-system. Besides touching multiple sub-systems by single device
->there are also some technical issues that are easier resolvable
->in a single driver. Additionally the firmware flashing functionality
->would bring more than 1000 lines of code with previous approach to
->the MFD driver - it is not something the MFD maintainers would like
->to see.
->
->Ivan Vecera (12):
->  dt-bindings: dpll: Add DPLL device and pin
->  dt-bindings: dpll: Add support for Microchip Azurite chip family
->  devlink: Add support for u64 parameters
->  devlink: Add new "clock_id" generic device param
->  dpll: Add basic Microchip ZL3073x support
->  dpll: zl3073x: Fetch invariants during probe
->  dpll: zl3073x: Read DPLL types and pin properties from system firmware
->  dpll: zl3073x: Register DPLL devices and pins
->  dpll: zl3073x: Implement input pin selection in manual mode
->  dpll: zl3073x: Add support to get/set priority on input pins
->  dpll: zl3073x: Implement input pin state setting in automatic mode
->  dpll: zl3073x: Add support to get/set frequency on pins
+> Don't worry, it is not lost, see
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=3D&submitt=
+er=3D&state=3D&q=3D&archive=3D&delegate=3D61610
 
-For the DPLL related code:
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+Hi,
+
+This is still not in linux-next and the status on patchwork didn't
+change. This will be the last remaining patch not under drivers/gpio/
+that's needed to complete this rework by the next cycle. Would you
+mind just Acking it and I can take it through the GPIO tree?
+
+Bart
