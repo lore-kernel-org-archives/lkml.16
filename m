@@ -1,108 +1,111 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C022D27B4E5;
-	Mon,  7 Jul 2025 09:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1351E3DF2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882001; cv=none; b=upsIznX73q2GwHFdEZKMemWcHVLhPUvxEIqfadST8p5rltHs36SunisN+q/HYtw4RDZdEdxC3EY8qYZmYGhl7wb2Dx9Fl3rgRblK24G762w4z2/bkg1EmBbiR+x99gH3j2jwMjHnWZcppBC76Snzfig9DiGrax6ieNWBKnAGzq4=
+	t=1751882066; cv=none; b=hSSPS+u/CrN/dDaEL1GLrF9WXQWXku3R0SNuVRCIexhLoo2w05DNQmwnkmja7PyY4Jgiq7cpNFpfkJSs/EjCsrJPkIh0iR6HchXGUbgmL+ZMwYNAnPq0PQkI3C//HDDuPSLwxkk3r8t4pWkYNUQrkyzGYF8AYPd+slnQdhkSNw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882001; c=relaxed/simple;
-	bh=8ikOpE89nvt2c13af32uAx4FAwR6RstV2FdUjQu/CSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NSZeF61X6JtXNazCwpPqbh5G8qPxuss78XlRFzZYrlekWpNvquk7/7YEPBGCLgRN91nYtKejF72OS2+CxRIKi9g9kYuWvejMm/8tmsTBeniiRIM2heaVRdHOvoparu8B1NwsEsnDyW2zy6HSBD8lq1DLY6aMn2eymmtuqAY+jQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2e93fc545b1811f0b29709d653e92f7d-20250707
-X-CID-CACHE: Type:Local,Time:202507071739+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:2ab2d498-7f91-40bb-bdd8-b619344a3bb3,IP:0,U
-	RL:0,TC:10,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:10
-X-CID-META: VersionHash:6493067,CLOUDID:0e0ec62399c8d822338bf1a4d728e3dd,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:4,Content:0|52,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 1,FCT|NGT
-X-CID-BAS: 1,FCT|NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 2e93fc545b1811f0b29709d653e92f7d-20250707
-X-User: dengjie03@kylinos.cn
-Received: from [10.42.12.86] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <dengjie03@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 428882174; Mon, 07 Jul 2025 17:53:06 +0800
-Message-ID: <2c4af4f8-5763-4ebf-8070-c7eabf43fe5e@kylinos.cn>
-Date: Mon, 7 Jul 2025 17:52:31 +0800
+	s=arc-20240116; t=1751882066; c=relaxed/simple;
+	bh=PMctWqdSUwyJh+vgKsEE3Z5HNCwNGQH1LRJi+dlS/aE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UBXRW+Y6IcuMFy7Xg51KB32Ge32DKaKU0J4KTfuSy0NZ+jHY+OwbCQmlYSa/sSP5EE82ATh5gmlIUaRbtzImp/Jr6PNVj93GflLLPqAnEJFfJ2Cqv0dv3qECs3RVjtYWyEKTt0nuc0H4ZYANrV9q+zMtbjp5CWAn3Daz7PWOO4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AfUibJVB; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AfUibJVB"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4538bc1cffdso25001515e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751882063; x=1752486863; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WCkV6gDGOoOMF8igB/5H1As4Qg7c4viJIZ8RBw36e10=;
+        b=AfUibJVBFIalQoFvAY+0wZdvcNMIJ6yijMzrnKhoO7uWtfTm4X+aIo8mzrUXN0dtnZ
+         FPZxweitmEr7ZOUxnFEcu6Z/eK0ycSs8/MrluOjNRp3l8Bn+WzfRPwFotVIAonMpkdIb
+         MrcJ8dLcv15/p9VsYjLoSup24sdxKFMPkw1NMPHtMxYXSJswRuWnNer8LHcyrijdHEcl
+         ha6qCgJ0xHkuClyib65oy0SOQjg5rFySXfQyimPsvS/PWxvZMpsXIr8ZxBY+oZ5YAWEn
+         paFUyhr8cqKTdTQOYHf45onAIfnGbtq+zfdCcz3yxRPI4oh0zDBlSy9z+Vo82v+7wU4i
+         CU/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751882063; x=1752486863;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WCkV6gDGOoOMF8igB/5H1As4Qg7c4viJIZ8RBw36e10=;
+        b=f0uC6qK4dDc20UBWN5puJkbrQyQJEWCdTdWdhrRQ4GzxY6TPtJ04rBm5SxEixBHTry
+         uDzVt5ZgbCumdeyvaKkKTxKc+b0buxi2JnIgfJVWIqMr+rMgjH0z5679mi7jcx82Wgy5
+         na+KNC/QuSqpwpMrcn9qJHZo3lYen7ggzRqUZ67w8iZJDGOzML8vbKMf9742gFhEc8aw
+         A4TQkG7O+iTmKMljApyDjjKX8yVJvl3N9SsuSUJ2N07kU8w6CWfMeg5tMuJVlU0gusVR
+         X9xYEp8w2nAFatHc8KIYmUp+nNr3kvwzAQLBQbcI9zXVGMwTgwf9Zo0cNprubCIHkAL+
+         Owww==
+X-Forwarded-Encrypted: i=1; AJvYcCV3IcqU7pgNQXtIJpx4TlqrWg2yu9eubaBIVCRvyoSgHhajhFx66GiY5gyg4tIOJNKRIQoJg65OGiTkg1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXbdFU2Li2HrjnCGCbLDxELef/kKd3VNnfzVgAapwcxXOLYyoZ
+	FEhk7qoeZEA/whYR2Cwl/5tMxzjPCIhRIK3L511PT3+ekQ2b2peKE/mj7gy2FKA/Gyo=
+X-Gm-Gg: ASbGncvLQixHcAP1w3EKlN+jlm7QspFlmbx1fovwa04M+Qq83vPqlKHTm0+jDdfdOfT
+	FeZdTLq/jQY3WbD2eMIydGRIT3oW9lqEMaxmLLDG71PqzCeJvSR7FX4YLE8z24m0c/g1gncZ9L4
+	xJbj5hz/D/cewSC20557iMeuALmW3HPh81Ek8ZxZK7b3i37db25M6ooDMT1Etcqom1xmh7k6euG
+	bcTxavj7kxxl66OEsS/Ye2a8oi3fZYP8QUHcqlMYthsnDte3lVUTRARFZje8cl9SNJ3ic0bcJi5
+	59WIq0AQQrYv4c4vOrEeCwpdT0lqSF+8bZ2XG70xXiP+Ak6Ko13KUrt/m/kcUM2TgE5QtzErgKf
+	ajRHTyD5PfH+sP+bdo1jNKjnv
+X-Google-Smtp-Source: AGHT+IGNA0zQonP2czf5X1Jge+pwADtgl7Io7cV8JOwQeqN86Oye2fUbW6LvrQW+jILiqb5VBqE7Pg==
+X-Received: by 2002:a05:600c:45cf:b0:43d:47b7:b32d with SMTP id 5b1f17b1804b1-454b4eb7f3bmr96048435e9.25.1751882062707;
+        Mon, 07 Jul 2025 02:54:22 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a1705ed5sm89436555e9.2.2025.07.07.02.54.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:54:22 -0700 (PDT)
+Date: Mon, 7 Jul 2025 11:54:20 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: wctrl@proton.me
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v4 03/11] dt-bindings: timer: mediatek: add MT6572
+Message-ID: <aGuZTIP3vo9q7MMV@mai.linaro.org>
+References: <20250702-mt6572-v4-0-bde75b7ed445@proton.me>
+ <20250702-mt6572-v4-3-bde75b7ed445@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] usb: storage: Ignore UAS driver for SanDisk Extreme
- Pro 55AF storage device
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stern@rowland.harvard.edu, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
-References: <2025070422-punctured-opal-f51e@gregkh>
- <20250707062507.39531-1-dengjie03@kylinos.cn>
- <2025070725-circle-recite-bc04@gregkh>
-From: Jie Deng <dengjie03@kylinos.cn>
-In-Reply-To: <2025070725-circle-recite-bc04@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702-mt6572-v4-3-bde75b7ed445@proton.me>
 
+On Wed, Jul 02, 2025 at 01:50:40PM +0300, Max Shevchenko via B4 Relay wrote:
+> From: Max Shevchenko <wctrl@proton.me>
+> 
+> Add a compatible string for timer on the MT6572 SoC.
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Max Shevchenko <wctrl@proton.me>
+> ---
 
-在 2025/7/7 16:47, Greg KH 写道:
->   　> So ignore UAS driver for this device.
-> > 
-> > Signed-off-by: Jie Deng <dengjie03@kylinos.cn>
-> > ---
-> > v2:
-> > 	* According to the file modification rules (sort by VendorID 
-> > 	  first, then by ProductID.) Add the newly added "UNUSUAL_DEV" 
-> > 	  in the correct position.
-> > v1:
-> > 	* The newly added "UNUSUAL_DEV" was directly added to the end 
-> > 	  without modifying the format according to the file.
-> > 
-> > ---
-> >  drivers/usb/storage/unusual_uas.h | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-> > index 1477e31d7763..6b1a08e2e724 100644
-> > --- a/drivers/usb/storage/unusual_uas.h
-> > +++ b/drivers/usb/storage/unusual_uas.h
-> > @@ -52,6 +52,13 @@ UNUSUAL_DEV(0x059f, 0x1061, 0x0000, 0x9999,
-> >  		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-> >  		US_FL_NO_REPORT_OPCODES | US_FL_NO_SAME),
-> >  
-> > +/* Reported-by: Jie Deng <dengjie03@kylinos.cn> */
-> > +UNUSUAL_DEV(0x0781, 0x55af, 0x0000, 0x9999,
-> > +		"SanDisk",
-> > +		"Extreme Pro 55AF",
-> > +		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-> > +		US_FL_IGNORE_UAS),
-> > +
-> >  /* Reported-by: Zhihong Zhou <zhouzhihong@greatwall.com.cn> */
-> >  UNUSUAL_DEV(0x0781, 0x55e8, 0x0000, 0x9999,
-> >  		"SanDisk",
-> > -- 
-> > 2.25.1
->
-> Why is there two "v2" patches sent here?  Shouldn't this be "v3"?
->
-> confused,
->
-> greg k-h 　 　 　 　 　 　 　 　 　 　　
->
-The first sent V2 patch was missing the description of the
-differences between V1 and V2 patches. The V2 patch sent for
-the second time only adds a description of the differences
-from the V1 patch compared to the V2 patch sent for the first time.
-There is no modification to the code. So it is rashly believed
-that it does not need to be defined as a V3 patch.
+Applied, thanks
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
