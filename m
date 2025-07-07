@@ -1,225 +1,267 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CCB16DEB1;
-	Mon,  7 Jul 2025 10:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDB01F8755;
+	Mon,  7 Jul 2025 10:01:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882441; cv=none; b=u3Gr60GKdleJZJHjizbanyeVxWe2+jdJfeTXor7Kt70z3ZR9MbBsVz9TvrEwRQkdHpqilYfWESYlLz9mRa8gsJSCJ9j5+f0K0PmnEVX3VfhupbsAynBN4XVgQshE+Oi6imv8Sh3GMBduIZYnmvppL8BOmYVpuqqUL48K4/s9wmA=
+	t=1751882492; cv=none; b=Wp3B4M6iCSl3dVIqkto9mwTtKwye6vcM1gCB7V7Fs0P89kU1rrGj/Gt466fVZXuv4zRi0mmFqK7TBH7DE321yIDtwGpgb16f7KdX59JeWb3l6VHNkI8f7qH0wB4K++5UOTT5sRvHOHmolQcxEmumSgF073LjvikJgXBoyXJZhHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882441; c=relaxed/simple;
-	bh=BlBD4CEIwIa0l/ZBHCnwTrIa4rAYovnkqlgWjQOi2VE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bqs4qXDk0+AY3pm3nPY2CCr5GBBykODcwsY9ivhzXSU+YOcgT3qdDZKh+Mv2HykM327FnaMjcfDN4ezQBlsbIH5SxX4cZXalgVg89jefftWJCgClth1fRQDG5k8TnbLQDccC/aSlnVUuAUF5KhzjQJmJ0Nvn0ofkYmdwlM4FGe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqwQUCoH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751882492; c=relaxed/simple;
+	bh=LrbLvzvF6gmWIWOl/u5715b2a2XljRasgW9tuQ0jM6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQcBW/sNuDpSnsFFAdb3XNoAth+9sUHcGeMYl7mOqjS+o3T39z6owG5hRP5HRoy3X/HJtkrZe7MuoQfHjZ9YMVQD++cDkRfm8qjX7lYckGDoOfKiI5Y0eKbuMjt27STq7eVC5cb7ZhbAbhKn8QB/J4Wu70mj/6J1EWkFm+b02ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6NRB7S8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqwQUCoH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44FEEC4CEEF;
-	Mon,  7 Jul 2025 10:00:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6NRB7S8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181DCC4CEE3;
+	Mon,  7 Jul 2025 10:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751882440;
-	bh=BlBD4CEIwIa0l/ZBHCnwTrIa4rAYovnkqlgWjQOi2VE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rqwQUCoHPdjiVgwMDgRtdwiJrd/O5Un5aNrzQs2VKgeZy9I2ujov5xihUM92ZTS5w
-	 FZwBmZn8AYv5jVr1PpBx4hqrt65zyjUwcwEAgEfKmktZJhFunz/OhC7YFejOadZvEI
-	 GDtyAVzcpOFEe6ugncojtXJefKTZ9Zxi5mad/Ez4WwgGTURhFv501pCTno0h11GXlY
-	 VEntLYT3pw4MKDUJh0yb/Ic6EBInpztqZq+0q2LioHs+3ODR6LP2pPLFakq8FIWeAG
-	 Kh4vznfoyqN1XinRMXv9VIfW8GeBBQXBoprXhyQVEQ+QzTLLaTHwbh96tZQOQwCZ0g
-	 ogEzgDS9ajrSQ==
-Message-ID: <c9824a36-7070-4600-9259-54b10b355790@kernel.org>
-Date: Mon, 7 Jul 2025 12:00:35 +0200
+	s=k20201202; t=1751882490;
+	bh=LrbLvzvF6gmWIWOl/u5715b2a2XljRasgW9tuQ0jM6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o6NRB7S8gi/pE+s4x+hbM9kCMnDJbR3mkeGKx8D65z8RIF9O/zQMzDaF9fKX2lZe5
+	 Nd0DpOG0gitZdCYiaqF1JNSqnOZ5KgaDUP3UqsA9MhbPpJd4J6jWznNxbPwjGew77M
+	 2+2tTI1brE2/H97GiNnLhgMhPy6DOzkvLNMZeNNdjXm9f32tnILnNwf90kIcCXoFlu
+	 VUupgU0UWvQsG9GqD9iFLY/+AbbhxD2252FQtSr1zJ8M1xYhxN0M+/jCQz30+VIqQ+
+	 jp/3pGkDcE+M9uDE4o9E+mIrIGYImdlp9Y0RI7xKh1bPXEfXNroQ1BOhfFc9e3fSvc
+	 4qCcaMf4Trtnw==
+Date: Mon, 7 Jul 2025 11:01:24 +0100
+From: Simon Horman <horms@kernel.org>
+To: Vivian Wang <wangruikang@iscas.ac.cn>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Vivian Wang <uwu@dram.page>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Junhui Liu <junhui.liu@pigmoral.tech>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 2/2] net: spacemit: Add K1 Ethernet MAC
+Message-ID: <20250707100124.GC89747@horms.kernel.org>
+References: <20250703-net-k1-emac-v4-0-686d09c4cfa8@iscas.ac.cn>
+ <20250703-net-k1-emac-v4-2-686d09c4cfa8@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/3] media: stk1160: use
- usb_alloc_noncoherent/usb_free_noncoherent()
-To: Xu Yang <xu.yang_2@nxp.com>, ezequiel@vanguardiasur.com.ar,
- mchehab@kernel.org, laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
- gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
- andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
- thomas.weissschuh@linutronix.de
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
-References: <20250704095751.73765-1-xu.yang_2@nxp.com>
- <20250704095751.73765-4-xu.yang_2@nxp.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250704095751.73765-4-xu.yang_2@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703-net-k1-emac-v4-2-686d09c4cfa8@iscas.ac.cn>
 
-Hi,
-
-On 4-Jul-25 11:57, Xu Yang wrote:
-> This will use USB noncoherent API to alloc/free urb buffers, then
-> stk1160 driver needn't to do dma sync operations by itself.
+On Thu, Jul 03, 2025 at 05:42:03PM +0800, Vivian Wang wrote:
+> The Ethernet MACs found on SpacemiT K1 appears to be a custom design
+> that only superficially resembles some other embedded MACs. SpacemiT
+> refers to them as "EMAC", so let's just call the driver "k1_emac".
 > 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-Regards,
-
-Hans
-
-
-
-> ---
-> Changes in v5:
->  - no changes
-> Changes in v4:
->  - no changes
-> Changes in v3:
->  - no changes
-> ---
->  drivers/media/usb/stk1160/stk1160-v4l.c   |  4 ---
->  drivers/media/usb/stk1160/stk1160-video.c | 43 ++++++-----------------
->  drivers/media/usb/stk1160/stk1160.h       |  7 ----
->  3 files changed, 11 insertions(+), 43 deletions(-)
+> This driver is based on "k1x-emac" in the same directory in the vendor's
+> tree [1]. Some debugging tunables have been fixed to vendor-recommended
+> defaults, and PTP support is not included yet.
 > 
-> diff --git a/drivers/media/usb/stk1160/stk1160-v4l.c b/drivers/media/usb/stk1160/stk1160-v4l.c
-> index 5ba3d9c4b3fb..715ce1dcb304 100644
-> --- a/drivers/media/usb/stk1160/stk1160-v4l.c
-> +++ b/drivers/media/usb/stk1160/stk1160-v4l.c
-> @@ -232,10 +232,6 @@ static int stk1160_start_streaming(struct stk1160 *dev)
->  
->  	/* submit urbs and enables IRQ */
->  	for (i = 0; i < dev->isoc_ctl.num_bufs; i++) {
-> -		struct stk1160_urb *stk_urb = &dev->isoc_ctl.urb_ctl[i];
-> -
-> -		dma_sync_sgtable_for_device(stk1160_get_dmadev(dev), stk_urb->sgt,
-> -					    DMA_FROM_DEVICE);
->  		rc = usb_submit_urb(dev->isoc_ctl.urb_ctl[i].urb, GFP_KERNEL);
->  		if (rc) {
->  			stk1160_err("cannot submit urb[%d] (%d)\n", i, rc);
-> diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
-> index 9cbd957ecc90..416cb74377eb 100644
-> --- a/drivers/media/usb/stk1160/stk1160-video.c
-> +++ b/drivers/media/usb/stk1160/stk1160-video.c
-> @@ -298,9 +298,7 @@ static void stk1160_process_isoc(struct stk1160 *dev, struct urb *urb)
->  static void stk1160_isoc_irq(struct urb *urb)
->  {
->  	int i, rc;
-> -	struct stk1160_urb *stk_urb = urb->context;
-> -	struct stk1160 *dev = stk_urb->dev;
-> -	struct device *dma_dev = stk1160_get_dmadev(dev);
-> +	struct stk1160 *dev = urb->context;
->  
->  	switch (urb->status) {
->  	case 0:
-> @@ -315,10 +313,6 @@ static void stk1160_isoc_irq(struct urb *urb)
->  		return;
->  	}
->  
-> -	invalidate_kernel_vmap_range(stk_urb->transfer_buffer,
-> -				     urb->transfer_buffer_length);
-> -	dma_sync_sgtable_for_cpu(dma_dev, stk_urb->sgt, DMA_FROM_DEVICE);
-> -
->  	stk1160_process_isoc(dev, urb);
->  
->  	/* Reset urb buffers */
-> @@ -327,7 +321,6 @@ static void stk1160_isoc_irq(struct urb *urb)
->  		urb->iso_frame_desc[i].actual_length = 0;
->  	}
->  
-> -	dma_sync_sgtable_for_device(dma_dev, stk_urb->sgt, DMA_FROM_DEVICE);
->  	rc = usb_submit_urb(urb, GFP_ATOMIC);
->  	if (rc)
->  		stk1160_err("urb re-submit failed (%d)\n", rc);
-> @@ -365,11 +358,9 @@ void stk1160_cancel_isoc(struct stk1160 *dev)
->  
->  static void stk_free_urb(struct stk1160 *dev, struct stk1160_urb *stk_urb)
->  {
-> -	struct device *dma_dev = stk1160_get_dmadev(dev);
-> -
-> -	dma_vunmap_noncontiguous(dma_dev, stk_urb->transfer_buffer);
-> -	dma_free_noncontiguous(dma_dev, stk_urb->urb->transfer_buffer_length,
-> -			       stk_urb->sgt, DMA_FROM_DEVICE);
-> +	usb_free_noncoherent(dev->udev, stk_urb->urb->transfer_buffer_length,
-> +			     stk_urb->transfer_buffer, DMA_FROM_DEVICE,
-> +			     stk_urb->sgt);
->  	usb_free_urb(stk_urb->urb);
->  
->  	stk_urb->transfer_buffer = NULL;
-> @@ -410,32 +401,19 @@ void stk1160_uninit_isoc(struct stk1160 *dev)
->  static int stk1160_fill_urb(struct stk1160 *dev, struct stk1160_urb *stk_urb,
->  			    int sb_size, int max_packets)
->  {
-> -	struct device *dma_dev = stk1160_get_dmadev(dev);
-> -
->  	stk_urb->urb = usb_alloc_urb(max_packets, GFP_KERNEL);
->  	if (!stk_urb->urb)
->  		return -ENOMEM;
-> -	stk_urb->sgt = dma_alloc_noncontiguous(dma_dev, sb_size,
-> -					       DMA_FROM_DEVICE, GFP_KERNEL, 0);
-> -
-> -	/*
-> -	 * If the buffer allocation failed, we exit but return 0 since
-> -	 * we allow the driver working with less buffers
-> -	 */
-> -	if (!stk_urb->sgt)
-> -		goto free_urb;
->  
-> -	stk_urb->transfer_buffer = dma_vmap_noncontiguous(dma_dev, sb_size,
-> -							  stk_urb->sgt);
-> +	stk_urb->transfer_buffer = usb_alloc_noncoherent(dev->udev, sb_size,
-> +							 GFP_KERNEL, &stk_urb->dma,
-> +							 DMA_FROM_DEVICE, &stk_urb->sgt);
->  	if (!stk_urb->transfer_buffer)
-> -		goto free_sgt;
-> +		goto free_urb;
->  
-> -	stk_urb->dma = stk_urb->sgt->sgl->dma_address;
->  	stk_urb->dev = dev;
->  	return 0;
-> -free_sgt:
-> -	dma_free_noncontiguous(dma_dev, sb_size, stk_urb->sgt, DMA_FROM_DEVICE);
-> -	stk_urb->sgt = NULL;
+> [1]: https://github.com/spacemit-com/linux-k1x
+> 
+> Tested-by: Junhui Liu <junhui.liu@pigmoral.tech>
+> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+
+...
+
+> diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
+
+...
+
+> +/**
+> + * struct emac_desc_ring - Software-side information for one descriptor ring
+> + * Same struture used for both RX and TX
+
+nit: structure
+
+> + * @desc_addr: Virtual address to the descriptor ring memory
+> + * @desc_dma_addr: DMA address of the descriptor ring
+> + * @total_size: Size of ring in bytes
+> + * @total_cnt: Number of descriptors
+> + * @head: Next descriptor to associate a buffer with
+> + * @tail: Next descriptor to check status bit
+> + * @rx_desc_buf: Array of descriptors for RX
+> + * @tx_desc_buf: Array of descriptors for TX, with max of two buffers each
+> + */
+
+...
+
+> +static void emac_set_mac_addr(struct emac_priv *priv, const unsigned char *addr)
+> +{
+> +	emac_wr(priv, MAC_ADDRESS1_HIGH, ((addr[1] << 8) | addr[0]));
+
+nit: no need for inner parentheses here,
+     the order of operations is on your side
+
+	emac_wr(priv, MAC_ADDRESS1_HIGH, addr[1] << 8 | addr[0]);
+
+> +	emac_wr(priv, MAC_ADDRESS1_MED, ((addr[3] << 8) | addr[2]));
+> +	emac_wr(priv, MAC_ADDRESS1_LOW, ((addr[5] << 8) | addr[4]));
+> +}
+
+...
+
+> +static int emac_rx_frame_status(struct emac_priv *priv, struct emac_desc *desc)
+> +{
+> +	/* Drop if not last descriptor */
+> +	if (!(desc->desc0 & RX_DESC_0_LAST_DESCRIPTOR)) {
+> +		netdev_dbg(priv->ndev, "RX not last descriptor\n");
+
+Unless I am mistaken these logs can occur on the basis of user
+(Network packet) input. If so, I think rate limited debug
+messages are more appropriate here and below.
+
+> +		return RX_FRAME_DISCARD;
+> +	}
 > +
->  free_urb:
->  	usb_free_urb(stk_urb->urb);
->  	stk_urb->urb = NULL;
-> @@ -494,12 +472,13 @@ int stk1160_alloc_isoc(struct stk1160 *dev)
->  		urb->transfer_buffer = dev->isoc_ctl.urb_ctl[i].transfer_buffer;
->  		urb->transfer_buffer_length = sb_size;
->  		urb->complete = stk1160_isoc_irq;
-> -		urb->context = &dev->isoc_ctl.urb_ctl[i];
-> +		urb->context = dev;
->  		urb->interval = 1;
->  		urb->start_frame = 0;
->  		urb->number_of_packets = max_packets;
->  		urb->transfer_flags = URB_ISO_ASAP | URB_NO_TRANSFER_DMA_MAP;
->  		urb->transfer_dma = dev->isoc_ctl.urb_ctl[i].dma;
-> +		urb->sgt = dev->isoc_ctl.urb_ctl[i].sgt;
->  
->  		k = 0;
->  		for (j = 0; j < max_packets; j++) {
-> diff --git a/drivers/media/usb/stk1160/stk1160.h b/drivers/media/usb/stk1160/stk1160.h
-> index 7b498d14ed7a..4cbcb0a03bab 100644
-> --- a/drivers/media/usb/stk1160/stk1160.h
-> +++ b/drivers/media/usb/stk1160/stk1160.h
-> @@ -16,8 +16,6 @@
->  #include <media/videobuf2-v4l2.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ctrls.h>
-> -#include <linux/usb.h>
-> -#include <linux/usb/hcd.h>
->  
->  #define STK1160_VERSION		"0.9.5"
->  #define STK1160_VERSION_NUM	0x000905
-> @@ -195,8 +193,3 @@ void stk1160_select_input(struct stk1160 *dev);
->  
->  /* Provided by stk1160-ac97.c */
->  void stk1160_ac97_setup(struct stk1160 *dev);
-> -
-> -static inline struct device *stk1160_get_dmadev(struct stk1160 *dev)
-> -{
-> -	return bus_to_hcd(dev->udev->bus)->self.sysdev;
-> -}
+> +	if (desc->desc0 & RX_DESC_0_FRAME_RUNT) {
+> +		netdev_dbg(priv->ndev, "RX runt frame\n");
+> +		return RX_FRAME_DISCARD;
+> +	}
+> +
+> +	if (desc->desc0 & RX_DESC_0_FRAME_CRC_ERR) {
+> +		netdev_dbg(priv->ndev, "RX frame CRC error\n");
+> +		return RX_FRAME_DISCARD;
+> +	}
+> +
+> +	if (desc->desc0 & RX_DESC_0_FRAME_MAX_LEN_ERR) {
+> +		netdev_dbg(priv->ndev, "RX frame exceeds max length\n");
+> +		return RX_FRAME_DISCARD;
+> +	}
+> +
+> +	if (desc->desc0 & RX_DESC_0_FRAME_JABBER_ERR) {
+> +		netdev_dbg(priv->ndev, "RX frame jabber error\n");
+> +		return RX_FRAME_DISCARD;
+> +	}
+> +
+> +	if (desc->desc0 & RX_DESC_0_FRAME_LENGTH_ERR) {
+> +		netdev_dbg(priv->ndev, "RX frame length error\n");
+> +		return RX_FRAME_DISCARD;
+> +	}
+> +
+> +	if (rx_frame_len(desc) <= ETH_FCS_LEN ||
+> +	    rx_frame_len(desc) > priv->dma_buf_sz) {
+> +		netdev_dbg(priv->ndev, "RX frame length unacceptable\n");
+> +		return RX_FRAME_DISCARD;
+> +	}
+> +	return RX_FRAME_OK;
+> +}
 
+...
+
+> +static int emac_resume(struct device *dev)
+> +{
+> +	struct emac_priv *priv = dev_get_drvdata(dev);
+> +	struct net_device *ndev = priv->ndev;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->bus_clk);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to enable bus clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (!netif_running(ndev))
+> +		return 0;
+> +
+> +	ret = emac_open(ndev);
+> +	if (ret)
+
+Smatch flags that priv->bus_clk resources are leaked here, and I agree.
+
+> +		return ret;
+> +
+> +	netif_device_attach(ndev);
+> +	return 0;
+> +}
+
+I would suggest addressing that like this.
+(Compile tested only!)
+
+diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
+index 6158e776bc67..ebd02ec2bb01 100644
+--- a/drivers/net/ethernet/spacemit/k1_emac.c
++++ b/drivers/net/ethernet/spacemit/k1_emac.c
+@@ -1843,10 +1843,14 @@ static int emac_resume(struct device *dev)
+ 
+ 	ret = emac_open(ndev);
+ 	if (ret)
+-		return ret;
++		goto err_clk_disable_unprepare;
+ 
+ 	netif_device_attach(ndev);
+ 	return 0;
++
++err_clk_disable_unprepare:
++	clk_disable_unprepare(priv->bus_clk);
++	return ret;
+ }
+ 
+ static int emac_suspend(struct device *dev)
+
+...
+
+> diff --git a/drivers/net/ethernet/spacemit/k1_emac.h b/drivers/net/ethernet/spacemit/k1_emac.h
+
+...
+
+> +struct emac_hw_stats {
+> +	u32 tx_ok_pkts;
+> +	u32 tx_total_pkts;
+> +	u32 tx_ok_bytes;
+> +	u32 tx_err_pkts;
+> +	u32 tx_singleclsn_pkts;
+> +	u32 tx_multiclsn_pkts;
+> +	u32 tx_lateclsn_pkts;
+> +	u32 tx_excessclsn_pkts;
+> +	u32 tx_unicast_pkts;
+> +	u32 tx_multicast_pkts;
+> +	u32 tx_broadcast_pkts;
+> +	u32 tx_pause_pkts;
+> +	u32 rx_ok_pkts;
+> +	u32 rx_total_pkts;
+> +	u32 rx_crc_err_pkts;
+> +	u32 rx_align_err_pkts;
+> +	u32 rx_err_total_pkts;
+> +	u32 rx_ok_bytes;
+> +	u32 rx_total_bytes;
+> +	u32 rx_unicast_pkts;
+> +	u32 rx_multicast_pkts;
+> +	u32 rx_broadcast_pkts;
+> +	u32 rx_pause_pkts;
+> +	u32 rx_len_err_pkts;
+> +	u32 rx_len_undersize_pkts;
+> +	u32 rx_len_oversize_pkts;
+> +	u32 rx_len_fragment_pkts;
+> +	u32 rx_len_jabber_pkts;
+> +	u32 rx_64_pkts;
+> +	u32 rx_65_127_pkts;
+> +	u32 rx_128_255_pkts;
+> +	u32 rx_256_511_pkts;
+> +	u32 rx_512_1023_pkts;
+> +	u32 rx_1024_1518_pkts;
+> +	u32 rx_1519_plus_pkts;
+> +	u32 rx_drp_fifo_full_pkts;
+> +	u32 rx_truncate_fifo_full_pkts;
+> +};
+
+Many of the stats above appear to cover stats covered by struct
+rtnl_link_stats64, ethtool_pause_stats, struct ethtool_rmon_stats, and
+possibly others standardised in ethtool.h. Please only report standard
+counters using standard mechanisms. And only use get_ethtool_stats to
+report non-standard counters.
+
+Link: https://www.kernel.org/doc/html/v6.16-rc4/networking/statistics.html#notes-for-driver-authors
+
+...
+
+-- 
+pw-bot: changes-requested
