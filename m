@@ -1,71 +1,40 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp112.iad3b.emailsrvr.com (smtp112.iad3b.emailsrvr.com [146.20.161.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0532BDC2D;
-	Mon,  7 Jul 2025 13:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1562951D0
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751896303; cv=none; b=rreXcJunVVsc1RbdrOUrJFS2wzHyoYvEQTyCYyNrDI6Kv2YckO2taEQfX96ttWkHPLXSucRiStyIsqObSH85Rb5r4A8OKAlT/ZyoWZ5J0nu5yat66RqWk2Vwv0RSZs6A/B28AZB1z41vQbT3BT2a+Zj1CbsBmiLIfBPem/uYPXM=
+	t=1751896319; cv=none; b=ADgbiSUy+F7pTFdV87saViTYXDCR5b6astB5rKlXwgtdCfRpfcQ2nxzFedagewKLOu6DLaRQIQff4SpihVgzG2GI7dTNT8WJJBmizK7yen6pBvLio9zTEvwFPrdZCJZeCf4tbzH+HSyN3cZDiOjdP6s4IOfQzez9b8swXHDQLBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751896303; c=relaxed/simple;
-	bh=eHJe5Mv0FiIbeUcaZHJX/UEgm7iZZflbPoPRb+bVQ60=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nBGjX9pgPQ0WJd9YBiTq0FPtQQthi8pcaIJFHFM8LtVd0kCgnxw86925JRb34ArDYd8rt/hRH8XMZghjuNG9ZGAza+HZ0yfB9YD+IkjMexq52BqavCplfFT+CrN9XADujmua2FQatkoHuG3xpE6Vh5JVjAkz2Dzp+NF0bLlE2cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=INkKftQu; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1751896319; c=relaxed/simple;
+	bh=kQUEkoO0e3HKWclSzP5sW8URv+gkDAlxxdhOQOzAwYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hIVSEtS7SReB/0KazA2QQkQapcDCZZWccxVsnZHe1U2eABmxXoWAefd/QtyMrhu7IKgXlNhrdaJpSqqhu+KiLLwnwJaCP6nUmHBbzVg56Lyyp1lyxOGBuJgBprWELVM2sAWzmyyzljtJNUovNlkjWGdrQg0yl6uk/VvQZhC8Sho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=yxvvacCK; arc=none smtp.client-ip=146.20.161.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="INkKftQu"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 567D1HmY026990;
-	Mon, 7 Jul 2025 09:51:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=Fmw9/
-	ow+cOCMKyO0ZV0z1YpETAAUhqWZhQLL99dF2ok=; b=INkKftQuCXDj7c42poKbW
-	WoLwQdx7B8qi+7h+zgo7soERS56/w07Df3Xi0+gpKyhls4jEFfHlUF8MrWINbqVw
-	P0suODm0bm39IloJkFgQ9u4YYk7wPMDWnejSP01wI7JyA4UqQwj8nlqB9FUECly5
-	751IgLaNlEn91KuqLnNATMhAPDIOQGla2N+Nqc9aqceqfnWaRTGtkSR551xrhrLr
-	bOavZzVc3tUgWUo56fNqw0cyrRpd0jSUB2SSJhqZUTshsKj+QaJFMNMEo/RqLGss
-	xAtrGNxLkzznCwdXxutN9IJxlRGfk9JA7fJg8PBoKEzcwHdXI4Hrr4H0Ovpu8Ywh
-	A==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47rayqh6j3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 09:51:25 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 567DpOwp011489
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Jul 2025 09:51:24 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 7 Jul 2025 09:51:23 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 7 Jul 2025 09:51:23 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Mon, 7 Jul 2025 09:51:23 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 567Dp6YZ016129;
-	Mon, 7 Jul 2025 09:51:09 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <andriy.shevchenko@intel.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v8 03/12] iio: adc: ad4170-4: Add support for calibration gain
-Date: Mon, 7 Jul 2025 10:51:05 -0300
-Message-ID: <ea8d07cad9b7b6106f0b5664c403ed080b362a6b.1751895245.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1751895245.git.marcelo.schmitt@analog.com>
-References: <cover.1751895245.git.marcelo.schmitt@analog.com>
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="yxvvacCK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1751895996;
+	bh=kQUEkoO0e3HKWclSzP5sW8URv+gkDAlxxdhOQOzAwYM=;
+	h=From:To:Subject:Date:From;
+	b=yxvvacCKNbKEA8pH0T8wtpaQTGv9iSUhUU4QYh3s2FosU4h/Qo6G8AY76dbiCugK/
+	 bhQxPFkLngexJhEp4DbDWrb4edGhutM1uSCpg9sz51KmgzWSUcFcdP7NbbSH/Z1K44
+	 0LOOb4MqknzTImh/FSDLZlu/r2vHa2V/Vl04I3So=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp23.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 70136A01EF;
+	Mon,  7 Jul 2025 09:46:35 -0400 (EDT)
+From: Ian Abbott <abbotti@mev.co.uk>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] comedi: aio_iiro_16: Fix bit shift out of bounds
+Date: Mon,  7 Jul 2025 14:46:22 +0100
+Message-ID: <20250707134622.75403-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,98 +42,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=AP9nYgXq c=1 sm=1 tr=0 ts=686bd0dd cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=Wb1JkmetP80A:10 a=gAnH3GRIAAAA:8 a=s1qB4CsIdprNQQnv0OQA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA4MCBTYWx0ZWRfX5MKlX/h0q92n
- WbpbGPqsJSI0Lg1vWnGn6dGsnvTdK71GN5QTua89TY42KaBqt+hqnq91tc6EAGmGlTMqar76rc3
- y5Xd3fpJMCnbPFkMfmVnlaXq4uvffe1iv9WzPT2gFdndfkZ6gw2YE380i7HBlBs8XGS32DxDijC
- P1FH/TJFrcOCcmUXadsFUuox5aCc5Usyhmjv0gYEk6XCAMoBpsBoyu0nxejgiwvpP0St60N6807
- HswQ9KiklXBuNRikmhfabGxSj5J6bMxVFz7ohMiBWcwZwMcWRQFuIQbJZ6CAPSW7W+WllrMWluW
- U0dYPhlFj/0RGauAJwc7E7TAf7t2Z7ek1cIA+gryUhlVkax1UHloHhTFw6FAzid0i9MfIR3h40V
- oXkBviCXOYISeNZks6K6HRyZNVRBxHdh4MJtgQXzEE66SHtcrdFGn2wD+rfLIxF1MDbM2njo
-X-Proofpoint-ORIG-GUID: _SftCCBJIgoqyQ52aWps8dmNdhLsEocC
-X-Proofpoint-GUID: _SftCCBJIgoqyQ52aWps8dmNdhLsEocC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-07_03,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 impostorscore=0 malwarescore=0 adultscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070080
+X-Classification-ID: 70b25bd4-aed2-4281-9999-a00560739e81-1-1
 
-Add support for ADC calibration gain configuration.
+When checking for a supported IRQ number, the following test is used:
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+	if ((1 << it->options[1]) & 0xdcfc) {
+
+However, `it->options[i]` is an unchecked `int` value from userspace, so
+the shift amount could be negative or out of bounds.  Fix the test by
+requiring `it->options[1]` to be within bounds before proceeding with
+the original test.  Valid `it->options[1]` values that select the IRQ
+will be in the range [1,15]. The value 0 explicitly disables the use of
+interrupts.
+
+Fixes: ad7a370c8be4 ("staging: comedi: aio_iiro_16: add command support for change of state detection")
+Cc: <stable@vger.kernel.org> # 5.13+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 ---
-No changes since v5.
+Patch does not apply cleanly to longterm kernels 5.4.x and 5.10.x.
+---
+ drivers/comedi/drivers/aio_iiro_16.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- drivers/iio/adc/ad4170-4.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/iio/adc/ad4170-4.c b/drivers/iio/adc/ad4170-4.c
-index 2051c7339fb4..c314675a9ad1 100644
---- a/drivers/iio/adc/ad4170-4.c
-+++ b/drivers/iio/adc/ad4170-4.c
-@@ -626,6 +626,7 @@ static const struct iio_chan_spec ad4170_channel_template = {
- 	.differential = 1,
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 			      BIT(IIO_CHAN_INFO_SCALE) |
-+			      BIT(IIO_CHAN_INFO_CALIBSCALE) |
- 			      BIT(IIO_CHAN_INFO_OFFSET),
- 	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),
- 	.scan_type = {
-@@ -948,6 +949,9 @@ static int ad4170_read_raw(struct iio_dev *indio_dev,
- 		pga = FIELD_GET(AD4170_AFE_PGA_GAIN_MSK, setup->afe);
- 		*val = chan_info->offset_tbl[pga];
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		*val = setup->gain;
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1062,6 +1066,18 @@ static int ad4170_set_pga(struct ad4170_state *st,
- 	return ad4170_write_channel_setup(st, chan->address, false);
- }
- 
-+static int ad4170_set_calib_gain(struct ad4170_state *st,
-+				 struct iio_chan_spec const *chan, int val)
-+{
-+	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
-+	struct ad4170_setup *setup = &chan_info->setup;
-+
-+	guard(mutex)(&st->lock);
-+	setup->gain = val;
-+
-+	return ad4170_write_channel_setup(st, chan->address, false);
-+}
-+
- static int __ad4170_write_raw(struct iio_dev *indio_dev,
- 			      struct iio_chan_spec const *chan, int val,
- 			      int val2, long info)
-@@ -1071,6 +1087,8 @@ static int __ad4170_write_raw(struct iio_dev *indio_dev,
- 	switch (info) {
- 	case IIO_CHAN_INFO_SCALE:
- 		return ad4170_set_pga(st, chan, val, val2);
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		return ad4170_set_calib_gain(st, chan, val);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1097,6 +1115,8 @@ static int ad4170_write_raw_get_fmt(struct iio_dev *indio_dev,
- 	switch (info) {
- 	case IIO_CHAN_INFO_SCALE:
- 		return IIO_VAL_INT_PLUS_NANO;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
+diff --git a/drivers/comedi/drivers/aio_iiro_16.c b/drivers/comedi/drivers/aio_iiro_16.c
+index b00fab0b89d4..739cc4db52ac 100644
+--- a/drivers/comedi/drivers/aio_iiro_16.c
++++ b/drivers/comedi/drivers/aio_iiro_16.c
+@@ -177,7 +177,8 @@ static int aio_iiro_16_attach(struct comedi_device *dev,
+ 	 * Digital input change of state interrupts are optionally supported
+ 	 * using IRQ 2-7, 10-12, 14, or 15.
+ 	 */
+-	if ((1 << it->options[1]) & 0xdcfc) {
++	if (it->options[1] > 0 && it->options[1] < 16 &&
++	    (1 << it->options[1]) & 0xdcfc) {
+ 		ret = request_irq(it->options[1], aio_iiro_16_cos, 0,
+ 				  dev->board_name, dev);
+ 		if (ret == 0)
 -- 
 2.47.2
 
