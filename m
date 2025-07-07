@@ -1,398 +1,101 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C60628724C;
-	Mon,  7 Jul 2025 06:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F4228724B;
+	Mon,  7 Jul 2025 06:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751871542; cv=none; b=ToFakJzqbKkTZn9cF9vSVE6kDS82Ds9Z+s/DuJjty0qT4HNKyMhvp2/nybq4LlDq+U2XyL8Dsb08kXXltL58vl8P0s/TWkgCzZrmbQ6tdM67jDWwFziE/slGJ5okcyng4OK1R7X370Wnuub2fQjO3HKfH93vNW28u3ecLkwC2BA=
+	t=1751871545; cv=none; b=ZE5+2UVl3RlIgezX1d1AFOdSLox+vfGfd+cedZ4EucEhQ5bmt1vNTDm9RIW6d/nCG1FQXDWzJQUok1NJ/Vt4T/21QGzHy4avvr89VYLBBjGIyReH5+xqrBeKH4+yEVS10U9ftlSpMCGzasdgC1WadZvg99ySWevI3JPsiOzfPBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751871542; c=relaxed/simple;
-	bh=lIBmtUnbDtt2NsRwGcOkyN+FpjQqtkwFakV+dJxb3cE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IHS2UPDPjWtUFb5yvvHcgRtOaJV2etzrN6z3wP/44XyT15kJwc39ZGv/E8CEmo0v333cMm2PwrPCHzMw2jZ+FkfmAIMBuQtES2U43U8GoaYtAOWazFO5SXKlR687WHPi4razGYReKGszQRKCUjz4pBNlPs2uSkmoeJ5miRHuq80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UuVm1ISh; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751871545; c=relaxed/simple;
+	bh=q5FZ/FivWBaXWG6gVD9nT0Wg6DMs8v6iPl7pHoRyQJk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=kfUgUKsHUglMEpt9lLPjoZk1GkV3Axts+B2krINYn5r4q99hYeCQQ5j+YrvHDAQkPRf+bVE8uc7qGQHPaztq3mJQmxiIg1BgO/8ZFhIA8Tzhs+NNPeIfVx5CQLlWqbKfqTc6mfI1UJAC4Q2OE6H6H/4WtNYLpE77ffHtD1JhUZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XJ1k3OMw; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UuVm1ISh"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751871538;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XJ1k3OMw"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 322B11FCF0;
+	Mon,  7 Jul 2025 06:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751871534;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YJq153NSPW76L4xCiOK5DyOP7ElmHsjp8n6ilNH3VoQ=;
-	b=UuVm1ISh7ZmBcsI1mZ5nsKw1mgLscOYxhMfOHSNrspshPDUPJY7f3wE1y8M18A10Jmd6AD
-	43D3V7rkGedwpo/G00zh5T33hdh/b7+kEA2NJrJ0S858C+Mm9Dgn9ECInXo4K5YFm7VZ/9
-	LzGP3lLmyHBYByS0dJVqRXL5/q3KgJo=
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: mpatocka@redhat.com,
-	agk@redhat.com,
-	snitzer@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@Huawei.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	dm-devel@lists.linux.dev,
-	Dongsheng Yang <dongsheng.yang@linux.dev>
-Subject: [PATCH v2 05/11] dm-pcache: add cache_segment
-Date: Mon,  7 Jul 2025 06:58:03 +0000
-Message-ID: <20250707065809.437589-6-dongsheng.yang@linux.dev>
-In-Reply-To: <20250707065809.437589-1-dongsheng.yang@linux.dev>
-References: <20250707065809.437589-1-dongsheng.yang@linux.dev>
+	bh=O2ZYTC0qX+ptd1Xz5KDmZ2eEoJyxUi5525heb7B18Aw=;
+	b=XJ1k3OMw1IieO1jf105DCvr2FDPmsgJlqGpSGWJmL575MSncbwGw8q8xZbKZdujzPitZLa
+	YpQ5L3FUwnG4Y+A0eWIvQlJVrIzdK9+jkyz/jsY31j9K61abpJfdJKJfGNvfab3EVKA9fB
+	Fd4CpncLWi1od2mCdmUNyUQk4tPCj9AY0cux/yECUsWFSDiwTe7BUgvCZ3dX9xox9lqYKa
+	qb8YZuqY/vTaJ7O7lBzmCTOL1CIfRvSRNhHqcA8oZd9C+zxejW+sjEQMQl0khCZjw2AWkR
+	5/V5gweCS1QypvpXGu0sNAqintg75CubhwSE9Svc+xOP5VCxmuVX/oQJKYQVvQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Date: Mon, 07 Jul 2025 08:58:53 +0200
+Message-Id: <DB5MMOAEFZZU.5TK1BDNOTFEO@bootlin.com>
+Cc: <linux-kernel@vger.kernel.org>, <ajay.kathat@microchip.com>,
+ <claudiu.beznea@tuxon.dev>, <marex@denx.de>, <kvalo@kernel.org>,
+ <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] wilc1000: replace deprecated strcpy() with strscpy()
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: =?utf-8?q?Miguel_Garc=C3=ADa?= <miguelgarciaroman8@gmail.com>,
+ <linux-wireless@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250705134810.197494-1-miguelgarciaroman8@gmail.com>
+In-Reply-To: <20250705134810.197494-1-miguelgarciaroman8@gmail.com>
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefuddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelkeehiefhfeehvefhtdegueelkeehffffffeuvdekkeekuddvueeguefgieeukeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehmihhguhgvlhhgrghrtghirghrohhmrghnkeesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrjhgrhidrkhgrthhhr
+ ghtsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheptghlrghuughiuhdrsggviihnvggrsehtuhigohhnrdguvghvpdhrtghpthhtohepmhgrrhgvgiesuggvnhigrdguvgdprhgtphhtthhopehkvhgrlhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhg
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-Introduce *cache_segment.c*, the in-memory/on-disk glue that lets a
-`struct pcache_cache` manage its array of data segments.
+Hi,
 
-* Metadata handling
-  - Loads the most-recent replica of both the segment-info block
-    (`struct pcache_segment_info`) and per-segment generation counter
-    (`struct pcache_cache_seg_gen`) using `pcache_meta_find_latest()`.
-  - Updates those structures atomically with CRC + sequence rollover,
-    writing alternately to the two metadata slots inside each segment.
+On Sat Jul 5, 2025 at 3:48 PM CEST, Miguel Garc=C3=ADa wrote:
+> strcpy() is deprecated for NUL-terminated strings.  Replace the single
+> instance in wilc1000 netdev setup with strscpy(), which guarantees
+> NUL-termination and prevents overflow.
+>
+> ndev->name is a fixed-size buffer (IFNAMSIZ, 16 bytes).
+>
+> Signed-off-by: Miguel Garc=C3=ADa <miguelgarciaroman8@gmail.com>
 
-* Segment initialisation (`cache_seg_init`)
-  - Builds a `struct pcache_segment` pointing to the segment’s data
-    area, sets up locks, generation counters, and, when formatting a new
-    cache, zeroes the on-segment kset header.
+LGTM, thanks for the update
 
-* Linked-list of segments
-  - `cache_seg_set_next_seg()` stores the *next* segment id in
-    `seg_info->next_seg` and sets the HAS_NEXT flag, allowing a cache to
-    span multiple segments. This is important to allow other type of
-    segment added in future.
+Reviewed-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
 
-* Runtime life-cycle
-  - Reference counting (`cache_seg_get/put`) with invalidate-on-last-put
-    that clears the bitmap slot and schedules cleanup work.
-  - Generation bump (`cache_seg_gen_increase`) persists a new generation
-    record whenever the segment is modified.
+> ---
+>  drivers/net/wireless/microchip/wilc1000/netdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/n=
+et/wireless/microchip/wilc1000/netdev.c
+> index af298021e050..8f4d11e1a2a6 100644
+> --- a/drivers/net/wireless/microchip/wilc1000/netdev.c
+> +++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
+> @@ -960,7 +960,7 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl=
+, const char *name,
+> =20
+>  	vif =3D netdev_priv(ndev);
+>  	ndev->ieee80211_ptr =3D &vif->priv.wdev;
+> -	strcpy(ndev->name, name);
+> +	strscpy(ndev->name, name, sizeof(ndev->name));
+>  	vif->wilc =3D wl;
+>  	vif->ndev =3D ndev;
+>  	ndev->ml_priv =3D vif;
 
-* Allocator
-  - `get_cache_segment()` uses a bitmap and per-cache hint to pick the
-    next free segment, retrying with micro-delays when none are
-    immediately available.
 
-Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
----
- drivers/md/dm-pcache/cache_segment.c | 293 +++++++++++++++++++++++++++
- 1 file changed, 293 insertions(+)
- create mode 100644 drivers/md/dm-pcache/cache_segment.c
 
-diff --git a/drivers/md/dm-pcache/cache_segment.c b/drivers/md/dm-pcache/cache_segment.c
-new file mode 100644
-index 000000000000..4c1f037f1fd3
---- /dev/null
-+++ b/drivers/md/dm-pcache/cache_segment.c
-@@ -0,0 +1,293 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include "cache_dev.h"
-+#include "cache.h"
-+#include "backing_dev.h"
-+#include "dm_pcache.h"
-+
-+static inline struct pcache_segment_info *get_seg_info_addr(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_segment_info *seg_info_addr;
-+	u32 seg_id = cache_seg->segment.seg_id;
-+	void *seg_addr;
-+
-+	seg_addr = CACHE_DEV_SEGMENT(cache_seg->cache->cache_dev, seg_id);
-+	seg_info_addr = seg_addr + PCACHE_SEG_INFO_SIZE * cache_seg->info_index;
-+
-+	return seg_info_addr;
-+}
-+
-+static void cache_seg_info_write(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_segment_info *seg_info_addr;
-+	struct pcache_segment_info *seg_info = &cache_seg->cache_seg_info;
-+
-+	mutex_lock(&cache_seg->info_lock);
-+	seg_info->header.seq++;
-+	seg_info->header.crc = pcache_meta_crc(&seg_info->header, sizeof(struct pcache_segment_info));
-+
-+	seg_info_addr = get_seg_info_addr(cache_seg);
-+	memcpy_flushcache(seg_info_addr, seg_info, sizeof(struct pcache_segment_info));
-+	pmem_wmb();
-+
-+	cache_seg->info_index = (cache_seg->info_index + 1) % PCACHE_META_INDEX_MAX;
-+	mutex_unlock(&cache_seg->info_lock);
-+}
-+
-+static int cache_seg_info_load(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_segment_info *cache_seg_info_addr_base, *cache_seg_info_addr;
-+	struct pcache_cache_dev *cache_dev = cache_seg->cache->cache_dev;
-+	struct dm_pcache *pcache = CACHE_DEV_TO_PCACHE(cache_dev);
-+	u32 seg_id = cache_seg->segment.seg_id;
-+	int ret = 0;
-+
-+	cache_seg_info_addr_base = CACHE_DEV_SEGMENT(cache_dev, seg_id);
-+
-+	mutex_lock(&cache_seg->info_lock);
-+	cache_seg_info_addr = pcache_meta_find_latest(&cache_seg_info_addr_base->header,
-+						sizeof(struct pcache_segment_info),
-+						PCACHE_SEG_INFO_SIZE,
-+						&cache_seg->cache_seg_info);
-+	if (IS_ERR(cache_seg_info_addr)) {
-+		ret = PTR_ERR(cache_seg_info_addr);
-+		goto out;
-+	} else if (!cache_seg_info_addr) {
-+		ret = -EIO;
-+		goto out;
-+	}
-+	cache_seg->info_index = cache_seg_info_addr - cache_seg_info_addr_base;
-+out:
-+	mutex_unlock(&cache_seg->info_lock);
-+
-+	if (ret)
-+		pcache_dev_err(pcache, "can't read segment info of segment: %u, ret: %d\n",
-+			      cache_seg->segment.seg_id, ret);
-+	return ret;
-+}
-+
-+static int cache_seg_ctrl_load(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_cache_seg_ctrl *cache_seg_ctrl = cache_seg->cache_seg_ctrl;
-+	struct pcache_cache_seg_gen cache_seg_gen, *cache_seg_gen_addr;
-+	int ret = 0;
-+
-+	mutex_lock(&cache_seg->ctrl_lock);
-+	cache_seg_gen_addr = pcache_meta_find_latest(&cache_seg_ctrl->gen->header,
-+					     sizeof(struct pcache_cache_seg_gen),
-+					     sizeof(struct pcache_cache_seg_gen),
-+					     &cache_seg_gen);
-+	if (IS_ERR(cache_seg_gen_addr)) {
-+		ret = PTR_ERR(cache_seg_gen_addr);
-+		goto out;
-+	}
-+
-+	if (!cache_seg_gen_addr) {
-+		cache_seg->gen = 0;
-+		cache_seg->gen_seq = 0;
-+		cache_seg->gen_index = 0;
-+		goto out;
-+	}
-+
-+	cache_seg->gen = cache_seg_gen.gen;
-+	cache_seg->gen_seq = cache_seg_gen.header.seq;
-+	cache_seg->gen_index = (cache_seg_gen_addr - cache_seg_ctrl->gen);
-+out:
-+	mutex_unlock(&cache_seg->ctrl_lock);
-+
-+	return ret;
-+}
-+
-+static inline struct pcache_cache_seg_gen *get_cache_seg_gen_addr(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_cache_seg_ctrl *cache_seg_ctrl = cache_seg->cache_seg_ctrl;
-+
-+	return (cache_seg_ctrl->gen + cache_seg->gen_index);
-+}
-+
-+static void cache_seg_ctrl_write(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_cache_seg_gen cache_seg_gen;
-+
-+	mutex_lock(&cache_seg->ctrl_lock);
-+	cache_seg_gen.gen = cache_seg->gen;
-+	cache_seg_gen.header.seq = ++cache_seg->gen_seq;
-+	cache_seg_gen.header.crc = pcache_meta_crc(&cache_seg_gen.header,
-+						 sizeof(struct pcache_cache_seg_gen));
-+
-+	memcpy_flushcache(get_cache_seg_gen_addr(cache_seg), &cache_seg_gen, sizeof(struct pcache_cache_seg_gen));
-+	pmem_wmb();
-+
-+	cache_seg->gen_index = (cache_seg->gen_index + 1) % PCACHE_META_INDEX_MAX;
-+	mutex_unlock(&cache_seg->ctrl_lock);
-+}
-+
-+static void cache_seg_ctrl_init(struct pcache_cache_segment *cache_seg)
-+{
-+	cache_seg->gen = 0;
-+	cache_seg->gen_seq = 0;
-+	cache_seg->gen_index = 0;
-+	cache_seg_ctrl_write(cache_seg);
-+}
-+
-+static int cache_seg_meta_load(struct pcache_cache_segment *cache_seg)
-+{
-+	int ret;
-+
-+	ret = cache_seg_info_load(cache_seg);
-+	if (ret)
-+		goto err;
-+
-+	ret = cache_seg_ctrl_load(cache_seg);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+err:
-+	return ret;
-+}
-+
-+/**
-+ * cache_seg_set_next_seg - Sets the ID of the next segment
-+ * @cache_seg: Pointer to the cache segment structure.
-+ * @seg_id: The segment ID to set as the next segment.
-+ *
-+ * A pcache_cache allocates multiple cache segments, which are linked together
-+ * through next_seg. When loading a pcache_cache, the first cache segment can
-+ * be found using cache->seg_id, which allows access to all the cache segments.
-+ */
-+void cache_seg_set_next_seg(struct pcache_cache_segment *cache_seg, u32 seg_id)
-+{
-+	cache_seg->cache_seg_info.flags |= PCACHE_SEG_INFO_FLAGS_HAS_NEXT;
-+	cache_seg->cache_seg_info.next_seg = seg_id;
-+	cache_seg_info_write(cache_seg);
-+}
-+
-+int cache_seg_init(struct pcache_cache *cache, u32 seg_id, u32 cache_seg_id,
-+		   bool new_cache)
-+{
-+	struct pcache_cache_dev *cache_dev = cache->cache_dev;
-+	struct pcache_cache_segment *cache_seg = &cache->segments[cache_seg_id];
-+	struct pcache_segment_init_options seg_options = { 0 };
-+	struct pcache_segment *segment = &cache_seg->segment;
-+	int ret;
-+
-+	cache_seg->cache = cache;
-+	cache_seg->cache_seg_id = cache_seg_id;
-+	spin_lock_init(&cache_seg->gen_lock);
-+	atomic_set(&cache_seg->refs, 0);
-+	mutex_init(&cache_seg->info_lock);
-+	mutex_init(&cache_seg->ctrl_lock);
-+
-+	/* init pcache_segment */
-+	seg_options.type = PCACHE_SEGMENT_TYPE_CACHE_DATA;
-+	seg_options.data_off = PCACHE_CACHE_SEG_CTRL_OFF + PCACHE_CACHE_SEG_CTRL_SIZE;
-+	seg_options.seg_id = seg_id;
-+	seg_options.seg_info = &cache_seg->cache_seg_info;
-+	pcache_segment_init(cache_dev, segment, &seg_options);
-+
-+	cache_seg->cache_seg_ctrl = CACHE_DEV_SEGMENT(cache_dev, seg_id) + PCACHE_CACHE_SEG_CTRL_OFF;
-+
-+	if (new_cache) {
-+		cache_dev_zero_range(cache_dev, CACHE_DEV_SEGMENT(cache_dev, seg_id),
-+				     PCACHE_SEG_INFO_SIZE * PCACHE_META_INDEX_MAX +
-+				     PCACHE_CACHE_SEG_CTRL_SIZE);
-+
-+		cache_seg_ctrl_init(cache_seg);
-+
-+		cache_seg->info_index = 0;
-+		cache_seg_info_write(cache_seg);
-+
-+		/* clear outdated kset in segment */
-+		memcpy_flushcache(segment->data, &pcache_empty_kset, sizeof(struct pcache_cache_kset_onmedia));
-+		pmem_wmb();
-+	} else {
-+		ret = cache_seg_meta_load(cache_seg);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	return 0;
-+err:
-+	return ret;
-+}
-+
-+/**
-+ * get_cache_segment - Retrieves a free cache segment from the cache.
-+ * @cache: Pointer to the cache structure.
-+ *
-+ * This function attempts to find a free cache segment that can be used.
-+ * It locks the segment map and checks for the next available segment ID.
-+ * If a free segment is found, it initializes it and returns a pointer to the
-+ * cache segment structure. Returns NULL if no segments are available.
-+ */
-+struct pcache_cache_segment *get_cache_segment(struct pcache_cache *cache)
-+{
-+	struct pcache_cache_segment *cache_seg;
-+	u32 seg_id;
-+
-+	spin_lock(&cache->seg_map_lock);
-+again:
-+	seg_id = find_next_zero_bit(cache->seg_map, cache->n_segs, cache->last_cache_seg);
-+	if (seg_id == cache->n_segs) {
-+		/* reset the hint of ->last_cache_seg and retry */
-+		if (cache->last_cache_seg) {
-+			cache->last_cache_seg = 0;
-+			goto again;
-+		}
-+		cache->cache_full = true;
-+		spin_unlock(&cache->seg_map_lock);
-+		return NULL;
-+	}
-+
-+	/*
-+	 * found an available cache_seg, mark it used in seg_map
-+	 * and update the search hint ->last_cache_seg
-+	 */
-+	__set_bit(seg_id, cache->seg_map);
-+	cache->last_cache_seg = seg_id;
-+	spin_unlock(&cache->seg_map_lock);
-+
-+	cache_seg = &cache->segments[seg_id];
-+	cache_seg->cache_seg_id = seg_id;
-+
-+	return cache_seg;
-+}
-+
-+static void cache_seg_gen_increase(struct pcache_cache_segment *cache_seg)
-+{
-+	spin_lock(&cache_seg->gen_lock);
-+	cache_seg->gen++;
-+	spin_unlock(&cache_seg->gen_lock);
-+
-+	cache_seg_ctrl_write(cache_seg);
-+}
-+
-+void cache_seg_get(struct pcache_cache_segment *cache_seg)
-+{
-+	atomic_inc(&cache_seg->refs);
-+}
-+
-+static void cache_seg_invalidate(struct pcache_cache_segment *cache_seg)
-+{
-+	struct pcache_cache *cache;
-+
-+	cache = cache_seg->cache;
-+	cache_seg_gen_increase(cache_seg);
-+
-+	spin_lock(&cache->seg_map_lock);
-+	if (cache->cache_full)
-+		cache->cache_full = false;
-+	clear_bit(cache_seg->cache_seg_id, cache->seg_map);
-+	spin_unlock(&cache->seg_map_lock);
-+
-+	pcache_defer_reqs_kick(CACHE_TO_PCACHE(cache));
-+	/* clean_work will clean the bad key in key_tree*/
-+	queue_work(cache_get_wq(cache), &cache->clean_work);
-+}
-+
-+void cache_seg_put(struct pcache_cache_segment *cache_seg)
-+{
-+	if (atomic_dec_and_test(&cache_seg->refs))
-+		cache_seg_invalidate(cache_seg);
-+}
--- 
-2.43.0
+
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
