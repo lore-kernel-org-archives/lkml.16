@@ -1,109 +1,110 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECDB295DBE
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755A0293B55;
+	Mon,  7 Jul 2025 10:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751885436; cv=none; b=GajTErOCzDybPquLGuFXfM4Mn0dm8hshr3SHJ19U0LRXhTUL7RUnJU5xL3y4vM4z8ZTkCkz8oUKXdtJMf9IL/C1SNrXyNa+KMYRMVIpHyDw4qfko/OTKXjC6TGzOfZApsV0v3xVv6m96hTNCqO2rXKzkBjmTkqRwQfMAde2Oa34=
+	t=1751885486; cv=none; b=uREPV+u23hbcLWV4iPpZfuJs6T4RNcePhyw2ZMntkFee2FFzAqOQtjWaqupC/julecpSzgQ/4O0QwGjlDmvwYV91Y0YLUAmH8auiurW1gC/3NHzNIbWvLO+4tKDSalWhw72W6drehzzCek3s9yWyjI/hb2ITOJE3ddahhufgoXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751885436; c=relaxed/simple;
-	bh=0DjKBEEYRbVy4AQeYlNr37VxbcA1nPmfYINGRxp0EWU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oQbQa/8Lq/rVXSixEcrfsqQdwQBCsvOEDgO31SKyyY8H13NDiEsZmSuysikcUmK5JGdwJGIBV2XarpMcCjUvxm/H/6o/vkWOwVrWcf/NENMjabyoY9UO54JCsohCb6BNuJYa775xb1YdRqfEWVl+sIkcwvWzpcHfdnluo8voTEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qo0V5/uK; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751885486; c=relaxed/simple;
+	bh=slOPMNTVA3FLhW65MdVR4aR/1OsxKkcOkNICbnYATJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6SVUtDLNN07XL4Lvi5gIR8tJIOEkWklg0U481LHUatnwagWxMjUdLUosrelIgzlA3cFKjTpPZkqZUEwXnTY4rRubOWYH7SW2wLrZN4naFrQc7MZDcPEg0MC1vb9hpjbO/kG7hDEvQrBDxif5dy3dXyzi8OeqCY2jJ1qqH/yVGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2gp0c+K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qo0V5/uK"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso4634675a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 03:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751885433; x=1752490233; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M0Uhf9cokxwTL0c2ydgWGzKYaoyMWc7a0121SK5qMwA=;
-        b=Qo0V5/uKxwkrRwOdKq7OurPUP3WxYLYRA9fAsn0HL2g0/qCLXYS/+8cq+C1Eiqvr89
-         Lcme7YYj/zq2yiy0Sq7OlqDcbvd5HpaaDGXC5obaPPXw6AUBOm73Z2A5GkQvNxxfvyzi
-         Q7+2O6AZARp8ybodC3yAg5pH7v1EV2NKjRSqCEWCeSsOXPe+uNX9HHwRI8lv84hFGL4+
-         eeI9p4/SRYJlooFV9Cr3oZeYZpArQhvBhyKZZQA3B1q6LYhoPPccxznVQ/MGoect6EAJ
-         it7eXo5DBofBc3RYH9dNX9PpW/NOxbSFQJxkYbZmYC9GgAS0UzYRgeerFAUERLDVm26Z
-         XfHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751885433; x=1752490233;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M0Uhf9cokxwTL0c2ydgWGzKYaoyMWc7a0121SK5qMwA=;
-        b=FH/AjswOsy/XtodfUIHBG+E5qjaS25FC+hbOg/HFPJunNMvrDZ4EQCEUtcScU6PUo4
-         1XOvurlfwO8sYb74lutvUiJDabfFfjOFZZ3S7JIkq7pT13X8G0hw8mzNl4ByNM2uF2wj
-         gVicOvgRqyFWr5Sme+7sA8Kusas0fydMJIHWP2qJutZ7VLZiUuo2YSqYvUAel3Tf+8nI
-         YaKx94RuCaSlsxT2aLNo/X6Z1vnYd4RZlbdhBrveGIy/XmGPdWYxQVcsRoUMRM9S19QC
-         md7vim1DNV3DIR0DS4uxGkAiY2DiH4bt7fv5QwD+SRrU1wTmNQ7uWQ9J40k8iYuKi5eY
-         rX1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVlXWFntaJpJ2ozG/AYDlLbjQDN5KClnzAjlXtN043veFcxeBkdEAJkIKmL5xwVUf8740nKyI2AYTjiWSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdNKxNOKxQ4tOXRKRNZfHjxOcg+ZHecIi9Iu9n4YB6UpLYxDwP
-	m5vDbinuPXCf+FOfCdzeDvYnYjeZ1/HyCZYYu1mKbRB94+v+NR6E2ZysuP49R5XmySU=
-X-Gm-Gg: ASbGncv0jINZWDlpQDQlEYPOJeOsCeMH21wV1y9qmH80QKiWz21KnFiiPkuXP+ZzSVr
-	wflt6zLHY8qszgnBox/F1ytK5zWS3/OZTL7Xa3cQVC8H2b4bv/gDO5M1/SsHr/1gk3r3FRW5MjQ
-	eQ2fIwHF74Tle7wTH5Zp88D2y1Fem8H3+EkoPn9eoIz5HRbucTXjcWkrNL3Iv9ujnm57CLyCMP6
-	8C/JG1wi7J+Cu/S0xLxSSMOCU+8Yyu0NYexu7Lo5Zt0HRuSuDpN02KPxDTHw5/1nPOSo554+qYQ
-	VdjbMhKsfdgDWE7UsiuzsUXxwrVCCnFDNQkdOSYEINSaBxezfIYojQLTetf0hdckvmVcejH1swQ
-	ESjozSIJpwwCBR6oOcx7J3v7kVWkjSvJf1pm2w6BBZK9xBw==
-X-Google-Smtp-Source: AGHT+IEnDjsO6opm22lwjQu/Rj7KamWYfLbMulTjzO/UV9wnDWne15HveaE9d9M6MYNJffXab6eCtg==
-X-Received: by 2002:a17:906:6a0a:b0:ad5:a121:6ebc with SMTP id a640c23a62f3a-ae3fb98bdcbmr1157384666b.0.1751885432641;
-        Mon, 07 Jul 2025 03:50:32 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f66d9263sm685589566b.32.2025.07.07.03.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 03:50:31 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 07 Jul 2025 11:50:29 +0100
-Subject: [PATCH 3/3] usb: typec: tcpm/tcpci_maxim: enable
- PROBE_PREFER_ASYNCHRONOUS
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2gp0c+K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE75C4CEE3;
+	Mon,  7 Jul 2025 10:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751885486;
+	bh=slOPMNTVA3FLhW65MdVR4aR/1OsxKkcOkNICbnYATJA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U2gp0c+Kgl9cK3ut2JrE9CJJHpRfc/LdGEG/KOkwFoNM2tzjS6Gpgtdl0j73+sA3l
+	 LZwsIIdjoZpSq9M+0BVFvIwGKR1JqPaoR7U9MHGaE/emID7fM7KE/PBaFsrAorSWeY
+	 JN4P/OYiUOkcrxwVcCKv5sxcle9qFoAB20AsVcPG7kFGveEiY3GOpd//CRrMONQQV0
+	 uqHvM6G2urwFfMYi6kzPuvAZG0PHBfjO5h9Y9skbuZNTVec/17yQeJIujj30IJ2ubj
+	 XcnvVsZaaVaAjIN3T4DxdS1Tds+5rN/lI7K9YHC19wsPJuzl7GRUxNhWK/YwleTjFf
+	 /vtjzlcW+4Rjw==
+Date: Mon, 7 Jul 2025 11:51:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/6] arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+Message-ID: <a5c902f4-6f10-4a1f-8d57-b232583e4556@sirena.org.uk>
+References: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
+ <20250610160152.1113930-5-laurentiumihalcea111@gmail.com>
+ <ac1daf6b-ee06-4076-b86f-b436ca0acd6d@sirena.org.uk>
+ <c3deef24-fed7-4405-9953-804bff118c11@gmail.com>
+ <8ef60a13-015f-4228-b834-799592342ae6@sirena.org.uk>
+ <225eb39b-958c-4e40-96be-272a8dc9ce12@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250707-max77759-irq-wake-v1-3-d367f633e4bc@linaro.org>
-References: <20250707-max77759-irq-wake-v1-0-d367f633e4bc@linaro.org>
-In-Reply-To: <20250707-max77759-irq-wake-v1-0-d367f633e4bc@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Badhri Jagan Sridharan <badhri@google.com>, 
- Amit Sunil Dhamne <amitsd@google.com>, 
- Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6IZozApVFuUcVoyp"
+Content-Disposition: inline
+In-Reply-To: <225eb39b-958c-4e40-96be-272a8dc9ce12@gmail.com>
+X-Cookie: We are what we are.
 
-This driver works fine with asynchronous probe.
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- drivers/usb/typec/tcpm/tcpci_maxim_core.c | 1 +
- 1 file changed, 1 insertion(+)
+--6IZozApVFuUcVoyp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/usb/typec/tcpm/tcpci_maxim_core.c b/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-index 43b0ec2d12ba6d4c1cfccbfd355af3e5d9ce1385..19f63865079658fb2a446dc390262d141b940e9a 100644
---- a/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-+++ b/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-@@ -572,6 +572,7 @@ MODULE_DEVICE_TABLE(of, max_tcpci_of_match);
- static struct i2c_driver max_tcpci_i2c_driver = {
- 	.driver = {
- 		.name = "maxtcpc",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = max_tcpci_of_match,
- 		.pm = &max_tcpci_pm_ops,
- 	},
+On Sat, Jul 05, 2025 at 05:41:17PM +0300, Laurentiu Mihalcea wrote:
+> On 7/3/2025 6:25 PM, Mark Brown wrote:
 
--- 
-2.50.0.727.gbf7dc18ff4-goog
+> > This also appears to be the source of the boot issues I mentioned on the
+> > EVK, affecting ramdisk only boots:
 
+> >    https://lava.sirena.org.uk/scheduler/job/1533032
+
+> > as well as NFS.  The board seems to get to userspace but then not
+> > respond to serial input, it looks like it's hit something while loading
+> > modules and locked up but ICBW.
+
+> OK, this is very odd. I've tried the ramdisk boot using the files from the CI job: Image,
+> modules, CPIO and my own flash.bin (u-boot and ATF hashes match those shown in
+> the CI job) on an EVK board and so far no hang.
+
+It may not actually be hung, it may just be hitting long timeouts in
+userspace (I notice that all the boots with a NFS root are doing module
+autoloading, and the ramdisk ones have tried to bring up the network).
+
+> What I've noticed though is that the bridge does indeed not get probed. So, for now,
+> I think I'm going to submit a patch to enable the driver config in the defconfig so
+> we can get the Verdin failures out of the way.
+
+If the driver is now required then it does need to be enabled.
+
+--6IZozApVFuUcVoyp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhrpqcACgkQJNaLcl1U
+h9Dwlgf+KcOwF5vR7PuxEJNsgZjoa9GnoGnVh+0CPAuGUe3yEo9/PeR8jVAdVjyO
+gdI8ymNYVm+xOaeRJiIgxFxA/CocttzXKGcw23uB5cM9hwaVkAmOaoqLVE+ef9xn
+hNu96YXWRPNskp5mB5d5WQcT/rfid/iaAzpCWktqFMLvZmzjaTdnSDDdJ1eqbUqL
+kgpSxE12xPns8/o8SPVU9rB7ShPuc16AdOJ5phCrMNnfnu0IAVTTpQJpr8LZhV9M
+MavTiyLgRI7EMXGXfQrxgRl8mbCIAe08ESsIjjNf+UB4nwXFZIAg00h9xqHt2LXp
+6sqF82kfizbNMybb9BmMbzXehQoUCA==
+=xYTV
+-----END PGP SIGNATURE-----
+
+--6IZozApVFuUcVoyp--
