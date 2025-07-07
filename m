@@ -1,127 +1,84 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F31189919;
-	Mon,  7 Jul 2025 06:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88804189919;
+	Mon,  7 Jul 2025 06:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751869080; cv=none; b=olGDL2/sXa3Csum7KWVwSQkAMZ4BW0PP2x3KWPEFzuqYaFdtsFjwUUFlsDJL2Z9jsf2rhvIE5jvO1YCmuzkPrFahfYiUgIMNpQWc2UYXEiaUFOR+sRRTBfWvriRBT4xuEofwxAsKhTbNPzIm+xPGW1hvXDXAh3Soq27+0LZ7MsE=
+	t=1751869083; cv=none; b=O5Fh1gcqj0p1BdIdVqnu3x5dZLVAdA4GdbEt+/qd621WtI73GO9GsViE7s4cPnEvk8vjZMlArpCV3vcKgLYd2rHEpvw53TRKOFh0raeVYuClbTC4CmFOe0zE9RLTwCQhynM5ZWZYEVv8/FewF++sQ67I2HsTzpZF27jFnc/LEw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751869080; c=relaxed/simple;
-	bh=IWt85/zAdAgAUcn5iduO4+Zv6u2Kp0nMvo4Z4VnG2NE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p34Ayz0AXKcJ0NdUuTrOSLF6pd69xU1q5S0vh95SF5x4mFumZQz3MZTt20C3erl2PgfrXnHaAiZqWycB5I3BIoKJLzZulxfzzsH/SBUrfUpkDmyVclJbv78M47y2l3l8MoKKhvG2lVkQRxfCrZTZNVX5yCx/HUYz5OSo4pwtPtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iQ/Dzo15; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1751869083; c=relaxed/simple;
+	bh=FEnyy0ttREgkNusNm/cWMbf4I0ab7s6gN1D2futEk7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nzR4B6AEiyiqRLoYnBySmlBy6cngUzPGmB6oBNJ8bzASUK1dPeWli3PFM9VxHVCTV89Ru0hkVAj/g6ZFPYvf1freXtK9FvxpLGQw1hkwVhboP3t+zYXbge60sJ46egQLwcbXa+91y/GTqtYqemVnNtx6xNMJEnybgX17qo/LAzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPsQEllN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iQ/Dzo15"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=VZ
-	srLx97tWye6NiKsgqCtHfdvcsi1VEsnd1hn95P6g8=; b=iQ/Dzo15PLGeNQQHJk
-	TBb+15iDmp5QKk6YjfDkyqN5rK62SJ3agPAvQyoL0s92f5dNCsPVfZ5eL4rduxdZ
-	r/uLOUqCaTYWGT5AiKnpFd4inJKLoslv4QkUqDVNWmtzzc9aZyMDGye8rVBuvE/i
-	QDgIH3aX3ChLy+hVqF4dn1zkg=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBHQKtjZmtoL8xmDA--.4702S2;
-	Mon, 07 Jul 2025 14:17:09 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: pabeni@redhat.com
-Cc: aleksander.lobakin@intel.com,
-	almasrymina@google.com,
-	asml.silence@gmail.com,
-	davem@davemloft.net,
-	david.laight.linux@gmail.com,
-	ebiggers@google.com,
-	edumazet@google.com,
-	horms@kernel.org,
-	kerneljasonxing@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	stfomichev@gmail.com,
-	willemb@google.com,
-	yangfeng59949@163.com,
-	yangfeng@kylinos.cn
-Subject: Re: [PATCH v3] skbuff: Add MSG_MORE flag to optimize large packet transmission
-Date: Mon,  7 Jul 2025 14:17:07 +0800
-Message-Id: <20250707061707.74848-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
-References: <1a24a603-b49f-4692-a116-f25605301af6@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPsQEllN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BDEC4CEF1;
+	Mon,  7 Jul 2025 06:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751869083;
+	bh=FEnyy0ttREgkNusNm/cWMbf4I0ab7s6gN1D2futEk7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PPsQEllNgMDXE4dVs6B+mehSZkGlSrO8DkAaLTvEueNX4a7Rbhi5/No3Cj7WJ03kS
+	 7pJt09k5VIwzPWSYQ8qWFX4jjAUFWbpp1i3p7lgBjVnBre41S/DtGJaKHXRQSzD1QF
+	 Fcpl057ZhIqF+NTRhgZlhb+I7nehrd23CTok/vQOBBG37BBGKBuNb2Hws4rjw2qpzk
+	 SER1/5lA92NgyyuqGPDu4LfCPfg/GOsniCTQK7C/HFACE4WgBXNviv3+3d6ddsntcz
+	 Wd3IaYP0D/wkoUjRnuD7l2A25FH+QBWVS4tecg/qY5QajqkH3YCPCq6WQSaHFaYZLW
+	 yKBDUurvm35Ow==
+Date: Mon, 7 Jul 2025 08:18:00 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: LI Qingwu <Qing-wu.Li@leica-geosystems.com.cn>
+Cc: lee@kernel.org, pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH V6 0/2] leds: pwm: Add optional GPIO enable pin support
+Message-ID: <20250707-lovely-practical-chinchilla-fe2d0e@krzk-bin>
+References: <20250707020752.713372-1-Qing-wu.Li@leica-geosystems.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBHQKtjZmtoL8xmDA--.4702S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFykWr4DXry3GF1fGr4xCrg_yoW5Gry8pa
-	yUJasFyrs8JF4UCrnrtw48uw4ay3yfKr15X3s8X34F9rn0gw1DWrW3trWj9FykGrnrK34Y
-	vr4qgasrCa45ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR75rwUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiYw2DeGhrY+hd3wAAsf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250707020752.713372-1-Qing-wu.Li@leica-geosystems.com.cn>
 
-On Sat, 5 Jul 2025 08:16:40 +0100 David Laight <david.laight.linux@gmail.com> wrote:
-
-> On Fri, 4 Jul 2025 17:50:42 +0200
-> Paolo Abeni <pabeni@redhat.com> wrote:
+On Mon, Jul 07, 2025 at 10:07:50AM +0800, LI Qingwu wrote:
+> Add support for an optional GPIO enable pin to the PWM LED driver.
+> Some LED controllers require an additional enable GPIO to be enabled
+> on the device before PWM control can take effect.
 > 
-> > On 7/4/25 11:26 AM, Feng Yang wrote:
-> > > Thu, 3 Jul 2025 12:44:53 +0100 david.laight.linux@gmail.com wrote:
-> > >   
-> > >> On Thu, 3 Jul 2025 10:48:40 +0200
-> > >> Paolo Abeni <pabeni@redhat.com> wrote:
-> > >>  
-> > >>> On 6/30/25 9:10 AM, Feng Yang wrote:  
-> > >>>> From: Feng Yang <yangfeng@kylinos.cn>
-> > >>>>
-> > >>>> The "MSG_MORE" flag is added to improve the transmission performance of large packets.
-> > >>>> The improvement is more significant for TCP, while there is a slight enhancement for UDP.    
-> > >>>
-> > >>> I'm sorry for the conflicting input, but i fear we can't do this for
-> > >>> UDP: unconditionally changing the wire packet layout may break the
-> > >>> application, and or at very least incur in unexpected fragmentation issues.  
-> > >>
-> > >> Does the code currently work for UDP?
-> > >>
-> > >> I'd have thought the skb being sent was an entire datagram.
-> > >> But each semdmsg() is going to send a separate datagram.
-> > >> IIRC for UDP MSG_MORE indicates that the next send() will be
-> > >> part of the same datagram - so the actual send can't be done
-> > >> until the final fragment (without MSG_MORE) is sent.  
-> > > 
-> > > If we add MSG_MORE, won't the entire skb be sent out all at once? Why doesn't this work for UDP?  
-> > 
-> > Without MSG_MORE N sendmsg() calls will emit on the wire N (small) packets.
-> > 
-> > With MSG_MORE on the first N-1 calls, the stack will emit a single
-> > packet with larger size.
-> > 
-> > UDP application may relay on packet size for protocol semantic. i.e. the
-> > application level message size could be expected to be equal to the
-> > (wire) packet size itself.
+> Testing:
+> - Tested on i.MX8MP EVK board with TPS92380 LED backlight driver
+> - Verified GPIO enable/disable functionality works correctly
+> - Confirmed both GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW polarities
+>   work properly
 > 
-> Correct, but the function is __skb_send_sock() - so you'd expect it to
-> send the 'message' held in the skb to the socket.
-> I don't think that the fact that the skb has fragments should make any
-> difference to what is sent.
-> In other words it ought to be valid for any code to 'linearize' the skb.
 > 
-> 	David
+> Device tree configuration used for testing:
+> 
+> 	backlight_keypad: backlight-keypad {
+> 		compatible = "pwm-leds";
+> 
+> 		led {
+> 			color = <LED_COLOR_ID_WHITE>;
+> 			enable-gpios = <&pca6416 11 GPIO_ACTIVE_HIGH>;
+> 			function = LED_FUNCTION_KBD_BACKLIGHT;
+> 			max-brightness = <100>;
+> 			pwms = <&pwm3 0 2500 0>;
+> 		};
+> 	};
+> 
+> Changes in V6:
+> - Collected Reviewed-by from Krzysztof Kozlowski on 1/2 patch. (Thanks!)
 
-Okay, thank you for your explanations.
+Don't send new versions for that. It's just unnecessary traffic and
+effort for us to sort out such emails.
 
-> > 
-> > Unexpectedly aggregating the packets may break the application. Also it
-> > can lead to IP fragmentation, which in turn could kill performances.
-> > 
-> > > If that's not feasible, would the v2 version of the code work for UDP?  
-> > 
-> > My ask is to explicitly avoid MSG_MORE when the transport is UDP.
-> > 
-> > /P
-> > 
+Read submitting patches in this regard.
 
-So do I need to resend the v2 version again (https://lore.kernel.org/all/20250627094406.100919-1-yangfeng59949@163.com/), 
-or is this version also inapplicable in some cases?
+Best regards,
+Krzysztof
 
