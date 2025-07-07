@@ -1,161 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEED2BD5A1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D992BEFF5;
+	Mon,  7 Jul 2025 13:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751895779; cv=none; b=CIZTGPF6vdnOX3k1VInrWlZ3VT5mMdvwyCtxcr1C7sf60Q41ho7jwXzbyhgIB7D4BNg22vkWOx/sidmyOwJGSEXzMIgh9drxwVuLTrjFt+tkkomOWk+mY44tewomUXpdYY4kFQcBpqbQm6sFeY6yhjicbhQVr+PAfp+vZna1nsg=
+	t=1751895781; cv=none; b=cZldyAckqF5XH05tyT++X3kqBCcN0so+Bg+nBpVSzJdJ7PNUoys9Lq3HidySp4mK2HPUTj6cSSCnRVgU0ZvQvZkgGINKJ1UgwJx/V9hXT70iXPtPe9aAvWEXozjjLPidpQ9OEehjLUjpuwi7y+y+JerMuwI8NDEqLY0yXt1l5Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751895779; c=relaxed/simple;
-	bh=xltTqBYmsiirVvBdNqG5/Fyy6AbHsBrBr+WSXMtuttA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AijZKl/u1+h6L1EMofZLckbMgTSQFfq6SI/UMicfh+tkERrkX3zXPJ+HJzfWca8QzsJ7+XImEe4AztK/w3Mo+W4hNIdA59o1bf8r9VP4APzmTx/h7JBEzNYcUdJZBmMbkq2R3AH5RQwtZpuqRDv7jXZAYlNf/JnbAvQDe73owJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DpGzbTg2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751895781; c=relaxed/simple;
+	bh=kFeQuslhr/3hnNLg6rE8C4RDktELrENqA7ibJjiDglQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hB45jdSGRLNrWR9g0Rvi6Zn7NREc93eIynS1EdmQeSaIAtrTJy6pQSY0V7G0rYqZvM3v+HV+tnuBVCVHae1PTVzW+aeHmfPqWM0RV9oO+nru3BwyBEzD4NZlEfLIFsAJrtGsGCi8BWZVr4/lsqQLvNpNis+vvg7SNjn/cHuxJbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCiDJQO3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpGzbTg2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751895776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VsmgUKFf5I0+AJIsgxdkjg4irOxBPoSgMLTf3OScQaQ=;
-	b=DpGzbTg2iJRWRCudsMabBbQlP3IWyGXgNUxS1Eq0s4kStUEbWKVM9/f6oUDYI75Xu/EA4j
-	Dw1x0qjUfuFWzI7+VUaUJYxUywuJ/oYeKUC4jyvzD+sOI1tYiYgvIfpzcoO8m6WPm0h98X
-	6kCHAHujSyX8yMlHdyHspnbMuE6WtOw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-28-IcXpSeFuM_aAgRFOrGbGVg-1; Mon, 07 Jul 2025 09:42:54 -0400
-X-MC-Unique: IcXpSeFuM_aAgRFOrGbGVg-1
-X-Mimecast-MFC-AGG-ID: IcXpSeFuM_aAgRFOrGbGVg_1751895773
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a50049f8eeso1436348f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 06:42:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751895773; x=1752500573;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VsmgUKFf5I0+AJIsgxdkjg4irOxBPoSgMLTf3OScQaQ=;
-        b=TiAsrd8Is8W7WPECbtfKZHzlxHZI2LnAZBxVZGP4QvV9wFZVvRd+4nEOZ45cjyrBdz
-         /EIX9dN1GIfgVHyrGF2kfIZJw8snktWLMrWjz7U+X7I0xj75LtFIHdElH0Ubt3SzYFpQ
-         Y/QKGeoAy/vcsVSYWfRWaV8BVxfKoy9s+CK5RiRAQ/gODhPFZNttSafiQnLJKUi7whf1
-         ds3cN761zExRT4fKLpvIl1dmV0RrcFBSaDVVjHgN0o5Rn7AzkIsqN6ABdlZXWdKsKxYG
-         xg0J7np6Zt3KN9pBhXrQ0XFUhjOEE+PAqtFJvMZdBCbOwug7nFzhLIHFJeLfchRXELj7
-         A1nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNYHl064Uk8Hbkn3az4bbtoL2clXYnA8fAAdaU/8K0S04rQCh6nbsovKWkEsZBkOvkvBktYWS6qnuHYYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD6398QBUPGsJMhRNJLS3b3YPtil8MUYC7WBkSfGnMaxZC/Z1A
-	GxcyI/bF3yJATpsgeBCoGKkDYyyaVzt7DO/nguy0ziSfjH1wwj0QT+cW6BB9Flroeqewx4dBk3w
-	jSYt/pozeXOn7ET5nubh/I4VjCKscTyQzQ3UeBlXN/5vM49zObDMT7WL9otVApfn98A==
-X-Gm-Gg: ASbGncse/KsT5/taZ7oOfelFMRAq3PsCdaB8dTENTprroIXMYPMAJTe0hK3bWMmAE8y
-	yTjciansbJxT3R1mZ8bZAEMAXlpzfJC7CY/wlUcn5MT1Y+Am/PaOqTx0Z/qn17eRqdd7Mq0DV5z
-	jCEMnGE1/LXTSO2wB9taLGosH7NoUuXblDRolVBMuC/dhqK2PNEK2tqjiplhtx4Zvrj25L/H3X+
-	HEEO1oavfRRer686UtD6TovN9Yk8RyuMN1kEAOaYNHUxeaykv2rXvjDA7kLplDPUx27u7qtlLEQ
-	4HRCv7TiTleZYar0D/illwqH5P8A
-X-Received: by 2002:a05:6000:400b:b0:3a5:1cc5:4a17 with SMTP id ffacd0b85a97d-3b49aa7d51dmr6564063f8f.42.1751895773417;
-        Mon, 07 Jul 2025 06:42:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFY8SiQF+6f5+bf4//S2AtBghoAdxNERSqvvMXKZJvwoNLtCvWhRhxkkv/MOEbunhybnSwajg==
-X-Received: by 2002:a05:6000:400b:b0:3a5:1cc5:4a17 with SMTP id ffacd0b85a97d-3b49aa7d51dmr6564020f8f.42.1751895772808;
-        Mon, 07 Jul 2025 06:42:52 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.144.135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997b492sm140318785e9.13.2025.07.07.06.42.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 06:42:52 -0700 (PDT)
-Date: Mon, 7 Jul 2025 15:42:45 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Xuewei Niu <niuxuewei.nxw@antgroup.com>, fupan.lfp@antgroup.com
-Subject: Re: [PATCH net-next v5 1/4] hv_sock: Return the readable bytes in
- hvs_stream_has_data()
-Message-ID: <xphwpqqi42w5b3jug3vfooybrlft3z5ewravl7jvzci7ogs3nh@5i7yi66dg7fa>
-References: <20250706-siocinq-v5-0-8d0b96a87465@antgroup.com>
- <20250706-siocinq-v5-1-8d0b96a87465@antgroup.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCiDJQO3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22655C4CEE3;
+	Mon,  7 Jul 2025 13:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751895781;
+	bh=kFeQuslhr/3hnNLg6rE8C4RDktELrENqA7ibJjiDglQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FCiDJQO3TLWkMR1UB2l25UOB7Cnz92eRbGlBhrORo4bms4FxKzSIPOETrajXSVj8c
+	 dOOE+6vir6JSjXFB4L0reTiS8Q0A46QNGBRwmXCTdfo22CNxvcStmgWrmR/JE1e+AL
+	 PvwZvBp3RQakfGrCjlCQurC3T5yNmZAQv5TopTIi4d3Je62azAUwaQlLa6p3RwLhH2
+	 hEts6+sqxHSEHdJFY1GaSKVGtJggmzf4WXClcEMuUqHHHiGyAjGdQrMXi9KAq7UMtb
+	 Ve41v+KGrkbfmxxm5G+500uSA7y/8KO9tqRGHz/BBX46KJ40nP7fGRPVfeqiQaTPR7
+	 D7U86KksH/Mww==
+From: Philipp Stanner <phasta@kernel.org>
+To: Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH v2 7/7] drm/nouveau: Remove waitque for sched teardown
+Date: Mon,  7 Jul 2025 15:42:20 +0200
+Message-ID: <20250707134221.34291-9-phasta@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250707134221.34291-2-phasta@kernel.org>
+References: <20250707134221.34291-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250706-siocinq-v5-1-8d0b96a87465@antgroup.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jul 06, 2025 at 12:36:29PM +0800, Xuewei Niu wrote:
->When hv_sock was originally added, __vsock_stream_recvmsg() and
->vsock_stream_has_data() actually only needed to know whether there
->is any readable data or not, so hvs_stream_has_data() was written to
->return 1 or 0 for simplicity.
->
->However, now hvs_stream_has_data() should return the readable bytes
->because vsock_data_ready() -> vsock_stream_has_data() needs to know the
->actual bytes rather than a boolean value of 1 or 0.
->
->The SIOCINQ ioctl support also needs hvs_stream_has_data() to return
->the readable bytes.
->
->Let hvs_stream_has_data() return the readable bytes of the payload in
->the next host-to-guest VMBus hv_sock packet.
->
->Note: there may be multpile incoming hv_sock packets pending in the
+struct nouveau_sched contains a waitque needed to prevent
+drm_sched_fini() from being called while there are still jobs pending.
+Doing so so far would have caused memory leaks.
 
-s/multpile/multiple
+With the new memleak-free mode of operation switched on in
+drm_sched_fini() by providing the callback
+nouveau_sched_fence_context_kill() the waitque is not necessary anymore.
 
->VMBus channel's ringbuffer, but so far there is not a VMBus API that
->allows us to know all the readable bytes in total without reading and
->caching the payload of the multiple packets, so let's just return the
->readable bytes of the next single packet. In the future, we'll either
->add a VMBus API that allows us to know the total readable bytes without
->touching the data in the ringbuffer, or the hv_sock driver needs to
->understand the VMBus packet format and parse the packets directly.
->
->Signed-off-by: Dexuan Cui <decui@microsoft.com>
->---
-> net/vmw_vsock/hyperv_transport.c | 17 ++++++++++++++---
-> 1 file changed, 14 insertions(+), 3 deletions(-)
->
->diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
->index 31342ab502b4fc35feb812d2c94e0e35ded73771..432fcbbd14d4f44bd2550be8376e42ce65122758 100644
->--- a/net/vmw_vsock/hyperv_transport.c
->+++ b/net/vmw_vsock/hyperv_transport.c
->@@ -694,15 +694,26 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
-> static s64 hvs_stream_has_data(struct vsock_sock *vsk)
-> {
-> 	struct hvsock *hvs = vsk->trans;
->+	bool need_refill;
-> 	s64 ret;
->
-> 	if (hvs->recv_data_len > 0)
->-		return 1;
->+		return hvs->recv_data_len;
->
-> 	switch (hvs_channel_readable_payload(hvs->chan)) {
-> 	case 1:
->-		ret = 1;
->-		break;
->+		need_refill = !hvs->recv_desc;
->+		if (!need_refill)
->+			return -EIO;
->+
->+		hvs->recv_desc = hv_pkt_iter_first(hvs->chan);
->+		if (!hvs->recv_desc)
->+			return -ENOBUFS;
->+
->+		ret = hvs_update_recv_data(hvs);
->+		if (ret)
->+			return ret;
->+		return hvs->recv_data_len;
-> 	case 0:
-> 		vsk->peer_shutdown |= SEND_SHUTDOWN;
-> 		ret = 0;
->
->-- 
->2.34.1
->
+Remove the waitque.
+
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nouveau_sched.c | 20 +++++++-------------
+ drivers/gpu/drm/nouveau/nouveau_sched.h |  9 +++------
+ drivers/gpu/drm/nouveau/nouveau_uvmm.c  |  8 ++++----
+ 3 files changed, 14 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
+index 2ec62059c351..7d9c3418e76b 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_sched.c
++++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
+@@ -122,11 +122,9 @@ nouveau_job_done(struct nouveau_job *job)
+ {
+ 	struct nouveau_sched *sched = job->sched;
+ 
+-	spin_lock(&sched->job.list.lock);
++	spin_lock(&sched->job_list.lock);
+ 	list_del(&job->entry);
+-	spin_unlock(&sched->job.list.lock);
+-
+-	wake_up(&sched->job.wq);
++	spin_unlock(&sched->job_list.lock);
+ }
+ 
+ void
+@@ -307,9 +305,9 @@ nouveau_job_submit(struct nouveau_job *job)
+ 	}
+ 
+ 	/* Submit was successful; add the job to the schedulers job list. */
+-	spin_lock(&sched->job.list.lock);
+-	list_add(&job->entry, &sched->job.list.head);
+-	spin_unlock(&sched->job.list.lock);
++	spin_lock(&sched->job_list.lock);
++	list_add(&job->entry, &sched->job_list.head);
++	spin_unlock(&sched->job_list.lock);
+ 
+ 	drm_sched_job_arm(&job->base);
+ 	job->done_fence = dma_fence_get(&job->base.s_fence->finished);
+@@ -460,9 +458,8 @@ nouveau_sched_init(struct nouveau_sched *sched, struct nouveau_drm *drm,
+ 		goto fail_sched;
+ 
+ 	mutex_init(&sched->mutex);
+-	spin_lock_init(&sched->job.list.lock);
+-	INIT_LIST_HEAD(&sched->job.list.head);
+-	init_waitqueue_head(&sched->job.wq);
++	spin_lock_init(&sched->job_list.lock);
++	INIT_LIST_HEAD(&sched->job_list.head);
+ 
+ 	return 0;
+ 
+@@ -502,9 +499,6 @@ nouveau_sched_fini(struct nouveau_sched *sched)
+ 	struct drm_gpu_scheduler *drm_sched = &sched->base;
+ 	struct drm_sched_entity *entity = &sched->entity;
+ 
+-	rmb(); /* for list_empty to work without lock */
+-	wait_event(sched->job.wq, list_empty(&sched->job.list.head));
+-
+ 	drm_sched_entity_fini(entity);
+ 	drm_sched_fini(drm_sched);
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
+index 20cd1da8db73..b98c3f0bef30 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_sched.h
++++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
+@@ -103,12 +103,9 @@ struct nouveau_sched {
+ 	struct mutex mutex;
+ 
+ 	struct {
+-		struct {
+-			struct list_head head;
+-			spinlock_t lock;
+-		} list;
+-		struct wait_queue_head wq;
+-	} job;
++		struct list_head head;
++		spinlock_t lock;
++	} job_list;
+ };
+ 
+ int nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_uvmm.c b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
+index 48f105239f42..ddfc46bc1b3e 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_uvmm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
+@@ -1019,8 +1019,8 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
+ 	u64 end = addr + range;
+ 
+ again:
+-	spin_lock(&sched->job.list.lock);
+-	list_for_each_entry(__job, &sched->job.list.head, entry) {
++	spin_lock(&sched->job_list.lock);
++	list_for_each_entry(__job, &sched->job_list.head, entry) {
+ 		struct nouveau_uvmm_bind_job *bind_job = to_uvmm_bind_job(__job);
+ 
+ 		list_for_each_op(op, &bind_job->ops) {
+@@ -1030,7 +1030,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
+ 
+ 				if (!(end <= op_addr || addr >= op_end)) {
+ 					nouveau_uvmm_bind_job_get(bind_job);
+-					spin_unlock(&sched->job.list.lock);
++					spin_unlock(&sched->job_list.lock);
+ 					wait_for_completion(&bind_job->complete);
+ 					nouveau_uvmm_bind_job_put(bind_job);
+ 					goto again;
+@@ -1038,7 +1038,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
+ 			}
+ 		}
+ 	}
+-	spin_unlock(&sched->job.list.lock);
++	spin_unlock(&sched->job_list.lock);
+ }
+ 
+ static int
+-- 
+2.49.0
 
