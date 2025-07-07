@@ -1,182 +1,132 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F5A286D7C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446B3279918;
+	Mon,  7 Jul 2025 07:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873423; cv=none; b=ODazqbgckYW1o2gWu6Q0E6yqBLJN+xbdbm4cfy+m+gLkt+ItK0sAHshZHuZPci46+3bo3hxZ+g+8j2LzGjFZ+FxGVKx/gDAXPEkSyXkPN1BILTWdlC79li6hQAUdtdIEUUTyXcIprdMaVjyT1OiQKbD2Qn9CRZetMWvUtbB5Ck4=
+	t=1751873438; cv=none; b=BQnn5cozS4YrbcP0qHNUkcgoM1nl9NTSYtkm39Kz13NwVBZqSW/vLeHS77fCpe9mErQ9ycXNg1y7iLuAAmSqELsjmAddnP0F6tqkHn6ECo2ps+oZR4IQJU+hxXUfLsdcClIqvDcZZ5voekMCj9mKX/mvoVpXeBpQV626/+4a0B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873423; c=relaxed/simple;
-	bh=aSpnSLUsKoIud4TMn2Bqvcleyy0rBk7G0hRpyIo8X6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=XVvuwvooVApNTPe8c7bOBslhy7SnpfrwQPqQJh/+QJOINCCqBPoSqZpiIpVlNMFTav+q/xM/w9vOFU3EAAHo/JxqqxEiLp8hHnvw7sSYMZjO4y7Mlc1ZVHS7wDIwmDokhJf0P4sJyOOYEQCF/jaJoyE7EFFZkdWWFs+SOiv4t0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nTcmJlWE; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751873438; c=relaxed/simple;
+	bh=zVp3mU9tpJoLyKShOFZbvOMZjx+sbDfvqdrK5RIOkbg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=dnKZKvJFkxX0ObBgAWIdHZYyi2AfLGJdmzplvA+FMz7A63lWrxMDGJ7F9V8FTwGQWQ6uY48Sr3SVZeDmfP5UNY/wvFV0BGBbHOJ83W883p94JgD3wHroH2BQ114p6BhGRMkTe7k7rslbvu3fipw7Xx3oq+mei+V9FxsWqTAoLzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=tcPHlMoW; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nTcmJlWE"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250707073019euoutp02a91394c87378c123b4062a8c100ee5ee~P55fY7eU31518415184euoutp024
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:30:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250707073019euoutp02a91394c87378c123b4062a8c100ee5ee~P55fY7eU31518415184euoutp024
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751873419;
-	bh=Q5MiDO4kvDAjyRPyePkrhFPW14vb6d7EHum8/0WQ8v4=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=nTcmJlWE9ADFjtTB8/5dbhfElVYFVx1jEthmk7Ctq63wpWZA0y3SsvT87qm57mCtz
-	 rUjt3bDhvweBckPVDFw5OznBTOS+vV7+8SZ9nHBpYZQENs4/FWNurFGCw+oFHkPpQ1
-	 XHWI3W7f3PQJvFFlwDzHrIxWLH38TC9yfJ59Mtd0=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250707073018eucas1p1a0c2e714826a2571f8c5281b8ef0457c~P55eomzep1941219412eucas1p1u;
-	Mon,  7 Jul 2025 07:30:18 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250707073017eusmtip20a0a1f63bf89beef337da1edc73632c1~P55dgBGZm2165621656eusmtip2K;
-	Mon,  7 Jul 2025 07:30:17 +0000 (GMT)
-Message-ID: <002c8275-f17d-4a4e-b6b8-4dc74c4d510d@samsung.com>
-Date: Mon, 7 Jul 2025 09:30:17 +0200
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="tcPHlMoW"
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
+	by mxout2.routing.net (Postfix) with ESMTP id B0FE35FAAF;
+	Mon,  7 Jul 2025 07:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1751873433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zVp3mU9tpJoLyKShOFZbvOMZjx+sbDfvqdrK5RIOkbg=;
+	b=tcPHlMoWChlrn8xTPaCqBQ/0kL86NAfoif4bczhRr5EPFM2mHMEWkuotkm7Qcm8BgxNhKd
+	cfd7uYKu7+c3NyNy1MFOYQHSkksnV/+Gw9qqAyCXu09nxFsZXLYurxI+bXh6AVtUosXhwp
+	CTur5EUurSQKKFv4T1RiC3Lo7PaHHeg=
+Received: from [IPv6:::1] (unknown [IPv6:2a01:599:808:65f4:756a:9686:4114:2d58])
+	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 3BB8D100758;
+	Mon,  7 Jul 2025 07:30:31 +0000 (UTC)
+Date: Mon, 07 Jul 2025 09:30:32 +0200
+From: Frank Wunderlich <linux@fw-web.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Johnson Wang <johnson.wang@mediatek.com>,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ Frank Wunderlich <frank-w@public-files.de>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v8_02/16=5D_dt-bindings=3A_n?=
+ =?US-ASCII?Q?et=3A_mediatek=2Cnet=3A_allow_up_to_8_IRQs?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250707-modest-awesome-baboon-aec601@krzk-bin>
+References: <20250706132213.20412-1-linux@fw-web.de> <20250706132213.20412-3-linux@fw-web.de> <20250707-modest-awesome-baboon-aec601@krzk-bin>
+Message-ID: <B875B8FF-FEDB-4BBD-8843-9BA6E4E89A45@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/6] rust: pwm: Add complete abstraction layer
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
-	Turquette <mturquette@baylibre.com>, Drew Fustini <fustini@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <aGpqqGMTU3a3O8cn@pollux>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250707073018eucas1p1a0c2e714826a2571f8c5281b8ef0457c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250706114605eucas1p17d1cbd035d14d95f4ad0588c2572b3e2
-X-EPHeader: CA
-X-CMS-RootMailID: 20250706114605eucas1p17d1cbd035d14d95f4ad0588c2572b3e2
-References: <20250706-rust-next-pwm-working-fan-for-sending-v9-0-42b5ac2101c7@samsung.com>
-	<CGME20250706114605eucas1p17d1cbd035d14d95f4ad0588c2572b3e2@eucas1p1.samsung.com>
-	<20250706-rust-next-pwm-working-fan-for-sending-v9-2-42b5ac2101c7@samsung.com>
-	<aGpqqGMTU3a3O8cn@pollux>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mail-ID: 03c03832-acef-4e85-9034-7323a57b8c25
 
+Am 7=2E Juli 2025 08:31:11 MESZ schrieb Krzysztof Kozlowski <krzk@kernel=2E=
+org>:
+>On Sun, Jul 06, 2025 at 03:21:57PM +0200, Frank Wunderlich wrote:
+>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>=20
+>> Increase the maximum IRQ count to 8 (4 FE + 4 RSS/LRO)=2E
+>
+>Because? Hardware was updated? It was missing before?
 
+There is no RSS support in driver yet,so IRQs were not added to existing D=
+TS yet=2E
 
-On 7/6/25 14:23, Danilo Krummrich wrote:
-> On Sun, Jul 06, 2025 at 01:45:13PM +0200, Michal Wilczynski wrote:
->> +/// Trait defining the operations for a PWM driver.
->> +pub trait PwmOps: 'static + Sized {
->> +    /// The type of the owned driver data (e.g., `Pin<KBox<...>>`).
->> +    type DrvData: 'static + ForeignOwnable;
->> +    /// The driver-specific hardware representation of a waveform.
->> +    ///
->> +    /// This type must be [`Copy`], [`Default`], and fit within `PWM_WFHWSIZE`.
->> +    type WfHw: Copy + Default;
->> +
->> +    /// Optional hook for when a PWM device is requested.
->> +    fn request(
->> +        _chip: &Chip<Self::DrvData>,
->> +        _pwm: &Device,
->> +        _parent_dev: &device::Device<Bound>,
->> +    ) -> Result {
->> +        Ok(())
->> +    }
->> +
->> +    /// Optional hook for when a PWM device is freed.
->> +    fn free(_chip: &Chip<Self::DrvData>, _pwm: &Device, _parent_dev: &device::Device<Bound>) {}
-> 
-> NIT: I can't think of a case providing this callback in Rust is useful. Do you
-> have a clear use-case in mind? Otherwise, I'd not provide this callback until
-> you have one. Should be trivial to add later on.
-> 
->> +impl<T: PwmOps> Adapter<T> {
-> 
-> <snip>
-> 
->> +    /// # Safety
->> +    ///
->> +    /// `dev` must be a valid pointer to a `bindings::device` embedded within a
->> +    /// `bindings::pwm_chip`. This function is called by the device core when the
->> +    /// last reference to the device is dropped.
->> +    unsafe extern "C" fn release_callback(dev: *mut bindings::device) {
->> +        // SAFETY: The function's contract guarantees that `dev` points to a `device`
->> +        // field embedded within a valid `pwm_chip`. `container_of!` can therefore
->> +        // safely calculate the address of the containing struct.
->> +        let c_chip_ptr = unsafe { container_of!(dev, bindings::pwm_chip, dev) };
->> +
->> +        // SAFETY: `c_chip_ptr` is a valid pointer to a `pwm_chip` as established
->> +        // above. Calling this FFI function is safe.
->> +        let drvdata_ptr = unsafe { bindings::pwmchip_get_drvdata(c_chip_ptr) };
->> +
->> +        if !drvdata_ptr.is_null() {
-> 
-> Is this check needed? I think one can't create a pwm::Chip instance without
-> providing a T, so this pointer can't be NULL I think.
-> 
->> +            // SAFETY: `drvdata_ptr` was stored by `Chip::new` from an owned `T::DrvData`
->> +            // and is guaranteed to be valid if non-null. `from_foreign` can safely
->> +            // reclaim ownership to allow Rust to drop and free the data.
->> +            let _owned_drvdata = unsafe { T::DrvData::from_foreign(drvdata_ptr.cast()) };
->> +        }
->> +    }
-> 
-> If you overwrite this callback (as you do below) you're leaking the memory
-> allocated by pwmchip_alloc().
-> 
-> The simple way to solve this would be to call pwmchip_release() from here.
+>>=20
+>> Frame-engine-IRQs (max 4):
+>> MT7621, MT7628: 1 IRQ
+>> MT7622, MT7623: 3 IRQs (only two used by the driver for now)
+>> MT7981, MT7986, MT7988: 4 IRQs (only two used by the driver for now)
+>
+>You updated commit msg - looks fine - but same problem as before in your
+>code=2E Now MT7981 has 4-8 interrupts, even though you say here it has on=
+ly
+>4=2E
 
-Thanks, a pwmchip_release() is static though, so it's either expose the
-pwmchip_release in the header, or call kfree() here directly on pwmchip.
+Ethernet works with 4,but can be 8 for MT798x=2E
+I cannot increase the MinItems here as it will
+throw error because currently only 4 are defined in DTS=2Esame for MT7986=
+=2E
+>>=20
+>> Mediatek Filogic SoCs (mt798x) have 4 additional IRQs for RSS and/or
+>> LRO=2E
+>
+>Although I don't know how to treat this=2E Just say how many interrupts
+>are there (MT7981, MT7986, MT7988: 4 FE and 4 RSS), not 4 but later
+>actually 4+4=2E
 
-> 
-> <snip>
-> 
->> +impl<T: 'static + ForeignOwnable> Chip<T> {
->> +    /// Allocates and wraps a PWM chip using `bindings::pwmchip_alloc`.
->> +    ///
->> +    /// Returns an [`ARef<Chip>`] managing the chip's lifetime via refcounting
->> +    /// on its embedded `struct device`.
->> +    pub fn new<O: PwmOps<DrvData = T>>(
->> +        parent_dev: &device::Device,
->> +        npwm: u32,
->> +        sizeof_priv: usize,
->> +        drvdata: T,
->> +    ) -> Result<ARef<Self>> {
->> +        // SAFETY: `parent_device_for_dev_field.as_raw()` is valid.
->> +        // `bindings::pwmchip_alloc` returns a valid `*mut bindings::pwm_chip` (refcount 1)
->> +        // or an ERR_PTR.
->> +        let c_chip_ptr_raw =
->> +            unsafe { bindings::pwmchip_alloc(parent_dev.as_raw(), npwm, sizeof_priv) };
->> +
->> +        let c_chip_ptr: *mut bindings::pwm_chip = error::from_err_ptr(c_chip_ptr_raw)?;
->> +
->> +        // Set the custom release function on the embedded device. This is the crucial step
->> +        // to ensure `drvdata` is freed when the chip's refcount reaches zero, regardless
->> +        // of whether `Registration::register` was called.
->> +        // SAFETY: `c_chip_ptr` points to a valid chip.
->> +        unsafe { (*c_chip_ptr).dev.release = Some(Adapter::<O>::release_callback); }
-> 
-> This overwrites [1].
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/core.c?h=v6.16-rc4#n1601
-> 
+First block is for Frame Engine IRQs and second for RSS/LRO=2E Only mentio=
+n total count=20
+across all SoCs is imho more confusing=2E
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+>I also do not understand why 7 interrupts is now valid=2E=2E=2E Are these=
+ not
+>connected physically?
+
+7 does not make sense but i know no way to allow 8 with min 4 without betw=
+een (5-7)=2E
+
+>Best regards,
+>Krzysztof
+
+Hi
+
+Thanks for taking time for review again=2E
+
+First block are the frame engine IRQs which are max 4 and on all SoCs=2E
+The RSS IRQs are only valid on Filogic (MT798x),so there a total of 8, but=
+ on
+MT7981 and MT7986 not yet added as i prepare the RSS/LRO driver in backgro=
+und=2E
+We just want to add the IRQs for MT7988 now=2E
+regards Frank
