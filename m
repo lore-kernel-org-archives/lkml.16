@@ -1,137 +1,162 @@
-Received: from mail-m49194.qiye.163.com (mail-m49194.qiye.163.com [45.254.49.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996B2156C6F;
-	Mon,  7 Jul 2025 10:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD6519F10A;
+	Mon,  7 Jul 2025 10:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751884231; cv=none; b=HalU1hb4e+ITqUO8R5JYNNKIyeD8uxPpUyVNBAOrrsTDgoKQ7bc2FfhaBUyJTcxh1EnkZyrHrUkMmyAkK9C38vyXxrLT/uOA4av1PZjaisqQlBLtHDc64/ArCqaxqJJIQsq98MdiYwScVDyvdeKllUnMwDjTxsmFP0MU2Ti2/bc=
+	t=1751884241; cv=none; b=bEVLmOExH3YoB1Y5nQG+FaHPbe0kCGhA9C5tNamBNcQGWgYTvhDogdkIDjgB3TBHNOQcnKyePOFuQb7Y3+JztcZUirXx+tnwgGMajjXJArAWBvSssbM95FB0+h4u/XvckDRCja+emjaa92hZ65WJO4ibTC8s2lrwTh1J2v2z1SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751884231; c=relaxed/simple;
-	bh=wzvySkfSkJ4e8dwMvyxg2jF5Ke08l5dP7TDvrD6QV24=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X1oLQaLGMAptKG14K7XCs0rtJ4i88rdszk4rEBErJtPKWAjXLhBJe347giO7TtYqAEDEg1BkXHQXHj571yKITMVn1tHbV3IjEbo5X/qf1drS1Az9un4AtOSp5o1wW1RMTyHcF9MWJO06h6bH3pwUv6GnSQ80nir1pLQB5lPtp7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=45.254.49.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
-Received: from localhost.localdomain (unknown [122.224.147.158])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1b2c5dbcb;
-	Mon, 7 Jul 2025 18:30:16 +0800 (GMT+08:00)
-From: Andy Xu <andy.xu@hj-micro.com>
-To: bhelgaas@google.com,
-	lukas@wunner.de
-Cc: mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jemma.zhang@hj-micro.com,
-	peter.du@hj-micro.com,
-	Hongbo Yao <andy.xu@hj-micro.com>
-Subject: [PATCH] PCI/DPC: Extend DPC recovery timeout
-Date: Mon,  7 Jul 2025 18:30:14 +0800
-Message-ID: <20250707103014.1279262-1-andy.xu@hj-micro.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1751884241; c=relaxed/simple;
+	bh=3xZ3C2XbqQloQMn1DRctoPeGmPKF5DG2Q0BNaKhC270=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvtMeP7vc4GO4h232/GOzwTH/brOaaTgF+RWK6tEYyil8lRF7FgTlwIyfP+3k8+9ShnKAiUSHhYj5+tn6wTPwZOucAveay+z8OaUC4oZyLzpljsxVByFHvBZeaub5Qp5LZBFVYp/B5mx9nlFEN7EwYFZ0SGJ8Lj+vtgMm6BTLZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lRMnDoDt; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lRMnDoDt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751884239; x=1783420239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3xZ3C2XbqQloQMn1DRctoPeGmPKF5DG2Q0BNaKhC270=;
+  b=lRMnDoDtY6OwDqZArxLnyVkWAe73oWrd8klL+xdhxnNqJk6axh02UhrL
+   ck6vTq21n5rOwD4d/N9N4SkMeS8M3nQxgp383vNPh/IFZi/RoZeZX4q9B
+   zqzau7ig/jVCeTkDy1HxdiFVdylVUZg1qBAR16NDPnmbpVebtHaw7pYUW
+   esJJmdOvWbrIh8zkhxIi8nsyLvtma5FWzjIH5ZqwB6R5CGjEqwu2bfQ45
+   rT/mqd/RFhZcV+EQs/uYD5qISBWD9QTHglJ9qL6P+i8WtrlYON6q+GOIa
+   N9g1/eOGexHT3B6A650ws8C5vj/8CEzYtgrnJYI2HFwzqB3pp4QP3dmP5
+   w==;
+X-CSE-ConnectionGUID: Lt0fxi/6R1ywTyZcCvqRYA==
+X-CSE-MsgGUID: nuoCHfkAQUSm3xpi3A/XlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="65554720"
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="65554720"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 03:30:37 -0700
+X-CSE-ConnectionGUID: cELMNLKzTDicN5BWgqNqSw==
+X-CSE-MsgGUID: U8bUEGEfQLWcPe0QGPVxlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="159717452"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 Jul 2025 03:30:31 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uYj7E-0000LD-2C;
+	Mon, 07 Jul 2025 10:30:28 +0000
+Date: Mon, 7 Jul 2025 18:29:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wander Lairson Costa <wander@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH v3 2/2] tracing/preemptirq: Optimize
+ preempt_disable/enable() tracepoint overhead
+Message-ID: <202507071800.OViM30Fr-lkp@intel.com>
+References: <20250704170748.97632-3-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUsfVk4YShhOGRpCTExKHlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUpPTFVKTkNZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSENVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a97e46fb83003afkunmcba88557e5ad6a
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PU06LBw6PTErETcvUUtKCTYI
-	IwgaCiNVSlVKTE5KQ0NPSUpMSEJCVTMWGhIXVRoVHwJVAw47ExFWFhIYCRRVGBQWRVlXWRILWUFZ
-	SklJVUlJT1VKT0xVSk5DWVdZCAFZQU1OT0k3Bg++
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704170748.97632-3-wander@redhat.com>
 
-From: Hongbo Yao <andy.xu@hj-micro.com>
+Hi Wander,
 
-Extend the DPC recovery timeout from 4 seconds to 7 seconds to
-support Mellanox ConnectX series network adapters.
+kernel test robot noticed the following build errors:
 
-My environment:
-  - Platform: arm64 N2 based server
-  - Endpoint1: Mellanox Technologies MT27800 Family [ConnectX-5]
-  - Endpoint2: Mellanox Technologies MT2910 Family [ConnectX-7]
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on tip/sched/core linus/master v6.16-rc5 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-With the original 4s timeout, hotplug would still be triggered:
+url:    https://github.com/intel-lab-lkp/linux/commits/Wander-Lairson-Costa/trace-preemptirq-reduce-overhead-of-irq_enable-disable-tracepoints/20250705-011058
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250704170748.97632-3-wander%40redhat.com
+patch subject: [PATCH v3 2/2] tracing/preemptirq: Optimize preempt_disable/enable() tracepoint overhead
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250707/202507071800.OViM30Fr-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250707/202507071800.OViM30Fr-lkp@intel.com/reproduce)
 
-[ 81.012463] pcieport 0004:00:00.0: DPC: containment event, status:0x1f01 source:0x0000
-[ 81.014536] pcieport 0004:00:00.0: DPC: unmasked uncorrectable error detected
-[ 81.029598] pcieport 0004:00:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
-[ 81.040830] pcieport 0004:00:00.0: device [0823:0110] error status/mask=00008000/04d40000
-[ 81.049870] pcieport 0004:00:00.0: [ 0] ERCR (First)
-[ 81.053520] pcieport 0004:00:00.0: AER: TLP Header: 60008010 010000ff 00001000 9c4c0000
-[ 81.065793] mlx5_core 0004:01:00.0: mlx5_pci_err_detected Device state = 1 health sensors: 1 pci_status: 1. Enter, pci channel state = 2
-[ 81.076183] mlx5_core 0004:01:00.0: mlx5_error_sw_reset:231:(pid 1618): start
-[ 81.083307] mlx5_core 0004:01:00.0: mlx5_error_sw_reset:252:(pid 1618): PCI channel offline, stop waiting for NIC IFC
-[ 81.077428] mlx5_core 0004:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
-[ 81.486693] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
-[ 81.496965] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
-[ 82.395040] mlx5_core 0004:01:00.1: print_health:819:(pid 0): Fatal error detected
-[ 82.395493] mlx5_core 0004:01:00.1: print_health_info:423:(pid 0): PCI slot 1 is unavailable
-[ 83.431094] mlx5_core 0004:01:00.0: mlx5_pci_err_detected Device state = 2 pci_status: 0. Exit, result = 3, need reset
-[ 83.442100] mlx5_core 0004:01:00.1: mlx5_pci_err_detected Device state = 2 health sensors: 1 pci_status: 1. Enter, pci channel state = 2
-[ 83.441801] mlx5_core 0004:01:00.0: mlx5_crdump_collect:50:(pid 2239): crdump: failed to lock gw status -13
-[ 83.454050] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:231:(pid 1618): start
-[ 83.454050] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:252:(pid 1618): PCI channel offline, stop waiting for NIC IFC
-[ 83.849429] mlx5_core 0004:01:00.1: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
-[ 83.858892] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
-[ 83.869464] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1618): Skipping wait for vf pages stage
-[ 85.201433] pcieport 0004:00:00.0: pciehp: Slot(41): Link Down
-[ 85.815016] mlx5_core 0004:01:00.1: mlx5_health_try_recover:335:(pid 2239): handling bad device here
-[ 85.824164] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:231:(pid 2239): start
-[ 85.831283] mlx5_core 0004:01:00.1: mlx5_error_sw_reset:252:(pid 2239): PCI channel offline, stop waiting for NIC IFC
-[ 85.841899] mlx5_core 0004:01:00.1: mlx5_unload_one_dev_locked:1612:(pid 2239): mlx5_unload_one_dev_locked: interface is down, NOP
-[ 85.853799] mlx5_core 0004:01:00.1: mlx5_health_wait_pci_up:325:(pid 2239): PCI channel offline, stop waiting for PCI
-[ 85.863494] mlx5_core 0004:01:00.1: mlx5_health_try_recover:338:(pid 2239): health recovery flow aborted, PCI reads still not working
-[ 85.873231] mlx5_core 0004:01:00.1: mlx5_pci_err_detected Device state = 2 pci_status: 0. Exit, result = 3, need reset
-[ 85.879899] mlx5_core 0004:01:00.1: E-Switch: Unload vfs: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
-[ 85.921428] mlx5_core 0004:01:00.1: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
-[ 85.930491] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
-[ 85.940849] mlx5_core 0004:01:00.1: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
-[ 85.949971] mlx5_core 0004:01:00.1: mlx5_uninit_one:1528:(pid 1617): mlx5_uninit_one: interface is down, NOP
-[ 85.959944] mlx5_core 0004:01:00.1: E-Switch: cleanup
-[ 86.035541] mlx5_core 0004:01:00.0: E-Switch: Unload vfs: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
-[ 86.077568] mlx5_core 0004:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(0), neovfs(0), active vports(0)
-[ 86.071727] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
-[ 86.096577] mlx5_core 0004:01:00.0: mlx5_wait_for_pages:786:(pid 1617): Skipping wait for vf pages stage
-[ 86.106909] mlx5_core 0004:01:00.0: mlx5_uninit_one:1528:(pid 1617): mlx5_uninit_one: interface is down, NOP
-[ 86.115940] pcieport 0004:00:00.0: AER: subordinate device reset failed
-[ 86.122557] pcieport 0004:00:00.0: AER: device recovery failed
-[ 86.128571] mlx5_core 0004:01:00.0: E-Switch: cleanup
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507071800.OViM30Fr-lkp@intel.com/
 
-I added some prints and found that:
- - ConnectX-5 requires >5s for full recovery
- - ConnectX-7 requires >6s for full recovery
+All errors (new ones prefixed by >>):
 
-Setting timeout to 7s covers both devices with safety margin.
+   In file included from include/linux/irqflags.h:18,
+                    from arch/m68k/include/asm/atomic.h:6,
+                    from include/linux/atomic.h:7,
+                    from include/linux/jump_label.h:257,
+                    from include/linux/static_key.h:1,
+                    from include/linux/tracepoint-defs.h:11,
+                    from include/linux/preempt.h:13,
+                    from arch/m68k/include/asm/processor.h:11,
+                    from include/linux/sched.h:13,
+                    from arch/m68k/kernel/asm-offsets.c:15:
+   arch/m68k/include/asm/irqflags.h: In function 'arch_local_irq_enable':
+>> arch/m68k/include/asm/irqflags.h:44:29: error: implicit declaration of function 'hardirq_count' [-Wimplicit-function-declaration]
+      44 |         if (MACH_IS_Q40 || !hardirq_count())
+         |                             ^~~~~~~~~~~~~
+   make[3]: *** [scripts/Makefile.build:98: arch/m68k/kernel/asm-offsets.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1274: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
-Signed-off-by: Hongbo Yao <andy.xu@hj-micro.com>
----
- drivers/pci/pcie/dpc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index fc18349614d7..35a37fd86dcd 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -118,10 +118,10 @@ bool pci_dpc_recovered(struct pci_dev *pdev)
- 	/*
- 	 * Need a timeout in case DPC never completes due to failure of
- 	 * dpc_wait_rp_inactive().  The spec doesn't mandate a time limit,
--	 * but reports indicate that DPC completes within 4 seconds.
-+	 * but reports indicate that DPC completes within 7 seconds.
- 	 */
- 	wait_event_timeout(dpc_completed_waitqueue, dpc_completed(pdev),
--			   msecs_to_jiffies(4000));
-+			   msecs_to_jiffies(7000));
- 
- 	return test_and_clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
- }
+vim +/hardirq_count +44 arch/m68k/include/asm/irqflags.h
+
+df9ee29270c11d David Howells 2010-10-07  31  
+df9ee29270c11d David Howells 2010-10-07  32  static inline void arch_local_irq_enable(void)
+df9ee29270c11d David Howells 2010-10-07  33  {
+df9ee29270c11d David Howells 2010-10-07  34  #if defined(CONFIG_COLDFIRE)
+df9ee29270c11d David Howells 2010-10-07  35  	asm volatile (
+df9ee29270c11d David Howells 2010-10-07  36  		"move	%/sr,%%d0	\n\t"
+df9ee29270c11d David Howells 2010-10-07  37  		"andi.l	#0xf8ff,%%d0	\n\t"
+df9ee29270c11d David Howells 2010-10-07  38  		"move	%%d0,%/sr	\n"
+df9ee29270c11d David Howells 2010-10-07  39  		: /* no outputs */
+df9ee29270c11d David Howells 2010-10-07  40  		:
+df9ee29270c11d David Howells 2010-10-07  41  		: "cc", "%d0", "memory");
+df9ee29270c11d David Howells 2010-10-07  42  #else
+df9ee29270c11d David Howells 2010-10-07  43  # if defined(CONFIG_MMU)
+df9ee29270c11d David Howells 2010-10-07 @44  	if (MACH_IS_Q40 || !hardirq_count())
+df9ee29270c11d David Howells 2010-10-07  45  # endif
+df9ee29270c11d David Howells 2010-10-07  46  		asm volatile (
+df9ee29270c11d David Howells 2010-10-07  47  			"andiw %0,%%sr"
+df9ee29270c11d David Howells 2010-10-07  48  			:
+df9ee29270c11d David Howells 2010-10-07  49  			: "i" (ALLOWINT)
+df9ee29270c11d David Howells 2010-10-07  50  			: "memory");
+df9ee29270c11d David Howells 2010-10-07  51  #endif
+df9ee29270c11d David Howells 2010-10-07  52  }
+df9ee29270c11d David Howells 2010-10-07  53  
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
