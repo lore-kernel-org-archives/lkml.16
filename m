@@ -1,86 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556DA29ACD4;
-	Mon,  7 Jul 2025 13:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B2129C326;
+	Mon,  7 Jul 2025 13:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751893207; cv=none; b=TQsh6NU5DyrFMVQxgFFF1PIeGqvjaqklUv2lHvB618O5QF8nBzHoC5iwLbzA24DRoh5n93HGjaaW4tGDnpVuB4vsiK4v0TbZdpxW/+BBBQLPcIIeEz38rZ4jSesq3v0AdF1Lqdzwxd6Jp59SPyfO5VbeT1OZzpq44RymWOEs/Ho=
+	t=1751893210; cv=none; b=skJW/lpa6R/6NsnvX/rEdHbSIpzBsX+Pw1O+unm0YjRIbsRT+ADIFvO7x6zaoA4SgmZ+KEUpU91HdWWYh2x25TObuXYCubVQxiAPkiiqa2Tyf9hD7fHs1cSn17Ceea/WwUi3BysJEBwt5A7bDZOvH13eg1rycev6fNbOsWbZqiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751893207; c=relaxed/simple;
-	bh=OYuuq41zyZEuye2UbQAlUX3ToiLuKhLbzSgHgVRSXmY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BAm/7gfETMtWAcWEC/qDWKpEl7TWehwsG8lklnnx1s03DoAmrEkeiM1tKDS4s4S/gA9is1oNxUkuMzM8phNJ2bZQ1Q/D9Lar2eknBFUVu4wTF13X5VhlCxDWUiqmrxs7+SENgCxQjYUH+SPkj9VRNS7N6NqW3wxl0f1aRY3bJ4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FanFTgxl; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751893210; c=relaxed/simple;
+	bh=vzpqH7cwAvt5EfB3DXmRzC/6/YWTutXwvmvDN5nphew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HZI3Ky4QYKxsoiyveMV+k/ELw6iEdledTVnYwDHf4ZLtJbqPOQGFyVTwMUXainkJaTapxT806MIdyXS1Qe4BZATYqeBKj5qext7FS7hVwxIwlkdOqgAR/Lb0JGO3+tl/llKz6vxLnaCf5LS72zYnXGBHpS6FuZmSpYBqmdv4FEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=40eDqH1T; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FanFTgxl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751893206; x=1783429206;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=OYuuq41zyZEuye2UbQAlUX3ToiLuKhLbzSgHgVRSXmY=;
-  b=FanFTgxlVXtOO/UtmnA6J+GL4UUs1C5Kv+g32VAvE8rKREosCeQbIidz
-   2GTErg5ogiAkNbl0Jorw3CO+zUCFJS/j70absxCmRo4qsEDQobP9W78Iu
-   EiJlVlRq2Dfqq5qCAiiagBkOJfWhV3Tr+G6luGr26Ls9wEYKragdC1Rgu
-   GrdxC6Fy18e+WMz3EiEPuijhK31OW5M4hmF7gl8Jc7G8ZgGrrppb/IJ5O
-   vBp8GmaIN3PffFNhuuCS12KHOmi7PAx6WGyXs/oLwtm2qLt8cLqaFX0vp
-   xzTpDD3SOe0Oq8+j5Suxl0MJt1Jl53767kPvguknsAPyrX0+nU7GLcxw1
-   Q==;
-X-CSE-ConnectionGUID: Sw1rhplPTBCA83iYatpcyw==
-X-CSE-MsgGUID: GZruzkpwQuCZMY2hiLvH5Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="53970649"
-X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
-   d="scan'208";a="53970649"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 06:00:03 -0700
-X-CSE-ConnectionGUID: 9D9/kXgeSCaii8wYgwAduw==
-X-CSE-MsgGUID: 95eWDQAqRy2B9tzh3WdcYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
-   d="scan'208";a="154634834"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.104])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 06:00:01 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
- Mario Limonciello <mario.limonciello@amd.com>, 
- Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20250707-dmi-fix-v1-1-6730835d824d@gmail.com>
-References: <20250707-dmi-fix-v1-1-6730835d824d@gmail.com>
-Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Fix `dmi_system_id`
- array
-Message-Id: <175189319656.2280.5627704855016194059.b4-ty@linux.intel.com>
-Date: Mon, 07 Jul 2025 15:59:56 +0300
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="40eDqH1T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=l9BqN9JWYSkSCj4ALm0oMo2ahkDITzuK7PJIB/RwV+Y=; b=40eDqH1Tpt6pqjoWJoqMb+ZDZ8
+	Eix80QnvxzoKWTucgItsK2bvEHjme85duJ1+kEmPHlqgjO84oY/2HqYd7IgOMciEjhJqvnxIpWTpR
+	rZjW/suaXWN7HijOpVBHlONAUpd91WWK4Mn+6nQ92h7Tnks181om8Jk6o1Jm6AMvrzJ2C74DazQT4
+	9B5LTdFzE1q/kBjA7KSPuS3yX6AAbvVhyQ8NTBqI7lk4NdxcoXWQdWLhFh1/f/Ezk3dP3YMtqzchH
+	ITqXuQeuhtiC6lM0myVIN28zZ+JedOWRLK3XaL9yNaqNBmkLQ5yxLytFzICC620Lnl03PhrGMsHiA
+	u+Txu/ZA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uYlS3-00000002Tjh-2VBZ;
+	Mon, 07 Jul 2025 13:00:07 +0000
+Date: Mon, 7 Jul 2025 06:00:07 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: ntfs3@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	syzbot+a5d1c9dfa91705cd2f6d@syzkaller.appspotmail.com,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Subject: Re: [PATCH] Revert "fs/ntfs3: Replace inode_trylock with inode_lock"
+Message-ID: <aGvE1_yre9ayskxu@infradead.org>
+References: <20250707124738.6764-1-almaz.alexandrovich@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250707124738.6764-1-almaz.alexandrovich@paragon-software.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, 07 Jul 2025 03:24:05 -0300, Kurt Borja wrote:
-
-> Add missing empty member to `awcc_dmi_table`.
+On Mon, Jul 07, 2025 at 02:47:38PM +0200, Konstantin Komarov wrote:
+> This reverts commit 69505fe98f198ee813898cbcaf6770949636430b.
 > 
-> 
+> Make lock acquiring conditional to avoid the deadlock.
 
-
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86: alienware-wmi-wmax: Fix `dmi_system_id` array
-      commit: 8346c6af27f1c1410eb314f4be5875fdf1579a10
-
---
- i.
+This is not a very useful commit message for a locking change.
+Please explain the problem this solves, and why the original reason
+for the locking change isn't valid any more, or less important than
+the newly arising issue.
 
