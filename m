@@ -1,121 +1,169 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3E028A1D3
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A08285CBD
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751874454; cv=none; b=P+p0jhcn8jv7TsowniVxsdH03nnvZQ9+yGGudtTpkDa67HPn4qGc0H+oPONHbbCrpMa6brpW5IxgTziHCUZrX4rZikJ5uSNGCzXSIhn1Pfn0GW+sH/xQjUfEr0xmS3yk5fwvyCLkgc7iwxSz3rY+nMnN5pV6k2GQaUfKP4fXqsQ=
+	t=1751874625; cv=none; b=I4sxC2pS02Y5HanaSQFHjJoeq2QOo1Ccown8eMwh6xmDQMrj8eDad4EUEwNoWoQe8F5ePgGB40jO2ri8oJ2QkBMywIu4ckrHFA8phxI1/+89xJV9PoF936DgSJo7QwzMou0Zbi0FJgHPnv3JMXh8fcNo8qnENwNl53xjZx93SYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751874454; c=relaxed/simple;
-	bh=gWcGlYBG9VdQBpWm6p9J7+lhSUYrFxwqeKyCXRoz8Fo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G/GOnW25w4n9YyQXgX8OaZokn7wLmdk3ik1/vbnNK49jM7oP/DJGi1j/IYfelPym+AWbWsJ+sKKOx+QhhXlcHJZYAejd98IqF3d0bliTcm5Ak29/CDWeBnJMpP1xkrY71IdP/T+BL8gdzO6ChjEhN50foa0QfF9uvj2Cs8tzYg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45348bff79fso30073725e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:47:32 -0700 (PDT)
+	s=arc-20240116; t=1751874625; c=relaxed/simple;
+	bh=wVo3Uj6jmnQf/BSDDMw9sp+FUodCwKCtMimosX22fNg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LvYmaQp5FBCa4kAGf8bFUHIVd3LWhrvtWqzuPEFWNlnJ14n3Xa1KO5xOWyp1ZOnF0XP/o7KddlSW/TG/W5hg/VAGJSIrCvzJaXGbOTbxevhjp0YmuP72GnNHuCgfhr5uh099zRPrrV82pN+nKc2ObQdsDe0MeGaiTts8fblsUFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=n/PFFzRv; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="n/PFFzRv"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4530921461aso18235885e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751874622; x=1752479422; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7KIguw26t4x0LRcjdNKl7u8c5ct1I3xgnx7WNCV/df4=;
+        b=n/PFFzRvEDOn8S8ODTT7crQKyqH79gl26adKTFQvBL+X7n37iZoJmYEYEC7PqxTuIe
+         Bg5vAAKOcnVp+Gx8we++hxwmk0vbXYAXWBEfIflHnIki+gdMe+/Pgd8Zl8SwiagrjtGY
+         2pLbMBsTXVzrVWZzRWbJ+rRoGmyHWm1GNhg3VpmxJk3YLUj5cp2Y6yGbI6+xRXlxokkW
+         kVClN/DXL6eUcIuHsE4gSXE64FA1zJ+yp+Jb5LdM9CvqUfbWCeNoOx0WgJDsotVOK5uV
+         8g5PivLkS8olQVJ1EmSVBF/yb/9WXRMD0YhQycq5pIZmQD9HM3h0+7LFPWF/2bAbGvrn
+         NW9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751874451; x=1752479251;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751874622; x=1752479422;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FEY2aQm3xhUcP7sj5Oq2Xh6CDlgTY4o4n58HV3+BEDA=;
-        b=Zr/wSFb/BDmQbQvYwVR9ahF64itgph7QqORdpt1Wjc25B9Ez4B/bTc7xRWAFcSZv0A
-         JRQgfOpIsWHgyhud0NFzgcJHSwyT7eDKze1W1xqpG0020RhynWlTsHj6tdH1IqNGYdoO
-         lgLSmZEsT1/mt/vTI6ioLHnteNp+kkgCjr1o1cGzH7RB2x+4FiiTuXeScL+TsxgFAuJ5
-         a4tXcbMovI63I+zILbJSNr/b0vHjVF72CT/2YsViJ/Be9KKencZUZGB5QdszDrjLwt3I
-         wxrAA7qUoiEriDcHEBpv307PKh634IOkPMzTgVUdQqggwcFp1f62c7iPPXtL7I66NVjM
-         MJqg==
-X-Gm-Message-State: AOJu0YwObTr/VWXD3aBQojfBc1ko90w6SG3mpqo6tpTQzOO6GxErMP9V
-	xoxAoLBaLjjgKbnc/9tar8H/ZmZ4mwXRBUhKnCKH6D8odOQnOysXUF5ixWik3w==
-X-Gm-Gg: ASbGncuMo/jPbN/HMAHzITdQlEE6XYEohcjnyrJlEoJL++lPWVw1i4eyz8wUrE9zThR
-	GhnjumCPBWfEgAFyVNQzN1yspeWZDB0Q4XlNERfY7kVBOxjUlMnrxy13qogFXdKi4aX6X9OOim/
-	ZvUbD/VzLTaqBgTNZozkL3OG8i9Mhrfmh76/NBw0vg+eBJilYONai5N8KQvqKD92OO/GQctU6rE
-	TQtdeRLnB8vqycDsoGCcxUj9y1mljujr2lhWaeAVU9xGjENxc9MX805zVxeaBHxASRgcWOz3CVN
-	EJf7EchL0emJUp8kJPO4T1NkwMSGMKtbVubD2XMzkZJ4MxUNpfn6T9JGc2HKzZOq6CPtaYA4GRM
-	X9ycIl/OzvvCOV4BtY3Ysp6Sw1hrkq2e3D+zWAVgPOesoaxOkLA==
-X-Google-Smtp-Source: AGHT+IGQ2p0zyDFvUFfCc3BgCvaQgicnavFr0NvZLrUvFDtieMDoUV34wD0aEvzmFpPILe534mnd/A==
-X-Received: by 2002:a05:600c:3b8d:b0:454:ad94:4b3d with SMTP id 5b1f17b1804b1-454c8221e2fmr7443515e9.1.1751874450628;
-        Mon, 07 Jul 2025 00:47:30 -0700 (PDT)
-Received: from mayhem.fritz.box (p200300f6f71c45003fa4d1e815666221.dip0.t-ipconnect.de. [2003:f6:f71c:4500:3fa4:d1e8:1566:6221])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b4708d0ed9sm9499960f8f.38.2025.07.07.00.47.29
+        bh=7KIguw26t4x0LRcjdNKl7u8c5ct1I3xgnx7WNCV/df4=;
+        b=YivY04n49IcVuodNWbrAqDAM+76mdz/tFvhf6EznTkqLcsJzZ4ZOYGBWNyKPmQcfXN
+         8nfkJe+ltSgCn+Z4PK3zJh2gfPFViM8L/1Q8Y5CWgBU1oobrvkQSIXyzcVkzO4CZrS4v
+         LWhnW5iosNvQi6JjquBVv59KW6gpC31nptOSnFy8xXsHOg5Q4RHnlVvmmXo2lkfi0QCw
+         0b90ykHH00qI5ZunxQ53NfdXJcnEuJqWbGuLUPodaHV2TSA/wV+Ko85n5R7V8hevKU20
+         kG+yisM3rYuUFFrrCCKYbjB0t+2yL9q5ImdhAodsXlTRF9Veyc8N+hvlVEqjaQAcapNi
+         ke9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWyCPSgJDL5Gj0T+aBAsX4rgxUw6zAdI7dFnr8RWXpjdAWSFljdIudyEUMn0XmCFxL8aBgKR0UprEPKdPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCnFL8kHtjnqwcrb/CD0cnMVVyDNywAd8PKvJploTz4b5UslFh
+	LjQ0nKHxVW1l5Z1oFeO2Etppy4EV7peUONoY/kpumRO7OSFT0kCpsgKi3dHOSF9Ma7c=
+X-Gm-Gg: ASbGnctQIdBf67jS+6zUNhKhfnNj8/HH+0O5DYGdxlqiyxXtbc1xNbHUhXfYKzT6Tl6
+	Vs74Jk2WvZRJQf4cWTzmpw4XDNkJ/CZfsYmkDDDSWqqwmh+WM5m8T4CKOEAm7aesc1fo083X+WV
+	sJSLQj4IYfE+iqsX+pVMDEXLgvYUaJOzZeq4bDNTbzMNk97EBsI0Y84b4ZuGX6eIpqQaZZuRVv7
+	dC73pbE8TDvegwmhSLuiXEwUvYpfsa/7uUxRI9OJIzfN7/DnHqs2EvrXW0EnVGnpNWjI+n+vP2p
+	4Cc1WV7zfmS/14w0XknEXnCJte/vuUbhexiHhMUCmZ4vYRvllYKQwkSz
+X-Google-Smtp-Source: AGHT+IH0BRfaJT6Ja/4oOAwTU9Pk8TniKor/Tf4bstFHxPXhtytwSi8RMT0ZGyIHaXzOhXpOamh8gw==
+X-Received: by 2002:a05:600c:1386:b0:453:5c30:a1fd with SMTP id 5b1f17b1804b1-454bb7f613amr61571815e9.8.1751874622098;
+        Mon, 07 Jul 2025 00:50:22 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3cf3:a61f:85ed:69db])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1893479sm104215455e9.39.2025.07.07.00.50.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 00:47:29 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Abhinav Ananthu <abhinav.ogl@gmail.com>,
-	Johannes Thumshirn <jth@kernel.org>
-Subject: [PATCH 1/1] mcb: use sysfs_emit_at() instead of scnprintf() in show functions
-Date: Mon,  7 Jul 2025 09:47:20 +0200
-Message-ID: <20250707074720.40051-2-jth@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250707074720.40051-1-jth@kernel.org>
-References: <20250707074720.40051-1-jth@kernel.org>
+        Mon, 07 Jul 2025 00:50:21 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 07 Jul 2025 09:50:14 +0200
+Subject: [PATCH 01/12] gpio: tps65910: use new GPIO line value setter
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250707-gpiochip-set-rv-gpio-round4-v1-1-35668aaaf6d2@linaro.org>
+References: <20250707-gpiochip-set-rv-gpio-round4-v1-0-35668aaaf6d2@linaro.org>
+In-Reply-To: <20250707-gpiochip-set-rv-gpio-round4-v1-0-35668aaaf6d2@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Viresh Kumar <vireshk@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux@ew.tq-group.com, linux-arm-kernel@lists.infradead.org, 
+ virtualization@lists.linux.dev, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2445;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=PFt654WU5Bje33IYcMH6++mqWC/NhCeC1UEL+Yp3IeI=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoa3w5QHqDYMrZJ+NhTqLDhhpPk4MYxtgOqLT6j
+ l09IjyBav6JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGt8OQAKCRARpy6gFHHX
+ chs7D/47U4VHP5YhUMqlgJvviv29pJWoT7ECD7eEwNL78AHuoyS/KQzoyrTPBim2otsR4VTVKGD
+ lfqBwX7VDQe0JLHsF63g9plpkWjiLM4YMRarfFU2/DS6rKpyflaraI1JPAzyU6Wfa/P9wjWkw10
+ 2gsDHVDkFoHyF9xgJWVOMB+iIBqmTemBD0kyqAmseZ7RY5ym2ke4ea9q7MS0tD65PBMUd3cqZFc
+ Qt/AOSuv1Vx+1i0CGwIi6V1pRjvRQ/MqW4GmP4L/A04D0Q7axr1Tizt2axy7FzHhYqjcWUToj3q
+ WdQsgPuPuD2gdjqZPEjeYJRFEOqo9NfFSrJeQYd6u+j0cXBNP7tC67mvTOrYh1eq460orTbfHe9
+ i3XiycOdEFQ1Azjlq7BhC1ORmlj0NAuk4UzKU3Dg/FsivFpgOOr4zxqAMDdl/mnVYKD5idAO/1q
+ 43yFE7MRLxwuSYTnOArL/AjYVUebH39gNlVs8eTPHZ685b2GChWc0OX+PN4ooEd0HRDxGWofpkm
+ EQA3PohnW6TPPN81ZY6thUVgu+hiqJ3jfZxacEcACayJcTorzD6W/axrrmeM5QB+C4iQ3BePpDy
+ VGkDtKHecrsrLemuFI+lXY9GYMrIq1zFFzgZ6h6B48Thf7CDqgspOciJAYW6KwcYVYlM7+y6fna
+ eeYYyQNl5cxl3hQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This change improves clarity and ensures proper bounds checking in
-line with the preferred sysfs_emit() API usage for sysfs 'show'
-functions. The PAGE_SIZE check is now handled internally by the helper.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-No functional change intended.
-
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
-Signed-off-by: Johannes Thumshirn <jth@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/mcb/mcb-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-tps65910.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/mcb/mcb-core.c b/drivers/mcb/mcb-core.c
-index 9b8c40a6459a..c1367223e71a 100644
---- a/drivers/mcb/mcb-core.c
-+++ b/drivers/mcb/mcb-core.c
-@@ -107,7 +107,7 @@ static ssize_t revision_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct mcb_bus *bus = to_mcb_bus(dev);
- 
--	return scnprintf(buf, PAGE_SIZE, "%d\n", bus->revision);
-+	return sysfs_emit(buf, "%d\n", bus->revision);
+diff --git a/drivers/gpio/gpio-tps65910.c b/drivers/gpio/gpio-tps65910.c
+index 187d21580573fb1d896d90642a537a90aced8276..3204f55394cff12dc1b462cdce60342ed1b32fc1 100644
+--- a/drivers/gpio/gpio-tps65910.c
++++ b/drivers/gpio/gpio-tps65910.c
+@@ -36,18 +36,18 @@ static int tps65910_gpio_get(struct gpio_chip *gc, unsigned offset)
+ 	return 0;
  }
- static DEVICE_ATTR_RO(revision);
  
-@@ -116,7 +116,7 @@ static ssize_t model_show(struct device *dev, struct device_attribute *attr,
+-static void tps65910_gpio_set(struct gpio_chip *gc, unsigned offset,
+-			      int value)
++static int tps65910_gpio_set(struct gpio_chip *gc, unsigned int offset,
++			     int value)
  {
- 	struct mcb_bus *bus = to_mcb_bus(dev);
+ 	struct tps65910_gpio *tps65910_gpio = gpiochip_get_data(gc);
+ 	struct tps65910 *tps65910 = tps65910_gpio->tps65910;
  
--	return scnprintf(buf, PAGE_SIZE, "%c\n", bus->model);
-+	return sysfs_emit(buf, "%c\n", bus->model);
+ 	if (value)
+-		regmap_set_bits(tps65910->regmap, TPS65910_GPIO0 + offset,
+-						GPIO_SET_MASK);
+-	else
+-		regmap_clear_bits(tps65910->regmap, TPS65910_GPIO0 + offset,
+-						GPIO_SET_MASK);
++		return regmap_set_bits(tps65910->regmap,
++				       TPS65910_GPIO0 + offset, GPIO_SET_MASK);
++
++	return regmap_clear_bits(tps65910->regmap, TPS65910_GPIO0 + offset,
++				 GPIO_SET_MASK);
  }
- static DEVICE_ATTR_RO(model);
  
-@@ -125,7 +125,7 @@ static ssize_t minor_show(struct device *dev, struct device_attribute *attr,
+ static int tps65910_gpio_output(struct gpio_chip *gc, unsigned offset,
+@@ -55,9 +55,12 @@ static int tps65910_gpio_output(struct gpio_chip *gc, unsigned offset,
  {
- 	struct mcb_bus *bus = to_mcb_bus(dev);
+ 	struct tps65910_gpio *tps65910_gpio = gpiochip_get_data(gc);
+ 	struct tps65910 *tps65910 = tps65910_gpio->tps65910;
++	int ret;
  
--	return scnprintf(buf, PAGE_SIZE, "%d\n", bus->minor);
-+	return sysfs_emit(buf, "%d\n", bus->minor);
- }
- static DEVICE_ATTR_RO(minor);
+ 	/* Set the initial value */
+-	tps65910_gpio_set(gc, offset, value);
++	ret = tps65910_gpio_set(gc, offset, value);
++	if (ret)
++		return ret;
  
-@@ -134,7 +134,7 @@ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct mcb_bus *bus = to_mcb_bus(dev);
+ 	return regmap_set_bits(tps65910->regmap, TPS65910_GPIO0 + offset,
+ 						GPIO_CFG_MASK);
+@@ -136,7 +139,7 @@ static int tps65910_gpio_probe(struct platform_device *pdev)
+ 	tps65910_gpio->gpio_chip.can_sleep = true;
+ 	tps65910_gpio->gpio_chip.direction_input = tps65910_gpio_input;
+ 	tps65910_gpio->gpio_chip.direction_output = tps65910_gpio_output;
+-	tps65910_gpio->gpio_chip.set	= tps65910_gpio_set;
++	tps65910_gpio->gpio_chip.set_rv	= tps65910_gpio_set;
+ 	tps65910_gpio->gpio_chip.get	= tps65910_gpio_get;
+ 	tps65910_gpio->gpio_chip.parent = &pdev->dev;
  
--	return scnprintf(buf, PAGE_SIZE, "%s\n", bus->name);
-+	return sysfs_emit(buf, "%s\n", bus->name);
- }
- static DEVICE_ATTR_RO(name);
- 
+
 -- 
-2.50.0
+2.48.1
 
