@@ -1,103 +1,155 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7514315C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC844315C;
+	Mon,  7 Jul 2025 12:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751892610; cv=none; b=KlB3JZGyBjJJi7GqF05Ly5CCvDSywf98OA208NbW//d/aFvOQ4eM5oEyDuvWCJQ7falKeZgg6zH+Nog9MQ26KMw2I1piWTJyzFnxGLYdUlBidkx6WpBsetdKRNHOnC1/fgzgUxMOzD5MRGDrAT831uYqrTd7I+09LxQ2/bW+lNg=
+	t=1751892625; cv=none; b=Kstdg9Aij7cUk/8BvDCa01dRVaNaEleuQmrLBMDkuFFj3wZPjTSCvfLl56xzn+YcZUxTd958qeeT2HrSElvH+k2DHZEVeeWIYOeDWJ5SX02TgCgaiJboGgvDCPlTXu9EHl1CloTcBVcZzGKa3kBpXY7xJjHkDjajZmEWWaH5oVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751892610; c=relaxed/simple;
-	bh=TlGVc2vlqFVb5SNdiOg16XM/hn4x/ChX9J75203gx1I=;
+	s=arc-20240116; t=1751892625; c=relaxed/simple;
+	bh=GwT868jh0Qxm7S+0u44DTz5mujm9rDPZRJQVcPQdqeM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iAi/2EpQUseQn13/5riVsyK7fKAGEj3QLpCP2ekrsMFnACeuTi7RbDyxl4TuYDh9iD6F0y5WaHY3dObV6crbJaoXjdp6Olk7l64DWwxpQN05qLi/tjnjd6S8+E6/m3jQR7PXRbwkeT+EjLfLITj58O68pqYbY/izjhQ2tNygERg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wdVtM+lV; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wdVtM+lV"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4537fdec33bso18752745e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 05:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751892607; x=1752497407; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QNdhzW/Y8MjvnDjqqg8r50YbwUFzxxNmO6sjtPUADNk=;
-        b=wdVtM+lV2m66DDMtkJY2nu88alF5cVWGttMZ10OgbzsZ8h47ohfTKj5PABJwoK4tgG
-         R65EXnjFiDOFCvOrozUhSSeOLXkz/xmjdfFfymxmBfSTyq8zlaE5LUOD/qY7LMv7tBQm
-         eu+1+UWCLVupmDIf72CNX3fkkABjLj+6fQoIbM9JCM21IJMOkwX5pQaDjU6Xx3F6Dq0o
-         KJp8kynEhEx534H/BuIavkPHVTrsuieSiajgPEREyrgjYkeyPbNVfVDUGqugBw8qOooT
-         jr+oefHrq1AwuCjEQr1vhL4BipOAsck/AE4/9zW2+IKvl/0RVtz5dEe60IDC5sqnscNa
-         fQOA==
+	 To:Cc:Content-Type; b=kFCjtVq7nhoxSggFwg5TcLo2bZqFz9owUOMO3bnNsYTYyLNTWzyti4yfzV/KiveqrwpZBXltUBtu9EfGG9q7Pc789Q4ygB8yiICnMHd67OIGcGF7nMqWJo+TG/ruKqXLtEkvxYyWyOkDU2hQPlNAVgGOvD/FJEO27rOphX7ouiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5315ebfda19so1132583e0c.1;
+        Mon, 07 Jul 2025 05:50:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751892607; x=1752497407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QNdhzW/Y8MjvnDjqqg8r50YbwUFzxxNmO6sjtPUADNk=;
-        b=OoWYJXZqXHonbnDCaXIa+2CXPsgTDk4S7vWZ4r9Gd4rXLyMOyc+dUuw9t6FslqZqw4
-         Rg9ETcTlhdTVgcAeuUGOt1c5YR+l6nILrILlcu/yS2JnXL7egWW1mlqc8Rm4Dr7UA8Nd
-         UToKPaXE7txHsXtwmPx/TyMqPK0C/nUAvBLsg1ujrmLQWsAgFq4zi3FPo9S5xqEcwsDV
-         66Ss6HJ47uWYW+IzE1OKAuZpf7WlxHHLoUm1XbPuYy+44u7/E+MLVNH/M6SNbdit7mJv
-         yZlYuBlxLEyudOs5g6SYXCVCjxC0iqG2/g7DtxM2haATGitQYgP33Ev9G4n27ll49i3L
-         3QCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpLL3sGKyWSOYLsy0sDh2yRR6Cr7njBF7bKdlW6rNp0bSy8taSq7G5Ba/O3KgDufRTclnVR8zqXFV35fI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+3qo3LQFMuWuQ6trgWWLCYtDqmccViZkbXlYId4uBA9ic4ZHs
-	tlEoTVvDjT+bnY2ZoznPoTwmI8/3SFjmOPCr3LFVYaEAGHP5Zf97p2MSMExDJeOfA5w4ZDM57TR
-	00vX0YyKAAvGdNb1pgw6701iL+r6LrX0CmwKDIVyF
-X-Gm-Gg: ASbGncsdpWjah9yqzO2I2/V2DZG/hpIwA4Up7j/f2WL74S+QaNlS8kxJhqjpYEJXxwK
-	5Ai3nsFkOh8YSGCEZm9/NRbkTzTViuLxKbAWowop59k4aOLm/1rM2d90RDR9XM/dM29KrYUxg+m
-	MZyXGEGMVs+oFhX7oktYGpN3H3/n/1OYUxS/w/zwZIhh7r3oJWeiIAYG2aM0Yx80jCse3wbHY=
-X-Google-Smtp-Source: AGHT+IHsMXBAD8GA+B5LxiAfDAfLtY6TvZ5FvEHyZmOChFA1YhgQJ0ZWJ5lgZJTqiFSe6ZNS/+jU9jf/Us1OmmZWM4c=
-X-Received: by 2002:a05:600c:83c4:b0:450:d04e:22d6 with SMTP id
- 5b1f17b1804b1-454b4e6bbdcmr104358265e9.7.1751892606844; Mon, 07 Jul 2025
- 05:50:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751892620; x=1752497420;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zracpAlWO5/gCbNS7IGfJCZEbRAa9k1rsHViJ/4d7wE=;
+        b=t/Anp0tNOGy6hMyqZfbeCjkGqqlZyuZBrU/pnCFumwuZVyKwiF0Z79QrmynLm944RO
+         8kdMGUfKURXGY4PpwEyYL7vsqvISn1aVyhCsgsWlsfKxW+4S+i5zikzdrLGY6jiRMNQi
+         G41FChrH1X9TTJjVyYpbdy/68Xdv/6BiUESSvge0QnwtP27qNXc1B1Au/+qCAkPCWJPn
+         NEspujLnTOytJt3z+RFDa4BgCiYFNmjjJvit6l2zb7PyTOP9b6iLZ3SpPZpnTAf0ad4e
+         iAbiiNzneGeSdmalCga6OHKgKWlnYT6IxZt/nwZditJEPHzTBODvazL4o3ijyT3ZyVJ1
+         6xhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvqtDaMe4PHeY6S9ZmJ3YgPhBoBQpBDIRhQCyavGpAVlYMqBvSyUJF3UcDcOrfsA/QnarH2lml@vger.kernel.org, AJvYcCWXAZPynSP7OD/68bA7VlhO8BkwglIlCAg4FBUhUAVKIz+RgbnkjeczrzOa/vA4HNYRNJwUEjF5kngvE3I=@vger.kernel.org, AJvYcCX2xNZBKHjfabhhaQxJkQauFlc6ztJ7Vu8yyqpJYJ+kG9pYQliaYDsVdwPhlBSxkuo5UmILzvvlopsMPBl/yff838o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUwAKEZnxZAJkhESnbLgIxyhntDtLFsfpSJmaHmPcLuvJ90ecU
+	WQHR7i2fj9uh9eVSMR5tp2ASp3PpDQ/csGgP0T/jbyfQjIk0+HZFbps4D/XYgvkt
+X-Gm-Gg: ASbGncvmJUh69/3iQywYFJ90ay8lqTReY4ZFnSJ0QAsWIDTK2RXkQJkvfQmP6HSi5y/
+	/bYFEGdSe+/AORt5VB5eY+xzLaHtrvy8kwp4smQZsS3nbQrcy50VwP27hyX5b5Ytyl6uxpql5QH
+	q7416MjoEYOvYiKiafJgUQB89pe6/NSSJ2xO2RpcZV9W4hbCZLvaVs8aLyyG8DxKthHFOlOQVbC
+	rv6q7Tc6xnil/tWEf8xGLLCaNGBjyov4lj396rr5GK3JvBxYWmdAGhfdxGLVA1dxuX6pBjJJa3S
+	vqSndResBSUXfeJ/bBiUqHJwMJM70Oupd/JGWJbpwt8ZcIJf4I5nldbqUc51cphKxUjhrj7uvBW
+	U65BToBla+x3TMbTgZDgCpJjlJsSZe2mMcuVXz7U=
+X-Google-Smtp-Source: AGHT+IH3JoyPP1AO2NSsZ0CAd8HQmyfwLPo2aIATpzY4TdQT6mXw5J9S7fZGfjYamU3PMntgPDUcOA==
+X-Received: by 2002:a05:6102:8016:b0:4dd:b037:d239 with SMTP id ada2fe7eead31-4f2ee1ab47amr7966058137.14.1751892620528;
+        Mon, 07 Jul 2025 05:50:20 -0700 (PDT)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4f2ea541f7csm1118480137.8.2025.07.07.05.50.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 05:50:20 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-531a1fad7faso1061740e0c.2;
+        Mon, 07 Jul 2025 05:50:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdQuB5NL8+Xj8pyoGZcTO/ovLfOkyYKPxcui+vvYfomo6uWw8ILnl+acYxNhUB6Nzbx6H4DG7tqxRJAi4T6t/H2DU=@vger.kernel.org, AJvYcCV1qRw71dLqLRVtjfOilxfkIGJVaSqFrfpO7Es/wZJ3rar+qrSwYVtPmn2/RF861sjxopi7h6TP@vger.kernel.org, AJvYcCWNQh9kveJ5KVF65fbfelQ9BelPCgiP51uo5PD19ki5B4+qfouGP6eRURhzPf1ZXMfy58N6qMrQq2kn1Z0=@vger.kernel.org
+X-Received: by 2002:a05:6102:2b86:b0:4e6:a338:a421 with SMTP id
+ ada2fe7eead31-4f2ee03d97fmr8080361137.6.1751892619438; Mon, 07 Jul 2025
+ 05:50:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701174656.62205-1-ojeda@kernel.org>
-In-Reply-To: <20250701174656.62205-1-ojeda@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 7 Jul 2025 14:49:54 +0200
-X-Gm-Features: Ac12FXzQ5ck03QQHYzFLsSFTLp2hRsyOexA643YmM2tCIERUaEuSJWfO_lmHndc
-Message-ID: <CAH5fLghD5eU-YUkq0M4gFK1tXOGHz3Py4m_+xTnYzLxT_ru0xw@mail.gmail.com>
-Subject: Re: [PATCH] rust: acpi: remove unneeded cast to clean future Clippy warning
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Len Brown <lenb@kernel.org>, 
-	linux-acpi@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <20250704-add_l2_switching-v1-0-ff882aacb258@renesas.com> <20250704-add_l2_switching-v1-3-ff882aacb258@renesas.com>
+In-Reply-To: <20250704-add_l2_switching-v1-3-ff882aacb258@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 7 Jul 2025 14:50:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUerQwRS7vX7UtaubgvEKjBzRXUR4PsJzxkeYaf9KaiaQ@mail.gmail.com>
+X-Gm-Features: Ac12FXyiSPYj31DBsG8h4WX8xUJaTIcUGjmMZWTM6hBt-xpHoxMZAAnHIaStaE4
+Message-ID: <CAMuHMdUerQwRS7vX7UtaubgvEKjBzRXUR4PsJzxkeYaf9KaiaQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] net: renesas: rswitch: add modifiable ageing time
+To: Michael Dege <michael.dege@renesas.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+	Paul Barker <paul@pbarker.dev>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 1, 2025 at 7:48=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wrot=
-e:
->
-> A future Clippy warning, `clippy::as_underscore`, is getting enabled in
-> parallel in the rust-next tree:
->
->     error: using `as _` conversion
->       --> rust/kernel/acpi.rs:25:9
->        |
->     25 |         self.0.driver_data as _
->        |         ^^^^^^^^^^^^^^^^^^^^^^-
->        |                               |
->        |                               help: consider giving the type exp=
-licitly: `usize`
->
-> The type is already `ulong`, which nowadays is always `usize`, so the
-> cast is unneeded. Thus remove it, which in turn will avoid the warning
-> in the future.
->
-> Other abstractions of device tables do not use a cast here either.
->
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+Hi Michael,
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+On Fri, 4 Jul 2025 at 07:52, Michael Dege <michael.dege@renesas.com> wrote:
+> This commit allows the setting of the MAC table aging in the R-Car S4
+> Rswitch using the SWITCHDEV_ATTR_ID_BRIDGE_AGEING_TIME attribute.
+>
+> Signed-off-by: Michael Dege <michael.dege@renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/net/ethernet/renesas/rswitch.h
+> +++ b/drivers/net/ethernet/renesas/rswitch.h
+> @@ -849,6 +849,7 @@ enum rswitch_gwca_mode {
+>  #define FWMACAGC_MACDESOG      BIT(29)
+>
+>  #define RSW_AGEING_TIME                300
+> +#define RSW_MAX_AGEING_TIME    65535
+
+This is not needed (see below).
+
+>
+>  /* TOP */
+>  #define TPEMIMC7(queue)                (TPEMIMC70 + (queue) * 4)
+> diff --git a/drivers/net/ethernet/renesas/rswitch_l2.c b/drivers/net/ethernet/renesas/rswitch_l2.c
+> index 242beb1f15c089585f5fe5019f626df8824b971a..c8a8a60a20e70f7ce421280ed35c0c4afe1ed039 100644
+> --- a/drivers/net/ethernet/renesas/rswitch_l2.c
+> +++ b/drivers/net/ethernet/renesas/rswitch_l2.c
+> @@ -196,6 +196,30 @@ static int rswitch_netdevice_event(struct notifier_block *nb,
+>         return NOTIFY_OK;
+>  }
+>
+> +static int rswitch_update_ageing_time(struct net_device *ndev, clock_t time)
+> +{
+> +       struct rswitch_device *rdev = netdev_priv(ndev);
+> +       u32 reg_val, time_val;
+> +
+> +       if (!is_rdev(ndev))
+> +               return -ENODEV;
+> +
+> +       /* Although brctl accepts the ageing time parameter in seconds, the value
+> +        * passed to the driver is multiplied by 100. We need it in seconds.
+> +        */
+> +       time_val = (u32)time / 100;
+
+switchdev_attr.u.ageing_time is clock_t, which is long, so no cast is
+needed before doing the division.  Actually the cast may truncate very
+large values on 64-bit.
+However, dropping the cast means time_val should be changed to clock_t.
+
+> +
+> +       if (time_val > RSW_MAX_AGEING_TIME)
+
+if (!FIELD_FIT(FWMACAGC_MACAGT, time_val))
+
+> +               return -EINVAL;
+> +
+> +       rdev = netdev_priv(ndev);
+> +       reg_val = FIELD_PREP(FWMACAGC_MACAGT, time_val);
+> +       reg_val |= FWMACAGC_MACAGE | FWMACAGC_MACAGSL;
+> +       iowrite32(reg_val, rdev->priv->addr + FWMACAGC);
+> +
+> +       return 0;
+> +}
+> +
+>  static int rswitch_port_attr_set(struct net_device *ndev, const void *ctx,
+>                                  const struct switchdev_attr *attr,
+>                                  struct netlink_ext_ack *extack)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
