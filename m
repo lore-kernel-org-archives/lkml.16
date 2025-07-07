@@ -1,25 +1,30 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1957A21D00A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1749028A1CE;
+	Mon,  7 Jul 2025 10:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882584; cv=none; b=HRGpp933SlAPPlorg5eirA2bYFGkObbZxIDI8V+X+x4VlEKniv+/772wOBistIFBehyOAO8pzwP9sWX44PT9Q32AJim5w0YLMusMcCDI5YpWlmen/vpfwBa+X4vMW9701e8x9UjAcqgUd4T8IdPMFGwYOd5mzT5oBAcDYCYmKgM=
+	t=1751882585; cv=none; b=rkYCIbCGSdvJfNGKWNmpjoH4D5qHr/xZd4Xo3P/bKtT9kCB5LS4vql/XkXywACQf8E2aNdasZtUHbDU701Ux5CNPhIwzwwDDC5Um4BCAA7i/vtYPX8MsmCR0MbcQ50rzkvRvwsVOb7FfZ5UCK7kG3nPk8skg26i34JLMF9ydyBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882584; c=relaxed/simple;
-	bh=dp6wcNgmC+/O9DlSETPF214n6u6nsyq4eNZepuIDczY=;
+	s=arc-20240116; t=1751882585; c=relaxed/simple;
+	bh=Fr153gJd+FEKlvqP+y6xczT1kZJgs0HMt4ilXQEXtDk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wr5cZmjdR8Z7N32wnIJNedX9h34qDx3JmbHIsRrQKMsIKe13Aog6Tk5MH8gquGabrfCEJiJ4UFJySe5lL1WSbdmzCuMa+5OUyIw95a2jZan6Ofp+UVprDZjlwYoSvkI0fbW5Z0Cw+0hqzs0KpdEjJTZs+c4igY+ea3J5fraEGuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [1.202.122.95])
-	by gateway (Coremail) with SMTP id _____8BxlmlSm2toqXMjAQ--.10922S3;
-	Mon, 07 Jul 2025 18:02:58 +0800 (CST)
-Received: from [192.168.187.221] (unknown [1.202.122.95])
-	by front1 (Coremail) with SMTP id qMiowJAxleRRm2toiqwMAA--.10442S2;
-	Mon, 07 Jul 2025 18:02:57 +0800 (CST)
-Message-ID: <d2097a44-bd1a-47b3-bf1a-d2b9d241fa5c@loongson.cn>
-Date: Mon, 7 Jul 2025 18:02:56 +0800
+	 In-Reply-To:Content-Type; b=HItFs6m2Myfz9MagwPep4ajTPcXl3CWEUkYb/p25pBjMLSrdlza/QYYxCjFIoGepsVFYB3mrEobhE/MWhFaRD2Jiw7COXdHtZOCDPuoCTGfUy9NYm/QCkMEyaZBbRcfk3B8q+x6YTsXy/m6OndrMZwceWGG1rvElDYS7r5tcwxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=n8lMu26K; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="n8lMu26K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=JKlpTevxu85gp6f6igNYxYtQcdo+vMwHhI23b2Bpl/U=;
+	b=n8lMu26KcKMwR2qks3e+G25Tf7fLeySn28QSabCIcoGWDfYAqRFAT8oVYmEwiL
+	PcqxKaa/n0CmUkq9DQArZAhyApzTQvLMfj7ovRkehozIolYHm5+BiqPKRY/pfHLk
+	Z/T1x1pbbmeGQyyLx/Fc7UGzrNDGbagUEOwm++sZfsjTE=
+Received: from [10.42.20.80] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wAHHCs+m2toxqqODA--.34329S2;
+	Mon, 07 Jul 2025 18:02:39 +0800 (CST)
+Message-ID: <1567a84b-3f78-4f0a-9549-bfe9fd4aa96b@163.com>
+Date: Mon, 7 Jul 2025 18:02:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,218 +32,216 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
-To: Yanteng Si <si.yanteng@linux.dev>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
- Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
- Guo Weikang <guoweikang.kernel@gmail.com>,
- Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
- <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-References: <20250701090449.2426151-1-wangming01@loongson.cn>
- <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
- <e89f6ce6-d9f4-4744-b6a6-9a82412795a0@loongson.cn>
- <ac47ba40-0b5e-4273-af7a-a34086ae4a80@linux.dev>
-Content-Language: en-US
-From: Ming Wang <wangming01@loongson.cn>
-In-Reply-To: <ac47ba40-0b5e-4273-af7a-a34086ae4a80@linux.dev>
+Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
+ but not fixuped
+To: Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>
+Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250626094937.515552-1-oushixiong1025@163.com>
+ <3b3feb03-c417-4569-b7b0-44565d7cce4f@suse.de>
+ <a937f41f-2cee-459d-b94f-b7f979072f3e@163.com>
+ <1687bb52-e724-46a8-af75-26b486634c20@suse.de>
+From: Shixiong Ou <oushixiong1025@163.com>
+In-Reply-To: <1687bb52-e724-46a8-af75-26b486634c20@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxleRRm2toiqwMAA--.10442S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEQEmhrYYMFOgAAsf
-X-Coremail-Antispam: 1Uk129KBj93XoW3XF13Cry8Aw4ruw47KFWxuFX_yoWxAr4UpF
-	ykA3WYyrZ8GFn7uw1I9wn8Xryayw4rJ3W7Wr1UWF15Ar1YyF1IgF40qr1q9FyUWr4Iqr10
-	qF1Utr9xZ3WDAFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082
-	IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-	cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUciF4DUUUU
+X-CM-TRANSID:_____wAHHCs+m2toxqqODA--.34329S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKrWxGr43XF4kAFW8JF15CFg_yoWxWFyxpF
+	WfGFW3CF48Xrn7Grs0g3Wqyrn3tr4kWFyq9FsxKw1UJFyqyF1avrnruryDurykZr4kGF1I
+	qr4jy34akF15CFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ua0PhUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/xtbBYwCDD2hrkI3wHAAAsd
 
-Hi Yanteng, Huacai,
 
-在 2025/7/7 10:33, Yanteng Si 写道:
-> 
-> 在 7/3/25 9:36 AM, Ming Wang 写道:
->> Hi Yanteng,
+在 2025/7/7 17:28, Thomas Zimmermann 写道:
+> Hi
+>
+> Am 07.07.25 um 11:24 schrieb Shixiong Ou:
 >>
->> Thanks for reviewing the patch and for your insightful question.
+>> 在 2025/6/27 17:13, Thomas Zimmermann 写道:
+>>> Hi
+>>>
+>>> Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
+>>>> From: Shixiong Ou <oushixiong@kylinos.cn>
+>>>>
+>>>> [WHY]
+>>>> On an ARM machine, the following log is present:
+>>>> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, 
+>>>> total 3072k
+>>>> [    2.297884] amdgpu 0000:04:00.0: 
+>>>> remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 
+>>>> 0x100fffffff
+>>>> [    2.297886] amdgpu 0000:04:00.0: 
+>>>> remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 
+>>>> 0x10101fffff
+>>>> [    2.297888] amdgpu 0000:04:00.0: 
+>>>> remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
+>>>>
+>>>> It show that the efifb framebuffer base is out of PCI BAR, and this
+>>>> results in both efi-framebuffer and amdgpudrmfb co-existing.
+>>>>
+>>>> The fbcon will be bound to efi-framebuffer by default and cannot be 
+>>>> used.
+>>>>
+>>>> [HOW]
+>>>> Do not load efifb driver if PCI BAR has changed but not fixuped.
+>>>> In the following cases:
+>>>>     1. screen_info_lfb_pdev is NULL.
+>>>>     2. __screen_info_relocation_is_valid return false.
+>>>
+>>> Apart from ruling out invalid screen_info, did you figure out why 
+>>> the relocation tracking didn't work? It would be good to fix this if 
+>>> possible.
+>>>
+>>> Best regards
+>>> Thomas
+>>>
+>> I haven’t figure out the root cause yet.
 >>
->> On 7/2/25 10:11, Yanteng Si wrote:
->>> 在 7/1/25 5:04 PM, Ming Wang 写道:
->>>> The LoongArch mem= parameter parser was previously limited to the
->>>> mem=SIZE@START format. This was inconvenient for the common use case
->>>> of simply capping the total system memory, as it forced users to
->>>> manually specify a start address. It was also inconsistent with the
->>>> behavior on other architectures.
+>> This issue is quite rare and might be related to the EFI firmware.
+>> However, I wonder if we could add some handling when no PCI resources 
+>> are found in screen_info_fixup_lfb(), as a temporary workaround for 
+>> the problem I mentioned earlier.
+>
+> As I said elsewhere in the thread, you can clear the screen_info's 
+> video type in the branch at [1] to disable it entirely. We should have 
+> probably done this anyway. Knowing the cause of the issue would still 
+> be nice though.
+>
+> Best regards
+> Thomas
+>
+> [1] 
+> https://elixir.bootlin.com/linux/v6.15.5/source/drivers/video/screen_info_pci.c#L44 
+>
+>
+thanks for you suggestion, while there are two cases:
+     1. screen_info_lfb_pdev is NULL.
+     2. __screen_info_relocation_is_valid return false.
+
+should we do it at [1] too?
+
+Best regards
+Shixiong Ou
+
+[1] 
+https://elixir.bootlin.com/linux/v6.15.5/source/drivers/video/screen_info_pci.c#L47
+
+>>
+>> Best regards
+>> Shixiong Ou
+>>
 >>>>
->>>> This patch enhances the parser in early_parse_mem() to also support the
->>>> more user-friendly mem=SIZE format. The implementation now checks for
->>>> the presence of the '@' symbol to determine the user's intent:
->>>>
->>>> - If mem=SIZE is provided (no '@'), the kernel now calls
->>>>    memblock_enforce_memory_limit(). This trims memory from the top down
->>>>    to the specified size.
->>>> - If mem=SIZE@START is used, the original behavior is retained for
->>>>    backward compatibility. This allows for defining specific memory
->>>>    banks.
->>>>
->>>> This change introduces an important usage rule reflected in the code's
->>>> comments: the mem=SIZE format should only be specified once on the
->>>> kernel command line. It acts as a single, global cap on total 
->>>> memory. In
->>>> contrast, the mem=SIZE@START format can be used multiple times to
->>>> define several distinct memory regions.
->>>>
->>>> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+>>>> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
 >>>> ---
->>>>   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
->>>>   1 file changed, 10 insertions(+), 8 deletions(-)
+>>>>   drivers/video/fbdev/efifb.c     |  4 ++++
+>>>>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
+>>>>   include/linux/screen_info.h     |  5 +++++
+>>>>   3 files changed, 33 insertions(+)
 >>>>
->>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/ 
->>>> setup.c
->>>> index b99fbb388fe0..af59ba180dc2 100644
->>>> --- a/arch/loongarch/kernel/setup.c
->>>> +++ b/arch/loongarch/kernel/setup.c
->>>> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
->>>>           return -EINVAL;
->>>>       }
->>>> +    start = 0;
->>>> +    size = memparse(p, &p);
->>>> +    if (*p == '@')    /* Every mem=... should contain '@' */
->>>> +        start = memparse(p + 1, &p);
->>>> +    else {            /* Only one mem=... is allowed if no '@' */
->>>> +        usermem = 1;
->>>> +        memblock_enforce_memory_limit(size);
->>>> +        return 0;
+>>>> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+>>>> index 0e1bd3dba255..de8d016c9a66 100644
+>>>> --- a/drivers/video/fbdev/efifb.c
+>>>> +++ b/drivers/video/fbdev/efifb.c
+>>>> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info 
+>>>> *si, char *options)
+>>>>     static inline bool fb_base_is_valid(struct screen_info *si)
+>>>>   {
+>>>> +    /* check whether fb_base has changed but not fixuped */
+>>>> +    if (!screen_info_is_useful())
+>>>> +        return false;
+>>>> +
+>>>>       if (si->lfb_base)
+>>>>           return true;
+>>>>   diff --git a/drivers/video/screen_info_pci.c 
+>>>> b/drivers/video/screen_info_pci.c
+>>>> index 66bfc1d0a6dc..ac57dcaf0cac 100644
+>>>> --- a/drivers/video/screen_info_pci.c
+>>>> +++ b/drivers/video/screen_info_pci.c
+>>>> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
+>>>>   static size_t screen_info_lfb_bar;
+>>>>   static resource_size_t screen_info_lfb_res_start; // original 
+>>>> start of resource
+>>>>   static resource_size_t screen_info_lfb_offset; // framebuffer 
+>>>> offset within resource
+>>>> +static bool screen_info_changed;
+>>>> +static bool screen_info_fixuped;
+>>>>     static bool __screen_info_relocation_is_valid(const struct 
+>>>> screen_info *si, struct resource *pr)
+>>>>   {
+>>>> @@ -24,6 +26,24 @@ static bool 
+>>>> __screen_info_relocation_is_valid(const struct screen_info *si, stru
+>>>>       return true;
+>>>>   }
+>>>>   +bool screen_info_is_useful(void)
+>>>> +{
+>>>> +    unsigned int type;
+>>>> +    const struct screen_info *si = &screen_info;
+>>>> +
+>>>> +    type = screen_info_video_type(si);
+>>>> +    if (type != VIDEO_TYPE_EFI)
+>>>> +        return true;
+>>>> +
+>>>> +    if (screen_info_changed && !screen_info_fixuped) {
+>>>> +        pr_warn("The screen_info has changed but not fixuped");
+>>>> +        return false;
 >>>> +    }
 >>>> +
->>>>       /*
->>>>        * If a user specifies memory size, we
->>>>        * blow away any automatically generated
->>>> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
->>>>           memblock_remove(memblock_start_of_DRAM(),
->>>>               memblock_end_of_DRAM() - memblock_start_of_DRAM());
+>>>> +    pr_info("The screen_info is useful");
+>>>> +    return true;
+>>>> +}
+>>>> +
+>>>>   void screen_info_apply_fixups(void)
+>>>>   {
+>>>>       struct screen_info *si = &screen_info;
+>>>> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
+>>>>           struct resource *pr = 
+>>>> &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+>>>>             if (pr->start != screen_info_lfb_res_start) {
+>>>> +            screen_info_changed = true;
+>>>>               if (__screen_info_relocation_is_valid(si, pr)) {
+>>>>                   /*
+>>>>                    * Only update base if we have an actual
+>>>>                    * relocation to a valid I/O range.
+>>>>                    */
+>>>>                   __screen_info_set_lfb_base(si, pr->start + 
+>>>> screen_info_lfb_offset);
+>>>> +                screen_info_fixuped = true;
+>>>>                   pr_info("Relocating firmware framebuffer to 
+>>>> offset %pa[d] within %pr\n",
+>>>>                       &screen_info_lfb_offset, pr);
+>>>>               } else {
+>>>>                   pr_warn("Invalid relocating, disabling firmware 
+>>>> framebuffer\n");
+>>>>               }
+>>>>           }
+>>>> +    } else {
+>>>> +        screen_info_changed = true;
 >>>>       }
->>>> -    start = 0;
->>>> -    size = memparse(p, &p);
->>>> -    if (*p == '@')
->>>> -        start = memparse(p + 1, &p);
->>>> -    else {
->>>> -        pr_err("Invalid format!\n");
->>>> -        return -EINVAL;
->>>> -    }
->>> I don't understand. Isn't it better to modify the else{} directly here?
->>>
->> You've raised a very good point. The reason for moving the parsing 
->> logic to the top, rather than just modifying the original else block, 
->> is to handle the fundamentally different behaviors required for 
->> mem=SIZE versus mem=SIZE@START. The key lies in thisexisting block of 
->> code which handles the mem=SIZE@START case:
->>
->> ```
->> /*
->> * If a user specifies memory size, we
->> * blow away any automatically generated
->> * size.
->> */
->> if (usermem == 0) {
->>     usermem = 1;
->>     memblock_remove(memblock_start_of_DRAM(),
->>             memblock_end_of_DRAM() - memblock_start_of_DRAM());
->> }
->> ```
->>
->> This code is destructive. As the comment says, it "blows away" the 
->> entire memory map discovered from the firmware (UEFI/ACPI). After this 
->> call, memblock is essentially empty, waiting for new regions to be 
->> added via memblock_add(). This is the correct behavior for 
->> mem=SIZE@START.
->>
->> However, the new mem=SIZE functionality is meant to be non- 
->> destructive. It should take the existing firmware-provided memory map 
->> and simply trim it down to the desired size. The function 
->> memblock_enforce_memory_limit() is designed for this purpose—it 
->> operates on the current state of memblock.
->>
->> If we were to keep the parsing logic at the end and only modify the 
->> else block, the destructive memblock_remove() call would have already 
->> executed for both cases. By that point, calling 
->> memblock_enforce_memory_limit() would be meaningless, as there would 
->> be no memory regions left in memblock to limit.
->>
->> Therefore, the patch moves the parsing logic to the very beginning to 
->> create a clean separation:
->> 1. It first checks if the format is mem=SIZE (no '@').
->> 2. If it is, it performs the non-destructive limit on the intact 
->> memory map and returns immediately, completely bypassing the 
->> destructive memblock_remove() logic.
->> 3. If the format is mem=SIZE@START, it falls through to the original 
->> destructive path as before.
-> 
-> I have an idea: what if we move the destructive code into the if block?
-
-@Yanteng,
-That's an excellent suggestion. You are right. Moving the destructive 
-memblock_remove() logic inside the if (*p == '@') block is indeed a much 
-cleaner way to structure the code. It improves readability by making the 
-logic for each case self-contained within a direct if/else structure.
-
-@Huacai,
-Yanteng proposed a great improvement to the patch structure.
-
-```
-static int __init early_parse_mem(char *p)
-{
-     // ...
-     size = memparse(p, &p);
-     if (*p == '@') {
-         // Handle 'mem=SIZE@START'
-         // The destructive memblock_remove() goes here.
-         // ...
-         // memblock_add_node()
-     } else {
-         // Handle 'mem=SIZE'
-         // The non-destructive memblock_enforce_memory_limit() goes here.
-     }
-     return 0;
-}
-```
-
-Before I send out a v2, I'd like to ask for your opinion on this 
-proposed change as well. Do you agree that this revised structure is the 
-better approach?
-
-Best regards,
-Ming
-
-> 
-> 
-> Thanks,
-> 
-> Yanteng
-> 
->>
->> I hope this explanation clarifies why the code structure was changed 
->> this way. It's crucial to ensure the non-destructive path is handled 
->> before any memory map information is lost.
->>
->> Best regards,
->> Ming
->>
->>
->>> Thanks,
->>> Yanteng
+>>>>   }
+>>>>   diff --git a/include/linux/screen_info.h 
+>>>> b/include/linux/screen_info.h
+>>>> index 923d68e07679..632cdbb1adbe 100644
+>>>> --- a/include/linux/screen_info.h
+>>>> +++ b/include/linux/screen_info.h
+>>>> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct 
+>>>> screen_info *si, struct resource *r,
+>>>>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
+>>>>     #if defined(CONFIG_PCI)
+>>>> +bool screen_info_is_useful(void);
+>>>>   void screen_info_apply_fixups(void);
+>>>>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
+>>>>   #else
+>>>> +bool screen_info_is_useful(void)
+>>>> +{
+>>>> +    return true;
+>>>> +}
+>>>>   static inline void screen_info_apply_fixups(void)
+>>>>   { }
+>>>>   static inline struct pci_dev *screen_info_pci_dev(const struct 
+>>>> screen_info *si)
 >>>
 >>
+>
 
