@@ -1,80 +1,33 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969C42BDC1D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 14:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7FF2BE022;
+	Mon,  7 Jul 2025 14:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751897672; cv=none; b=KH1lqDUT3zUzqpNWuhg+4x3igKQTYoSRhJi29WP5TJMScDBtNXZk72BJ3jqS14LbW0OYIq8zqxt5D/yOQ/CXrK8dB/niVyTSsuSlFZiOrEzSG4F+4k9b2FeTanQm3djehstjdBVxp+2dAYNhnKOxgwSUFL9CNB76TV5/b5a3S5E=
+	t=1751897691; cv=none; b=r7nZJ21pKfiNPN6YrpGAJUQP45EZQRjUj9QdpQ0fvToIKZNDfYUI4xAoNr3l732+GwyN2XguG8fgaND6Q3tnHfprLE0TZhrMwKGwcs53lmC/sG1isH+5/3gUZpdKnlnJwU0xFuf5NZzEtj4jIg4KYj+3XUlH8qBYmTf0ouZfvvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751897672; c=relaxed/simple;
-	bh=wyyuJDrRfoNJOmcanbvB4+TVaoG0zMMIZkVOHnDpIVc=;
+	s=arc-20240116; t=1751897691; c=relaxed/simple;
+	bh=paKdTQVSLgww6rtrLny/d+gU3M/Xfeh/Wq28MOMUzW0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LRRxWRXj1cluiVWtdu18RRCxbf40NK0/SWCc92isXmW3CyxncvULLPJPnCK/W0QJ0LLyBv5+6vPgttfKzXQGQIliEWK+RY3VncXZvOMarUfmduiYajQq8X1wUdOBpbUb/pJLqR573MzDJfT35pFmk+Gkcf/S2G4ADzsuCh6n1fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2376GiWL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9pC5qqvz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2376GiWL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9pC5qqvz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=LvAGiP//QYEKRSFZeerXIz2x/Z595HAEGi0DzRRhLU3RI2yLIIjFMXLLL7HCp3NULv86J4ho5VLLZsirbAP2AiXxHvTQkIyhH5/P8fNYQkfcqLBynXZeX/TjRDTLJ+7+z/sdx1WzuHaGtCO9uzvKIV5FQBWsYsysrvLZvsLDALs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNbEY+CT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2376GiWL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9pC5qqvz";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2376GiWL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9pC5qqvz"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D2AD721169;
-	Mon,  7 Jul 2025 14:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751897668; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
-	b=2376GiWLhZkC3nXDMVhHeSl9tiJUIEhuBiE+AbRhrCcb7D/K+WVvEZvJ2z6T+ZmGCsmJvV
-	4NCGQkajTub7LNOJzXebfdHBygrWfI9SY8BlJA3/jyRwFYvbu4khy8oDxdqFgvBBE+TSHR
-	R6aTJxvFl63iOPh2TTFoSyGBAp5Z4y0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751897668;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
-	b=9pC5qqvzGMg0wh3oWA4ItU4tK4Lw3GisfGVzcsaiExKo6Z67zng4/gBWQJ/9GkXrCZ7uWR
-	WEYqGD0/6EqjFKBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751897668; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
-	b=2376GiWLhZkC3nXDMVhHeSl9tiJUIEhuBiE+AbRhrCcb7D/K+WVvEZvJ2z6T+ZmGCsmJvV
-	4NCGQkajTub7LNOJzXebfdHBygrWfI9SY8BlJA3/jyRwFYvbu4khy8oDxdqFgvBBE+TSHR
-	R6aTJxvFl63iOPh2TTFoSyGBAp5Z4y0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751897668;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jLZYdJeenU37StAo31l/djlK1WDY3qDtjHuaWSDBpeI=;
-	b=9pC5qqvzGMg0wh3oWA4ItU4tK4Lw3GisfGVzcsaiExKo6Z67zng4/gBWQJ/9GkXrCZ7uWR
-	WEYqGD0/6EqjFKBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A190A13757;
-	Mon,  7 Jul 2025 14:14:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rz6eJUTWa2iOKgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 07 Jul 2025 14:14:28 +0000
-Message-ID: <5a848e15-6a57-4ecb-a015-d4f358b8a5d3@suse.cz>
-Date: Mon, 7 Jul 2025 16:14:28 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNbEY+CT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6A5C4CEE3;
+	Mon,  7 Jul 2025 14:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751897690;
+	bh=paKdTQVSLgww6rtrLny/d+gU3M/Xfeh/Wq28MOMUzW0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FNbEY+CTReGb0P8T+OPfEcXoJqYki85sozGKjJMinqmv+OBGSS7RvofOY7Eh5VSeQ
+	 RLKczXOsa8CDgw+jijBbfhlQ8PT7NTTpkxFmBF8Yf9HHLJYan4csiN9l2iOx5PUXkY
+	 BMn8ymU+3vqKmjXFhgUAI070VacH1WknMxqGSwKh5uxerjCOEFBfDAnKQwJ0eUxFfY
+	 EuiN4u4/WjP93pDBePAR3zcdujosFvcXeeqwq/uWjyro+iiFHyanbWolc7mTRqhgrT
+	 wPJBVK+EmaFaRc1h/nfdT4jGu2U3+BDYMv2oFMlnlMwEpX20XiDIYyxrn+rqy7QXWn
+	 QZqOq2NUBt10A==
+Message-ID: <d063964c-5ca9-4602-8338-05c46c2d2775@kernel.org>
+Date: Mon, 7 Jul 2025 16:14:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,150 +35,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm, vmstat: remove the NR_WRITEBACK_TEMP node_stat_item
- counter
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Tejun Heo <tj@kernel.org>, Maxim Patlasov <mpatlasov@parallels.com>,
- Jan Kara <jack@suse.cz>, Zach O'Keefe <zokeefe@google.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>, Joanne Koong <joannelkoong@gmail.com>,
- Jingbo Xu <jefflexu@linux.alibaba.com>, Jeff Layton <jlayton@kernel.org>,
- Miklos Szeredi <mszeredi@redhat.com>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
-References: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJnyBr8BQka0IFQAAoJECJPp+fMgqZkqmMQ
- AIbGN95ptUMUvo6aAdhxaOCHXp1DfIBuIOK/zpx8ylY4pOwu3GRe4dQ8u4XS9gaZ96Gj4bC+
- jwWcSmn+TjtKW3rH1dRKopvC07tSJIGGVyw7ieV/5cbFffA8NL0ILowzVg8w1ipnz1VTkWDr
- 2zcfslxJsJ6vhXw5/npcY0ldeC1E8f6UUoa4eyoskd70vO0wOAoGd02ZkJoox3F5ODM0kjHu
- Y97VLOa3GG66lh+ZEelVZEujHfKceCw9G3PMvEzyLFbXvSOigZQMdKzQ8D/OChwqig8wFBmV
- QCPS4yDdmZP3oeDHRjJ9jvMUKoYODiNKsl2F+xXwyRM2qoKRqFlhCn4usVd1+wmv9iLV8nPs
- 2Db1ZIa49fJet3Sk3PN4bV1rAPuWvtbuTBN39Q/6MgkLTYHb84HyFKw14Rqe5YorrBLbF3rl
- M51Dpf6Egu1yTJDHCTEwePWug4XI11FT8lK0LNnHNpbhTCYRjX73iWOnFraJNcURld1jL1nV
- r/LRD+/e2gNtSTPK0Qkon6HcOBZnxRoqtazTU6YQRmGlT0v+rukj/cn5sToYibWLn+RoV1CE
- Qj6tApOiHBkpEsCzHGu+iDQ1WT0Idtdynst738f/uCeCMkdRu4WMZjteQaqvARFwCy3P/jpK
- uvzMtves5HvZw33ZwOtMCgbpce00DaET4y/UzsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZ8gcVAUJFhTonwAKCRAiT6fnzIKmZLY8D/9uo3Ut9yi2YCuASWxr7QQZ
- lJCViArjymbxYB5NdOeC50/0gnhK4pgdHlE2MdwF6o34x7TPFGpjNFvycZqccSQPJ/gibwNA
- zx3q9vJT4Vw+YbiyS53iSBLXMweeVV1Jd9IjAoL+EqB0cbxoFXvnjkvP1foiiF5r73jCd4PR
- rD+GoX5BZ7AZmFYmuJYBm28STM2NA6LhT0X+2su16f/HtummENKcMwom0hNu3MBNPUOrujtW
- khQrWcJNAAsy4yMoJ2Lw51T/5X5Hc7jQ9da9fyqu+phqlVtn70qpPvgWy4HRhr25fCAEXZDp
- xG4RNmTm+pqorHOqhBkI7wA7P/nyPo7ZEc3L+ZkQ37u0nlOyrjbNUniPGxPxv1imVq8IyycG
- AN5FaFxtiELK22gvudghLJaDiRBhn8/AhXc642/Z/yIpizE2xG4KU4AXzb6C+o7LX/WmmsWP
- Ly6jamSg6tvrdo4/e87lUedEqCtrp2o1xpn5zongf6cQkaLZKQcBQnPmgHO5OG8+50u88D9I
- rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
- dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
- m6M14QORSWTLRg==
-In-Reply-To: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
+Subject: Re: [PATCH 2/2] staging: media: atomisp: unify initialization flag
+ usage in HMM
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>, mchehab@kernel.org,
+ sakari.ailus@linux.intel.org, andy@kernel.org, gregkh@linuxfoundation.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-kernel-mentees@lists.linux.dev,
+ skhan@linuxfoundation.org, dan.carpenter@linaro.org
+References: <20250707140923.58935-1-abdelrahmanfekry375@gmail.com>
+ <20250707140923.58935-3-abdelrahmanfekry375@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250707140923.58935-3-abdelrahmanfekry375@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,parallels.com,suse.cz,google.com,lwn.net,linuxfoundation.org,suse.com,linux.intel.com,cmpxchg.org,nvidia.com,gmail.com,linux.alibaba.com,redhat.com,vger.kernel.org,kvack.org,kernel.dk];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
 
-On 6/25/25 17:51, Vlastimil Babka wrote:
-> The only user of the counter (FUSE) was removed in commit 0c58a97f919c
-> ("fuse: remove tmp folio for writebacks and internal rb tree") so follow
-> the established pattern of removing the counter and hardcoding 0 in
-> meminfo output, as done recently with NR_BOUNCE. Update documentation
-> for procfs, including for the value for Bounce that was missed when
-> removing its counter.
+Hi Abdelrahman,
+
+On 7-Jul-25 16:09, Abdelrahman Fekry wrote:
+> Previously, the initialization state of the `hmm_bo_device` was tracked
+> in two places: a global `hmm_initialized` boolean in `hmm.c`, and a local
+> integer `flag` in the `hmm_bo_device` struct. This was redundant and could
+> lead to inconsistent state checks.
 > 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> - Removes the global `hmm_initialized` variable and all checks against it.
+> - Replaces the `int flag` in `struct hmm_bo_device` with a strongly-typed 
+>  `enum hmm_bo_device_init_flag flag` (values: UNINITED = 0, INITED = 1).
+> - Initializes `flag` to `HMM_BO_DEVICE_UNINITED` at declaration to 
+>   ensure a well-defined starting state.
+> - Removes a redundant `hmm_init()` call inside `__hmm_alloc()` since its
+>   always called after hmm_init()
+> 
+> This change improves type safety, consistency, and readability when
+> handling the HMM initialization state.
+> 
+> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
 > ---
-> The removal of the counter is straightforward. The reason for the large
-> Cc list is that there is a comment in mm/page-writeback.c function
-> wb_position_ratio() that mentions NR_WRITEBACK_TEMP, and just deleting
-> the sentence feels to me it could be the wrong thing to do - maybe the
-> strictlimit feature itself is now obsolete? It sure does mention FUSE
-> as the main reason to exist, but commit 5a53748568f79 that introduced it
-> also mentions slow USB sticks as a possibile scenario. Has that
-> happened? I'm not familiar enough with this so I'd rather highlight this
-> and ask for input here than make "git grep NR_WRITEBACK_TEMP" return
-> nothing.
+>  .../staging/media/atomisp/include/hmm/hmm_bo.h   |  9 +++++++--
+>  drivers/staging/media/atomisp/pci/hmm/hmm.c      | 16 ++++------------
+>  2 files changed, 11 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/include/hmm/hmm_bo.h b/drivers/staging/media/atomisp/include/hmm/hmm_bo.h
+> index e09ac29ac43d..155f9d89b365 100644
+> --- a/drivers/staging/media/atomisp/include/hmm/hmm_bo.h
+> +++ b/drivers/staging/media/atomisp/include/hmm/hmm_bo.h
+> @@ -58,7 +58,10 @@
+>  #define	ISP_VM_SIZE	(0x7FFFFFFF)	/* 2G address space */
+>  #define	ISP_PTR_NULL	NULL
+>  
+> -#define	HMM_BO_DEVICE_INITED	0x1
+> +enum hmm_bo_device_init_flag {
+> +	HMM_BO_DEVICE_INITED	= 0x1,
+> +	HMM_BO_DEVICE_UNINITED	= 0x2,
+> +};
+>  
+>  enum hmm_bo_type {
+>  	HMM_BO_PRIVATE,
+> @@ -86,7 +89,9 @@ struct hmm_bo_device {
+>  
+>  	/* list lock is used to protect the entire_bo_list */
+>  	spinlock_t	list_lock;
+> -	int flag;
+> +
+> +	/* flag to indicate whether the bo device is inited or not */
+> +	enum hmm_bo_device_init_flag flag;
 
-Thanks all for the input. Andrew, please squash in this fixup. The changelog
-of that can be appended to the changelog of the original patch. Thanks.
+Please just replace this with a "bool initialized"; data
+member taking `true` and `false as values instead of
+introducing a new type for this.
 
-----8<----
-From 55d9070995010991abc0c6dbd68a8a53b5d622bc Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 7 Jul 2025 16:09:31 +0200
-Subject: [PATCH] mm, vmstat: remove the NR_WRITEBACK_TEMP node_stat_item
- counter-fix
+>  
+>  	/* linked list for entire buffer object */
+>  	struct list_head entire_bo_list;
+> diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+> index c2ee9d2ec0d5..767a3a24f8e5 100644
+> --- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
+> +++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
+> @@ -24,9 +24,10 @@
+>  #include "mmu/isp_mmu.h"
+>  #include "mmu/sh_mmu_mrfld.h"
+>  
+> -struct hmm_bo_device bo_device;
+> +struct hmm_bo_device bo_device = {
+> +	.flag = HMM_BO_DEVICE_UNINITED,
+> +};
+>  static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
+> -static bool hmm_initialized;
+>  
+>  int hmm_init(void)
+>  {
+> @@ -38,8 +39,6 @@ int hmm_init(void)
+>  		dev_err(atomisp_dev, "hmm_bo_device_init failed.\n");
+>  		return ret;
+>  
+> -	hmm_initialized = true;
+> -
+>  	/*
+>  	 * As hmm use NULL to indicate invalid ISP virtual address,
+>  	 * and ISP_VM_START is defined to 0 too, so we allocate
+> @@ -62,7 +61,7 @@ void hmm_cleanup(void)
+>  	dummy_ptr = 0;
+>  
+>  	hmm_bo_device_exit(&bo_device);
+> -	hmm_initialized = false;
+> +	bo_device.flag = HMM_BO_DEVICE_UNINITED;
 
-Also remove the mention of NR_WRITEBACK_TEMP implications from a comment
-in wb_position_ratio(). The rest of the comment there about fuse setting
-bdi->max_ratio to 1% is still correct.
+This clearing of the flag / setting `initialized = false` belongs inside bo_exit()
+not here.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/page-writeback.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 72b0ff0d4bae..3e248d1c3969 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -1101,9 +1101,7 @@ static void wb_position_ratio(struct dirty_throttle_control *dtc)
- 	 * such filesystems balance_dirty_pages always checks wb counters
- 	 * against wb limits. Even if global "nr_dirty" is under "freerun".
- 	 * This is especially important for fuse which sets bdi->max_ratio to
--	 * 1% by default. Without strictlimit feature, fuse writeback may
--	 * consume arbitrary amount of RAM because it is accounted in
--	 * NR_WRITEBACK_TEMP which is not involved in calculating "nr_dirty".
-+	 * 1% by default.
- 	 *
- 	 * Here, in wb_position_ratio(), we calculate pos_ratio based on
- 	 * two values: wb_dirty and wb_thresh. Let's consider an example:
--- 
-2.50.0
+>  }
+>  
+>  static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
+> @@ -72,13 +71,6 @@ static ia_css_ptr __hmm_alloc(size_t bytes, enum hmm_bo_type type,
+>  	struct hmm_buffer_object *bo;
+>  	int ret;
+>  
+> -	/*
+> -	 * Check if we are initialized. In the ideal world we wouldn't need
+> -	 * this but we can tackle it once the driver is a lot cleaner
+> -	 */
+> -
+> -	if (!hmm_initialized)
+> -		hmm_init();
+>  	/* Get page number from size */
+>  	pgnr = size_to_pgnr_ceil(bytes);
+>  
 
+
+Regards,
+
+Hans
 
 
