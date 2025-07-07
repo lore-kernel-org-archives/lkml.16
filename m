@@ -1,104 +1,244 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B966800
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796FC800;
+	Mon,  7 Jul 2025 08:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875403; cv=none; b=mlT+hirhAAFgHTVC3R280wIQkznAOxzvployVVqmQQd765zejKZasxSHik6ID1yvhui0+PlovpBiN69c0Z6FHhb5Q0JC6dV5YnhhDtODYJxedcdTJ10oLaTmYpZfafiOrGnGhy9bXt4+mim/At/8OR26Kpuks0hWucAcYjnFd/c=
+	t=1751875413; cv=none; b=C7XmW6AHmrFQnV/w1dnCxldohLYOgLm6MLAwC1W6AmsO5Wk3mZ5SI8z5AV18LYB/Tw/kx/orQPHarYm+/Ngz/nOX9n1R+k25RFl59hdTNob9EKF97fpCr0SK+yw3DOXCwcWDRSh2bSmu239BrGlA2R3xpwa6katpTiwmYADE7JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875403; c=relaxed/simple;
-	bh=WQE2kv3HQ0gTQZ4sJoK5QnluNwdWhUSE4VaZEjb6gBg=;
+	s=arc-20240116; t=1751875413; c=relaxed/simple;
+	bh=g1usd24mzRnTIn8RaPaizytARVjhWOOMWYiw3ko0c9w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BW1HNpbfQTH4LyjXB5aQWK0El1kbw3KrBIcCptqDTsrSVGuGFW6inL28ytfIa3aFJTrQphhsqiQZKciWwtVi8ZNe/j+qwDh6rCfkDKr13dWMha+t7b7eNmS8xocbtWEaklE2bCmdxdUVnOO/mGn09zeF0prR1UYkpN+h/VwDl2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X9Ev8Ni8; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 MIME-Version; b=cx7fC2qKrtoLJxRELJGqbLoSuNwSGVBTJua89SmdeV98WkX0JSfucfpz3zXGLsWh3zGtVasEQbpR3m4hvbWv4sm1dR4TqHdXiyAtHKCriG3yudTe7gVtaz43hSiWuH1l5krQunMeRv4virpQZHAKuWzkSZuMw8HTp+pblKcDJj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bKznEaWz; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X9Ev8Ni8"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso2734093f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 01:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751875400; x=1752480200; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j8ER9RiwBf3a0PNuzWR+wHPlPKYNVAx60ODVLZpCr8E=;
-        b=X9Ev8Ni8VR+vXSZ17LvHTTqKiBx58SkM/ADlXFfNLgkbZ252vTGdrnC5PhAyDlzmPq
-         tbVIe35BJ8G75QMDg4Ya6L5jTbqbXqTugWaS+uCqUhkVe9Y8CJxIroW5zT9DiuxhS8aT
-         i5GIP0TUhNzpooMwpVK2UZCsyUULoymVSO/Jd8cWYLl7FMOyZAqKOPuNSHMMYSr0o10L
-         SjhEfnlidBHMSmmZr9Aa07r3cnzzL4lo4wdBO1vAx+IzqKrx0h+9Mh78LGTIdCfz8gNf
-         KO3ykplQ709pTXgmxOfDu3x2D/KedTxBSHJsVktTfDMbNTKtVfS3jw2X9hZPc84xszpi
-         oSWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751875400; x=1752480200;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j8ER9RiwBf3a0PNuzWR+wHPlPKYNVAx60ODVLZpCr8E=;
-        b=T+7AHtKCg4KOV5vUCsbZ/Knz2W+QQgOtE2iimzjX50wljY37t9niMN2ctN+07qcjYi
-         r/uXFPXjbja0BU/SC/gL4JvAmNT5kvPc20cL6aHANcxQP4VByz8RWr1o/0q0QD3djwnz
-         hCNg/bxZiWyCXehRX+UhDHKMKI4ZQmVDZThXQVerPdhVwLWu5mVgEtarQRK29MQ8rGU8
-         OJkn676J2jlOlxbRf/UzUhjYoJ5BvjUFquh0kuoWjCrJtIlUD1Weusn7/Iz45hcZXkmw
-         XJh4NhaZWG4W2fZEthRjx4oa/7dG4ZGMPckzITAodqEUT8Z7GVuwb/hYhigWz0QDJEau
-         OZHA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/T2agxd9i+HrgARxjStihNzNwgREYPxKvd7H8/e9IaewBHlhqKmGVvmfvcwCnKQEAfTWy2EoiOWm9A54=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcAsJdu+pDtQOeTXwXsmtxXjOttZsDuXQfUlvAEAKUPtM6spCr
-	J9oCB6DlyUeyww3jxAoHgWmE1fH0RHRrTvYSHBekERubODZEMKuoYXbzYrSjM2qBMyY=
-X-Gm-Gg: ASbGncthVkwIJOPxoYetzlItvbDVXBFoVWYAWJK5MzxPEF5++bDH6TleCaZoBxjj/1c
-	xai1f3tdbsd8i7YfQcrVW41XJy14+u1IeM4gDTeDwn/E0cyCUpWqAX5gBpTKdoxss4r0r8RNH6m
-	XAUpDG4YUcy6kwDOaJbmxJXrH+y9uyFOc6J+OHtvMqpYAfHVecASBIvEi9HCb+QtB9nbeG6QUDO
-	xbR4A4/yZLdEP0tsre6D40RWPUPovP6E3CtBNsWBKF052d/+ax5TZk9UA5xiEhJQ4XD0gbsW3eI
-	q6xcSdabvDjuoZRSHtNSxECE/mRJyLBqha9R+4PBn/f0Q+F9U1sifl4PzY4AEAE=
-X-Google-Smtp-Source: AGHT+IEuKhwyI5Z+SjqvtbsXi6ZzIS1X4CZuWomS6qhOy+fAEFEaFFSGiYj31JlHRtL0PKXI2U00Ng==
-X-Received: by 2002:a5d:64c9:0:b0:3b1:9259:3ead with SMTP id ffacd0b85a97d-3b49aa73e31mr5001650f8f.28.1751875399847;
-        Mon, 07 Jul 2025 01:03:19 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3cf3:a61f:85ed:69db])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997e367sm130980235e9.15.2025.07.07.01.03.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 01:03:19 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-pm@vger.kernel.org,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bKznEaWz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751875411; x=1783411411;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=g1usd24mzRnTIn8RaPaizytARVjhWOOMWYiw3ko0c9w=;
+  b=bKznEaWzcYMgoRT2Un5r5ixdwIwRNO/k/wzxlCEelOMxf4yBZeKGZIo5
+   ujw8YPfF6kR7UPyKtfJ+ckVgEnfANjeGStZ6IbN72sNfNKSGJYpfshatB
+   VQABcDp3I+WFafPdtmgTFffcLfYALuqspVwfPIfsOkV7yxQdTTPY3saGY
+   cLtAraoDaTVZMvsJG8Ue0+0xzcBv3paFXOTsSSMCnivF5VYDkdBi+CYe8
+   HhUeeZRjcFDWpfr8xgMKVQ36kkKomJ0VfDiqAlqCzzl+0LI5Zqj84gWNm
+   +fgkdzOHqm9Rb+2pQ1hnmDOIpU6TPM0N/MUd4TQpkSRlmHSwtemJHEyfQ
+   Q==;
+X-CSE-ConnectionGUID: WWkoCbj9QTmNDPS854oayw==
+X-CSE-MsgGUID: EPMaFhT2Qa2SDL7oPWOl2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="53807168"
+X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
+   d="scan'208";a="53807168"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 01:03:30 -0700
+X-CSE-ConnectionGUID: vyXTIaloR7aLTzXQqPoEKA==
+X-CSE-MsgGUID: +Ex8rCk0Svq8GLwiRF3otQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
+   d="scan'208";a="160804321"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 07 Jul 2025 01:03:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id A0BD01DF; Mon, 07 Jul 2025 11:03:17 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Xiongwei Song <xiongwei.song@windriver.com>,
+	Xin Li <xin3.li@intel.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Breno Leitao <leitao@debian.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Hou Tao <houtao1@huawei.com>,
+	Juergen Gross <jgross@suse.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: (subset) [PATCH 00/80] treewide: Remove redundant pm_runtime_mark_last_busy() calls
-Date: Mon,  7 Jul 2025 10:03:18 +0200
-Message-ID: <175187539072.14957.12381640890960188309.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
-References: <20250704075225.3212486-1-sakari.ailus@linux.intel.com>
+	linux-efi@vger.kernel.org,
+	linux-mm@kvack.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv9 02/16] x86/alternatives: Disable LASS when patching kernel alternatives
+Date: Mon,  7 Jul 2025 11:03:02 +0300
+Message-ID: <20250707080317.3791624-3-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250707080317.3791624-1-kirill.shutemov@linux.intel.com>
+References: <20250707080317.3791624-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Sohil Mehta <sohil.mehta@intel.com>
 
+For patching, the kernel initializes a temporary mm area in the lower
+half of the address range. See commit 4fc19708b165 ("x86/alternatives:
+Initialize temporary mm for patching").
 
-On Fri, 04 Jul 2025 10:52:25 +0300, Sakari Ailus wrote:
-> Late last year I posted a set to switch to __pm_runtime_mark_last_busy()
-> and gradually get rid of explicit pm_runtime_mark_last_busy() calls in
-> drivers, embedding them in the appropriate pm_runtime_*autosuspend*()
-> calls. The overall feedback I got at the time was that this is an
-> unnecessary intermediate step, and removing the
-> pm_runtime_mark_last_busy() calls can be done after adding them to the
-> relevant Runtime PM autosuspend related functions. The latter part has
-> been done and is present in Rafael's tree at the moment, also see
-> <URL:https://lore.kernel.org/linux-pm/CAJZ5v0g7-8UWp6ATOy+=oGdxDaCnfKHBG_+kbiTr+VeuXZsUFQ@mail.gmail.com/>:
-> 
-> [...]
+Disable LASS enforcement during patching to avoid triggering a #GP
+fault.
 
-Applied, thanks!
+The objtool warns due to a call to a non-allowed function that exists
+outside of the stac/clac guard, or references to any function with a
+dynamic function pointer inside the guard. See the Objtool warnings
+section #9 in the document tools/objtool/Documentation/objtool.txt.
 
-[15/80] gpio: arizona: Remove redundant pm_runtime_mark_last_busy() calls
-        https://git.kernel.org/brgl/linux/c/2fd13c8e5be15369d157da3277ac7407fa73f90a
+Considering that patching is usually small, replace the memcpy() and
+memset() functions in the text poking functions with their open coded
+versions.
 
-Best regards,
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/include/asm/smap.h   | 33 +++++++++++++++++++++++++++++++--
+ arch/x86/kernel/alternative.c | 28 ++++++++++++++++++++++++++--
+ 2 files changed, 57 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/smap.h b/arch/x86/include/asm/smap.h
+index 4f84d421d1cf..d0cc24348641 100644
+--- a/arch/x86/include/asm/smap.h
++++ b/arch/x86/include/asm/smap.h
+@@ -23,18 +23,47 @@
+ 
+ #else /* __ASSEMBLER__ */
+ 
++/*
++ * The CLAC/STAC instructions toggle the enforcement of X86_FEATURE_SMAP and
++ * X86_FEATURE_LASS.
++ *
++ * SMAP enforcement is based on the _PAGE_BIT_USER bit in the page tables: the
++ * kernel is not allowed to touch pages with the bit set unless the AC bit is
++ * set.
++ *
++ * LASS enforcement is based on bit 63 of the virtual address. The kernel is
++ * not allowed to touch memory in the lower half of the virtual address space
++ * unless the AC bit is set.
++ *
++ * Use stac()/clac() when accessing userspace (_PAGE_USER) mappings,
++ * regardless of location.
++ *
++ * Use lass_stac()/lass_clac() when accessing kernel mappings (!_PAGE_USER)
++ * in the lower half of the address space.
++ *
++ * Note: a barrier is implicit in alternative().
++ */
++
+ static __always_inline void clac(void)
+ {
+-	/* Note: a barrier is implicit in alternative() */
+ 	alternative("", "clac", X86_FEATURE_SMAP);
+ }
+ 
+ static __always_inline void stac(void)
+ {
+-	/* Note: a barrier is implicit in alternative() */
+ 	alternative("", "stac", X86_FEATURE_SMAP);
+ }
+ 
++static __always_inline void lass_clac(void)
++{
++	alternative("", "clac", X86_FEATURE_LASS);
++}
++
++static __always_inline void lass_stac(void)
++{
++	alternative("", "stac", X86_FEATURE_LASS);
++}
++
+ static __always_inline unsigned long smap_save(void)
+ {
+ 	unsigned long flags;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ea1d984166cd..992ece0e879a 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2447,16 +2447,40 @@ void __init_or_module text_poke_early(void *addr, const void *opcode,
+ __ro_after_init struct mm_struct *text_poke_mm;
+ __ro_after_init unsigned long text_poke_mm_addr;
+ 
++/*
++ * Text poking creates and uses a mapping in the lower half of the
++ * address space. Relax LASS enforcement when accessing the poking
++ * address.
++ */
++
+ static void text_poke_memcpy(void *dst, const void *src, size_t len)
+ {
+-	memcpy(dst, src, len);
++	lass_stac();
++
++	/*
++	 * Objtool is picky about what occurs within the STAC/CLAC region
++	 * because this code runs with protection disabled. Objtool typically
++	 * does not permit function calls in this area.
++	 *
++	 * Avoid using memcpy() here. Instead, open code it.
++	 */
++	asm volatile("rep movsb"
++		     : "+D" (dst), "+S" (src), "+c" (len) : : "memory");
++
++	lass_clac();
+ }
+ 
+ static void text_poke_memset(void *dst, const void *src, size_t len)
+ {
+ 	int c = *(const int *)src;
+ 
+-	memset(dst, c, len);
++	lass_stac();
++
++	/* Open code memset(): make objtool happy. See text_poke_memcpy(). */
++	asm volatile("rep stosb"
++		     : "+D" (dst), "+c" (len) : "a" (c) : "memory");
++
++	lass_clac();
+ }
+ 
+ typedef void text_poke_f(void *dst, const void *src, size_t len);
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.47.2
+
