@@ -1,209 +1,122 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DD842AA6
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33A32BD58F;
+	Mon,  7 Jul 2025 13:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751896358; cv=none; b=UsdKJeMvto5oGf+DC0HlwYwNdYTtm2U8vdrgFvFypEx56Lq8L6QZfBp76messOfIGD01a1+P2jo5zzwb6SvfbVx1gCSWkHxRb4qzvAJQCkujxAuYcVOKjN5xntVpIKqfZltnQxC+48RzVysacbrVtpqIbB7OflXhwgMMBt2Tm+w=
+	t=1751896364; cv=none; b=mJe8tBXEYuTwPHIhjU5n8HKaGLYyz+mWM+JuJqRyx1FActi3yA36Fbf3GENdbj1QEyNq/nebWaH/FNqmKqS+SxPvNqiqnXbK2rDHc+K9CP/pufpUbzMxynGMCMTZyzQAxPq/+t10UeKVMhs6qCkBZb1DLEMT3uY3Eqqll7jmnxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751896358; c=relaxed/simple;
-	bh=0p83iB56DZ5vXm2WcCKMsVx0YqsFUTdwgddeiuNJjrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mhco4iRXl5Ihcg/NRhqB3xgs64q+LlDrq6I6dEQMEVRavCMcNOHlpKTAalJk9MK+0WxD/uEXi83uR0OgjIfhfHg7cEF94/FJAZadUOrnqSUz3uqiFNXAMpSOOWuatQUUbVvtp57azMMikWxsaq090RdeQrFT817HB4jn0+WfkqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sKWET7oX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SLbHDT8U; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QN2tIXP6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=efChDb3o; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751896364; c=relaxed/simple;
+	bh=uaQ69Jy8F7cYe1tv252wZLz+6Q0M31KJkfAx8QLMhQs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Oc8z3fbwX7H0+mib+GCveOupWlBxwT5YX2Wa3GU3uCoU6/19pb1nuHWqoT5P/WkvlRbcUdvg/3qzsm88WMWlrVaDWywD18QNxZYsSxC2q1i8AOgpmQWSdHdI5bkc0lv3kirWJs1a0JboBXPQ4NHBgdsoZWojNgtaq9leLAET/Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=NWbD3laU; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sKWET7oX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SLbHDT8U";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QN2tIXP6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="efChDb3o"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D26701F393;
-	Mon,  7 Jul 2025 13:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751896353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5kJmcMrW05nUM/cTrAx/0N5xvN6mfuL9oO0G0oGkUyA=;
-	b=sKWET7oXN4mCPjMsfTK2gbvuZDepudrFnd60tBU8VV8o/rxiTVZo9CQdMAaHbY2LF3vPM6
-	awUHcYU1db7KWWKW/6jLbmFW8u4XlHGYVFvgNVYrFhIEEWVTGOmBrIcXTrEbFRKgTSf4Bb
-	5T0LkOq7CPqz5pSdE4jvJ/vC+bmljpI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751896353;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5kJmcMrW05nUM/cTrAx/0N5xvN6mfuL9oO0G0oGkUyA=;
-	b=SLbHDT8U8aVt73iqczG4v4E6d6vdA+qD9n5y6zVW1ZndjDqSI1AlcVgl767giMTF+/tp5I
-	hZrHnNIRDe1fjUDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QN2tIXP6;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=efChDb3o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751896352; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5kJmcMrW05nUM/cTrAx/0N5xvN6mfuL9oO0G0oGkUyA=;
-	b=QN2tIXP6kRV+vmu92qkMNwTUm9mp7tzbLlpCP/gjHzPAfwIdBWNCwmalHaMTRqQumNxAhe
-	RF98g7YNH+sEe89COFI0LZTP2Xi/DdWzu6+WgUtSiF/oGM4KbjD+otolsfZAk6rmiVXGD1
-	d6/fkAUwasPrU+Mt5jl3j/f02A0rgas=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751896352;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5kJmcMrW05nUM/cTrAx/0N5xvN6mfuL9oO0G0oGkUyA=;
-	b=efChDb3oxomV5BopPChfcLXSYsEFKHxpC3UEstUNMx06oP6M8SrhAwIvgGAwDm/JFYuJSR
-	WiCyeCHqvyoUEpBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9316613757;
-	Mon,  7 Jul 2025 13:52:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gSUtIiDRa2hfIwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 07 Jul 2025 13:52:32 +0000
-Message-ID: <2f27e1f2-5c55-43a7-b204-575eb88da168@suse.de>
-Date: Mon, 7 Jul 2025 15:52:32 +0200
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="NWbD3laU"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 567CpX6D026979;
+	Mon, 7 Jul 2025 09:52:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=CqwcB
+	eRuMphf2ePXDOzCo4xWdwQnRMctXzNBq9izLFU=; b=NWbD3laUOhhzV7fNUM0i0
+	nkjXmOUZdDuPJBg7zbJgCJKHYIGa/KvCbUMOYaruZsJ9I6F1XrrCcZx+niMpGtx/
+	mF3AKAYDNhuhmz85y4uHOmmCzEK1Am8KwLNuDnttq3TOqhtv+1NlP3ZhMTmV4Agw
+	fK+YFgx6h4p6nVmclqy8BGqzL/m+N4FFJIMqE6jj3Ftx+XEHr4ipIFhue1wbeUGq
+	CLyCtZisOsP4EXitvDdm8Ojtozrx5v9q99+kzktlX6sdP/DepkcVQmC/2vz3nbGg
+	nvMbRRfEovhY5xXMPgeM3D8gn0YyoorVe7ajGjdZRCSQN2YzET5RxAphpxuygwE0
+	g==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47rayqh6mr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 09:52:24 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 567DqIgo011592
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Jul 2025 09:52:18 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 7 Jul
+ 2025 09:52:17 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 7 Jul 2025 09:52:17 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 567DpxUA016146;
+	Mon, 7 Jul 2025 09:52:02 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
+        <andriy.shevchenko@intel.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v8 05/12] Documentation: ABI: IIO: Add sinc5+avg to the filter_type_available list
+Date: Mon, 7 Jul 2025 10:51:59 -0300
+Message-ID: <7ae9ec6da3a3f0c33206880fcba35a17531cf219.1751895245.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1751895245.git.marcelo.schmitt@analog.com>
+References: <cover.1751895245.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] drm/vgem/vgem_drv convert to use faux_device
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- Lyude Paul <lyude@redhat.com>
-References: <2025070114-iron-shiny-b92e@gregkh>
- <42d0f819-87ae-44d0-a9c5-ae4fa91b1227@suse.de>
- <2025070231-prism-unlatch-e99e@gregkh>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <2025070231-prism-unlatch-e99e@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: D26701F393
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,linux.intel.com,kernel.org,gmail.com,ffwll.ch,lists.freedesktop.org,redhat.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.51
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=AP9nYgXq c=1 sm=1 tr=0 ts=686bd118 cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=Wb1JkmetP80A:10 a=gAnH3GRIAAAA:8 a=SbKw_mlo35DZte1DD3gA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA4MSBTYWx0ZWRfX8lncNOfEN+Vt
+ A6bn8aXCI09bK3tq6vQ8zDWICxEKa5tZQ+NJwAj/Z+yjhtQO5AkZ739QeNxFmySAbuidAtpCqfG
+ 3BKDf0iwJm+Fapokz3szZQncHRwfN9UeiQ+mozmGangN9RmKLYzI//GScp1iABvVGsBonHZT9ig
+ VBpLzpmrx6v8Yg/aI+XjQKYRj+Uw2h44PZ7hIvmdokz7ACy1WfcrNwnB+iJOBeFQ41pz9oFJF0O
+ FZqAqObNAX43MRfUtxHVCjhOUCL6xt8SNvsP+Bn8cao2skSrbL2Gqty4bfsshIHlyr7MdcL410g
+ EuT3NVaoUqQekSxMwXTOJb2BvHEDbiyMiKNNhqtg8aku1ewWI8hm5L6rQaPIg49Mmx5ktJRbr6z
+ VLJkn7Eeh5v4mda4I0YX14uywOugFmgzlSeAgBRrSuLJL7r5Rpgx/2pqYmqYPc6kKK7rje49
+X-Proofpoint-ORIG-GUID: qF41MXViTmHNLout0C3Rp7Wdq9deQPYW
+X-Proofpoint-GUID: qF41MXViTmHNLout0C3Rp7Wdq9deQPYW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_03,2025-07-07_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 impostorscore=0 malwarescore=0 adultscore=0
+ spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070081
 
-Hi
+Add the sinc5+avg filter type to the list of possible values for the
+filter_type_available attribute.
 
-Am 02.07.25 um 09:49 schrieb Greg Kroah-Hartman:
-> On Wed, Jul 02, 2025 at 09:36:40AM +0200, Thomas Zimmermann wrote:
->> Hi
->>
->> Am 01.07.25 um 12:51 schrieb Greg Kroah-Hartman:
->>> The vgem driver does not need to create a platform device, as there is
->>> no real platform resources associated it,  it only did so because it was
->>> simple to do that in order to get a device to use for resource
->>> management of drm resources.  Change the driver to use the faux device
->>> instead as this is NOT a real platform device.
->>>
->>> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
->>> Cc: Maxime Ripard <mripard@kernel.org>
->>> Cc: David Airlie <airlied@gmail.com>
->>> Cc: Simona Vetter <simona@ffwll.ch>
->>> Cc: dri-devel@lists.freedesktop.org
->>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->>> Reviewed-by: Lyude Paul <lyude@redhat.com>
->>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> ---
->>> v5: - rebased against 6.16-rc4 and resent as it seems to have been lost
->> Not lost, but thanks for the update. This patch and the one for vkms depend
->> on "drm/gem-shmem: Do not map s/g table by default". [1] It'll land soon and
->> the faux_device updates soon after.
->>
->> Best regards
->> Thomas
->>
->> [1] https://patchwork.freedesktop.org/series/150968/
-> Great, thanks for letting me know.
+The sinc5+avg filter type is handled by the ad4170 driver.
 
-This patch and the one for vkms have been merged into DRM trees. They 
-should show up in upstream in one of the next merge windows.
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+---
+No changes since v7.
 
-Best regards
-Thomas
+ Documentation/ABI/testing/sysfs-bus-iio | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> greg k-h
-
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 3bc386995fb6..fcc40d211ddf 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -2321,6 +2321,7 @@ Description:
+ 		* "sinc3+pf3" - Sinc3 + device specific Post Filter 3.
+ 		* "sinc3+pf4" - Sinc3 + device specific Post Filter 4.
+ 		* "sinc5+pf1" - Sinc5 + device specific Post Filter 1.
++		* "sinc5+avg" - Sinc5 + averaging by 4.
+ 		* "wideband" - filter with wideband low ripple passband
+ 		  and sharp transition band.
+ 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.47.2
 
