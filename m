@@ -1,86 +1,86 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA301F8BCB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A810C28853E;
+	Mon,  7 Jul 2025 11:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751886297; cv=none; b=qNFt4EDGXgq7Q+AbwNvfX9ag6+hyGeYjfW4i2tz3zt0lR2qUiLU0w6jxz2GwD64H/alBX0exVEjFfbV4gU0P5uzXEYIyGwapes1aYE5vGXOhb6bjqNDImKdZX6MBrpRZVwQ/t9rzOOIOSZMSJjbVZJIAr8mbBplpBjqzeSEAyV0=
+	t=1751886346; cv=none; b=m9nwOJRMwsbCxcI/9qq42yfIetA44hB9JKlw6Vu9ajW2SNjqGUsA9snF8itFliG7ln9krkh7Ijyg3mdNK/qijAGddSarGvm523IRqZhLC6MnsImHPujaEYCBcdjGjsYJRV3Pk2ngo6GjLg5cC8Iqu41D6yJbpITDhihZLth+Xcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751886297; c=relaxed/simple;
-	bh=9p8xTo8+z1wX9jIntt/DEWR+55R0l9UvlDWk3HYd5TI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F1kU5NCIynNIl74vJshaS4ljvRGOlndfsCiFH29yOJI9LvsHTclWkEes6JQ4J1HY/JFRvAiHqdx+0Q51ZCexsDIQtYdDbEQyFFqS1jxRnoPCZPi3qtkDrywUMH8vKlSy1oyHTtfQ7ENSKA+mVmy8fClIPaqMbONsZBMHaWrJ5yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bbLtp4FfNz2SSwY;
-	Mon,  7 Jul 2025 19:02:58 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6150B1A016C;
-	Mon,  7 Jul 2025 19:04:51 +0800 (CST)
-Received: from huawei.com (10.67.174.76) by kwepemg500010.china.huawei.com
- (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 7 Jul
- 2025 19:04:50 +0800
-From: Yuntao Liu <liuyuntao12@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC: <mhocko@suse.com>, <surenb@google.com>, <rppt@kernel.org>,
-	<vbabka@suse.cz>, <Liam.Howlett@oracle.com>, <lorenzo.stoakes@oracle.com>,
-	<liuyuntao12@huawei.com>, <david@redhat.com>, <akpm@linux-foundation.org>
-Subject: [PATCH -next] mm/memory: fix null pointer dereference in fault_dirty_shared_page
-Date: Mon, 7 Jul 2025 10:51:18 +0000
-Message-ID: <20250707105118.413056-1-liuyuntao12@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1751886346; c=relaxed/simple;
+	bh=KoMwxI+BjZlkT8Tms2SDNkjYSNzeRufAe/1amGoI+ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mb2DKigIYoAKWHlqYtifTYhWJKuoeE5pVr7bYdzkWf7DUH5N+lnGAkj5MV+wpQ0MaelO1tw9S6cWI9YlkKtM2cif6VrFYiAJnGnU9CwndnZQYCh/XkPZRLJia1U1xnfgHm3pAuOQdIgTj4zxP9/XvIxGyOlRtVn8ZMdIc/8Lv30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDDxGoey; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDDxGoey"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1431C4CEE3;
+	Mon,  7 Jul 2025 11:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751886346;
+	bh=KoMwxI+BjZlkT8Tms2SDNkjYSNzeRufAe/1amGoI+ac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sDDxGoeyD7+j008f4C5gG8JDXIDhNP0oYiiRUsHQHw1XANM4XOzj4BtQ3WRR5Nn0K
+	 WLQ2PaBnbxIIzlNv3K7Ile06rk1m+JjXzF5UOOIs8F8KxsKtXtAULq9PJzo5d1kaxo
+	 caU444uhBlooXbSdeQvgvT8/tOrzFv03nVOss4vwcoBh01qYKDQ0/1z8HNvWeFWIXT
+	 ihr6tAvSPIwYq+TN0y7vd0jE6GXiIDMGZTlGlX4HxAe7bi6VDUGc9t5elocqno+Onm
+	 crt4dZtDXxsWvYAgX2SCmcV72FGyZzew9r+pB2iOAoJINY5GG/OgEc6ykmZmHl6wTS
+	 gBqnE5NypwKLA==
+Date: Mon, 7 Jul 2025 13:05:39 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <aGuqA92VDLK8eRY1@ryzen>
+References: <fr6orvqq62hozn5g3svpyyazdshv4kh4xszchxbmpdcpgp5pg6@mlehmlasbvrm>
+ <20250530113404.GA138859@bhelgaas>
+ <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
 
-Page mapping with "VM_READ|VM_WRITE|VM_MAYREAD|VM_MAYWRITE|VM_SHARED",
-the first time accessing this address through a write operation will
-trigger a do_shared_fault, if mapping is anonymous, it can lead to a
-null pointer dereference.
+Hello Mani,
 
-[   23.232336][  T195] Call trace:
-[   23.232542][  T195]  file_update_time+0x2c/0xd8
-[   23.232801][  T195]  fault_dirty_shared_page+0x1a0/0x220
-[   23.233099][  T195]  do_shared_fault+0xe8/0x240
-[   23.233374][  T195]  do_fault+0x78/0x240
-[   23.233629][  T195]  handle_pte_fault+0x1f0/0x3f0
-[   23.233905][  T195]  __handle_mm_fault+0x2b0/0x548
-[   23.234186][  T195]  handle_mm_fault+0xd4/0x2f8
-[   23.234462][  T195]  do_page_fault+0x2f0/0x5f8
-[   23.234727][  T195]  do_translation_fault+0x8c/0xc8
-[   23.235021][  T195]  do_mem_abort+0x68/0x100
-[   23.235283][  T195]  el0_da+0x4c/0x1a8
-[   23.235551][  T195]  el0t_64_sync_handler+0xe4/0x158
-[   23.235861][  T195]  el0t_64_sync+0x37c/0x380
+On Fri, May 30, 2025 at 09:39:28PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
+> 
+> > I think pci_host_handle_link_down() should take a Root Port, not a
+> > host bridge, and the controller driver should figure out which port
+> > needs to be recovered, or the controller driver can have its own loop
+> > to recover all of them if it can't figure out which one needs it.
+> > 
+> 
+> This should also work. Feel free to drop the relevant commits for v6.16, I can
+> resubmit them (including dw-rockchip after -rc1).
 
-Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
----
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What is the current status of this?
 
-diff --git a/mm/memory.c b/mm/memory.c
-index eaf98d518289..8106ef8a5036 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3412,7 +3412,7 @@ static vm_fault_t fault_dirty_shared_page(struct vm_fault *vmf)
- 	mapping = folio_raw_mapping(folio);
- 	folio_unlock(folio);
- 
--	if (!page_mkwrite)
-+	if (!page_mkwrite && vma->vm_file)
- 		file_update_time(vma->vm_file);
- 
- 	/*
--- 
-2.34.1
+I assume that there is not much time left before 6.17 cut-off.
 
+
+Kind regards,
+Niklas
