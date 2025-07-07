@@ -1,104 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270DB29B797
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70BB299952
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 13:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751893872; cv=none; b=itoxHnKPtXcuQm6lWuE8b+H9UHqHTReVL7dTf+fc77Xdpdm/h4Aw7xuNzqosoFXVo5Bci5pRC63qQokUR7A/6FM2EyjRwSL8s7Y9DrXk64nKykft8Vs8ihtM59QyADoeBDGdxLcDpet5ndnfBZEtdOusEcQ5BO4Nt0W/VsOanyE=
+	t=1751893898; cv=none; b=dGN5V+WXW8qg3wyKg939eoki4CBInNyTHQo7wpZ5wM9gl/XNNGzL5Kdsy9jQ7hU9R3o8n6ECMBmEkyc6kg7ukSFPKmV1wxIsgo7l6WTjty+XRCdH7JP29/hUYz3KBQOWr3qmcFVvaMn/SspbgYpHwe1ea5Wg15yNBKOoy90ydRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751893872; c=relaxed/simple;
-	bh=40DnKg+YQPDIcAmF5uWP2p/D9eH4Oh9jjmwhWksPPoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zh4ZANr0XoPETKoFenX26CpxLwwj/oIYDzZRJiip7Yxe4vtlj08Zc6lCkT8pmZCw7boDWLDP1HWFMClEeweCdo1hMXeFHpFOMlfTiQtib3KKRN/DHWSVTscNZxUFgavhc4eMva2MyVfwsitCtgvUseJeck169KFWTQybxBJhN10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+NDnmsW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751893898; c=relaxed/simple;
+	bh=XDiwfhbYrMjUL7vP4j8tnf5zRFoURkJAU/mBdb9ini0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1rD/uzmekK17Y/YrB2j6hCGrWziabhWyFt/h1SbA7NgHaw07X0XYz74dxfCLWeWdS4tkp3SmetuC3hutBG7GUkjptYz6H0UTKktGwzC+4hvjhm/63nyhlgzpWVEuT7L8Z7oKWBfqOQwpuM+A4DKjvew6tlXp0ry1nTo9awK+vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYKxGUvF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+NDnmsW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751893870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MWi3pSu9OtqgbaqSGhfJZ0s+az4AigV80DZ7IYOhf7I=;
-	b=f+NDnmsW6mjHEV88S6c3/+Lt3CGN0nG1IWE0BW6MLmQ8vhJQ+E7RTjshB4gJiuI7l/nSfq
-	5YEXcGaG05gqwq4p6Y8H40NbufU48u5XwJiO0D7jbKXDH8JGUKJGtZm2HHdk0W32Rxcatq
-	EWLeWhI/AiG5OT/k/d4jqLQJmlybXbM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-c6GcVHlOPsW8XXx_O2Xm4w-1; Mon,
- 07 Jul 2025 09:11:07 -0400
-X-MC-Unique: c6GcVHlOPsW8XXx_O2Xm4w-1
-X-Mimecast-MFC-AGG-ID: c6GcVHlOPsW8XXx_O2Xm4w_1751893864
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB7871944AAB;
-	Mon,  7 Jul 2025 13:11:03 +0000 (UTC)
-Received: from [10.44.32.50] (unknown [10.44.32.50])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3932B195608F;
-	Mon,  7 Jul 2025 13:10:56 +0000 (UTC)
-Message-ID: <6fcfeee2-f6c9-43a4-81de-6c4e9d1b923d@redhat.com>
-Date: Mon, 7 Jul 2025 15:10:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYKxGUvF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C516C4CEE3;
+	Mon,  7 Jul 2025 13:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751893897;
+	bh=XDiwfhbYrMjUL7vP4j8tnf5zRFoURkJAU/mBdb9ini0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gYKxGUvFvLp1X7YKUNCuxiU1im+h8dr6C37jG74LdI7bfLBZejumkBt5zYLjFHREP
+	 bDWTICqmFS67BJ7JYJUbj7QQ0TnzThWL0xmayZ3iJUEC6C4m9Biv2eq4Tk1vsK39dk
+	 iiYf+1BoYwsO9Uv3m5D60zmgCyCNQrLOzPHPa1ADjvO4ODyh9H6WuXZgBbjn5lG/Db
+	 EBjuXcyquZpVKv75DbQNasIZ1/90VBuZqFQoYz5bxe6OL+okrLit5F/MbLcAkKwOGl
+	 uS5BseU8vWSRG+gPXPSe1JDcKdpTpwcJV8i1MbEf18VvvnqmjjNjOa1kjxsUOkD6uf
+	 pnWs9OmRRLo+A==
+Date: Mon, 7 Jul 2025 15:11:34 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v7 7/7] timers: Exclude isolated cpus from timer migration
+Message-ID: <aGvHhsWysTN3rmCt@localhost.localdomain>
+References: <20250626114900.106061-1-gmonaco@redhat.com>
+ <20250626114900.106061-8-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v13 12/12] dpll: zl3073x: Add support to get/set
- frequency on pins
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>, Jiri Pirko <jiri@resnulli.us>
-Cc: netdev@vger.kernel.org, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
- Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
-References: <20250704182202.1641943-1-ivecera@redhat.com>
- <20250704182202.1641943-13-ivecera@redhat.com>
- <idzmiaubwlnkzds2jbminyr46vuqo37nz5twj7f2yytn4aqoff@r34cm3qpd5mj>
- <25360415-bd91-4523-b0a6-664d22ba9f37@linux.dev>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <25360415-bd91-4523-b0a6-664d22ba9f37@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250626114900.106061-8-gmonaco@redhat.com>
 
-
-
-On 07. 07. 25 3:02 odp., Vadim Fedorenko wrote:
-> On 07/07/2025 09:32, Jiri Pirko wrote:
->> Fri, Jul 04, 2025 at 08:22:02PM +0200, ivecera@redhat.com wrote:
->>
->> [...]
->>
->>> +static int
->>> +zl3073x_dpll_input_pin_frequency_set(const struct dpll_pin *dpll_pin,
->>> +                     void *pin_priv,
->>> +                     const struct dpll_device *dpll,
->>> +                     void *dpll_priv, u64 frequency,
->>> +                     struct netlink_ext_ack *extack)
->>
->> Unrelated to this patch, but ny idea why we don't implement
->> "FREQUENCY_CAN_CHANGE" capability. I think we are missing it.
->>
-> Do you mean that some DPLLs may implement fixed frequency pins and
-> we have to signal it back to user-space?
+Le Thu, Jun 26, 2025 at 01:49:00PM +0200, Gabriele Monaco a �crit :
+> The timer migration mechanism allows active CPUs to pull timers from
+> idle ones to improve the overall idle time. This is however undesired
+> when CPU intensive workloads run on isolated cores, as the algorithm
+> would move the timers from housekeeping to isolated cores, negatively
+> affecting the isolation.
 > 
-I think this is not necessary... user-space know this if the supported
-frequency list is empty or has only single frequency.
+> Exclude isolated cores from the timer migration algorithm, extend the
+> concept of unavailable cores, currently used for offline ones, to
+> isolated ones:
+> * A core is unavailable if isolated or offline;
+> * A core is available if isolated and offline;
 
-Ivan
+If not isolated and online ?
 
+> +static int __init tmigr_init_isolation(void)
+> +{
+> +	cpumask_var_t cpumask;
+> +
+> +	if (!housekeeping_enabled(HK_TYPE_DOMAIN))
+> +		return 0;
+> +	if (!alloc_cpumask_var(&cpumask, GFP_KERNEL))
+> +		return -ENOMEM;
+> +	cpumask_andnot(cpumask, tmigr_available_cpumask,
+> +		       housekeeping_cpumask(HK_TYPE_DOMAIN));
+> +	cpumask_and(cpumask, cpumask, housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
+> +	on_each_cpu_mask(cpumask, tmigr_cpu_isolate, NULL, 1);
+> +
+> +	tmigr_exclude_isolated = true;
+
+This should be set unconditionally, even if
+!housekeeping_enabled(HK_TYPE_DOMAIN).
+
+Otherwise future cpuset isolation followed by cpuset de-isolation
+won't make the CPUs back available.
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
