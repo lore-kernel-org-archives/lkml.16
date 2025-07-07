@@ -1,43 +1,50 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5755D17A2F6;
-	Mon,  7 Jul 2025 06:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349692798E3
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 06:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751870480; cv=none; b=Lx4nfc1kmRRpaLek7zzmkijNAGuwBHBzagZBe/keQ7WHGYQU2DaFX1/C91/beZucBZSRVGWVC+nt3ohfCpcnedtPhMuXG4cVqdBF2BbB9+jI/au2gOkU3e2VOGUix6s1DAq7q25wiSAMVYMRRad13ImvIy5rBeEolgZK8osevzE=
+	t=1751870527; cv=none; b=uO9dTOOXMFB++bSt91VgQKFRWwAPGEwGn61QwiOBk+pCVF6WwbIuWo0Bn9OJdizWrLFWnHMFBRofVxZG8VIgDV+A3QKJUX4+hrm7XkEdbxr4IFdVvgtgdgFtVrihyaRFUAfAvocJBvbVOBTMcnvO3/SHiAK2qBiHs2JF3eTDSjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751870480; c=relaxed/simple;
-	bh=E4CpdpfvjbFb31eNpt1I5W5xMwZ2+JX1DELQsURXRzg=;
+	s=arc-20240116; t=1751870527; c=relaxed/simple;
+	bh=IiLGpE2uyMrqtwvy9R1BT98d8U7KS311154swWkBZBE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KIrKwmHS1SdffzpSBPesyPXa9Uts7nuQgNoHpmdhC5vz6oc6ANcAZpuGuhllgd7pVxXcHCye9HdmSg92l7MESpCChn0jK9EpNu8LhbfIi99iHxrBN26V6KxuEn3Yk2WxqqQaNwr+O5mdmMxZd5Xzf/x4/GBnQ+LM6vIAvmNV25w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
-X-QQ-mid: esmtpsz11t1751870403t7b4d411c
-X-QQ-Originating-IP: PVXPnXHUFKpnol3MyikDQMlsWMN3G4auBiHn1fypUpM=
-Received: from localhost ( [203.174.112.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Jul 2025 14:40:01 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 17395511315991072941
-Date: Mon, 7 Jul 2025 14:39:55 +0800
-From: Yibo Dong <dong100@mucse.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/15] net: rnpgbe: Add basic mbx ops support
-Message-ID: <9C6FCA38E28D6768+20250707063955.GA162739@nic-Precision-5820-Tower>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-4-dong100@mucse.com>
- <80644ec1-a313-403a-82dd-62eb551442d3@lunn.ch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ph+HBw9CG0l4YABDiHMSCXQ23VABfd2lICqT0YvXCfn+q0VIpPTp0pDwpzDgAvaTMYrzHuROfhmimVZbqdl/M2weUd17RftN4E0/mV2OH5N746hJN7j85/4bpNmzL3+gL81IJsYFNe5wxP7ixYP2mQc2oW3ojYD4aHUH5IG9PaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FyAGP6pq; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FyAGP6pq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=IiLG
+	pE2uyMrqtwvy9R1BT98d8U7KS311154swWkBZBE=; b=FyAGP6pqhTWS7vDw7fmX
+	dh2+VKzogPqkT8l7OQ1SW8LDBGl0c9nIu6jysu18SXB9FsJPMPzaJW8ZSogJ5CAt
+	tsVx1qQ+muSk3FGUEJ6A3+jI1vwzUI3S2cI4aSzKrP64vLyAZcnl90oQKOcNHJ/D
+	I2DWu8fyMtmzt44cX/vikJV29JXkajR/DGpWjWOdbYnuwqJjj1TXF7gK2SLSG0DM
+	mwQ1DwVrlk4iW4W5qmJHxyacHR9cCLsY/PftOZoEqrtRZ/ngo+MwF/m53uNEni/2
+	ADhtJUZKvOLguYSRG2ejY+PvgRo3kGuxXRBXRTCa/78msA45BA0exJJV63W1F6lf
+	zA==
+Received: (qmail 1127800 invoked from network); 7 Jul 2025 08:41:55 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jul 2025 08:41:55 +0200
+X-UD-Smtp-Session: l3s3148p1@I6XGI1E5huogAwDPXxVOAFK6vZd9m4LR
+Date: Mon, 7 Jul 2025 08:41:55 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v3 0/9] PCI: rzg3s-host: Add PCIe driver for Renesas
+ RZ/G3S SoC
+Message-ID: <aGtsM22QYqekuiQA@shikoro>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,119 +53,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <80644ec1-a313-403a-82dd-62eb551442d3@lunn.ch>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MAN6sKHDZ5xSaGWXfe+7Bn+vUKbGkUDEXayIP+S/njJsCtK4DB1iRPtn
-	16vaqm0+0isEJiLqZb/XtfZMP8i9m3XLf1LsQ2+qa2KWnJp4Rl4mg1mA9PJGJmyUiForwHt
-	Ir2vjToYE9/bdlC+pyihymFeooPyoR7fDsw0IPIgWEtLiBTroDKWuRzVwDLVMaXjngEw0Q9
-	GoFNOFm7H8klMPcNlxw7Is4PNHhPqNy4v2Qp1nwHobVYJUcRr5l8K7ls3JShMKuPwaX5NfL
-	PA3uoihlrDWs290klquNPPK3zBrobRJX+fq4GRf1bMkUl+8nl7csZvisFRdS+vMVOqS4gg1
-	AHxGzGWWY5r8GouGynaPPgjRYjcJm6Gm/+/AVfX2ZzTIu5vp/S7lwyywD/GqUZWCWE4GWj5
-	gWSThikHht7yxgU+DSHyaBxnFiW2qSFP4zo4kG0QZsDW7RNDeCMyDdYJnlGKz2V6J3ZM4ZT
-	BnSrxXJAeeoXkyl1paYr9dVkE5Ewi8PFc8hMCEjQzwm34zJo+51uBfnhM7xNv6lL3bSr8DL
-	Iyl6M6PfaTJPdEJ1Up20pS2EtpnRslxwime4HorBkuylvECMyxkcXpjxMZzCc3/6yJMcJQ7
-	2MoxP9cSV7gNPnOVwuj80oCFSZ2uOOKhtVxJA6DqQM51rtTdJA0Lz+qyVehwgPTt1jFXQ/K
-	taHog2ig4DfvSk3pqOwCaXvJmuMBr6MKGCs5aqoYB8sCa9DHqi84FtgHZVGNz485nk/6Q0e
-	vpWKfpgC8vKWF3ZFQTKY9fypx1L3lm53klMxNnaZ0BgAIbz/145pbl80YL2bkBRn0XMIQF1
-	XnGRPUMLj0kn5UVjdaAVUAj/K/P9okxB+OhsfmYE5xZwzd+nbBCLh5fWX2DO22acUX+2G6V
-	YfD3jdwRxYx0Yi8/8sqAHS4rq9135aGJMr5gKQ4VFaQ21cdMj5Xja8ndMFXbWo6D0S8Easq
-	/N7mnTBaUqWVzNB0unvfmIeGtq45//uORHhpXjQbfAsUoxg==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
 
-On Fri, Jul 04, 2025 at 08:13:19PM +0200, Andrew Lunn wrote:
-> >  #define MBX_FEATURE_WRITE_DELAY BIT(1)
-> >  	u32 mbx_feature;
-> >  	/* cm3 <-> pf mbx */
-> > -	u32 cpu_pf_shm_base;
-> > -	u32 pf2cpu_mbox_ctrl;
-> > -	u32 pf2cpu_mbox_mask;
-> > -	u32 cpu_pf_mbox_mask;
-> > -	u32 cpu2pf_mbox_vec;
-> > +	u32 fw_pf_shm_base;
-> > +	u32 pf2fw_mbox_ctrl;
-> > +	u32 pf2fw_mbox_mask;
-> > +	u32 fw_pf_mbox_mask;
-> > +	u32 fw2pf_mbox_vec;
-> 
-> Why is a patch adding a new feature deleting code?
-> 
-Not delete code, 'cpu' here means controller in the chip, not host.
-So, I just rename 'cpu' to 'fw' to avoid confusion.
-> > +/**
-> > + * mucse_read_mbx - Reads a message from the mailbox
-> > + * @hw: Pointer to the HW structure
-> > + * @msg: The message buffer
-> > + * @size: Length of buffer
-> > + * @mbx_id: Id of vf/fw to read
-> > + *
-> > + * returns 0 if it successfully read message or else
-> > + * MUCSE_ERR_MBX.
-> > + **/
-> > +s32 mucse_read_mbx(struct mucse_hw *hw, u32 *msg, u16 size,
-> 
-> s32 is an unusual type for linux. Can the mbox actually return
-> negative amounts of data?
-> 
-No, it cann't return negative amounts of data, but this function
-returns negative when it failed. Maybe I should use 'int'?
-> > +/**
-> > + * mucse_write_mbx - Write a message to the mailbox
-> > + * @hw: Pointer to the HW structure
-> > + * @msg: The message buffer
-> > + * @size: Length of buffer
-> > + * @mbx_id: Id of vf/fw to write
-> > + *
-> > + * returns 0 if it successfully write message or else
-> > + * MUCSE_ERR_MBX.
-> 
-> Don't invent new error codes. EINVAL would do.
-> 
-Got it, I will fix this.
-> > + **/
-> > +s32 mucse_write_mbx(struct mucse_hw *hw, u32 *msg, u16 size,
-> > +		    enum MBX_ID mbx_id)
-> > +{
-> > +	struct mucse_mbx_info *mbx = &hw->mbx;
-> > +	s32 ret_val = 0;
-> > +
-> > +	if (size > mbx->size)
-> > +		ret_val = MUCSE_ERR_MBX;
-> > +	else if (mbx->ops.write)
-> > +		ret_val = mbx->ops.write(hw, msg, size, mbx_id);
-> > +
-> > +	return ret_val;
-> > +}
-> > +static inline void mucse_mbx_inc_pf_ack(struct mucse_hw *hw,
-> > +					enum MBX_ID mbx_id)
-> 
-> No inline functions in C files. Let the compiler decide.
-> 
-Got it, I will move it to the h file.
-> > +static s32 mucse_poll_for_msg(struct mucse_hw *hw, enum MBX_ID mbx_id)
-> > +{
-> > +	struct mucse_mbx_info *mbx = &hw->mbx;
-> > +	int countdown = mbx->timeout;
-> > +
-> > +	if (!countdown || !mbx->ops.check_for_msg)
-> > +		goto out;
-> > +
-> > +	while (countdown && mbx->ops.check_for_msg(hw, mbx_id)) {
-> > +		countdown--;
-> > +		if (!countdown)
-> > +			break;
-> > +		udelay(mbx->usec_delay);
-> > +	}
-> > +out:
-> > +	return countdown ? 0 : -ETIME;
-> 
-> ETIMEDOUT, not ETIME. Please use iopoll.h, not roll your own.
-> 
->     Andrew
-> 
-> ---
-> pw-bot: cr
-> 
-Got it, I will fix it.
-Thanks for your feedback.
+
+> Please provide your feedback.
+
+What is this based on? I tried v6.16-rc4 and renesas-driver/master. Or
+is there a branch I could pull?
+
