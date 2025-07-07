@@ -1,83 +1,76 @@
-Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [207.226.244.123])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36421C5485
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 11:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.226.244.123
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637751373;
+	Mon,  7 Jul 2025 11:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889172; cv=none; b=NMqW+pWGw1icyTtUAexweIh3qHzwuox5HhlTaknFwmgGBjYhuOEg1wjnal+71XHe4OO4vWyyO0yG7E+8oDSt0KVcAmEZa8I+sl4b7gZmFXHRWT7JTNHMuB2xdZfEQ1JU0Ql0//vbIzWNBsjruLb7PDALoVaplTGiLmlChjDxw6c=
+	t=1751889226; cv=none; b=F1r28Ikosn6L1hYfIYyDTXLMiLVpgp6OHtzWmuUnrvr5AbtBNaUmo/RCXcDSLL/8cg9xZqGMxvisKaCp7rIRGzHTkcx3Bc6LyBEhNYQ6SUzbqNmv1fc/ix2agn2kzMk+nXcizxVlr+lq6d6/S8AB7S/mBAcGeG6JEtweeQE1zvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889172; c=relaxed/simple;
-	bh=12FCicUjjfZ9lxeY4mSTbNezI/AtmCjgVoNY8oN8zh4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CNpfNAieFwDynfSnAugZczU5XIRomqzLPSXN7CwZJtgI8dODTEaT+pNlT8RVdwbErClFDWMwWYwD4VLVlE2rW8HZRSb5XzFMml8CW/jNC7+APcbo9KNETpYIcRM10gBFeUvJkJlOFYFqvMe2JYpU3mlSeROJLHvU2UrKdWOn5ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass smtp.mailfrom=xiaomi.com; arc=none smtp.client-ip=207.226.244.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xiaomi.com
-X-CSE-ConnectionGUID: AEeIoheoSZiPmupsFeL80Q==
-X-CSE-MsgGUID: av3+6Od3SDWD+KmU0zfBfg==
-X-IronPort-AV: E=Sophos;i="6.16,294,1744041600"; 
-   d="scan'208";a="145457956"
-From: weilinghan <weilinghan@xiaomi.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-CC: <linux-kernel@vger.kernel.org>, hulingchen <hulingchen@xiaomi.com>,
-	weilinghan <weilinghan@xiaomi.com>, weipengliang <weipengliang@xiaomi.com>
-Subject: [PATCH] PCI: remove call pci_save_aspm_l1ss_state() from pci_save_pcie_state()
-Date: Mon, 7 Jul 2025 19:52:36 +0800
-Message-ID: <20250707115236.3076-1-weilinghan@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1751889226; c=relaxed/simple;
+	bh=jM+/UUCJoXc+bzfrp40R7IOgg6i7fASt5M7fn2z62CQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOzWgkOB2JkaA1Q820QF3JLGCuYXWs3oexY9jEjHlOOWEP2HIwN4QuEG0pA/9Wpsjo0PJSgQSOz0tP9N/0Qr2jDl0NSaBTisIffd5ln9OBoOkyY2DcoiOutaSLJOxZOGuTPbscYH5srZpRDy7G+Je6awMJ74KSGCG4aUbfXR3JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=s/XG/WfU; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="s/XG/WfU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=xjTX6YNdxABo8Jl2jn8Lm6RPCYX+HMZYyUJcZGWNE5w=; b=s/XG/WfUD5TwLxJR21YjurMr1+
+	uIrql8eVFB8xIOWZb4jN66SOFhAIiOzXDuBzM8UYaxQPnp47ksUndJ1Mo8p9nminew4/FcaTjzxfH
+	vpDQ1eD4Ib2UtLuPW5FSqB7k5isk46x6lgS73u0NqgVfNgvLtqQYrjdEF9pRl//l0ReY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uYkPc-000hxy-QL; Mon, 07 Jul 2025 13:53:32 +0200
+Date: Mon, 7 Jul 2025 13:53:32 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Michael Dege <michael.dege@renesas.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Paul Barker <paul@pbarker.dev>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: Re: [PATCH 0/3] net: renesas: rswitch: R-Car S4 add HW offloading
+ for layer 2 switching
+Message-ID: <dd75a12d-17cd-45a7-97d0-a243df54c215@lunn.ch>
+References: <20250704-add_l2_switching-v1-0-ff882aacb258@renesas.com>
+ <9c8cb213-7daf-43bb-8d20-aaefa13127af@lunn.ch>
+ <TY4PR01MB14282E8A9E82714106D448EA0824FA@TY4PR01MB14282.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJ-MBX01.mioffice.cn (10.237.8.121) To BJ-MBX03.mioffice.cn
- (10.237.8.123)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY4PR01MB14282E8A9E82714106D448EA0824FA@TY4PR01MB14282.jpnprd01.prod.outlook.com>
 
-During the suspend-resume process, PCIe resumes by enabling L1.2
-in the pci_restore_state function due to patch 4ff116d0d5fd.
-However, in the following scenario, the resume process
-becomes very time-consuming:
+> There is a discrepancy between the value being passed by iproute2 and brctl. Iproute2 passes the
+> value unaltered in seconds and brctl passes the value in seconds multiplied by 100. So far this
+> is OK because brctl is deprecated. But the default value being passed when neither brctl is called
+> nor the ageing parameter is added when the bridge is created is also multiplied by 100 resulting in
+> 30000s being set as default ageing time instead of 300s. Is this a known issue?
 
-1.The platform has multiple PCI buses.
-2.The link transition time from L1.2 to L0 exceeds 100 microseconds by
-accessing the configuration space of the EP.
-3.The PCI framework has async_suspend enabled
-(by calling device_enable_async_suspend(&dev->dev)
-in pci_pm_init(struct pci_dev *dev)).
-4.On ARM platforms, CONFIG_PCI_LOCKLESS_CONFIG is not enabled, which means
-the pci_bus_read_config_##size interfaces contain locks (spinlock).
+You need to be careful of 100. It is probably the value of HZ you are
+using. This means it is probably in jiffies.
 
-Practical measurements show that enabling L1.2 during the
-resume process introduces an additional delay of approximately
-150ms in the pci_pm_resume_noirq() function for platforms
-with two PCI buses, compared to when L1.2 is disabled.
+It could be whoever added support to DSA was using HZ = 1000, and so
+assumed it has milliseconds, not jiffies, and the API is broken.
 
-Signed-off-by: weilinghan <weilinghan@xiaomi.com>
----
- drivers/pci/pci.c | 2 --
- 1 file changed, 2 deletions(-)
+If you have time, could you dig into this. Trace there where jiffies
+are used, seconds, and what conversions are preformed, for the default
+values, netlink API and sysfs API. Once we know where it goes wrong,
+we can figure out how to fix it.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9e42090fb108..0834211b0f8c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1708,7 +1708,6 @@ static int pci_save_pcie_state(struct pci_dev *dev)
- 	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &cap[i++]);
- 	pcie_capability_read_word(dev, PCI_EXP_SLTCTL2, &cap[i++]);
- 
--	pci_save_aspm_l1ss_state(dev);
- 	pci_save_ltr_state(dev);
- 
- 	return 0;
-@@ -1725,7 +1724,6 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- 	 * LTR itself in PCI_EXP_DEVCTL2.
- 	 */
- 	pci_restore_ltr_state(dev);
--	pci_restore_aspm_l1ss_state(dev);
- 
- 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
- 	if (!save_state)
--- 
-2.43.0
-
+	Andrew
