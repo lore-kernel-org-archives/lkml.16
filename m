@@ -1,308 +1,218 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDDA215077;
-	Mon,  7 Jul 2025 01:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751851973; cv=none; b=MMV3AwBV6qnB4KsmnPOatzcNUQa/EJmIxq5b/2aialWeWctd3Yw4lrTt5y3AsNa+vFU66unELkz36m9wu4uU0Eg2tKqCercnHCzAhW3KnXyS7v5Xj5ofR5yKEPURuuiJtEhHgz+6IuG5ASIoT04Bp3s7LceR6EZnCJk4W7q+qH8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751851973; c=relaxed/simple;
-	bh=Sdiy6j0WC+m4Q6ASAdQP14zPihhovqD7Xz7GFbD7pq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TMi6RuwSeQmlU45SoNyBaHIQEkQcgRLFJLCnBus5MdDKZGNZLRSWn3KscHQx/XApIjYqImv3uSVDoin1FvtPArfdWLWCNTzB5hMzv32KMKZINHY0O8Le11/0z+sgYXheQf3hg0Pe7FgpnP3wvJE7Kq93Bbusb7QkpF47Ymlgy5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dt5t24zKHMkQ;
-	Mon,  7 Jul 2025 09:32:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 47B671A0D27;
-	Mon,  7 Jul 2025 09:32:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S18;
-	Mon, 07 Jul 2025 09:32:45 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: agk@redhat.com,
-	snitzer@kernel.org,
-	mpatocka@redhat.com,
-	song@kernel.org,
-	yukuai3@huawei.com
-Cc: dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH v5 14/15] md: check before referencing mddev->bitmap_ops
-Date: Mon,  7 Jul 2025 09:27:10 +0800
-Message-Id: <20250707012711.376844-15-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250707012711.376844-1-yukuai1@huaweicloud.com>
-References: <20250707012711.376844-1-yukuai1@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4FC22FE02;
+	Mon,  7 Jul 2025 01:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751851976; cv=fail; b=oi4gYlVj52EEbfdqPwqbomC+cZy0TzRjV+OHQ1j4vSrvsszvdpoGuUbcI7gYTq08/vuWd408zv7ICy+bv1AAmYpYIKr2nZjoATl0/UGL2MzcvRSrPPLLEU5G/41YKTE6ASEeWZ2D2vs4C8XP/oPE8qCr+Ks2qrftc/vumQVdcY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751851976; c=relaxed/simple;
+	bh=9uF0UCyE4ziswKp6hq+f6yhZVWDxW8AOGt9zInrlSkA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OjRdvm7nVwOks3m9dKQFNBaCzyGsDnf6kSJ2k3oC1MaWXxTbTXECp2iWRvijB6yEyoFwZQ32PZUGmB2RFIV9ujxvDS88LC3E8IPrjvbU77rq5aTGRnzeZ2pDwUDYzal26TRjO791x8sQrbkcbDUEUzwOdSiTusqJuTtYeuLphwU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OL5DxU1B; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OL5DxU1B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751851975; x=1783387975;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9uF0UCyE4ziswKp6hq+f6yhZVWDxW8AOGt9zInrlSkA=;
+  b=OL5DxU1BQdl+0ufA/S9QggScHZYZrvIfpyDkhEc1hHnu69ODsMmT5Y2J
+   hkS3g1ZdtkuZVWItZSNXBDHqb8aNyqJIkN1NO1xYUSKFoQQ0OJ+f51HED
+   Wq2ocP7dOflKuwWetQqewC8kK+xmku1w52Yb/rU8suJylxHKuef0i+8D5
+   NYlRzuoNx4QhT1Vourzghg0cH0cJXSljd8D8FzvccMWEEHA6LZbgTG/iT
+   ta7q0qrsk7XO0Igx7wbZ5/8zETnMHydybzY+6G3O3J/dqIbhNgizCJRv6
+   1n1rhJTIYHIAG3qtwdEdh0CWsMhJLTIB6GXViEwmQWmKuybjlzhETyDPK
+   g==;
+X-CSE-ConnectionGUID: 9OiySyrXRBujrynywAt0bQ==
+X-CSE-MsgGUID: qhB1+UtlTF2ENKDaoScneQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11486"; a="41692127"
+X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
+   d="scan'208";a="41692127"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 18:32:54 -0700
+X-CSE-ConnectionGUID: 6nR0QP5USUu74KQM2rTVNQ==
+X-CSE-MsgGUID: 8orKc+R0TYuJxLAuMWU+sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,293,1744095600"; 
+   d="scan'208";a="155184374"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2025 18:32:53 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 6 Jul 2025 18:32:52 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Sun, 6 Jul 2025 18:32:52 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.63) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 6 Jul 2025 18:32:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y80rQTpNPmGwZi312NlfeIBfmxpg7aPOsNTDHrzTJryPjvWdsgY3OmoKg5cUWUT+GigJKrlLS9GYONELFuAw1Waii8yehfG1WILMBrouipDK+cLyv4P/MsbvqxwJ5+DcimilVAJUVTXTfXs59UUAaFbr6PMpGRfKHeFOQmwc5dKgEYCVQ+paPrLJTnN4FERdnBWmfhq3lbHVxxsjyJxeEm6tSMr0d0X2eVTzszyzydcVl3iZT6hDixx34hklaMV2k8SXztE1IL/0slPAZeptsR2MRA0AtixmGA34M7KEGLnv6urhsGREo7X8bIEB8vLbMgeoaohUEFpc9q/IY3qDDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AlkSJCfikUxa5BqwV0VWSU1ad0f/GPTQFeL7K3V0i3Y=;
+ b=R9jyW1IVxe268IfgSDseD7feP+TBQU15oKIgnePxLvQtFCBYm/44fNpwT6dkqkmPz88RH6VMjLUew8zp8RVQ7kPZOD9gQ6FKQfY5eHaAAMKLViHqDUR8jwX+KoJjTP3St1u3+TkXZD7MkunciAa2sFF46h4vE4gIomqvaB/vPEaVhG21Pvpu8LHhp6y+xsEvlOmc13cn47syPBNizZ0fQkwTcrGzYnVibwmu1+wZXW4Xm+aebYs6GL3BxJgUnTgWNvO4GRkaRczuAp+lY/U9w2JEOw8Ty1kr//a/GgJweGmcFCtj9BSY9elFS1geGFcJk9ewluBl948ExZ8OlkNplg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by PH7PR11MB5981.namprd11.prod.outlook.com (2603:10b6:510:1e0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Mon, 7 Jul
+ 2025 01:32:49 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8835.025; Mon, 7 Jul 2025
+ 01:32:49 +0000
+Date: Mon, 7 Jul 2025 09:32:37 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<seanjc@google.com>, <pbonzini@redhat.com>, <dave.hansen@intel.com>,
+	<rick.p.edgecombe@intel.com>, <mlevitsk@redhat.com>, <john.allen@amd.com>,
+	<weijiang.yang@intel.com>, <minipli@grsecurity.net>, <xin@zytor.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v11 00/23] Enable CET Virtualization
+Message-ID: <aGsjtapc5igIjng+@intel.com>
+References: <20250704085027.182163-1-chao.gao@intel.com>
+ <88443d81-78ac-45ad-b359-b328b9db5829@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <88443d81-78ac-45ad-b359-b328b9db5829@intel.com>
+X-ClientProxiedBy: SG2PR02CA0009.apcprd02.prod.outlook.com
+ (2603:1096:3:17::21) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S18
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jr4DGryUXFyUWw4xKw4Durg_yoW3AFWfp3
-	yxt3Z8KrW5XrWfWw47AFyv9F1rXwn7tr9rtryxXw13Gr1rJrnxWF4rWFy8tr15C348AFn8
-	Zw4rta1rCr17WF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBI
-	daVFxhVjvjDU0xZFpf9x0JUQFxUUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|PH7PR11MB5981:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4954f6f9-01bc-4d32-78b5-08ddbcf62ef8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ed/bDKOqa5dtO63yMUDTOTCMkwSPVIXvZE3kEjAxeE0kYoMc+fBBdpRx322m?=
+ =?us-ascii?Q?Fy8E0z3Fp38kvUCz1lpQbtlcjlcYsAhkwE7MlKAwK5PV7WjPU9wZ/llgJ1Ft?=
+ =?us-ascii?Q?Sq0YznEBmqBGloeKOoEDLE8MwcaLVluRAWm3VghMxV5ZuZYi2sn++p4t18Au?=
+ =?us-ascii?Q?pBqqF3xCCb6qpi8zCOZBkcHXJZD60fq+qJaTH3sfOOXqr64CgvHQNomN87Y2?=
+ =?us-ascii?Q?UAc4Ud9t4RAq5q8TltanjoSBbTb3cQ5BZZ6aANgdviglazrf0M89q2sn23Yq?=
+ =?us-ascii?Q?PBWLLGHolhlN9ngSMv7PrF2jTw8BFkUBu2fT388prXqmgn8aQIR7zQmysVL6?=
+ =?us-ascii?Q?EklQ+8xV6lat5KnuVknjpDxT5cejZoKbavrogZ7YEM+XCMJExjHaQj/5+5NI?=
+ =?us-ascii?Q?tq67OA1+4MLsrEnEkgKqYBxn3YkMOTahrm+poecHt/f9OposST3Dpel70SSt?=
+ =?us-ascii?Q?2691IhUHLLdeYp0pgRXuI/b9MpJV4bdPnpaCAE+b65lrP+/cGalbdJ7h0SgI?=
+ =?us-ascii?Q?wd/3GMrGA3KhfcXVWYT1pEXtzMu5OlBnpbb2E9Yf/u6KdxxMsiqcbWAXphEd?=
+ =?us-ascii?Q?2ouEBUs8/dmzcUHhJVmklT0sDqHg9UShWZE11HQ38SAhxHVPfczmAP/ZhLmV?=
+ =?us-ascii?Q?+D3teEhFBtmYW1M81QaIwOYmN5pvIS5HJ63cW5RC1uuuHR+BRu5pCNESh9xD?=
+ =?us-ascii?Q?oPHcNgb3zFvSGcXWZyMBLAR9Sj2/pAtIMCskhJ1SD0x0KRlXVe7TJuAEEO8P?=
+ =?us-ascii?Q?vv6J6ofk9/qgjYNDkrby5vKDtz4VTxC7+k7t99nMTsilgHIJ8r38oaqY9vIl?=
+ =?us-ascii?Q?7vjAs9yYJ34MVr700NqK+oriY/SaucWShT9mT0gXio288WneYWAjn/410tQC?=
+ =?us-ascii?Q?WE+Qdwt7v5MfktFUJleHEjHUev4A4Yvu37adA1oy+tc+MjLU2cbVci7vr82i?=
+ =?us-ascii?Q?I3G7bOcdSqGIT6uVetQAY/sFs0AfVlnClpDKaxikW1Rq1g7wSCL39dyBIqqe?=
+ =?us-ascii?Q?KAUht1EI5w0UInhopJceEwIPT7/9PMf9Ogo4XdZuDAXdqu12czCDSBORBwra?=
+ =?us-ascii?Q?cM9pUR30bW1/eykqPCh6xdGF8YamxZSB9NKcr/vkfcJZiWgiPGyyWmKFtCJn?=
+ =?us-ascii?Q?63ERAF0LlFYkSK0NEzpCciT9U6mCM5l5Fjx9YcD4DC9rMRIiK/TsFeFHbte7?=
+ =?us-ascii?Q?IBjV3ntb7iqpJCUk0fx6nx1fq6lT7ui54by7q1tNstCTJ2f4nJgf4HxKOhq3?=
+ =?us-ascii?Q?yyE3ORTIsfcfl9/TyNDzhO2OfkUfb/LGg9NermvEyoRRHZiVxgK6ELM45tgj?=
+ =?us-ascii?Q?3DHcvejerVywIu/OJlV0wVivt/8gUaz40Gsk66VCB5lGikb/95TyXrjeRrWp?=
+ =?us-ascii?Q?FnPNUxrHY87OJCD2DybtpsNwEiWd4rWS7dXEMJ8IYfgVQ84/Nq9C2MF0XmJO?=
+ =?us-ascii?Q?O6HDGn+FjgE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OX812Y+be19v2LVp3DPFDlBEdDVJt0Y7K2JkNshBzJUrr5URe0NImvSXKCdo?=
+ =?us-ascii?Q?WdWXgGZVHgr6p9ZVmP49l+45Xa4bOPw5R6OGnZC96uPNsSZu4vxJGGH5XR5V?=
+ =?us-ascii?Q?+HugMpkNUMUfTq68QlMHTxjfKJ8JI/IvU8WxZjZvSf2HDTnZ3srkmclVPslG?=
+ =?us-ascii?Q?1ErgE3Jsxw0gq4TwT8TUF7CxM2e3r1fUZpIpGCteyNVF3gJHbMKk/BW0qtaB?=
+ =?us-ascii?Q?3GIUqJPtjmJ3IEqjB6/fSx9y2Qr04k1CEUPLrrCriq+yerSaeL/t29fUEu79?=
+ =?us-ascii?Q?+OEonV/rMt1bCBkqzUblXZN1BWJAcdFYNNkJDipQrhLSWg9wjuCGVgTvSzwK?=
+ =?us-ascii?Q?LrciQXIggMZX8o2rbfoXB8kG8BUDPeMeUlVq5yfKXX9ot6eUlhv5SdmqZ8Ut?=
+ =?us-ascii?Q?DfMFOhRm2dvvCPmQ2n1EK8eSRR8tl76KTIZILLUM6Q3/XSdjERQqdLql9oD3?=
+ =?us-ascii?Q?Hwnt0Frzz6J+pVZ28N1l71gR2n0pf7t2V1GErG981IyOxS24uH4WLTZrlkOC?=
+ =?us-ascii?Q?P3H97Z6MYqbTz7A8E9B7uWJqOTMo7CwPE05gpw2IME1+oi3BTY2BEKCNxyK2?=
+ =?us-ascii?Q?4ZXxiy/McmqgnhbCEp2TJaysGNKaDzQ5b0JVG8TikOR2GThPZFKSaCOEhEnA?=
+ =?us-ascii?Q?cMzG5/xj/gdsQb2T832hB2VFkl6tpJrsuIV7ZOygoxAaIzf/r9iI8V+C6LBH?=
+ =?us-ascii?Q?68+QdsZv6w+P/38/wPK+29bzu9yKvCAGwaWVrNWRU7tni3eA+XpImxRQHa5T?=
+ =?us-ascii?Q?NesmiQ93yH3bKK5Xh3SkLnEAqHA7iw+XPj+fEp8ZbHe6piKlL4ZIUtoN/SRA?=
+ =?us-ascii?Q?nFHC8V6+J7raCHTyrTWsarpB4xNr3kjex8g3xzZf2DKrRR7MepBxMjYC3Bg1?=
+ =?us-ascii?Q?9peybUjHPOGXjME9bSAeRCKWX93oyoBdZXf9YrZ/JmCDR7BvGbfqxTLvWFLc?=
+ =?us-ascii?Q?CyMibHS4FFtFP7mmJroRbJ8V6qwQ8ikHhEfKsG816uDEwnqPg+Y7kqXyofNo?=
+ =?us-ascii?Q?Rx5vTDlz2dcjPCKDBFWy0BSMvkIwj2jHhEmDNA8N5LWW17xrw+Mrw+5tEHeg?=
+ =?us-ascii?Q?VcmcyfzoxEg4Z/kJbqxyvva1ezzKK6mf6A21RHmmD7bSkqFJPas18sLp0DBg?=
+ =?us-ascii?Q?ZXXwubCTZbqpM9mMYWrZd1Z/SJjCHWpksm671Vmh1md74CZ/zogOLqmRInHE?=
+ =?us-ascii?Q?3A1rIY1xclluQN4jfGpPOvCdvq6jtrL0RUlUBsQq/AQVLgY6/s7NTqkTlE7J?=
+ =?us-ascii?Q?7hhUhva3u5pz4C5J9YqseiTZjaSqlzeRye1NR4nWUlsI0jAf2GaUCWgMB+ly?=
+ =?us-ascii?Q?3wuQLW1Ku5m7cLssW9In2KJG14ThzEMTw5WbISUqauS2uqNKd/raR++9qTTL?=
+ =?us-ascii?Q?0Jpr1pJDHUaMQ5rzSYOb4Oct6Tj+b+UQcrvnD2864ROXlLvYhu+3slc06wPT?=
+ =?us-ascii?Q?REZhn7qaWZjgH0jLVNdwo+273r1LR3vvVm7XCMhnDfhpGOUkYd8xMlsEnPKo?=
+ =?us-ascii?Q?v/IfzkEir1SxYwrTYO1Vl+oB5JS5V8WkumKbhLfvmTRBKuCap2a0K4pQMFET?=
+ =?us-ascii?Q?Y9JcDiN2xyDdNYiW/V+iemapF4R8eAfNGfpb9rww?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4954f6f9-01bc-4d32-78b5-08ddbcf62ef8
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 01:32:49.6847
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mjVm6nJwLdg6UnBqorzbIo0DvzTGPr9fc40tEIplgrDVZMTd0Zu2vCGq/+bz2pqR9hq2jXfr6A1LzBWmtiqvag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5981
+X-OriginatorOrg: intel.com
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Mon, Jul 07, 2025 at 12:51:14AM +0800, Xiaoyao Li wrote:
+>Hi Chao,
+>
+>On 7/4/2025 4:49 PM, Chao Gao wrote:
+>> Tests:
+>> ======================
+>> This series passed basic CET user shadow stack test and kernel IBT test in L1
+>> and L2 guest.
+>> The patch series_has_ impact to existing vmx test cases in KVM-unit-tests,the
+>> failures have been fixed here[1].
+>> One new selftest app[2] is introduced for testing CET MSRs accessibilities.
+>> 
+>> Note, this series hasn't been tested on AMD platform yet.
+>> 
+>> To run user SHSTK test and kernel IBT test in guest, an CET capable platform
+>> is required, e.g., Sapphire Rapids server, and follow below steps to build
+>> the binaries:
+>> 
+>> 1. Host kernel: Apply this series to mainline kernel (>= v6.6) and build.
+>> 
+>> 2. Guest kernel: Pull kernel (>= v6.6), opt-in CONFIG_X86_KERNEL_IBT
+>> and CONFIG_X86_USER_SHADOW_STACK options. Build with CET enabled gcc versions
+>> (>= 8.5.0).
+>> 
+>> 3. Apply CET QEMU patches[3] before build mainline QEMU.
+>
+>You forgot to provide the links of [1][2][3].
 
-Prepare to introduce CONFIG_MD_BITMAP.
+Oops, thanks for catching this.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 68 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+Here are the links:
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 7ed95e5e43fc..2f7e8d77e7ef 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1346,6 +1346,9 @@ static u64 md_bitmap_events_cleared(struct mddev *mddev)
- 	struct md_bitmap_stats stats;
- 	int err;
- 
-+	if (!md_bitmap_enabled(mddev, false))
-+		return 0;
-+
- 	err = mddev->bitmap_ops->get_stats(mddev->bitmap, &stats);
- 	if (err)
- 		return 0;
-@@ -2303,13 +2306,15 @@ static int
- super_1_allow_new_offset(struct md_rdev *rdev,
- 			 unsigned long long new_offset)
- {
-+	struct mddev *mddev = rdev->mddev;
-+
- 	/* All necessary checks on new >= old have been done */
- 	if (new_offset >= rdev->data_offset)
- 		return 1;
- 
- 	/* with 1.0 metadata, there is no metadata to tread on
- 	 * so we can always move back */
--	if (rdev->mddev->minor_version == 0)
-+	if (mddev->minor_version == 0)
- 		return 1;
- 
- 	/* otherwise we must be sure not to step on
-@@ -2321,8 +2326,7 @@ super_1_allow_new_offset(struct md_rdev *rdev,
- 	if (rdev->sb_start + (32+4)*2 > new_offset)
- 		return 0;
- 
--	if (!rdev->mddev->bitmap_info.file) {
--		struct mddev *mddev = rdev->mddev;
-+	if (md_bitmap_registered(mddev) && !mddev->bitmap_info.file) {
- 		struct md_bitmap_stats stats;
- 		int err;
- 
-@@ -2794,7 +2798,8 @@ void md_update_sb(struct mddev *mddev, int force_change)
- 
- 	mddev_add_trace_msg(mddev, "md md_update_sb");
- rewrite:
--	mddev->bitmap_ops->update_sb(mddev->bitmap);
-+	if (md_bitmap_enabled(mddev, false))
-+		mddev->bitmap_ops->update_sb(mddev->bitmap);
- 	rdev_for_each(rdev, mddev) {
- 		if (rdev->sb_loaded != 1)
- 			continue; /* no noise on spare devices */
-@@ -4670,6 +4675,9 @@ bitmap_store(struct mddev *mddev, const char *buf, size_t len)
- 	unsigned long chunk, end_chunk;
- 	int err;
- 
-+	if (!md_bitmap_enabled(mddev, false))
-+		return len;
-+
- 	err = mddev_lock(mddev);
- 	if (err)
- 		return err;
-@@ -5995,7 +6003,7 @@ struct mddev *md_alloc(dev_t dev, char *name)
- 		return ERR_PTR(error);
- 	}
- 
--	if (mddev->bitmap_ops && mddev->bitmap_ops->group)
-+	if (md_bitmap_registered(mddev) && mddev->bitmap_ops->group)
- 		if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
- 			pr_warn("md: cannot register extra bitmap attributes for %s\n",
- 				mdname(mddev));
-@@ -6239,7 +6247,7 @@ int md_run(struct mddev *mddev)
- 			(unsigned long long)pers->size(mddev, 0, 0) / 2);
- 		err = -EINVAL;
- 	}
--	if (err == 0 && pers->sync_request &&
-+	if (err == 0 && pers->sync_request && md_bitmap_registered(mddev) &&
- 	    (mddev->bitmap_info.file || mddev->bitmap_info.offset)) {
- 		err = mddev->bitmap_ops->create(mddev);
- 		if (err)
-@@ -6314,7 +6322,8 @@ int md_run(struct mddev *mddev)
- 		pers->free(mddev, mddev->private);
- 	mddev->private = NULL;
- 	put_pers(pers);
--	mddev->bitmap_ops->destroy(mddev);
-+	if (md_bitmap_registered(mddev))
-+		mddev->bitmap_ops->destroy(mddev);
- abort:
- 	bioset_exit(&mddev->io_clone_set);
- exit_sync_set:
-@@ -6334,10 +6343,12 @@ int do_md_run(struct mddev *mddev)
- 	if (err)
- 		goto out;
- 
--	err = mddev->bitmap_ops->load(mddev);
--	if (err) {
--		mddev->bitmap_ops->destroy(mddev);
--		goto out;
-+	if (md_bitmap_registered(mddev)) {
-+		err = mddev->bitmap_ops->load(mddev);
-+		if (err) {
-+			mddev->bitmap_ops->destroy(mddev);
-+			goto out;
-+		}
- 	}
- 
- 	if (mddev_is_clustered(mddev))
-@@ -6476,7 +6487,8 @@ static void __md_stop_writes(struct mddev *mddev)
- 		mddev->pers->quiesce(mddev, 0);
- 	}
- 
--	mddev->bitmap_ops->flush(mddev);
-+	if (md_bitmap_enabled(mddev, true))
-+		mddev->bitmap_ops->flush(mddev);
- 
- 	if (md_is_rdwr(mddev) &&
- 	    ((!mddev->in_sync && !mddev_is_clustered(mddev)) ||
-@@ -6503,7 +6515,8 @@ EXPORT_SYMBOL_GPL(md_stop_writes);
- 
- static void mddev_detach(struct mddev *mddev)
- {
--	mddev->bitmap_ops->wait_behind_writes(mddev);
-+	if (md_bitmap_enabled(mddev, false))
-+		mddev->bitmap_ops->wait_behind_writes(mddev);
- 	if (mddev->pers && mddev->pers->quiesce && !is_md_suspended(mddev)) {
- 		mddev->pers->quiesce(mddev, 1);
- 		mddev->pers->quiesce(mddev, 0);
-@@ -6519,7 +6532,8 @@ static void __md_stop(struct mddev *mddev)
- {
- 	struct md_personality *pers = mddev->pers;
- 
--	mddev->bitmap_ops->destroy(mddev);
-+	if (md_bitmap_registered(mddev))
-+		mddev->bitmap_ops->destroy(mddev);
- 	mddev_detach(mddev);
- 	spin_lock(&mddev->lock);
- 	mddev->pers = NULL;
-@@ -7236,6 +7250,9 @@ static int set_bitmap_file(struct mddev *mddev, int fd)
- {
- 	int err = 0;
- 
-+	if (!md_bitmap_registered(mddev))
-+		return -EINVAL;
-+
- 	if (mddev->pers) {
- 		if (!mddev->pers->quiesce || !mddev->thread)
- 			return -EBUSY;
-@@ -7586,6 +7603,14 @@ static int update_array_info(struct mddev *mddev, mdu_array_info_t *info)
- 		rv = update_raid_disks(mddev, info->raid_disks);
- 
- 	if ((state ^ info->state) & (1<<MD_SB_BITMAP_PRESENT)) {
-+		/*
-+		 * Metadata says bitmap existed, however kernel can't find
-+		 * registered bitmap.
-+		 */
-+		if (WARN_ON_ONCE(!md_bitmap_registered(mddev))) {
-+			rv = -EINVAL;
-+			goto err;
-+		}
- 		if (mddev->pers->quiesce == NULL || mddev->thread == NULL) {
- 			rv = -EINVAL;
- 			goto err;
-@@ -8420,6 +8445,9 @@ static void md_bitmap_status(struct seq_file *seq, struct mddev *mddev)
- 	unsigned long chunk_kb;
- 	int err;
- 
-+	if (!md_bitmap_enabled(mddev, false))
-+		return;
-+
- 	err = mddev->bitmap_ops->get_stats(mddev->bitmap, &stats);
- 	if (err)
- 		return;
-@@ -8822,7 +8850,7 @@ static void md_end_clone_io(struct bio *bio)
- 	struct bio *orig_bio = md_io_clone->orig_bio;
- 	struct mddev *mddev = md_io_clone->mddev;
- 
--	if (bio_data_dir(orig_bio) == WRITE && mddev->bitmap)
-+	if (bio_data_dir(orig_bio) == WRITE && md_bitmap_enabled(mddev, false))
- 		md_bitmap_end(mddev, md_io_clone);
- 
- 	if (bio->bi_status && !orig_bio->bi_status)
-@@ -8849,7 +8877,7 @@ static void md_clone_bio(struct mddev *mddev, struct bio **bio)
- 	if (blk_queue_io_stat(bdev->bd_disk->queue))
- 		md_io_clone->start_time = bio_start_io_acct(*bio);
- 
--	if (bio_data_dir(*bio) == WRITE && mddev->bitmap) {
-+	if (bio_data_dir(*bio) == WRITE && md_bitmap_enabled(mddev, false)) {
- 		md_io_clone->offset = (*bio)->bi_iter.bi_sector;
- 		md_io_clone->sectors = bio_sectors(*bio);
- 		md_bitmap_start(mddev, md_io_clone);
-@@ -8873,7 +8901,7 @@ void md_free_cloned_bio(struct bio *bio)
- 	struct bio *orig_bio = md_io_clone->orig_bio;
- 	struct mddev *mddev = md_io_clone->mddev;
- 
--	if (bio_data_dir(orig_bio) == WRITE && mddev->bitmap)
-+	if (bio_data_dir(orig_bio) == WRITE && md_bitmap_enabled(mddev, false))
- 		md_bitmap_end(mddev, md_io_clone);
- 
- 	if (bio->bi_status && !orig_bio->bi_status)
-@@ -9598,7 +9626,7 @@ static void md_start_sync(struct work_struct *ws)
- 	 * We are adding a device or devices to an array which has the bitmap
- 	 * stored on all devices. So make sure all bitmap pages get written.
- 	 */
--	if (spares)
-+	if (spares && md_bitmap_enabled(mddev, true))
- 		mddev->bitmap_ops->write_all(mddev);
- 
- 	name = test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery) ?
-@@ -9686,7 +9714,7 @@ static void unregister_sync_thread(struct mddev *mddev)
-  */
- void md_check_recovery(struct mddev *mddev)
- {
--	if (mddev->bitmap)
-+	if (md_bitmap_enabled(mddev, false))
- 		mddev->bitmap_ops->daemon_work(mddev);
- 
- 	if (signal_pending(current)) {
-@@ -10066,7 +10094,7 @@ static void check_sb_changes(struct mddev *mddev, struct md_rdev *rdev)
- 		ret = mddev->pers->resize(mddev, le64_to_cpu(sb->size));
- 		if (ret)
- 			pr_info("md-cluster: resize failed\n");
--		else
-+		else if (md_bitmap_enabled(mddev, false))
- 			mddev->bitmap_ops->update_sb(mddev->bitmap);
- 	}
- 
--- 
-2.39.2
+[1]: KVM-unit-tests fixup:
+https://lore.kernel.org/all/20230913235006.74172-1-weijiang.yang@intel.com/
+[2]: Selftest for CET MSRs:
+https://lore.kernel.org/all/20230914064201.85605-1-weijiang.yang@intel.com/
+[3]: QEMU patch:
+https://lore.kernel.org/all/20230720111445.99509-1-weijiang.yang@intel.com/
 
+Please note that [1] has already been merged. And [3] is an older version of
+CET for QEMU; I plan to post a new version for QEMU after the KVM series is
+merged.
