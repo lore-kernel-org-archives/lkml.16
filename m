@@ -1,204 +1,279 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D0821D5B2
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17159218E99
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751879207; cv=none; b=SFUAwcxN10WbWJJr3uiC1KBx36lfQda2/j1fldxD9tFU+ItY08cVtdCu61hDwqpfjf1PmeBdvX28La5gZWCbFObj2HBU12GYEg6tJVcci7RHrvYlpn5NX6guIb1gAhuBjvUPPV/2YVKFDESWofovz3BTHllWmXLTFBZwEv27OI8=
+	t=1751879232; cv=none; b=jn32wprhe9dgOAjl46J+q5dvD2zwqMp1I9TPijhkC8Y3azfJ3aiivtUi4mySHNVECM/H9j1KauSBGaovVLV4IMJIa/VBV1Eb+EUzLoHQ8bIvGZyDw53jxWu0gt8+kCyHFdVHPl3u7/n6t1XgpniavI4g+Z2ISjRNE/2rryqoLO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751879207; c=relaxed/simple;
-	bh=Mn82wIBx5bHzV9lHH1hLPKU4X+2jhaQ8JgIgfr5H6VM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/eVlhI+hLu+Gmko5PzyYeT7Fh7h2mWFCz41uc6My30ha4T12yV85DYfvnTHw9LtsyCRz1UddfPMuzDZaiL9BOfArAxeT3EZ6fgT/pL9fC8Wl+3WlURugApTQ3P4VxXYAaf3ZVuBtlHTv2xFI6FAluKbNTrE6SYLTJkgol5mP7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qa2hWaD3; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751879232; c=relaxed/simple;
+	bh=u/pepq4BlOtHJye8dzjJX8y8BCLsgtulB2ZBsmpIUPE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8HPzBaXhvmeKcQbXYxOmCat0gbU2TJhEz3tEPvSj6rhU7AijeHIdjPGIiARl8U+qrdRz0TJikBOFpiTy1gllmCQjt5XCc4yfGEd7jU2xoi6qdI1U7EZ+n8ITKs63IUfrz4raDwoe+C/4ModyKCw3vWUnqWBrWl941Iy9rYg6SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W0EGxl8O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qa2hWaD3"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5677dTXl000853;
-	Mon, 7 Jul 2025 09:05:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=JZAVqz
-	z+/AYNM7plaVwJE/hKu2L5xVYkSAq/22T+dRw=; b=qa2hWaD3ZicKqqRO+BzHmO
-	sK5lcFFhK40+tsqgqR3bQb+Ow0rSqVVxLn9uTLW+V3G4QXQ/v6RtkzWv0cgGmqI5
-	7/SqNTHTS2JZVZC0tGnovv92Dw7dIuKWtC5znYHo5HNQr14wTBA1nQbZMn0aoTbd
-	2qUtPWW+WSUC+d3UMuOTZ+n8tZbL1jJHKaxn7zup9BURp5c9cVCiVipkN820BlhA
-	Gr2hM2NmBugLFHxn7c+qGNEhtcdoBLTOc1g4mf9l9FE9uuAEn/7hS1DGYEMt7CjG
-	ErT6ShZJpTWw33+VWWTlwv3LbZ4fBy9zkPz7KJ+uRU7NLcvtFbMEF1z1Dht6BBQw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puqn03x8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 09:05:44 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5678vftv009106;
-	Mon, 7 Jul 2025 09:05:43 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puqn03x4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 09:05:43 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5674vWJi002860;
-	Mon, 7 Jul 2025 09:05:42 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qfvm57mh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Jul 2025 09:05:42 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56795eUb44171738
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Jul 2025 09:05:40 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C97D32004E;
-	Mon,  7 Jul 2025 09:05:40 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E05102004B;
-	Mon,  7 Jul 2025 09:05:38 +0000 (GMT)
-Received: from [9.109.215.252] (unknown [9.109.215.252])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Jul 2025 09:05:38 +0000 (GMT)
-Message-ID: <132949bc-f901-40e6-a34c-d1d67d03d8b6@linux.ibm.com>
-Date: Mon, 7 Jul 2025 14:35:38 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W0EGxl8O"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 566NR97g023446
+	for <linux-kernel@vger.kernel.org>; Mon, 7 Jul 2025 09:07:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=2M3NRLxqF+ccW20K1HLg5RAl
+	uxCezcoEWGabcXTrS4Y=; b=W0EGxl8OlDx/66dFOGPcYOTy+HP863eRChCHK88s
+	lqA/lBYvF7tGSO8drLynCVWan8+9IMv6BAFiZPNNyhXFmDWw5tC5tPhGqF1eMAtJ
+	kCEkc7senHsc3mn0ccnwgS4ndEPkz/1/OHA7mcGItMHzo1vEtT/b8A1q+cXtk4P5
+	LbyKqKFR2pCJDgHtw6GjcAmX4IA9mB+UYk6oxbkj6WVUggPi7nOqEnFdqOsrqmd/
+	5npKvpCGnYkbrS+Hkbh4ZUwKI4gEQPT1S92tP+mCXid6mwjJLRzI/pqE/yuPZ7Hq
+	Y/OL1h5rSPJtcaBmdUZJUUIDbv2uGzTPyjN1v9uF6TYC4w==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47psdqm01q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 09:07:08 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7ceb5b5140eso399307485a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:07:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751879228; x=1752484028;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2M3NRLxqF+ccW20K1HLg5RAluxCezcoEWGabcXTrS4Y=;
+        b=svyXnsF2i1kWRP08iBvxDZNHYTNH098gGUTLXvvXaaBin+FXiQaXro7QWfw0ByMWL3
+         rrxPfQM14ZJKZlY8EaF+FMAm5sJIcVyhJ1W8XFU82N1CKD0d37ugHdIYGWLkaOoehOfF
+         7MCAzIfT456Ws5+4481/O6dw6RIsK42sEUpdWmIBDphlmjkQdZmti7LXKAvjdlXO31sX
+         BXa4tCLdMl+V4hMMWZlSrNhxWYD2IbbF2KD2vxfA2ieBcUApK00ad6B7eAgcWm/4DMQ8
+         f/WqF9lJtf85iJ0SW9Qqyh2L2waF87oXNa1ALeQs1VDngpw0O929wCxV69uH6q0+wAMV
+         Teyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVu3nqPO7ubqylsOjjOx9EQTwcp2OzQBcCdH52bGLjS3YAQvcKb+e1i7irYIlBULDrSdOGAEzB2V42N1Ek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZVBOeR/ICADcCJviewpAHXTAM1GFEIeGrZlY/60VebjE1dQqY
+	cc14MdiXQs6VQMSuS74ULDIevjf+yc5AdUXVsEJHT1TdMntwE6lnH1miK6CK6nlvbTUt88XYqk2
+	JBCma3Aq2xXClJH52VPSRntZFkbipz6vy2LOJgtBv2fpVgo5GSPRTyn5qZViXbGta46Y=
+X-Gm-Gg: ASbGnct0e9mbpgn3JrBHQWYZdfwI//+nV7NqKl/9o00+v9/ApGBHkmFu10yNYky0noh
+	oS+1CTQHfxDCJGEfAYFZD7nHnS+08QC+syraFqJJm+ZgQnUlWasEg5Dmo2G/bnBS1IzYtTm8uLd
+	yXnscTnYyO1AWLUll9gTq332hCF99q2/Gm1tUaAG/3pINc6rKbiTsTjdGOFm2FLDUM08XTKDy89
+	ZXIZIxGvFqNrZrzsjEvNJMKU1ZrX5CG5xgMt49Qvn7NiAa3Tu/0pusyxYXm9NcNv8ZXUCKIjU5/
+	2BQWJJUpHqDQXuaRo4+Yf/UPoad7Jux8W6/z97wmd5Bs2c7w2snmn+c=
+X-Received: by 2002:a05:620a:2949:b0:7d5:c317:f656 with SMTP id af79cd13be357-7d5efcbee2emr958580485a.18.1751879227865;
+        Mon, 07 Jul 2025 02:07:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6aD5tvb/dCyF6gQiMcQ+/KS1dIVJbshrVTbBQFRpZDKpCPBqDRVXm63NJT/XXUHJchE6ljQ==
+X-Received: by 2002:a05:620a:2949:b0:7d5:c317:f656 with SMTP id af79cd13be357-7d5efcbee2emr958575985a.18.1751879227344;
+        Mon, 07 Jul 2025 02:07:07 -0700 (PDT)
+Received: from trex (97.red-79-144-186.dynamicip.rima-tde.net. [79.144.186.97])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b47285dc08sm9696139f8f.98.2025.07.07.02.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:07:06 -0700 (PDT)
+From: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
+X-Google-Original-From: Jorge Ramirez <JorgeRamirez-Ortiz>
+Date: Mon, 7 Jul 2025 11:06:58 +0200
+To: Vikash Garodia <quic_vgarodia@quicinc.com>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>, krzk+dt@kernel.org,
+        bryan.odonoghue@linaro.org, quic_dikshita@quicinc.com,
+        mchehab@kernel.org, robh@kernel.org, conor+dt@kernel.org,
+        konradybcio@kernel.org, andersson@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] media: dt-bindings: venus: Add qcm2290 dt schema
+Message-ID: <aGuOMrjfQBNYAjmF@trex>
+References: <20250626135931.700937-1-jorge.ramirez@oss.qualcomm.com>
+ <20250626135931.700937-2-jorge.ramirez@oss.qualcomm.com>
+ <76492de3-c200-535a-aa1b-c617ba6146f1@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/12] sched: Address schbench regression
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com, clm@meta.com
-References: <20250702114924.091581796@infradead.org>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250702114924.091581796@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=FZ43xI+6 c=1 sm=1 tr=0 ts=686b8de8 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=UHm0IdFZaVUJiL6fVWQA:9 a=QEXdDO2ut3YA:10
- a=1CNFftbPRP8L7MoqJWF3:22
-X-Proofpoint-GUID: ougA__xWWPS4DCTZ6TDn_5ps-SMUei_1
-X-Proofpoint-ORIG-GUID: tl33qC09_1RfxV1n0ziFoxiIh_bNd3ur
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA1MCBTYWx0ZWRfXxf4a9Mg+/4O8 vqbcaKoDnln48vflMaPwRT6gP1EhaT3449S+8tI0VydklK7Vc1kwmZIqqcQi2i1S5KzQpvBfJQQ 9ZYu/tgHfXOVHMRyyENyG8Cb5IZwSEmG6xqWiUiWT0STmxA+Yu2N1tTG8h5mZUeEaTIbCMgIw3d
- 4kdNWTlm6xGaL9lHIzNn/fcv4wQ/Tu/PrCp2A+/6pOcDPi/LWlaofAiLAYhqqK6DAmBMMF571wP eVWkZ4Axbo2hJsn/9sgh+OmkE3UQVtakm3ovrVONUBIPzYkQ25wCYHY1PT7JAzju1vF5dq9gcN/ 5KCFKlW3YhCDFETEuMh7MPNENf+uR1P60eDv/ewfLTObywn5/n7MHdz7ojrLPz0s1JanqTIMcoS
- 48sPjKm2A9c97PAH4Tkp3iECxLKcZisDwAyfUTuJHhuaC4F/05PCqFeo9TvCxkzaxT+rMajD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76492de3-c200-535a-aa1b-c617ba6146f1@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=ffSty1QF c=1 sm=1 tr=0 ts=686b8e3c cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=oX6B8lV6/A+qF9mARCc04Q==:17
+ a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=gEfo2CItAAAA:8 a=EUspDBNiAAAA:8
+ a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=JD67tWt7rTSO11IQpAQA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=sptkURWiP4Gy88Gu7hUp:22 a=cvBusfyB2V15izCimMoJ:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 9RnnNpyFmGWrD2Yuj6MYY4iEn6aZSluU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA1MiBTYWx0ZWRfXxNBFVRwLWHbP
+ LlYXXbpD6/g0gz3dPqVQPF0W875rQlZ6Ppm5M2/M2D73PMV8yuc7w0wuj7+JX41+T8tUtcRnjMI
+ e0RXZJVibmZfIC5GIH/kKT7p0qV75bAm1kB3ljSsoPOIKi1SFdGgAh9H3HRpNCEXD5H2H/4pb3S
+ ZOSo4xJzcNMqAxJ1Lv0t3Qn29+oclO+x5gIGpws7mb71P1AVNP0PnIfyXHCl6Uq6/Q9Nv8jqH8X
+ RnecrGK9xhOCrw2ys0kePBGnV+gI9LknEtAgbqKmvFgYXcgB/a6QEKgnJ84QbdERGACr3IskhaE
+ 3aPQyat6voMeMFfghyyQrO0yaXP5qmPvT7QM6usggY1p/iXPj6ZgkXQ4rlkS4vwf0QSquOWsBag
+ bUV5D/545yN34az8eI9UzCnKDer6M+XrpQZdIu5KOMQtsGrCv8qEeiPeKo2vXzt7woACNsrw
+X-Proofpoint-GUID: 9RnnNpyFmGWrD2Yuj6MYY4iEn6aZSluU
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-07_01,2025-07-07_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=628 clxscore=1011
- spamscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507070050
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070052
 
-
-
-On 7/2/25 17:19, Peter Zijlstra wrote:
-> Hi!
+On 27/06/25 17:36:43, Vikash Garodia wrote:
 > 
-> Previous version:
+> On 6/26/2025 7:29 PM, Jorge Ramirez-Ortiz wrote:
+> > Add a schema for the venus video encoder/decoder on the qcm2290.
+> > 
+> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > ---
+> >  .../bindings/media/qcom,qcm2290-venus.yaml    | 127 ++++++++++++++++++
+> >  1 file changed, 127 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/qcom,qcm2290-venus.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/qcom,qcm2290-venus.yaml b/Documentation/devicetree/bindings/media/qcom,qcm2290-venus.yaml
+> > new file mode 100644
+> > index 000000000000..a9f89b545334
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/qcom,qcm2290-venus.yaml
+> > @@ -0,0 +1,127 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/qcom,qcm2290-venus.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm QCM2290 Venus video encode and decode accelerators
+> > +
+> > +maintainers:
+> > +  - Vikash Garodia <quic_vgarodia@quicinc.com>
+> > +
+> > +description:
+> > +  The Venus AR50_LITE IP is a video encode and decode accelerator present
+> > +  on Qualcomm platforms
+> > +
+> > +allOf:
+> > +  - $ref: qcom,venus-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: qcom,qcm2290-venus
+> > +
+> > +  power-domains:
+> > +    maxItems: 3
+> > +
+> > +  power-domain-names:
+> > +    items:
+> > +      - const: venus
+> > +      - const: vcodec0
+> > +      - const: cx
+> > +
+> > +  clocks:
+> > +    maxItems: 6
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: core
+> > +      - const: iface
+> > +      - const: bus
+> > +      - const: throttle
+> > +      - const: vcodec0_core
+> > +      - const: vcodec0_bus
+> > +
+> > +  iommus:
+> > +    minItems: 1
+> > +    maxItems: 5
+> 2 should be good to support non secure usecases. 5 not needed.
+
+ok
+
+> > +
+> > +  interconnects:
+> > +    maxItems: 2
+> > +
+> > +  interconnect-names:
+> > +    items:
+> > +      - const: video-mem
+> > +      - const: cpu-cfg
+> > +
+> > +  operating-points-v2: true
+> > +  opp-table:
+> > +    type: object
+> > +
+> > +required:
+> > +  - compatible
+> > +  - power-domain-names
+> > +  - iommus
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/clock/qcom,gcc-qcm2290.h>
+> > +    #include <dt-bindings/interconnect/qcom,qcm2290.h>
+> > +    #include <dt-bindings/interconnect/qcom,rpm-icc.h>
+> > +    #include <dt-bindings/power/qcom-rpmpd.h>
+> > +
+> > +    venus: video-codec@5a00000 {
+> > +        compatible = "qcom,qcm2290-venus";
+> > +        reg = <0x5a00000 0xf0000>;
+> > +        interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +        power-domains = <&gcc GCC_VENUS_GDSC>,
+> > +                        <&gcc GCC_VCODEC0_GDSC>,
+> > +                        <&rpmpd QCM2290_VDDCX>;
+> > +        power-domain-names = "venus",
+> > +                             "vcodec0",
+> > +                             "cx";
+> > +        operating-points-v2 = <&venus_opp_table>;
+> > +
+> > +        clocks = <&gcc GCC_VIDEO_VENUS_CTL_CLK>,
+> > +                 <&gcc GCC_VIDEO_AHB_CLK>,
+> > +                 <&gcc GCC_VENUS_CTL_AXI_CLK>,
+> > +                 <&gcc GCC_VIDEO_THROTTLE_CORE_CLK>,
+> > +                 <&gcc GCC_VIDEO_VCODEC0_SYS_CLK>,
+> > +                 <&gcc GCC_VCODEC0_AXI_CLK>;
+> > +        clock-names = "core",
+> > +                       "iface",
+> > +                       "bus",
+> > +                       "throttle",
+> > +                       "vcodec0_core",
+> > +                       "vcodec0_bus";
+> > +
+> > +        memory-region = <&pil_video_mem>;
+> > +        iommus = <&apps_smmu 0x860 0x0>,
+> > +                 <&apps_smmu 0x880 0x0>,
+> > +                 <&apps_smmu 0x861 0x04>,
+> > +                 <&apps_smmu 0x863 0x0>,
+> > +                 <&apps_smmu 0x804 0xE0>;
+> update this accordingly.
+> > +
+> > +        interconnects = <&mmnrt_virt MASTER_VIDEO_P0 RPM_ALWAYS_TAG
+> > +                         &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>,
+> > +                        <&bimc MASTER_APPSS_PROC RPM_ACTIVE_TAG
+> > +                         &config_noc SLAVE_VENUS_CFG RPM_ACTIVE_TAG>;
+> > +        interconnect-names = "video-mem",
+> > +                             "cpu-cfg";
+> > +
+> > +        venus_opp_table: opp-table {
+> > +            compatible = "operating-points-v2";
+> > +
+> > +            opp-133000000 {
+> > +                opp-hz = /bits/ 64 <133000000>;
+> > +                required-opps = <&rpmpd_opp_low_svs>;
+> > +            };
+> This value is incorrect, fix it to 133330000.
+> > +            opp-240000000 {
+> > +                opp-hz = /bits/ 64 <240000000>;
+> > +                required-opps = <&rpmpd_opp_svs>;
+> Do you see other corners in the reference catalog as well, not just the
+> downstream code ? OR did you limit this as the usecase do not demand higher corner ?
+
+there was an internal AR50_LITE presentation where only these two
+claimed to be supported - all of the others were not. so I went for the
+most restrictive option (ie, this one).
+
+how do you want me to proceed then? should I just use IPCAT, or downstream?
+
+
 > 
->    https://lkml.kernel.org/r/20250520094538.086709102@infradead.org
-> 
-> 
-> Changes:
->   - keep dl_server_stop(), just remove the 'normal' usage of it (juril)
->   - have the sched_delayed wake list IPIs do select_task_rq() (vingu)
->   - fixed lockdep splat (dietmar)
->   - added a few preperatory patches
-> 
-> 
-> Patches apply on top of tip/master (which includes the disabling of private futex)
-> and clm's newidle balance patch (which I'm awaiting vingu's ack on).
-> 
-> Performance is similar to the last version; as tested on my SPR on v6.15 base:
->
-
-
-Hi Peter,
-Gave this a spin on a machine with 5 cores (SMT8) PowerPC system.
-
-I see significant regression in schbench. let me know if i have to test different
-number of threads based on the system size.
-Will go through the series and will try a bisect meanwhile.
-
-
-schbench command used and varied 16,32,64,128 as thread groups.
-./schbench -L -m 4 -M auto -n 0 -r 60 -t <thread_groups>
-
-
-base: commit 8784fb5fa2e0042fe3b1632d4876e1037b695f56 (origin/master, origin/HEAD)
-Merge: 11119b0b378a 94b59d5f567a
-Author: Borislav Petkov (AMD) <bp@alien8.de>
-Date:   Sat Jul 5 19:24:35 2025 +0200
-
-     Merge irq/drivers into tip/master
-
-
-====================================
-16 threads   base       base+series
-====================================
-                              
-Wakeup Latencies percentiles (usec) runtime 30 (s)
-50.0th:       7.20,      12.40(-72.22)
-90.0th:      14.00,      32.60(-132.86)
-99.0th:      23.80,      56.00(-135.29)
-99.9th:      33.80,      74.80(-121.30)
-
-RPS percentiles (requests) runtime 30 (s)
-20.0th:  381235.20,  350720.00(-8.00)
-50.0th:  382054.40,  353996.80(-7.34)
-90.0th:  382464.00,  356044.80(-6.91)
-
-====================================
-32 threads   base       base+series
-====================================
-Wakeup Latencies percentiles (usec) runtime 30 (s)
-50.0th:       9.00,      47.60(-428.89)
-90.0th:      19.00,     104.00(-447.37)
-99.0th:      32.00,     144.20(-350.62)
-99.9th:      46.00,     178.20(-287.39)
-
-RPS percentiles (requests) runtime 30 (s)
-20.0th:  763699.20,  515379.20(-32.52)
-50.0th:  764928.00,  519168.00(-32.13)
-90.0th:  766156.80,  530227.20(-30.79)
-
-
-====================================
-64 threads   base       base+series
-====================================
-Wakeup Latencies percentiles (usec) runtime 30 (s)
-50.0th:      13.40,     112.80(-741.79)
-90.0th:      25.00,     216.00(-764.00)
-99.0th:      38.40,     282.00(-634.38)
-99.9th:      60.00,     331.40(-452.33)
-
-RPS percentiles (requests) runtime 30 (s)
-20.0th: 1500364.80,  689152.00(-54.07)
-50.0th: 1501184.00,  693248.00(-53.82)
-90.0th: 1502822.40,  695296.00(-53.73)
-
-
-====================================
-128 threads   base       base+series
-====================================
-Wakeup Latencies percentiles (usec) runtime 30 (s)
-50.0th:      22.00,     168.80(-667.27)
-90.0th:      43.60,     320.60(-635.32)
-99.0th:      71.40,     395.60(-454.06)
-99.9th:     100.00,     445.40(-345.40)
-
-RPS percentiles (requests) runtime 30 (s)
-20.0th: 2686156.80, 1034854.40(-61.47)
-50.0th: 2730393.60, 1057587.20(-61.27)
-90.0th: 2763161.60, 1084006.40(-60.77)
-
+> Regards,
+> Vikash
+> > +            };
+> > +        };
+> > +    };
