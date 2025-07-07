@@ -1,46 +1,43 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1413220F2D;
-	Mon,  7 Jul 2025 07:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE111E5B88;
+	Mon,  7 Jul 2025 07:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873886; cv=none; b=qiJt+/3VZ502xl4tmVbVuMNesUgVL3sy6hRjfXpi1bG5ocVkZoNA4zZH3KYYxYDC6oTovktdtTkqb5m/im/CQPVT1uDmp0fdrCFjMbuGzZxfJBqfwikBnG2Ss74HG14ZIvEY/SFN0m9qdOG2fp7Q0HbYEMWxU4D2M+Dhta1l3uc=
+	t=1751873977; cv=none; b=EgSyf15KDSfYIelH+g/zV/sc3cV9N3bFFoMlXxmSrtMYOEcOizQ09shACfBVhP5fPLCeJBdELqpqvUvqIrDYD2NM4D6273sDAQLZKm0H1S+6BauWjW1EXTFl5qGtAv6Wr9KfDZ2Oh8Z2AQqqE3kzQNCfLHsb4Wm+UK8+FWPOBMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873886; c=relaxed/simple;
-	bh=n4UW7ZoSq762p2vsAB0ks/IJ++q46OJO7BcDrp5Hjvw=;
+	s=arc-20240116; t=1751873977; c=relaxed/simple;
+	bh=itVQ6V0Mr9OovVSe2MWKuCPuJjDkX6YRyGMqSSgLTOc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mWuhN04pFcPy7n+QBWU+LbdfbbsXVO06zFjaBgo39Zul9P+3yVXx+MVZ/y8ugchLDRoiKChb3fajpT4NtvKQgIDolOHFR2TBJId4d2UmwwEZI67XofbNRjlN/fqBeIJjdTZXtxvhWgVi0H6XQySWLCtbrM7FzpghfNJCmrQC49Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=jJvp+wqE; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="jJvp+wqE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=7346OZHTuSrLm7WiDgkYI1AvDhjuIewBzgFjJ+P/eQs=;
-	b=jJvp+wqEORUgf5bHI7laU///x9HXRZv0yPGdDonkb2PfI/m+wW2621MG6aroIJ
-	Kr4+4P1HtNHIWtDcpf4AwEH5H5l8e/nEtXa1POqi+x82vT19GmWgjOezD2gS3oiQ
-	fuKB6fl6IjvNJctcq+BxQgOBtYzmROYohhwbvKeTdst/E=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDXX_YmeWtoME88AA--.37050S3;
-	Mon, 07 Jul 2025 15:37:12 +0800 (CST)
-Date: Mon, 7 Jul 2025 15:37:10 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v1] arm64: dts: freescale: imx8mm-verdin: Keep LDO5
- always on
-Message-ID: <aGt5JoocafXbX1cX@dragon>
-References: <20250623132545.111619-1-francesco@dolcini.it>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fa19oG0O1RVJcZi227x1Vbdo/dw/RmKyLFEyDK6p3N0gg7SPBCAD8mGkM8xaRnrtqA5DarqoFwML9vyn6u/ZFr7YJzFmXFmMLqrXFrSh5oUEtyeE/NhOLKmQd19MqNYxd7nkm6oCFspFTbCEqYQeqSF+C2/9lrvCXxq05Up6r9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=114.132.62.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: zesmtpsz7t1751873865tf5aee820
+X-QQ-Originating-IP: mJw/heq6b2Ta6GtlIIN+F3vmI3qSS3RNqcxng9NIU/M=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 07 Jul 2025 15:37:43 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3322818785866076011
+Date: Mon, 7 Jul 2025 15:37:43 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/15] net: rnpgbe: Add get_capability mbx_fw ops support
+Message-ID: <CB185D75E8EDC84A+20250707073743.GA164527@nic-Precision-5820-Tower>
+References: <20250703014859.210110-1-dong100@mucse.com>
+ <20250703014859.210110-5-dong100@mucse.com>
+ <57497e14-3f9a-4da8-9892-ed794aadbf47@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,36 +46,126 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623132545.111619-1-francesco@dolcini.it>
-X-CM-TRANSID:Mc8vCgDXX_YmeWtoME88AA--.37050S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4rur4rAFWUXryftFyDGFg_yoWDtwc_CF
-	ySqr4xWw1xGFWjy3yqkF4UZFW8Kas3tr97tayIgrZxJF9xZay3XFWktFn5ZrnxGanxur98
-	Zw13t3saq3s7WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj7DGUUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIAhdwmhreSi2IQAA3y
+In-Reply-To: <57497e14-3f9a-4da8-9892-ed794aadbf47@lunn.ch>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Nc4Sv39/e83Wv/xSPCBI764BfkQBkT4hm9ezADdd7z/A2YTleb4RHIdg
+	X6CL3Xr8IsxwzEwNlqkt+2PM/L7tdj7omGDntaKG4PGMcYtYGAdxolutctGPTY4cDgbwjto
+	uN1cYczd8CIiri6UCfAdXOxjtggxEfnoHW0KJgPpbPmAEo2jwkNXNC7kvMOGUP8tyZ8xdVy
+	AOO8WFGJof2vSX+Msy/OcsP4F7dbaT0CMUOffiPgH0OzaHn2JusoWh/bH0JdGsxhvxiBCiz
+	Z1y+Bgtp/Zio9ppkib3X3iageHfK+etYLMwDdPnO2AY4pIIoc1hEd+sG8EldLT6H7swlnr8
+	mltF1PmFD5RCjVXFPc0yuzuRPBCeCUMdkL94jtFr0hYpZi3N+JLHpJq78OBelnJaRdBo8cP
+	tw7OgQaSv4HvrjqgzTPTh0mBlfGoBcgpKd93ItcbgXlFM/HrrNfFhu/6tgIz2caykgH0Wzx
+	7YUjx/0GSy73zNM8mBAROngRplUKDPLaG7PT3K10uPdOuh10s2C7J8EqT6uv8X7zLQWjtwB
+	a/3aRBTXhNKOhWANHug3puXbTyMDEi/+KCWSfl01IV7w1xWyX0c3j+0wa77IIEBSSD2BhfT
+	yHJ8KO4yelDhwb9SRas6pf/nS6M5mG6Ktpnb9Pm+8EMVxFi7RygSgD12SIkuseGFTYeLC0y
+	S/FpN5AwRlVoMY49IvMzerRc5x0Gm5ofdFMEsBu1lRF+5dg4pHt9vltW8zNTHuqGnWGSAHm
+	8aqCT/obbwKJvEvW4uzh6Ivwx4AErVu/FV+hzxpA0z9AgNtOrXGFfET3l6OOknTrtdh2X8P
+	0dF6JWn004Mz3jWydAomGKzY1ynVBdIp4eVjN303P+Tc+g8lXASgQRT5hA0tWSTFrIj52Sv
+	mymuDIrHW6pUPKbfc0uBodRH2fNszFzdpLYwfMfqToff/HoGUcrCSOAv20u2VxT3AaHrF7A
+	xSqmTwEp8D/2Sc6cgwE0cOOyaXcId2TUMmnEbETRszNoAnoGv/TlB8XSB
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Jun 23, 2025 at 03:25:45PM +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Fri, Jul 04, 2025 at 08:25:12PM +0200, Andrew Lunn wrote:
+> > +/**
+> > + * mucse_fw_send_cmd_wait - Send cmd req and wait for response
+> > + * @hw: Pointer to the HW structure
+> > + * @req: Pointer to the cmd req structure
+> > + * @reply: Pointer to the fw reply structure
+> > + *
+> > + * mucse_fw_send_cmd_wait sends req to pf-cm3 mailbox and wait
+> > + * reply from fw.
+> > + *
+> > + * Returns 0 on success, negative on failure
+> > + **/
+> > +static int mucse_fw_send_cmd_wait(struct mucse_hw *hw,
+> > +				  struct mbx_fw_cmd_req *req,
+> > +				  struct mbx_fw_cmd_reply *reply)
+> > +{
+> > +	int err;
+> > +	int retry_cnt = 3;
+> > +
+> > +	if (!hw || !req || !reply || !hw->mbx.ops.read_posted)
 > 
-> LDO5 regulator is used to power the i.MX8MM NVCC_SD2 I/O supply, that is
-> used for the SD2 card interface and also for some GPIOs.
+> Can this happen?
 > 
-> When the SD card interface is not enabled the regulator subsystem could
-> turn off this supply, since it is not used anywhere else, however this
-> will also remove the power to some other GPIOs, for example one I/O that
-> is used to power the ethernet phy, leading to a non working ethernet
-> interface.
+> If this is not supposed to happen, it is better the driver opps, so
+> you get a stack trace and find where the driver is broken.
 > 
-> [   31.820515] On-module +V3.3_1.8_SD (LDO5): disabling
-> [   31.821761] PMIC_USDHC_VSELECT: disabling
-> [   32.764949] fec 30be0000.ethernet end0: Link is Down
+Yes, it is not supposed to happen. So, you means I should remove this
+check in order to get opps when this condition happen?
+> > +		return -EINVAL;
+> > +
+> > +	/* if pcie off, nothing todo */
+> > +	if (pci_channel_offline(hw->pdev))
+> > +		return -EIO;
 > 
-> Fix this keeping the LDO5 supply always on.
+> What can cause it to go offline? Is this to do with PCIe hotplug?
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support for verdin imx8m mini")
-> Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Yes, I try to get a PCIe hotplug condition by 'pci_channel_offline'.
+If that happens, driver should never do bar-read/bar-write, so return
+here.
+> > +
+> > +	if (mutex_lock_interruptible(&hw->mbx.lock))
+> > +		return -EAGAIN;
+> 
+> mutex_lock_interruptable() returns -EINTR, which is what you should
+> return, not -EAGAIN.
+> 
+Got it, I should return '-EINTR' here.
+> > +
+> > +	err = hw->mbx.ops.write_posted(hw, (u32 *)req,
+> > +				       L_WD(req->datalen + MBX_REQ_HDR_LEN),
+> > +				       MBX_FW);
+> > +	if (err) {
+> > +		mutex_unlock(&hw->mbx.lock);
+> > +		return err;
+> > +	}
+> > +
+> > +retry:
+> > +	retry_cnt--;
+> > +	if (retry_cnt < 0)
+> > +		return -EIO;
+> > +
+> > +	err = hw->mbx.ops.read_posted(hw, (u32 *)reply,
+> > +				      L_WD(sizeof(*reply)),
+> > +				      MBX_FW);
+> > +	if (err) {
+> > +		mutex_unlock(&hw->mbx.lock);
+> > +		return err;
+> > +	}
+> > +
+> > +	if (reply->opcode != req->opcode)
+> > +		goto retry;
+> > +
+> > +	mutex_unlock(&hw->mbx.lock);
+> > +
+> > +	if (reply->error_code)
+> > +		return -reply->error_code;
+> 
+> The mbox is using linux error codes? 
+> 
+It is used only between driver and fw, yay be just samply like this: 
+0     -- no error
+not 0 -- error
+So, it is not using linux error codes.
+> > +#define FLAGS_DD BIT(0) /* driver clear 0, FW must set 1 */
+> > +/* driver clear 0, FW must set only if it reporting an error */
+> > +#define FLAGS_ERR BIT(2)
+> > +
+> > +/* req is little endian. bigendian should be conserened */
+> > +struct mbx_fw_cmd_req {
+> > +	u16 flags; /* 0-1 */
+> > +	u16 opcode; /* 2-3 enum GENERIC_CMD */
+> > +	u16 datalen; /* 4-5 */
+> > +	u16 ret_value; /* 6-7 */
+> 
+> If this is little endian, please use __le16, __le32 etc, so that the
+> static analysers will tell you if you are missing cpu_to_le32 etc.
+> 
+> 	Andrew
+> 
+Got it, I will fix it.
 
-Applied, thanks!
-
+Thanks for your feedback.
