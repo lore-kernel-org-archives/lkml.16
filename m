@@ -1,122 +1,208 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E044DDA9
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC3CDDA9;
+	Mon,  7 Jul 2025 07:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872300; cv=none; b=Y3I/6KfIQcFHHNIE+/h067eBUvd9rcNd7ICaminKHXxkKbpjP44oO5QItkdz6d+GgBd5TCTya0dPOqqmUFiDTpWR2EVHNC2Ea3kw6IXXo3uUJjn5MUIY4RM1RgfBaMfgB5Ph6g1ms7U8CZv2oi3o3MLowJs83f8tMUoeK8zGbV8=
+	t=1751872305; cv=none; b=Yz9x2y4IMIpVB0oN+JS/9JRsy6rjQHBIfpJJt7+gokLkVy4/6VqxeeVJkFQPA/jo0TkOHN3FMZ+/kfxCvE2Nu2g6HwEyknZDzD8OutklE3lHuL0g9nSrLQNQ0vC0MCtsgxoQqD5pQcpRtWSqyczZ4v+/Ra2poAk4JxTDPx+TKVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751872300; c=relaxed/simple;
-	bh=FTbzH7sUYfIh5vRRzY4mEg4YlWyIJ80eJTsG4k14wUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=do1Z4xwhapXJHWmKwvuA1YauOEFzsrc4wT+PQhB0OZUGgdpEKtSJ8Md+cV+OAmz+1SqDMCCzFu4YB5O16SToajxtvCVJo0/oIFscgRJ++kx3xZ8Xb2CJ3AMIs2MZqQ1jbzpoYCDnzgEr97LyOjuTMghBhrkGvFudCaKuNt6HCz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Pg6HkEpv; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751872305; c=relaxed/simple;
+	bh=uLxeOM+etaHGUjx+2ZrAsCOdFcNwKHnHqHFH5hQN3hw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=oGFGOa6tXHpOSKV73CSrAKUVzPptVod7USSQppLJ47uMzg6zMW14/NBKE2zQVUoequOji1IgL3PDXnPv7LRhWXLYl8i4POgFD98eCs5MI4aOuLqqXurhUjIJRZ+0QyD/2QXdHfiP/pbQxlwi758C1FyR9KT9N2sEDh250+MV2HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j6+Jj5ZY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gvqer0NS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Pg6HkEpv"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a52874d593so2290799f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751872297; x=1752477097; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mhpmcEfpmP10cZ/KxQHb4VkQYn5Otwx0q5WEU7PxZY8=;
-        b=Pg6HkEpvuMF/npV98qcPqIvK9Mkg0Cefyiv8a08+si1+GMOKSRYRutgL6StZ0PGsE2
-         LCEQOUQhLiu1SRLXWUT+gMwbdXq7BiEqHjtHlsndUPmgY1ZtT844vEwy6hl0dQt7isrl
-         oELsNyinp7wdKQHQaxNxopsBhecMME31zARXA6Dx2ok7gFoDFAs33REC9fCDXvJEwrhw
-         uE8B8OL6t0lI37NP+IsNlrlmI1PbB9SIgKhL/PUxpEht1jrwcuA9YiXS4fGuiaaKKivY
-         U740XRg+2iyz7/7I/Jka1mNUpLvqGzYHQ8jf2H2ZUMKN2vXm3MzNTf7fEg6RWG1YspnH
-         BD3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751872297; x=1752477097;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mhpmcEfpmP10cZ/KxQHb4VkQYn5Otwx0q5WEU7PxZY8=;
-        b=LGPFopP2QIooCs7jvFTErIjgsU140e4OIo2UXP+yiQZRDSPqBmOiDvDB3YJPefvGdE
-         LxH9K6L4GvHNEuYNRyB4mmURfZmgpawyJEUuv+VYJzfIpTCDUvzfc9D/xrWifHPUmud7
-         6sD0rK+35hdzahPtKEVQpALGnX2DPwtlu+LDQKrC357Fng1W0d3BdO11OlIMhgK1Moas
-         sli6GCSQ/E1t1Z4nlRZUZjPFoqlKSfKewT3SOkFlRgxURS5wCHIfdDSpjTVr/BteDnRs
-         xkRq8WUeQm4dy1sNsRo4uXRUhHI295pxLQ+koV2ipbPj2DMC4ZUPIlGetbz+Dfn+UYRe
-         r8nw==
-X-Forwarded-Encrypted: i=1; AJvYcCX42Khjkk+ey4AJwHvJZW3XsPuC/KyaVR3tR7LWjB6Up2GWh7ToDSSGNezfgSSIic9dkgwmUYyquvgFNuc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoT/JNTL4diU4Xzqs4XpIbwind7MMf82swbnZShCgZyLF4NEUw
-	JI1CzETls1eXhKYl6OMAIIQZoYZZLbPHW93tu4Dy5uFGt5Hv+uIbJJk+4qOS4Ri9TLU=
-X-Gm-Gg: ASbGncst/P3NEqP1vKgH2ax79CEAlpcfvVZumdU6OajRSBFfMcz3ENBX+TkNZ6fisHJ
-	8x/vEkluShHc4VnDaXmcEqQSkBUDLpxj9G/7M5OQBAtsofKE++f7Qnvxo26+nGMm+/AFChzdDpj
-	NHFzBPrch8PRrFK5a0nMlttTyiRIBL9QIAQCzV5yYtz+b0gN9Ydyuu6vybOaevq1vLse8TgHkib
-	4RzC2H/b2GepIUNSTz/GZR7tXi98MY/0JddTeN2+uu6Px6t7T4bLPFKrvBGZNqtc/h5EmGT8X9y
-	xmf4MpLY9eV05avSAbQ88LQS2u23cWuuBpyL7ggv10ux9qn5vsQEjOIspB8ZCIzxApepDNBfCuE
-	=
-X-Google-Smtp-Source: AGHT+IH92dqetXit3ZJCizl1QYi+uzMQpWlbHYRZOw7IVfprOTQBcR+Z3r5aSrbsz/VpOdBwLgy7pQ==
-X-Received: by 2002:a05:6000:400a:b0:3a5:8d08:6239 with SMTP id ffacd0b85a97d-3b4964fed61mr9032469f8f.21.1751872296703;
-        Mon, 07 Jul 2025 00:11:36 -0700 (PDT)
-Received: from localhost (109-81-17-167.rct.o2.cz. [109.81.17.167])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454a9bdf038sm132858925e9.27.2025.07.07.00.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 00:11:36 -0700 (PDT)
-Date: Mon, 7 Jul 2025 09:11:35 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>
-Subject: Re: [RFC 2/7] mm/vmalloc: Support non-blocking GFP flags in
- alloc_vmap_area()
-Message-ID: <aGtzJyYPKA7Hn6kQ@tiehlicka>
-References: <20250704152537.55724-1-urezki@gmail.com>
- <20250704152537.55724-3-urezki@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j6+Jj5ZY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gvqer0NS"
+Date: Mon, 07 Jul 2025 07:11:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751872302;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NpgJ+V6JDK/jrHXe1NWBI7RzL9IjWRyxBHhjGPKrhVI=;
+	b=j6+Jj5ZYUmW+sxlXpaGqMbZLRpCJklt37ridmT//hdzk1jHhiQztHqiHWaHwxZ0PYtn1cj
+	ZoU2Tdj4Rwhtu9BFWFVXpEWNl5Lnv79ZF5js5sJjFw83XAGU+qupJmoToitfvQqimKZkzp
+	L5WZJs3JPyycLLo8GTqUOeQFKD7+HuReId4nBVEsUoje2v0KE5fJNBUTwEvSQQFRScUSSx
+	B972WmDaz4Qp+GxskIhN1F6ZhbV/pVAXtCSIxQ+u5GWXlpP7rzEEodtijze8kTdGkMAlyK
+	u8Xr2fnE2xcCWaP24gPCVKx25N361Y+qoYk4RoGTnmO7C14F1hbPeP71/sYifg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751872302;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NpgJ+V6JDK/jrHXe1NWBI7RzL9IjWRyxBHhjGPKrhVI=;
+	b=gvqer0NSgj8FypIgqqWnJ3haXaSlf0YsJM+oWlZJGghF4gYUztJpWoTcpQQRsEnbnWex6k
+	LK2uUmuof+N/fiDQ==
+From:
+ tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/ptp] vdso/gettimeofday: Add support for auxiliary clocks
+Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250701-vdso-auxclock-v1-12-df7d9f87b9b8@linutronix.de>
+References: <20250701-vdso-auxclock-v1-12-df7d9f87b9b8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704152537.55724-3-urezki@gmail.com>
+Message-ID: <175187230133.406.14766599474126564979.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 04-07-25 17:25:32, Uladzislau Rezki wrote:
-[...]
-> @@ -2030,7 +2033,8 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  	 */
->  	va = node_alloc(size, align, vstart, vend, &addr, &vn_id);
->  	if (!va) {
-> -		gfp_mask = gfp_mask & GFP_RECLAIM_MASK;
-> +		if (allow_block)
-> +			gfp_mask = gfp_mask & GFP_RECLAIM_MASK;
+The following commit has been merged into the timers/ptp branch of tip:
 
-I don't follow here and is this even correct?
+Commit-ID:     7893ea1006fcbb876ddf53ad4ebba4a054add4b2
+Gitweb:        https://git.kernel.org/tip/7893ea1006fcbb876ddf53ad4ebba4a054a=
+dd4b2
+Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+AuthorDate:    Tue, 01 Jul 2025 10:58:06 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 07 Jul 2025 08:58:54 +02:00
 
->  
->  		va = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
->  		if (unlikely(!va))
-> @@ -2057,8 +2061,14 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  	 * If an allocation fails, the error value is
->  	 * returned. Therefore trigger the overflow path.
->  	 */
-> -	if (IS_ERR_VALUE(addr))
-> +	if (IS_ERR_VALUE(addr)) {
-> +		if (!allow_block) {
-> +			kmem_cache_free(vmap_area_cachep, va);
-> +			return ERR_PTR(-ENOMEM);
+vdso/gettimeofday: Add support for auxiliary clocks
 
-I would suggest to add a comment for this. Something like
+Expose the auxiliary clocks through the vDSO.
 
-for blockable requests trigger the overflow paths because that
-relies on vmap_purge_lock mutex and blocking notifiers.
+Architectures not using the generic vDSO time framework,
+namely SPARC64, are not supported.
 
-> +		}
-> +
->  		goto overflow;
-> +	}
->  
->  	va->va_start = addr;
->  	va->va_end = addr + size;
-> -- 
-> 2.39.5
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250701-vdso-auxclock-v1-12-df7d9f87b9b8@l=
+inutronix.de
 
--- 
-Michal Hocko
-SUSE Labs
+---
+ include/vdso/datapage.h |  2 ++-
+ lib/vdso/gettimeofday.c | 49 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+index f4c96d9..0253303 100644
+--- a/include/vdso/datapage.h
++++ b/include/vdso/datapage.h
+@@ -5,6 +5,7 @@
+ #ifndef __ASSEMBLY__
+=20
+ #include <linux/compiler.h>
++#include <uapi/linux/bits.h>
+ #include <uapi/linux/time.h>
+ #include <uapi/linux/types.h>
+ #include <uapi/asm-generic/errno-base.h>
+@@ -46,6 +47,7 @@ struct vdso_arch_data {
+ #define VDSO_COARSE	(BIT(CLOCK_REALTIME_COARSE)	| \
+ 			 BIT(CLOCK_MONOTONIC_COARSE))
+ #define VDSO_RAW	(BIT(CLOCK_MONOTONIC_RAW))
++#define VDSO_AUX	__GENMASK(CLOCK_AUX_LAST, CLOCK_AUX)
+=20
+ #define CS_HRES_COARSE	0
+ #define CS_RAW		1
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index c383878..d6743ed 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -2,6 +2,7 @@
+ /*
+  * Generic userspace implementations of gettimeofday() and similar.
+  */
++#include <vdso/auxclock.h>
+ #include <vdso/datapage.h>
+ #include <vdso/helpers.h>
+=20
+@@ -74,7 +75,7 @@ static inline bool vdso_cycles_ok(u64 cycles)
+ static __always_inline bool vdso_clockid_valid(clockid_t clock)
+ {
+ 	/* Check for negative values or invalid clocks */
+-	return likely((u32) clock < MAX_CLOCKS);
++	return likely((u32) clock < CLOCK_AUX_LAST);
+ }
+=20
+ /*
+@@ -268,6 +269,48 @@ bool do_coarse(const struct vdso_time_data *vd, const st=
+ruct vdso_clock *vc,
+ 	return true;
+ }
+=20
++static __always_inline
++bool do_aux(const struct vdso_time_data *vd, clockid_t clock, struct __kerne=
+l_timespec *ts)
++{
++	const struct vdso_clock *vc;
++	u32 seq, idx;
++	u64 sec, ns;
++
++	if (!IS_ENABLED(CONFIG_POSIX_AUX_CLOCKS))
++		return false;
++
++	idx =3D clock - CLOCK_AUX;
++	vc =3D &vd->aux_clock_data[idx];
++
++	do {
++		/*
++		 * Open coded function vdso_read_begin() to handle
++		 * VDSO_CLOCK_TIMENS. See comment in do_hres().
++		 */
++		while ((seq =3D READ_ONCE(vc->seq)) & 1) {
++			if (IS_ENABLED(CONFIG_TIME_NS) && vc->clock_mode =3D=3D VDSO_CLOCKMODE_TI=
+MENS) {
++				vd =3D __arch_get_vdso_u_timens_data(vd);
++				vc =3D &vd->aux_clock_data[idx];
++				/* Re-read from the real time data page */
++				continue;
++			}
++			cpu_relax();
++		}
++		smp_rmb();
++
++		/* Auxclock disabled? */
++		if (vc->clock_mode =3D=3D VDSO_CLOCKMODE_NONE)
++			return false;
++
++		if (!vdso_get_timestamp(vd, vc, VDSO_BASE_AUX, &sec, &ns))
++			return false;
++	} while (unlikely(vdso_read_retry(vc, seq)));
++
++	vdso_set_timespec(ts, sec, ns);
++
++	return true;
++}
++
+ static __always_inline bool
+ __cvdso_clock_gettime_common(const struct vdso_time_data *vd, clockid_t cloc=
+k,
+ 			     struct __kernel_timespec *ts)
+@@ -289,6 +332,8 @@ __cvdso_clock_gettime_common(const struct vdso_time_data =
+*vd, clockid_t clock,
+ 		return do_coarse(vd, &vc[CS_HRES_COARSE], clock, ts);
+ 	else if (msk & VDSO_RAW)
+ 		vc =3D &vc[CS_RAW];
++	else if (msk & VDSO_AUX)
++		return do_aux(vd, clock, ts);
+ 	else
+ 		return false;
+=20
+@@ -433,6 +478,8 @@ bool __cvdso_clock_getres_common(const struct vdso_time_d=
+ata *vd, clockid_t cloc
+ 		 * Preserves the behaviour of posix_get_coarse_res().
+ 		 */
+ 		ns =3D LOW_RES_NSEC;
++	} else if (msk & VDSO_AUX) {
++		ns =3D aux_clock_resolution_ns();
+ 	} else {
+ 		return false;
+ 	}
