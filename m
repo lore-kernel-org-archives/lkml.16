@@ -1,210 +1,264 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2041E28B7EC;
-	Mon,  7 Jul 2025 09:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60075286412;
+	Mon,  7 Jul 2025 09:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751880277; cv=none; b=g5f8v6SzyKEgsOj4x9OycQ9MSGYU5iOI9z2pElXYo0FzdUq94Ne20K00gZCImzyl+LvGNsf59Z+buGrTBqtEIs6XXAP0KdP2lY5+SpR/BldQcQr7UQJ0JIVU0VNcUA+dA36iZKZSTeyWIeI9iyMG5qsPr7yVmhjqOlp6eOAv6mI=
+	t=1751880341; cv=none; b=ENJRSlE2Et4vGaU9qfo2JVqFzi0zIyvr3dIHc6rV7ErMP9z0InHFzVk/dRL8K2NdxMn7wM4BhcmNpHmpJuTIDC71g7IrdQzC3hIF8op0reEyU0T8H8AD3JvUbSz1PEdzmXQ7YYqeUPBB9sV2p8X83Q24t5NCoOPyjMyxW2xOqrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751880277; c=relaxed/simple;
-	bh=UhZONFmTnwgsncJPFXZXNmHXc56iX7sIdw1FP5OW8F8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uiqD2ka4ogi1Q5BAeeRkdPKnhePz4+B39wnh1Uwg4scvTV/Do6H5YZJKxN+4MMObS9a8s6IsamTUafxTxasvwoBRMaxJA40smAjJ/Z/VodZVQGqBVhg5624xbWW8QFonFvckpZghAvndg1Me+4K5SqN8X+aNQILa+Eaxwvs7HcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=J4ja/z0g; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1751880341; c=relaxed/simple;
+	bh=kiu74TbM0Cl3ZxjxQf5ILMyGowXJ4logIX6ks4uEFoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B9VLv4pExNkHuqxXOwWCY+Szc0otC+CN2iKmbNduvxvRvH6jptDnXu4+aXUnhJFatjgr++sAqPzhQLuBsDh77kMa+EW2eEzkrKPNAR2tEwJcVgMrVz6Uw8QJcTEA+QFO8dv5o4nzME9ZDoGCZAqxy6sTbYW4E3ErRZHhB9/HTE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bRp95toe; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="J4ja/z0g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=W66/dbK4Xwfefk7OxFMLWKDsjpz1zv53LGHljDMha0g=;
-	b=J4ja/z0gMlVEeTQWzO56zWx5vjtxfAxkGz/Oz4FCye1bdJbp8FK15ugawAbhax
-	XYxHkXm1nDExGEQVlT7sGOWKIAZ9Bmx3C0fPvHB1tAJZtH/y6Zocj5L5YBhbwuEm
-	PKHvQaII3ABxCd/wCPl9V+0eG1Lcgdm8luuflM7B5aLng=
-Received: from [10.42.20.80] (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDnTyAzkmto5RUbDQ--.50855S2;
-	Mon, 07 Jul 2025 17:24:04 +0800 (CST)
-Message-ID: <a937f41f-2cee-459d-b94f-b7f979072f3e@163.com>
-Date: Mon, 7 Jul 2025 17:24:03 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRp95toe"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4538a2fc7ffso27356545e9.0;
+        Mon, 07 Jul 2025 02:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751880338; x=1752485138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uBfXlQ5Rh46iJk1Ot161EwZF/wssDqxpNViVgwXBrGk=;
+        b=bRp95toeDbgrwusQafmBZUEdXNv4ROiYYXc2+FAM8iyo9b0ezluL+H6FDANqa5bWBx
+         LR7fzL5MuVjKTUCkMkA9gWcJGwY/5DiSLTWjzGo8HWNNOwhN0Cr25nsfICj9uJbMTTLA
+         Z3EKfbHhm/LogfvdQMoFKfYv6d/l7yJXgVED2/rHxXjCGjSkAbELL2MzA+Sb7oTH22pI
+         uvGDU+XlRyiCKo4+VidVhZc1YqjtlBBR1DmWarCft8gHsHU+sNv4iXZ/wbYy6PTCyuN2
+         4fHZNq8fVfVCO3uUjyK2Xd5BSP7Us2yySOpHhvRomyG9N/jBVVqXDWSA8fGeWA7JkHtx
+         FlTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751880338; x=1752485138;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uBfXlQ5Rh46iJk1Ot161EwZF/wssDqxpNViVgwXBrGk=;
+        b=UpBfamRd3iB1QdUjfeyMdLm259ESIZlkrGixZW00Kv+JQgMC+WkVWyxyZBBIjMJPSN
+         jwKvKTFu1DuWnxEJXFMIXLEN64YVPYo0URF6LsvJ9+Y5eTdo94dxJ/EJb5HCn2vpD4tS
+         dTSZzEAtRRxrcOxP/84xDAy2mFv5r+bL0NMTzagwblK97pvva47kZysIebPQqndj1eXu
+         8EhT9DbCNkwzrXdeRtuP+c3WBE+5qEWdVb5dWx0k1xdxlOZzCzG39hRVSA/od5Bnt7Ir
+         a4zGr8e+AUuMPnS3fnxAyzNRvtMcY5v4AXlcVF+jQ8qqLfELXHLN2x90OznNzkkrbDvM
+         3u7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDLbqNDBSJ9qWZODTTBWbxwqqpMOgnY+inm0UPV3/aT9/UfyJS41cTie9uNow5rAAaIEGwgikdabA63u0=@vger.kernel.org, AJvYcCXL3J9fkWlyE524AjvywkE9kyz3/J335oUG7vFbQ2SWeBhje5HFvYP7mI8pXVD1kcv3i2w9aPXg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz0j1sySIhgfYUSWnDZ/5kQDS7gCgWy6dUedbapZuaLsEWIQEG
+	lnI7rvDBHUuHHRoeakgCHuLTRsEvyjZK1VQzgg1Ww1IQVhsB4uSSTBk=
+X-Gm-Gg: ASbGncvkjOCZqjhRE04u6p6IXGMg1P710TjUaakZhLDtai6xOwjWE6Tenw73wPxQST6
+	e5Vufa1oYj7cD9RnZGkIGfAGCZ1dW2VjH/zDFfZ8kZTND8ROToSRQA1Tyr4hevJSa5g5QBqHzjb
+	m/kqQFBPs4DVr98WaeK/tTTatM5t/UbrLW386Se52Y2IU/yoyhGrBQhyZEp/YY7ygD3XTK6KrU8
+	LwNOjThHG6Kszm7bMnYwKkJNQcR6C2glv11srKvxPZFXCqjEvCpqocY3c4wsyHUhLQwiYK+jmG2
+	76GiSMoexkGjbYYVuDmkeMmQu61xoQIaCKR7c3LTXyl8Y7GYjdcCEnFgCo/ZrLx9NvaygB6Ws3v
+	hZ8aXUCZa
+X-Google-Smtp-Source: AGHT+IGmJIakfH6RwdWQXAB2RSk4UIYPuqWeGj9ECYYOi5nFOPPfRxhO4I42se2wJJpaehcK/1mujA==
+X-Received: by 2002:a05:600c:1da0:b0:453:835a:db with SMTP id 5b1f17b1804b1-454b1f471fdmr96857885e9.4.1751880337364;
+        Mon, 07 Jul 2025 02:25:37 -0700 (PDT)
+Received: from phoenix.rocket.internal ([2a12:26c0:2205:8802:9bf5:fd10:aa7f:bd06])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454b1890626sm108671325e9.40.2025.07.07.02.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:25:36 -0700 (PDT)
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+To: anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com
+Cc: edumazet@google.com,
+	kuba@kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rui Salvaterra <rsalvaterra@gmail.com>
+Subject: [PATCH iwl-next] igc: demote register and ring dumps to debug
+Date: Mon,  7 Jul 2025 10:17:10 +0100
+Message-ID: <20250707092531.365663-1-rsalvaterra@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
- but not fixuped
-To: Thomas Zimmermann <tzimmermann@suse.de>, Helge Deller <deller@gmx.de>
-Cc: Peter Jones <pjones@redhat.com>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Shixiong Ou <oushixiong@kylinos.cn>
-References: <20250626094937.515552-1-oushixiong1025@163.com>
- <3b3feb03-c417-4569-b7b0-44565d7cce4f@suse.de>
-From: Shixiong Ou <oushixiong1025@163.com>
-In-Reply-To: <3b3feb03-c417-4569-b7b0-44565d7cce4f@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnTyAzkmto5RUbDQ--.50855S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtr4UuF43ZryfuFy3ur47twb_yoW7Ar4rpF
-	WfGFW3CF48Xrn7Gws8G3WDAF1fZr4kWFyqkFZxK3W8Ary7Ar1YvrnruryDury5ZrWkJF1x
-	tr4jyw1akF15CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UTbytUUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXAd5D2heWMK4AgADs4
 
+This is debug information, upon which the user is not expected to act. Output as
+such. This avoids polluting the dmesg with full register dumps at every link
+down.
 
-在 2025/6/27 17:13, Thomas Zimmermann 写道:
-> Hi
->
-> Am 26.06.25 um 11:49 schrieb oushixiong1025@163.com:
->> From: Shixiong Ou <oushixiong@kylinos.cn>
->>
->> [WHY]
->> On an ARM machine, the following log is present:
->> [    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, total 
->> 3072k
->> [    2.297884] amdgpu 0000:04:00.0: 
->> remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 0x100fffffff
->> [    2.297886] amdgpu 0000:04:00.0: 
->> remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 0x10101fffff
->> [    2.297888] amdgpu 0000:04:00.0: 
->> remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
->>
->> It show that the efifb framebuffer base is out of PCI BAR, and this
->> results in both efi-framebuffer and amdgpudrmfb co-existing.
->>
->> The fbcon will be bound to efi-framebuffer by default and cannot be 
->> used.
->>
->> [HOW]
->> Do not load efifb driver if PCI BAR has changed but not fixuped.
->> In the following cases:
->>     1. screen_info_lfb_pdev is NULL.
->>     2. __screen_info_relocation_is_valid return false.
->
-> Apart from ruling out invalid screen_info, did you figure out why the 
-> relocation tracking didn't work? It would be good to fix this if 
-> possible.
->
-> Best regards
-> Thomas
->
-I haven’t figure out the root cause yet.
+Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+---
 
-This issue is quite rare and might be related to the EFI firmware.
-However, I wonder if we could add some handling when no PCI resources 
-are found in screen_info_fixup_lfb(), as a temporary workaround for the 
-problem I mentioned earlier.
+This file hasn't been touched in over four years, it's probably from a time when
+the driver was under heavy development (started in 2018). Nevertheless, the
+status quo is positively annoying. :)
 
-Best regards
-Shixiong Ou
+ drivers/net/ethernet/intel/igc/igc_dump.c | 54 +++++++++++------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
->>
->> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
->> ---
->>   drivers/video/fbdev/efifb.c     |  4 ++++
->>   drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
->>   include/linux/screen_info.h     |  5 +++++
->>   3 files changed, 33 insertions(+)
->>
->> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
->> index 0e1bd3dba255..de8d016c9a66 100644
->> --- a/drivers/video/fbdev/efifb.c
->> +++ b/drivers/video/fbdev/efifb.c
->> @@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info *si, 
->> char *options)
->>     static inline bool fb_base_is_valid(struct screen_info *si)
->>   {
->> +    /* check whether fb_base has changed but not fixuped */
->> +    if (!screen_info_is_useful())
->> +        return false;
->> +
->>       if (si->lfb_base)
->>           return true;
->>   diff --git a/drivers/video/screen_info_pci.c 
->> b/drivers/video/screen_info_pci.c
->> index 66bfc1d0a6dc..ac57dcaf0cac 100644
->> --- a/drivers/video/screen_info_pci.c
->> +++ b/drivers/video/screen_info_pci.c
->> @@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
->>   static size_t screen_info_lfb_bar;
->>   static resource_size_t screen_info_lfb_res_start; // original start 
->> of resource
->>   static resource_size_t screen_info_lfb_offset; // framebuffer 
->> offset within resource
->> +static bool screen_info_changed;
->> +static bool screen_info_fixuped;
->>     static bool __screen_info_relocation_is_valid(const struct 
->> screen_info *si, struct resource *pr)
->>   {
->> @@ -24,6 +26,24 @@ static bool 
->> __screen_info_relocation_is_valid(const struct screen_info *si, stru
->>       return true;
->>   }
->>   +bool screen_info_is_useful(void)
->> +{
->> +    unsigned int type;
->> +    const struct screen_info *si = &screen_info;
->> +
->> +    type = screen_info_video_type(si);
->> +    if (type != VIDEO_TYPE_EFI)
->> +        return true;
->> +
->> +    if (screen_info_changed && !screen_info_fixuped) {
->> +        pr_warn("The screen_info has changed but not fixuped");
->> +        return false;
->> +    }
->> +
->> +    pr_info("The screen_info is useful");
->> +    return true;
->> +}
->> +
->>   void screen_info_apply_fixups(void)
->>   {
->>       struct screen_info *si = &screen_info;
->> @@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
->>           struct resource *pr = 
->> &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
->>             if (pr->start != screen_info_lfb_res_start) {
->> +            screen_info_changed = true;
->>               if (__screen_info_relocation_is_valid(si, pr)) {
->>                   /*
->>                    * Only update base if we have an actual
->>                    * relocation to a valid I/O range.
->>                    */
->>                   __screen_info_set_lfb_base(si, pr->start + 
->> screen_info_lfb_offset);
->> +                screen_info_fixuped = true;
->>                   pr_info("Relocating firmware framebuffer to offset 
->> %pa[d] within %pr\n",
->>                       &screen_info_lfb_offset, pr);
->>               } else {
->>                   pr_warn("Invalid relocating, disabling firmware 
->> framebuffer\n");
->>               }
->>           }
->> +    } else {
->> +        screen_info_changed = true;
->>       }
->>   }
->>   diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
->> index 923d68e07679..632cdbb1adbe 100644
->> --- a/include/linux/screen_info.h
->> +++ b/include/linux/screen_info.h
->> @@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct 
->> screen_info *si, struct resource *r,
->>   u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
->>     #if defined(CONFIG_PCI)
->> +bool screen_info_is_useful(void);
->>   void screen_info_apply_fixups(void);
->>   struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
->>   #else
->> +bool screen_info_is_useful(void)
->> +{
->> +    return true;
->> +}
->>   static inline void screen_info_apply_fixups(void)
->>   { }
->>   static inline struct pci_dev *screen_info_pci_dev(const struct 
->> screen_info *si)
->
+diff --git a/drivers/net/ethernet/intel/igc/igc_dump.c b/drivers/net/ethernet/intel/igc/igc_dump.c
+index c09c95cc5f70..e84d09ca8e67 100644
+--- a/drivers/net/ethernet/intel/igc/igc_dump.c
++++ b/drivers/net/ethernet/intel/igc/igc_dump.c
+@@ -98,13 +98,13 @@ static void igc_regdump(struct igc_hw *hw, struct igc_reg_info *reginfo)
+ 			regs[n] = rd32(IGC_TXDCTL(n));
+ 		break;
+ 	default:
+-		netdev_info(dev, "%-15s %08x\n", reginfo->name,
++		netdev_dbg(dev, "%-15s %08x\n", reginfo->name,
+ 			    rd32(reginfo->ofs));
+ 		return;
+ 	}
+ 
+ 	snprintf(rname, 16, "%s%s", reginfo->name, "[0-3]");
+-	netdev_info(dev, "%-15s %08x %08x %08x %08x\n", rname, regs[0], regs[1],
++	netdev_dbg(dev, "%-15s %08x %08x %08x %08x\n", rname, regs[0], regs[1],
+ 		    regs[2], regs[3]);
+ }
+ 
+@@ -123,22 +123,22 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 	if (!netif_msg_hw(adapter))
+ 		return;
+ 
+-	netdev_info(netdev, "Device info: state %016lX trans_start %016lX\n",
++	netdev_dbg(netdev, "Device info: state %016lX trans_start %016lX\n",
+ 		    netdev->state, dev_trans_start(netdev));
+ 
+ 	/* Print TX Ring Summary */
+ 	if (!netif_running(netdev))
+ 		goto exit;
+ 
+-	netdev_info(netdev, "TX Rings Summary\n");
+-	netdev_info(netdev, "Queue [NTU] [NTC] [bi(ntc)->dma  ] leng ntw timestamp\n");
++	netdev_dbg(netdev, "TX Rings Summary\n");
++	netdev_dbg(netdev, "Queue [NTU] [NTC] [bi(ntc)->dma  ] leng ntw timestamp\n");
+ 	for (n = 0; n < adapter->num_tx_queues; n++) {
+ 		struct igc_tx_buffer *buffer_info;
+ 
+ 		tx_ring = adapter->tx_ring[n];
+ 		buffer_info = &tx_ring->tx_buffer_info[tx_ring->next_to_clean];
+ 
+-		netdev_info(netdev, "%5d %5X %5X %016llX %04X %p %016llX\n",
++		netdev_dbg(netdev, "%5d %5X %5X %016llX %04X %p %016llX\n",
+ 			    n, tx_ring->next_to_use, tx_ring->next_to_clean,
+ 			    (u64)dma_unmap_addr(buffer_info, dma),
+ 			    dma_unmap_len(buffer_info, len),
+@@ -150,7 +150,7 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 	if (!netif_msg_tx_done(adapter))
+ 		goto rx_ring_summary;
+ 
+-	netdev_info(netdev, "TX Rings Dump\n");
++	netdev_dbg(netdev, "TX Rings Dump\n");
+ 
+ 	/* Transmit Descriptor Formats
+ 	 *
+@@ -165,11 +165,11 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 
+ 	for (n = 0; n < adapter->num_tx_queues; n++) {
+ 		tx_ring = adapter->tx_ring[n];
+-		netdev_info(netdev, "------------------------------------\n");
+-		netdev_info(netdev, "TX QUEUE INDEX = %d\n",
++		netdev_dbg(netdev, "------------------------------------\n");
++		netdev_dbg(netdev, "TX QUEUE INDEX = %d\n",
+ 			    tx_ring->queue_index);
+-		netdev_info(netdev, "------------------------------------\n");
+-		netdev_info(netdev, "T [desc]     [address 63:0  ] [PlPOCIStDDM Ln] [bi->dma       ] leng  ntw timestamp        bi->skb\n");
++		netdev_dbg(netdev, "------------------------------------\n");
++		netdev_dbg(netdev, "T [desc]     [address 63:0  ] [PlPOCIStDDM Ln] [bi->dma       ] leng  ntw timestamp        bi->skb\n");
+ 
+ 		for (i = 0; tx_ring->desc && (i < tx_ring->count); i++) {
+ 			const char *next_desc;
+@@ -188,7 +188,7 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 			else
+ 				next_desc = "";
+ 
+-			netdev_info(netdev, "T [0x%03X]    %016llX %016llX %016llX %04X  %p %016llX %p%s\n",
++			netdev_dbg(netdev, "T [0x%03X]    %016llX %016llX %016llX %04X  %p %016llX %p%s\n",
+ 				    i, le64_to_cpu(u0->a),
+ 				    le64_to_cpu(u0->b),
+ 				    (u64)dma_unmap_addr(buffer_info, dma),
+@@ -198,7 +198,7 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 				    buffer_info->skb, next_desc);
+ 
+ 			if (netif_msg_pktdata(adapter) && buffer_info->skb)
+-				print_hex_dump(KERN_INFO, "",
++				print_hex_dump(KERN_DEBUG, "",
+ 					       DUMP_PREFIX_ADDRESS,
+ 					       16, 1, buffer_info->skb->data,
+ 					       dma_unmap_len(buffer_info, len),
+@@ -208,11 +208,11 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 
+ 	/* Print RX Rings Summary */
+ rx_ring_summary:
+-	netdev_info(netdev, "RX Rings Summary\n");
+-	netdev_info(netdev, "Queue [NTU] [NTC]\n");
++	netdev_dbg(netdev, "RX Rings Summary\n");
++	netdev_dbg(netdev, "Queue [NTU] [NTC]\n");
+ 	for (n = 0; n < adapter->num_rx_queues; n++) {
+ 		rx_ring = adapter->rx_ring[n];
+-		netdev_info(netdev, "%5d %5X %5X\n", n, rx_ring->next_to_use,
++		netdev_dbg(netdev, "%5d %5X %5X\n", n, rx_ring->next_to_use,
+ 			    rx_ring->next_to_clean);
+ 	}
+ 
+@@ -220,7 +220,7 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 	if (!netif_msg_rx_status(adapter))
+ 		goto exit;
+ 
+-	netdev_info(netdev, "RX Rings Dump\n");
++	netdev_dbg(netdev, "RX Rings Dump\n");
+ 
+ 	/* Advanced Receive Descriptor (Read) Format
+ 	 *    63                                           1        0
+@@ -245,12 +245,12 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 
+ 	for (n = 0; n < adapter->num_rx_queues; n++) {
+ 		rx_ring = adapter->rx_ring[n];
+-		netdev_info(netdev, "------------------------------------\n");
+-		netdev_info(netdev, "RX QUEUE INDEX = %d\n",
++		netdev_dbg(netdev, "------------------------------------\n");
++		netdev_dbg(netdev, "RX QUEUE INDEX = %d\n",
+ 			    rx_ring->queue_index);
+-		netdev_info(netdev, "------------------------------------\n");
+-		netdev_info(netdev, "R  [desc]      [ PktBuf     A0] [  HeadBuf   DD] [bi->dma       ] [bi->skb] <-- Adv Rx Read format\n");
+-		netdev_info(netdev, "RWB[desc]      [PcsmIpSHl PtRs] [vl er S cks ln] ---------------- [bi->skb] <-- Adv Rx Write-Back format\n");
++		netdev_dbg(netdev, "------------------------------------\n");
++		netdev_dbg(netdev, "R  [desc]      [ PktBuf     A0] [  HeadBuf   DD] [bi->dma       ] [bi->skb] <-- Adv Rx Read format\n");
++		netdev_dbg(netdev, "RWB[desc]      [PcsmIpSHl PtRs] [vl er S cks ln] ---------------- [bi->skb] <-- Adv Rx Write-Back format\n");
+ 
+ 		for (i = 0; i < rx_ring->count; i++) {
+ 			const char *next_desc;
+@@ -270,13 +270,13 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 
+ 			if (staterr & IGC_RXD_STAT_DD) {
+ 				/* Descriptor Done */
+-				netdev_info(netdev, "%s[0x%03X]     %016llX %016llX ---------------- %s\n",
++				netdev_dbg(netdev, "%s[0x%03X]     %016llX %016llX ---------------- %s\n",
+ 					    "RWB", i,
+ 					    le64_to_cpu(u0->a),
+ 					    le64_to_cpu(u0->b),
+ 					    next_desc);
+ 			} else {
+-				netdev_info(netdev, "%s[0x%03X]     %016llX %016llX %016llX %s\n",
++				netdev_dbg(netdev, "%s[0x%03X]     %016llX %016llX %016llX %s\n",
+ 					    "R  ", i,
+ 					    le64_to_cpu(u0->a),
+ 					    le64_to_cpu(u0->b),
+@@ -285,7 +285,7 @@ void igc_rings_dump(struct igc_adapter *adapter)
+ 
+ 				if (netif_msg_pktdata(adapter) &&
+ 				    buffer_info->dma && buffer_info->page) {
+-					print_hex_dump(KERN_INFO, "",
++					print_hex_dump(KERN_DEBUG, "",
+ 						       DUMP_PREFIX_ADDRESS,
+ 						       16, 1,
+ 						       page_address
+@@ -309,8 +309,8 @@ void igc_regs_dump(struct igc_adapter *adapter)
+ 	struct igc_reg_info *reginfo;
+ 
+ 	/* Print Registers */
+-	netdev_info(adapter->netdev, "Register Dump\n");
+-	netdev_info(adapter->netdev, "Register Name   Value\n");
++	netdev_dbg(adapter->netdev, "Register Dump\n");
++	netdev_dbg(adapter->netdev, "Register Name   Value\n");
+ 	for (reginfo = (struct igc_reg_info *)igc_reg_info_tbl;
+ 	     reginfo->name; reginfo++) {
+ 		igc_regdump(hw, reginfo);
+-- 
+2.49.0
 
