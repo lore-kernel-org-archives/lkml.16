@@ -1,139 +1,110 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393BE1373;
-	Mon,  7 Jul 2025 00:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F4C4A3E;
+	Mon,  7 Jul 2025 00:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751847721; cv=none; b=k6rW00htz8fjMO9KG94df7YKKJ8lTl0jL3OObsElykSdGyMas3lHm+B7dtvVrYBNcwgf84TlWPsENOI0m8nM5MCf6RyjKSoJoNMmEjglBOu0QcHjasj6nbtUVuU5unNvZ8SE/fIFWSL2gXdzkn3/vPKdnstgNExcijMnDBbcEIM=
+	t=1751848330; cv=none; b=b064k9ZegOhxasT5Ogkg8jKzHIj3nfqmZJXNavrS12+2DDw0XcUM4dczlBEogLMl1N2vtw5HybIloGalU4FX/rPMXw8tHARVsN6ICriZOLso+Yb2txemsTrWYyK+zBmOUUY50pRFC3ufqfCGCfNSeoYvn3yzwXLT6Ictzx9WLf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751847721; c=relaxed/simple;
-	bh=hUyy8yKA2gGVH48GVBvBv9Us8897KhgL9cXpJipTfLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVK0L0xpxFVT6tA6fgQ/864CycZvZ0la9yxq1zz2Q9DId3tMrrVMmSam/DmbrO73OS33VgcbrERX6KTAiXvvDEGGnjCS0bAfB2Jo+r0xrtgtU/4gRgRT9M5Q7y3tIBzrfpx9lqbDldwRkIzzSdIt0EvWfXrzNJCRS8WnC3/p8Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-c0-686b131ab99d
-Date: Mon, 7 Jul 2025 09:21:41 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Harry Yoo <harry.yoo@oracle.com>, willy@infradead.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
-	jackmanb@google.com
-Subject: Re: [PATCH net-next v7 1/7] netmem: introduce struct netmem_desc
- mirroring struct page
-Message-ID: <20250707002141.GA3379@system.software.com>
-References: <20250625043350.7939-1-byungchul@sk.com>
- <20250625043350.7939-2-byungchul@sk.com>
- <20250626174904.4a6125c9@kernel.org>
- <20250627035405.GA4276@system.software.com>
- <20250627173730.15b25a8c@kernel.org>
- <aGHNmKRng9H6kTqz@hyeyoo>
- <20250701164508.0738f00f@kernel.org>
+	s=arc-20240116; t=1751848330; c=relaxed/simple;
+	bh=mhbc0WemYmG8rm7InaTf8LWaoJtr9oPrFfMT15Fe94M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mTksE7dLb7SjJVrCCEHZ1iN2LMp4Ukn+HmArQuispl76FtbaJdl//wjIeWGReRW4zK8vOyKG/5TxXT+WOi2+O61DCzsH/98f81oCV7HWyD0K9qZabJ5sboGOe7Lw7ruRPhCZO8AGVOS6c/QUqTnw3KnhZ/M94I/P5ScohvTdKaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CjjWRng1; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjjWRng1"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso2612464a12.2;
+        Sun, 06 Jul 2025 17:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751848329; x=1752453129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=waNYge1pVnAmfDAo+Scw1VWP79dyDXSW85JWJajzOys=;
+        b=CjjWRng1/yBXsTo8SS37DCSs8xrIraEdFmcXWtmpgSEFgD1CvB73e6navO8Toh21MS
+         NdZGYBa5GLFcX23OKkDoNEwpu10Ivd0DfxAy4yCwd2DnMfX8tEbfOVZaEDDHmNnHJG3z
+         mIIhR4zwPcz2yMIbHnsylteqDWseHgdiv0F431IRxMD5gv97Dixnl/0e7kkVTQ2G4lSS
+         pXUP+P9OuCk5VHY6d6/QkXwd3crCvKXlx4S9lHizObKbfcZYagN1JPWp5RY9BdbZiagj
+         FDtfQzGYEDpKOeHop9vcPnPEr8MhTDR74H1RufXd56JcSS2IDf2I6RiAT4+Wvt20tKb+
+         154Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751848329; x=1752453129;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=waNYge1pVnAmfDAo+Scw1VWP79dyDXSW85JWJajzOys=;
+        b=u3yfmRRmb+zUthNqKpiy3UWvHFvWi4k1Of1ppDxmSJdznXk1zBBYAxAsM769go6RgQ
+         rKdB5+Wa5obpRkwcuov8x5/N9a0zXdsuhcZYyAl4dCdgRgHCodgp6IWToJI9bDTctSEq
+         dj/x+QRP6RQhQDL4Rm9XH8lQFKm807/fzPOqUF9kh68ENaKoVh26gCqtNTETjrtnA5oS
+         L6pqQnmURXPZV6ggW85Yik6Y4AhKmanILYI0lW1xeaV7Aj4QjcMjvhKPn3/FVmIEPFA/
+         L7fFVS2fE5PJkh0SBwYGWNCWfwLtmz2W4oBI/v4mcxIVjCp9xBkqoDUANxWTIMZYq/55
+         Ahuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdfVe5O5TSZPQshZaqO7HXCNXPJScluz924WsTVwuJ+eZhVekxLbODFSRQNs5BjS+HuzZ0KBSbm9TqOdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI1uxZTBRh2otaVHUHFroYorqBiT3NuzIuAaYvv5GRrDdMQMwR
+	oQCKyqgsW5ou2S3bmawLaIcH2doA4Jm64LASezprNw004gQvcJQsHHmc
+X-Gm-Gg: ASbGncvOsESkTg570DPG/tUjEihS11sSgZephZxYdlZqFSo6Aw30GfoUTK4P8vOENYH
+	SFcd82UKy1Won9vBanoSrasi7cvJJmT+ZPX82mowfyqUQUaYaU5HIhlCOGAH8n7dV6+w6sYrdCf
+	D7JNijA3n3wrcJlxRGB6JCvtpiyz0AHDwDvDtFMHX/e8AFWoX6QgZ2Rx4I+NQhFziMrjhXzgVPA
+	/Cu2VDU8Sg3nvSw7TSNBPpDXnkJ/vIqsTNQ9Tdv/ol9OqYbdK/d49iQvwjqcpMlurwI1jTiSg5q
+	s1taSnONCyakEHYpwbud1UeRBg3heSFKrrQJGsgL+Hw7lNJTPSdDeKyTS4Dy0Q==
+X-Google-Smtp-Source: AGHT+IEJfwXHQNDfml8NzaqLJBaxvkA9HUYq+A9+IyCh9ibIK7D1D9K8y86d2uYsm2pa9DcODEISyg==
+X-Received: by 2002:a17:90b:3c8f:b0:312:1d2d:18e2 with SMTP id 98e67ed59e1d1-31aac4b2f1cmr15485476a91.20.1751848328607;
+        Sun, 06 Jul 2025 17:32:08 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-31a9cc66830sm10477012a91.16.2025.07.06.17.32.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 17:32:08 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Longbin Li <looong.bin@gmail.com>,
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yixun Lan <dlan@gentoo.org>
+Subject: Re: [PATCH 0/2] riscv: dts: sophgo: sg2044: add PCIe device node
+Date: Mon,  7 Jul 2025 08:31:59 +0800
+Message-ID: <175184826045.122679.3644918560620246720.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250618015851.272188-1-inochiama@gmail.com>
+References: <20250618015851.272188-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701164508.0738f00f@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzjmuVsdp9WZFtUJD6KJYPdGFoi8vdCGwEMqogx7aci7b
-	0jQKrEaRqIVJ5NRYRnnpspqlK5bpXKlkZoZ1stpkXkiyRmbStNtmRX378f8//Ph/eDhKZZZH
-	cFr9AdGgF3RqRkErPkwsWxgRlqJZ8i0vDkqs1xi4+jUTyrvtciipqkEw7H/NwmdXEwOXLo5Q
-	UPLURMMX6ygFfY+8LFy1bQLPlX4aHCdrKfCebmYgzzRGwX3/RxaO2Stk0F6TL4fC0csU1GZ3
-	s/D8XgkD7ms/5dDvzKOhxVxJgyd/LTyyTIWRx4MIXNZaGYzkljJwtsPCQI/Jg6Cj0UtD8dF8
-	BNY6SQ5jXwOO4odudu180jjoo8jtylcyctf8liUWWzqprogmOVIHRWxVpxhiGypgyZsXDoY0
-	nx+jyV37ZxnJO/6RIZ/6umjiq+tkiPV2J01aLS52S+h2xapkUafNEA2L1+xWaNyuXCbNG5b5
-	8oyXzUb1k3NQCIf5OJztaWP/ssN9Rx5kmp+Pv5fVUUFm+CgsSf5xDg/kpuoiOgcpOIq/zuBC
-	dwsKFmG8gB3eYVmQlfxyLLU/GT9S8RdkePhB758iFLcU9dJBpvhoLP0YCORcgGfg8h9cMA7h
-	Y7C/0z4+Ygo/D9fXNMl+j7Nz2Dem/c3TcUOFRJ9BvPk/q/k/q/mf1YKoKqTS6jNSBa0ubpEm
-	S6/NXJS0L9WGAh9z5ci3HXY01B7vRDyH1BOVSxL2alRyIcOYlepEmKPU4coTTIpGpUwWsg6J
-	hn27DOk60ehEMzhaPU0ZO3IwWcXvEQ6IKaKYJhr+tjIuJCIbbTvxYDRqo9k5NMu02+rvG7iV
-	9P79ThW/bnVsQvGxZzsPz5kt1DfM/TKptHBrlLA0Kfy6/WbbrgmRzeA5XXBoDTnevipBP3R5
-	DxJiF7y2RcKApOi5sXJFV8S8/TpJSqzx9a2eqTvny1i2OdJR/i6sunVwQ7zFiKO6nyV6Vq5f
-	ENOmpo0aISaaMhiFX7d721stAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRiH+Z/bjsPhaZodrD60CsXSlG4vGGYfolNkRBBBRHnQQ5vOGVsb
-	WgSmK2vlvQ82L6wk56UYTJuzlprXpJso1iqbY6nYBc2ckpnWJkV9e/g97+/l/fDSuHSRCKMV
-	qrOCWsUrZZSYEB+Ky40KC06Tx9gur4EKy10KGr5ngtltJ6Gi3obAO/9OBDNdvRRU35rDoeKl
-	noBZyw8cxno8ImiwJsJIzTgBjrxmHDyFTyjI1y/g8Gh+UgQ59loMOiv7SOi3FZBw48cdHJqz
-	3SIYfFBBgevuLxLGO/IJ6DPWETBSkAA9plCYe/oFQZelGYO565UUlA6YKPigH0Ew0OkhoPxi
-	AQJLq5OEhe++HeXdLlHCRq7zyxTONdW9wbgW43sRZ7JqucbaSM7gHMA5a/1VirN+KxFxw68c
-	FPekbIHgWuwzGJefO0lx02NvCW6qdYjiqie+YpylaYg4LD0u3pUiKBU6Qb0lPkksd3Vdp854
-	gjNfF3lE2ag9yIACaJbZxjpc90k/E8wGdvF2K+5niglnnc75ZQ7x5frGm4QBiWmcuUexN1x9
-	yC+CGZ51eLyYnyXMTtbZ/3x5SMpUYay3bfSPWMH23Rwl/Iwzkaxz6aMvp328mjUv0f44gIll
-	54fsy0esZNaz7bZerAhJjP+1jf+1jf/aJoTXoxCFSpfOK5TbozVp8iyVIjM6OSPdinxPUXPh
-	Z7EdeQf3dSCGRrJAScyxVLmU5HWarPQOxNK4LERymUqTSyUpfNY5QZ1xSq1VCpoOtJomZKsk
-	B44JSVLmNH9WSBOEM4L6r8XogLBslKk1M47U4nXdeaURJyXhLdW5w61u3KV9UWYo67nljZma
-	fDpukkV5NjdeORivjziRyKyM99bsd15LCjUpX1QrPl/CtPDMbUwMakjcsSvj6NiRvaYg4/lp
-	szFu9+NNn0pm7xe6hk2VCQ/3rI0PSk6PC+zd2phUNbGxPXVUl0NuapMRGjkfG4mrNfxvX+2S
-	LBADAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 04:45:08PM -0700, Jakub Kicinski wrote:
-> On Mon, 30 Jun 2025 08:34:48 +0900 Harry Yoo wrote:
-> > > Ugh, you keep explaining the mechanics to me. Our goal here is not
-> > > just to move fields around and make it still compile :/
-> > >
-> > > Let me ask you this way: you said "netmem_desc" will be allocated
-> > > thru slab "shortly". How will calling the equivalent of page_address()
-> > > on netmem_desc work at that stage? Feel free to refer me to the existing
-> > > docs if its covered..
-> >
-> > https://kernelnewbies.org/MatthewWilcox/Memdescs/Path
-> > https://kernelnewbies.org/MatthewWilcox/Memdescs
-> >
-> > May not be the exact document you're looking for,
-> > but with this article I can imagine:
-> >
-> > - The ultimate goal is to shrink struct page to eventually from 64 bytes
-> >   to 8 bytes, by allocating only the minimum required metadata per 4k page
-> >   statically and moving the rest of metadata to dynamically-allocated
-> >   descriptors (netmem_desc, anon, file, ptdesc, zpdesc, etc.) using slab
-> >   at page allocation time.
-> >
-> > - We can't achieve that goal just yet, because several subsystems
-> >   still use struct page fields for their own purposes.
-> >
-> >   To achieve that, each of these subsystems needs to define
-> >   its own descriptor, which, for now, overlays struct page, and should be
-> >   converted to use the new descriptor.
-> >
-> >   Eventually, these descriptors will be allocated using slab.
-> >
-> > - For CPU-readable buffers, page->memdesc will point to a netmem_desc,
-> >   with a lower bit set indicating that it's a netmem_desc rather than
-> >   other type. Networking code will need to cast it to (netmem_desc *)
-> >   and dereference it to access networking specific fields.
-> >
-> > - The struct page array (vmemmap) will still be statically allocated
-> >   at boot time (or during memory hotplug time).
-> >   So no change in how page_address() works.
-> >
-> > net_iovs will continue to be not associated with struct pages,
-> > as the buffers don't have corresponding struct pages.
-> > net_iovs are already allocated using slab.
+On Wed, 18 Jun 2025 09:58:47 +0800, Inochi Amaoto wrote:
+> As the PCIe driver is merged, add device node of PCIe device and MSI
+> device for SG2044.
 > 
-> Thanks a lot, this clarifies things for me.
+> Inochi Amaoto (2):
+>   riscv: dts: sophgo: sg2044: add MSI device support for SG2044
+>   riscv: dts: sophgo: sg2044: add PCIe device support for SG2044
 > 
-> Unfortunately, I still think that it's hard to judge patches 1 and 7
-> in context limited to this series, so let's proceed to reposting just
-> the "middle 5" patches.
+> [...]
 
-Just in case, I sent v8 with the "middle 5" last week as you requested.
-I'm convinced they are non-controversial but lemme know if any.
+Applied to for-next, thanks!
 
-	Byungchul
+[1/2] riscv: dts: sophgo: sg2044: add MSI device support for SG2044
+      https://github.com/sophgo/linux/commit/29ce381d6bc61b23024c6ee42a5745d4becb28c1
+[2/2] riscv: dts: sophgo: sg2044: add PCIe device support for SG2044
+      https://github.com/sophgo/linux/commit/55fd09df36d7c6ae59d82a7df5072827f65a0eb4
+
+Thanks,
+Inochi
+
