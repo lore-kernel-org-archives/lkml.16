@@ -1,330 +1,158 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A395428934E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE10B2D78A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 09:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751882366; cv=none; b=mA9kOrjemKFMNMIVEkuth81jCEBf3DI0vtKuYnXkPuwp9BuZP1dYww4hXf/jQNh1yV39kZoj1Ho/4Ti0mFJeBkbUKi8l+EAa7BswlrEky3flIMyKm/3N7fayRJADhhIhJvPwjz0gqIzVo0Qu93M/Cixcvjf5mqCl+iGrcgVGf68=
+	t=1751882396; cv=none; b=DyDHMK6HFLT44JRB7ThxpZ+s7VTHYIgktUOW2ZbmuqGRilPvzt0GTKl8VuW11Q6Mf34Mr01wwUNKvnre7XPJ2ENAe+sGXOTwVK0P3NlJ22rjIT8J6obx3O7qCRAor/GfDjZ5M9RQfI/QAMgGD1Di7omPdBlRM6+MdF7QVjnBAlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751882366; c=relaxed/simple;
-	bh=12MJoW0kbKlBkp8ffyDIjdKhkfT8Yp8PMwc5Px6aCeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pafPd1o0IxdwYrq5vL5jq6atFpHw8RY4ULJ4DbsZ8jJMWCm9LjnmxovOipEQbqhA1Hn8LZKuENEqYvRZ6CVUWQMmSUDvxKx+8EmMKzz18PPK74oznp54pBpJd2kTRN6cpEJp5vNR8nSp+c8LDZLX3M3pDUnqtnjhesbWXmEpCrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mBG3URH1; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751882396; c=relaxed/simple;
+	bh=7Yz0bjI0WWqTDd5wMmn0BB46jE5RLxxJUDmNLhFW3Qk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iz7Jwq+NGfODLdrTqvnxjkbJdJCsxfVzUPMNvx9qghwBWfI8R7OkWpkJt+rs8V+k7ciOw+n/kcxOkuDcya4440MzWChk3M3flNRvAh7bEXqt4M7mpZgAI5HgSvdY8WeSHng04j0Clw+snmWBDzHjh01W8S7XeBgWuMTxU3onQLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eYWwkCgf; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mBG3URH1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0881143AE7;
-	Mon,  7 Jul 2025 09:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751882356;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aIuFlXWrcDzU9uPaQKpuqpy2rjs9RFnhUBtYgzbA9Uw=;
-	b=mBG3URH1EKrJK/9byvkOGEmzsn5QyyDPOXTERmFclarapjywrB5Ah/7q0/VWSw891BpwKx
-	+WNhSstAtb7CxvRolX4NhkLoD9a/2uSR9bqPPYbAzoWbauQh8VSe4H1H+MbrTEyZqK1O/G
-	aB7gyHekMQ4lpJMEjLm9b891iOEF2t347myivgB/xdfAvJTxf2cl5FcrwAezoadPE4ZuXA
-	lkLxaoL1olalS+IE4775uYeMfrtHbTmYU9mIEO/r+e8pmCTLrh41gi0ko8Zn/btNUyipKK
-	0zm2Z3OBL6X5F+UVmOIuwHsNwN5oc4ObAM3f8WW5Fc3/ZOmt/+vR3JtxocCPZg==
-Date: Mon, 7 Jul 2025 11:58:53 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Inki Dae
- <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, Marek
- Szyprowski <m.szyprowski@samsung.com>, Jani Nikula
- <jani.nikula@linux.intel.com>, Dmitry Baryshkov <lumag@kernel.org>, Hui Pu
- <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Kevin Hilman <khilman@baylibre.com>, Jerome
- Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 00/32] drm/mipi-dsi: avoid DSI host drivers to have
- pointers to DSI devices
-Message-ID: <20250707115853.128f2e6f@booty>
-In-Reply-To: <20250707-strange-warm-bear-cb4ee8@houat>
-References: <20250625-drm-dsi-host-no-device-ptr-v1-0-e36bc258a7c5@bootlin.com>
-	<20250707-strange-warm-bear-cb4ee8@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eYWwkCgf"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453398e90e9so18766055e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 02:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751882392; x=1752487192; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d82/2ial6v9ccHeZaghL3hLg/dzpt/+BNJIXRihD9fE=;
+        b=eYWwkCgf1Y/w6vxyp+NoMkTUdyBmohRGRfP67QIPZ/bEQRMOVJNmmkJV4uBf5Ze4Yh
+         y2Mx8WDVMAzwwiz3ndyChiSga+RGBDQIVVjRTPCZ7QoXWWLFjd3KVaXmJSghr3NMaEH+
+         99eEbKkNekpPUQI0zGDrc1N3pZNuVmlnNm/ndJd15QihssI97tUVB24T7drju25z85pA
+         sPjWsKjEOaMhxwXVuQo4Tj4gkddxl+xNTMDtYDccw+KwTK5qQ2xkCzNGRqfg26NYf0f6
+         iNWrb5tg5B05IhwKJ34MNQiHOAnS3jNXy0joGLg668meOYfnmtblaJSryT7OgWd6bO+0
+         95Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751882392; x=1752487192;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d82/2ial6v9ccHeZaghL3hLg/dzpt/+BNJIXRihD9fE=;
+        b=bq5GRuv7Xk+uk1QUrMiVVQ4xgYAfgE0+BHMYSzkwxM506/T6t5+s8jMtHKnYmrERar
+         bVQFYGddicETzcUx/DeoihwGOPuO6Nh1vXjHP7QEfgOdKlcCdnQotRZHKDRNMJKuz4ox
+         QzE+5shP27aZCaDGiNvEnTXCAF2O34etEjxzlecq1d+rb7vxVKkHNG2eYfN4YJ1ztyrP
+         XtecSG6pPkr8GKU76ww02wLbcKJIq216oBcSVWlZxefB5Q39VSL2P/GWvBk1TjHgGhfM
+         ayvCydDCtTEII+3AAXUspakDJfPdAg0MOmnkPBJsc56RwdTs9kdLbYHu3ZJffC0pM+to
+         fEAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIkckmvYN/aQyTa1ZKev09/rv0o5t6i6DLdOFC784K+6dlas0zD1HffoM4VavZuWNhOPeS/Sxbz/3nJyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1ixKpwjjd6yjiKBR+yforMVIOFyIpPNGVz/ls5kvFXYgSs1Xi
+	M9cpgZKdS1zUjr9BYcoBAIqHY5jPbrwRtQLo9tj9QSvd7MqZf4M2JYs1MdICkcm7fFs=
+X-Gm-Gg: ASbGncurPHrc3J6Wfdq2vEBxd82q5VENdJftAgiPnHZgPhYaM526hdtlKLW8SMyPOeH
+	PH7oK+Ck7uUkCA0ZIGdMg2AYz7are15KDK1jsTDLoIOsVRglOzqQpZSWPVAmwMMNL2uDFxFoJo8
+	r19ZCSxLpGJn4d4Im5Rf8UF4ufdj+xuSmIYWgELyKpo9midXU809evhBlcbIzVDSngXCfBYbpTv
+	LYDDYALXIpBsmANjdPE+quMwDLOv0XgbrHGotxZkixsGSc6vPjsvQNuOB5yIOg3A5uMgut6twKT
+	PDX0hZidF2b+jMLhSOyT7/+wcG9YHapZcSOFBDGUrcN+RiCRgzVHjC0cMPzvNuwG8oaT2ngimYI
+	=
+X-Google-Smtp-Source: AGHT+IHRjy82W3krhF0E3ljOItCoie8HVrp+8y0T7w/WP5rEf/zip2ygctxQu9zwoA/kbRgg/9MwOA==
+X-Received: by 2002:a05:600c:548e:b0:442:ccfa:18c with SMTP id 5b1f17b1804b1-454b318d9c0mr86326645e9.32.1751882392003;
+        Mon, 07 Jul 2025 02:59:52 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969058sm137832675e9.3.2025.07.07.02.59.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 02:59:51 -0700 (PDT)
+Date: Mon, 7 Jul 2025 11:59:49 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: YoungJun Park <youngjun.park@lge.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, shikemeng@huaweicloud.com, 
+	kasong@tencent.com, nphamcs@gmail.com, bhe@redhat.com, baohua@kernel.org, 
+	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, 
+	taejoon.song@lge.com, gunho.lee@lge.com
+Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
+ per cgroup swap priority control
+Message-ID: <nyzhn5e5jxk2jscf7rrsrcpgoblppdrbi7odgkwl5elgkln4bq@mdhevtbwp7co>
+References: <20250612103743.3385842-1-youngjun.park@lge.com>
+ <20250612103743.3385842-2-youngjun.park@lge.com>
+ <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
+ <aFIJDQeHmTPJrK57@yjaykim-PowerEdge-T330>
+ <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
+ <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
+ <bhcx37fve7sgyod3bxsky5wb3zixn4o3dwuiknmpy7fsbqgtli@rmrxmvjro4ht>
+ <aGPd3hIuEVF2Ykoy@yjaykim-PowerEdge-T330>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wdwglhs4zrm53st4"
+Content-Disposition: inline
+In-Reply-To: <aGPd3hIuEVF2Ykoy@yjaykim-PowerEdge-T330>
+
+
+--wdwglhs4zrm53st4
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefudehtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvgeejjeevhefhiefgffethfdtieffheefvedtgeekteejffdtvedugeeihfdvkeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeekjedruddvtddrvddukedrvddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekjedruddvtddrvddukedrvddtjedphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdehpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghir
- hhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
+ per cgroup swap priority control
+MIME-Version: 1.0
 
-On Mon, 7 Jul 2025 08:16:49 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
+Hello.
 
-> Hi Luca,
+On Tue, Jul 01, 2025 at 10:08:46PM +0900, YoungJun Park <youngjun.park@lge.=
+com> wrote:
+>   memory.swap.priority
+=2E..
+
+>         To assign priorities to swap devices in the current cgroup,
+>         write one or more lines in the following format:
 >=20
-> On Wed, Jun 25, 2025 at 06:45:04PM +0200, Luca Ceresoli wrote:
-> > This series is the first attempt at avoiding DSI host drivers to have
-> > pointers to DSI devices (struct mipi_dsi_device), as discussed during t=
-he
-> > Linux Plumbers Conference 2024 with Maxime and Dmitry.
-> >=20
-> > It is working, but I consider this a draft in order to discuss and
-> > challenge the proposed approach.
-> >=20
-> > Overall work
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >=20
-> > This is part of the work towards removal of bridges from a still existi=
-ng
-> > DRM pipeline without use-after-free. The grand plan as discussed in [1].
-> > Here's the work breakdown (=E2=9E=9C marks the current series):
-> >=20
-> >  1. =E2=80=A6 add refcounting to DRM bridges (struct drm_bridge)
-> >     (based on devm_drm_bridge_alloc() [0])
-> >     A. =E2=9C=94 add new alloc API and refcounting (in v6.16-rc1)
-> >     B. =E2=9C=94 convert all bridge drivers to new API (now in drm-misc=
--next)
-> >     C. =E2=9C=94 kunit tests (now in drm-misc-next)
-> >     D. =E2=80=A6 add get/put to drm_bridge_add/remove() + attach/detach=
-()
-> >          and warn on old allocation pattern (under review)
-> >     E. =E2=80=A6 add get/put on drm_bridge accessors
-> >        1. =E2=80=A6 drm_bridge_chain_get_first_bridge() + add a cleanup=
- action
-> >        2. =E2=80=A6 drm_bridge_chain_get_last_bridge()
-> >        3. drm_bridge_get_prev_bridge()
-> >        4. drm_bridge_get_next_bridge()
-> >        5. drm_for_each_bridge_in_chain()
-> >        6. drm_bridge_connector_init
-> >        7. of_drm_find_bridge
-> >        8. drm_of_find_panel_or_bridge, *_of_get_bridge
-> >     F. debugfs improvements
-> >  2. handle gracefully atomic updates during bridge removal
-> >  3. =E2=9E=9C avoid DSI host drivers to have dangling pointers to DSI d=
-evices
-> >       (this series)
-> >  4. finish the hotplug bridge work, removing the "always-disconnected"
-> >     connector, moving code to the core and potentially removing the
-> >     hotplug-bridge itself (this needs to be clarified as points 1-3 are
-> >     developed)
-> >=20
-> > [0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc=
-1e629b715ea3d1ba537ef2da95eec
-> > [1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2=
-c9c3058@bootlin.com/t/#u
-> >=20
-> > Motivation
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >=20
-> > The motivation for this series is that with hot-pluggable hardware a DSI
-> > device can be disconnected from the DSI host at runtime, and later on
-> > reconnected, potentially with a different model having different bus
-> > parameters.
-> >=20
-> > DSI host drivers currently receive a struct mipi_dsi_device pointer in =
-the
-> > attach callback and some store it permanently for later access to the b=
-ur
-> > format data (lanes, channel, pixel format etc). The stored pointer can
-> > become dangling if the device is removed, leading to a use-after-free.
-> >=20
-> > Currently the data exchange between DSI host and device happens primari=
-ly
-> > by two means:
-> >=20
-> >  * the device requests attach, detach and message transfer to the host =
-by
-> >    calling mipi_dsi_attach/detach/transfer which in turn call the callb=
-acks
-> >    in struct mipi_dsi_host_ops
-> >     - for this to work, struct mipi_dsi_device has a pointer to the hos=
-t:
-> >       this is OK because the goal is supporting hotplug of the "remote"
-> >       part of the DRM pipeline
-> >  * the host accesses directly the fields of struct mipi_dsi_device, to
-> >    which it receives a pointer in the .attach and .detach callbacks
-> >=20
-> > The second bullet is the problematic one, which we want to remove.
-> >=20
-> > Strategy
-> > =3D=3D=3D=3D=3D=3D=3D=3D
-> >=20
-> > I devised two possible strategies to address it:
-> >=20
-> >  1. change the host ops to not pass a struct mipi_dsi_device, but inste=
-ad
-> >     to pass only a copy of the needed information (bus format mainly), =
-so
-> >     the host driver does never access any info from the device
-> >    =20
-> >  2. let the host get info from the device as needed, but without having=
- a
-> >     pointer to it; this is be based on:
-> >      - storing a __private mipi_dsi_device pointer in struct mipi_dsi_h=
-ost
-> >      - adding getters to the DSI core for the host to query the needed
-> >        info, e.g. drm_mipi_dsi_host_get_device_lanes(host) (the getters
-> >        would be allowed to dereference the device pointer)
-> >=20
-> > This series implements strategy 1. It does so by adding a .attach_new h=
-ost
-> > op, which does not take a mipi_dsi_device pointer, and converting most =
-host
-> > drivers to it. Once all drivers are converted, the old op can be remove=
-d,
-> > and .attach_new renamed to .attach. =20
->=20
-> I don't recall discussing this particular aspect at Plumbers, so sorry
-> if we're coming back to the same discussion we had.
->=20
-> I'm not necessarily opposed to changing the MIPI-DSI bus API, but I
-> don't think changing the semantics to remove the fact that a particular
-> device is connected or not is a good idea.
->=20
-> I would have expected to have bus driver (maybe) take a device pointer
-> at attach, and drop it at detach.
->=20
-> Then, when we detect the hotplug of a DSI device, we detach it from its
-> parent, and we're done.
->=20
-> What prevents us from using that approach?
+>           <swap_device_unique_id> <priority>
 
-I probably should have done a recap of the whole discussion, so let me
-do it now.
+How would the user know this unique_id? (I don't see it in /proc/swaps.)
 
-It all starts with one fact: a DSI device can be disconnected and then
-a different one connected later on, having a different DSI bus format
-(lanes, channel, mode flags, whatever). A detach/attach sequence would
-handle that, but only in the simple case when there is a host/device
-pair. Let's how consider this topology:
-                                                     =20
-                =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90                 =20
-                =E2=94=82    DSI bridge    =E2=94=82                 =20
-=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=90  A  =E2=94=82                  =E2=94=82  B  =E2=
-=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
-=E2=94=82 DSI host=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA=E2=
-=94=82device        host=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=
-=BA=E2=94=82DSI device =E2=94=82
-=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=98     =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=94=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=98
-                                                     =20
-Here link A is always connected, link B is hot-pluggable. When the tail
-device is removed and a different one plugged, a detach/attach sequence
-can update the bus format on the DSI bridge, but then the DSI bridge
-cannot update the format on the first host without faking a
-detach/attach that does not map a real event.
+>         Note:
+>           A special value of -1 means the swap device is completely
+>           excluded from use by this cgroup. Unlike the global swap
+>           priority, where negative values simply lower the priority,
+>           setting -1 here disables allocation from that device for the
+>           current cgroup only.
 
-The above topology is probably not common, but it is exactly what the
-hotplug-bridge introduces [0]. Whether the hotplug-bridge will have to
-eventually exist or not to support hotplug is still to be defined, but
-regardless there is another problematic aspect.
+The divergence from the global semantics is little bit confusing.
+There should better be a special value (like 'disabled') in the interface.
+And possible second special value like 'none' that denotes the default
+(for new (unconfigured) cgroups or when a new swap device is activated).
 
-The second problematic aspect is that several DSI host drivers will not
-even drm_bridge_add() until they have an attached DSI device. One such
-example is samsung-dsim, which calls drm_bridge_add()
-in samsung_dsim_host_attach(). When such a driver implements the first
-DSI host, the DSI bridge must register a DSI device before the DRM card
-can be instantiated. See the lengthy comment before
-hotplug_bridge_dsi_attach() in [0] for more gory details, but the
-outcome is that the hotplug-bridge needs to attach a DSI device with
-a fake format once initially just to let the DRM card probe, and the
-detach and reattach with the correct format once an actual DSI device
-is connected at the tail.
+>   memory.swap.priority.effective
+>         A read-only file showing the effective swap priority ordering
+>         actually applied to this cgroup, after resolving inheritance
+>         from ancestors.
 
-[0] https://lore.kernel.org/all/20240917-hotplug-drm-bridge-v4-4-bc4dfee61b=
-e6@bootlin.com/
+Yes, this'd be definitely useful for troubleshooting and understanding
+the configurations.
 
-The above would be improved if the DSI host API provided a way to
-notify to the host about a bus format change, which is however not
-present currently.
+=2E..
+>         In this case:
+>           - If no cgroup sets any configuration, the output matches the
+>             global `swapon` priority.
+>           - If an ancestor has a configuration, the child inherits it
+>             and ignores its own setting.
 
-The naive solution would be adding a new DSI host op:
+The child's priority could be capped by ancestors' instead of wholy
+overwritten? (So that remains some effect both.)
 
- struct mipi_dsi_host_ops {
- 	int (*attach)(struct mipi_dsi_host *host,
- 		      struct mipi_dsi_device *dsi);
- 	int (*detach)(struct mipi_dsi_host *host,
- 		      struct mipi_dsi_device *dsi);
-+	int (*bus_fmt_changed)(struct mipi_dsi_host *host,
-+ 		      struct mipi_dsi_device *dsi);
- 	ssize_t (*transfer)(struct mipi_dsi_host *host,
- 			    const struct mipi_dsi_msg *msg);
- };
+Thanks,
+Michal
 
-This would allow reduce the current sequence:
- 1. attach with dummy format (no tail device yet)
- 2. fake detach
- 3. attach
+--wdwglhs4zrm53st4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-with:
- 1. attach with dummy format (no tail device yet)
- 2. update format
+-----BEGIN PGP SIGNATURE-----
 
-Adding such a new op would be part of chapter 4 of this work, being it
-quite useless without hotplug.
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGuakwAKCRB+PQLnlNv4
+CPFYAP4ydDKYFygLh14WYhl6pOkLrwj8JkhclU3yKqmmebJVTQD/W+JB5AMQ7qu3
+RqhHDUL/M9s2yFNaz+QmdaSUTCcsNgk=
+=X9yq
+-----END PGP SIGNATURE-----
 
-However while reasoning about this I noticed the DSI host drivers peek
-into the struct mipi_dsi_device fields to read the format, so there is
-no sort of isolation between host and device. Introducing a struct to
-contain all the format fields looked like a good improvement in terms
-of code organization.
-
-Yet another aspect is that several host drivers keep a pointer to the
-device, and thus in case of format change in the DSI device they might
-be reading different fields at different moments, ending up with an
-inconsistent format.
-
-The above considerations, which are all partially overlapped, led me to
-the idea of introducing a struct to exchange a DSI bus format, to be
-exchanged as a whole ("atomically") between host and device. What's
-your opinion about introducing such a struct?
-
-The second aspect of this series is not passing pointers, and that's
-the core topic you questioned. I realize it is not strictly necessary
-to reach the various goals discussed in this e-mail. The work I'm doing
-on the drm_bridge struct is actually a way to store a pointer while
-avoiding use-after-free, so that can obviously be done for a simpler
-scenario such as DSI host-device. However I thought not passing a
-pointer would be a more radical solution: if a driver receives no
-pointer, then it cannot by mistake keep it stored when it shouldn't,
-maybe in a rare case within a complex driver where it is hard to spot.
-
-I'll be OK to change the approach and keep the pointer passed in the
-attach/detach ops, if that is the best option. However I'd like to have
-your opinion about the above topics before working towards that
-direction, and ensure I fully grasp the usefulness of keeping the
-pointer.
-
-Post scriptum. The very initial issue that led to all this discussion
-when writing the hotplug-bridge driver is that the samsung-dsim driver
-will not drm_bridge_add() until a DSI device does .attach to it. Again,
-see the comments before hotplug_bridge_dsi_attach() in [0] for details.
-However by re-examining the driver for the N-th time now from a new
-POV, I _think_ this is not correct and potentially easy to solve. But this =
-leads to one fundamental question:
-
-
---=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--wdwglhs4zrm53st4--
