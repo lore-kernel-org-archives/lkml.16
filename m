@@ -1,150 +1,139 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1B218035;
-	Mon,  7 Jul 2025 00:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751847345; cv=pass; b=r74OimeZN7UPfcFCHYIVcnDRbNVSApy12JSnh0IL+HULI29lGvhLDJK3gxMl00bBPLkM3vqRvDy2sMfrhkEP2A40TowehPwvNxOjYHQY12BIFePFf8K5G6BseFhTWFRbl1Tx7gkSRg60nGHZezWjRX1CsQmqCmc9X9HawRYaKHM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751847345; c=relaxed/simple;
-	bh=bg3UTIoYitdrE1fKKbSI9xlD3lw7ZBNyiPwF21r9hGQ=;
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393BE1373;
+	Mon,  7 Jul 2025 00:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751847721; cv=none; b=k6rW00htz8fjMO9KG94df7YKKJ8lTl0jL3OObsElykSdGyMas3lHm+B7dtvVrYBNcwgf84TlWPsENOI0m8nM5MCf6RyjKSoJoNMmEjglBOu0QcHjasj6nbtUVuU5unNvZ8SE/fIFWSL2gXdzkn3/vPKdnstgNExcijMnDBbcEIM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751847721; c=relaxed/simple;
+	bh=hUyy8yKA2gGVH48GVBvBv9Us8897KhgL9cXpJipTfLI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AcpYzlth0SGRcWt9MYlP7fqqsIp0w59xeof3sN4SNC3vIjVgE9AUWgvAdy3jlX0kEQ5+/LIIlaKuYJswTthhOry9WYZOBhaW0id01WwmMGf7t6ikcKqr/MlzmUjeybG/XpZt+WpB2dBafxJSCzEYIuB80TWwu+R4wQc3YdiTNA8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=eQNcOwYH; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="eQNcOwYH"
-ARC-Seal: i=1; a=rsa-sha256; t=1751847330; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UTrKTZ3xXD548GT3q5KhD3JK9dOlxc1/gl993isZWCDB7ZdC6tm8r2W+Qp5UhIm84ID1a8s+c5ahoB6x1Qixq6yG8PKLajvXPq+j8xR6/c1murPnw4hi+Jh/BKNJNL28IcO/KjB8ClIaHtHoaM11OnFvvxI/O6n9cY5aBGMnr/k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751847330; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=bg3UTIoYitdrE1fKKbSI9xlD3lw7ZBNyiPwF21r9hGQ=; 
-	b=NxZbSbRmmq0WqYYLz2Z7EGdVQgB6LYDvNjNag+is8SPK5O4+TjkA7qbYTXXeigvvN9s3PDfbUHw/ZPBLeuUEPG6VKS4gjdIH242qHj1/3y1x7XonGD87ktU+Rrunk0oVU8New/T0jo8H4fuvyw0wsivX2AtlXlFLZh3sy6gZpFs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751847330;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=bg3UTIoYitdrE1fKKbSI9xlD3lw7ZBNyiPwF21r9hGQ=;
-	b=eQNcOwYHfMrChfzs/bOXHZAs3RO0F7clXQprNAjtlaEA974VEP17E0Au6WE8lLvH
-	KuH8iGLRDNF+uST57YHjjjfffgtxcGH/xaNQkQ2hxPxG7iFvBhN2uy6k8ZQmhax84VL
-	7H3fGzTQpLW/DVxyyIeohIUqny+wsACP0phn5ROc=
-Received: by mx.zohomail.com with SMTPS id 175184732787092.66100338687909;
-	Sun, 6 Jul 2025 17:15:27 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 230A0180F14; Mon, 07 Jul 2025 02:15:22 +0200 (CEST)
-Date: Mon, 7 Jul 2025 02:15:22 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>, David Collins <david.collins@oss.qualcomm.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	kernel@oss.qualcomm.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 1/8] power: supply: core: Add resistance power supply
- property
-Message-ID: <fb3ielhucosims237ikv4jfp3oq6fu5ftgt2mvenj6pjmzrpqo@vip3r6qew32p>
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <20250530-qcom_battmgr_update-v2-1-9e377193a656@oss.qualcomm.com>
- <b7m55sjc2rtvtelvez6sxnjvdostvxmfjhhsr4uxhyhh4bxrcd@xmioz2bsgis2>
- <e9160bb8-2b5c-4c30-b60f-520decde851e@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVK0L0xpxFVT6tA6fgQ/864CycZvZ0la9yxq1zz2Q9DId3tMrrVMmSam/DmbrO73OS33VgcbrERX6KTAiXvvDEGGnjCS0bAfB2Jo+r0xrtgtU/4gRgRT9M5Q7y3tIBzrfpx9lqbDldwRkIzzSdIt0EvWfXrzNJCRS8WnC3/p8Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-c0-686b131ab99d
+Date: Mon, 7 Jul 2025 09:21:41 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Harry Yoo <harry.yoo@oracle.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
+	jackmanb@google.com
+Subject: Re: [PATCH net-next v7 1/7] netmem: introduce struct netmem_desc
+ mirroring struct page
+Message-ID: <20250707002141.GA3379@system.software.com>
+References: <20250625043350.7939-1-byungchul@sk.com>
+ <20250625043350.7939-2-byungchul@sk.com>
+ <20250626174904.4a6125c9@kernel.org>
+ <20250627035405.GA4276@system.software.com>
+ <20250627173730.15b25a8c@kernel.org>
+ <aGHNmKRng9H6kTqz@hyeyoo>
+ <20250701164508.0738f00f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="orqvdfabm65lopjd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e9160bb8-2b5c-4c30-b60f-520decde851e@oss.qualcomm.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/251.827.75
-X-ZohoMailClient: External
+In-Reply-To: <20250701164508.0738f00f@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzjmuVsdp9WZFtUJD6KJYPdGFoi8vdCGwEMqogx7aci7b
+	0jQKrEaRqIVJ5NRYRnnpspqlK5bpXKlkZoZ1stpkXkiyRmbStNtmRX378f8//Ph/eDhKZZZH
+	cFr9AdGgF3RqRkErPkwsWxgRlqJZ8i0vDkqs1xi4+jUTyrvtciipqkEw7H/NwmdXEwOXLo5Q
+	UPLURMMX6ygFfY+8LFy1bQLPlX4aHCdrKfCebmYgzzRGwX3/RxaO2Stk0F6TL4fC0csU1GZ3
+	s/D8XgkD7ms/5dDvzKOhxVxJgyd/LTyyTIWRx4MIXNZaGYzkljJwtsPCQI/Jg6Cj0UtD8dF8
+	BNY6SQ5jXwOO4odudu180jjoo8jtylcyctf8liUWWzqprogmOVIHRWxVpxhiGypgyZsXDoY0
+	nx+jyV37ZxnJO/6RIZ/6umjiq+tkiPV2J01aLS52S+h2xapkUafNEA2L1+xWaNyuXCbNG5b5
+	8oyXzUb1k3NQCIf5OJztaWP/ssN9Rx5kmp+Pv5fVUUFm+CgsSf5xDg/kpuoiOgcpOIq/zuBC
+	dwsKFmG8gB3eYVmQlfxyLLU/GT9S8RdkePhB758iFLcU9dJBpvhoLP0YCORcgGfg8h9cMA7h
+	Y7C/0z4+Ygo/D9fXNMl+j7Nz2Dem/c3TcUOFRJ9BvPk/q/k/q/mf1YKoKqTS6jNSBa0ubpEm
+	S6/NXJS0L9WGAh9z5ci3HXY01B7vRDyH1BOVSxL2alRyIcOYlepEmKPU4coTTIpGpUwWsg6J
+	hn27DOk60ehEMzhaPU0ZO3IwWcXvEQ6IKaKYJhr+tjIuJCIbbTvxYDRqo9k5NMu02+rvG7iV
+	9P79ThW/bnVsQvGxZzsPz5kt1DfM/TKptHBrlLA0Kfy6/WbbrgmRzeA5XXBoDTnevipBP3R5
+	DxJiF7y2RcKApOi5sXJFV8S8/TpJSqzx9a2eqTvny1i2OdJR/i6sunVwQ7zFiKO6nyV6Vq5f
+	ENOmpo0aISaaMhiFX7d721stAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRiH+Z/bjsPhaZodrD60CsXSlG4vGGYfolNkRBBBRHnQQ5vOGVsb
+	WgSmK2vlvQ82L6wk56UYTJuzlprXpJso1iqbY6nYBc2ckpnWJkV9e/g97+/l/fDSuHSRCKMV
+	qrOCWsUrZZSYEB+Ky40KC06Tx9gur4EKy10KGr5ngtltJ6Gi3obAO/9OBDNdvRRU35rDoeKl
+	noBZyw8cxno8ImiwJsJIzTgBjrxmHDyFTyjI1y/g8Gh+UgQ59loMOiv7SOi3FZBw48cdHJqz
+	3SIYfFBBgevuLxLGO/IJ6DPWETBSkAA9plCYe/oFQZelGYO565UUlA6YKPigH0Ew0OkhoPxi
+	AQJLq5OEhe++HeXdLlHCRq7zyxTONdW9wbgW43sRZ7JqucbaSM7gHMA5a/1VirN+KxFxw68c
+	FPekbIHgWuwzGJefO0lx02NvCW6qdYjiqie+YpylaYg4LD0u3pUiKBU6Qb0lPkksd3Vdp854
+	gjNfF3lE2ag9yIACaJbZxjpc90k/E8wGdvF2K+5niglnnc75ZQ7x5frGm4QBiWmcuUexN1x9
+	yC+CGZ51eLyYnyXMTtbZ/3x5SMpUYay3bfSPWMH23Rwl/Iwzkaxz6aMvp328mjUv0f44gIll
+	54fsy0esZNaz7bZerAhJjP+1jf+1jf/aJoTXoxCFSpfOK5TbozVp8iyVIjM6OSPdinxPUXPh
+	Z7EdeQf3dSCGRrJAScyxVLmU5HWarPQOxNK4LERymUqTSyUpfNY5QZ1xSq1VCpoOtJomZKsk
+	B44JSVLmNH9WSBOEM4L6r8XogLBslKk1M47U4nXdeaURJyXhLdW5w61u3KV9UWYo67nljZma
+	fDpukkV5NjdeORivjziRyKyM99bsd15LCjUpX1QrPl/CtPDMbUwMakjcsSvj6NiRvaYg4/lp
+	szFu9+NNn0pm7xe6hk2VCQ/3rI0PSk6PC+zd2phUNbGxPXVUl0NuapMRGjkfG4mrNfxvX+2S
+	LBADAAA=
+X-CFilter-Loop: Reflected
 
+On Tue, Jul 01, 2025 at 04:45:08PM -0700, Jakub Kicinski wrote:
+> On Mon, 30 Jun 2025 08:34:48 +0900 Harry Yoo wrote:
+> > > Ugh, you keep explaining the mechanics to me. Our goal here is not
+> > > just to move fields around and make it still compile :/
+> > >
+> > > Let me ask you this way: you said "netmem_desc" will be allocated
+> > > thru slab "shortly". How will calling the equivalent of page_address()
+> > > on netmem_desc work at that stage? Feel free to refer me to the existing
+> > > docs if its covered..
+> >
+> > https://kernelnewbies.org/MatthewWilcox/Memdescs/Path
+> > https://kernelnewbies.org/MatthewWilcox/Memdescs
+> >
+> > May not be the exact document you're looking for,
+> > but with this article I can imagine:
+> >
+> > - The ultimate goal is to shrink struct page to eventually from 64 bytes
+> >   to 8 bytes, by allocating only the minimum required metadata per 4k page
+> >   statically and moving the rest of metadata to dynamically-allocated
+> >   descriptors (netmem_desc, anon, file, ptdesc, zpdesc, etc.) using slab
+> >   at page allocation time.
+> >
+> > - We can't achieve that goal just yet, because several subsystems
+> >   still use struct page fields for their own purposes.
+> >
+> >   To achieve that, each of these subsystems needs to define
+> >   its own descriptor, which, for now, overlays struct page, and should be
+> >   converted to use the new descriptor.
+> >
+> >   Eventually, these descriptors will be allocated using slab.
+> >
+> > - For CPU-readable buffers, page->memdesc will point to a netmem_desc,
+> >   with a lower bit set indicating that it's a netmem_desc rather than
+> >   other type. Networking code will need to cast it to (netmem_desc *)
+> >   and dereference it to access networking specific fields.
+> >
+> > - The struct page array (vmemmap) will still be statically allocated
+> >   at boot time (or during memory hotplug time).
+> >   So no change in how page_address() works.
+> >
+> > net_iovs will continue to be not associated with struct pages,
+> > as the buffers don't have corresponding struct pages.
+> > net_iovs are already allocated using slab.
+> 
+> Thanks a lot, this clarifies things for me.
+> 
+> Unfortunately, I still think that it's hard to judge patches 1 and 7
+> in context limited to this series, so let's proceed to reposting just
+> the "middle 5" patches.
 
---orqvdfabm65lopjd
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/8] power: supply: core: Add resistance power supply
- property
-MIME-Version: 1.0
+Just in case, I sent v8 with the "middle 5" last week as you requested.
+I'm convinced they are non-controversial but lemme know if any.
 
-Hi,
-
-On Mon, Jun 30, 2025 at 04:28:14PM +0800, Fenglin Wu wrote:
-> On 6/22/2025 9:26 AM, Sebastian Reichel wrote:
-> > On Fri, May 30, 2025 at 03:35:06PM +0800, Fenglin Wu via B4 Relay wrote:
-> > > From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-> > >=20
-> > > Some battery drivers provide the ability to export resistance as a
-> > > parameter. Add resistance power supply property for that purpose.
-> > This is missing some information and the naming is bad.
-> >=20
-> > Which resistance (I suppose battery internal resistance)?
-> >=20
-> > That is heavily dependent on the battery temperature. So this needs
-> > to document if this is for the current temperature or for some
-> > specific one.
-> >=20
-> > -- Sebastian
->=20
-> This is battery internal resistance calculated by battery management syst=
-em,
-> using the real-time temperature measured by the thermistor inside the
-> battery pack.
->=20
-> I can update the name to something like "rt_internal_resistance" and upda=
-te
-> the description accordingly.
-
-Your message is kind of mixed signal to me.
-
-If the BMS needs the thermistor to calculate the internal
-resistance, it means the data is either not real-time, but
-just adopting some fixed value to the current temperature,
-or the internal resistance is adopted from the current
-temperature to some fixed temperature.
-
-My expectation would be, that the BMS instead actually measures the
-internal resistance via ohm's and law and Kirchhoff's voltage law.
-So please make sure to understand what data is actually provided by
-the BMS for a proper ABI description.
-
-Depending on the description I think 'internal_resistance' is a good
-name.
-
-Greetings,
-
--- Sebastian
-
---orqvdfabm65lopjd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhrEZYACgkQ2O7X88g7
-+poJbA//S3Qz3Ln7piw+pbGa8pohdUZjhJetS+frJHREKwEQX31E8iqMa5bbumhb
-QQHbrNvDREndfwHjJZXWsCUA0YI6kLVWlUpUKegJJzszVuR++7ihPSwPo3AYs1kA
-70dUL45RUIeqaaDfThdP0hZIkJZEiu9n72I/n4Y3R6QzlhOTAy1FwmZIdlY6Pfpa
-Zdes/Kbp6YsTpftEfyBK90lrEUE5qRXu0sCDkjtaQQACIHr/61m2/h5v9D2OlEMn
-0RgXFWi6hYAezGfGyY6+YjTkqmtcZcnHJlTdqORv5hmhbQYqqGrjP6gHzM7jwRx8
-/4/lL5ax3EMjWQk8KdAs0s9GYsby9DeNGYcgpp0Qfee58mDUepagNkVntRQFhW6v
-rCW1T5lYh4vkoY5GrOP8dLgRQEJQP66JPVq8pgppMj8WCCXyh7EbaltNvXGfm+WP
-5h8hhsg8ysi9v2FTVqrHobvSc4BJ4DrUD9Gx2j11PjFV80KDjGiZAM4ZQXj9QjgQ
-pvDozcn5C3mswYHBsT36Daan2S/16QQi9WIKwKCqUrRIW50xAJNzyWrsADh2NMe8
-a2tDVYNK4c4qMvb7rqoPql/PtNAit/G4+nw5M2IddtG5eVxW7CrgSBpq5fJpDjdx
-Bs/EzIFfg8j4K8xY9l0iRbVrze/jhO5Dsck3cbbXlUM5fCIEZGI=
-=Jeor
------END PGP SIGNATURE-----
-
---orqvdfabm65lopjd--
+	Byungchul
