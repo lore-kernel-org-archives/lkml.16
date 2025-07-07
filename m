@@ -1,137 +1,129 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F87A28BAA4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79DC28C2B3
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 07:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751875054; cv=none; b=IZ+z5TbEnPgNVOcFwaq8yGPF+LpDV28mXAtG6ICK/XzmFapfQ/OSMCsQH/j8IdkqCpj3l4d88xFAr4jzIlFARpNzXsKWH58h13w6tk7nsRFao9BXsy/4AiFK73lpcLd8ZzvmexZxIUEyA1qiayAyn9xz067ML3kyrj7npvnODeU=
+	t=1751875057; cv=none; b=mB8i+XEzVx73ytmwABos2LexEns3lAojfA6LuN41c1TELeejqr4Wg5kE2pZLsNmVunq93NxAjc4+Ix4S4jRcKphrqi19PEom3pORER4MimEzS6ApCj8EVbIjaZbSeQPMlwHoylybMjRxamfAHCU8F/yRcuuOP4e7nTDCtiSJF4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751875054; c=relaxed/simple;
-	bh=BNtXI6K5RCIrHiaNuAT0td9mVfirnsJeRHBVePeXdz8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tVZ5PemO2SWeN2nLS6u+SwBkXXfIf6Gc6zrGfF9+tGLBPnxFrFMPZ7Agb1qFqv6dWVpsmhM1HdXhlEyPUz7RtbvFafa2lns/x9ivy8cF1gwwSvtcWIwNgSB03X7wUSF6zV6pqMEyurgMdWgRx4RZFhbh5ozHLHSFsevOFiAuc+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2HPeg7MJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bqAZV+qS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2HPeg7MJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bqAZV+qS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751875057; c=relaxed/simple;
+	bh=TIYvoKfMMCjlv2uIdTylizwMRIdwqTIRMTgS9s8saVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fPM1hWLN+IuTUjMFz8PuGVM5mXkX0nOmzAqVKP6VNZQoPX+YnSco5HRJYYLDmzG4xy3f8b2kDY8QaJq+QLCncxx8aHRm7xoIYH1G1v7rg6eVqaVvKP/C8iOgO0A8FKyNveDoDJ8Mx2shm3cmIdOxt13+ikIP84WqoV6ipX3D3jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=fAXCp2Ok; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2HPeg7MJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bqAZV+qS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2HPeg7MJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bqAZV+qS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 07A1D2116B;
-	Mon,  7 Jul 2025 07:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751875051; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hDEgDLZXsyHM38uVRVvbQQHy283T0o/grMgEY23Wm+k=;
-	b=2HPeg7MJ1siLppGgXBRo4KX9fSch8taSpbtlSrvbPDuceowWZzvJQIsA7SpMwsoC6wBZ+c
-	umdvgiV1hinRnlCS1fS+3/r6XOmNRtc7MlqfLW6fkAT83EDiLAqGRlpXeArY36CRtq3p4I
-	uxEoCI/ES/93XafpKlLenZYr1EPDimo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751875051;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hDEgDLZXsyHM38uVRVvbQQHy283T0o/grMgEY23Wm+k=;
-	b=bqAZV+qS2JIjx1JRmMlPuSRtT93HLgzThVwZ6Vdo42GyN8m4sLWWn7Mdbv47VHa+UAw+QC
-	UqzAl4EM4mjZkeDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=2HPeg7MJ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bqAZV+qS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751875051; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hDEgDLZXsyHM38uVRVvbQQHy283T0o/grMgEY23Wm+k=;
-	b=2HPeg7MJ1siLppGgXBRo4KX9fSch8taSpbtlSrvbPDuceowWZzvJQIsA7SpMwsoC6wBZ+c
-	umdvgiV1hinRnlCS1fS+3/r6XOmNRtc7MlqfLW6fkAT83EDiLAqGRlpXeArY36CRtq3p4I
-	uxEoCI/ES/93XafpKlLenZYr1EPDimo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751875051;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hDEgDLZXsyHM38uVRVvbQQHy283T0o/grMgEY23Wm+k=;
-	b=bqAZV+qS2JIjx1JRmMlPuSRtT93HLgzThVwZ6Vdo42GyN8m4sLWWn7Mdbv47VHa+UAw+QC
-	UqzAl4EM4mjZkeDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C7C2813757;
-	Mon,  7 Jul 2025 07:57:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7mpzL+p9a2hMKQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 07 Jul 2025 07:57:30 +0000
-Date: Mon, 07 Jul 2025 09:57:30 +0200
-Message-ID: <87jz4ko2l1.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,	Takashi
- Iwai <tiwai@suse.de>,	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: mts64: Replace deprecated strcpy() with strscpy()
-In-Reply-To: <20250706160906.416270-1-thorsten.blum@linux.dev>
-References: <20250706160906.416270-1-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="fAXCp2Ok"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af51596da56so2098205a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 00:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brighamcampbell.com; s=google; t=1751875055; x=1752479855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/MC/xohKHOcg+vnOOSNCEDTYlZuTz6zJxo6U8fkD0yY=;
+        b=fAXCp2OkG630hcC1x3SNl4GRMHD9RpPkRHnjMVtZ6FFYIFmA53Ndu6pC/DKss6AMO0
+         miJtcA+RgIfT4ZcCMdSEHsINFBUDHyI0z9bz3OFdiVmnswRIdua/ZjZp3X9iF03RlRyR
+         PlUD4+PZJqaqi9vMAIRxLOFBwL3Hi5gjOBPSrGPWxESuMLzJJOVV8as2NhmOjRDLPHtl
+         HVcFX1ZR1kifAT7YyHm/ado3fX+5d0vOwbVHRgRNFvCfyoPlU5Qg1W6jn8MtBpl6pjkw
+         Zn6Z1VO6TWQKNSdiSDneMvIRQkdurjS0pAs9Yw5opKmDyrHORLnwUS5tm6zN109SuUJL
+         OU/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751875055; x=1752479855;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/MC/xohKHOcg+vnOOSNCEDTYlZuTz6zJxo6U8fkD0yY=;
+        b=EkMZCpI4Cv96KwM45Nrt0mQTWHgWfh19whG4CcCJiTsjed2ojzZRLpXJH9FY/GATE7
+         SwCjDTXFUA/HgiWJc1Z8e+kY13X2fbxyV5igaFu+SWa5vLglo5WiLa3GYFkrN4JxQq7n
+         sfT0cum+c1b7aCrM664Yp8v6Y2mYMadio4XU251mEH3VzU/jkPqo2GxtyzBimRjHUc/u
+         Q9dcSxonpeTQV+/f5/emjAzZY7J7+ZulHiIEmq0OZZRSgS+41jEKSzcdpnQyv2AHEkkr
+         mvf5UaYZ9mmLvb3vnv0Bbn/6nw3QBYqPKgiXqBrV8NgodecNWWC1teGWiDN9oxybuCNw
+         e+6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUCebzOyD5oy0lwE3juPrfOBID1ebAx/cc9wbuiVvfY3KJ1sgHqWGOpoAhpluR932HJZKnaF2qDJxzwr0w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKZzDSPIfVuUBxQN+reap05IH8vJ5fFZgi3EHlbZCyJymaGDZn
+	XhI5kU9j5k21KAAWCCuzp31fZEoqylFDnbfb64O2KfIRrQVoKHNZEATpZWQ6rGx/7Qg=
+X-Gm-Gg: ASbGncsMDba7MdetRHU3daOqdh73hspyykBfq2RPUF+DomvHKkMEPeoBWfKJandRTEK
+	AAoXKacCpAdTYE+i3UmcQWbRr9urMYNpscZ29brpcK6Ch5ggEIAWyTv4uFoT3kBieFz4GwMD5KY
+	c8PxvcHNBE9wRaqcaJC8egcpv3GqM5F6u+9U6IV02Z1T4tUlD8yjqweVjXFhZMqHzEYyBt7ddOw
+	I1dO24Ny02Edm1gu+YLl3NMkY4Y+1XKh+xeTD/TFPIXNZf8hUBnklYX6CYdnTpR7DPLFYXTGFWH
+	FyXiYuaiH2N/4cbbpZk9WEKoLCHPqjWOXdl1zw12ejJMR6xMldt5eWI2lvn0YSTzPW/+XjoBnqF
+	u1+zCBXg55WtyJQ3WSA==
+X-Google-Smtp-Source: AGHT+IEG3rUVLj/sU9Sc3cCmT/rktoO/r9+WAKUWx4b+U8GR+jBcTNhe69ooHHcJV8ngN58Oe5tUvA==
+X-Received: by 2002:a05:6a20:2583:b0:21f:54f0:3b84 with SMTP id adf61e73a8af0-2260b96873fmr18892440637.35.1751875054860;
+        Mon, 07 Jul 2025 00:57:34 -0700 (PDT)
+Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee62f8bdsm8246476a12.57.2025.07.07.00.57.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 00:57:34 -0700 (PDT)
+From: Brigham Campbell <me@brighamcampbell.com>
+To: dianders@chromium.org,
+	tejasvipin76@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Brigham Campbell <me@brighamcampbell.com>
+Subject: [PATCH 3/3] drm: docs: Remove completed task from drm TODO list
+Date: Mon,  7 Jul 2025 01:56:58 -0600
+Message-ID: <20250707075659.75810-4-me@brighamcampbell.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250707075659.75810-1-me@brighamcampbell.com>
+References: <20250707075659.75810-1-me@brighamcampbell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 07A1D2116B
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.51
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, 06 Jul 2025 18:09:03 +0200,
-Thorsten Blum wrote:
-> 
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Remove TODO item from drm documentation to transition away from using
+mipi_dsi_*_write_seq() macros now that the work is complete.
 
-Applied now.  Thanks.
+Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+---
+ Documentation/gpu/todo.rst | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
+diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
+index be8637da3fe9..76afb8a784e3 100644
+--- a/Documentation/gpu/todo.rst
++++ b/Documentation/gpu/todo.rst
+@@ -497,24 +497,6 @@ Contact: Douglas Anderson <dianders@chromium.org>
+ 
+ Level: Intermediate
+ 
+-Transition away from using mipi_dsi_*_write_seq()
+--------------------------------------------------
+-
+-The macros mipi_dsi_generic_write_seq() and mipi_dsi_dcs_write_seq() are
+-non-intuitive because, if there are errors, they return out of the *caller's*
+-function. We should move all callers to use mipi_dsi_generic_write_seq_multi()
+-and mipi_dsi_dcs_write_seq_multi() macros instead.
+-
+-Once all callers are transitioned, the macros and the functions that they call,
+-mipi_dsi_generic_write_chatty() and mipi_dsi_dcs_write_buffer_chatty(), can
+-probably be removed. Alternatively, if people feel like the _multi() variants
+-are overkill for some use cases, we could keep the mipi_dsi_*_write_seq()
+-variants but change them not to return out of the caller.
+-
+-Contact: Douglas Anderson <dianders@chromium.org>
+-
+-Level: Starter
+-
+ Remove devm_drm_put_bridge()
+ ----------------------------
+ 
+-- 
+2.49.0
 
-Takashi
