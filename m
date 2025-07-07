@@ -1,285 +1,84 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6C421FF5C;
-	Mon,  7 Jul 2025 07:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751873638; cv=pass; b=kIi36ws2BC6cHrhg0FC42UniDIoiUdcZ17Rtp1kpKH7oZbpSTBa9iR/stDG1d2++JM5OTeD7T09UBgRz7z03toXaLiiUtuahluw7/ArdBagw+tZKODb5NVtbwST2s9qiZeObKJ4b7d+iWudC57d2JN8DSMpiJwPNtPfIcEGYsA8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751873638; c=relaxed/simple;
-	bh=wXsTWyd4yYlOsiktiqaiTuUm1qucpLijYl3bq49V17w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZILTz21rYqEtwppwi670Th+QQutZuTREtY2wviqtPy82izQ9Z3DbMD5LDDrf0RQVPUBHF7/5vM3YAYFcYXUbXkdiTXAXogdu/4nBzZ27ry3uEIPihJtpeilZyCCIDaS28webEriT22XW0dl54yGuSJfHzOBuOTY0i0DcdttaI50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=aJlh81gn; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1413220F2D;
+	Mon,  7 Jul 2025 07:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751873886; cv=none; b=qiJt+/3VZ502xl4tmVbVuMNesUgVL3sy6hRjfXpi1bG5ocVkZoNA4zZH3KYYxYDC6oTovktdtTkqb5m/im/CQPVT1uDmp0fdrCFjMbuGzZxfJBqfwikBnG2Ss74HG14ZIvEY/SFN0m9qdOG2fp7Q0HbYEMWxU4D2M+Dhta1l3uc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751873886; c=relaxed/simple;
+	bh=n4UW7ZoSq762p2vsAB0ks/IJ++q46OJO7BcDrp5Hjvw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mWuhN04pFcPy7n+QBWU+LbdfbbsXVO06zFjaBgo39Zul9P+3yVXx+MVZ/y8ugchLDRoiKChb3fajpT4NtvKQgIDolOHFR2TBJId4d2UmwwEZI67XofbNRjlN/fqBeIJjdTZXtxvhWgVi0H6XQySWLCtbrM7FzpghfNJCmrQC49Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=jJvp+wqE; arc=none smtp.client-ip=1.95.21.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="aJlh81gn"
-ARC-Seal: i=1; a=rsa-sha256; t=1751873620; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=HTCku5Z4eE+HXVPl3u6T2Czgb3E8BG0hU0FVn/GpZjxuDiW5YetXJMhHfh95kfzxvgNsyN09pPJe0boWmoD0NxCGIfiJD8sfNEDZ82lARDwuG3n9a9X2wwBIVMXry4hfk4pL2iGKt6LAS99IEujqwYdZBmfAZD1N0o1b7Ipv4m8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751873620; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=BdU2n3YWpibKbpwCxOh1ePuw+qQOxSR0HU9wfR6gAUw=; 
-	b=UUtocAbeWAI9mnkKNCOlVjqWdsytG9HMeedJ9kKrctqq7KJ7JkyEu8zd6+ZCVsVoPRUolbhlLonFfNxnXfgI7JoICALTx6KEjDlQnoH9EgwIgNIKjGQmmfhTziS/wEI0anJWqdrK41eEvGD9ggnABvzLtTLp9fYdBbNPPo8LZhE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751873620;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=BdU2n3YWpibKbpwCxOh1ePuw+qQOxSR0HU9wfR6gAUw=;
-	b=aJlh81gnwv0G1WDmGbMUDQMTGB7/sBHhRZLQ/LdDsTfMlJSrQlsII+HOS4H4R+pC
-	+3PxtlCvu3Y0bXGRyk3u09OWv3tMp8ZfX2PPh6zmdtFpmGGufya6lLwCL5EgMZV8zCv
-	XwCHvyPXvLIpvlBqF73giMgeFOZKnBr6oXA06TlY=
-Received: by mx.zohomail.com with SMTPS id 1751873617320882.1477553147479;
-	Mon, 7 Jul 2025 00:33:37 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] selftests/mm: pagemap_scan ioctl: add PFN ZERO test cases
-Date: Mon,  7 Jul 2025 12:33:20 +0500
-Message-ID: <20250707073321.106431-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="jJvp+wqE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=7346OZHTuSrLm7WiDgkYI1AvDhjuIewBzgFjJ+P/eQs=;
+	b=jJvp+wqEORUgf5bHI7laU///x9HXRZv0yPGdDonkb2PfI/m+wW2621MG6aroIJ
+	Kr4+4P1HtNHIWtDcpf4AwEH5H5l8e/nEtXa1POqi+x82vT19GmWgjOezD2gS3oiQ
+	fuKB6fl6IjvNJctcq+BxQgOBtYzmROYohhwbvKeTdst/E=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDXX_YmeWtoME88AA--.37050S3;
+	Mon, 07 Jul 2025 15:37:12 +0800 (CST)
+Date: Mon, 7 Jul 2025 15:37:10 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: freescale: imx8mm-verdin: Keep LDO5
+ always on
+Message-ID: <aGt5JoocafXbX1cX@dragon>
+References: <20250623132545.111619-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623132545.111619-1-francesco@dolcini.it>
+X-CM-TRANSID:Mc8vCgDXX_YmeWtoME88AA--.37050S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4rur4rAFWUXryftFyDGFg_yoWDtwc_CF
+	ySqr4xWw1xGFWjy3yqkF4UZFW8Kas3tr97tayIgrZxJF9xZay3XFWktFn5ZrnxGanxur98
+	Zw13t3saq3s7WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj7DGUUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIAhdwmhreSi2IQAA3y
 
-Add test cases to test the correctness of PFN ZERO flag of pagemap_scan
-ioctl. Test with normal pages backed memory and huge pages backed
-memory.
+On Mon, Jun 23, 2025 at 03:25:45PM +0200, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> 
+> LDO5 regulator is used to power the i.MX8MM NVCC_SD2 I/O supply, that is
+> used for the SD2 card interface and also for some GPIOs.
+> 
+> When the SD card interface is not enabled the regulator subsystem could
+> turn off this supply, since it is not used anywhere else, however this
+> will also remove the power to some other GPIOs, for example one I/O that
+> is used to power the ethernet phy, leading to a non working ethernet
+> interface.
+> 
+> [   31.820515] On-module +V3.3_1.8_SD (LDO5): disabling
+> [   31.821761] PMIC_USDHC_VSELECT: disabling
+> [   32.764949] fec 30be0000.ethernet end0: Link is Down
+> 
+> Fix this keeping the LDO5 supply always on.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support for verdin imx8m mini")
+> Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Cc: David Hildenbrand <david@redhat.com>
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-The bug has been fixed [1].
-
-[1] https://lore.kernel.org/all/20250617143532.2375383-1-david@redhat.com
-Changes since v1:
-- Skip if madvise() fails
-- Skip test if use_zero_page isn't set to 1
-- Keep on using memalign()+free() to allocate huge pages
-
-Changes sice v2:
-- Move zero page detection code out to vm_util and use that
-- Use mmap instead of memalign to allocate hugepage
----
- tools/testing/selftests/mm/cow.c           | 27 +-------
- tools/testing/selftests/mm/pagemap_ioctl.c | 72 +++++++++++++++++++++-
- tools/testing/selftests/mm/vm_util.c       | 23 +++++++
- tools/testing/selftests/mm/vm_util.h       |  2 +
- 4 files changed, 95 insertions(+), 29 deletions(-)
-
-diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
-index b6cfe0a4b7dfd..b26bbf6ec4617 100644
---- a/tools/testing/selftests/mm/cow.c
-+++ b/tools/testing/selftests/mm/cow.c
-@@ -72,31 +72,6 @@ static int detect_thp_sizes(size_t sizes[], int max)
- 	return count;
- }
- 
--static void detect_huge_zeropage(void)
--{
--	int fd = open("/sys/kernel/mm/transparent_hugepage/use_zero_page",
--		      O_RDONLY);
--	size_t enabled = 0;
--	char buf[15];
--	int ret;
--
--	if (fd < 0)
--		return;
--
--	ret = pread(fd, buf, sizeof(buf), 0);
--	if (ret > 0 && ret < sizeof(buf)) {
--		buf[ret] = 0;
--
--		enabled = strtoul(buf, NULL, 10);
--		if (enabled == 1) {
--			has_huge_zeropage = true;
--			ksft_print_msg("[INFO] huge zeropage is enabled\n");
--		}
--	}
--
--	close(fd);
--}
--
- static bool range_is_swapped(void *addr, size_t size)
- {
- 	for (; size; addr += pagesize, size -= pagesize)
-@@ -1791,7 +1766,7 @@ int main(int argc, char **argv)
- 	}
- 	nr_hugetlbsizes = detect_hugetlb_page_sizes(hugetlbsizes,
- 						    ARRAY_SIZE(hugetlbsizes));
--	detect_huge_zeropage();
-+	has_huge_zeropage = detect_huge_zeropage();
- 
- 	ksft_set_plan(ARRAY_SIZE(anon_test_cases) * tests_per_anon_test_case() +
- 		      ARRAY_SIZE(anon_thp_test_cases) * tests_per_anon_thp_test_case() +
-diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
-index 57b4bba2b45f3..059c6d5f971e7 100644
---- a/tools/testing/selftests/mm/pagemap_ioctl.c
-+++ b/tools/testing/selftests/mm/pagemap_ioctl.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+
- #define _GNU_SOURCE
- #include <stdio.h>
- #include <fcntl.h>
-@@ -34,8 +35,8 @@
- #define PAGEMAP "/proc/self/pagemap"
- int pagemap_fd;
- int uffd;
--unsigned int page_size;
--unsigned int hpage_size;
-+size_t page_size;
-+size_t hpage_size;
- const char *progname;
- 
- #define LEN(region)	((region.end - region.start)/page_size)
-@@ -1480,6 +1481,68 @@ static void transact_test(int page_size)
- 			      extra_thread_faults);
- }
- 
-+void zeropfn_tests(void)
-+{
-+	unsigned long long mem_size;
-+	struct page_region vec;
-+	int i, ret;
-+	char *mmap_mem, *mem;
-+
-+	/* Test with normal memory */
-+	mem_size = 10 * page_size;
-+	mem = mmap(NULL, mem_size, PROT_READ, MAP_PRIVATE | MAP_ANON, -1, 0);
-+	if (mem == MAP_FAILED)
-+		ksft_exit_fail_msg("error nomem\n");
-+
-+	/* Touch each page to ensure it's mapped */
-+	for (i = 0; i < mem_size; i += page_size)
-+		(void)((volatile char *)mem)[i];
-+
-+	ret = pagemap_ioctl(mem, mem_size, &vec, 1, 0,
-+			    (mem_size / page_size), PAGE_IS_PFNZERO, 0, 0, PAGE_IS_PFNZERO);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
-+
-+	ksft_test_result(ret == 1 && LEN(vec) == (mem_size / page_size),
-+			 "%s all pages must have PFNZERO set\n", __func__);
-+
-+	munmap(mem, mem_size);
-+
-+	/* Test with huge page if user_zero_page is set to 1 */
-+	if (!detect_huge_zeropage()) {
-+		ksft_test_result_skip("%s use_zero_page not supported or set to 1\n", __func__);
-+		return;
-+	}
-+
-+	mem_size = 2 * hpage_size;
-+	mmap_mem = mmap(NULL, mem_size, PROT_READ | PROT_WRITE,
-+			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	if (mmap_mem == MAP_FAILED)
-+		ksft_exit_fail_msg("error nomem\n");
-+
-+	/* We need a THP-aligned memory area. */
-+	mem = (char *)(((uintptr_t)mmap_mem + hpage_size) & ~(hpage_size - 1));
-+
-+	ret = madvise(mem, hpage_size, MADV_HUGEPAGE);
-+	if (!ret) {
-+		char tmp = *mem;
-+
-+		asm volatile("" : "+r" (tmp));
-+
-+		ret = pagemap_ioctl(mem, hpage_size, &vec, 1, 0,
-+				    0, PAGE_IS_PFNZERO, 0, 0, PAGE_IS_PFNZERO);
-+		if (ret < 0)
-+			ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
-+
-+		ksft_test_result(ret == 1 && LEN(vec) == (hpage_size / page_size),
-+				 "%s all huge pages must have PFNZERO set\n", __func__);
-+	} else {
-+		ksft_test_result_skip("%s huge page not supported\n", __func__);
-+	}
-+
-+	munmap(mmap_mem, mem_size);
-+}
-+
- int main(int __attribute__((unused)) argc, char *argv[])
- {
- 	int shmid, buf_size, fd, i, ret;
-@@ -1494,7 +1557,7 @@ int main(int __attribute__((unused)) argc, char *argv[])
- 	if (init_uffd())
- 		ksft_exit_pass();
- 
--	ksft_set_plan(115);
-+	ksft_set_plan(117);
- 
- 	page_size = getpagesize();
- 	hpage_size = read_pmd_pagesize();
-@@ -1669,6 +1732,9 @@ int main(int __attribute__((unused)) argc, char *argv[])
- 	/* 16. Userfaultfd tests */
- 	userfaultfd_tests();
- 
-+	/* 17. ZEROPFN tests */
-+	zeropfn_tests();
-+
- 	close(pagemap_fd);
- 	ksft_exit_pass();
- }
-diff --git a/tools/testing/selftests/mm/vm_util.c b/tools/testing/selftests/mm/vm_util.c
-index a36734fb62f38..dde9e8ab4dc46 100644
---- a/tools/testing/selftests/mm/vm_util.c
-+++ b/tools/testing/selftests/mm/vm_util.c
-@@ -424,3 +424,26 @@ bool check_vmflag_io(void *addr)
- 		flags += flaglen;
- 	}
- }
-+
-+bool detect_huge_zeropage(void)
-+{
-+	int fd = open("/sys/kernel/mm/transparent_hugepage/use_zero_page",
-+		      O_RDONLY);
-+	bool enabled = 0;
-+	char buf[15];
-+	int ret;
-+
-+	if (fd < 0)
-+		return 0;
-+
-+	ret = pread(fd, buf, sizeof(buf), 0);
-+	if (ret > 0 && ret < sizeof(buf)) {
-+		buf[ret] = 0;
-+
-+		if (strtoul(buf, NULL, 10) == 1)
-+			enabled = 1;
-+	}
-+
-+	close(fd);
-+	return enabled;
-+}
-diff --git a/tools/testing/selftests/mm/vm_util.h b/tools/testing/selftests/mm/vm_util.h
-index 6effafdc4d8a2..ca4c1f78ce18c 100644
---- a/tools/testing/selftests/mm/vm_util.h
-+++ b/tools/testing/selftests/mm/vm_util.h
-@@ -74,6 +74,8 @@ int uffd_register_with_ioctls(int uffd, void *addr, uint64_t len,
- unsigned long get_free_hugepages(void);
- bool check_vmflag_io(void *addr);
- 
-+bool detect_huge_zeropage(void);
-+
- /*
-  * On ppc64 this will only work with radix 2M hugepage size
-  */
--- 
-2.43.0
+Applied, thanks!
 
