@@ -1,241 +1,149 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B8B12B94;
-	Mon,  7 Jul 2025 03:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D241C5496
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751859047; cv=none; b=df5aZIkn52NIvwG1bJ3eu1eGsNFEpJZInhA/yaQt6kqO4mXOh450BNBXlb30wmlCraBqevZ4X+lh0zD+9LVwqzcMEvZhmuhl/q/XTfVjbp+WcgZAyiFVl5337y0Yg1SoZXkTPHTdQDHsIWFU5i8BFaSZ5IJG7TldsflBAG0vUDo=
+	t=1751859071; cv=none; b=QjHH0xr8i/ouL08RCG9Y9WNyRWaaXaOKlrlUTftW1QxjH/l78im81nskkeI7cklO/w3VGaFM6dFIICiLASS1uOP8uPdPomu/7rPhLOibVYLVfUpS+5IBypem5MR3nA5ML+AIkAENbOeyb/B9lHXnzPHDGxOMCh55ZUq3ElyV6m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751859047; c=relaxed/simple;
-	bh=kxBDgCOSz0tq1MaLRMuxn7XrqsVVSATXO/ynrjrJbd0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=dbN/bd3RaaebwIbS8un1mtquzB9sI7mz2OHSvEJetWC9kAa9oWfA+ioKt0j/RD6W/mgWLcTzM5FyA22rZ+mHJK7hCer2BpS1BUTMBuZma2FNjV2t1+edssbQlyvQePHNIHlKo6EPfMrB9K6MnVap8e1G7FnNKeV1isPVJu9cFaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=iO2AS+Bt; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1751859071; c=relaxed/simple;
+	bh=5bGLlcz2LNZcz7V3A8E5z8rSY2F/sUreYHn4QIcKulI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Be7EfUCX2Vflz4IB+6w8ThNJWJJD4+or9fmCShzsnOuSRwbANjLcQXQm9qfPPyunPp2dERvUg4S8x8hDcPU1DvwrYuQVLedMuDL0u4XkFQyDgNDKz6F3iObWlCM91Cq97YKL4xFzsy8X+9iysPawBLO2tL7pHdFOJzSjwQxSSc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LcTtXg57; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="iO2AS+Bt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id; bh=HP8tZujBjcSHGre
-	MG32sL06BiLfrv9CiKF8NSKgD8CQ=; b=iO2AS+Bt7g1bJfHsadCJ/avBYWhlivM
-	hGDlFCw4gJZjPqnyyWWxzbnXbPeR1Fb4HaeMAUw8+XRjaWGvzvIzb7whz7S7AQnA
-	i/ePZUoox4I+ZaUytryt2THzbQRet/GLEjglDFLc7B6UnGqQwBw6i9u5ZTU6956x
-	1DjdcyXLrzeQ=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnr9uoO2tor4cpBA--.25530S2;
-	Mon, 07 Jul 2025 11:14:49 +0800 (CST)
-From: yangge1116@126.com
-To: ardb@kernel.org
-Cc: jarkko@kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	ilias.apalodimas@linaro.org,
-	jgg@ziepe.ca,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: [PATCH V3] efi/tpm: Fix the issue where the CC platforms event log header can't be correctly identified
-Date: Mon,  7 Jul 2025 11:14:47 +0800
-Message-Id: <1751858087-10366-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wDnr9uoO2tor4cpBA--.25530S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtryxtrW3CF4DXrW3Xr13Jwb_yoW3JF4DpF
-	48Jr9Yyr45ta1Igw1fAw1UCwsxXw4ktrZrGFyDK34jyrnxWFyIgFWUGFy5GF93trs7J3Z0
-	qa4Utr17Ca4UuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoKZXUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOhGDG2hrOMlJZwAAsv
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcTtXg57"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23649faf69fso21782515ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751859069; x=1752463869; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6D4FNc+ZPSxMXR0yzDGObqB7ha5/gNIAEBywyOv4ZVY=;
+        b=LcTtXg578i992XbUZWtRG7EYYzL7uFwH5IWxnn+avTbqCw7+pQZRzEdD/Y3qmMR7L0
+         2oJH8okPQn7Tr+ow8kW/ymNtJCThYlnvI9d1gmi5LHUtcVSmFU/qSdoCz1hjxE1ry48/
+         +0V9N+nNzxlqLbA1g2u7QxmUIw6gNutYDlTMIZHJzhJvdU7cATF1GyhiXk5W8A2W25oC
+         yKaXwFuZ94LH/XxzIaxecaQ7Uk43eZpa5itZAK1zM66Epxn/X/7uo72bqMePdpr+Entv
+         80GxeJzOuaVmKrikCrIr6K+ELkFMb+8eWvRc2pg3W6Uw+bLqrybAis4w+eWPTn/jMnPH
+         bqNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751859069; x=1752463869;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6D4FNc+ZPSxMXR0yzDGObqB7ha5/gNIAEBywyOv4ZVY=;
+        b=pjrn8x+mXqXcnG7p/Hmo3Lf9TMpB5Aae8q/lxeMMcobLge0mGdBBMlVJn48t5KdP4J
+         j5Loyi3G64BO8V9M1G1I7uD9SDhpxSG0B06/y08JvSGuBMU4iyuDwu/flgpRSBPhjNZ+
+         7W5vztIqQAPGSIPBbUDca9XVOL+YzOy8BLGMdjHlsRb7X8SqURgA95mZE1sqgAHQBKTw
+         IjHiLte1/M6H+Wm+CJ20JwbLHAjMYhdPQbf/ToUsuCmDx6Hd7E2ODxTWd5xmZZ/MUplY
+         UOlb6V8d1LAFWULjCQtM8ynaQGQw94klpR8TJIII80VsY4SbxHwiRLF7ofKDBVxef4Go
+         evNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzqpz4q1x+IEH7DvQ20mtOSJS0piDK4otb49wRzehCuj/XhKQeB1zHE+YPLNb7E8zOeg9zOoTz/GCOG5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypjtFIkbNYR/Mgpc9e0P6R2/pVwAgo1NEvtnz9fGzXwKSn2cen
+	aKct7q6nXEEtDIugo6nUaNlXnoUcDZyRP9uMIvj7CQXQ/5jIk3Ikhv+v
+X-Gm-Gg: ASbGnct7o4uY/sgwO8BkyVZM6MWi9t4EXjfFHLrDUM5pKvKV0kYwc9RU7D5iA8H3d6t
+	3xRLfPgN/Fkvkij71dARoXv5crL9lznImIISy0tzV6Wyfm7rqFMqn4R1efIvdqFn2a2aYDBG/WX
+	P1CbiLLraDCHNqngrjUQoSmSixRhSprpzoOIumrYaUi1xEEyjMOEOE9fi5rqz6DYXEHMlA4gyEA
+	Q4fovnmvkMYJ3c72FmcjFlexEJkLGpJQ2+gn5JV1JQQKVbocn6EgB7zL0epTz9fygYjaliL+Qpt
+	NmeLnpoE3DafgFcftJt4K8xvKomhhLq32YphAGJmNI/OdTVgbk6/n0wG+1hr6spDbmiIpInV/8W
+	8VdxH1vMbdGIWPGbm/Kz9tCL4ZAw3skv4CuyJiXKoH7HWJkZURw==
+X-Google-Smtp-Source: AGHT+IEVYxAqKEVcCfg4J8NqSrjAG5zg58gwvdEAbHHYEWOVkuup7CGKWYMfT6CQpOy35AnTNXLlXA==
+X-Received: by 2002:a17:902:ce89:b0:234:d7b2:2ab9 with SMTP id d9443c01a7336-23c87472898mr163559135ad.12.1751859068755;
+        Sun, 06 Jul 2025 20:31:08 -0700 (PDT)
+Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:5e93:4ea0:4954:ef6c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8fcf6715sm48359415ad.51.2025.07.06.20.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Jul 2025 20:31:08 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: mark@fasheh.com,
+	jlbec@evilplan.org,
+	joseph.qi@linux.alibaba.com,
+	ocfs2-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
+	syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
+Subject: [PATCH v2] ocfs2: avoid potential ABBA deadlock by reordering tl_inode lock
+Date: Sun,  6 Jul 2025 23:29:51 -0400
+Message-ID: <20250707032951.361331-1-ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Ge Yang <yangge1116@126.com>
+In ocfs2_move_extent(), tl_inode is currently locked after the global
+bitmap inode. However, in ocfs2_flush_truncate_log(), the lock order
+is reversed: tl_inode is locked first, followed by the global bitmap
+inode.
 
-Since commit d228814b1913 ("efi/libstub: Add get_event_log() support
-for CC platforms") reuses TPM2 support code for the CC platforms, when
-launching a TDX virtual machine with coco measurement enabled, the
-following error log is generated:
+This creates a classic ABBA deadlock scenario if two threads attempt
+these operations concurrently and acquire the locks in different orders.
 
-[Firmware Bug]: Failed to parse event in TPM Final Events Log
+To prevent this, move the tl_inode locking earlier in
+ocfs2_move_extent(), so that it always precedes the global bitmap
+inode lock.
 
-Call Trace:
-efi_config_parse_tables()
-  efi_tpm_eventlog_init()
-    tpm2_calc_event_log_size()
-      __calc_tpm2_event_size()
+No functional changes beyond lock ordering.
 
-The pcr_idx value in the Intel TDX log header is 1, causing the function
-__calc_tpm2_event_size() to fail to recognize the log header, ultimately
-leading to the "Failed to parse event in TPM Final Events Log" error.
-
-According to UEFI Specification 2.10, Section 38.4.1: For TDX, TPM PCR
-0 maps to MRTD, so the log header uses TPM PCR 1 instead. To successfully
-parse the TDX event log header, the check for a pcr_idx value of 0
-must be skipped.
-
-According to Table 6 in Section 10.2.1 of the TCG PC Client
-Specification, the index field does not require the PCR index to be
-fixed at zero. Therefore, skipping the check for a pcr_idx value of
-0 for CC platforms is safe.
-
-Link: https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#intel-trust-domain-extension
-Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_PCClient_PFP_r1p05_v23_pub.pdf
-Fixes: d228814b1913 ("efi/libstub: Add get_event_log() support for CC platforms")
-Signed-off-by: Ge Yang <yangge1116@126.com>
-Cc: stable@vger.kernel.org
+Reported-by: syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67d5645c.050a0220.1dc86f.0004.GAE@google.com/
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
 ---
+v1 -> v2: Fixed unlocking order in ocfs2_move_extent.
 
-V3:
-- fix build error
+ fs/ocfs2/move_extents.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-V2:
-- limit the fix for CC only suggested by Jarkko and Sathyanarayanan
-
- drivers/char/tpm/eventlog/tpm2.c   |  4 +++-
- drivers/firmware/efi/libstub/tpm.c | 13 +++++++++----
- drivers/firmware/efi/tpm.c         |  4 +++-
- include/linux/tpm_eventlog.h       | 14 +++++++++++---
- 4 files changed, 26 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
-index 37a0580..30ef47c 100644
---- a/drivers/char/tpm/eventlog/tpm2.c
-+++ b/drivers/char/tpm/eventlog/tpm2.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/tpm_eventlog.h>
-+#include <linux/cc_platform.h>
+diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
+index 369c7d27befd..aaf8eb2693a4 100644
+--- a/fs/ocfs2/move_extents.c
++++ b/fs/ocfs2/move_extents.c
+@@ -617,6 +617,8 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+ 	 */
+ 	credits += OCFS2_INODE_UPDATE_CREDITS + 1;
  
- #include "../tpm.h"
- #include "common.h"
-@@ -36,7 +37,8 @@
- static size_t calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 				   struct tcg_pcr_event *event_header)
- {
--	return __calc_tpm2_event_size(event, event_header, false);
-+	return __calc_tpm2_event_size(event, event_header, false,
-+			cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT));
- }
- 
- static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
-diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-index a5c6c4f..9728060 100644
---- a/drivers/firmware/efi/libstub/tpm.c
-+++ b/drivers/firmware/efi/libstub/tpm.c
-@@ -50,7 +50,8 @@ void efi_enable_reset_attack_mitigation(void)
- static void efi_retrieve_tcg2_eventlog(int version, efi_physical_addr_t log_location,
- 				       efi_physical_addr_t log_last_entry,
- 				       efi_bool_t truncated,
--				       struct efi_tcg2_final_events_table *final_events_table)
-+				       struct efi_tcg2_final_events_table *final_events_table,
-+				       bool is_cc_event)
- {
- 	efi_guid_t linux_eventlog_guid = LINUX_EFI_TPM_EVENT_LOG_GUID;
- 	efi_status_t status;
-@@ -87,7 +88,8 @@ static void efi_retrieve_tcg2_eventlog(int version, efi_physical_addr_t log_loca
- 			last_entry_size =
- 				__calc_tpm2_event_size((void *)last_entry_addr,
- 						    (void *)(long)log_location,
--						    false);
-+						    false,
-+						    is_cc_event);
- 		} else {
- 			last_entry_size = sizeof(struct tcpa_event) +
- 			   ((struct tcpa_event *) last_entry_addr)->event_size;
-@@ -123,7 +125,8 @@ static void efi_retrieve_tcg2_eventlog(int version, efi_physical_addr_t log_loca
- 			header = data + offset + final_events_size;
- 			event_size = __calc_tpm2_event_size(header,
- 						   (void *)(long)log_location,
--						   false);
-+						   false,
-+						   is_cc_event);
- 			/* If calc fails this is a malformed log */
- 			if (!event_size)
- 				break;
-@@ -157,6 +160,7 @@ void efi_retrieve_eventlog(void)
- 	efi_tcg2_protocol_t *tpm2 = NULL;
- 	efi_bool_t truncated;
- 	efi_status_t status;
-+	bool is_cc_event = false;
- 
- 	status = efi_bs_call(locate_protocol, &tpm2_guid, NULL, (void **)&tpm2);
- 	if (status == EFI_SUCCESS) {
-@@ -186,11 +190,12 @@ void efi_retrieve_eventlog(void)
- 
- 		final_events_table =
- 			get_efi_config_table(EFI_CC_FINAL_EVENTS_TABLE_GUID);
-+		is_cc_event = true;
++	inode_lock(tl_inode);
++
+ 	/*
+ 	 * ocfs2_move_extent() didn't reserve any clusters in lock_allocators()
+ 	 * logic, while we still need to lock the global_bitmap.
+@@ -637,13 +639,11 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+ 		goto out_unlock_gb_mutex;
  	}
  
- 	if (status != EFI_SUCCESS || !log_location)
- 		return;
+-	inode_lock(tl_inode);
+-
+ 	handle = ocfs2_start_trans(osb, credits);
+ 	if (IS_ERR(handle)) {
+ 		ret = PTR_ERR(handle);
+ 		mlog_errno(ret);
+-		goto out_unlock_tl_inode;
++		goto out_unlock_gb_inode;
+ 	}
  
- 	efi_retrieve_tcg2_eventlog(version, log_location, log_last_entry,
--				   truncated, final_events_table);
-+				   truncated, final_events_table, is_cc_event);
- }
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index cdd4310..ca8535d 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -12,6 +12,7 @@
- #include <linux/init.h>
- #include <linux/memblock.h>
- #include <linux/tpm_eventlog.h>
-+#include <linux/cc_platform.h>
+ 	new_phys_blkno = ocfs2_clusters_to_blocks(inode->i_sb, *new_phys_cpos);
+@@ -704,12 +704,13 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
+ 	ocfs2_commit_trans(osb, handle);
+ 	brelse(gd_bh);
  
- int efi_tpm_final_log_size;
- EXPORT_SYMBOL(efi_tpm_final_log_size);
-@@ -23,7 +24,8 @@ static int __init tpm2_calc_event_log_size(void *data, int count, void *size_inf
+-out_unlock_tl_inode:
+-	inode_unlock(tl_inode);
+-
++out_unlock_gb_inode:
+ 	ocfs2_inode_unlock(gb_inode, 1);
++
+ out_unlock_gb_mutex:
+ 	inode_unlock(gb_inode);
++
++	inode_unlock(tl_inode);
+ 	brelse(gb_bh);
+ 	iput(gb_inode);
  
- 	while (count > 0) {
- 		header = data + size;
--		event_size = __calc_tpm2_event_size(header, size_info, true);
-+		event_size = __calc_tpm2_event_size(header, size_info, true,
-+				     cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT));
- 		if (event_size == 0)
- 			return -1;
- 		size += event_size;
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 891368e..b3380c9 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -143,6 +143,7 @@ struct tcg_algorithm_info {
-  * @event:        Pointer to the event whose size should be calculated
-  * @event_header: Pointer to the initial event containing the digest lengths
-  * @do_mapping:   Whether or not the event needs to be mapped
-+ * @is_cc_event:  Whether or not the event is from a CC platform
-  *
-  * The TPM2 event log format can contain multiple digests corresponding to
-  * separate PCR banks, and also contains a variable length of the data that
-@@ -159,7 +160,8 @@ struct tcg_algorithm_info {
- 
- static __always_inline u32 __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 					 struct tcg_pcr_event *event_header,
--					 bool do_mapping)
-+					 bool do_mapping,
-+					 bool is_cc_event)
- {
- 	struct tcg_efi_specid_event_head *efispecid;
- 	struct tcg_event_field *event_field;
-@@ -201,8 +203,14 @@ static __always_inline u32 __calc_tpm2_event_size(struct tcg_pcr_event2_head *ev
- 	count = event->count;
- 	event_type = event->event_type;
- 
--	/* Verify that it's the log header */
--	if (event_header->pcr_idx != 0 ||
-+	/*
-+	 * Verify that it's the log header. According to the TCG PC Client
-+	 * Specification, when identifying a log header, the check for a
-+	 * pcr_idx value of 0 is not required. For CC platforms, skipping
-+	 * this check during log header is necessary; otherwise, the CC
-+	 * platform's log header may fail to be recognized.
-+	 */
-+	if ((!is_cc_event && event_header->pcr_idx != 0) ||
- 	    event_header->event_type != NO_ACTION ||
- 	    memcmp(event_header->digest, zero_digest, sizeof(zero_digest))) {
- 		size = 0;
 -- 
-2.7.4
+2.45.2
 
