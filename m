@@ -1,49 +1,52 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E84EB38;
-	Mon,  7 Jul 2025 12:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A7A19F41C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889659; cv=none; b=oIsHS4ZEoQRpmyOu8JOdt1AQo1k2GQqoieL1Vdk2wKplDpFK4eBBxVj28P4aqLmjdUFtTd6NEYifr2qYLRoIJhiQvN/2l+lyU0I1bqpfpZG10lNdv8LbKq8QsUCIqi3ohZhL+6ptQpLtRyTJ1X82iovDCwB76Qfyz4bFQyXDLNk=
+	t=1751889671; cv=none; b=JVCmcFQP7LxcyaC2Wrgg0uwL5z9D8DyZD9SQxEg4SHi2C0HgrRSyyx1mo3jTZFGaKhQfAOtRrQExWpEcw5jz8UOl/gCzVxoPDz3yhbwGztLOtStXkIeSQiGQRp5n6bwtpr58nVCmQN/Q2EeVQsLSTxXghIdXKjSx7z6vSkK+58o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889659; c=relaxed/simple;
-	bh=P95bcMQU7ZPJZKZhLDXLyZrEYnchtk24M7xzCIyhGTs=;
+	s=arc-20240116; t=1751889671; c=relaxed/simple;
+	bh=NYE1/zwxWHmOulQ+HuKvBZEAn3rmUhfmFV+pVMZCm9M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oTBeKm9aWkpNTQ7v4k7KDGU/bieCh1uiPn2KvbMqf3CBz5ehdStmV8nk/I769WizCsXBI4Q7IfNOgOqixcCZhLpH4+b4uXbi3Q6dlu0olAC3CyrB48JPvqswKxYzopuzsK0Hjoky6HsQn+9qbuuBfWGW32phJ7x6QM9HbGq1+lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=wEL90RUB; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=bOoz/jjsyWJpofBCjUxZswNY3jZ8QDTIMdhFE2hLbQULPabU/2m2RrOEe7pbvBhcFMWw/7ZzLXvWTyfChEF82tKQ85f80RG/zBm/dzTaBL1Pov4clvrxUlHZZpOsdnxmMjWAQyqrldK0BZuupPYD64GFKKNbjdkOfr0LM5WorTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=J/CH2BNN; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wEL90RUB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Q+5AuUFTHWtlPlVeriGBMAZdNv3i5ihbtFUnvkIaFUI=; b=wEL90RUBpGaKK5y6QFqfX7IriG
-	oPoY/JS7G6uRRY8C/1LFAOBLiHjJCKlheHs6mJkHDOUUhzAXrW9gkh7AKiyTc+MRlDWttGVOHwHx/
-	ILc8cp8PlVawigpXOS1ISxhCsN/CVye+trXo4TnFkJLsHfHvOK/synbvKdMvAjBZENl8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uYkW8-000i1l-Pb; Mon, 07 Jul 2025 14:00:16 +0200
-Date: Mon, 7 Jul 2025 14:00:16 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yibo Dong <dong100@mucse.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
-	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
-	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
-	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
-	alexanderduyck@fb.com, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/15] net: rnpgbe: Add basic mbx ops support
-Message-ID: <f8a69fa5-cc3d-4968-8b19-0bdb27e1e917@lunn.ch>
-References: <20250703014859.210110-1-dong100@mucse.com>
- <20250703014859.210110-4-dong100@mucse.com>
- <80644ec1-a313-403a-82dd-62eb551442d3@lunn.ch>
- <9C6FCA38E28D6768+20250707063955.GA162739@nic-Precision-5820-Tower>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="J/CH2BNN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=v6Qu
+	fareNLNn3UFYbV8ntusgGG8AMzvapPp5xVg2a8Q=; b=J/CH2BNNwBz/INtXzqUi
+	JzXmw4WYqaSpUAAl5/1nQT8ew9Vcj/uHeuDY4/TlaHIbmUr9vu3C9v4iGTMpG77P
+	5GzWM/Aa2pn3kjxwcRSglh8NniQese4kdaoTP/O6J1V8y2kIFx2uo/NN5MgDvycW
+	mX1ZNLG7AQUH1NisBz+5EdQVI5YmboE4V6rOALT7OaECyDBRR9Ywe99FCWm5jdbQ
+	mSlt21SJ9K+ib9+P2+HsOAe8oyJywIL6IREQsxZ5wXBH2dcRbmbUT73lnc2ltXlg
+	5h5l9EVJBJdbSP4R4ga7P5iTqAna5b89jaFCM2o1gF4bzyqI0BxWwNewC1eIQkTv
+	8Q==
+Received: (qmail 1234705 invoked from network); 7 Jul 2025 14:01:05 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jul 2025 14:01:05 +0200
+X-UD-Smtp-Session: l3s3148p1@ksEpmVU5CsIgAwDPXxVOAFK6vZd9m4LR
+Date: Mon, 7 Jul 2025 14:01:04 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+	catalin.marinas@arm.com, will@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, p.zabel@pengutronix.de, lizhi.hou@amd.com,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v3 0/9] PCI: rzg3s-host: Add PCIe driver for Renesas
+ RZ/G3S SoC
+Message-ID: <aGu3AJHIEYgHVRQQ@shikoro>
+References: <20250704161410.3931884-1-claudiu.beznea.uj@bp.renesas.com>
+ <aGtsM22QYqekuiQA@shikoro>
+ <96af5f63-dbaf-4177-95e2-a6cc24019dc0@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,32 +55,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9C6FCA38E28D6768+20250707063955.GA162739@nic-Precision-5820-Tower>
+In-Reply-To: <96af5f63-dbaf-4177-95e2-a6cc24019dc0@tuxon.dev>
 
-On Mon, Jul 07, 2025 at 02:39:55PM +0800, Yibo Dong wrote:
-> On Fri, Jul 04, 2025 at 08:13:19PM +0200, Andrew Lunn wrote:
-> > >  #define MBX_FEATURE_WRITE_DELAY BIT(1)
-> > >  	u32 mbx_feature;
-> > >  	/* cm3 <-> pf mbx */
-> > > -	u32 cpu_pf_shm_base;
-> > > -	u32 pf2cpu_mbox_ctrl;
-> > > -	u32 pf2cpu_mbox_mask;
-> > > -	u32 cpu_pf_mbox_mask;
-> > > -	u32 cpu2pf_mbox_vec;
-> > > +	u32 fw_pf_shm_base;
-> > > +	u32 pf2fw_mbox_ctrl;
-> > > +	u32 pf2fw_mbox_mask;
-> > > +	u32 fw_pf_mbox_mask;
-> > > +	u32 fw2pf_mbox_vec;
+On Mon, Jul 07, 2025 at 11:05:30AM +0300, Claudiu Beznea wrote:
+> Hi, Wolfram,
+> 
+> On 07.07.2025 09:41, Wolfram Sang wrote:
 > > 
-> > Why is a patch adding a new feature deleting code?
+> >> Please provide your feedback.
 > > 
-> Not delete code, 'cpu' here means controller in the chip, not host.
-> So, I just rename 'cpu' to 'fw' to avoid confusion.
+> > What is this based on? I tried v6.16-rc4 and renesas-driver/master. Or
+> > is there a branch I could pull?
+> > 
+> 
+> This is based on next-20250703. I pushed it here, as well:
+> https://github.com/claudiubeznea/linux/commits/claudiu/rzg3s/pcie-v3/
 
-So, so let me rephrase my point. Why was it not called fw_foo right
-from the beginning? You are making the code harder to review by doing
-stuff like this. And your code is going to need a lot of review and
-revisions because its quality if low if you ask me.
+Thank you, I doubled checked and tested again. Still works, great!
 
-	Andrew
