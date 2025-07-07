@@ -1,149 +1,224 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012006.outbound.protection.outlook.com [52.101.71.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D241C5496
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 03:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751859071; cv=none; b=QjHH0xr8i/ouL08RCG9Y9WNyRWaaXaOKlrlUTftW1QxjH/l78im81nskkeI7cklO/w3VGaFM6dFIICiLASS1uOP8uPdPomu/7rPhLOibVYLVfUpS+5IBypem5MR3nA5ML+AIkAENbOeyb/B9lHXnzPHDGxOMCh55ZUq3ElyV6m4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751859071; c=relaxed/simple;
-	bh=5bGLlcz2LNZcz7V3A8E5z8rSY2F/sUreYHn4QIcKulI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Be7EfUCX2Vflz4IB+6w8ThNJWJJD4+or9fmCShzsnOuSRwbANjLcQXQm9qfPPyunPp2dERvUg4S8x8hDcPU1DvwrYuQVLedMuDL0u4XkFQyDgNDKz6F3iObWlCM91Cq97YKL4xFzsy8X+9iysPawBLO2tL7pHdFOJzSjwQxSSc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LcTtXg57; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A4D12B94;
+	Mon,  7 Jul 2025 03:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751859139; cv=fail; b=aMFsH1+zrqWgFVoB1LxFCqDiwkFOuXfrqLsvP7tr6iesotxcLjKrH0Y89YY88os4Lfk6yk5c85lcrQumvi79CkkRLoxagmi/a4bpSv+yx35Bw7qv0zL52EUmAZ74xpgTVTAT8wuYzl9x0m/EH6+/c1LgV3A1od7RxDO7KXEAyhg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751859139; c=relaxed/simple;
+	bh=eWnQ7snTFEOz+FWcKu8n4Q7cfo2BhzCqAzGWzOYCuBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lDKmtgwTZipbXYuxXV+3o5P4S50FhPBkBxPiDL8Fh4FPWlWz2wGkgopahFLSzYr/SiBbQaPvGSSHtjdu1vJUzWrEEIIgWjPY/fsiDk58CsjoxYv9MRQX2aO4Vz+dWRrGvYT/1WKbVqs0tSnseJu5Qsn7MpYm4LptwSX0RkbfNAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=AVq/ugjq; arc=fail smtp.client-ip=52.101.71.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcTtXg57"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23649faf69fso21782515ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 20:31:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751859069; x=1752463869; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6D4FNc+ZPSxMXR0yzDGObqB7ha5/gNIAEBywyOv4ZVY=;
-        b=LcTtXg578i992XbUZWtRG7EYYzL7uFwH5IWxnn+avTbqCw7+pQZRzEdD/Y3qmMR7L0
-         2oJH8okPQn7Tr+ow8kW/ymNtJCThYlnvI9d1gmi5LHUtcVSmFU/qSdoCz1hjxE1ry48/
-         +0V9N+nNzxlqLbA1g2u7QxmUIw6gNutYDlTMIZHJzhJvdU7cATF1GyhiXk5W8A2W25oC
-         yKaXwFuZ94LH/XxzIaxecaQ7Uk43eZpa5itZAK1zM66Epxn/X/7uo72bqMePdpr+Entv
-         80GxeJzOuaVmKrikCrIr6K+ELkFMb+8eWvRc2pg3W6Uw+bLqrybAis4w+eWPTn/jMnPH
-         bqNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751859069; x=1752463869;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6D4FNc+ZPSxMXR0yzDGObqB7ha5/gNIAEBywyOv4ZVY=;
-        b=pjrn8x+mXqXcnG7p/Hmo3Lf9TMpB5Aae8q/lxeMMcobLge0mGdBBMlVJn48t5KdP4J
-         j5Loyi3G64BO8V9M1G1I7uD9SDhpxSG0B06/y08JvSGuBMU4iyuDwu/flgpRSBPhjNZ+
-         7W5vztIqQAPGSIPBbUDca9XVOL+YzOy8BLGMdjHlsRb7X8SqURgA95mZE1sqgAHQBKTw
-         IjHiLte1/M6H+Wm+CJ20JwbLHAjMYhdPQbf/ToUsuCmDx6Hd7E2ODxTWd5xmZZ/MUplY
-         UOlb6V8d1LAFWULjCQtM8ynaQGQw94klpR8TJIII80VsY4SbxHwiRLF7ofKDBVxef4Go
-         evNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzqpz4q1x+IEH7DvQ20mtOSJS0piDK4otb49wRzehCuj/XhKQeB1zHE+YPLNb7E8zOeg9zOoTz/GCOG5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypjtFIkbNYR/Mgpc9e0P6R2/pVwAgo1NEvtnz9fGzXwKSn2cen
-	aKct7q6nXEEtDIugo6nUaNlXnoUcDZyRP9uMIvj7CQXQ/5jIk3Ikhv+v
-X-Gm-Gg: ASbGnct7o4uY/sgwO8BkyVZM6MWi9t4EXjfFHLrDUM5pKvKV0kYwc9RU7D5iA8H3d6t
-	3xRLfPgN/Fkvkij71dARoXv5crL9lznImIISy0tzV6Wyfm7rqFMqn4R1efIvdqFn2a2aYDBG/WX
-	P1CbiLLraDCHNqngrjUQoSmSixRhSprpzoOIumrYaUi1xEEyjMOEOE9fi5rqz6DYXEHMlA4gyEA
-	Q4fovnmvkMYJ3c72FmcjFlexEJkLGpJQ2+gn5JV1JQQKVbocn6EgB7zL0epTz9fygYjaliL+Qpt
-	NmeLnpoE3DafgFcftJt4K8xvKomhhLq32YphAGJmNI/OdTVgbk6/n0wG+1hr6spDbmiIpInV/8W
-	8VdxH1vMbdGIWPGbm/Kz9tCL4ZAw3skv4CuyJiXKoH7HWJkZURw==
-X-Google-Smtp-Source: AGHT+IEVYxAqKEVcCfg4J8NqSrjAG5zg58gwvdEAbHHYEWOVkuup7CGKWYMfT6CQpOy35AnTNXLlXA==
-X-Received: by 2002:a17:902:ce89:b0:234:d7b2:2ab9 with SMTP id d9443c01a7336-23c87472898mr163559135ad.12.1751859068755;
-        Sun, 06 Jul 2025 20:31:08 -0700 (PDT)
-Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:5e93:4ea0:4954:ef6c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8fcf6715sm48359415ad.51.2025.07.06.20.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Jul 2025 20:31:08 -0700 (PDT)
-From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: mark@fasheh.com,
-	jlbec@evilplan.org,
-	joseph.qi@linux.alibaba.com,
-	ocfs2-devel@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="AVq/ugjq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eNbq+2bCqk3Jou+SGt/DeTU7Di9sf30Ia/6vxFm0inS8/PrCd0oT71swGyprlwrV9mUTagSCRVBzykLHd07OexCkCq5fegtGCFE5GfITvl0wkfNwmzcZEbexbpFJYDMv0hcOyevBdQKrV+ha5CkLz3zphlnxY9crwOb8MS6b9FKzYMwHDOa9NBBlL0VWOAwEso8wdIbhX6mHCtbA5Gjl1vb1mSXy1H5tHHlpPZmp6iMhzlz19+EAfQCmMA05ThJdqIqrikwoVvG0LdZPVMS8rcmltTh0et6Jow8Uht24TNOefIwa4NiGghoBJl2Fcfsz84XlZPO8SXWvABX98udM7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=efHZOJ/vJvsgwTxnrVX0HwJLNbMtQrYZGx3bCC/tYIA=;
+ b=t/DnkQiZekWlfSWMcq8T8GOtL+4fXwLLPZMsLGGBrwg3r1DFcVVJah+HL/r0qlCK7MbgNNdKzumZY7lQVpWJ33WI1N4a1SDcB0SlYmUmbYlWbOPyG4m/7NiPQvsjn8DDQT+UAQBtey46/Bgc1VBIcfM3JO589lsfn27k6e5lh19hhTZ4FT1DYbepirfqCu/1Ek8gz3asLA/dg2FqnnVCbSRVysg0WKumeIT1Guspwrmj785rrjmoizr53T22YO5M7e56SoTE8uPFUXvCtXvTq7g9AKAiXL8OEoVHG4zHGHuhWkgYfykT5U3KafoK8R64858jXfyadqQ7dG+Ikc5UEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=efHZOJ/vJvsgwTxnrVX0HwJLNbMtQrYZGx3bCC/tYIA=;
+ b=AVq/ugjqktbWDJivm9n/uZ6Ua4mAuN2W0bAgHR3VczjTEFSk5os4j+f121/+O96/qbeoEynWguewhCx6+wIC9Sou9q98hfNvmpVFbG1sbdrryPaNtfttb8kxniet2yKgPiGmtZJDwFljXQkxR0s2kpffKIpbT9XAjY5Eq7BOilhpcBi+bODme2AyAWTBk3KFuAo0yuGx89UARZlrlZkI16pE4cFZzF+Aof+cV56qt9Zj0GRK79VyootPp5AB1FAhe91yuS5N2cy9VZnZZPX15hwDLKNL8CVbjkPppGPL5h8bgrLPXCS5xSYoWzvFrDHNTyi/V1DZkLbgpDQDNVSkiw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DBAPR04MB7256.eurprd04.prod.outlook.com (2603:10a6:10:1a3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.24; Mon, 7 Jul
+ 2025 03:32:13 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%7]) with mapi id 15.20.8901.021; Mon, 7 Jul 2025
+ 03:32:12 +0000
+Date: Mon, 7 Jul 2025 12:42:19 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, peter.griffin@linaro.org,
+	andre.draszik@linaro.org, willmcvicker@google.com,
+	cristian.marussi@arm.com, sudeep.holla@arm.com,
+	kernel-team@android.com, arm-scmi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
-	syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
-Subject: [PATCH v2] ocfs2: avoid potential ABBA deadlock by reordering tl_inode lock
-Date: Sun,  6 Jul 2025 23:29:51 -0400
-Message-ID: <20250707032951.361331-1-ipravdin.official@gmail.com>
-X-Mailer: git-send-email 2.45.2
+Subject: Re: [PATCH] mailbox: stop the release and reacquire of the chan lock
+Message-ID: <20250707044219.GA11488@nxa18884-linux>
+References: <20250606-mbox-drop-reacquire-lock-v1-1-d36d1a13d83f@linaro.org>
+ <CABb+yY2HYgS25xouVJpq+Aia1M=b1_ocbHiyrnVqZcf0c0xcGg@mail.gmail.com>
+ <fac9a5fb-7a39-4c12-9dca-d2338b6dad8c@linaro.org>
+ <CABb+yY1pn3+dFd=e80PaqEP2saF84f3buPt=ZYnTjDbSv3RN6g@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABb+yY1pn3+dFd=e80PaqEP2saF84f3buPt=ZYnTjDbSv3RN6g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: MA0PR01CA0034.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:81::8) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DBAPR04MB7256:EE_
+X-MS-Office365-Filtering-Correlation-Id: 399bd110-8bea-4494-6267-08ddbd06dcaa
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|366016|1800799024|19092799006|376014|7416014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?yGuBhp/kN5IA+wDk/ytaKVEDeSdZ6v87gSrJIcfz4BfKpl1b94ILvxYc/5/G?=
+ =?us-ascii?Q?5QcFC6af+XvN+BCL0/uVW/XRpEXHR1G3PwTDEapafnrYsNPio4vpv5ichafA?=
+ =?us-ascii?Q?nx464Bpxee1FrgHUTuqMWRbElkP8WAfJIxmXyLaj2Bh77HHp2oZvz57EDnhj?=
+ =?us-ascii?Q?+hhIedSbv5j0iWyO2SOBGbwtlj7bnVz7aqNqr++BuDBb6PMrpjqtbOqobG8t?=
+ =?us-ascii?Q?5ne1HyhC2j6w1c/yXjGMdZZ7JLr9IsZqjv+O8v/tYGtMyTTge6H2X9JjvXjD?=
+ =?us-ascii?Q?zAgILOVwX+A6ITHD5sHDm2mS3CBMsHBmYyqoBYycvm/4faOYUJTdODjTcRx5?=
+ =?us-ascii?Q?aBu3XH28OL/Fbz1coIUADZl5jCxZOJFi0K7kKxbIlyNYIQThY4/Q8cAN89Ch?=
+ =?us-ascii?Q?PQmpMjv0bYT5lytP1zb4TGvbgKnkOIrFr+bR2SoV19ND+QjS89p9FziaUMd8?=
+ =?us-ascii?Q?xjMiBzlYeoqjTNrEQGgegkYW6xlH0TiiP3tXO67xVYWsbiiJXIqe4BVLpjdM?=
+ =?us-ascii?Q?RxFZMzfwPUJxWnWhsZ7tVd5VXtx/N1djsK6edHR4N4oeFIHQmpM+MiM7o8Ly?=
+ =?us-ascii?Q?r2CdbAF/A+nmg4KJqnsUsxqsSRhUpjuIjJXh64iVY0x32Wv0+CGccD1Fp1Px?=
+ =?us-ascii?Q?myuju7tC2AdE6MQe7ZgRokal3i972Rd9GS0fzaQnVqAVqpagb9MQOZsdvHa2?=
+ =?us-ascii?Q?xmBYetlU1VSm7Ar7qOvCmBn0ifIbmLoks2bBnCM+kgerbFL/pqz75mngec4Z?=
+ =?us-ascii?Q?7Ut6eppfLXUgBi0NQSc0mfZ1U0R7O3UArUxJUQmRaJ4ZJ1MUBkCe9m9OiCGG?=
+ =?us-ascii?Q?ADIdcledBCrHYFN1hYyZO6lwmYS6CtpGxleOaCayjw9o1/VTEdbIG4BBVfCM?=
+ =?us-ascii?Q?4hG7AzT2dHXmrMp5AKjPknYgIfrPZyKispBrtdmfSRsaAvsLE2hoINXQ6VKk?=
+ =?us-ascii?Q?Jw/qN/m1dcbiU3oVgT5vEXKSM1N/S/oECFBNQFPUh8u1zEbpBqmc4yCuB90x?=
+ =?us-ascii?Q?Z1B6u9wBhZkmbzEx6LMeNozUbRSPs0oyacBu6Uiuqrj0+4ejqXO2q42Xw3WG?=
+ =?us-ascii?Q?wmIvlFAgLGuNcUbqRM9cciThILlafP5Im9aLa8XKbdF4fKFJFFv2opR+LYFS?=
+ =?us-ascii?Q?CI2TbxuoxVcxqG5ECDw8Ie7WrQGPECbD4tWrsnFS5C3beqb6pKjh7Wqxfdb/?=
+ =?us-ascii?Q?zxbU+ilqlbrTuV2pg6X7Y0fPS8QLEbMVB2qLgOyPj5W/znk24Ic6i+rbTsBa?=
+ =?us-ascii?Q?vwuWue9XFLL6hKL+Wb047NcLvD+yru6ur6EuZVapcmQS90qYKVTneVFOM1oa?=
+ =?us-ascii?Q?qu3TRasPjVssfYRpIyHZjbf8jEpxaLtTA3kPQcnLFgQniHLeGL116uCQ3IfW?=
+ =?us-ascii?Q?D7PqDxtPmV66K1mzODsLGEYa+66nvNC2C2EwQa6WNxXu1IZFxcL7xK0/+SrA?=
+ =?us-ascii?Q?DrMtY2R8UL6TSISMjqTd0YGpTUrHKhPytodCML9bz/7hs0v4nnpqkQ=3D=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(19092799006)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?BF3Mw4s5rJHKS9cbcZ4Anl7AVwz4vT1o8zgLG7KH872QUcCJK6JL4KruccPZ?=
+ =?us-ascii?Q?jnnz+34jsI+WsUn/3oZ2IcI5XDOfytJbqcMzaz4GI7rAI3LZvyORCth15nK+?=
+ =?us-ascii?Q?QRXNv7x3v9CM1z61LyK7+AjoDgfZQgYoCz1Xvgh2qM4RoGbxEMLDw2BGQDH6?=
+ =?us-ascii?Q?3lG/5R1qHu3L+qIu2zGOb4WxoydKQbc84vYSRYJyK3ljMJelQ6uvOB0Uryu1?=
+ =?us-ascii?Q?N4j0/77e2Vlg19atFS31IqtqAT5zwtSaEN6FsVJpRfB43zxk/WSJu0NtMhJP?=
+ =?us-ascii?Q?LWlCOgUKPVxXLEzTlnnmLrnQq3kavS8HlHoLrQiauuqI+uKauVP/DAS8jq8a?=
+ =?us-ascii?Q?LP5rLyct+xoMQptXz/hV00OwI+GQsRQHy+FEXLSgR8lYNVSu5zXzQ/VrZEJ/?=
+ =?us-ascii?Q?FgwwS9/XBZ0+mZgdkrO+HWfZ5wgcQvXOXkP/jVNGavEYHnpm30ju/tMSV+OO?=
+ =?us-ascii?Q?NnDf6pDrvqWzgxsi3S9jqybjDBXIDP37iwjSkABIDtI0RNzMiGlH9iRxPJZ0?=
+ =?us-ascii?Q?pe4neAFZt3Ele0Y52iAe0eTH+S+glr8Ht+heUFcN18IGHScavG86Uk1rq/mF?=
+ =?us-ascii?Q?YPLvSY633oMpdXM3Li2efWJi6YQ5ez8JQs8+TkJZ/OD6Yk/2JDr7gj9h782W?=
+ =?us-ascii?Q?hz4eno0PQNPhI7dJOOIho+y4vx7TGklHjLKSnh767QHDEww5B2RCMzUVjsB5?=
+ =?us-ascii?Q?xrtNM5cL7piK9g2pVqycdrOasLBgUt/ITkOj32BdLGs+GyHY4ayHNxwDNQ+t?=
+ =?us-ascii?Q?CBLUoLPyyc6VcG0HBb+4e/FkNU5p7nKU2kd8sGUIBFOsxK3JSL3nkvTDH65w?=
+ =?us-ascii?Q?fFgJJXbXtQh3xlqtn8r0Gcran+9D6hSUTmfpFsibvWkGR8O1dZGvnpljg3+A?=
+ =?us-ascii?Q?baEgwwdrXcgn4fVa3Uw++tsUBD8KmJ+lKYWLda6CPc+hnn3r0+W7mcCGjN3R?=
+ =?us-ascii?Q?98p8sjNp2n220P3wajZZNBUiEYMlygAyvHJg92xPlW2hdDbotwXNLTpkxm9E?=
+ =?us-ascii?Q?Sbh+QRnt8VWzIbtPSGNo04BmHB91fwrpzWBTT8ch5kOzQbDuieNqlh4WIN2y?=
+ =?us-ascii?Q?hlvdHx7Vki7LYoojWsWdvdWoV/utwpLxBDpvosOH5Lvl+OnCvi7jsSy6YPsm?=
+ =?us-ascii?Q?MlSnnksRJX7pGiqM4PhgcbXltlhkxnj69XOysrFU9F3VEpcFxpp59/Hnk8Uv?=
+ =?us-ascii?Q?oMzqwm6nmG5I/RFa5pEyRPX6E3CDLFrBn+tN/Y438aRakSZG3Drs+ok0eEix?=
+ =?us-ascii?Q?6JVtAbOYFLKyAFr2SNWXDwFWcA8YPSb4nvYen+2pXDEHRLBRMR89ahNcK+rA?=
+ =?us-ascii?Q?cZyJj91CuCRIpUqFSHnLSar5ocSra1TexYQLyNhKWS0/WKGVFUt7UEOT7O/4?=
+ =?us-ascii?Q?FPDJjo3OsRXoysGr2EyFe4vgui7Gs8kZ73eBMBUx9GAt6oiEk+mCwE3C+3o6?=
+ =?us-ascii?Q?GWVKE2lX8w25fMAsHj9Qm6j8/a6Yv8BbkH9CxhMmTkg6YRvRvJ9kMA3uVc19?=
+ =?us-ascii?Q?unITE4p2Zr+rXNIgqtaH7vzVQfhGVQ3+YYK8uVbS8JlBZhnCahMsRlQ9s1z/?=
+ =?us-ascii?Q?qnIha0sqP/OQXffFfdFAI3e6rSOdYM46yaXbGvhz?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 399bd110-8bea-4494-6267-08ddbd06dcaa
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 03:32:12.8670
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W6iZwR8acO/NpQGnAum3/JQ0x+O+Znkzx30AmBF02e61AHf+CTHEP3TlUlJCTGmFtxNKyX3TDZlz8pPm9atFPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7256
 
-In ocfs2_move_extent(), tl_inode is currently locked after the global
-bitmap inode. However, in ocfs2_flush_truncate_log(), the lock order
-is reversed: tl_inode is locked first, followed by the global bitmap
-inode.
+Hi Jassi, Tudor
+On Sat, Jul 05, 2025 at 09:19:08PM -0500, Jassi Brar wrote:
+>On Fri, Jul 4, 2025 at 7:30???AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>>
+>> Hi, Jassi,
+>>
+>> Sorry for the delay, I was out for a while.
+>>
+>> On 6/23/25 12:41 AM, Jassi Brar wrote:
+>> > On Fri, Jun 6, 2025 at 8:41???AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>> >>
+>> >> There are two cases where the chan lock is released and reacquired
+>> >> were it shouldn't really be:
+>> >>
+>> >> 1/ released at the end of add_to_rbuf() and reacquired at the beginning
+>> >> of msg_submit(). After the lock is released at the end of add_to_rbuf(),
+>> >> if the mailbox core is under heavy load, the mailbox software queue may
+>> >> fill up without any of the threads getting the chance to drain the
+>> >> software queue.
+>> >>         T#0 acquires chan lock, fills rbuf, releases the lock, then
+>> >>         T#1 acquires chan lock, fills rbuf, releases the lock, then
+>> >>         ...
+>> >>         T#MBOX_TX_QUEUE_LEN returns -ENOBUFS;
+>> >> We shall drain the software queue as fast as we can, while still holding
+>> >> the channel lock.
+>> >>
+>> > I don't see any issue to fix to begin with.
+>> > T#0 does drain the queue by moving on to submit the message after
+>> > adding it to the rbuf.
+>>
+>> The problem is that the code releases the chan->lock after adding the
+>> message to rbuf and then reacquires it on submit. A thread can be
+>> preempted after add_to_rbuf(), without getting the chance to get to
+>> msg_submit().
+>>
+>> Let's assume that
+>> T#0 adds to rbuf and gets preempted by T#1
+>> T#1 adds to rbuf and gets preempted by T#2
+>> ...
+>> T#n-1 adds to rbuf and gets preempted by T#n
+>>
+>> We fill the mailbox software queue without any thread getting to
+>> msg_submit().
 
-This creates a classic ABBA deadlock scenario if two threads attempt
-these operations concurrently and acquire the locks in different orders.
+I try to understand this case. Is this patch from code inspection or
+the issue could be reproduced on real platform?
 
-To prevent this, move the tl_inode locking earlier in
-ocfs2_move_extent(), so that it always precedes the global bitmap
-inode lock.
+If the client continuously issues 'mbox_send_message',
+there might be possibility that 'msg_submit' does not have chance to get
+get chan lock.
 
-No functional changes beyond lock ordering.
+>>
+>I get that but I still don't see a problem.
+>When the queue gets filled the next submission will be rejected and
+>have to wait until the mailbox gets some work done. Which is the
+>expected behaviour. And will be the same even if we don't release the
+>lock between add_to_rbug and and msg_submit and there are enough
+>mbox_send_message calls coming in faster than the transmission bus.
 
-Reported-by: syzbot+6bf948e47f9bac7aacfa@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67d5645c.050a0220.1dc86f.0004.GAE@google.com/
-Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
----
-v1 -> v2: Fixed unlocking order in ocfs2_move_extent.
+Not sure I get it clear, do you mean this?
+When the mailbox queue is full, any new message submission will be rejected.
+The sender must wait until space becomes available as messages are processed.
 
- fs/ocfs2/move_extents.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+This is the expected behavior and ensures proper flow control. Even if we
+avoid releasing the lock between add_to_rbuf() and msg_submit(), the outcome
+remains the same: if mbox_send_message() calls arrive faster than the bus can
+transmit, the queue will eventually fill up and block further submissions.
 
-diff --git a/fs/ocfs2/move_extents.c b/fs/ocfs2/move_extents.c
-index 369c7d27befd..aaf8eb2693a4 100644
---- a/fs/ocfs2/move_extents.c
-+++ b/fs/ocfs2/move_extents.c
-@@ -617,6 +617,8 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
- 	 */
- 	credits += OCFS2_INODE_UPDATE_CREDITS + 1;
- 
-+	inode_lock(tl_inode);
-+
- 	/*
- 	 * ocfs2_move_extent() didn't reserve any clusters in lock_allocators()
- 	 * logic, while we still need to lock the global_bitmap.
-@@ -637,13 +639,11 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
- 		goto out_unlock_gb_mutex;
- 	}
- 
--	inode_lock(tl_inode);
--
- 	handle = ocfs2_start_trans(osb, credits);
- 	if (IS_ERR(handle)) {
- 		ret = PTR_ERR(handle);
- 		mlog_errno(ret);
--		goto out_unlock_tl_inode;
-+		goto out_unlock_gb_inode;
- 	}
- 
- 	new_phys_blkno = ocfs2_clusters_to_blocks(inode->i_sb, *new_phys_cpos);
-@@ -704,12 +704,13 @@ static int ocfs2_move_extent(struct ocfs2_move_extents_context *context,
- 	ocfs2_commit_trans(osb, handle);
- 	brelse(gd_bh);
- 
--out_unlock_tl_inode:
--	inode_unlock(tl_inode);
--
-+out_unlock_gb_inode:
- 	ocfs2_inode_unlock(gb_inode, 1);
-+
- out_unlock_gb_mutex:
- 	inode_unlock(gb_inode);
-+
-+	inode_unlock(tl_inode);
- 	brelse(gb_bh);
- 	iput(gb_inode);
- 
--- 
-2.45.2
+Thanks,
+Peng
 
+>Thanks.
+>
