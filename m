@@ -1,126 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99229B21C;
-	Mon,  7 Jul 2025 13:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0A7FBF0;
+	Mon,  7 Jul 2025 13:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751893298; cv=none; b=MUdwvUzfrlrrXBXazumUenInF+Ilz4Rj8nTHYyVxdGr4dLrkM3LBQeWX3ILnfkVXAXaS+o1ze5qv6tj13ie85+GJ8R6q268BRO6e6eNgiVJv+04/Wzgl7AurBhhDCUDPJuPCVSU91UjiU0T+ifhPPu3jqLzKqChILVSryGLKZaw=
+	t=1751893366; cv=none; b=slG0uQubLNAEqN4xCrbYQPpSwO/sE0P9vzy+mZd6CP8e3wFsGzRfovBbrydmLBmDJhhk0dYiAGbgZdiFgv/6WgiNxKKhUxZIsjaI9GnoTEbDGepjJTL0a4MI8wBD1fiJNabt5pak67SVGtgIFEGrlYuC7Ujz9RaLQpQD/iEd8cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751893298; c=relaxed/simple;
-	bh=wJXCaxn9WklumXZYfIw9ExdkXBuXXrm+vZD0eBogR/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=swZhBBNc+o+W6fc/TivmlZBw8kJemhF6cyAuJ4w/QMHmQxuC+VifEqJSwCNhRSWI3ZzpHt9XQ8ycjy3RfLXUFl7yCqOL2biC4F85qIzz9zK/zNthHJc6BJmDeDsnXK0u2lcnBad15Zzjef/+erTDN3bDyDzhzNdOBlCcCSZ1lrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRpRqP7U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751893366; c=relaxed/simple;
+	bh=ttL61mw3WsTuOB+52D4aBiD7MkcauxnxYjRPVNV3xMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KcP2S0jVv/IIexGvbZ3/UQFttVRtsFadLV0LGEUSjozI+or0JgyhCBiSyZnCh6hVwhBBGxWTTp50TSWZj4aG3U4qKavgxT6pSIE4vAt9kY+iZppze59jnFJN7JnciVfiMkqzApZpzvBU2myeBLWfWn/g2XmY+maGAJ/uqbSSuvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K6s1W45f; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRpRqP7U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4D9CC4CEF5;
-	Mon,  7 Jul 2025 13:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751893297;
-	bh=wJXCaxn9WklumXZYfIw9ExdkXBuXXrm+vZD0eBogR/s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GRpRqP7Uq4EN7ZMT0lM7eCigLt/rHIPN1L7MMz9u6GY/TYiQJroLbcZ3puvWbsMkR
-	 V98PF3onyk7z/K1UrKdhSgr1B6T7TOAdJkzD5Fa0PHgxHOTnHBmxzrv/XCnBcN/021
-	 zHsFnOrhIE4Ms6YsHY9ec+1Zd+ooHBB/8rx6JrSUQ11mMCNaZgZPs41jNJBnhHr9uz
-	 m5+vcGlJAD1U5xH/kTMDHwcTBgluuoZIxf08c3Kfkbq20qPh0PUjBpBQLD4HAeKQSI
-	 viFcIGRlFl4yEK3dAVXKM1R/BjTQS8/Al6OWks65bybPbgzXPHC3pTlVT0rK+08x/U
-	 Xj2s9H+MEMzmw==
-Message-ID: <5fb10c0d-eb85-40d1-97f2-9e36d4d1f62c@kernel.org>
-Date: Mon, 7 Jul 2025 15:01:33 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6s1W45f"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-312a806f002so600122a91.3;
+        Mon, 07 Jul 2025 06:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751893364; x=1752498164; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ttL61mw3WsTuOB+52D4aBiD7MkcauxnxYjRPVNV3xMM=;
+        b=K6s1W45fzTEMo8S2KfoTZ+4EUF728wz1ymB+bMHZtdtZ17/tUtwl2L9cHlev/exWqe
+         gFPnwOi76rMErdLsDnmfCej5wE2wEwcuNQw62aPmlkWp287BAhS50p6bPq+gm9oLVjXn
+         PwWipp2q8QdAh2LTcOTNN0+Sjp77oBxM5nuXt2etzYl77uvBLVWBWhFGoR7JHPVZsjnh
+         vNDBHe1nPLfqZkUS0I6b63XHO8HP4oIt9gAraUG0DSkqYQ2zQE5olTCL9+Ue8l2DdxFk
+         AU6dJv7APnI7Tq6Le+QrA25JqidItqJl5tTHdyqBKcHA3kRM/eccQvsYijue9G7d3oiS
+         1FBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751893364; x=1752498164;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ttL61mw3WsTuOB+52D4aBiD7MkcauxnxYjRPVNV3xMM=;
+        b=uR7WblMqD7zsfs7BWWJzgtJdh6xTiZeHpkd1KnL/BvFxg7ZapFBCeXnrJS5kGXDhlv
+         L2bkOWtheXSDwjrR/W0WGZIBPDkv7s1sYdYllBzH4WMB+iuPdnF2anGZPTBskROh6yen
+         XjVipeY/JIfvoPCoCbgySDL3SFL234kmuwU4aJ7DLTv3cc9m6Nv1KRVsgMBG5km3y5Js
+         Ad7ASNXzJ/QWunA/gWIVAzleVuDloRshaZC3du/Y4rKvLkrbBlifjUXTZkNQ0x6bq0uq
+         d9ZSMI3KaZm2q0gXhEWR70vhlXC4wdwG7aEefh2cmLgJEvkctISzevmCoMyplmShifHi
+         GjOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVr+OxIBEiiqkX4b0k2ITLJBURI5AuOSuOGIOiS/9TDQ7axCV3nAgtNYlvrN4o6vZVuAnRmz6HcNZ7KOoI=@vger.kernel.org, AJvYcCVuJk6f5xO7rmkBA7s8H1SljpMftNuuEFudvYjw6zuKvFYP8i+c0sxYRNEUVvErvNoOLTnrWbxYIaChFiJ0VuSk@vger.kernel.org, AJvYcCW+g1PBua5/GNB8aIUKCMj89CA2afU3syCP7bZtnZIxVuIR79eWSaYmeZiKaEL7c/4t/n8rRt1uq3c=@vger.kernel.org, AJvYcCXzIZhiYZNjkWbP7xyxDJjVHusickFTW35tmxSulleveqAc7+9bOfIv8n2tEANbzulzBuPNNLutK/1Cv51QUwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrGmad2wL8SqMPW5fxbDoQed8LkweRCmHE1udlYxi9GDIN9ggg
+	ml2KFqbjIORXB1W058raX8spnY+S0thkiXzhNU71Bj0YDxZobHku1QkeJptlXtqONJHoV1unmky
+	L+MK9oFmELrbhY/HUWOuBUNT+MLd06kw=
+X-Gm-Gg: ASbGncudf5rTpG03qTvQnDEdpXT7DqBZirOmeVFe4+VP/odQ3jxZuMXSSFbcs2O69aA
+	jcEZz6iQDSoCPYz/IMvzFw6vNRZ+4F0MiOkreFybrQ0OlYRatNjTz8DB8VSwP0UpWwGrfYZQArr
+	d/V5dwYUw48lOSBl4qvRvw96VMBv2eI3hBTuLO1EdDudK5
+X-Google-Smtp-Source: AGHT+IGcUdtG7c49dzljrZOU2A0R/aJ3fgIUFsQWVqWZVGDk1Wg8hZ7rWGNL6MsTbu2LKGo5ScJO7pQZtAaRQ+gn0wY=
+X-Received: by 2002:a17:90b:588d:b0:312:25dd:1c8b with SMTP id
+ 98e67ed59e1d1-31aacbe7a10mr7192318a91.2.1751893364216; Mon, 07 Jul 2025
+ 06:02:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: uvcvideo: avoid variable shadowing in
- uvc_ctrl_cleanup_fh
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Desnes Nunes <desnesn@redhat.com>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@kernel.org
-References: <20250701172556.117872-1-desnesn@redhat.com>
- <45b69c6c-e8d5-4b71-9759-cd76eb1a7258@kernel.org>
- <20250707125028.GB12247@pendragon.ideasonboard.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250707125028.GB12247@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250701053557.20859-1-work@onurozkan.dev> <20250701053557.20859-3-work@onurozkan.dev>
+ <DB1SKFOR9W3I.1MBT3C6FGBWH7@kernel.org>
+In-Reply-To: <DB1SKFOR9W3I.1MBT3C6FGBWH7@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 7 Jul 2025 15:02:31 +0200
+X-Gm-Features: Ac12FXyVqiuEWGZohsK5hoFoVgSKg9BuDl65kJZHFLhTe8UZs9aNiJP_eFyQW7s
+Message-ID: <CANiq72kqmMTLQaE03WEFzi2UN=Sk31TLDPi3S5UuuA5bHj3O9g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] rust: switch to `#[expect(...)]` in init and kunit
+To: Benno Lossin <lossin@kernel.org>
+Cc: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, rafael@kernel.org, 
+	viresh.kumar@linaro.org, gregkh@linuxfoundation.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	davidgow@google.com, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Jul 2, 2025 at 8:47=E2=80=AFPM Benno Lossin <lossin@kernel.org> wro=
+te:
+>
+> @Miguel are you going to pick this eventually, or do you think it should
+> have a new version with the right splitting?
 
-On 7-Jul-25 14:50, Laurent Pinchart wrote:
-> Hi Hans,
-> 
-> On Mon, Jul 07, 2025 at 02:43:09PM +0200, Hans de Goede wrote:
->> On 1-Jul-25 19:25, Desnes Nunes wrote:
->>> This avoids a variable loop shadowing occurring between the local loop
->>> iterating through the uvc_entity's controls and the global one going
->>> through the pending async controls of the file handle
->>>
->>> Cc: stable@kernel.org
->>> Fixes: 10acb9101355 ("media: uvcvideo: Increase/decrease the PM counter per IOCTL")
->>> Signed-off-by: Desnes Nunes <desnesn@redhat.com>
->>
->> Thank you for the new version.
->>
->> I've pushed this to uvc/for-next now:
->>
->> https://gitlab.freedesktop.org/linux-media/users/uvc/-/commits/for-next/
-> 
-> As mentioned during the review (see
-> 20250701192928.GB16835@pendragon.ideasonboard.com), I still prefer local
-> loop variables. Can we use that please ?
+I guess I could take it since the series can only introduce build
+failures at worst.
 
-Ok, I'll drop this from for-next.
+However, I thought we were going to do the proper split (as
+independent patches, too) and then let each maintainer pick each on
+their own pace.
 
-Desnes, can you prepare a v3 moving the toplevel declation
-inside the other loop please ?
-
-Regards,
-
-Hans
-
-
-
-
->> Note I had to manually apply the patch because of it conflicting with:
->>
->> https://gitlab.freedesktop.org/linux-media/users/uvc/-/commit/2b1e8e9f7bb30204ddb42887c4e554c131f003c9
->>
->> So if you want this backported to stable you will need to send
->> the original version to stable your self.
->>
->> I plan to send a pull-request with the changes from for-next this Thursday.
->>
->>> ---
->>>  drivers/media/usb/uvc/uvc_ctrl.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
->>> index 44b6513c5264..532615d8484b 100644
->>> --- a/drivers/media/usb/uvc/uvc_ctrl.c
->>> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
->>> @@ -3260,7 +3260,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
->>>  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
->>>  {
->>>  	struct uvc_entity *entity;
->>> -	int i;
->>> +	unsigned int i;
->>>  
->>>  	guard(mutex)(&handle->chain->ctrl_mutex);
->>>  
->>> @@ -3268,7 +3268,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
->>>  		return;
->>>  
->>>  	list_for_each_entry(entity, &handle->chain->dev->entities, list) {
->>> -		for (unsigned int i = 0; i < entity->ncontrols; ++i) {
->>> +		for (i = 0; i < entity->ncontrols; ++i) {
->>>  			if (entity->controls[i].handle != handle)
->>>  				continue;
->>>  			uvc_ctrl_set_handle(handle, &entity->controls[i], NULL);
->>
-> 
-
+Cheers,
+Miguel
