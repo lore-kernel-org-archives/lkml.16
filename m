@@ -1,45 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356912D94A3;
-	Mon,  7 Jul 2025 14:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558B42D94B8;
+	Mon,  7 Jul 2025 14:23:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898228; cv=none; b=c6E9zqBCp0lAgqtJ/gIgPWIjAjpy6Y4PfZ4cTmM0hJAKYeb3leC0doffoMryoRcHWZ0vauECpOtxK/3vFnvKKqa8fTa7Kan0Ux8u0upSypMfDVlnMtYnSjAyS2oEkUX+lHjKt3pcl1pl2lhmumiUO9lqQ8lyP/m1z8oAodJZ6JA=
+	t=1751898228; cv=none; b=Jy4mbGlM5ZM2QRHrUeff5YZrTjV4Bz88Wn0OAc2gk83e4jIL55d6jSVRMO0YzxvFMzUX/pivym+vnugZt+F+fxPxCAeKj0J/6nk6xQ17Sd5dYQJFbjuA334z2g9LLQ/30xZlv+0aeZ6Mj37Mvu+WWoMeKU0LfAms/VQTxsWUcbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751898228; c=relaxed/simple;
-	bh=JcmvL25bXQfaLkY11Owes9dUKbSJPxPQqJEIshQR/o0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ETNjPs7SUnlFeL6d6nBOIYCT/sV2g8mrapDC2wTzGAVWpoMwChAmq9hKF9DRVpoQ9nVaiedRvS1ut8QOpUfClOVePpdRLckZNVfpoQm4rsBDgGgEPQS5TyqACLnHLNdC6oAEHE11aguci/RJTosmmhRCfs3ncf63pLaR3MwZQBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=292lFkKv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f5nSlQy6; arc=none smtp.client-ip=193.142.43.55
+	bh=Q/F9vDKfu7XaTh9AflpJQNkYDtIxfJAukiznBldYvG8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=D0o9qLrQVqWePGyXlYRV3bUbWx30fLD6xXm5s8IrjBHCCT0/jvm4vSRA8nPJvrTGOCpPUDMupvhsE9rGU7U8m/3XUffYOaHH77tdoVvM/D799L1G7/ehsCF9zlT6tjqEQpBu0DMiunI4PXrOaJlGwalJAJfs57Bih93iXnCDyP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LUYFMkNm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rzIMMVmd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="292lFkKv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f5nSlQy6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LUYFMkNm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzIMMVmd"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751898223;
+	s=2020; t=1751898225;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KoxGtcBc84Qj+eZza6DcHhhNFnBejxE85d5gTKWJM3g=;
-	b=292lFkKviW4VDspmiXGr9X6zd7pTzi4gdEhYNczjE4HhdB2pSQzat7Y+QLqNkLr+dVtiyJ
-	utea+SUY4FDRFLLNjciL3ms4/L/Ch+WjxVXCvN6wmtM5tdBmPtnIZ3WDfkTa6amGyMF4XG
-	C8bbyVAxKJshn94Mjs03MP1DMMXX1Ib4U5ANmtCSyHlDTfhDCaTNNCgvTDqvBpe0LMmvap
-	a2Pv5aStyum80Ynng857tb5ah4ws0KJXSpHdh+DdJ8qlqmSD4PuQv1iT1jX6XoOFRR8xzB
-	mwOLXgP1IRDHmP/T2Iv0b1Ck54UXk5nVIOxwobzWMVEpEzcmNne6zglrP1FuDQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qBqbw4PdzPyuPrlKENbYISEQyRJfwMczckSvk7p27gQ=;
+	b=LUYFMkNmXmW3U3cAaVQgV+PDog/MWpXTZ4sYpfiSQ5GGO5sxXQPVtryHmmOv3/ZUDka6d/
+	h3T7h1qw0uw1KqPHx+o9nZLubYjhdSfuXRN30Om0h0/onXqX4q4CpJwpKAAdL0CoplRTZl
+	vjTzZDtMEatZLFkCaPgif8wrGOhzr/T+4HsUCuT3TE4HiHOZ6P/sHLUcBENUwacOA6y7rG
+	ihoXUjib8FBxRux5Nwz+MNNeqLicLn1FtNukJ9HyeKekzCL4gh4qlM3WNj8K8CHH1u+7WS
+	T1a+jN5Wmr9HVAgKXY+hKRLvEy0TG2JfQC7RmVY0ns9fJNQRlCTIfHN4IuBFkQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751898223;
+	s=2020e; t=1751898225;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KoxGtcBc84Qj+eZza6DcHhhNFnBejxE85d5gTKWJM3g=;
-	b=f5nSlQy6z6zb+klFWCyhuFMBgrjf95Ao9lR4qqiqC5tuyJbeQtfu5Vve26+NSDuNSIGzLr
-	9uuxs5d3ZZpxW2DQ==
-Subject: [PATCH 0/5] selftests: vDSO: Clean up vdso_test_abi and drop
- vdso_test_clock_getres
-Date: Mon, 07 Jul 2025 16:23:38 +0200
-Message-Id: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qBqbw4PdzPyuPrlKENbYISEQyRJfwMczckSvk7p27gQ=;
+	b=rzIMMVmdpHRaCpBXp/yd4hUcGqNGHD35D89zrqJqbs1O0rg5JyqRH88mBG0NDzYY2mRjJS
+	VexDff3jNemMPCBA==
+Date: Mon, 07 Jul 2025 16:23:41 +0200
+Subject: [PATCH 3/5] selftests: vDSO: vdso_test_abi: Use explicit indices
+ for name array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,43 +50,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAGrYa2gC/x3LMQqAMAxA0atIZgO1KAGvIg5iUs3SSlOKIN7d4
- vj4/AdMsorB3D2Qpappig1D38F+bvEQVG4G7/zkyBFWtoRFrBgGvcWQZGQOgSl4grZdWf7QrmV
- 93w/7B2edYgAAAA==
-X-Change-ID: 20250707-vdso-tests-fixes-7e4ddffd7f27
+Message-Id: <20250707-vdso-tests-fixes-v1-3-545be9781b0c@linutronix.de>
+References: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
+In-Reply-To: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
  Vincenzo Frascino <vincenzo.frascino@arm.com>, 
  Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751898221; l=906;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751898221; l=2009;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=JcmvL25bXQfaLkY11Owes9dUKbSJPxPQqJEIshQR/o0=;
- b=BVHHojJOW4YuJCthlaAtxpdUoAlDID+JzAbAEIb8pXQ5lHvJEFB2Xfau8tcKMg9G8wDhNFj93
- zw47VkaBth5A/tsRXnzsulxwSsvdseS7DK9HVaquRn+IZg2E7Mp1oki
+ bh=Q/F9vDKfu7XaTh9AflpJQNkYDtIxfJAukiznBldYvG8=;
+ b=Hfyp7uArTsKNdw/eAkznj4+Nbrpg6i3gVqiH0gxgaznGYdjJYnEap6NVjBcZMv70pCCshFTJw
+ XIoV1qq/AskBPCejOiY2VbUV2FKAgKGOCTLNLSR+KourOx1IR6Hy2qH
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Some cleanups for the vDSO selftests.
+The array relies on the numeric values of the clock IDs.
+When reading the code it is not obvious that the order is correct.
+
+Make the code easier to read by using explicit indices.
+
+While at it make the array static.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Thomas Weißschuh (5):
-      selftests: vDSO: vdso_test_abi: Use ksft_finished()
-      selftests: vDSO: vdso_test_abi: Drop clock availability tests
-      selftests: vDSO: vdso_test_abi: Use explicit indices for name array
-      selftests: vDSO: vdso_test_abi: Test CPUTIME clocks
-      selftests: vDSO: Drop vdso_test_clock_getres
+ tools/testing/selftests/vDSO/vdso_test_abi.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
- tools/testing/selftests/vDSO/Makefile              |   2 -
- tools/testing/selftests/vDSO/vdso_test_abi.c       |  57 +++-------
- .../selftests/vDSO/vdso_test_clock_getres.c        | 123 ---------------------
- 3 files changed, 17 insertions(+), 165 deletions(-)
----
-base-commit: 437079605c26dc7c98586580a8c01b5f7f746a79
-change-id: 20250707-vdso-tests-fixes-7e4ddffd7f27
+diff --git a/tools/testing/selftests/vDSO/vdso_test_abi.c b/tools/testing/selftests/vDSO/vdso_test_abi.c
+index 407817e929d89ee434191e336da0e6f18b989a71..96d0dd3677b357876e92f6d2d962d43d642e9bee 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_abi.c
++++ b/tools/testing/selftests/vDSO/vdso_test_abi.c
+@@ -31,19 +31,19 @@ typedef long (*vdso_clock_gettime_t)(clockid_t clk_id, struct timespec *ts);
+ typedef long (*vdso_clock_getres_t)(clockid_t clk_id, struct timespec *ts);
+ typedef time_t (*vdso_time_t)(time_t *t);
+ 
+-const char *vdso_clock_name[12] = {
+-	"CLOCK_REALTIME",
+-	"CLOCK_MONOTONIC",
+-	"CLOCK_PROCESS_CPUTIME_ID",
+-	"CLOCK_THREAD_CPUTIME_ID",
+-	"CLOCK_MONOTONIC_RAW",
+-	"CLOCK_REALTIME_COARSE",
+-	"CLOCK_MONOTONIC_COARSE",
+-	"CLOCK_BOOTTIME",
+-	"CLOCK_REALTIME_ALARM",
+-	"CLOCK_BOOTTIME_ALARM",
+-	"CLOCK_SGI_CYCLE",
+-	"CLOCK_TAI",
++static const char * const vdso_clock_name[] = {
++	[CLOCK_REALTIME]		= "CLOCK_REALTIME",
++	[CLOCK_MONOTONIC]		= "CLOCK_MONOTONIC",
++	[CLOCK_PROCESS_CPUTIME_ID]	= "CLOCK_PROCESS_CPUTIME_ID",
++	[CLOCK_THREAD_CPUTIME_ID]	= "CLOCK_THREAD_CPUTIME_ID",
++	[CLOCK_MONOTONIC_RAW]		= "CLOCK_MONOTONIC_RAW",
++	[CLOCK_REALTIME_COARSE]		= "CLOCK_REALTIME_COARSE",
++	[CLOCK_MONOTONIC_COARSE]	= "CLOCK_MONOTONIC_COARSE",
++	[CLOCK_BOOTTIME]		= "CLOCK_BOOTTIME",
++	[CLOCK_REALTIME_ALARM]		= "CLOCK_REALTIME_ALARM",
++	[CLOCK_BOOTTIME_ALARM]		= "CLOCK_BOOTTIME_ALARM",
++	[/* CLOCK_SGI_CYCLE */ 10]	= "CLOCK_SGI_CYCLE",
++	[CLOCK_TAI]			= "CLOCK_TAI",
+ };
+ 
+ static void vdso_test_gettimeofday(void)
 
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.50.0
 
