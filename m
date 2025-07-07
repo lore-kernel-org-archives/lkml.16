@@ -1,147 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475FA288C8D;
-	Mon,  7 Jul 2025 10:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070C826059D;
+	Mon,  7 Jul 2025 10:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751885015; cv=none; b=foYk78YXBAi1jMq8tBxS0bFkdKT+UqHKAnkXFzZ8250Q93abDhAPDzVEhibXQvFlQYH1LKUXZwzIqy3mW7eem9qMtQYonzPZAMr06IWmCG/wApFlQC3p8avjqKS6cF12mYAvJsHVGNZMPt5UgDl6A74g8bS97TO5TbREx6/gqN4=
+	t=1751885049; cv=none; b=Uxs6et6vJ5pFsi0l/QQsxm4N8LavTcsdGFn7WEpSmG4fVL1Any7MS5EGbK/L59zo+or4UkRnQfUujeQiCzJQ2P0q7Eh46JpSKV+Q8pLclzbGyzv8iRKb7D64ctTsHq5z4RqjYwY0AxFcD3al1Vm5LVCQ8gcL98pBqm0R/cCnD+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751885015; c=relaxed/simple;
-	bh=ZAHncvRq/os3HYtn8J7X9/8sN0J5JEZiybhSWcC8h+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vol3DIqJTVxYG9CIJoPSmm6dy9s3iA4vgBO1yGjDDa0WQX/OYSk/qUSBYlP25UsfECHR/xqQp1HInq0G2TKFIDJBrKzRF1U1all5iRqOxxYY0omF9UubLNsie2EjNusmGOlYvB9bTk3Abfe5lDSwHXjzDbkoVTqp+JiQGlxMIbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiDoMvaM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751885049; c=relaxed/simple;
+	bh=SjYXX7ZDI39EwB3CpttIlw1Vl4E8XtC1XpyQv46bDcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KjyJOC/MoPOKPnHyOFeE5CkLhCW3q23LfD4fQo+ERWqd3SZRnRZQOeSnja5tgyJmC1Hhsri9Q6SNnjFuFJ4o49+3r3573IPUD7Nu+rgh1SiQbaLBn4pZCJ5d0Ox712WANBun3e9QqHUka/hFz01rbuICeH+SbKpspVPKj0ZRsWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MLpkOaTA; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiDoMvaM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED05DC4CEF5;
-	Mon,  7 Jul 2025 10:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751885014;
-	bh=ZAHncvRq/os3HYtn8J7X9/8sN0J5JEZiybhSWcC8h+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QiDoMvaMaEtgtwLkbm7fWeJkr74MnR9ckIpH80fi864JSTlJW8GAN+l4MQWNo/QIr
-	 KDoX+f13espcJXebVoABhzBqq8HV+GR1+B27AMR1DUe7cOvaBti79jKPsDVm40IQKv
-	 6wd5DeUd8v6lV9xth8qOBezBUrCPRfODIbomdLpfUmgkeIUKIx5/GUpwxVRLgVDpXt
-	 0lJGqztvJw9fvqFYY1wZ018EOUwfoslkiwCMdpHT2lP4Mg0dAo5FsnvO/9VLI1hDBl
-	 zamXhcQZEOLlZVd7alhNqDcn8BuEzs4w1CZe3YRmg0cROX90bT4zliB2UFS/1+9nOL
-	 WLgwzoxlObrCA==
-Date: Mon, 7 Jul 2025 11:43:29 +0100
-From: Simon Horman <horms@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alex Elder <elder@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: Use of_reserved_mem_region_to_resource{_byname}()
- for "memory-region"
-Message-ID: <20250707104329.GF89747@horms.kernel.org>
-References: <20250703183459.2074381-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MLpkOaTA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751885046;
+	bh=SjYXX7ZDI39EwB3CpttIlw1Vl4E8XtC1XpyQv46bDcs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MLpkOaTAJLq4MlrgIGANDFNa+JH58OcI6UYNWz/PJEFtQcnmTL/RIx8x27u3R/myf
+	 jZMJyaM26Ev9l5IitO46i1LH/ENLfRMgk9batqZ8+o/RlOqpnl4t+a522dY6kyY1ZS
+	 tI4r0mziRd2JgKo/oZIP1/oLouUSQeWebAMEVYdxNT3Kf80lzK+HLofHTgTGKdIn1l
+	 slcINFRYB82/9SfjGD3s9Nxs2pDgs2XHC0R5dBhjVMiXKEwZtjvl+H4T1JAwvRLieK
+	 cNKSbM+nzmOYeTEyE7vv9qBtcud49x8Wvv/atmaSumhHGWzR2RP1XLvaZh1sRjvkMf
+	 9xMdydt8MqLDQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6ABA517E06BF;
+	Mon,  7 Jul 2025 12:44:05 +0200 (CEST)
+Message-ID: <5a196563-9589-4d00-a042-1dbb0295b0a5@collabora.com>
+Date: Mon, 7 Jul 2025 12:44:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703183459.2074381-1-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/6] iio: Add support for MT6363/6373 Auxiliary ADC
+To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <noname.nuno@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20250703141146.171431-1-angelogioacchino.delregno@collabora.com>
+ <ab0a407412c705e409d9d26591543713a092c13f.camel@gmail.com>
+ <20250706114455.26748e20@jic23-huawei>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250706114455.26748e20@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 03, 2025 at 01:34:57PM -0500, Rob Herring (Arm) wrote:
-> Use the newly added of_reserved_mem_region_to_resource{_byname}()
-> functions to handle "memory-region" properties.
+Il 06/07/25 12:44, Jonathan Cameron ha scritto:
+> On Fri, 04 Jul 2025 13:39:56 +0100
+> Nuno Sá <noname.nuno@gmail.com> wrote:
 > 
-> The error handling is a bit different for mtk_wed_mcu_load_firmware().
-> A failed match of the "memory-region-names" would skip the entry, but
-> then other errors in the lookup and retrieval of the address would not
-> skip the entry. However, that distinction is not really important.
-> Either the region is available and usable or it is not. So now, errors
-> from of_reserved_mem_region_to_resource() are ignored so the region is
-> simply skipped.
+>> On Thu, 2025-07-03 at 16:11 +0200, AngeloGioacchino Del Regno wrote:
+>>> Changes in v2:
+>>>   - Added error checks to all regmap r/w operations
+>>>   - Moved adc_vref addition to different commit
+>>>   - Various other fixes
+>>>
+>>> This series adds support for the Auxiliary ADC IP found on the new
+>>> MediaTek MT6363 and MT6373 PMICs, found on board designs featuring
+>>> the MT8196 Chromebook SoC or the MT6991 Dimensity 9400 Smartphone SoC.
+>>>
+>>> AngeloGioacchino Del Regno (6):
+>>>    dt-bindings: iio: adc: mt6359: Add MT6363 PMIC AuxADC
+>>>    dt-bindings: iio: adc: mt6359: Add MT6373 PMIC AuxADC
+>>>    iio: adc: mt6359: Add ready register index and mask to channel data
+>>>    iio: adc: mt6359: Move reference voltage to platform data
+>>>    iio: adc: mt6359: Add support for MediaTek MT6363 PMIC AUXADC
+>>>    iio: adc: mt6359: Add support for MediaTek MT6373 PMIC AUXADC
+>>>
+>>>   .../iio/adc/mediatek,mt6359-auxadc.yaml       |   2 +
+>>>   drivers/iio/adc/mt6359-auxadc.c               | 440 +++++++++++++++---
+>>>   .../iio/adc/mediatek,mt6363-auxadc.h          |  24 +
+>>>   .../iio/adc/mediatek,mt6373-auxadc.h          |  19 +
+>>>   4 files changed, 416 insertions(+), 69 deletions(-)
+>>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6363-auxadc.h
+>>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6373-auxadc.h
+>>
+>>
+>> LGTM,
+>>
+>> Reviewed-by: Nuno Sá <nuno.sa@analog.com>
+>>
+> Applied to the togreg branch of iio.git.  Initially pushed out as testing
+> for 0-day to take a first look and see if we missed anything.
+> Jonathan
+> 
 
-Thanks for explaining this, it's much appreciated.
+Thanks for that!
 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  drivers/net/ethernet/airoha/airoha_npu.c    | 25 ++++++----------
->  drivers/net/ethernet/mediatek/mtk_wed.c     | 24 ++++------------
->  drivers/net/ethernet/mediatek/mtk_wed_mcu.c | 32 +++++++--------------
->  drivers/net/ipa/ipa_main.c                  | 12 ++------
-
-FWIIW, I would slightly prefer one patch per driver.
-
-...
-
-> diff --git a/drivers/net/ethernet/mediatek/mtk_wed.c b/drivers/net/ethernet/mediatek/mtk_wed.c
-> index 351dd152f4f3..73c26fcfd85e 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_wed.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_wed.c
-> @@ -1318,26 +1318,14 @@ mtk_wed_rro_ring_alloc(struct mtk_wed_device *dev, struct mtk_wed_ring *ring,
->  static int
->  mtk_wed_rro_alloc(struct mtk_wed_device *dev)
->  {
-> -	struct reserved_mem *rmem;
-> -	struct device_node *np;
-> -	int index;
-> +	struct resource res;
-> +	int ret;
->  
-> -	index = of_property_match_string(dev->hw->node, "memory-region-names",
-> -					 "wo-dlm");
-> -	if (index < 0)
-> -		return index;
-> -
-> -	np = of_parse_phandle(dev->hw->node, "memory-region", index);
-> -	if (!np)
-> -		return -ENODEV;
-> -
-> -	rmem = of_reserved_mem_lookup(np);
-> -	of_node_put(np);
-> -
-> -	if (!rmem)
-> -		return -ENODEV;
-> +	ret = of_reserved_mem_region_to_resource_byname(dev->hw->node, "wo-dlm", &res);
-
-Please consider line-wrapping the line above so it is 80 columns wide or
-less, as is still preferred for Networking code.
-
-> +	if (ret)
-> +		return ret;
->  
-> -	dev->rro.miod_phys = rmem->base;
-> +	dev->rro.miod_phys = res.start;
->  	dev->rro.fdbk_phys = MTK_WED_MIOD_COUNT + dev->rro.miod_phys;
->  
->  	return mtk_wed_rro_ring_alloc(dev, &dev->rro.ring,
-
-> diff --git a/drivers/net/ethernet/mediatek/mtk_wed_mcu.c b/drivers/net/ethernet/mediatek/mtk_wed_mcu.c
-
-...
-
-> @@ -319,13 +313,7 @@ mtk_wed_mcu_load_firmware(struct mtk_wed_wo *wo)
->  
->  	/* load firmware region metadata */
->  	for (i = 0; i < ARRAY_SIZE(mem_region); i++) {
-> -		int index = of_property_match_string(wo->hw->node,
-> -						     "memory-region-names",
-> -						     mem_region[i].name);
-> -		if (index < 0)
-> -			continue;
-> -
-> -		ret = mtk_wed_get_memory_region(wo->hw, index, &mem_region[i]);
-> +		ret = mtk_wed_get_memory_region(wo->hw, mem_region[i].name, &mem_region[i]);
-
-Ditto.
-
->  		if (ret)
->  			return ret;
->  	}
-
-...
+Cheers,
+Angelo
