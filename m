@@ -1,170 +1,231 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1008C2D8DA7;
-	Mon,  7 Jul 2025 14:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CAC2D97B0;
+	Mon,  7 Jul 2025 14:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751898229; cv=none; b=TZ7WKOn0RNtqPvsuMWS7CsnmqP5WNmDUyid74e7sbLzYN6SNzk9HJ4qwQCA2FPCqv+xaZVfZmMaFXGQ7ZJ0YNTsViTPiJn9vqwGAL5yl1FEsbRHBncq9tUvtFXULXECuGfKrUlTDDRbR4XInPeKPCJEC/C3DP5tno+I+riV7qmI=
+	t=1751898231; cv=none; b=RgfZyG5P0dbvoSKDwY5uqwgDaNRhQbmBG8ct/qQHKOthYssFynD8O20UNt3Bob+/HEAlvZpXxcYrGAc0ipiFw2AVeda88MIEBQnrgP290GrM4ZJBsBvVg2lcScl6yT5mS+C3RyDov23oFou0eZFAju7nlvog5AYqss8vIt0rmGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751898229; c=relaxed/simple;
-	bh=Ivb4sEJ315yPpA6w6gGkLWI94DbQvOmt61KT3beBg94=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CpXdLlGIMGUcnOe3jl6NfSLDwgaFkMhfq0Q9wt9XIruhOCduRcZqQXVT+WRD2CYUwG8crl54Pgo5iLth7DevA/I5tQ5D0B7Z4tdygRZrzhPzU9Yd/WnbVgsRtQviGYiH6a+JYbD33RzO5iw4AxK6w3CDOeW03twUAdvWVnE7e+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ffR+SWki; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1751898231; c=relaxed/simple;
+	bh=s4skLLJfopoH2TWuLw68jE7DlOUR1hAhAHbxjOf1rD4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tM330s0PSn8nSDt5KMZqaD08XkbYjF8qYMnKBdHLRgkaBZiupGkvifEPpC2aXZx7WQxu32dIOKPV6cQ0N2i65n6tc5L+xseXalv+tGP4r7tkqJNSLTa/8xPMJ4ZYM+ZyIke+5KOvkUIM8ljyR1RrwLXhkYIjtKMxrN7vehD2FXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mpRJDZPO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cPt4+3lu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ffR+SWki"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bbRLQ4bdWz9t1B;
-	Mon,  7 Jul 2025 16:23:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1751898222;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mpRJDZPO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cPt4+3lu"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751898226;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+6e+PcGOhziaHPv2fooE3Mhq4C1IPp18icg31JFqEy0=;
-	b=ffR+SWkiKB9WbWaNGhqMuxqsE52z254tpTUQZe5jFt8NBzuujnqJZw9d1+45vg6y7eMN92
-	OB9P13fXqYVzkwN4t1wJF0vB4a9wJRhy7WQ0Iiava1lotvj/tQNQE/PFq3GzAxu07Ly+z3
-	6nD8y9sDqHk2IeKXs8KJZUEz5/vvhQnKHAnbGgvVmZLwLaCWFsqYghnAjaf5cTKjxwSDlI
-	ZQegm5oxr43vVDNZYEUtm7TZOiur6dkgIUuvQIpUhha6IrFcBbetxUWEOPY6vOHMfG4vVE
-	YqL61VItf9ZnU9IXw8EcUiwV6XOEjBhjyl3ewfpjOKpQLUHJLAiLTuYmy+fHyQ==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v2 2/5] huge_memory: add huge_zero_page_shrinker_(init|exit) function
-Date: Mon,  7 Jul 2025 16:23:16 +0200
-Message-ID: <20250707142319.319642-3-kernel@pankajraghav.com>
-In-Reply-To: <20250707142319.319642-1-kernel@pankajraghav.com>
-References: <20250707142319.319642-1-kernel@pankajraghav.com>
+	bh=Pq7ctUq5bHh87KWv51A0aETgmBc6Ve8Sl/O21M03X6U=;
+	b=mpRJDZPO50o4vLQGEJyB0M8/8hdc6gStYxDq1KdA04K6AQHDrLHTnnQKVppcDr2koFm9b8
+	4BUf04l313w1JWbKQSi+QHn6p3V84rkJu7yBaf7aAWJa2OMcLgCK+o78ginBdrcuN4sMCa
+	+m2Qluu1Se+KsaRz0Oh1QmazSi6n4lySVYstE+u9r4jRYcbxTJi4mRHzPulmiVFC1baksn
+	i1Ljq95JE3+di26R1TmYMee30QZBvtXnBQ38GBe7JvlNUyu34bMYCiNE1Ly4NkR3h82uXH
+	FIslPyJfrvbM/zWwPc4f0jq2Bu8kVQvffuX5xyM5snwM+l8UqYYrjg6+GvVTvQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751898226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pq7ctUq5bHh87KWv51A0aETgmBc6Ve8Sl/O21M03X6U=;
+	b=cPt4+3luq/Srfd+rPwnvWKZEYrbFquBBeM2BftCIaCESBpai6SNgXxZQxKTMpCdo5jouLx
+	MJ4ev5xiGTJYUZDA==
+Date: Mon, 07 Jul 2025 16:23:43 +0200
+Subject: [PATCH 5/5] selftests: vDSO: Drop vdso_test_clock_getres
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250707-vdso-tests-fixes-v1-5-545be9781b0c@linutronix.de>
+References: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
+In-Reply-To: <20250707-vdso-tests-fixes-v1-0-545be9781b0c@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751898221; l=4660;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=s4skLLJfopoH2TWuLw68jE7DlOUR1hAhAHbxjOf1rD4=;
+ b=BdSEX7GiS3a04xCqvPsN2BEpFMTb2uoea9+n6lt+PyQCcqFtumBOIJrIZh7r1fqniCZ5KyXij
+ 4BbEnAPPc6xDkmGGN+F17nyHXQERyHu02GVXCnQpCCipzklH9DgWs1z
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+vdso_test_abi provides the exact same functionality, properly uses
+kselftest.h and explicitly calls into the vDSO without relying on the libc.
 
-Add huge_zero_page_shrinker_init() and huge_zero_page_shrinker_exit().
-As shrinker will not be needed when static PMD zero page is enabled,
-these two functions can be a no-op.
+Drop the pointless testcase.
 
-This is a preparation patch for static PMD zero page. No functional
-changes.
-
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- mm/huge_memory.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ tools/testing/selftests/vDSO/Makefile              |   2 -
+ .../selftests/vDSO/vdso_test_clock_getres.c        | 123 ---------------------
+ 2 files changed, 125 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index d3e66136e41a..101b67ab2eb6 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -289,6 +289,24 @@ static unsigned long shrink_huge_zero_page_scan(struct shrinker *shrink,
- }
+diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
+index 918a2caa070ebc681a9525f0518afffcf10f5ae3..e361aca22a74dc5c279ab1aa16f308b7e6e85bf1 100644
+--- a/tools/testing/selftests/vDSO/Makefile
++++ b/tools/testing/selftests/vDSO/Makefile
+@@ -4,7 +4,6 @@ include ../../../scripts/Makefile.arch
+ TEST_GEN_PROGS := vdso_test_gettimeofday
+ TEST_GEN_PROGS += vdso_test_getcpu
+ TEST_GEN_PROGS += vdso_test_abi
+-TEST_GEN_PROGS += vdso_test_clock_getres
+ ifeq ($(ARCH),$(filter $(ARCH),x86 x86_64))
+ TEST_GEN_PROGS += vdso_standalone_test_x86
+ endif
+@@ -29,7 +28,6 @@ CFLAGS_NOLIBC := -nostdlib -nostdinc -ffreestanding -fno-asynchronous-unwind-tab
+ $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
+ $(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
+ $(OUTPUT)/vdso_test_abi: parse_vdso.c vdso_test_abi.c
+-$(OUTPUT)/vdso_test_clock_getres: vdso_test_clock_getres.c
  
- static struct shrinker *huge_zero_page_shrinker;
-+static int huge_zero_page_shrinker_init(void)
-+{
-+	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
-+	if (!huge_zero_page_shrinker)
-+		return -ENOMEM;
-+
-+	huge_zero_page_shrinker->count_objects = shrink_huge_zero_page_count;
-+	huge_zero_page_shrinker->scan_objects = shrink_huge_zero_page_scan;
-+	shrinker_register(huge_zero_page_shrinker);
-+	return 0;
-+}
-+
-+static void huge_zero_page_shrinker_exit(void)
-+{
-+	shrinker_free(huge_zero_page_shrinker);
-+	return;
-+}
-+
- 
- #ifdef CONFIG_SYSFS
- static ssize_t enabled_show(struct kobject *kobj,
-@@ -850,33 +868,31 @@ static inline void hugepage_exit_sysfs(struct kobject *hugepage_kobj)
- 
- static int __init thp_shrinker_init(void)
- {
--	huge_zero_page_shrinker = shrinker_alloc(0, "thp-zero");
--	if (!huge_zero_page_shrinker)
--		return -ENOMEM;
-+	int ret = 0;
- 
- 	deferred_split_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE |
- 						 SHRINKER_MEMCG_AWARE |
- 						 SHRINKER_NONSLAB,
- 						 "thp-deferred_split");
--	if (!deferred_split_shrinker) {
--		shrinker_free(huge_zero_page_shrinker);
-+	if (!deferred_split_shrinker)
- 		return -ENOMEM;
+ $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c | headers
+ $(OUTPUT)/vdso_standalone_test_x86: CFLAGS:=$(CFLAGS_NOLIBC) $(CFLAGS)
+diff --git a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
+deleted file mode 100644
+index b5d5f59f725a703c357dfca91bfe170aaaeb42fa..0000000000000000000000000000000000000000
+--- a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
++++ /dev/null
+@@ -1,123 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+-/*
+- * vdso_clock_getres.c: Sample code to test clock_getres.
+- * Copyright (c) 2019 Arm Ltd.
+- *
+- * Compile with:
+- * gcc -std=gnu99 vdso_clock_getres.c
+- *
+- * Tested on ARM, ARM64, MIPS32, x86 (32-bit and 64-bit),
+- * Power (32-bit and 64-bit), S390x (32-bit and 64-bit).
+- * Might work on other architectures.
+- */
+-
+-#define _GNU_SOURCE
+-#include <elf.h>
+-#include <fcntl.h>
+-#include <stdint.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <time.h>
+-#include <sys/auxv.h>
+-#include <sys/mman.h>
+-#include <sys/time.h>
+-#include <unistd.h>
+-#include <sys/syscall.h>
+-
+-#include "../kselftest.h"
+-
+-static long syscall_clock_getres(clockid_t _clkid, struct timespec *_ts)
+-{
+-	long ret;
+-
+-	ret = syscall(SYS_clock_getres, _clkid, _ts);
+-
+-	return ret;
+-}
+-
+-const char *vdso_clock_name[12] = {
+-	"CLOCK_REALTIME",
+-	"CLOCK_MONOTONIC",
+-	"CLOCK_PROCESS_CPUTIME_ID",
+-	"CLOCK_THREAD_CPUTIME_ID",
+-	"CLOCK_MONOTONIC_RAW",
+-	"CLOCK_REALTIME_COARSE",
+-	"CLOCK_MONOTONIC_COARSE",
+-	"CLOCK_BOOTTIME",
+-	"CLOCK_REALTIME_ALARM",
+-	"CLOCK_BOOTTIME_ALARM",
+-	"CLOCK_SGI_CYCLE",
+-	"CLOCK_TAI",
+-};
+-
+-/*
+- * This function calls clock_getres in vdso and by system call
+- * with different values for clock_id.
+- *
+- * Example of output:
+- *
+- * clock_id: CLOCK_REALTIME [PASS]
+- * clock_id: CLOCK_BOOTTIME [PASS]
+- * clock_id: CLOCK_TAI [PASS]
+- * clock_id: CLOCK_REALTIME_COARSE [PASS]
+- * clock_id: CLOCK_MONOTONIC [PASS]
+- * clock_id: CLOCK_MONOTONIC_RAW [PASS]
+- * clock_id: CLOCK_MONOTONIC_COARSE [PASS]
+- */
+-static inline int vdso_test_clock(unsigned int clock_id)
+-{
+-	struct timespec x, y;
+-
+-	printf("clock_id: %s", vdso_clock_name[clock_id]);
+-	clock_getres(clock_id, &x);
+-	syscall_clock_getres(clock_id, &y);
+-
+-	if ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)) {
+-		printf(" [FAIL]\n");
+-		return KSFT_FAIL;
 -	}
 -
--	huge_zero_page_shrinker->count_objects = shrink_huge_zero_page_count;
--	huge_zero_page_shrinker->scan_objects = shrink_huge_zero_page_scan;
--	shrinker_register(huge_zero_page_shrinker);
- 
- 	deferred_split_shrinker->count_objects = deferred_split_count;
- 	deferred_split_shrinker->scan_objects = deferred_split_scan;
- 	shrinker_register(deferred_split_shrinker);
- 
-+	ret = huge_zero_page_shrinker_init();
-+	if (ret) {
-+		shrinker_free(deferred_split_shrinker);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
- static void __init thp_shrinker_exit(void)
- {
--	shrinker_free(huge_zero_page_shrinker);
-+	huge_zero_page_shrinker_exit();
- 	shrinker_free(deferred_split_shrinker);
- }
- 
+-	printf(" [PASS]\n");
+-	return KSFT_PASS;
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	int ret = 0;
+-
+-#if _POSIX_TIMERS > 0
+-
+-#ifdef CLOCK_REALTIME
+-	ret += vdso_test_clock(CLOCK_REALTIME);
+-#endif
+-
+-#ifdef CLOCK_BOOTTIME
+-	ret += vdso_test_clock(CLOCK_BOOTTIME);
+-#endif
+-
+-#ifdef CLOCK_TAI
+-	ret += vdso_test_clock(CLOCK_TAI);
+-#endif
+-
+-#ifdef CLOCK_REALTIME_COARSE
+-	ret += vdso_test_clock(CLOCK_REALTIME_COARSE);
+-#endif
+-
+-#ifdef CLOCK_MONOTONIC
+-	ret += vdso_test_clock(CLOCK_MONOTONIC);
+-#endif
+-
+-#ifdef CLOCK_MONOTONIC_RAW
+-	ret += vdso_test_clock(CLOCK_MONOTONIC_RAW);
+-#endif
+-
+-#ifdef CLOCK_MONOTONIC_COARSE
+-	ret += vdso_test_clock(CLOCK_MONOTONIC_COARSE);
+-#endif
+-
+-#endif
+-	if (ret > 0)
+-		return KSFT_FAIL;
+-
+-	return KSFT_PASS;
+-}
+
 -- 
-2.49.0
+2.50.0
 
