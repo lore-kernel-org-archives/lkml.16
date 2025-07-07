@@ -1,161 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEB41DE8BB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A361DE8BB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 10:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751884032; cv=none; b=iOdWZZtl5OtUiFt119bdKUDqDwmi+eP9S8ZBflcwiY0sdydqfEXRU2xl4vQkgtINp7ewTtEuktXoY+BcYxeQVEK79DiHtB+sSBm5UDtKx1n/HxIkRAV1+YXwHt78x3hEAojrUaKr0UIGLO8sIVxvhPoqpRCrdHE09G5jTOibqDU=
+	t=1751884039; cv=none; b=ZhCRit3SqGIjuCB8tEXYFfexALmJlpCKvXSFzSxLM+G5rYP98xVyjPX/A1cWdxqOZpmiHlP9RcpIrdoNG0zqxkPFrP/z857IppyJ8Xr2jGu3eiIQeuB5koUAS1elJKqtSFwxdjwyPBWXLX120RuVc3eJ2yRkQButR8y/AxWM064=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751884032; c=relaxed/simple;
-	bh=Un/oE7qjSvi7G3I3N4C9KQ48YyzxUBuP7bKnrw3pmXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kWPiQIL3DUrNdZIk9ZlzOMjnI5x2gFzWhZHecNqRgHwtKgMCvRjURGJy2zGaLBBr5CyZ1y6/0XcLhH7I8ah10PHt8Y2A8zPAQdOtyW4QpPjdvdd4vyIOoFHR/Cbf6s73Yc3fja2KVLtdhJ9U1k3+lqDCVWsTjt7PblWY9RJRA6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CF201595;
-	Mon,  7 Jul 2025 03:26:57 -0700 (PDT)
-Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 447733F6A8;
-	Mon,  7 Jul 2025 03:27:08 -0700 (PDT)
-Message-ID: <9495df36-053e-49a3-8046-1e6aed63b4af@arm.com>
-Date: Mon, 7 Jul 2025 11:27:06 +0100
+	s=arc-20240116; t=1751884039; c=relaxed/simple;
+	bh=xFUNUc5m5ajWoG/fAc3PfI2ibizJRteLWpJOojk196U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TDhCg8AkD1S2L+AFH9xYX707TK9I02DsS4qTWFkvddO5s82ZdXwS1LGvm0JXDwaXKnS80JUXsfiuomkZzPgoXt8vDAr1Tbmd+OHZBfRzytcUSGDlyEyQvKgF3Kr3LMAQuafulw/G/nfhEzr6Hhwvn+losldr/Utakb60TL98vOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YNZKposv; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YNZKposv"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235ea292956so24769855ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 03:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751884036; x=1752488836; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UrCguQvMCX0qN0EKrycpjflp0FRWcgp0pAKxoev4M7U=;
+        b=YNZKposvjQSErj8F+ZstHuGLurQsHkaiIGNtvQi3GI2HkLtEGEvEH0XLxc8HXLpBb1
+         stx3ecuLmfejyyHVBhb8llXyxE8CCGYPkudOLGJ10/10lgSlfb2+hgttYmKH4fkk9agn
+         XMKKQL3b5qAYN7w4CPqpZ2tYSSSvIqyc1iySg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751884036; x=1752488836;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UrCguQvMCX0qN0EKrycpjflp0FRWcgp0pAKxoev4M7U=;
+        b=gb9YyEduoEa5rkkkAeIVdRUMCzPAeJ7h0Gxmqqpd5q7/B/Z2Clgqy0txfa2L0AI0Mx
+         MNWFvU91yBx3aL8E2DhxlcbdJitTZsOTdzRqwKWcUCk7blKnnGHxHopNaejI0r1OU/vQ
+         Q4xs/96G1UG2pmRU3ES1bt70sQzJPljn9J/fHRoL8TNhgi9xTmSamaQO4msXjPL/abKB
+         57YXhPbKfYeM92Om3A9fj14zVcyjkaWA71xDHizKPAz0OeKlRfXpDTc8fPLo7QFzYhEd
+         xLyMTy1WvTW1CVyhLY/UNSrN1A+f22xK+/buAon9LCflJzZZYBmgLPBjSOKU7Dv/qwBF
+         Eypg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+CV7bgGE5gIGACDHQCMVM/HvJRbCYmiWLggGB2R0noYuuY7peqNF/n4FS1YAeCCJgqXZG1piYWASEkSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVe0OuU7wEH8q1RqDX8klOghnv3qaOWfhEt2glCoAoTj5yBIMb
+	8HhIugpK45uQHHIyQy/NfO4CYpqG7QTxSkc2ZrcIozZ/GWP1LtaJa+SiUk8ikdna6w6qDWcwIb8
+	XADQ=
+X-Gm-Gg: ASbGnct0WPwUftEhPWN6sPg/RDut8OdzTRekNnVf3cWr9/mkQTiONkm1KebDiNwUm4g
+	j523Wv+mJp6nX7EJR4toxlEIbvqM1edX5xXTfbV1DZQOoAIsNnkBe1CCliqdQLX8b+Chim85V5b
+	yCNHxjFe0ImlfoNju2VR1LuFO9X0WuJppyF10Zo9KMts7e4+ILmLH9TUM6X8PNp5pRoQNCH1CmI
+	+fKVMSTbDUGJckuc6SbQyOdzquxIzSp9COogQLV+8JG4qvileyx8hX8cByJo13SOXD0MuGklqLB
+	Z6nHCGSTDJihNr5bRe7r7zEP6eDLo7DzRhd9kFwHL+v1yUVkr3Y/M3vkXXqjoecsOC/2GyBm5i4
+	rzIBqsLaFn5sEGJtCy2MXI5EJ6Ec8irk=
+X-Google-Smtp-Source: AGHT+IFDfxeN+onnny+B6L+7wHiiEtPBfsMaJLUeKdhihyzBWk863pmDXzSYrNTM3um5yiBK4Jo6vQ==
+X-Received: by 2002:a17:903:138a:b0:235:eb71:a386 with SMTP id d9443c01a7336-23c875e8180mr142789935ad.50.1751884036508;
+        Mon, 07 Jul 2025 03:27:16 -0700 (PDT)
+Received: from yuanhsinte-p620-1.tpe.corp.google.com ([2401:fa00:1:10:53d3:893:10bb:1dc3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c8434f0d8sm82986895ad.82.2025.07.07.03.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 03:27:16 -0700 (PDT)
+From: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Date: Mon, 07 Jul 2025 18:27:10 +0800
+Subject: [PATCH 6.6] thermal/of: Fix mask mismatch when no trips subnode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] cacheinfo: Set cache 'id' based on DT data
-To: James Morse <james.morse@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, sudeep.holla@arm.com,
- Rob Herring <robh@kernel.org>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
- WillDeaconwill@kernel.org
-References: <20250704173826.13025-1-james.morse@arm.com>
- <20250704173826.13025-2-james.morse@arm.com>
-Content-Language: en-US
-From: Ben Horgan <ben.horgan@arm.com>
-In-Reply-To: <20250704173826.13025-2-james.morse@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250707-trip-point-v1-1-8f89d158eda0@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAP2ga2gC/x3MPQqAMAxA4atIZiO1/gS9ijiIjZqlllREKN7d4
+ vgN7yWIrMIRxiKB8i1RTp9RlwWsx+J3RnHZYI3tDBnCSyVgOMVfSI1beNjcsFILOQjKmzz/bIK
+ +6mF+3w8zmkmzYQAAAA==
+X-Change-ID: 20250707-trip-point-73dae9fd9c74
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Hsin-Te Yuan <yuanhsinte@chromium.org>
+X-Mailer: b4 0.15-dev-2a633
 
-Hi James,
+After commit 725f31f300e3 ("thermal/of: support thermal zones w/o trips
+subnode") was backported on 6.6 stable branch as commit d3304dbc2d5f
+("thermal/of: support thermal zones w/o trips subnode"), thermal zones
+w/o trips subnode still fail to register since `mask` argument is not
+set correctly. When number of trips subnode is 0, `mask` must be 0 to
+pass the check in `thermal_zone_device_register_with_trips()`.
 
-On 7/4/25 18:38, James Morse wrote:
-> From: Rob Herring <robh@kernel.org>
-> 
-> Use the minimum CPU h/w id of the CPUs associated with the cache for the
-> cache 'id'. This will provide a stable id value for a given system. As
-> we need to check all possible CPUs, we can't use the shared_cpu_map
-> which is just online CPUs. As there's not a cache to CPUs mapping in DT,
-> we have to walk all CPU nodes and then walk cache levels.
-> 
-> The cache_id exposed to user-space has historically been 32 bits, and
-> is too late to change. This value is parsed into a u32 by user-space
-> libraries such as libvirt:
-> https://github.com/libvirt/libvirt/blob/master/src/util/virresctrl.c#L1588
-> 
-> Give up on assigning cache-id's if a CPU h/w id greater than 32 bits
-> is found.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> [ ben: converted to use the __free cleanup idiom ]
-> Signed-off-by: Ben Horgan <ben.horgan@arm.com>
-> [ morse: Add checks to give up if a value larger than 32 bits is seen. ]
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
-> Use as a 32bit value has also been seen in DPDK patches here:
-> http://inbox.dpdk.org/dev/20241021015246.304431-2-wathsala.vithanage@arm.com/
-> 
-> Changes since v1:
->   * Remove the second loop in favour of a helper.
->   
-> An open question from v1 is whether it would be preferable to use an
-> index into the DT of the CPU nodes instead of the hardware id. This would
-> save an arch specific swizzle - but the numbers would change if the DT
-> were changed. This scheme isn't sensitive to the order of DT nodes.
-> 
-> ---
->   drivers/base/cacheinfo.c | 38 ++++++++++++++++++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
-> 
-> diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
-> index cf0d455209d7..df593da0d5f7 100644
-> --- a/drivers/base/cacheinfo.c
-> +++ b/drivers/base/cacheinfo.c
-> @@ -8,6 +8,7 @@
->   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->   
->   #include <linux/acpi.h>
-> +#include <linux/bitfield.h>
->   #include <linux/bitops.h>
->   #include <linux/cacheinfo.h>
->   #include <linux/compiler.h>
-> @@ -183,6 +184,42 @@ static bool cache_node_is_unified(struct cacheinfo *this_leaf,
->   	return of_property_read_bool(np, "cache-unified");
->   }
->   
-> +static bool match_cache_node(struct device_node *cpu,
-> +			     const struct device_node *cache_node)
-> +{
-> +	for (struct device_node *cache __free(device_node) = of_find_next_cache_node(cpu);
-Looks like the creation of this helper function has upset the 
-device_node reference counting. This first __free(device_node) will only 
-cause of_node_put() to be called in the case of the early return from 
-the loop. You've dropped the second __free(device_node) which accounts 
-for 'cache' changing on each iteration.
-> +	     cache != NULL; cache = of_find_next_cache_node(cache)) {
-> +		if (cache == cache_node)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static void cache_of_set_id(struct cacheinfo *this_leaf,
-> +			    struct device_node *cache_node)
-> +{
-> +	struct device_node *cpu;
-> +	u32 min_id = ~0;
-> +
-> +	for_each_of_cpu_node(cpu) {
-> +		u64 id = of_get_cpu_hwid(cpu, 0);
-> +
-> +		if (FIELD_GET(GENMASK_ULL(63, 32), id)) {
-> +			of_node_put(cpu);
-> +			return;
-> +		}
-> +
-> +		if (match_cache_node(cpu, cache_node))
-> +			min_id = min(min_id, id);
-> +	}
-> +
-> +	if (min_id != ~0) {
-> +		this_leaf->id = min_id;
-> +		this_leaf->attributes |= CACHE_ID;
-> +	}
-> +}
-> +
->   static void cache_of_set_props(struct cacheinfo *this_leaf,
->   			       struct device_node *np)
->   {
-> @@ -198,6 +235,7 @@ static void cache_of_set_props(struct cacheinfo *this_leaf,
->   	cache_get_line_size(this_leaf, np);
->   	cache_nr_sets(this_leaf, np);
->   	cache_associativity(this_leaf);
-> +	cache_of_set_id(this_leaf, np);
->   }
->   
->   static int cache_setup_of_node(unsigned int cpu)
+Set `mask` to 0 when there's no trips subnode.
 
+Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+---
+ drivers/thermal/thermal_of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_of.c
+index 0f520cf923a1e684411a3077ad283551395eec11..97aeb869abf5179dfa512dd744725121ec7fd0d9 100644
+--- a/drivers/thermal/thermal_of.c
++++ b/drivers/thermal/thermal_of.c
+@@ -514,7 +514,7 @@ static struct thermal_zone_device *thermal_of_zone_register(struct device_node *
+ 	of_ops->bind = thermal_of_bind;
+ 	of_ops->unbind = thermal_of_unbind;
+ 
+-	mask = GENMASK_ULL((ntrips) - 1, 0);
++	mask = ntrips ? GENMASK_ULL((ntrips) - 1, 0) : 0;
+ 
+ 	tz = thermal_zone_device_register_with_trips(np->name, trips, ntrips,
+ 						     mask, data, of_ops, &tzp,
 
-Ben
+---
+base-commit: a5df3a702b2cba82bcfb066fa9f5e4a349c33924
+change-id: 20250707-trip-point-73dae9fd9c74
+
+Best regards,
+-- 
+Hsin-Te Yuan <yuanhsinte@chromium.org>
 
