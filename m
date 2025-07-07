@@ -1,334 +1,285 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8008D3597A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 05:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBCD19ABC2;
+	Mon,  7 Jul 2025 05:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751864490; cv=none; b=dOm3ajmUlPdV9dS2lOt5vMuH4DZiL/yQz2vExHScmYoXAKOsn8pAx+jOC8LI6b8ydL/LETXPwI8LXvT//IU7jZ+8wimPM/X5kxseF2yD5It2v8ncXZ6PXPRGk4Bdo98EDVThFvMzy2GtK1En+M2Mj6/UBr6CDi8i6g1luglf5Fo=
+	t=1751864500; cv=none; b=WbfDiVolWBnSs8tDegXtekj2FASscdBi7HfrWBhc2LS/9CitLXaTMBUr00ORRB5VNZYmjX48Z/wPbSC7APta8wkmNp9l9BWMUOdDLpAUTsFwuXWp90lyp8UzKe2wD6sKCvfhUTR1oUTAQ+90jyj0Qj1LqzAvryrc3kio+P5g870=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751864490; c=relaxed/simple;
-	bh=420HxGI0LBtBs5jQqceU4Q+fIw6yy9YUndiQcPVc6QU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=I7UnKdx2kK0rDi0dJUrlFTfKNps/uKC+/T+0km+pDAhQtKujbDcnldo41hwJjWe3dNA9NcezrkcukJHx32F+4oXknfEgyfJ3CstTsHVd7NToBRBeP5zHEUWq8yOmd90sNPAQowy6z/OLw1L5CKKMEJDgRC81XjLZ5K+oU4iu2/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86d01ff56ebso447185439f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Jul 2025 22:01:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751864486; x=1752469286;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lzuIHo13XX1cGLBZyheOl7WSxR7YYsmSm/51i+mgb5A=;
-        b=XH8bjltfZyobpt/V1w6D5rFzyolvZqGyAdnhU4dCMZP20IkFEogDFq1nMCoVf3E11e
-         Mdf2mqY8gZnQ+UO7AefkPN9kbE69/h+NADmv11GCTkP4mArZPlKWejbGOd1YI0w1huMS
-         Kyvi/cSJESjpl3ZcEjqvNfA9GIrONggCwVosxt1Bodj7jsBCNkWKM2YT40/HxPop4ss6
-         RRw37JDCw6yBGN6xAre6Lx2sa17p+cMfwyTV0mcYr5kXCvrK87i7vCEA+T6DVM3RN7PW
-         TlvGsgVUV8UlAx/C8LePMhZ+XCmqgZjg4JxAKR01golLh/hLh3Y9v+aYoDzzh6eE0kSG
-         1SKw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4e2IIFazb9HrRAtCkm82y9tz9wiZrVrtJlt9rEX6Kdcc5M/XtghgiO2SZwF+RDErQMDo1z+TnrlXSXaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBfrb8c5aYVMVzg6+2Td8dbFy7SD7IzQtHFfJOVT/n7i9Ez7Da
-	bf54uwd0iKmn1MxrOsXJ1v6NTpMzq5peZ8fBr/RX0DBMgOmJ1TIF7qD4P7cIE7UTReOtgvsvpVO
-	SXmiSMx0ddE2rTG/cSUGl0JnrhcX+x/Q4VOchBlpvVg06NF5977X2q7wjuu4=
-X-Google-Smtp-Source: AGHT+IG9eK1QOxUtDoFIFCmuZvWi5/+cM9w/MCo6wL7NVcw1RFDlkjAT3jwQsIV3kpZhhP7jbuBA5jlbHiSASxo5WRUtacpOv+jJ
+	s=arc-20240116; t=1751864500; c=relaxed/simple;
+	bh=iDByYHnbq6hJxIjqTvjvaoSpLQMX/BOf4upkEkCnCes=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IkFEROaAGmO5ST3rV/RG5pRQh2ugeV2mx64CaIlNdCLC4sj5n4vthjwqB6PxBXQfSYCCJ8A/DKraqoofWF3JGuyI6VEsWBrkM9Ot3O7e46cSZmHo1VIrD02/GFuYI0r9Duf/Fo0av8onKWUYOW+RQxCHWUknRZs3Jg/yHa3/8SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=34vjTT8i; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="34vjTT8i"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=NAU/5xwp1VDhh0b7SpgTb+vw1QLyKInxXDmYrDSMhbk=; b=34vjTT8i3FvtB+g0rz8+6IdrQ1
+	9OM0Aj1YvVpBRzj+WCupGrj2kjF6qigLCqVgIPtFdGopMT9PEVBg7oSs84s+/NGKGgA7gpfZ0K9WJ
+	KxdLyLvIbFNdGdAkzjlkcVEEyMzdoSO64qjR9HlPjV6SRy74GbzYjhN8geI8Rh95CrGOhmZMwcTII
+	90CcA87faGPbjPANictFPX1LKylzc3hwfsDfZYtkriQivudbmRnc7TNyHeBb19UbZHmUfOyANuUPW
+	70bStmkXSRVfItwNJqhxok/90KBx6WIooCGx4QHAYL8defBCHwmkPXVEMTbh/QYRGMXKVvsO7tNP4
+	ksQqm/mw==;
+Received: from [50.53.25.54] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uYdyz-00000001PL5-332e;
+	Mon, 07 Jul 2025 05:01:37 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH -next] docs: kdoc: various fixes for grammar, spelling, punctuation
+Date: Sun,  6 Jul 2025 22:01:35 -0700
+Message-ID: <20250707050135.2660457-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:388e:b0:864:4aa2:d796 with SMTP id
- ca18e2360f4ac-876e47b4e4emr1005644539f.8.1751864486533; Sun, 06 Jul 2025
- 22:01:26 -0700 (PDT)
-Date: Sun, 06 Jul 2025 22:01:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686b54a6.a00a0220.c7b3.0075.GAE@google.com>
-Subject: [syzbot] [ext4?] possible deadlock in ext4_evict_inode (4)
-From: syzbot <syzbot+1a921ddeed254c00100d@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Correct grammar, spelling, and punctuation in comments, strings,
+print messages, logs.
 
-syzbot found the following issue on:
+Change two instances of two spaces between words to just one space.
 
-HEAD commit:    d7b8f8e20813 Linux 6.16-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D14234bd4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D72aa0474e3c3b9a=
-c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D1a921ddeed254c001=
-00d
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-=
-1~exp1~20250616065826.132), Debian LLD 20.1.7
+codespell was used to find misspelled words.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/605b3edeb031/disk-=
-d7b8f8e2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a3cb6f3ea4a9/vmlinux-=
-d7b8f8e2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/cd9e0c6a9926/bzI=
-mage-d7b8f8e2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+1a921ddeed254c00100d@syzkaller.appspotmail.com
-
-ext4 filesystem being mounted at /31/file0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa supports tim=
-estamps until 2038-01-19 (0x7fffffff)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-WARNING: possible circular locking dependency detected
-6.16.0-rc5-syzkaller #0 Not tainted
-------------------------------------------------------
-syz.5.282/7960 is trying to acquire lock:
-ffff88807b0b8618 (sb_internal){.+.+}-{0:0}, at: percpu_down_read_freezable =
-include/linux/percpu-rwsem.h:83 [inline]
-ffff88807b0b8618 (sb_internal){.+.+}-{0:0}, at: __sb_start_write include/li=
-nux/fs.h:1795 [inline]
-ffff88807b0b8618 (sb_internal){.+.+}-{0:0}, at: sb_start_intwrite include/l=
-inux/fs.h:1978 [inline]
-ffff88807b0b8618 (sb_internal){.+.+}-{0:0}, at: ext4_evict_inode+0x2d6/0xee=
-0 fs/ext4/inode.c:215
-
-but task is already holding lock:
-ffff88805438cb98 (&sbi->s_writepages_rwsem){++++}-{0:0}, at: ext4_writepage=
-s_down_write fs/ext4/ext4.h:1816 [inline]
-ffff88805438cb98 (&sbi->s_writepages_rwsem){++++}-{0:0}, at: ext4_ext_migra=
-te+0x2f3/0x1010 fs/ext4/migrate.c:438
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #5 (&sbi->s_writepages_rwsem){++++}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       percpu_down_read_internal+0x48/0x1c0 include/linux/percpu-rwsem.h:53
-       percpu_down_read include/linux/percpu-rwsem.h:77 [inline]
-       ext4_writepages_down_read fs/ext4/ext4.h:1804 [inline]
-       ext4_writepages+0x1cc/0x350 fs/ext4/inode.c:2952
-       do_writepages+0x32b/0x550 mm/page-writeback.c:2636
-       filemap_fdatawrite_wbc mm/filemap.c:386 [inline]
-       __filemap_fdatawrite_range mm/filemap.c:419 [inline]
-       filemap_write_and_wait_range+0x217/0x310 mm/filemap.c:691
-       ext4_collapse_range+0x2da/0x950 fs/ext4/extents.c:5426
-       ext4_fallocate+0x58d/0xcd0 fs/ext4/extents.c:4786
-       vfs_fallocate+0x6a3/0x830 fs/open.c:341
-       ksys_fallocate fs/open.c:365 [inline]
-       __do_sys_fallocate fs/open.c:370 [inline]
-       __se_sys_fallocate fs/open.c:368 [inline]
-       __x64_sys_fallocate+0xc0/0x110 fs/open.c:368
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #4 (mapping.invalidate_lock#2){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
-       filemap_invalidate_lock_shared include/linux/fs.h:934 [inline]
-       filemap_fault+0x546/0x1200 mm/filemap.c:3400
-       __do_fault+0x138/0x390 mm/memory.c:5169
-       do_read_fault mm/memory.c:5590 [inline]
-       do_fault mm/memory.c:5724 [inline]
-       do_pte_missing mm/memory.c:4251 [inline]
-       handle_pte_fault mm/memory.c:6069 [inline]
-       __handle_mm_fault+0x37ed/0x5620 mm/memory.c:6212
-       handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6381
-       do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1387
-       handle_page_fault arch/x86/mm/fault.c:1476 [inline]
-       exc_page_fault+0x76/0xf0 arch/x86/mm/fault.c:1532
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-       fault_in_readable+0x8e/0x130 mm/gup.c:-1
-       fault_in_iov_iter_readable+0x1b4/0x2f0 lib/iov_iter.c:94
-       generic_perform_write+0x7cc/0x910 mm/filemap.c:4161
-       ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:299
-       ext4_dio_write_iter fs/ext4/file.c:613 [inline]
-       ext4_file_write_iter+0x182a/0x1bc0 fs/ext4/file.c:721
-       do_iter_readv_writev+0x56e/0x7f0 fs/read_write.c:-1
-       vfs_writev+0x31a/0x960 fs/read_write.c:1057
-       do_pwritev fs/read_write.c:1153 [inline]
-       __do_sys_pwritev2 fs/read_write.c:1211 [inline]
-       __se_sys_pwritev2+0x179/0x290 fs/read_write.c:1202
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #3 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __might_fault+0xcc/0x130 mm/memory.c:6971
-       _inline_copy_to_user include/linux/uaccess.h:192 [inline]
-       _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
-       copy_to_user include/linux/uaccess.h:225 [inline]
-       fiemap_fill_next_extent+0x1c0/0x390 fs/ioctl.c:145
-       ocfs2_fiemap+0x888/0xc90 fs/ocfs2/extent_map.c:806
-       ioctl_fiemap fs/ioctl.c:220 [inline]
-       do_vfs_ioctl+0x16d0/0x1990 fs/ioctl.c:841
-       __do_sys_ioctl fs/ioctl.c:905 [inline]
-       __se_sys_ioctl+0x82/0x170 fs/ioctl.c:893
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&ocfs2_quota_ip_alloc_sem_key){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       ocfs2_create_local_dquot+0x19d/0x1a40 fs/ocfs2/quota_local.c:1227
-       ocfs2_acquire_dquot+0x80f/0xb30 fs/ocfs2/quota_global.c:883
-       dqget+0x7b1/0xf10 fs/quota/dquot.c:977
-       __dquot_initialize+0x3b3/0xcb0 fs/quota/dquot.c:1505
-       ocfs2_get_init_inode+0x13b/0x1b0 fs/ocfs2/namei.c:202
-       ocfs2_mknod+0x863/0x2050 fs/ocfs2/namei.c:310
-       ocfs2_create+0x1a5/0x440 fs/ocfs2/namei.c:673
-       lookup_open fs/namei.c:3717 [inline]
-       open_last_lookups fs/namei.c:3816 [inline]
-       path_openat+0x14f1/0x3830 fs/namei.c:4052
-       do_filp_open+0x1fa/0x410 fs/namei.c:4082
-       do_sys_openat2+0x121/0x1c0 fs/open.c:1437
-       do_sys_open fs/open.c:1452 [inline]
-       __do_sys_openat fs/open.c:1468 [inline]
-       __se_sys_openat fs/open.c:1463 [inline]
-       __x64_sys_openat+0x138/0x170 fs/open.c:1463
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&dquot->dq_lock){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:747
-       dquot_release+0x66/0x600 fs/quota/dquot.c:531
-       ext4_release_dquot+0x3ee/0x6c0 fs/ext4/ext4_jbd2.h:-1
-       quota_release_workfn+0x35f/0x610 fs/quota/dquot.c:840
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
-       worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
-       kthread+0x711/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #0 (sb_internal){.+.+}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       percpu_down_read_internal+0x48/0x1c0 include/linux/percpu-rwsem.h:53
-       percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
-       __sb_start_write include/linux/fs.h:1795 [inline]
-       sb_start_intwrite include/linux/fs.h:1978 [inline]
-       ext4_evict_inode+0x2d6/0xee0 fs/ext4/inode.c:215
-       evict+0x504/0x9c0 fs/inode.c:810
-       ext4_ext_migrate+0xd23/0x1010 fs/ext4/migrate.c:588
-       __ext4_ioctl fs/ext4/ioctl.c:1402 [inline]
-       ext4_ioctl+0x1b1a/0x3510 fs/ext4/ioctl.c:1626
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:907 [inline]
-       __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  sb_internal --> mapping.invalidate_lock#2 --> &sbi->s_writepages_rwsem
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&sbi->s_writepages_rwsem);
-                               lock(mapping.invalidate_lock#2);
-                               lock(&sbi->s_writepages_rwsem);
-  rlock(sb_internal);
-
- *** DEADLOCK ***
-
-3 locks held by syz.5.282/7960:
- #0: ffff88807b0b8428 (sb_writers#4){.+.+}-{0:0}, at: mnt_want_write_file+0=
-x60/0x200 fs/namespace.c:601
- #1: ffff88805c5b2a20 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_l=
-ock include/linux/fs.h:869 [inline]
- #1: ffff88805c5b2a20 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: __ext4_=
-ioctl fs/ext4/ioctl.c:1401 [inline]
- #1: ffff88805c5b2a20 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: ext4_io=
-ctl+0x1b12/0x3510 fs/ext4/ioctl.c:1626
- #2: ffff88805438cb98 (&sbi->s_writepages_rwsem){++++}-{0:0}, at: ext4_writ=
-epages_down_write fs/ext4/ext4.h:1816 [inline]
- #2: ffff88805438cb98 (&sbi->s_writepages_rwsem){++++}-{0:0}, at: ext4_ext_=
-migrate+0x2f3/0x1010 fs/ext4/migrate.c:438
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 7960 Comm: syz.5.282 Not tainted 6.16.0-rc5-syzkaller #0=
- PREEMPT(full)=20
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
- percpu_down_read_internal+0x48/0x1c0 include/linux/percpu-rwsem.h:53
- percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
- __sb_start_write include/linux/fs.h:1795 [inline]
- sb_start_intwrite include/linux/fs.h:1978 [inline]
- ext4_evict_inode+0x2d6/0xee0 fs/ext4/inode.c:215
- evict+0x504/0x9c0 fs/inode.c:810
- ext4_ext_migrate+0xd23/0x1010 fs/ext4/migrate.c:588
- __ext4_ioctl fs/ext4/ioctl.c:1402 [inline]
- ext4_ioctl+0x1b1a/0x3510 fs/ext4/ioctl.c:1626
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fec7c18e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fec79ff6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fec7c3b5fa0 RCX: 00007fec7c18e929
-RDX: 0000000000000000 RSI: 0000000000006609 RDI: 0000000000000004
-RBP: 00007fec7c210b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fec7c3b5fa0 R15: 00007ffc144475c8
- </TASK>
-
-
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ scripts/lib/kdoc/kdoc_files.py  |    4 ++--
+ scripts/lib/kdoc/kdoc_output.py |    8 ++++----
+ scripts/lib/kdoc/kdoc_parser.py |   20 ++++++++++----------
+ scripts/lib/kdoc/kdoc_re.py     |   24 ++++++++++++------------
+ 4 files changed, 28 insertions(+), 28 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--- linux-next-20250704.orig/scripts/lib/kdoc/kdoc_files.py
++++ linux-next-20250704/scripts/lib/kdoc/kdoc_files.py
+@@ -64,7 +64,7 @@ class GlobSourceFiles:
+ 
+     def parse_files(self, file_list, file_not_found_cb):
+         """
+-        Define an interator to parse all source files from file_list,
++        Define an iterator to parse all source files from file_list,
+         handling directories if any
+         """
+ 
+@@ -229,7 +229,7 @@ class KernelFiles():
+         Return output messages from a file name using the output style
+         filtering.
+ 
+-        If output type was not handled by the syler, return None.
++        If output type was not handled by the styler, return None.
+         """
+ 
+         # NOTE: we can add rules here to filter out unwanted parts,
+--- linux-next-20250704.orig/scripts/lib/kdoc/kdoc_output.py
++++ linux-next-20250704/scripts/lib/kdoc/kdoc_output.py
+@@ -8,7 +8,7 @@
+ Implement output filters to print kernel-doc documentation.
+ 
+ The implementation uses a virtual base class (OutputFormat) which
+-contains a dispatches to virtual methods, and some code to filter
++contains dispatches to virtual methods, and some code to filter
+ out output messages.
+ 
+ The actual implementation is done on one separate class per each type
+@@ -59,7 +59,7 @@ class OutputFormat:
+     OUTPUT_EXPORTED     = 2 # output exported symbols
+     OUTPUT_INTERNAL     = 3 # output non-exported symbols
+ 
+-    # Virtual member to be overriden at the  inherited classes
++    # Virtual member to be overridden at the inherited classes
+     highlights = []
+ 
+     def __init__(self):
+@@ -85,7 +85,7 @@ class OutputFormat:
+     def set_filter(self, export, internal, symbol, nosymbol, function_table,
+                    enable_lineno, no_doc_sections):
+         """
+-        Initialize filter variables according with the requested mode.
++        Initialize filter variables according to the requested mode.
+ 
+         Only one choice is valid between export, internal and symbol.
+ 
+@@ -210,7 +210,7 @@ class OutputFormat:
+             return self.data
+ 
+         # Warn if some type requires an output logic
+-        self.config.log.warning("doesn't now how to output '%s' block",
++        self.config.log.warning("doesn't know how to output '%s' block",
+                                 dtype)
+ 
+         return None
+--- linux-next-20250704.orig/scripts/lib/kdoc/kdoc_re.py
++++ linux-next-20250704/scripts/lib/kdoc/kdoc_re.py
+@@ -16,7 +16,7 @@ re_cache = {}
+ 
+ class KernRe:
+     """
+-    Helper class to simplify regex declaration and usage,
++    Helper class to simplify regex declaration and usage.
+ 
+     It calls re.compile for a given pattern. It also allows adding
+     regular expressions and define sub at class init time.
+@@ -27,7 +27,7 @@ class KernRe:
+ 
+     def _add_regex(self, string, flags):
+         """
+-        Adds a new regex or re-use it from the cache.
++        Adds a new regex or reuses it from the cache.
+         """
+ 
+         if string in re_cache:
+@@ -117,7 +117,7 @@ class NestedMatch:
+ 
+             '\\bSTRUCT_GROUP(\\(((?:(?>[^)(]+)|(?1))*)\\))[^;]*;'
+ 
+-    which is used to properly match open/close parenthesis of the
++    which is used to properly match open/close parentheses of the
+     string search STRUCT_GROUP(),
+ 
+     Add a class that counts pairs of delimiters, using it to match and
+@@ -139,13 +139,13 @@ class NestedMatch:
+     #       \bSTRUCT_GROUP\(
+     #
+     # is similar to: STRUCT_GROUP\((.*)\)
+-    # except that the content inside the match group is delimiter's aligned.
++    # except that the content inside the match group is delimiter-aligned.
+     #
+-    # The content inside parenthesis are converted into a single replace
++    # The content inside parentheses is converted into a single replace
+     # group (e.g. r`\1').
+     #
+     # It would be nice to change such definition to support multiple
+-    # match groups, allowing a regex equivalent to.
++    # match groups, allowing a regex equivalent to:
+     #
+     #   FOO\((.*), (.*), (.*)\)
+     #
+@@ -171,14 +171,14 @@ class NestedMatch:
+         but I ended using a different implementation to align all three types
+         of delimiters and seek for an initial regular expression.
+ 
+-        The algorithm seeks for open/close paired delimiters and place them
+-        into a stack, yielding a start/stop position of each match  when the
++        The algorithm seeks for open/close paired delimiters and places them
++        into a stack, yielding a start/stop position of each match when the
+         stack is zeroed.
+ 
+-        The algorithm shoud work fine for properly paired lines, but will
+-        silently ignore end delimiters that preceeds an start delimiter.
++        The algorithm should work fine for properly paired lines, but will
++        silently ignore end delimiters that precede a start delimiter.
+         This should be OK for kernel-doc parser, as unaligned delimiters
+-        would cause compilation errors. So, we don't need to rise exceptions
++        would cause compilation errors. So, we don't need to raise exceptions
+         to cover such issues.
+         """
+ 
+@@ -206,7 +206,7 @@ class NestedMatch:
+                     stack.append(end)
+                     continue
+ 
+-                # Does the end delimiter match what it is expected?
++                # Does the end delimiter match what is expected?
+                 if stack and d == stack[-1]:
+                     stack.pop()
+ 
+--- linux-next-20250704.orig/scripts/lib/kdoc/kdoc_parser.py
++++ linux-next-20250704/scripts/lib/kdoc/kdoc_parser.py
+@@ -21,8 +21,8 @@ from kdoc_re import NestedMatch, KernRe
+ #
+ # Regular expressions used to parse kernel-doc markups at KernelDoc class.
+ #
+-# Let's declare them in lowercase outside any class to make easier to
+-# convert from the python script.
++# Let's declare them in lowercase outside any class to make it easier to
++# convert from the Perl script.
+ #
+ # As those are evaluated at the beginning, no need to cache them
+ #
+@@ -283,7 +283,7 @@ class KernelDoc:
+         args["type"] = dtype
+         args["warnings"] = self.entry.warnings
+ 
+-        # TODO: use colletions.OrderedDict to remove sectionlist
++        # TODO: use collections.OrderedDict to remove sectionlist
+ 
+         sections = args.get('sections', {})
+         sectionlist = args.get('sectionlist', [])
+@@ -509,7 +509,7 @@ class KernelDoc:
+ 
+     def check_sections(self, ln, decl_name, decl_type, sectcheck, prmscheck):
+         """
+-        Check for errors inside sections, emitting warnings if not found
++        Check for errors inside sections, emitting warnings if not-found
+         parameters are described.
+         """
+ 
+@@ -565,7 +565,7 @@ class KernelDoc:
+ 
+     def dump_struct(self, ln, proto):
+         """
+-        Store an entry for an struct or union
++        Store an entry for a struct or union
+         """
+ 
+         type_pattern = r'(struct|union)'
+@@ -670,7 +670,7 @@ class KernelDoc:
+             # TODO: use NestedMatch for FOO($1, $2, ...) matches
+             #
+             # it is better to also move those to the NestedMatch logic,
+-            # to ensure that parenthesis will be properly matched.
++            # to ensure that parentheses will be properly matched.
+ 
+             (KernRe(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S), r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
+             (KernRe(r'DECLARE_PHY_INTERFACE_MASK\s*\(([^\)]+)\)', re.S), r'DECLARE_BITMAP(\1, PHY_INTERFACE_MODE_MAX)'),
+@@ -683,7 +683,7 @@ class KernelDoc:
+             (KernRe(r'DEFINE_DMA_UNMAP_LEN\s*\(' + args_pattern + r'\)', re.S), r'__u32 \1'),
+         ]
+ 
+-        # Regexes here are guaranteed to have the end limiter matching
++        # Regexes here are guaranteed to have the end delimiter matching
+         # the start delimiter. Yet, right now, only one replace group
+         # is allowed.
+ 
+@@ -711,7 +711,7 @@ class KernelDoc:
+         # Python behavior is different: it parses 'members' only once,
+         # creating a list of tuples from the first interaction.
+         #
+-        # On other words, this won't get nested structs.
++        # In other words, this won't get nested structs.
+         #
+         # So, we need to have an extra loop on Python to override such
+         # re limitation.
+@@ -941,7 +941,7 @@ class KernelDoc:
+ 
+     def dump_function(self, ln, prototype):
+         """
+-        Stores a function of function macro inside self.entries array.
++        Stores a function or function macro inside self.entries array.
+         """
+ 
+         func_macro = False
+@@ -1258,7 +1258,7 @@ class KernelDoc:
+             #
+             else:
+                 self.emit_msg(ln,
+-                              f"This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst\n{line}")
++                              f"This comment starts with '/**', but isn't a kernel-doc comment. Refer to Documentation/doc-guide/kernel-doc.rst\n{line}")
+                 self.state = state.NORMAL
+                 return
+             #
