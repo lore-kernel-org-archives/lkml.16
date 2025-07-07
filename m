@@ -1,136 +1,156 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6360028935D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E612798E3;
+	Mon,  7 Jul 2025 12:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751893115; cv=none; b=crypEjl5S8eg9v3tXZHOC951n8faLSCPtwsBXtqF+cn8Z+Y4NTWuWnnzk7tvUjHHTuHFR8gFEugVl9eoZory+wOKRTU715fMoHVxg4elQ6swNqwPak9/pWEuHzVAyGTDL0H78QrYQzFgY+4ZxqKYZ842iy6o1cC1TQjYS0W5nNo=
+	t=1751893180; cv=none; b=qJE5wGqHthbm3MDqGCZyaqhgrp/9eausVzMk05Gww1x4lSasE6Ia08egLT+FJ88kVhOw6YZmTNgFKxSF45xBru4U7tIMcbdoRgR990r6mVEwQashk/qIypAxT5+rAzJ/8Xz9Te9OALMf58NdDWP7MemEBw1dNLCSXEH668DteDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751893115; c=relaxed/simple;
-	bh=yKJNh7Lnr1WIh3u7D+FrLbc255TwpZ5V/xE17d+JUwo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=R/Bv7UrJ/9Siq+QQy7OHK0/HGtD+WFvXl50bII6zyIqWaXcOJ/czOxdqPmOnsqaE4+msIYSwNjQMaZ432AZlX9E7KRRl4gp6IARjLKPC1ys4B+M187Q5Y6jUj4Pk+5hP9LVjXfJBTZWZXNoQNcCb8aKfrtRcO23mtkirA5ZhZVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lzhb9LBY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YT/m0Qpp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751893180; c=relaxed/simple;
+	bh=AIpdjaop4M9+6eXivbyQLogbWlCGzKNHvDpcMI0Z31c=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DpPiIsbA3FXO3ixIWhG9/qNe5OepWn7ixnmkiIkd0Ma+tgffTpuLICLIBhIbVzB/nhw7VwZRI+TXCkpCIuiwLEaIOT04O8FHN6rmAC/otVFg4VIDRIR8kOPRZgJaamQTickDVa4tkq2RjWZ1uv0/FXzCPSkc12D9SXd9F8Jg+nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EwSE49WH; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lzhb9LBY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YT/m0Qpp"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751893105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LUN42cWiSUwI/rz+2Hn290BpUIUJUzByb2lKJbjzz1c=;
-	b=Lzhb9LBYPUtX1LDWNNCHL25EaFVukLp+b2xTpwawig9bvEDQTI9yFd5H3tsXQpTwN6Ir4W
-	Yjgx0XJ2L1/5j5WGiTGXpsE++hCnWM5GeoDQnvJPkfqppKcxsuP1I9neV7G2R27u57TMOe
-	ZArAwDF4Ni32gw7f9Xih7vY3OM4hYxUfLJJI7aPNb8lK/MCiHImTDxXpvyItsNJPxI4g70
-	CGHEbDcWhcxEy6nMHDIhdbMThfHaCQi6JYquDbrMv053ZclALjO6QbYLxIDiGgskHvbvrm
-	4G/wYCRMLuZl6HnRwbYsODykhXjclg0XJrRu5YsQqRQXuucYn+mfQ2wBtjL91Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751893105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LUN42cWiSUwI/rz+2Hn290BpUIUJUzByb2lKJbjzz1c=;
-	b=YT/m0QppFQpTgb6pMq6eFbDwimZA0YAXi38Xx6soKXp5Xtz69Poh2lup+s9KdnqJuvY1bp
-	OXjof4eGyGL4w8Aw==
-Date: Mon, 07 Jul 2025 14:58:11 +0200
-Subject: [PATCH] tools/nolibc: avoid false-positive -Wmaybe-uninitialized
- through waitpid()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EwSE49WH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751893178; x=1783429178;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AIpdjaop4M9+6eXivbyQLogbWlCGzKNHvDpcMI0Z31c=;
+  b=EwSE49WHo/5jZhSHP0EkNPa+jsSVZ5txkCgtXBOCJMnSZEieZQBh6IB9
+   5VhcvwM2PCIVUN8Edhd4/jUoNPXkruWO4GGMKfin9sj9lEwKBgtqsextC
+   q13pO1t4cL7Bhi3OGPDL78TyMv36Bz+wD/ward6rXbf2s4xiEImwE3yhL
+   WhKplt/rttSO8T9Mm5F7Qlu+TgWyQAjEJYCJbAMwXnnLYEsCUWbNXXEzQ
+   HFS1xLKk6o4/khMFv6dcGJjEtqxUYGkJWi/spSuB1Svi1A2WsirMXFRpp
+   WoOIkcLAfs9fzatFRyoODWVcu2SxqceEEIbDJ3dCw5BxF9/PScZycmIiA
+   A==;
+X-CSE-ConnectionGUID: jc6yz7ypTBqIKJ1kG5yHHg==
+X-CSE-MsgGUID: Hx89f7GFTz6UuMx6g6V+2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="53970616"
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="53970616"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 05:59:37 -0700
+X-CSE-ConnectionGUID: nwgno0biRkOTSA+PUotBNw==
+X-CSE-MsgGUID: 3nActMbpTL6pXWMIprqrSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,294,1744095600"; 
+   d="scan'208";a="154634790"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.104])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 05:59:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Jul 2025 15:59:31 +0300 (EEST)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] platform/mellanox: mlxbf-pmc: Validate event/enable
+ input
+In-Reply-To: <2ee618c59976bcf1379d5ddce2fc60ab5014b3a9.1751380187.git.shravankr@nvidia.com>
+Message-ID: <fe24c309-737e-72c5-90ae-cfb873dd195d@linux.intel.com>
+References: <cover.1751380187.git.shravankr@nvidia.com> <2ee618c59976bcf1379d5ddce2fc60ab5014b3a9.1751380187.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250707-nolibc-waitpid-uninitialized-v1-1-dcd4e70bcd8f@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAGLEa2gC/x3MTQqDMBAG0KvIrDuQiCWmVyldxGTUD2SUxP5Q8
- e4NXb7NO6hIhhS6NQdleaFg1Qp7aSjOQSdhpGpqTXs1zjjWdcEQ+R2wb0j8VCh2hAVfSRyt7by
- JvfcuUC22LCM+//7+OM8fe5R1bW4AAAA=
-X-Change-ID: 20250707-nolibc-waitpid-uninitialized-c11490c8997a
-To: Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751893101; l=2239;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=yKJNh7Lnr1WIh3u7D+FrLbc255TwpZ5V/xE17d+JUwo=;
- b=m/7wEa4wlO3HnhXqiWoXADS+0xMFjvi43ssNsOMphEiVXhXlmIfxYwWKF8tcan+9ZrB97ly9N
- q5XHz1wRWyvDpXCPpzhQwtI0B4d9TW9cU4By2tZ/plwTTqhkgX8bJoe
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=US-ASCII
 
-The compiler does not know that waitid() will only ever return 0 or -1.
-If waitid() would return a positive value than waitpid() would return that
-same value and *status would not be initialized.
-However users calling waitpid() know that the only possible return values
-of it are 0 or -1. They therefore might check for errors with
-'ret == -1' or 'ret < 0' and use *status otherwise. The compiler will then
-warn about the usage of a potentially uninitialized variable.
+On Wed, 2 Jul 2025, Shravan Kumar Ramani wrote:
 
-Example:
+> Before programming the event info, validate the event number received as input
+> by checking if it exists in the event_list. Also fix a typo in the comment for
+> mlxbf_pmc_get_event_name() to correctly mention that it returns the event name
+> when taking the event number as input, and not the other way round. For setting
+> the enable value, the input should be 0 or 1 only. Use kstrtobool() in place of
+> kstrtoint() in  mlxbf_pmc_enable_store() to accept only valid input.
+> 
+> Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueField-3")
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 9cc3d4ca53cf..9aa8de1122e5 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -1223,7 +1223,7 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+>  	return -ENODEV;
+>  }
+>  
+> -/* Get the event number given the name */
+> +/* Get the event name given the number */
+>  static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
+>  {
+>  	const struct mlxbf_pmc_events *events;
+> @@ -1807,6 +1807,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
+>  		err = kstrtouint(buf, 0, &evt_num);
+>  		if (err < 0)
+>  			return err;
+> +
+> +		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
+> +			return -EINVAL;
+>  	}
+>  
+>  	if (strstr(pmc->block_name[blk_num], "l3cache"))
+> @@ -1887,13 +1890,14 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  {
+>  	struct mlxbf_pmc_attribute *attr_enable = container_of(
+>  		attr, struct mlxbf_pmc_attribute, dev_attr);
+> -	unsigned int en, blk_num;
+> +	unsigned int blk_num;
+>  	u32 word;
+>  	int err;
+> +	bool en;
+>  
+>  	blk_num = attr_enable->nr;
+>  
+> -	err = kstrtouint(buf, 0, &en);
+> +	err = kstrtobool(buf, &en);
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -1913,14 +1917,11 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+>  			MLXBF_PMC_WRITE_REG_32, word);
+>  	} else {
+> -		if (en && en != 1)
+> -			return -EINVAL;
+> -
+>  		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
+>  		if (err)
+>  			return err;
+>  
+> -		if (en == 1) {
+> +		if (en) {
+>  			err = mlxbf_pmc_config_l3_counters(blk_num, true, false);
+>  			if (err)
+>  				return err;
+> 
 
-	$ cat test.c
-	#include <stdio.h>
-	#include <unistd.h>
+Hi,
 
-	int main(void)
-	{
-		int ret, status;
+I've applied this series to the review-ilpo-fixes branch but I had to 
+split the kstrbool() change to own commit, it's very apparent these two 
+changes should have been separate right from the start (and I even asked 
+you to split this earlier).
 
-		ret = waitpid(0, &status, 0);
-		if (ret == -1)
-			return 0;
+Whenever making changes, especially fixes, please try hard put separate 
+changes into own patches. That should be done even if the changes touch 
+same file, and they may even look similar such as here, both are doing 
+"input validation", but the cases were still clearly different.
 
-		printf("status %x\n", status);
+It's easier to review, justify in the changelog, etc. when the change is 
+very focused on a single problem only.
 
-		return 0;
-	}
-
-	$ gcc --version
-	gcc (GCC) 15.1.1 20250425
-
-	$ gcc -Wall -Os -Werror -nostdlib -nostdinc -static -Iusr/include -Itools/include/nolibc/ -o /dev/null test.c
-	test.c: In function ‘main’:
-	test.c:12:9: error: ‘status’ may be used uninitialized [-Werror=maybe-uninitialized]
-	   12 |         printf("status %x\n", status);
-	      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	test.c:6:18: note: ‘status’ was declared here
-	    6 |         int ret, status;
-	      |                  ^~~~~~
-	cc1: all warnings being treated as errors
-
-Avoid the warning by normalizing waitid() errors to '-1' in waitpid().
-
-Fixes: 0c89abf5ab3f ("tools/nolibc: implement waitpid() in terms of waitid()")
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- tools/include/nolibc/sys/wait.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/include/nolibc/sys/wait.h b/tools/include/nolibc/sys/wait.h
-index 4d44e3da0ba814d00368027d893e2eb1155b86f3..56ddb806da7f2466be5523b52fd01480b711daec 100644
---- a/tools/include/nolibc/sys/wait.h
-+++ b/tools/include/nolibc/sys/wait.h
-@@ -78,7 +78,7 @@ pid_t waitpid(pid_t pid, int *status, int options)
- 
- 	ret = waitid(idtype, id, &info, options);
- 	if (ret)
--		return ret;
-+		return -1;
- 
- 	switch (info.si_code) {
- 	case 0:
-
----
-base-commit: 4a40129087a4c32135bb1177a57bbbe6ee646f1a
-change-id: 20250707-nolibc-waitpid-uninitialized-c11490c8997a
-
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+ i.
 
