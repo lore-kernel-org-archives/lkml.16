@@ -1,150 +1,107 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C599429DB6C;
-	Mon,  7 Jul 2025 13:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFECB28ECF2;
+	Mon,  7 Jul 2025 13:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751894291; cv=none; b=qwk1Qym6ueSmLECCl2iCX8Knq/zrZLWxW1RSLubypCOImttjotoGxbP/xZjbjmsdHPLaG05Hb6xGq7Q/ZJFVpZV51eHT8H0dkWyQz49DY7Dau4rojJVGfoanpZ24oB35Ot+UmGw3eEQ9XuchB1zLkKRxOn77RW75FQMbaY1af+U=
+	t=1751894343; cv=none; b=MSbV47qppsYWQqTnqpwRMTzRrHNzT7w8ee10grCrL144iJU/YkS5YjOR35c0QYBzuGKvz6z24FcRhYJB4vFSeWw6Tb3uYuLDhh2505kZr3mP8icm27OPjbUgLNfwUsHFv8WVtsc4wCeCwaFbUGp33771/8bX969ca9hQWcyP9fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751894291; c=relaxed/simple;
-	bh=8y8QpZtJTFNp8o0QUnini93q/Vu/FSNfMkKtriiY5zs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qFV/HxE7g4dgpJYfMYiK2Z3Ju/s9NOH2ZIF8ixbxm/P/FtFZgbaX8oAkdXGdW83k39+NhSVTToTlG9jGew1Ytq1dsSWO62ih/D4ZcHtvZ8rWXzF0+P+S9iAa+0/DOCVT/0/Fyn/6DVQRsDrzpk884pzqlG28sdBrxZQIWduuX2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=i2L34cYS; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1751894343; c=relaxed/simple;
+	bh=unpSKTFzLaDlkd0/9ndQM6FmFBUbqbcfpFb1tp2+T00=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QYYJ8UOcemWL6HyJrbxib4TnB4oUDtcxtn0980FwKNQycplDW2hdZBOLLs6UDbmoW5I3ixiUkry6/+5Gc93SmKXzMPKMihHl3U8pqWnb1Y7YugKcnxW1fhDoyQw/OXsL3ZoFVYAMjix0gCq55F7YpBnoG/pFl7KI9AHcepJ5Qb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g4dKB5W1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qzxWP6gL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="i2L34cYS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=zQASOhd0uZfQPjpQCiM/quTJ21C6rqW24eheUrCsOao=; b=i2L34cYSflNzgpHuw65V1hcoNJ
-	rm08nlqIfhEwfg+yMzgy8PcxLZdwYP4vVh1+LwA8qtFvpB5sxSzIRuiiINs9dNoNs1wOOYvJs3//E
-	JAwF8o/xHHgj5xrC/luckim34/bH9YjqHn+DO3ln3N1hYHIfHNqIdnGP5VA1N3mUULnrLOITwGJH4
-	rDbBIk70656+znmXE1fdQe00YSkDuAAh0WOOmDCnV8Sd5dHGwcs3qHIUVXQnNFXPWRCHl3n5tNvMT
-	sBSvM+oX0FRaePnAFG9TtAx6C3lrkWiJ9zb1wXNcRmW+2W2R26+apxRKokOjMjdr2SFIcuYMvEI8d
-	lHQPcOtg==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uYljT-000KzP-02;
-	Mon, 07 Jul 2025 15:18:07 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uYljR-0007T1-1r;
-	Mon, 07 Jul 2025 15:18:06 +0200
-Message-ID: <c883e328-9d08-4a6c-b02a-f33e0e287555@iogearbox.net>
-Date: Mon, 7 Jul 2025 15:18:05 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g4dKB5W1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qzxWP6gL"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751894339;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GhF2JcPNoR0FO9hi7SfPGNigJ/u6PP1goT7e88VaZuU=;
+	b=g4dKB5W1tyUW+YFRe2KJ1+HB6LwWDjm/QZ2/L9NDFe4rdlRCHuLkJBv4HloYruslJQf5Az
+	ieZU4/v9UxbqEzoGcBqanZ0k21K8cvkEwMvuf8UGcms97EyaGRM40+9zi93ja1sX5hUNKN
+	zkqpWZNTFAbGzjaSLkmswwkf2wQfJEQaaH9OY9hsqO5bDaLNrt7TVdiMgskqAUDsdmVz5f
+	LK1pzRL76mNB2cZEb4LxSfZFMUaFYuG7bElIf+lnM1/95IE0fP2PydPccW0QYz0NL4Xs1+
+	+bY8n791+LJ9r3V6A0nzKBlEpOxgj0MjLjBKxfjPd7t/amoUxczOmVi2+9gJpQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751894339;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GhF2JcPNoR0FO9hi7SfPGNigJ/u6PP1goT7e88VaZuU=;
+	b=qzxWP6gLU7cYzA2dZHMLb/Y4QyVyqAL0s3+PqLn+lmwdq52+JB3dp/vkPtESBH93QhFzqr
+	mzn8dCRoEljMkKAQ==
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Shuah Khan <shuah@kernel.org>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd
+ <sboyd@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, Richard
+ Cochran <richardcochran@gmail.com>, Christopher Hall
+ <christopher.s.hall@intel.com>, Miroslav Lichvar <mlichvar@redhat.com>,
+ Werner Abt <werner.abt@meinberg-usa.com>, David Woodhouse
+ <dwmw2@infradead.org>, Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao
+ <namcao@linutronix.de>, Antoine Tenart <atenart@kernel.org>
+Subject: Re: [PATCH 14/14] selftests/timers/auxclock: Test vDSO functionality
+In-Reply-To: <20250707082144-159cd778-47f3-428f-878c-8c22d4f297fc@linutronix.de>
+References: <20250701-vdso-auxclock-v1-0-df7d9f87b9b8@linutronix.de>
+ <20250701-vdso-auxclock-v1-14-df7d9f87b9b8@linutronix.de>
+ <87cyadrrpk.ffs@tglx>
+ <20250707082144-159cd778-47f3-428f-878c-8c22d4f297fc@linutronix.de>
+Date: Mon, 07 Jul 2025 15:18:58 +0200
+Message-ID: <871pqsrvel.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/libbpf: add WERROR option
-To: Sam James <sam@gentoo.org>, bpf@vger.kernel.org,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Quentin Monnet <qmo@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-References: <7e6c41e47c6a8ab73945e6aac319e0dd53337e1b.1751712192.git.sam@gentoo.org>
-Content-Language: en-US
-From: Daniel Borkmann <daniel@iogearbox.net>
-Autocrypt: addr=daniel@iogearbox.net; keydata=
- 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
-In-Reply-To: <7e6c41e47c6a8ab73945e6aac319e0dd53337e1b.1751712192.git.sam@gentoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27692/Mon Jul  7 10:35:53 2025)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 7/5/25 12:43 PM, Sam James wrote:
-> Check the 'WERROR' variable and suppress adding '-Werror' if WERROR=0.
-> 
-> This mirrors what tools/perf and other directories in tools do to handle
-> -Werror rather than adding it unconditionally.
+On Mon, Jul 07 2025 at 09:17, Thomas Wei=C3=9Fschuh wrote:
+> On Sun, Jul 06, 2025 at 10:26:31PM +0200, Thomas Gleixner wrote:
+>> On Tue, Jul 01 2025 at 10:58, Thomas Wei=C3=9Fschuh wrote:
+>>=20
+>> > Extend the auxclock test to also cover the vDSO.
+>>=20
+>> I'm not really convinved, that this is the right thing to do. Why can't
+>> this just extend selftests/vDSO instead of creating these
+>>=20
+>> > +#include "../vDSO/parse_vdso.c"
+>> > +#include "../vDSO/vdso_config.h"
+>> > +#include "../vDSO/vdso_call.h"
+>>=20
+>> cross directory oddities? Confused.
+>
+> Then we'd have to duplicate the auxclock management into the vDSO selftes=
+ts.
 
-Could you also add to the commit desc why you need it? Are there particular
-warnings you specifically need to suppress when building under gentoo?
+Fair enough.
 
-> Signed-off-by: Sam James <sam@gentoo.org>
-> ---
->   tools/lib/bpf/Makefile | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> index 168140f8e646..9563d37265da 100644
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@ -77,10 +77,15 @@ else
->     CFLAGS := -g -O2
->   endif
->   
-> +# Treat warnings as errors unless directed not to
-> +ifneq ($(WERROR),0)
-> +  CFLAGS += -Werror
-> +endif
+> I intend to introduce some vDSO accessors which force the usage of the vD=
+SO
+> fastpath by using parse_vdso.c to directly call into the vDSO and seccomp=
+ to
+> inhibit the fallback syscalls.
+>
+> Or, to avoid a dependency we could move the vDSO parsing one step up to
+> tools/testing/selftests/vdso_support.h, and clean up the interfaces.
 
-Should we also add sth similar to tools/bpf/bpftool/Makefile and by default
-enforce with -Werror with the option to disable?
+Maybe that's not the worst thing as there are VDSO tests in several
+places by now.
 
->   # Append required CFLAGS
->   override CFLAGS += -std=gnu89
->   override CFLAGS += $(EXTRA_WARNINGS) -Wno-switch-enum
-> -override CFLAGS += -Werror -Wall
-> +override CFLAGS += -Wall
->   override CFLAGS += $(INCLUDES)
->   override CFLAGS += -fvisibility=hidden
->   override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+Thanks,
 
+        tglx
