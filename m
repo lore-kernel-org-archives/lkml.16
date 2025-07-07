@@ -1,247 +1,159 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BB71991CA;
-	Mon,  7 Jul 2025 08:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B73286880;
+	Mon,  7 Jul 2025 08:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751877332; cv=none; b=io3lXIJnZ+qzggHjGW51xSuO626bNUidSN9S+/Py9Ko6qPk2s29urUrLWhSGoSERsTe9YQKXfnUyCZwtmpyhMd1tzacd6beKswR0cfbszqkxweIPiRzbudfPRUv6F/4yvXEhx8NYGqn4llW855Z2dNk7SkbZG5UL3FG0eqkKbRU=
+	t=1751877347; cv=none; b=l1o4i01l6PD6XeuJyQn4lX1rPJAltoWmKyngzsPttYgkuQXcL60i65C2O0usLhMXA3r7iX/+0gImC5NFlvXwPULlpSwBpx67A6aOP/zXzFy9wRXActdSCP0EtRZ4SRjet1exyHvjxE65tbkk7KExCSVI1P7xNIiGkQVCab4KHMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751877332; c=relaxed/simple;
-	bh=c+OHzeBm0ZQ5KVmICsG+TpRuQJv+FO1MlXQYnQ9Woc8=;
+	s=arc-20240116; t=1751877347; c=relaxed/simple;
+	bh=aCW3py4LC/FhSwrb7dWFXORC15iko6Ud2YCiD3w7Y8Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ncj8tRaXfZI8+pg8a7YcK7RpeuXc3KTXrrD+eSMI6M8PKeXyhes1E2kaGcGolxqAMNvgNIC28rg7yJ0Zh2c8vcrncZimUkFv+sOBNcX+BbzN25nGQEzIz5x+/JIvr5bb5/VDSFQijpQL5jX7lJJro40lYfbhBHyNrAAkLBuVWHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foursemi.com; spf=pass smtp.mailfrom=foursemi.com; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foursemi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foursemi.com
-X-QQ-mid: esmtpgz14t1751877245t6879af3a
-X-QQ-Originating-IP: EXPBHUCjMuLBbyDHcC6ocEdsYFi+F1sQN5KjNonpwzY=
-Received: from localhost ( [113.89.234.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Jul 2025 16:34:03 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11672384708710778107
-EX-QQ-RecipientCnt: 12
-Date: Mon, 7 Jul 2025 16:34:03 +0800
-From: Nick Li <nick.li@foursemi.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com,
-	xiaoming.yang@foursemi.com, danyang.zheng@foursemi.com,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] ASoC: codecs: Add FourSemi FS2104/5S audio
- amplifier driver
-Message-ID: <88CC983A5550253C+aGuGe7pQvIBPclfz@foursemi.com>
-References: <20250703035639.7252-1-nick.li@foursemi.com>
- <20250703035639.7252-3-nick.li@foursemi.com>
- <b1ad15d1-bf9f-4b94-abb8-1e9c6d512987@sirena.org.uk>
- <1C4720AC50797830+aGe3L70OToh6txmC@foursemi.com>
- <0370941d-63eb-4676-8a74-b8afef524376@sirena.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KV0H+9P7gBs+FLiZYSAMDSTt11qhVaRgWpgdhIboUsFjCJ5/y1E110VVxTF7WoRswi9L9bu8PazYk/wOjs7vBVJ0bgrQmGX2w1c1j+CE3CEj9wWwTO7Zvw15pgA8GdZ9h3qDffyjmFDH7ylWWPWElSCrOKv77kvAGwNFdVwDTW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62C011595;
+	Mon,  7 Jul 2025 01:35:32 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21BE13F6A8;
+	Mon,  7 Jul 2025 01:35:40 -0700 (PDT)
+Date: Mon, 7 Jul 2025 10:35:37 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: Jie Zhan <zhanjie9@hisilicon.com>
+Cc: Prashant Malani <pmalani@google.com>, Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Ionela Voinescu <ionela.voinescu@arm.com>,
+	z00813676 <zhenglifeng1@huawei.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: CPPC: Dont read counters for idle CPUs
+Message-ID: <aGuG2ayA23ojsUix@arm.com>
+References: <20250619000925.415528-1-pmalani@google.com>
+ <20250619000925.415528-3-pmalani@google.com>
+ <ff65b997-eb14-798f-1d2f-c375bf763e71@hisilicon.com>
+ <CAFivqm+hjfDwPJCiHavnZSg2D+OaP5xbQnidmwxQ3HD32ic6EA@mail.gmail.com>
+ <ef3f933a-742c-9e8e-9da4-762b33f2de94@hisilicon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0370941d-63eb-4676-8a74-b8afef524376@sirena.org.uk>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:foursemi.com:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: ONcd5u+FjiuQnR804v+HINLptnFnRAJHpfCkgG7xlisGJhqfmE4C69qT
-	fdn1XhLXZvE4qwUzQ7J+dRvOb14le0niRpvmhgQB34NhbJo6HfmdJtjTWiKZ32mWgACKm7P
-	aK8n95mg3Xn6VUgC89FCB2ZrPgmbHul1MRGnZWuiCBm5fcWQlUzcOpGb1SO3rwR+KEH4Qjk
-	T9Enayh0y86+sVRUlxLpw/iH0moAdQYhK2qTjYuP1baT7f5rpPkf+PSKkh6pHLzaKEdbKKX
-	PnZL21QCIOS9el2m+ANRAVONmuEhMJT648BAtPY9JW6nHzUoGkKJUOm3UkwN1MP36NkoLfx
-	JFO7vHQaqfzjI2IOtmDXUtbMz7By/pQpfQTyJ+oY+yohc/malE7mkbKgNbfOEUvzhfVNeZn
-	Nt8ogP9CVTcf2AScirz32CKD83U6X6w0rIKjZFr+7ksCXBkh6Fg/0rrcdL+SGMN96EM3Qja
-	+jQVO3N687YaERH7nC2dBTSEtD8w3dK24IAe2mKJmlHIaT6K2QcPTyYXneBHRUPismgnPpn
-	8U5Fmf+g76GL7BKkKVm7vvmduNyyeT/2zs8cvepfDw8QMXR3c1hR/bte0P4nRRpoOFUreNJ
-	ZC2Qlc7p1EiVYsZFf82hFjAZ607OvTdurz80OYAxlh1jg3gliPCHro7lu1BEHHo+UpAN6lK
-	ZrwJ5rfy3NNN5+K8qe5k3TVworC00ISuhuVfUY1i9d6cUykRROoeFp64wrI7z25IYg6pAdZ
-	sDE+YtBaO9jensJdtGgk22aH9TGQetfFGthYPBUKArY5vU0MjJcnEJljMO4QwUY4ZOd4oRS
-	g+HYQ23s73z7a+ce/MkLSbZfpux12o6/ojoVhNW4s4FQ0XE5maJRYHd4nQUZvIda4teVuXK
-	H+spoYzgLaadbqSXh078DLiglpKZC+hv3rVVT3DwHzDJ/O7WQFPUzWZYp6SWXQ2PHRKgN6r
-	zDZpPrkEtH+J+/WrDLZCVdlfM4Gy+wo90CaUK/23AJW8Rxc42BHBfbed58e3cdOFHTUTofF
-	t8+81HfhQJA24res0w
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <ef3f933a-742c-9e8e-9da4-762b33f2de94@hisilicon.com>
 
-On Fri, Jul 04, 2025 at 03:37:32PM +0100, Mark Brown wrote:
-> On Fri, Jul 04, 2025 at 07:12:47PM +0800, Nick Li wrote:
-> > On Thu, Jul 03, 2025 at 03:59:34PM +0100, Mark Brown wrote:
-> > > On Thu, Jul 03, 2025 at 11:56:37AM +0800, Nick wrote:
+On Fri, Jun 27, 2025 at 03:54:59PM +0800, Jie Zhan wrote:
 > 
-> > > > +static int fs210x_set_pcm_volume(struct fs210x_priv *fs210x)
+> Hi Prashant,
 > 
-> > > > +	ret  = fs210x_reg_write(fs210x, FS210X_39H_LVOLCTRL, vol[0]);
-> > > > +	ret |= fs210x_reg_write(fs210x, FS210X_3AH_RVOLCTRL, vol[1]);
+> Sorry for a late reply as I'm busy on other stuff and this doesn't seem to
+> be an easy issue to solve.
 > 
-> > > This looks pretty generic, why is it not using a standard control type?
+> I may provide some thoughts but probably need more time to go through the
+> history and come up with a good solution.
+>  
+> Actually, the inaccuracy of cppc_cpufreq_get_rate() has been reported and
+> discussed many times.  I believe your issue is just one of the cases.
 > 
-> > 1. We use regmap as REGMAP_NONE, because most of the registers settings
-> >    are in the firmware, if we use a standard control,the driver shouldn't
-> >    cache the registers after suspending the device(it will be reset).
-> 
-> You can exclude registers from a cache, including excluding most of
-> them, or manually handle registers over suspend/resume.  It's generally
-> better to share the userspace facing interfaces.
+> For the latest kernel, [1] provides a new 'cpuinfo_avg_freq' sysfs file to
+> reflect the frequency base on AMUs, which is supposed to be more stable.
+> Though it usually shows 'Resource temporarily unavailable' on my platform
+> at the moment and looks a bit buggy.
+>
+I'd say that would mean the CPU for which the 'cpuinfo_avg_freq' is queried is
+mostly idle. If that is not the case then I guess it is 'buggy' and should be
+fixed, so more details would be appreciated.
 
-OK, we will update the volume control to:
-SOC_DOUBLE_TLV(...)
-and use the regmap to cache the volumes.
-
+---
+BR
+Beata
+> Most of the related discussions can be found in the reference links in [1].
+> [1] https://lore.kernel.org/linux-pm/20250131162439.3843071-1-beata.michalska@arm.com/
 > 
-> > 2. The volume registers of FS2104 and FS2105S are different,
-> >    if we us a stardard control, we need two controls,
-> >    and register it by checking the device type.
-> > so we customize the volume control.
+> As reported, the current frequency sampling method may show an large error
+> on 1) 100% load, 2) high memory access pressure, 3) idle cpus in your case.
 > 
-> If the different devices have different controls you should just
-> register different controls.
-
-OK.
-
+> AFAICS, they may all come from the unstable latency accessing remote AMUs
+> for 4 times but delaying a fixed 2us sampling window.
 > 
-> > > > +	ret = fs210x_set_pcm_volume(fs210x);
+> Increase the sampling windows seems to help but also increase the time
+> overhead, so that's not favoured by people.
 > 
-> > > The driver should use the device defaults rather than having to 
+> On 20/06/2025 13:07, Prashant Malani wrote:
+> > Hi Jie,
+> > 
+> > Thanks for taking a look at the patch.
+> > 
+> > On Thu, 19 Jun 2025 at 20:53, Jie Zhan <zhanjie9@hisilicon.com> wrote:
+> >> On 19/06/2025 08:09, Prashant Malani wrote:
+> >>> AMU performance counters tend to be inaccurate when measured on idle CPUs.
+> >>> On an idle CPU which is programmed to 3.4 GHz (verified through firmware),
+> >>> here is a measurement and calculation of operating frequency:
+> >>>
+> >>> t0: ref=899127636, del=3012458473
+> >>> t1: ref=899129626, del=3012466509
+> >>> perf=40
+> >>
+> >> In this case, the target cpu is mostly idle but not fully idle during the
+> >> sampling window since the counter grows a little bit.
+> >> Perhaps some interrupts happen to run on the cpu shortly.
 > 
-> > The volume contorl can be used to set different volumes,
-> > the volume will be masked in fs210x->vol[2],
-> > we restore the volume when the driver resumes(reinitializes) the deivce.
+> Check back here again, I don't think it 'mostly idle'.
+> Diff of ref counters is around 2000, and I guess the ref counter freq is
+> 1GHz on your platform?  That's exactly 2us, so the target cpu is mostly
+> busy.
 > 
-> You're not just restoring the values on resume, you're also overwriting
-> them on probe.
-
-Yes, the volume will be set to the default value at the first time of initialization on probe,
-and it may be updated by volume control later.
-It's a good way to use the regmap cache(REGCACHE_RBTREE) to cache the volumes.
-
+> So that might be some other issue.  Let's forget the minimum threshold
+> stuff below for now.
 > 
-> > > > +static void fs210x_sdz_pin_set(struct fs210x_priv *fs210x, bool active)
-> > > > +{
-> > > > +	if (!fs210x || !fs210x->gpio_sdz)
-> > > > +		return;
+> >>
+> >> Thus, the actual issue is the accuracy of frequency sampling becomes poor
+> >> when the delta of counters are too small to obtain a reliable accuracy.
+> >>
+> >> Would it be more sensible to put a minimum threshold of the delta of
+> >> counters when sampling the frequency?
+> > 
+> > I'm happy to throw together a patch if there is some safe
+> > threshold the experts here can agree on for the minimum delta for
+> > the ref counter. I would caution that with this sort of approach we
+> > start running into the familiar issue:
+> > - What value is appropriate? Too large and you get false
+> > positives (falling back to the idle invalid path when we shouldn't), and
+> > too less and you get false negatives (we still report inaccurate
+> > counter values).
+> > - Is the threshold the same across platforms?
+> > - Will it remain the same 5/10 years from now?
+> > 
+> >>  BTW, that ABI
+> >> doesn't seem to be synchronous at all, i.e. the cpu might be busy when we
+> >> check and then become idle when sampling.
+> >>
+> > 
+> > I don't think this is necessarily an issue. The ABI doesn't need to be
+> > synchronous; it is merely a snapshot of the scheduler view of that CPU
+> > at a point in time. Even the current method of perf counters sampling
+> > is purely hueristic. The CPU might be idle for the 2 usec the
+> > sampling is done, and servicing traffic before and after that.
+> > This is inherent whenever you are sampling any system state.
 > 
-> > > Shouldn't this be integrated with the chip init/reset?
+> Then the issue is not totally solved, just less often?
 > 
-> > 1. We implement this function(reset and wait times) to clarify that
-> >    pulling up/down the SDZ/reset pin must to wait enougth delay time.
-> 
-> That doesn't really answer the question?
-
-It's ok to integrate it into the chip init/reset.
-
-> 
-> > > > +	 * According to the power up/down sequence of FS210x,
-> > > > +	 * the FS210x requests the I2S clock has been present
-> > > > +	 * and stable(>= 2ms) before it playing.
-> > > > +	 */
-> > > > +	if (fs210x->clk_bclk) {
-> > > > +		mutex_lock(&fs210x_mutex);
-> > > > +		ret = fs210x_dev_play(fs210x);
-> > > > +		mutex_unlock(&fs210x_mutex);
-> > > > +	} else {
-> 
-> > > This is definitely not appropriate for mute, it should be in the power
-> > > management flow - either set_bias_level() or a DAPM widget.
-> 
-> > 1. Because the device uses BCLK clock as the clock source,
-> >    we need to start the device in the life cycle of the clock,
-> >    also we need to start device after the PLL setting(set in dai->hw_params)
-> >    so we start the device in here: dai->mute_stream(unmute)
-> 
-> All the power management happens after hw_params(), this isn't an issue.
-
-We will evaluate the way to reduce the cost time of starting/stoping device:
-Do PM by DAPM widget or set_bias_on.
-
-> 
-> > 2. If the SOC(s) doesn't have the clock(bclk) for us to configure,
-> >    It meams no clock bclk defined in the DTS,
-> >    and the clock is activated in dai->trigger start usually,
-> >    so we will use a delay work to start the device in here.
-> 
-> > Any good ideas about satisfying this power up/down sequence?
-> 
-> There's not great options here, and you're going to loose the start of
-> playback especially with devices that don't start clocking until audio
-> starts.  You really need the CPU vendors you're working with to
-> implement SND_SOC_DAIFMT_CONT or expose their clocks via the clock API
-> but not all hardware is able to do this.  I think given how limited your
-> hardware is here you really need something in trigger() or some new
-> callback that runs later than that, the delayed work you've got there is
-> trying to fudge things to run after trigger.
-> 
-
-We will start the start_work in dai->trigger if there is no clock bclk
-for us to control, and disable fading in/out in firmware to reduce
-the time consumption if it is needed(As a backup plan).
-
-> > > > +	if (!(status & FS210X_05H_AMPS_MASK))
-> > > > +		dev_err(fs210x->dev, "Amplifier unready\n");
-> 
-> > > Does this get triggered during the normal start/stop flow?
-> 
-> > It will get triggered when:
-> > 1. BCLK clock is closed before stoping device
-> > 2. BCLK clock is opened after starting device
-> > We should avoid these power up/down sequence, it may cause pop noise,
-> > If they happens, it should be reported and fixed?
-> 
-> If they don't happen in normal operation it's fine to have them, the
-> concern was that this would be triggered during normal operation as part
-> of the startup or shutdown sequence.
-
-We can remove the registers dumping, and set the AMPS status to dev_dbg level.
-
-> 
-> > > > +	schedule_delayed_work(&fs210x->fault_check_work,
-> > > > +			      msecs_to_jiffies(FS210X_FAULT_CHECK_INTERVAL_MS));
-> 
-> > > Might be good to have this tunable from sysfs.
-> 
-> > Good idea, or set the interval times by the DTS property.
-> > We are considering adding a DTS property:
-> > foursemi,monitor-period-ms
-> 
-> I suspect the DT people won't like that since it's more of a tuning
-> thing.
-
-OK, we add a sysfs node for this.
-
-> 
-> > > > +static int fs210x_suspend(struct snd_soc_component *cmpnt)
-> > > > +{
-> > > > +	struct fs210x_priv *fs210x;
-> > > > +	int ret;
-> > > > +
-> > > > +	fs210x = snd_soc_component_get_drvdata(cmpnt);
-> > > > +	if (!fs210x || !fs210x->dev)
-> > > > +		return -EINVAL;
-> 
-> > > > +	cancel_delayed_work_sync(&fs210x->start_work);
-> > > > +	cancel_delayed_work_sync(&fs210x->fault_check_work);
-> 
-> > > > +	mutex_lock(&fs210x_mutex);
-> 
-> > > We don't need to prevent new work being scheduled?
-> 
-> > Could you please explain more details to help me understand and test this case?
-> 
-> What if for example playback is starting up at the same time as the
-> system enters suspend - the CODEC startup might get run after the
-> delayed work is cancelled but before the lock is taken.
-
-Understood, thanks a lot.
-
-We evaluate to remove the resume/suspend(cold start up/down device):
-The power consumptions between register settings and pins controlling are very close,
-and it can help us to reduce the time consumption.
-
-Best regards,
-Nick
-
+> > 
+> > I would imagine it is more reliable to trust the kernel scheduler's view
+> > of whether a CPU is idle, than relying on counters and a calculation
+> > method which are sensitive and unreliable for idle systems
+> > (i.e stray interrupts can throw off the calculations).
+> > 
+> > That said, I'm happy to go with the approach folks on this list recommend.
+> > 
+> > Cheers,
+> > 
