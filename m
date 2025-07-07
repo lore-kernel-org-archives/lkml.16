@@ -1,76 +1,83 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2970F29AAF5
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E84EB38;
+	Mon,  7 Jul 2025 12:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751889608; cv=none; b=QpK+jDerewfx5N8bsJzEEVZVUTD2pdu5jewCg7oSFYSbeVD+s3+tzkhJSX+79k+YUY143DzejRkyU8RU4gRMyd3eCihxmUCPBJam25vvz5JSW2OJXvUHdfOvJMVDDdwXbr4baPy5ELgPFd550XgiujvQKBd2ZDP1mi+vIr2GzcQ=
+	t=1751889659; cv=none; b=oIsHS4ZEoQRpmyOu8JOdt1AQo1k2GQqoieL1Vdk2wKplDpFK4eBBxVj28P4aqLmjdUFtTd6NEYifr2qYLRoIJhiQvN/2l+lyU0I1bqpfpZG10lNdv8LbKq8QsUCIqi3ohZhL+6ptQpLtRyTJ1X82iovDCwB76Qfyz4bFQyXDLNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751889608; c=relaxed/simple;
-	bh=sR5NzZd6gB92D+YYUhDZHN28rfytV6FGqZQRcztfPFQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=db/UYqdQU89utUV996YypoGizSWbDUtHX68iLNOBluYLCWZPHmerj4gKbF3h9EtHKBfx5uuG7afpp+aIxSElo+hU7W3/OeF0fm6lMzxBifaxntqZDQPyzKDVZ04qDkZ6EUFeBTruYj/kBzK9TBPjRWWncyRdPjr4fS+f30bt29o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86d07ccc9ecso215194439f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Jul 2025 05:00:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751889606; x=1752494406;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MG/BFrGeNu2zrolHFTcPIfc6coVJaiqjc4KfS7f00Z4=;
-        b=S6Gy6NXJzKroCsimZxdsMvnzy0yxXKDrIYRnD1SX7Iz+yHMRmka2vhOgZywJuboUOL
-         XeBlFWhyeVma7psH1bKHE26VuzTLaWjmOsyrKLBJMALqiChEwF7q26M9ykhlvOwnWLFe
-         2e++ckEkhr1QmdvxA+5L2D5lXrh8XEh4z12tJnUjIzU11R3syJ1AhUHaA3FRaA107eOt
-         GDZuNI0pV6Ga6LMlkbv4KlCXSPTcvxbKEhVFOxikcrmSvhWN4xt1G8gLaHPqx9NGUfWg
-         tavcGaHp1oLSD2n9LlPnQgRwelIG3Xfr42VQlDBe8aMwr+NZzb1/2r9dVx7VaVkcXRFn
-         WH8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXyp1wiH22j93x4bslPyWCrqZmEQT055gi+sjnHSGdxpJZBpssJcPccYORWHC2RXhaPWYAa1RkOYXnVyBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4jDxIPmal+lWbi+pGIEtXlWPhifQQ1YHzSFzs0Sa5bBosGUuY
-	BhLIrWXFnv/7gdxkU0rNUNPRh0/IDGQCk2Qq654nydB5SIqJ0yug3buscdk3XIuLt71V4156Wr8
-	Wy+PFSlA8wCTdVJYJPie6vBcmCQJXuNEwHjsBKyIOkmHswBPeRWxW+FziuHE=
-X-Google-Smtp-Source: AGHT+IEuiO6NN4/MHaaUcmlU6EEXItxKrtn2LFDJXr1h+3rZWUE7rs1UVj+Y/EJQ7GuyDWCSIoQ135BiVSZvIOe7v2H+OWivZaSO
+	s=arc-20240116; t=1751889659; c=relaxed/simple;
+	bh=P95bcMQU7ZPJZKZhLDXLyZrEYnchtk24M7xzCIyhGTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oTBeKm9aWkpNTQ7v4k7KDGU/bieCh1uiPn2KvbMqf3CBz5ehdStmV8nk/I769WizCsXBI4Q7IfNOgOqixcCZhLpH4+b4uXbi3Q6dlu0olAC3CyrB48JPvqswKxYzopuzsK0Hjoky6HsQn+9qbuuBfWGW32phJ7x6QM9HbGq1+lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=wEL90RUB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wEL90RUB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Q+5AuUFTHWtlPlVeriGBMAZdNv3i5ihbtFUnvkIaFUI=; b=wEL90RUBpGaKK5y6QFqfX7IriG
+	oPoY/JS7G6uRRY8C/1LFAOBLiHjJCKlheHs6mJkHDOUUhzAXrW9gkh7AKiyTc+MRlDWttGVOHwHx/
+	ILc8cp8PlVawigpXOS1ISxhCsN/CVye+trXo4TnFkJLsHfHvOK/synbvKdMvAjBZENl8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uYkW8-000i1l-Pb; Mon, 07 Jul 2025 14:00:16 +0200
+Date: Mon, 7 Jul 2025 14:00:16 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yibo Dong <dong100@mucse.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/15] net: rnpgbe: Add basic mbx ops support
+Message-ID: <f8a69fa5-cc3d-4968-8b19-0bdb27e1e917@lunn.ch>
+References: <20250703014859.210110-1-dong100@mucse.com>
+ <20250703014859.210110-4-dong100@mucse.com>
+ <80644ec1-a313-403a-82dd-62eb551442d3@lunn.ch>
+ <9C6FCA38E28D6768+20250707063955.GA162739@nic-Precision-5820-Tower>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1f12:b0:3df:3ab2:cc7c with SMTP id
- e9e14a558f8ab-3e1355658bemr96154485ab.13.1751889606077; Mon, 07 Jul 2025
- 05:00:06 -0700 (PDT)
-Date: Mon, 07 Jul 2025 05:00:06 -0700
-In-Reply-To: <6853f202.a00a0220.137b3.0005.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686bb6c6.a00a0220.c7b3.0084.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_trans_update_by_path
-From: syzbot <syzbot+210dfbddd64294066983@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9C6FCA38E28D6768+20250707063955.GA162739@nic-Precision-5820-Tower>
 
-syzbot has bisected this issue to:
+On Mon, Jul 07, 2025 at 02:39:55PM +0800, Yibo Dong wrote:
+> On Fri, Jul 04, 2025 at 08:13:19PM +0200, Andrew Lunn wrote:
+> > >  #define MBX_FEATURE_WRITE_DELAY BIT(1)
+> > >  	u32 mbx_feature;
+> > >  	/* cm3 <-> pf mbx */
+> > > -	u32 cpu_pf_shm_base;
+> > > -	u32 pf2cpu_mbox_ctrl;
+> > > -	u32 pf2cpu_mbox_mask;
+> > > -	u32 cpu_pf_mbox_mask;
+> > > -	u32 cpu2pf_mbox_vec;
+> > > +	u32 fw_pf_shm_base;
+> > > +	u32 pf2fw_mbox_ctrl;
+> > > +	u32 pf2fw_mbox_mask;
+> > > +	u32 fw_pf_mbox_mask;
+> > > +	u32 fw2pf_mbox_vec;
+> > 
+> > Why is a patch adding a new feature deleting code?
+> > 
+> Not delete code, 'cpu' here means controller in the chip, not host.
+> So, I just rename 'cpu' to 'fw' to avoid confusion.
 
-commit d21262d4e35d448cbc80092c91f04cc0a5f2b0b4
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Wed May 28 18:26:33 2025 +0000
+So, so let me rephrase my point. Why was it not called fw_foo right
+from the beginning? You are making the code harder to review by doing
+stuff like this. And your code is going to need a lot of review and
+revisions because its quality if low if you ask me.
 
-    bcachefs: bch2_dev_journal_bucket_delete()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=100a928c580000
-start commit:   d7b8f8e20813 Linux 6.16-rc5
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=120a928c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=140a928c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=72aa0474e3c3b9ac
-dashboard link: https://syzkaller.appspot.com/bug?extid=210dfbddd64294066983
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=141a1f70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121a1f70580000
-
-Reported-by: syzbot+210dfbddd64294066983@syzkaller.appspotmail.com
-Fixes: d21262d4e35d ("bcachefs: bch2_dev_journal_bucket_delete()")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+	Andrew
