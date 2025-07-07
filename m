@@ -1,207 +1,225 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2088.outbound.protection.outlook.com [40.107.92.88])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115D827A12D;
-	Mon,  7 Jul 2025 07:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751872699; cv=fail; b=d7X5oq6puzweca24+txoIRAbn0bxVLMcILgiHb0fBOX5Jwsr3GoKmtNTPz1Oj/cjmwwV686QAIbUkIbRGja+qv1RecpmdHufBpORDro2WjrB+8OWiD2Op0VGsuVcXTEGjZZkgZoWF0khm+dozrchLzJg8Xc7nghZOFk0YFD2kPQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751872699; c=relaxed/simple;
-	bh=3dwY3w5w7VZpZ+7lGYSMz5PP121eIEOVqhmcMaXzmgQ=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=P6+/QZqhOugHX5gjdeBxPwwNjIBcf/fe+NfbLV806mbLuyG5hM2vES01Cn2XTp5n8mCaowG0lKTHCC3JHzrIrB+rTidsmBy/INgoLTvvGIabfv4vvkZ1tqtRVB5qNjwxXfsJ1OhhLDU82qYErzqKhnAnlZ5i0I7oGTk5CecDBBo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dGHa139j; arc=fail smtp.client-ip=40.107.92.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECA919DF48;
+	Mon,  7 Jul 2025 07:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751872745; cv=none; b=Uz3D8C8ES6NumYbWTHHtYbMd9YjKqfwn1fSBatiVLQrjH1KzzxMOuciIK4mABKxaqkS9jA1JXTUmXjpu4Watc2orcl/oWyWehBMRcDDja6WXfwpPeIs+bZjaGvF2h+JXqAEIA9rUbaK7SEYGp0CcOhhZvcgRtIjUuSsDYlC1QHE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751872745; c=relaxed/simple;
+	bh=6qyv0xo/sgLYEkCRj+4SeR3Odb9feijdfziK2yrteLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C4LREDAEvyUQuo1v3P5Y+m4Cl/bJpeZMSHmOzCdmwejNLflVHbxXJde9U6kZm3TdX8FlfdpEpCeAUWiyUL+PUDs/bETzI1pXahAzTEC5iAZzUOwybcuMsju34tzouXfDeuPSVmIrLSro6rq8shewqUD3k+IRuWOqdF4Hd6HS9/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JKIx4xDk; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dGHa139j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IZTvdQzih2vTfonx8EycbL+P9EmsMNabtP/TweOMK7on3A+KEy8hSmeBrEifpiVPzbFLKlPhgAQSi7eEQZA6oGiOZJlY6bZAXzkLFhgEIctqoBgyRhD9RemWd076pyuVOfelMVXe2SkrFdI8Z7tyut3/LdN8ESbzmHRA6IIV450HlnHCIuVculYU2Y62q2NMSNvhtA6F5lOmCq6NBPwc7pXEpjmLfO/h2n/nlv42HKWKY2MgElZfU0elnfHCITOQcEFS8PL5mmrPEo+DnAawco5GwVGYqcOTMEv97emOC/BXreALAKH0mvS3fvp36UVQRCa66eevSsQ8KEPS6N+kRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZhBdd4umqtdfaoX+X+GK/RRudwBnLu33WJbeqdMEGP0=;
- b=hCPwhHip/IzyYEBwT0eAqnpCLKNmTU5HTzOutRFN8L863xG5qNi3EPQ56/bmGFuBsgvvdFQuYshc+LoiirPaeVuqfSyKqa6oJx/bnY28kMLI3U5vWC3zktCPG/U9epfcI+4U+FnqgUIclcCxxnLLQz2sq0vpEuLbuly+m/hY3fLZLTQ0JOeuVtG/6zzaGpQcaLhl/NAu/dDTL3u4AwyXuPU4+u/tZ/65rq0HQesFZqzSwXzfswexiOI+7RaD/GXGchizBcZkpAgaJqufFZSVTUh2mS0tQ00qTMn/ujeK3TMitV2DaXQmxlZhK+yrXHGTtpios9O+mhJtS9sUE+r4kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZhBdd4umqtdfaoX+X+GK/RRudwBnLu33WJbeqdMEGP0=;
- b=dGHa139jbFwTzqVXK6qS97leOikVTfdpaHebisR7qhRXen6GMYmCjx+HqNwgpqYVehwWf2L4hDLv8sd3qVNN7L868B17vwu8UpIxL6/bceCsNwGFEXWxP6p5Yy1IWdVnIq08/g7mLqZ6j/GwlD1Iu4+gcoRypqt0C0LEq5hyKG7uLz2UQzXr30E3c9CEyE99bjO+vkr4sNRkXt2kXsG/QFEzdjLVCHw29N66kPB9vv/7hxtOa9GMMifMkSIV1ZUm5Q66IVEa2OhjaBaPSsjJSFBYOheczAiFKsPKROFSR0qIbPatagxGVy5UCFVGoHkBsdcnIHcX4BudKtjuB8K9XQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by BY5PR12MB4257.namprd12.prod.outlook.com (2603:10b6:a03:20f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Mon, 7 Jul
- 2025 07:18:15 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8901.021; Mon, 7 Jul 2025
- 07:18:14 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 07 Jul 2025 16:18:09 +0900
-Message-Id: <DB5N1F62UP4U.2XQ69N3FE1HWP@nvidia.com>
-Cc: <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <david.m.ertman@intel.com>, <ira.weiny@intel.com>,
- <leon@kernel.org>, <kwilczynski@kernel.org>, <bhelgaas@google.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 0/8] Device: generic accessors for drvdata +
- Driver::unbind()
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Danilo Krummrich" <dakr@kernel.org>, "Greg KH"
- <gregkh@linuxfoundation.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250621195118.124245-1-dakr@kernel.org>
- <2025070142-difficult-lucid-d949@gregkh> <aGO7BP1t-A_CQ700@pollux>
-In-Reply-To: <aGO7BP1t-A_CQ700@pollux>
-X-ClientProxiedBy: TYCP286CA0079.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b3::17) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JKIx4xDk"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5676UcB7006198;
+	Mon, 7 Jul 2025 07:18:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=i/ySVy9eEo9mO81pLM0pgTY0i9ABMHhqb1TFhPXvR
+	XE=; b=JKIx4xDku1UvKuRnx22L60Gtq/ACC8odvBRCJzQrSrA0pPcFZzD4VMHWc
+	XeEX2Jh2IA8GNsHoqpsVmjFlo+s158XHBxaxYGwquiuPgxjwzzXaVWxY+Dobzw3s
+	68otr4gROpY/Yux9hkREIdsS5lRhIVZKsOzW1JXgmVxQ7Vr0eWY/hVIOQqz2nbyr
+	lXqOnLsOtmT92kj+RCItBq+74FYcTbTO0fW+XiIxLbXM6ZR5hEzMmMiCCNyq4MzH
+	vMPoWQ/GZIt/5q/CjF7PXpPpfuDJ1Mexfjogc6V413LzGjS4LXxsjC/yXDOGC325
+	W+djh0dusfwZ4qSP5elY9i2jaeP/g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puk3r3a6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 07:18:47 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5677BrX9012626;
+	Mon, 7 Jul 2025 07:18:47 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puk3r39y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 07:18:47 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5673ra6t010841;
+	Mon, 7 Jul 2025 07:18:46 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qeryw3rb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Jul 2025 07:18:45 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5677IgAZ30212662
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Jul 2025 07:18:42 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 09BC22004B;
+	Mon,  7 Jul 2025 07:18:42 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DF29E2004D;
+	Mon,  7 Jul 2025 07:18:39 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.94.242])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  7 Jul 2025 07:18:39 +0000 (GMT)
+From: Aditya Bodkhe <adityab1@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, Aditya Bodkhe <adityab1@linux.ibm.com>
+Subject: [PATCH 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+Date: Mon,  7 Jul 2025 12:48:36 +0530
+Message-ID: <20250707071837.59753-1-adityab1@linux.ibm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|BY5PR12MB4257:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a06f961-7c8e-4231-43e0-08ddbd266f06
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cnZxb1Rpc3k0OW43aUlJcWRlOXZYTWl3dTJ6Qjd2bDdjU0Rxclk2VVl1c0Vq?=
- =?utf-8?B?VFdvVEtlWWRUck9KMFZPYzUzSmFxVFRsSjkrQW9wMTRmUDRjelVzMXNOSzF2?=
- =?utf-8?B?dGRkTk5HRUsxL1Rwc3RXRkVnbTNpSEhXaUp6ZWVDUkFydTFuNjhOL01HVkJC?=
- =?utf-8?B?VnpTeVFnUllmSFI3WEpVNFVQak91d0psWGVxVlFQOFE3MkxOTTNsNGQxRVRV?=
- =?utf-8?B?V3IvNXZBaFY5VWZGZU9taFcwZ3d5ME9mRG9mYm0xNXoybFV2VStkd1p0bzNy?=
- =?utf-8?B?a0ZoUEQ5NnZ2K3lRWE5lM1pSNVhmM2VwbCtQWnM2NXdtWVRaVW1NYXNZWXF1?=
- =?utf-8?B?OXZUd1lIQSt6eCtrMFJOd0wxNmZnUWtSbkY2QVNCOHp4UFRJbUR5Y2NteGlr?=
- =?utf-8?B?Ujg4TVhyYnpvbzdSWGpGN0J6d2dDOTYwb3NQVGhFekxsYTZFdE8zS0dhVzVx?=
- =?utf-8?B?TG45WWpqYlFHV3RhK0VPTEttOUh1UDBwTGdyVVFYeUZaSTROeFJJdG1ybURL?=
- =?utf-8?B?N3BhbkRjamd4SmVMUUFjeDRhSk9WMXpEMW11RDlmK1hYMmhZY0EwOFdpZTc1?=
- =?utf-8?B?MCtRbWE4TDRKSlVsTUc4RzAzUkZQQjJ5cVY4TVRCUUlZYk9mV1NBeHl0UDdl?=
- =?utf-8?B?Z0RKdlFwT1BuaFlGWHljdHVKNGRlQXFGTklqUTh2RGlIUVpybnZqL0tBU0Vo?=
- =?utf-8?B?ZXJ3cDN4dnNSb2FiTmloUUNLWS9meWJKbjdZMXJhQWF0YzF1M1k1eXpCLzEr?=
- =?utf-8?B?MlZkWXRQTmx6RVUya3NKNU0rR0c2aGQ3T1dsbCs3Y01UTHJQcGlKQ3YvdExo?=
- =?utf-8?B?dDdvSzJpbFdiUmY1Zk5vVWhCcGFrN1ZJSWRySUlzNXpaQWFTVXh3Z0JBa0dI?=
- =?utf-8?B?cnZGK25nc0FwRFZNMVJlN0NacnhTN1dxY1FSWStsUFdnV3l2VmQxa1huc1BZ?=
- =?utf-8?B?dGtqZVlibVphNkRtRnpLcHE0d2NUNHJ6TGE1ZFA3Y2h3cC83TTBQWDR0eU1V?=
- =?utf-8?B?SEhNZkQvenUrb3d3dks3S1FVak5CbEs0c3U5M0xLYWI3bUlWWmtIeFhnVlRD?=
- =?utf-8?B?MWFhdGV4eWJVU0FzeFI3OXQxaDQ0UzcxSCtIVld2YjdCRmxvUk1YYmpCblN4?=
- =?utf-8?B?bnBmeFlxVlRMVTdMbTNDVEE5MlB1WGpueGMzZnZaMUxjUzJwYTZBb2x1MlJn?=
- =?utf-8?B?dmlURStKbm5WS1NRczlXZzFLZk5tSVlQb1VaTnhiMUxVanpEWlk3MUdKM0JP?=
- =?utf-8?B?cy83MnBFTDh2YVhFWjF5dHBxUVFjSVZGaHFPY0UwMVl6c1VxWmc4NTVSOGY0?=
- =?utf-8?B?bUFJUTAydExGK05mMjZEYVl3c3BITWtUZU11aFFNZE5OZFY5eEl2bnBISklG?=
- =?utf-8?B?cDRvb1RiTXdYSlB3RnhqS09BSnlzUmtVRG5sY0ZOQ3lJZkJDdmZRVnE3YXpH?=
- =?utf-8?B?MzM4OGNoVGMxYTJoOU5CRVNYL1VTUXpFQkRuYzIxYmJsVUk0M2ZYeFJwaHBh?=
- =?utf-8?B?K29OdHRNVE45UThSMTNkVW9KbS9yNmhZd1h1Tk1ZTjBrRnRtUnFvWWxqZFFV?=
- =?utf-8?B?Ym5lKzZzMFlVQVYwVXh0WWtGMHV1QjhNYlBwenZ1Zzc4YmFyUWRhMDg3dnl2?=
- =?utf-8?B?SDNzN0loQnZzVHBrY1dFSEk0d3huOGtTU0hQdnZndTdPR1dhb25KK29OWWZV?=
- =?utf-8?B?M1RCZmJuUXkvdDlmVTc2SWhJU1dTMHp3TkdtM05UWjgrYVlPTmxrTkZKeHV3?=
- =?utf-8?B?RHFkTzMrUXFxdlZqMkxBZWJTVGpZU1lrNWU4enVhUzBwdi9JTTQ0cWZNZXBG?=
- =?utf-8?B?RXIzSit1UlYyMkQxdDlBQkJiK0VqeGpUV2xiQ2FwOGx2WFg1R1BBRnZ0SjV2?=
- =?utf-8?B?ZFN5VUlzVWl4RFBSU2hnVWRpdXFIL2sxV3ppR1Q3SWE2SzE5T0t3MW5UQS9o?=
- =?utf-8?Q?R4xtOB1ix0s=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVJlcXlUZHBrRVZxTkZDa0h0ekhTR1lReTdHb2tZb2hvd2crUWNwanBZekhi?=
- =?utf-8?B?cWUrbnpNVVpqL2dsS1krSy9LVjE4T1NqWkZhQTdHWjBEeHhNUk4vY3k3bk9L?=
- =?utf-8?B?bi9CY3VaK2d1dkVaQmUyanNUZHhmWDVzNWVoNUwxaHJ0ZE9oNHoxSU9rQnN3?=
- =?utf-8?B?ZTFESnZ0TnpoNyt4ak1tVm1NNkVXRGdFcmNEc3Zpa20wZFZEUWdIWTE3Qll2?=
- =?utf-8?B?OXBaWnR5bzd2UFBqYm9RMkxadlRCWmhsTGh5YU5CcUx2Q1p3a2s4T3YxOUhs?=
- =?utf-8?B?R0RzKzZ2YmpYODNhSnh4MjBQZGhQNmJZUjJYMEdydmIyaXQ1cmozY0ZmYUtl?=
- =?utf-8?B?bDRoTE5tZDE5aGYxNUVKSytkZnhvQ2NVSVdRRE9pdlpLVEhiL3M5SXVqRHdv?=
- =?utf-8?B?L1RLSXhZN2FuMFhNQVBWWjZzdlpGNmpNZXNFM0VvNldoK0RkZUU3Q0I1WXYw?=
- =?utf-8?B?eHkzVjM4cEFEZFdEc29FUzVjMHU3eXNRa0R6M29qazBWMUlld0FmciszRUxV?=
- =?utf-8?B?L09VMlN0b3RQS2d6NHM3Ti8xMlRWTUpwa04yMllvRTRqektlcWNsSHNkR1o3?=
- =?utf-8?B?Ui9WMjlOZHdvYTFWY1lWbmZwanBWYWdQbWxKQmU2WE1DVXRYRllyN2lsVkYv?=
- =?utf-8?B?aFJ5enY1eEFuVTFLVklXQkxwQVlQbEpON21sbUNRY0ZYT2hXNnhkeTEyblpL?=
- =?utf-8?B?V2I1WHdPd0R3aE9xY0xsRmtleGY2VG5xaXVJV29QNDVpNmhNbzd6NlFLMlQz?=
- =?utf-8?B?N05aL0R4Z0ZCbmVTSEpITG04WDRnTlgwYWFmNE9TdE9LOHNMQ2FUSG1pL3dV?=
- =?utf-8?B?S2FCOTdRWUQyUkZvMW8xUk1oNzdJQi8zRW1aUHFBSkRoODBabjVDV21XVG9l?=
- =?utf-8?B?N0RuU0x0WS9jSHNYdklPOHJrRnJOa1g3R3VHanFaUHc5YXJqQTJuclVwZXFD?=
- =?utf-8?B?ZStla0NNY0h0djN4MlFSb1Jsd1ozVXFyczhTc0NKMHlSeGxyaUxkQzNEdzN0?=
- =?utf-8?B?dmx4b1Fhd3k5NDFTUXhlOTduTTh5NnVDV25ma045STVMdVdGbTRFZFl5a0V1?=
- =?utf-8?B?NzRWbytKbGJWekpsU3Q3RGx5YW5YMHd0eFFVVlFoTUdMV1VOVG44THNmTkZ1?=
- =?utf-8?B?ZzdpMFZMWEsybnNGb3ovOUNqU3lMY2lTczRGNm1MaDQ1YVBFYlZaZlRPQmMz?=
- =?utf-8?B?TXhRRzZyVlNQb2lxUHZFN3ArY1RUcVpEZDVBd0tXQzBmazh2TW9JYmE2K2lJ?=
- =?utf-8?B?OHg5QTNCVDFaWlhockhjb1IyUkx3bUNTcFRuQzlMckU1T3lLTlpPdTV1bGti?=
- =?utf-8?B?Q2QrKzlJcjFycmNXR3JmY0ZRMFZJOTBJOGQwbmhBWFdsd1NCQUl6K3hkRTEx?=
- =?utf-8?B?ejdCSkN2UHlhMWdSMG1GbXdNUWRhT09MdGU2WEczcmwybWd2emJIMytQSU5r?=
- =?utf-8?B?enlIOVpGTzBBL21BRHFhSkdxWTltMGtNNzFmWmk2T1Y5VllLemJqT2dDL25I?=
- =?utf-8?B?aUhMN0NHeTVCNGFzTEE4bGd4Y1BBZWV0QXNKMy8zd3Y1L280UUJ6Zk1ST1RN?=
- =?utf-8?B?SVpjZ0haVDFLbE5TNGJqUWVGMXdNbTVyQm5hNG9JdmRVMTc5WTJSNkJRbkNB?=
- =?utf-8?B?aGNCNEh5TDFhRGM4eGFJOE93VWF4MzdqTEd4MCswYXFwTlBLZTJWb3NTZHl6?=
- =?utf-8?B?T0dETVBIU0VnMVFuN1NmNTdvdnRIdFZnUS9rWnBDL0Q0Z2FOdHdpR0dEampW?=
- =?utf-8?B?d2tDRHNuYllJd2xzZWtlMVdabDJDbjB0Q1l0V1QvTFJvSWx4N0xxeWp5NVZl?=
- =?utf-8?B?V3pxN1NmVGg4cUNDRm5vWFdjZGxGdzhJTnFydWd3clRBYzZIaWRWQnZKYm4y?=
- =?utf-8?B?anJoVE1sRHY3SDNWWUFDWmdiWmU5Rk9hYUZ3QlZ0UVpzUkowYU0wSW5TakpH?=
- =?utf-8?B?L1lvRjU2K3dEMmZoWGRrdHJmcy95Zlg0L2VvZ3l2b2R5alAwTmpoT2k1bmp0?=
- =?utf-8?B?azNLMDZxcnZKV29TTlVTYmlxMXVGVkl3U25uVm9WRGhva2djWG1KalVSN3Bo?=
- =?utf-8?B?dVJCcU5BaVJrMmhHeldBSC9OOVpTYjN2SWk1UDBBc3NHZUkzZlRkdzlsOHRR?=
- =?utf-8?B?dVFJLzRUNkFxNnRIQU16VnBYTER4eWptZ1EyaHZzZUR5aFBFbUJ5QWx3S1d1?=
- =?utf-8?Q?plRdwneTdcWkle/KPNB2V/KoWKQZ7mELI1faKH68mRoF?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a06f961-7c8e-4231-43e0-08ddbd266f06
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2025 07:18:14.5405
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5NJmxk+Bwjxv0G7Tq2X2uD3YZG6L2uQWq2qjvlgM7RP4Q6nPaylEPnA8YAy3GLakmSrau1YOQ70tH+j2h1tMVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4257
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA3MDA0MSBTYWx0ZWRfX9njvmq8MwSg8 saY1iOG9UKXtHXI/JWlMuZknj0a4QeWCsNbIUjkHUXCePl/I7JBxtSsQQPjyM8FhvrCxieexURs DfDpKA0YMVhDPBAkSJqW6V3nPagKA1ev21qeGzQBz5TTdMVeaa2zapCaARN1SseRzaP0pPC2Er9
+ i5/Ob+9WPTcln+82OtW4HgwSTMDPNc1jSfaEWretnhVIHFhriZgBJhXDEHi/+cnugeLHJHlIfHU l6rxSaOub5jBMA9KEeBnccukK4pRggkuXrgtkZoLy8XhDNkotDyOINPFDoVf+CUYpHkuXAoEBaA SPKEC+AsUVjy+ugHgUZwQySGCwLzJzW3DXeGSlOqqFIUhixCsWtIf97HdL7fOkFcvlBjhMRnx4G
+ v8IkSnmKZFwPGCSWS6pM+q2E8jvAQfQohYVACLE/63dBvH3CN+HQwUuwsTh8WTejq2Tas4gU
+X-Authority-Analysis: v=2.4 cv=XYeJzJ55 c=1 sm=1 tr=0 ts=686b74d7 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=f-JPSP1mq3vSRxYuwIAA:9
+X-Proofpoint-ORIG-GUID: okWYG16UegyMyKdQCOvEzcIb0x5GCiC8
+X-Proofpoint-GUID: ja4sO7d4taS4QzHFOUKkHAtAK_jezqxa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-07_01,2025-07-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 impostorscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ spamscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507070041
 
-On Tue Jul 1, 2025 at 7:40 PM JST, Danilo Krummrich wrote:
->> > This makes it inefficient (but not impossible) to access device
->> > resources, e.g. to write device registers, and impossible to call devi=
-ce
->> > methods, which are only accessible under the Core device context.
->> >=20
->> > In order to solve this, add an additional callback for (1), which we
->> > call unbind().
->> >=20
->> > The reason for calling it unbind() is that, unlike remove(), it is *on=
-ly*
->> > meant to be used to perform teardown operations on the device (1), but
->> > *not* to release resources (2).
->>=20
->> Ick.  I get the idea, but unbind() is going to get confusing fast.
->> Determining what is, and is not, a "resource" is going to be hard over
->> time.  In fact, how would you define it?  :)
->
-> I think the definition is simple: All teardown operations a driver needs =
-a
-> &Device<Core> for go into unbind().
->
-> Whereas drop() really only is the destructor of the driver's private data=
-.
->
->> Is "teardown" only allowed to write to resources, but not free them?
->
-> "Teardown" is everything that involves interaction with the device when t=
-he
-> driver is unbound.
->
-> However, we can't free things there, that happens in the automatically wh=
-en the
-> destructor of the driver's private data is called, i.e. in drop().
+commit a1be9ccc57f0 ("function_graph: Support recording and printing the
+return value of function") introduced support for function graph return
+value tracing.
 
-Can't we somehow make a (renamed) `unbind` receive full ownership of the
-driver's private data, such that it will be freed (and its `drop`
-implementation called) before `unbind` returns? Or do we necessarily
-need to free that data later?
+Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
+ftrace_regs") further refactored and optimized the implementation,
+making `struct fgraph_ret_regs` unnecessary.
+
+This patch enables the above modifications for powerpc64, ensuring that
+function graph return value tracing is available on this architecture.
+
+After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
+but there are a few other build and runtime dependencies for FPROBE to
+work properly. The next patch addresses them.
+
+Signed-off-by: Aditya Bodkhe <adityab1@linux.ibm.com>
+---
+ arch/powerpc/Kconfig                     |  1 +
+ arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
+ arch/powerpc/kernel/trace/ftrace_entry.S | 41 ++++++++++++++----------
+ 3 files changed, 40 insertions(+), 17 deletions(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c3e0cc83f120..9163521bc4b9 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -250,6 +250,7 @@ config PPC
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
+ 	select HAVE_FUNCTION_ERROR_INJECTION
++	select HAVE_FUNCTION_GRAPH_FREGS
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
+ 	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
+diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
+index 82da7c7a1d12..6ffc9c9cf4e3 100644
+--- a/arch/powerpc/include/asm/ftrace.h
++++ b/arch/powerpc/include/asm/ftrace.h
+@@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+ 		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
+ 	} while (0)
+ 
++#undef ftrace_regs_get_return_value
++static __always_inline unsigned long
++ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
++{
++	return arch_ftrace_regs(fregs)->regs.gpr[3];
++}
++#define ftrace_regs_get_return_value ftrace_regs_get_return_value
++
++#undef ftrace_regs_get_frame_pointer
++static __always_inline unsigned long
++ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
++{
++	return arch_ftrace_regs(fregs)->regs.gpr[1];
++}
++
+ static __always_inline void
+ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+ 				    unsigned long ip)
+diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+index 3565c67fc638..eafbfb7584ed 100644
+--- a/arch/powerpc/kernel/trace/ftrace_entry.S
++++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+@@ -409,23 +409,30 @@ EXPORT_SYMBOL(_mcount)
+ _GLOBAL(return_to_handler)
+ 	/* need to save return values */
+ #ifdef CONFIG_PPC64
+-	std	r4,  -32(r1)
+-	std	r3,  -24(r1)
++	stdu	r1, -SWITCH_FRAME_SIZE(r1)
++	std	r4, GPR4(r1)
++	std	r3, GPR3(r1)
++  /* Save previous stack pointer (r1) */
++	addi	r3, r1, SWITCH_FRAME_SIZE
++	std	r3, GPR1(r1)
+ 	/* save TOC */
+-	std	r2,  -16(r1)
+-	std	r31, -8(r1)
++	std	r2,  24(r1)
++	std	r31, 32(r1)
+ 	mr	r31, r1
+-	stdu	r1, -112(r1)
+-
++  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
++	addi	r3,  r1, STACK_INT_FRAME_REGS
+ 	/*
+ 	 * We might be called from a module.
+ 	 * Switch to our TOC to run inside the core kernel.
+ 	 */
+ 	LOAD_PACA_TOC()
+ #else
+-	stwu	r1, -16(r1)
+-	stw	r3, 8(r1)
+-	stw	r4, 12(r1)
++	stwu	r1, -SWITCH_FRAME_SIZE(r1)
++	stw	r4, GPR4(r1)
++	stw	r3, GPR3(r1)
++	addi	r3, r1, SWITCH_FRAME_SIZE
++	stw	r3, GPR1(r1)
++	addi	r3, r1, STACK_INT_FRAME_REGS
+ #endif
+ 
+ 	bl	ftrace_return_to_handler
+@@ -435,15 +442,15 @@ _GLOBAL(return_to_handler)
+ 	mtlr	r3
+ 
+ #ifdef CONFIG_PPC64
+-	ld	r1, 0(r1)
+-	ld	r4,  -32(r1)
+-	ld	r3,  -24(r1)
+-	ld	r2,  -16(r1)
+-	ld	r31, -8(r1)
++	ld	r4,  GPR4(r1)
++	ld	r3,  GPR3(r1)
++	ld	r2,  24(r1)
++	ld	r31, 32(r1)
++	ld	r1,  0(r1)
+ #else
+-	lwz	r3, 8(r1)
+-	lwz	r4, 12(r1)
+-	addi	r1, r1, 16
++	lwz	r3, GPR3(r1)
++	lwz	r4, GPR4(r1)
++	addi	r1, r1, SWITCH_FRAME_SIZE
+ #endif
+ 
+ 	/* Jump back to real return address */
+-- 
+2.50.0
 
