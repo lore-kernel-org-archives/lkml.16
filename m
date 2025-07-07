@@ -1,65 +1,47 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B91314A0BC;
-	Mon,  7 Jul 2025 01:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12401B4F09;
+	Mon,  7 Jul 2025 01:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751851943; cv=none; b=APbhXuItqxZyEZV69D7ACytLw1KYk5ikcdoBWQA0g4sTe8idXsHLiC/HPg48uTxYVB7avUvB/geY/JnoIiF+1vBPn4ceGWV/pt1nXW/dgThVgEkhGTjxTRx/IKv2X86Gk2DWl+HP81Dko/QPXzsLoAAi0p6S5YCR+YL4MDX436o=
+	t=1751851963; cv=none; b=e/ipjz2X/ibLFK97QxqyTQHPz7GCGq6VE5ZOiQJQiTCZjKN0tI/KK2udkY1v5vh/CsOCAB2ogorgggBX3X08LhlqfIb0Tzdbcb8Db6HENoQSw4SzueSe0CGgOq0YuNgWAUgsIgOOh+xCGe25ofG3ZzdpeyP2iGpw4KL0AF2T/Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751851943; c=relaxed/simple;
-	bh=Kkmk1jidWr/OH2zdu96hQg8GlPc9b0VVkkfGdpd0CSU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jXMnLn6tTydZwqHAky+jDqxeiFPseae6MVKKn1CzlmsviN6SljZggyyk1qW+D+SPwKuoNnowlNrRDHzAEeztMguMcRkH0iOKGCIXJlZ2xyTOJVOMLt+ks+8dwFElABZUFUvCWwTcJ+X0gUCvSbwFM21pTd/Z7fp/3jJv9tC5xEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=st3sr5EX; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="st3sr5EX"
-X-UUID: 376c126c5ad211f0b33aeb1e7f16c2b6-20250707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3MQIv0Ru2TodCm/r0/qlTSRfO8/nzt6MirQPs9V9tbU=;
-	b=st3sr5EXUXuPKVhj9f0duRSDTa+IMiefDGyJawJXhBW0N78sJTZ7g4wRwATefqrp/2hn3JXafYbEZq+VHRD0/lknj7sjcYmk2AdpDkcrKmx4SckhIdQ+NtcQmh8KberVVtTUnJDN+ZtZkr9pbjAaqc8WVdyjRpUDTsJvgkIxdFs=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.2,REQID:bcc20fb6-fefc-4884-b5a6-33731e5d9ab1,IP:0,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:25
-X-CID-META: VersionHash:9eb4ff7,CLOUDID:c55b9382-cc21-4267-87cf-e75829fa6365,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:11|97|99|83|106|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:
-	0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 376c126c5ad211f0b33aeb1e7f16c2b6-20250707
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
-	(envelope-from <shangyao.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1705185487; Mon, 07 Jul 2025 09:32:16 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 7 Jul 2025 09:32:15 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 7 Jul 2025 09:32:15 +0800
-From: shangyao lin <shangyao.lin@mediatek.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: Shangyao Lin <shangyao.lin@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v2 04/13] dt-bindings: media: mediatek: add cam-yuv binding
-Date: Mon, 7 Jul 2025 09:31:45 +0800
-Message-ID: <20250707013154.4055874-5-shangyao.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250707013154.4055874-1-shangyao.lin@mediatek.com>
-References: <20250707013154.4055874-1-shangyao.lin@mediatek.com>
+	s=arc-20240116; t=1751851963; c=relaxed/simple;
+	bh=jEQrD3JWf7qasjiLNtGv8jzcAM2d7EwDg8Yr5eQIRow=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JjQbnnh/y1vPpyhJEy0Jhgwocmi/1iNGqAqF0IeMKtm0OpxQnxsMKfvugAp16w4jInEfjuRPfL4FP02PHTjtiDY9p1mcuG2+ucP22ncZukX06+jtZFdPBFWBU24qDWQ/nRee5MmKvMXDANSB6Gm6kJgVEGkCdPMuPf71ImJRSZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bb6Dn02tWzYQtf2;
+	Mon,  7 Jul 2025 09:32:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id CEEA71A1B8A;
+	Mon,  7 Jul 2025 09:32:39 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP3 (Coremail) with SMTP id _Ch0CgDnSCazI2to_nSRAw--.35890S8;
+	Mon, 07 Jul 2025 09:32:39 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: agk@redhat.com,
+	snitzer@kernel.org,
+	mpatocka@redhat.com,
+	song@kernel.org,
+	yukuai3@huawei.com
+Cc: dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH v5 04/15] md/md-bitmap: merge md_bitmap_group into bitmap_operations
+Date: Mon,  7 Jul 2025 09:27:00 +0800
+Message-Id: <20250707012711.376844-5-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250707012711.376844-1-yukuai1@huaweicloud.com>
+References: <20250707012711.376844-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,165 +49,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-CM-TRANSID:_Ch0CgDnSCazI2to_nSRAw--.35890S8
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy5CFWktFWrtF4UAry7Wrg_yoW5WryDpF
+	ZrJ343uw1rJF45Xa17Z34q9a4rW3s7trZrKFWfCw1ruFy7XasxJr48Ca4jywn8WFy3CFsI
+	qw1Yyw1Uur18WF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
+	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
+	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
+	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+	WIevJa73UjIFyTuYvjfUOyIUUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: "shangyao.lin" <shangyao.lin@mediatek.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-Add camera isp7x module device document.
+Now that all bitmap implementations are internal, it doesn't make sense
+to export md_bitmap_group anymore.
 
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
+ drivers/md/md-bitmap.c | 5 ++++-
+ drivers/md/md-bitmap.h | 2 ++
+ drivers/md/md.c        | 6 +++++-
+ drivers/md/md.h        | 1 -
+ 4 files changed, 11 insertions(+), 3 deletions(-)
 
-Changes in v2:
-  - Rename binding file to mediatek,mt8188-cam-yuv.yaml
-  - Various fixes per review comments
-  - Update maintainers list
-
-Signed-off-by: shangyao.lin <shangyao.lin@mediatek.com>
----
- .../mediatek/mediatek,mt8188-cam-yuv.yaml     | 134 ++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100755 Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-cam-yuv.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-cam-yuv.yaml b/Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-cam-yuv.yaml
-new file mode 100755
-index 000000000000..0de120d3c6e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek/mediatek,mt8188-cam-yuv.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (c) 2024 MediaTek Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/mediatek/mediatek,cam-yuv.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index fc7282304b00..0ba1da35aa84 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2990,7 +2990,8 @@ static struct attribute *md_bitmap_attrs[] = {
+ 	&max_backlog_used.attr,
+ 	NULL
+ };
+-const struct attribute_group md_bitmap_group = {
 +
-+title: The cam-yuv unit of MediaTek ISP system
++static struct attribute_group md_bitmap_group = {
+ 	.name = "bitmap",
+ 	.attrs = md_bitmap_attrs,
+ };
+@@ -3026,6 +3027,8 @@ static struct bitmap_operations bitmap_ops = {
+ 	.copy_from_slot		= bitmap_copy_from_slot,
+ 	.set_pages		= bitmap_set_pages,
+ 	.free			= md_bitmap_free,
 +
-+maintainers:
-+  - Shangyao Lin <shangyao.lin@mediatek.com>
-+  - Shu-hsiang Yang <shu-hsiang.yang@mediatek.com>
-+  - Shun-yi Wang <shun-yi.wang@mediatek.com>
-+  - Teddy Chen <teddy.chen@mediatek.com>
++	.group			= &md_bitmap_group,
+ };
+ 
+ void mddev_set_bitmap_ops(struct mddev *mddev)
+diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+index 28c1f1c1cc83..0ceb9e97d21f 100644
+--- a/drivers/md/md-bitmap.h
++++ b/drivers/md/md-bitmap.h
+@@ -100,6 +100,8 @@ struct bitmap_operations {
+ 			      sector_t *hi, bool clear_bits);
+ 	void (*set_pages)(void *data, unsigned long pages);
+ 	void (*free)(void *data);
 +
-+description:
-+  MediaTek cam-yuv is the camera YUV processing unit in MediaTek SoC.
++	struct attribute_group *group;
+ };
+ 
+ /* the bitmap API */
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index bda3ef814d97..7ed95e5e43fc 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -5749,7 +5749,6 @@ static const struct attribute_group md_redundancy_group = {
+ 
+ static const struct attribute_group *md_attr_groups[] = {
+ 	&md_default_group,
+-	&md_bitmap_group,
+ 	NULL,
+ };
+ 
+@@ -5996,6 +5995,11 @@ struct mddev *md_alloc(dev_t dev, char *name)
+ 		return ERR_PTR(error);
+ 	}
+ 
++	if (mddev->bitmap_ops && mddev->bitmap_ops->group)
++		if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
++			pr_warn("md: cannot register extra bitmap attributes for %s\n",
++				mdname(mddev));
 +
-+properties:
-+  compatible:
-+    const: mediatek,mt8188-cam-yuv
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+    description:
-+      Base address and optional inner base address of the cam-yuv hardware block.
-+
-+  reg-names:
-+    items:
-+      - const: base
-+      - const: inner_base
-+    minItems: 1
-+    maxItems: 2
-+    description:
-+      Names for each register region. Must be "base" and optionally "inner_base".
-+
-+  mediatek,larbs:
-+    description:
-+      List of phandles to the local arbiters in the current SoCs.
-+      Refer to bindings/memory-controllers/mediatek,smi-larb.yaml.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    minItems: 1
-+    maxItems: 32
-+
-+  interrupts:
-+    minItems: 1
-+    description: Interrupts for the cam-yuv block.
-+
-+  dma-ranges:
-+    minItems: 1
-+    description: Address information of IOMMU mapping to memory.
-+
-+  power-domains:
-+    minItems: 1
-+    description: Power domains for the cam-yuv block.
-+
-+  clocks:
-+    minItems: 4
-+    maxItems: 16
-+    description: List of phandles to the clocks required by the cam-yuv block.
-+
-+  clock-names:
-+    items:
-+      - const: camsys_cam2mm0_cgpdn
-+      - const: camsys_cam2mm1_cgpdn
-+      - const: camsys_cam2sys_cgpdn
-+      - const: camsys_yuva_larbx
-+      - const: camsys_yuva_cam_cgpdn
-+      - const: camsys_yuva_camtg_cgpdn
-+      - const: camsys_yuvb_larbx_cgpdn
-+      - const: camsys_yuvb_cam_cgpdn
-+      - const: camsys_yuvb_camtg_cgpdn
-+    minItems: 4
-+    maxItems: 16
-+    description: Names of the clocks, must match the order of the clocks property.
-+
-+  iommus:
-+    minItems: 1
-+    maxItems: 32
-+    description: Points to the respective IOMMU block with master port as argument.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - iommus
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/power/mediatek,mt8188-power.h>
-+    #include <dt-bindings/clock/mediatek,mt8188-clk.h>
-+    #include <dt-bindings/memory/mediatek,mt8188-memory-port.h>
-+
-+    soc {
-+      yuv@16050000 {
-+        compatible = "mediatek,mt8188-cam-yuv";
-+        reg = <0 0x16050000 0 0x8000>;
-+        reg-names = "base";
-+        mediatek,larbs = <&larb17a>;
-+        interrupts = <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH 0>;
-+        dma-ranges = <0x2 0x0 0x0 0x40000000 0x1 0x0>;
-+        power-domains = <&spm MT8188_POWER_DOMAIN_CAM_SUBA>;
-+        clocks = <&camsys CLK_CAM_MAIN_CAM2MM0_GALS>,
-+                 <&camsys CLK_CAM_MAIN_CAM2MM1_GALS>,
-+                 <&camsys CLK_CAM_MAIN_CAM2SYS_GALS>,
-+                 <&camsys_yuva CLK_CAM_YUVA_LARBX>,
-+                 <&camsys_yuva CLK_CAM_YUVA_CAM>,
-+                 <&camsys_yuva CLK_CAM_YUVA_CAMTG>;
-+        clock-names = "camsys_cam2mm0_cgpdn",
-+                      "camsys_cam2mm1_cgpdn",
-+                      "camsys_cam2sys_cgpdn",
-+                      "camsys_yuva_larbx_cgpdn",
-+                      "camsys_yuva_cam_cgpdn",
-+                      "camsys_yuva_camtg_cgpdn";
-+        iommus = <&vpp_iommu M4U_PORT_L17A_YUVO_R1>,
-+                 <&vpp_iommu M4U_PORT_L17A_YUVO_R3>,
-+                 <&vpp_iommu M4U_PORT_L17A_YUVCO_R1>,
-+                 <&vpp_iommu M4U_PORT_L17A_YUVO_R2>,
-+                 <&vpp_iommu M4U_PORT_L17A_RZH1N2TO_R1>,
-+                 <&vpp_iommu M4U_PORT_L17A_DRZS4NO_R1>,
-+                 <&vpp_iommu M4U_PORT_L17A_TNCSO_R1>;
-+      };
-+    };
-+
-+...
+ 	kobject_uevent(&mddev->kobj, KOBJ_ADD);
+ 	mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
+ 	mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 67b365621507..d6fba4240f97 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -796,7 +796,6 @@ struct md_sysfs_entry {
+ 	ssize_t (*show)(struct mddev *, char *);
+ 	ssize_t (*store)(struct mddev *, const char *, size_t);
+ };
+-extern const struct attribute_group md_bitmap_group;
+ 
+ static inline struct kernfs_node *sysfs_get_dirent_safe(struct kernfs_node *sd, char *name)
+ {
 -- 
-2.18.0
+2.39.2
 
