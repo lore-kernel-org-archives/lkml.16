@@ -1,122 +1,174 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B4D27AC34
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Jul 2025 08:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75172CCC8;
+	Mon,  7 Jul 2025 08:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751876086; cv=none; b=uxtaWEKfbFAJwh50siIx3mIbIhrlpOREhp036YfEiAdlw3u3Dml2uPiXw45DU1Rd8nMG6PrEiyFEpkHotfjzQXR8NE6iN7wbwZZ/weL5Va9O1W36ZglhrlsG2TScqqXEm2X8L3b+U53PuIJ79R29SWoVzvHEVcGbnEQBt5O5lkw=
+	t=1751876158; cv=none; b=Kuxtvx6HSYBDvF8EwwKHE9npNQp42TCdvCoqUzxF4NTTPX7rm21u72SwXylsAkaR4ZLkSJus0hDGYmtZEbibOTP9GE4t6RXztJNh6Ec+UkLQ2iiHVUncbUH/XzCldVllQ8JUAXGvPXsQwoGnsdZQm3TMttoNazEdCBDQKbTgdSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751876086; c=relaxed/simple;
-	bh=REDttirfsJlFO7OpsoIYpKcHqpgtFT0zAuY6MizcGfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C+3lwHKO8mwCe9puKdRXbumiE8D+aESyA1VUSuz9ml8SFhV37pdFP2dHSQ71ona0KkTr8xqLRSCntQLwGgnVD2OYGx3CNvf7cyM8bl9AVvTQl17F5wzqczkdxSfdmAucN+mQ8lx5xZTz5YbttSnlGnO+rLe48PFQx0u3Wpd4Mk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KlIUnSnc; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KlIUnSnc"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751876081; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=al3xd+vqfx8QYsniRark/BwtIMxmJYpnPra7XC6K1e8=;
-	b=KlIUnSncfNDhPgUzrD2GiqhaZFBP5UYyCg9tXHDggRFraYYlE+Wz18nutfnDMj3+LZB5Uzx+z9IjnrvebIaDl6DN5vXWidbRntxhdqEeG5QWMYtaFK1ZMuxifix6vcsRPJ4MRtysDyg4bpoogJGphyhoKpnIJTubnJsQkwmaSi0=
-Received: from 30.74.144.127(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wi3TIo._1751876079 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 07 Jul 2025 16:14:40 +0800
-Message-ID: <f3a54399-6a1b-467f-97d7-ee2481ac811b@linux.alibaba.com>
-Date: Mon, 7 Jul 2025 16:14:39 +0800
+	s=arc-20240116; t=1751876158; c=relaxed/simple;
+	bh=Dd9Xk6xGGd0ME7zXV2jEaLbAC4FI8QKMO0ycCC1LHgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pGxGEE4W24Ex4WyRj2ec7FuNE/N++cEW3lhcgNj2nPPQ6L1DDLGzUvUMsTLV37Oj8n4795CFhijuamSY76Ct+fAROHXgcFpDThoxzolsd3LchwzyI+DKjpWruRuuSCWl3r2iJH6yyp3cF456SgJx7tRaS1S6SOTGnCWr0gBaYyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=114.132.77.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: esmtpsz21t1751876057t3b8668fe
+X-QQ-Originating-IP: vPFkWzDcFDHcvaKiIAy0Ih4IzObjBkvW/Dpqgv0ZlPo=
+Received: from localhost ( [203.174.112.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 07 Jul 2025 16:14:15 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 13134278031464448130
+Date: Mon, 7 Jul 2025 16:14:14 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+	andrew+netdev@lunn.ch, gur.stavi@huawei.com, maddy@linux.ibm.com,
+	mpe@ellerman.id.au, danishanwar@ti.com, lee@trager.us,
+	gongfan1@huawei.com, lorenzo@kernel.org, geert+renesas@glider.be,
+	Parthiban.Veerasooran@microchip.com, lukas.bulwahn@redhat.com,
+	alexanderduyck@fb.com, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/15] net: rnpgbe: Add download firmware for n210 chip
+Message-ID: <0FA3F272A6C59EFF+20250707081414.GA166175@nic-Precision-5820-Tower>
+References: <20250703014859.210110-1-dong100@mucse.com>
+ <20250703014859.210110-6-dong100@mucse.com>
+ <37ede55f-613b-481f-a8d9-43ee1414849a@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/9] mm/shmem, swap: simplify swapin path and result
- handling
-To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
-References: <20250704181748.63181-1-ryncsn@gmail.com>
- <20250704181748.63181-8-ryncsn@gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250704181748.63181-8-ryncsn@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37ede55f-613b-481f-a8d9-43ee1414849a@lunn.ch>
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Nj/O81qLKo2gDJk6/WQnhlZCV2blhLEjBNLp90yvs9tYHea82L5evEyl
+	qlLsenyPYn22vmYk6t6xCVLxNqZO+5HpvtvYhl//TpWfAf9B9/7KWBw8JACJV4uRlsZo1QU
+	r6ul2OC8j0dY7hDzEx+pePRHGAn9lO5uoRljzH5+k/w7h1MkFudqVgo2T0e9l6s3N1CuM6f
+	BT098Ch0tps+pPP4whjXT8shMKeBAkQu2t7/A+26d8N1HaELeJzU2gew8P/p3D+re5moDf/
+	KbDhNoRaN5E2R7+OxTvC7/gY+jarvUodKF5a7jLyDBO6SJejYiphNZdbaHFkX9yRuHxWUZ9
+	nhDomtUAaYQneV46721gMqatKoI617lmlyWesPl2s0CRZL9pCdgjOKEVUUpULTU7/oiUEVa
+	ihHpTxgOTzNEJ+HLuw2md1okRSaQs9nf3q0b6ehPD9uf3l9kEbLcHb68/lyDOzlPjJVHkS0
+	pMIGMDfQeFCGvK/6XwxPwdW9Ssha+ZXp4aoao8q9RMufno73Mw8Bbup3vJCpzGNILiDkq9p
+	BgGR81hdqSk9AV34+kNULpPHwoaKvmtEovzglMhI8PXgDMrWX4ouXY+jryBy3AruUzXqrNE
+	IQb3vX4edI6lKCcQ8ZePVLTXSyTqifmAZ9JCFKxXRH/ci6KYFi6FJx9l9DVJEcUBwyayXIf
+	ecwb6/i0G1F0igp2GW4jclrL0KgS7yP1dzcbO2XTGeIKijnBX/ir4AYJodsyyt7rrR/B1c7
+	u8LON5/0COcr7aapkj3vidhfxHYmJa7eRvprfVzyZXA2sKHwc897Z8cIsdqOUWRf36fjju4
+	jHPUzppgtuUHXKL3K9gByNZvePKvkAvGp4oTxgdEJYwQBUUcwcRHLEXSE4JdqDrdyI3HeyS
+	aVCn6SAYKSi7lrpPUAaeHwWGvSsMD0AAYK9Xm3cHAnHLE9C3S7gRnvNYMkCFr+1KFOspbiN
+	N8ux6UN12ZG1Hlw+dapiwTd3g9ek8glnNRpC+sQRmpY59HN05KzB5VnRhnIiOyDNwSHDUZM
+	xCkxdqPA==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-
-
-On 2025/7/5 02:17, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
+On Fri, Jul 04, 2025 at 08:33:14PM +0200, Andrew Lunn wrote:
+> >  static int init_firmware_for_n210(struct mucse_hw *hw)
+> >  {
+> > -	return 0;
+> > +	char *filename = "n210_driver_update.bin";
+> > +	const struct firmware *fw;
+> > +	struct pci_dev *pdev = hw->pdev;
+> > +	int rc = 0;
+> > +	int err = 0;
+> > +	struct mucse *mucse = (struct mucse *)hw->back;
+> > +
+> > +	rc = request_firmware(&fw, filename, &pdev->dev);
+> > +
+> > +	if (rc != 0) {
+> > +		dev_err(&pdev->dev, "requesting firmware file failed\n");
+> > +		return rc;
+> > +	}
+> > +
+> > +	if (rnpgbe_check_fw_from_flash(hw, fw->data)) {
+> > +		dev_info(&pdev->dev, "firmware type error\n");
 > 
-> Slightly tidy up the different handling of swap in and error handling
-> for SWP_SYNCHRONOUS_IO and non-SWP_SYNCHRONOUS_IO devices. Now swapin
-> will always use either shmem_swapin_direct or shmem_swapin_cluster,
-> then check the result.
+> Why dev_info()? If this is an error then you should use dev_err().
 > 
-> Simplify the control flow and avoid a redundant goto label.
+Yes, it should be dev_err().
+> > +	dev_info(&pdev->dev, "init firmware successfully.");
+> > +	dev_info(&pdev->dev, "Please reboot.");
 > 
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> ---
->   mm/shmem.c | 31 +++++++++++++------------------
->   1 file changed, 13 insertions(+), 18 deletions(-)
+> Don't spam the lock with status messages.
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 1fe9a3eb92b1..782162c0c4e0 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2327,33 +2327,28 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   			count_vm_event(PGMAJFAULT);
->   			count_memcg_event_mm(fault_mm, PGMAJFAULT);
->   		}
-> -		/* Skip swapcache for synchronous device. */
->   		if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
-> +			/* Direct mTHP swapin skipping swap cache & readhaed */
->   			folio = shmem_swapin_direct(inode, vma, index, swap,
->   						    index_entry, order, gfp);
-> -			if (!IS_ERR(folio)) {
-> +			if (IS_ERR(folio)) {
-> +				error = PTR_ERR(folio);
-> +				folio = NULL;
-> +				goto failed;
-> +			} else {
-
-The 'else' can be avoided, otherwise LGTM.
-
->   				if (folio_test_large(folio))
->   					swap = index_entry;
->   				skip_swapcache = true;
-> -				goto alloced;
->   			}
-> -
-> -			/*
-> -			 * Direct swapin handled order 0 fallback already,
-> -			 * if it failed, abort.
-> -			 */
-> -			error = PTR_ERR(folio);
-> -			folio = NULL;
-> -			goto failed;
-> -		}
-> -		/* Cached swapin with readahead, only supports order 0 */
-> -		folio = shmem_swapin_cluster(swap, gfp, info, index);
-> -		if (!folio) {
-> -			error = -ENOMEM;
-> -			goto failed;
-> +		} else {
-> +			/* Cached swapin with readhaed, only supports order 0 */
-> +			folio = shmem_swapin_cluster(swap, gfp, info, index);
-> +			if (!folio) {
-> +				error = -ENOMEM;
-> +				goto failed;
-> +			}
->   		}
->   	}
-> -alloced:
->   	if (order > folio_order(folio)) {
->   		/*
->   		 * Swapin may get smaller folios due to various reasons:
-
+> Reboot? Humm, maybe this should be devlink flash command.
+> 
+> request_firmware() is normally used for download into SRAM which is
+> then used immediately. If you need to reboot the machine, devlink is
+> more appropriate.
+> 
+Yes, this is used to download flash to the chip, and then reboot to run.
+I will change it to devlink.
+> > +static inline void mucse_sfc_command(u8 __iomem *hw_addr, u32 cmd)
+> > +{
+> > +	iowrite32(cmd, (hw_addr + 0x8));
+> > +	iowrite32(1, (hw_addr + 0x0));
+> > +	while (ioread32(hw_addr) != 0)
+> > +		;
+> 
+> 
+> Never do endless loops waiting for hardware. It might never give what
+> you want, and there is no escape.
+> 
+Got it, I will update this.
+> > +static int32_t mucse_sfc_flash_wait_idle(u8 __iomem *hw_addr)
+> > +{
+> > +	int time = 0;
+> > +	int ret = HAL_OK;
+> > +
+> > +	iowrite32(CMD_CYCLE(8), (hw_addr + 0x10));
+> > +	iowrite32(RD_DATA_CYCLE(8), (hw_addr + 0x14));
+> > +
+> > +	while (1) {
+> > +		mucse_sfc_command(hw_addr, CMD_READ_STATUS);
+> > +		if ((ioread32(hw_addr + 0x4) & 0x1) == 0)
+> > +			break;
+> > +		time++;
+> > +		if (time > 1000)
+> > +			ret = HAL_FAIL;
+> > +	}
+> 
+> iopoll.h 
+> 
+Got it, I will use method in iopoll.h.
+> > +static int mucse_sfc_flash_erase_sector(u8 __iomem *hw_addr,
+> > +					u32 address)
+> > +{
+> > +	int ret = HAL_OK;
+> > +
+> > +	if (address >= RSP_FLASH_HIGH_16M_OFFSET)
+> > +		return HAL_EINVAL;
+> 
+> Use linux error codes, EINVAL.
+> 
+Got it.
+> > +
+> > +	if (address % 4096)
+> > +		return HAL_EINVAL;
+> 
+> EINVAL
+> 
+Got it.
+> > +
+> > +	mucse_sfc_flash_write_enable(hw_addr);
+> > +
+> > +	iowrite32((CMD_CYCLE(8) | ADDR_CYCLE(24)), (hw_addr + 0x10));
+> > +	iowrite32((RD_DATA_CYCLE(0) | WR_DATA_CYCLE(0)), (hw_addr + 0x14));
+> > +	iowrite32(SFCADDR(address), (hw_addr + 0xc));
+> > +	mucse_sfc_command(hw_addr, CMD_SECTOR_ERASE);
+> > +	if (mucse_sfc_flash_wait_idle(hw_addr)) {
+> > +		ret = HAL_FAIL;
+> > +		goto failed;
+> 
+> mucse_sfc_flash_wait_idle() should return -ETIMEDOUT, so return that.
+> 
+> 	Andrew
+> 
+Got it, I will return -ETIMEDOUT.
+Thanks for your feedback.
